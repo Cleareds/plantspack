@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '@/lib/auth'
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 
@@ -22,67 +22,97 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
 
   const { signUp, signInWithGoogle, signInWithFacebook } = useAuth()
 
+  // Debug: Log when component mounts and auth context
+  React.useEffect(() => {
+    console.log('🎯 SignupForm mounted')
+    console.log('🔑 signUp function available:', !!signUp)
+  }, [signUp])
+
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('🚀 Form submitted!')
     e.preventDefault()
-    setLoading(true)
-    setError('')
-    setSuccess('')
-
-    // Validation
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
-      return
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
-      setLoading(false)
-      return
-    }
-
-    console.log('Attempting signup for:', email, username)
     
-    const { data, error } = await signUp(email, password, {
-      username,
-      firstName,
-      lastName,
-    })
-    
-    console.log('Signup result:', { data, error })
-    
-    if (error) {
-      console.error('Signup error:', error)
-      setError(error.message)
-    } else if (data?.user) {
-      console.log('User created:', data.user)
-      console.log('Email confirmed at:', data.user.email_confirmed_at)
-      console.log('Confirmation sent at:', data.user.confirmation_sent_at)
-      
-      // Check if user is immediately confirmed (no email confirmation required)
-      if (data.user.email_confirmed_at) {
-        console.log('User immediately confirmed')
-        setSuccess('Account created successfully! You can now log in.')
-        setTimeout(() => {
-          onToggle()
-        }, 2000)
-      } else if (data.user.confirmation_sent_at) {
-        console.log('Confirmation email sent')
-        setSuccess('Account created! Please check your email to verify your account.')
-      } else {
-        console.log('User created but no confirmation info')
-        // Try to check if email confirmation is disabled
-        setSuccess('Account created! Redirecting to login...')
-        setTimeout(() => {
-          onToggle()
-        }, 2000)
+    try {
+      setLoading(true)
+      setError('')
+      setSuccess('')
+
+      console.log('📝 Form data:', { email, username, firstName, lastName })
+
+      // Validation
+      if (!email || !username || !password) {
+        console.log('❌ Missing required fields')
+        setError('Please fill in all required fields')
+        setLoading(false)
+        return
       }
-    } else {
-      console.log('No user data returned')
-      setError('Registration failed. Please try again.')
+
+      if (password !== confirmPassword) {
+        console.log('❌ Passwords do not match')
+        setError('Passwords do not match')
+        setLoading(false)
+        return
+      }
+
+      if (password.length < 6) {
+        console.log('❌ Password too short')
+        setError('Password must be at least 6 characters')
+        setLoading(false)
+        return
+      }
+
+      console.log('✅ Validation passed, attempting signup for:', email, username)
+      
+      if (!signUp) {
+        console.error('❌ signUp function not available')
+        setError('Authentication service not available. Please refresh the page.')
+        setLoading(false)
+        return
+      }
+
+      const result = await signUp(email, password, {
+        username,
+        firstName,
+        lastName,
+      })
+      
+      console.log('📊 Signup result:', result)
+      
+      if (result.error) {
+        console.error('❌ Signup error:', result.error)
+        setError(result.error.message || 'Registration failed. Please try again.')
+      } else if (result.data?.user) {
+        console.log('✅ User created:', result.data.user)
+        console.log('📧 Email confirmed at:', result.data.user.email_confirmed_at)
+        console.log('📮 Confirmation sent at:', result.data.user.confirmation_sent_at)
+        
+        // Check if user is immediately confirmed (no email confirmation required)
+        if (result.data.user.email_confirmed_at) {
+          console.log('✅ User immediately confirmed')
+          setSuccess('Account created successfully! You can now log in.')
+          setTimeout(() => {
+            onToggle()
+          }, 2000)
+        } else if (result.data.user.confirmation_sent_at) {
+          console.log('📧 Confirmation email sent')
+          setSuccess('Account created! Please check your email to verify your account.')
+        } else {
+          console.log('⚠️ User created but no confirmation info')
+          setSuccess('Account created! Redirecting to login...')
+          setTimeout(() => {
+            onToggle()
+          }, 2000)
+        }
+      } else {
+        console.log('❌ No user data returned')
+        setError('Registration failed. Please try again.')
+      }
+    } catch (err) {
+      console.error('💥 Exception during signup:', err)
+      setError('An unexpected error occurred. Please try again.')
+    } finally {
+      setLoading(false)
     }
-    
-    setLoading(false)
   }
 
   return (
@@ -101,6 +131,14 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         {success && (
           <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
             {success}
+          </div>
+        )}
+
+        {/* Debug info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+            <div>signUp available: {signUp ? '✅' : '❌'}</div>
+            <div>Form loading: {loading ? '✅' : '❌'}</div>
           </div>
         )}
 
