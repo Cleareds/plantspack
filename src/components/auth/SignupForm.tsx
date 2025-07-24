@@ -25,7 +25,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   // Debug: Log when component mounts and auth context
   React.useEffect(() => {
     console.log('🎯 SignupForm mounted')
-    console.log('🔑 signUp function available:', !!signUp)
+    console.log('🔑 signUp function available:', typeof signUp === 'function')
   }, [signUp])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,7 +63,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
 
       console.log('✅ Validation passed, attempting signup for:', email, username)
       
-      if (!signUp) {
+      if (typeof signUp !== 'function') {
         console.error('❌ signUp function not available')
         setError('Authentication service not available. Please refresh the page.')
         setLoading(false)
@@ -137,7 +137,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         {/* Debug info */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
-            <div>signUp available: {signUp ? '✅' : '❌'}</div>
+            <div>signUp available: {typeof signUp === 'function' ? '✅' : '❌'}</div>
             <div>Form loading: {loading ? '✅' : '❌'}</div>
           </div>
         )}
