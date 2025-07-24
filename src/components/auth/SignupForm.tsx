@@ -41,7 +41,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
       return
     }
 
-    const { error } = await signUp(email, password, {
+    const { data, error } = await signUp(email, password, {
       username,
       firstName,
       lastName,
@@ -49,8 +49,28 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
     
     if (error) {
       setError(error.message)
+    } else if (data?.user) {
+      // Check if user is immediately confirmed (no email confirmation required)
+      if (data.user.email_confirmed_at) {
+        setSuccess('Account created successfully! You can now log in.')
+        // Automatically switch to login form after 2 seconds
+        setTimeout(() => {
+          onToggle()
+        }, 2000)
+      } else if (data.user.confirmation_sent_at) {
+        setSuccess('Account created! Please check your email to verify your account.')
+      } else {
+        // User created but status unclear - show generic success
+        setSuccess('Account created! You can now try logging in.')
+        setTimeout(() => {
+          onToggle()
+        }, 2000)
+      }
     } else {
-      setSuccess('Account created! Please check your email to verify your account.')
+      setSuccess('Account created! You can now try logging in.')
+      setTimeout(() => {
+        onToggle()
+      }, 2000)
     }
     
     setLoading(false)

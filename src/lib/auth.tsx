@@ -248,6 +248,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       })
       
+      // If signup succeeds and user is immediately confirmed (no email confirmation required)
+      if (data?.user && !error && data.user.email_confirmed_at) {
+        console.log('User signed up and confirmed immediately')
+        
+        // Create user profile immediately if it doesn't exist
+        try {
+          const { error: profileError } = await supabase
+            .from('users')
+            .upsert({
+              id: data.user.id,
+              email: data.user.email || '',
+              username: userData.username,
+              first_name: userData.firstName || '',
+              last_name: userData.lastName || '',
+              bio: '',
+              avatar_url: null,
+            }, { onConflict: 'id' })
+          
+          if (profileError) {
+            console.error('Error creating user profile:', profileError)
+          }
+        } catch (profileError) {
+          console.error('Error creating user profile:', profileError)
+        }
+      }
+      
       return { data, error }
     } catch (error) {
       return { data: null, error }
