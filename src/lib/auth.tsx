@@ -236,6 +236,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, userData: { username: string; firstName?: string; lastName?: string }) => {
     try {
+      console.log('Auth: Starting signup process for', email)
+      console.log('Auth: User metadata:', userData)
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -248,13 +251,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       })
       
-      // If signup succeeds and user is immediately confirmed (no email confirmation required)
-      if (data?.user && !error && data.user.email_confirmed_at) {
-        console.log('User signed up and confirmed immediately')
+      console.log('Auth: Signup response:', { data, error })
+      
+      if (error) {
+        console.error('Auth: Signup error:', error)
+        return { data, error }
+      }
+      
+      if (data?.user) {
+        console.log('Auth: User created in auth.users')
+        console.log('Auth: User ID:', data.user.id)
+        console.log('Auth: Email confirmed at:', data.user.email_confirmed_at)
+        console.log('Auth: Confirmation sent at:', data.user.confirmation_sent_at)
         
-        // Create user profile immediately if it doesn't exist
+        // Always try to create user profile, regardless of confirmation status
         try {
-          const { error: profileError } = await supabase
+          console.log('Auth: Attempting to create user profile')
+          const { data: profileData, error: profileError } = await supabase
             .from('users')
             .upsert({
               id: data.user.id,
@@ -267,15 +280,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }, { onConflict: 'id' })
           
           if (profileError) {
-            console.error('Error creating user profile:', profileError)
+            console.error('Auth: Error creating user profile:', profileError)
+          } else {
+            console.log('Auth: User profile created successfully:', profileData)
           }
         } catch (profileError) {
-          console.error('Error creating user profile:', profileError)
+          console.error('Auth: Exception creating user profile:', profileError)
         }
+      } else {
+        console.log('Auth: No user data in response')
       }
       
       return { data, error }
     } catch (error) {
+      console.error('Auth: Exception in signup:', error)
       return { data: null, error }
     }
   }

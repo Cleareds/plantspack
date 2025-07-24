@@ -41,36 +41,45 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
       return
     }
 
+    console.log('Attempting signup for:', email, username)
+    
     const { data, error } = await signUp(email, password, {
       username,
       firstName,
       lastName,
     })
     
+    console.log('Signup result:', { data, error })
+    
     if (error) {
+      console.error('Signup error:', error)
       setError(error.message)
     } else if (data?.user) {
+      console.log('User created:', data.user)
+      console.log('Email confirmed at:', data.user.email_confirmed_at)
+      console.log('Confirmation sent at:', data.user.confirmation_sent_at)
+      
       // Check if user is immediately confirmed (no email confirmation required)
       if (data.user.email_confirmed_at) {
+        console.log('User immediately confirmed')
         setSuccess('Account created successfully! You can now log in.')
-        // Automatically switch to login form after 2 seconds
         setTimeout(() => {
           onToggle()
         }, 2000)
       } else if (data.user.confirmation_sent_at) {
+        console.log('Confirmation email sent')
         setSuccess('Account created! Please check your email to verify your account.')
       } else {
-        // User created but status unclear - show generic success
-        setSuccess('Account created! You can now try logging in.')
+        console.log('User created but no confirmation info')
+        // Try to check if email confirmation is disabled
+        setSuccess('Account created! Redirecting to login...')
         setTimeout(() => {
           onToggle()
         }, 2000)
       }
     } else {
-      setSuccess('Account created! You can now try logging in.')
-      setTimeout(() => {
-        onToggle()
-      }, 2000)
+      console.log('No user data returned')
+      setError('Registration failed. Please try again.')
     }
     
     setLoading(false)
