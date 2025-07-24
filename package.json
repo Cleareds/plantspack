@@ -6,22 +6,45 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:start": "npx supabase start",
+    "db:stop": "npx supabase stop",
+    "db:reset": "npx supabase db reset",
+    "db:seed": "npx supabase db reset && npm run db:setup-complete",
+    "db:seed-js": "npx supabase db reset && npm run db:setup-complete",
+    "db:populate": "psql -h localhost -p 54322 -U postgres -d postgres -f supabase/seed.sql",
+    "db:populate-js": "node scripts/seed-data.js",
+    "db:setup-complete": "node scripts/create-test-users.js && node scripts/seed-data.js",
+    "db:create-users": "node scripts/create-test-users.js",
+    "db:standalone": "node scripts/standalone-setup.js",
+    "db:fix-auth": "node scripts/fix-auth-users.js",
+    "db:studio": "echo 'Open Supabase Studio at: http://localhost:54323'",
+    "dev:full": "npm run db:start && npm run dev"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.52.0",
+    "@types/leaflet": "^1.9.20",
+    "date-fns": "^4.1.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.525.0",
+    "next": "15.4.3",
+    "psql": "^0.0.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "15.4.3"
+    "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
-    "@eslint/eslintrc": "^3"
+    "supabase": "^2.31.8",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
