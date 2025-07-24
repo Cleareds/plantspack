@@ -142,7 +142,13 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form 
+          onSubmit={(e) => {
+            console.log('📝 Form onSubmit triggered!')
+            handleSubmit(e)
+          }}
+          className="space-y-4"
+        >
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
@@ -152,7 +158,10 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  console.log('📧 Email changed:', e.target.value)
+                  setEmail(e.target.value)
+                }}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder="Enter your email"
                 required
@@ -248,9 +257,27 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           <button
             type="submit"
             disabled={loading}
+            onClick={(e) => {
+              console.log('🖱️ Button clicked!', e.type)
+              // Don't prevent default here - let form handle it
+            }}
             className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 disabled:opacity-50"
           >
             {loading ? 'Creating Account...' : 'Create Account'}
+          </button>
+
+          {/* Debug test button */}
+          <button
+            type="button"
+            onClick={() => {
+              console.log('🧪 Test button clicked!')
+              console.log('📊 Current form state:', { email, username, firstName, lastName })
+              console.log('🔧 signUp function:', typeof signUp)
+              setSuccess('Test button works! Check console.')
+            }}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 text-sm"
+          >
+            🧪 Test Debug (Check Console)
           </button>
         </form>
 
