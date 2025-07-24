@@ -39,6 +39,7 @@ export default function Map() {
     latitude: 0,
     longitude: 0
   })
+  const [leafletIcon, setLeafletIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
   const { user, initialized } = useAuth()
   const fetchedRef = useRef(false)
@@ -76,10 +77,10 @@ export default function Map() {
         query = query.eq('category', selectedCategory)
       }
 
-      const { data, error } = await query
+      const { data: placesData, error } = await query
 
       if (error) throw error
-      setPlaces(data || [])
+      setPlaces(placesData || [])
     } catch (error) {
       console.error('Error fetching places:', error)
     } finally {
@@ -90,12 +91,26 @@ export default function Map() {
   // Fix Leaflet marker icons and create custom icons on client side only
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const L = require('leaflet')
-      delete (L.Icon.Default.prototype as any)._getIconUrl
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      import('leaflet').then((L) => {
+        delete (L.Icon.Default.prototype as any)._getIconUrl
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        })
+        
+        // Create custom icon for user location
+        setLeafletIcon(new L.Icon({
+          iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+            <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12.5" cy="12.5" r="8" fill="#3B82F6" stroke="white" stroke-width="3"/>
+              <circle cx="12.5" cy="12.5" r="3" fill="white"/>
+            </svg>
+          `),
+          iconSize: [25, 25],
+          iconAnchor: [12.5, 12.5],
+          popupAnchor: [0, -12.5],
+        }))
       })
     }
   }, [])
@@ -333,7 +348,7 @@ export default function Map() {
     }
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('places')
         .insert({
           ...newPlace,
@@ -599,20 +614,10 @@ export default function Map() {
             />
             
             {/* User Location Marker */}
-            {userLocation && (
+            {userLocation && leafletIcon && (
               <Marker
                 position={userLocation}
-                icon={typeof window !== 'undefined' ? new (require('leaflet')).Icon({
-                  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
-                    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12.5" cy="12.5" r="8" fill="#3B82F6" stroke="white" stroke-width="3"/>
-                      <circle cx="12.5" cy="12.5" r="3" fill="white"/>
-                    </svg>
-                  `),
-                  iconSize: [25, 25],
-                  iconAnchor: [12.5, 12.5],
-                  popupAnchor: [0, -12.5],
-                }) : undefined}
+                icon={leafletIcon}
               >
                 <Popup>
                   <div className="p-2">

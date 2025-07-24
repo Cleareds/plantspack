@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { Tables } from './supabase'
-import { AuthResponse, AuthErrorResponse } from './types'
 
 type UserProfile = Tables<'users'>
 

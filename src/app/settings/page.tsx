@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { Save, User, Mail } from 'lucide-react'
+import AvatarUpload from '@/components/ui/AvatarUpload'
 
 export default function SettingsPage() {
   const [username, setUsername] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [bio, setBio] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
@@ -30,6 +32,7 @@ export default function SettingsPage() {
         setFirstName(profile.first_name || '')
         setLastName(profile.last_name || '')
         setBio(profile.bio || '')
+        setAvatarUrl(profile.avatar_url || null)
       } else {
         // Fallback to user metadata if profile isn't loaded
         const metadata = user.user_metadata
@@ -37,6 +40,7 @@ export default function SettingsPage() {
         setFirstName(metadata?.first_name || '')
         setLastName(metadata?.last_name || '')
         setBio('') // Bio won't be in metadata
+        setAvatarUrl(null)
       }
       setInitialDataLoaded(true)
     }
@@ -75,6 +79,10 @@ export default function SettingsPage() {
     setLoading(false)
   }
 
+  const handleAvatarUpdate = (newAvatarUrl: string) => {
+    setAvatarUrl(newAvatarUrl)
+    setMessage('Avatar updated successfully!')
+  }
 
   if (!initialized || (authLoading && !initialDataLoaded)) {
     return (
@@ -108,6 +116,25 @@ export default function SettingsPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Avatar Upload Section */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Profile Picture
+            </label>
+            <div className="flex items-center space-x-4">
+              <AvatarUpload
+                currentAvatar={avatarUrl}
+                onAvatarUpdate={handleAvatarUpdate}
+              />
+              <div className="text-sm text-gray-600">
+                <p>Click to upload a new profile picture</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Maximum 2MB. Image will be cropped to 500x500 pixels.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address

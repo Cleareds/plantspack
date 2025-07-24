@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
-import { MessageCircle, Send, Heart } from 'lucide-react'
+import { MessageCircle, Send } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
 
 type Comment = Tables<'comments'> & {

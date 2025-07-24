@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import PostCard from './PostCard'
@@ -25,7 +25,6 @@ export default function Feed() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
-  const [offset, setOffset] = useState(0)
   const { user, initialized } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -38,7 +37,6 @@ export default function Feed() {
       } else {
         setLoading(true)
         setError(null)
-        setOffset(0)
         offsetRef.current = 0
         setPosts([])
         setHasMore(true)
@@ -89,11 +87,9 @@ export default function Feed() {
           const uniqueNewPosts = newPosts.filter(p => !existingIds.has(p.id))
           return [...prevPosts, ...uniqueNewPosts]
         })
-        setOffset(currentOffset + POSTS_PER_PAGE)
         offsetRef.current = currentOffset + POSTS_PER_PAGE
       } else {
         setPosts(newPosts)
-        setOffset(POSTS_PER_PAGE)
         offsetRef.current = POSTS_PER_PAGE
       }
 
@@ -162,7 +158,6 @@ export default function Feed() {
       setLoadingMore(false)
       setError(null)
       setHasMore(true)
-      setOffset(0)
       offsetRef.current = 0
       
       // Fetch initial posts
@@ -200,7 +195,6 @@ export default function Feed() {
 
         const newPosts = data || []
         setPosts(newPosts)
-        setOffset(POSTS_PER_PAGE)
         offsetRef.current = POSTS_PER_PAGE
         setHasMore(newPosts.length === POSTS_PER_PAGE)
         
@@ -224,7 +218,6 @@ export default function Feed() {
     setLoadingMore(false)
     setError(null)
     setHasMore(true)
-    setOffset(0)
     offsetRef.current = 0
     
     // Fetch fresh posts
@@ -262,7 +255,6 @@ export default function Feed() {
 
       const newPosts = data || []
       setPosts(newPosts)
-      setOffset(POSTS_PER_PAGE)
       offsetRef.current = POSTS_PER_PAGE
       setHasMore(newPosts.length === POSTS_PER_PAGE)
     } catch (err) {
@@ -362,7 +354,7 @@ export default function Feed() {
             {!hasMore && posts.length > 0 && (
               <div className="text-center">
                 <div className="border-t border-gray-200 pt-6">
-                  <p className="text-gray-500 text-sm mb-2">🌱 You've reached the end of the feed!</p>
+                  <p className="text-gray-500 text-sm mb-2">🌱 You&apos;ve reached the end of the feed!</p>
                   <p className="text-gray-400 text-xs">
                     {posts.length} post{posts.length !== 1 ? 's' : ''} loaded
                   </p>
