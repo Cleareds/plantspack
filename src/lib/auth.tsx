@@ -117,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes (login/logout events) - set up first
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth: State changed:', event, !!session?.user, 'isMounted:', isMounted)
       
       if (!isMounted) {
@@ -139,42 +139,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('Auth: Background validation passed')
       }
       
-      try {
-        console.log('Auth: Entering try block for event:', event)
-        setSession(session)
-        setUser(session?.user ?? null)
-        
-        if (session?.user) {
-          sessionStorage.setItem('auth-status', 'authenticated')
-          console.log('Auth: Loading user profile for:', session.user.id)
-          // Load profile in background - don't block auth state change
-          loadUserProfile(session.user.id).then(() => {
-            console.log('Auth: Profile loading completed')
-          }).catch(error => {
-            console.error('Profile loading failed:', error)
-          })
-        } else {
-          sessionStorage.setItem('auth-status', 'unauthenticated')
-          setProfile(null)
-        }
-        console.log('Auth: Try block completed successfully')
-      } catch (error) {
-        console.error('❌ Auth: State change error:', error)
-        sessionStorage.setItem('auth-status', 'error')
-      } finally {
-        console.log('Auth: Entering finally block for event:', event, 'isMounted:', isMounted)
-        if (isMounted) {
-          // Only update loading state if we set it earlier (for SIGNED_OUT)
-          if (event === 'SIGNED_OUT') {
-            setLoading(false)
-          }
-          setAuthReady(true)
-          console.log('Auth: State changed:', event, !!session?.user)
-          console.log('Auth: authReady set to TRUE in state change finally block')
-        } else {
-          console.log('Auth: Component unmounted, skipping state updates')
-        }
+      // Update session and user state
+      setSession(session)
+      setUser(session?.user ?? null)
+      
+      if (session?.user) {
+        sessionStorage.setItem('auth-status', 'authenticated')
+        console.log('Auth: Loading user profile for:', session.user.id)
+        // Load profile in background - don't block auth state change
+        loadUserProfile(session.user.id).then(() => {
+          console.log('Auth: Profile loading completed')
+        }).catch(error => {
+          console.error('Profile loading failed:', error)
+        })
+      } else {
+        sessionStorage.setItem('auth-status', 'unauthenticated')
+        setProfile(null)
       }
+      
+      console.log('Auth: State change handler completed for event:', event)
     })
 
     // Initialize auth after setting up the listener
