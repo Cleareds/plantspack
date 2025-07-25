@@ -66,8 +66,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(session.user)
           sessionStorage.setItem('auth-status', 'authenticated')
           
-          // Always fetch fresh profile data
-          await loadUserProfile(session.user.id)
+          // Load profile in background - don't block auth initialization
+          loadUserProfile(session.user.id).catch(error => {
+            console.error('Profile loading failed:', error)
+          })
         } else {
           console.log('ℹ️ Auth: No active session')
           setUser(null)
@@ -143,8 +145,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           sessionStorage.setItem('auth-status', 'authenticated')
           console.log('Auth: Loading user profile for:', session.user.id)
-          await loadUserProfile(session.user.id)
-          console.log('Auth: Profile loading completed')
+          // Load profile in background - don't block auth state change
+          loadUserProfile(session.user.id).then(() => {
+            console.log('Auth: Profile loading completed')
+          }).catch(error => {
+            console.error('Profile loading failed:', error)
+          })
         } else {
           sessionStorage.setItem('auth-status', 'unauthenticated')
           setProfile(null)
