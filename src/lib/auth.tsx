@@ -90,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAuthReady(true)
           console.log('Auth: State changed: INITIAL_SESSION', !!currentSession?.user)
           console.log('Auth: authReady set to TRUE in initialization')
+          console.log('Auth: Initialization forcing re-render...')
         }
       }
     }
@@ -132,17 +133,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(true)
       } else {
         // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, ensure authReady is true
-        setAuthReady(true)
-        setLoading(false)
-        setInitialized(true)
         console.log('Auth: authReady set to TRUE for event:', event)
         console.log('Auth: Background validation passed')
+        
+        // Batch state updates to ensure re-render
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+        setInitialized(true)
+        setAuthReady(true)
+        console.log('Auth: State updates completed for event:', event)
       }
       
-      // Update session and user state
-      setSession(session)
-      setUser(session?.user ?? null)
-      
+      // Handle profile loading separately to avoid affecting auth state
       if (session?.user) {
         sessionStorage.setItem('auth-status', 'authenticated')
         console.log('Auth: Loading user profile for:', session.user.id)
