@@ -120,11 +120,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth: State changed:', event, !!session?.user, 'isMounted:', isMounted)
+      console.log('Auth: About to check isMounted condition...')
       
       if (!isMounted) {
         console.log('Auth: Component unmounted, exiting state change handler')
         return
       }
+      
+      console.log('Auth: isMounted check passed, continuing...')
       
       // Only reset auth state for actual sign out events, not sign in or initial session
       if (event === 'SIGNED_OUT') {
@@ -132,6 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthReady(false)
         setLoading(true)
       } else {
+        console.log('Auth: Processing authenticated event:', event)
         // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, ensure authReady is true
         console.log('Auth: authReady set to TRUE for event:', event)
         console.log('Auth: Background validation passed')
