@@ -133,20 +133,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       try {
+        console.log('Auth: Entering try block for event:', event)
         setSession(session)
         setUser(session?.user ?? null)
         
         if (session?.user) {
           sessionStorage.setItem('auth-status', 'authenticated')
+          console.log('Auth: Loading user profile for:', session.user.id)
           await loadUserProfile(session.user.id)
+          console.log('Auth: Profile loading completed')
         } else {
           sessionStorage.setItem('auth-status', 'unauthenticated')
           setProfile(null)
         }
+        console.log('Auth: Try block completed successfully')
       } catch (error) {
         console.error('❌ Auth: State change error:', error)
         sessionStorage.setItem('auth-status', 'error')
       } finally {
+        console.log('Auth: Entering finally block for event:', event, 'isMounted:', isMounted)
         if (isMounted) {
           // Only update loading state if we set it earlier (for SIGNED_OUT)
           if (event === 'SIGNED_OUT') {
@@ -155,6 +160,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setAuthReady(true)
           console.log('Auth: State changed:', event, !!session?.user)
           console.log('Auth: authReady set to TRUE in state change finally block')
+        } else {
+          console.log('Auth: Component unmounted, skipping state updates')
         }
       }
     })
