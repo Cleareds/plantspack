@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { Save, User, Mail } from 'lucide-react'
 import AvatarUpload from '@/components/ui/AvatarUpload'
+import FollowingList from '@/components/profile/FollowingList'
 
 export default function SettingsPage() {
   const [username, setUsername] = useState('')
@@ -101,9 +102,11 @@ export default function SettingsPage() {
 
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h1>
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Profile Settings */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h1>
 
         {message && (
           <div className={`mb-4 p-3 rounded ${
@@ -216,6 +219,12 @@ export default function SettingsPage() {
             <span>{loading ? 'Saving...' : 'Save Changes'}</span>
           </button>
         </form>
+        </div>
+
+        {/* Following List */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <FollowingList />
+        </div>
       </div>
     </div>
   )

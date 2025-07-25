@@ -22,14 +22,8 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
 
   const { signUp, signInWithGoogle, signInWithFacebook } = useAuth()
 
-  // Debug: Log when component mounts and auth context
-  React.useEffect(() => {
-    console.log('🎯 SignupForm mounted')
-    console.log('🔑 signUp function available:', typeof signUp === 'function')
-  }, [signUp])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log('🚀 Form submitted!')
     e.preventDefault()
     
     try {
@@ -37,34 +31,26 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
       setError('')
       setSuccess('')
 
-      console.log('📝 Form data:', { email, username, firstName, lastName })
-
       // Validation
       if (!email || !username || !password) {
-        console.log('❌ Missing required fields')
         setError('Please fill in all required fields')
         setLoading(false)
         return
       }
 
       if (password !== confirmPassword) {
-        console.log('❌ Passwords do not match')
         setError('Passwords do not match')
         setLoading(false)
         return
       }
 
       if (password.length < 6) {
-        console.log('❌ Password too short')
         setError('Password must be at least 6 characters')
         setLoading(false)
         return
       }
 
-      console.log('✅ Validation passed, attempting signup for:', email, username)
-      
       if (typeof signUp !== 'function') {
-        console.error('❌ signUp function not available')
         setError('Authentication service not available. Please refresh the page.')
         setLoading(false)
         return
@@ -76,39 +62,20 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         lastName,
       })
       
-      console.log('📊 Signup result:', result)
-      
       if (result.error) {
-        console.error('❌ Signup error:', result.error)
         setError(result.error.message || 'Registration failed. Please try again.')
       } else if (result.data?.user) {
-        console.log('✅ User created:', result.data.user)
-        console.log('📧 Email confirmed at:', result.data.user.email_confirmed_at)
-        console.log('📮 Confirmation sent at:', result.data.user.confirmation_sent_at)
-        
-        // Check if user is immediately confirmed (no email confirmation required)
-        if (result.data.user.email_confirmed_at) {
-          console.log('✅ User immediately confirmed')
-          setSuccess('Account created successfully! You can now log in.')
-          setTimeout(() => {
-            onToggle()
-          }, 2000)
-        } else if (result.data.user.confirmation_sent_at) {
-          console.log('📧 Confirmation email sent')
-          setSuccess('Account created! Please check your email to verify your account.')
-        } else {
-          console.log('⚠️ User created but no confirmation info')
-          setSuccess('Account created! Redirecting to login...')
-          setTimeout(() => {
-            onToggle()
-          }, 2000)
-        }
+        // Since registration is working and users can log in immediately,
+        // show success message regardless of confirmation status
+        setSuccess('Account created successfully! You can now log in.')
+        setTimeout(() => {
+          onToggle()
+        }, 2000)
       } else {
-        console.log('❌ No user data returned')
         setError('Registration failed. Please try again.')
       }
     } catch (err) {
-      console.error('💥 Exception during signup:', err)
+      console.error('Signup error:', err)
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -134,21 +101,8 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           </div>
         )}
 
-        {/* Debug info */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
-            <div>signUp available: {typeof signUp === 'function' ? '✅' : '❌'}</div>
-            <div>Form loading: {loading ? '✅' : '❌'}</div>
-          </div>
-        )}
 
-        <form 
-          onSubmit={(e) => {
-            console.log('📝 Form onSubmit triggered!')
-            handleSubmit(e)
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
@@ -158,10 +112,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => {
-                  console.log('📧 Email changed:', e.target.value)
-                  setEmail(e.target.value)
-                }}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder="Enter your email"
                 required
@@ -257,27 +208,9 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           <button
             type="submit"
             disabled={loading}
-            onClick={(e) => {
-              console.log('🖱️ Button clicked!', e.type)
-              // Don't prevent default here - let form handle it
-            }}
             className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 disabled:opacity-50"
           >
             {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-
-          {/* Debug test button */}
-          <button
-            type="button"
-            onClick={() => {
-              console.log('🧪 Test button clicked!')
-              console.log('📊 Current form state:', { email, username, firstName, lastName })
-              console.log('🔧 signUp function:', typeof signUp)
-              setSuccess('Test button works! Check console.')
-            }}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 text-sm"
-          >
-            🧪 Test Debug (Check Console)
           </button>
         </form>
 

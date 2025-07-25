@@ -109,37 +109,68 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
         
         if (session?.user) {
-          console.log('Auth: User authenticated, caching data...')
-          
           // Cache session data
           sessionStorage.setItem('sb-user', JSON.stringify(session.user))
           sessionStorage.setItem('sb-session', JSON.stringify(session))
           sessionStorage.setItem('sb-cache-time', Date.now().toString())
           
-          // Fetch and cache profile
+          // Fetch and cache profile with retry logic
           try {
-            const { data: profileData, error: profileError } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', session.user.id)
-              .single()
+            let profileData = null
+            let retries = 3
+            
+            while (retries > 0 && !profileData) {
+              const { data, error: profileError } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .single()
 
-            if (!profileError && profileData) {
-              setProfile(profileData)
-              sessionStorage.setItem('sb-profile', JSON.stringify(profileData))
+              if (!profileError && data) {
+                profileData = data
+                setProfile(data)
+                sessionStorage.setItem('sb-profile', JSON.stringify(data))
+                break
+              } else if (retries === 1) {
+                // Last retry failed, create profile from user metadata
+                console.log('Profile not found, creating from metadata')
+                const metadata = session.user.user_metadata
+                
+                const { data: newProfile, error: createError } = await supabase
+                  .from('users')
+                  .upsert({
+                    id: session.user.id,
+                    email: session.user.email || '',
+                    username: metadata?.username || `user_${session.user.id.slice(0, 8)}`,
+                    first_name: metadata?.first_name || '',
+                    last_name: metadata?.last_name || '',
+                    bio: '',
+                    avatar_url: null,
+                  }, { onConflict: 'id' })
+                  .select()
+                  .single()
+                
+                if (!createError && newProfile) {
+                  setProfile(newProfile)
+                  sessionStorage.setItem('sb-profile', JSON.stringify(newProfile))
+                }
+              }
+              
+              retries--
+              if (retries > 0) {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+              }
             }
           } catch (profileError) {
             console.error('Auth: Profile fetch error:', profileError)
           }
         } else {
-          console.log('Auth: No user session')
           clearAuthCache()
           setProfile(null)
         }
         
         setLoading(false)
         setInitialized(true)
-        console.log('Auth: Database check completed')
       } catch (error) {
         console.error('Auth: Database check failed:', error)
         clearAuthCache()
@@ -236,9 +267,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, userData: { username: string; firstName?: string; lastName?: string }) => {
     try {
-      console.log('Auth: Starting signup process for', email)
-      console.log('Auth: User metadata:', userData)
-      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -251,23 +279,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         },
       })
       
-      console.log('Auth: Signup response:', { data, error })
-      
       if (error) {
-        console.error('Auth: Signup error:', error)
         return { data, error }
       }
       
       if (data?.user) {
-        console.log('Auth: User created in auth.users')
-        console.log('Auth: User ID:', data.user.id)
-        console.log('Auth: Email confirmed at:', data.user.email_confirmed_at)
-        console.log('Auth: Confirmation sent at:', data.user.confirmation_sent_at)
-        
         // Always try to create user profile, regardless of confirmation status
+        // Wait a bit for the trigger to potentially create the profile first
+        await new Promise(resolve => setTimeout(resolve, 500))
+        
         try {
-          console.log('Auth: Attempting to create user profile')
-          const { data: profileData, error: profileError } = await supabase
+          const { error: profileError } = await supabase
             .from('users')
             .upsert({
               id: data.user.id,
@@ -280,20 +302,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }, { onConflict: 'id' })
           
           if (profileError) {
-            console.error('Auth: Error creating user profile:', profileError)
-          } else {
-            console.log('Auth: User profile created successfully:', profileData)
+            console.error('Error creating user profile:', profileError)
           }
         } catch (profileError) {
-          console.error('Auth: Exception creating user profile:', profileError)
+          console.error('Error creating user profile:', profileError)
         }
-      } else {
-        console.log('Auth: No user data in response')
       }
       
       return { data, error }
     } catch (error) {
-      console.error('Auth: Exception in signup:', error)
       return { data: null, error }
     }
   }
