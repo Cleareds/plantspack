@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initializeAuth = async () => {
       if (!isMounted) return
       
-      console.log('Auth: Fast initialization starting... [NEW CODE v2]')
+      console.log('🚀 AUTH SYSTEM FIXED - NEW CODE LOADING 🚀')
       setLoading(true)
       setInitialized(false)
       
