@@ -117,9 +117,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!isMounted) return
+      console.log('Auth: State changed:', event, !!session?.user, 'isMounted:', isMounted)
       
-      console.log('Auth: State changed:', event, !!session?.user)
+      if (!isMounted) {
+        console.log('Auth: Component unmounted, exiting state change handler')
+        return
+      }
       
       // Only reset auth state for actual sign out events, not sign in or initial session
       if (event === 'SIGNED_OUT') {
