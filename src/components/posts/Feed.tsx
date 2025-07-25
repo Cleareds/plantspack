@@ -25,8 +25,7 @@ export default function Feed() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
-  const { user, authReady, loading: authLoading, initialized } = useAuth()
-  console.log('Feed component - authReady:', authReady, 'authLoading:', authLoading, 'initialized:', initialized, 'user:', !!user)
+  const { user, authReady } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
@@ -149,18 +148,11 @@ export default function Feed() {
 
   // Initialize feed when auth is ready
   useEffect(() => {
-    console.log('🔄 Feed useEffect - authReady:', authReady, 'user:', user?.id, 'timestamp:', Date.now())
-    
     if (!authReady) {
-      console.log('⏳ Waiting for auth to be ready... authReady is FALSE')
       return
     }
     
-    console.log('✅ Auth ready, fetching posts...')
-    
-    // Always fetch fresh posts when auth is ready
     const loadInitialPosts = async () => {
-      console.log('📡 Fetching initial posts...')
       setLoading(true)
       setError(null)
       offsetRef.current = 0
@@ -200,13 +192,12 @@ export default function Feed() {
         if (error) throw error
 
         const newPosts = data || []
-        console.log('✅ Loaded', newPosts.length, 'posts')
         setPosts(newPosts)
         offsetRef.current = POSTS_PER_PAGE
         setHasMore(newPosts.length === POSTS_PER_PAGE)
         
       } catch (err) {
-        console.error('❌ Error fetching posts:', err)
+        console.error('Error fetching posts:', err)
         setError('Failed to load posts. Please try again.')
         setPosts([])
       } finally {

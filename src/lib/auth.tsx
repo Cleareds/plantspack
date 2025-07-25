@@ -39,38 +39,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initializeAuth = async () => {
       if (!isMounted) return
       
-      console.log('🚀 AUTH SYSTEM FIXED - NEW CODE LOADING 🚀')
       setLoading(true)
       setInitialized(false)
       
       let currentSession = null
       
       try {
-        // Always fetch fresh auth data from Supabase - no caching
-        console.log('📡 Auth: Fetching session from Supabase...')
         const { data: { session }, error } = await supabase.auth.getSession()
         currentSession = session
         
         if (!isMounted) return
         
         if (error) {
-          console.error('❌ Auth: Session error:', error)
+          console.error('Auth session error:', error)
           setUser(null)
           setProfile(null)
           setSession(null)
           sessionStorage.setItem('auth-status', 'unauthenticated')
         } else if (session?.user) {
-          console.log('Auth: Using cached session data')
           setSession(session)
           setUser(session.user)
           sessionStorage.setItem('auth-status', 'authenticated')
           
-          // Load profile in background - don't block auth initialization
           loadUserProfile(session.user.id).catch(error => {
             console.error('Profile loading failed:', error)
           })
         } else {
-          console.log('ℹ️ Auth: No active session')
           setUser(null)
           setProfile(null)
           setSession(null)
@@ -78,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         if (!isMounted) return
-        console.error('❌ Auth: Initialization error:', error)
+        console.error('Auth initialization error:', error)
         setUser(null)
         setProfile(null)
         setSession(null)
@@ -88,16 +82,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false)
           setInitialized(true)
           setAuthReady(true)
-          console.log('Auth: State changed: INITIAL_SESSION', !!currentSession?.user)
-          console.log('Auth: authReady set to TRUE in initialization')
-          console.log('Auth: Initialization forcing re-render...')
         }
       }
     }
 
     const loadUserProfile = async (userId: string) => {
       try {
-        console.log('Auth: Fetching fresh profile for user:', userId)
         const { data, error } = await supabase
           .from('users')
           .select('*')
@@ -106,9 +96,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!error && data) {
           setProfile(data)
-          console.log('Auth: Profile loaded successfully')
-        } else if (error) {
-          console.error('Profile fetch error:', error)
         }
       } catch (error) {
         console.error('Profile fetch error:', error)
@@ -119,52 +106,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth: State changed [NEW CODE v2]:', event, !!session?.user, 'isMounted:', isMounted)
-      console.log('Auth: About to check isMounted condition...')
+      if (!isMounted) return
       
-      if (!isMounted) {
-        console.log('Auth: Component unmounted, exiting state change handler')
-        return
-      }
-      
-      console.log('Auth: isMounted check passed, continuing...')
-      
-      // Only reset auth state for actual sign out events, not sign in or initial session
       if (event === 'SIGNED_OUT') {
-        console.log('Auth: Resetting authReady to FALSE for event:', event)
         setAuthReady(false)
         setLoading(true)
+        setSession(null)
+        setUser(null)
+        setProfile(null)
+        sessionStorage.setItem('auth-status', 'unauthenticated')
       } else {
-        console.log('Auth: Processing authenticated event:', event)
-        // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, ensure authReady is true
-        console.log('Auth: authReady set to TRUE for event:', event)
-        console.log('Auth: Background validation passed')
-        
-        // Batch state updates to ensure re-render
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
         setInitialized(true)
         setAuthReady(true)
-        console.log('Auth: State updates completed for event:', event)
+        
+        if (session?.user) {
+          sessionStorage.setItem('auth-status', 'authenticated')
+          loadUserProfile(session.user.id).catch(error => {
+            console.error('Profile loading failed:', error)
+          })
+        } else {
+          sessionStorage.setItem('auth-status', 'unauthenticated')
+          setProfile(null)
+        }
       }
-      
-      // Handle profile loading separately to avoid affecting auth state
-      if (session?.user) {
-        sessionStorage.setItem('auth-status', 'authenticated')
-        console.log('Auth: Loading user profile for:', session.user.id)
-        // Load profile in background - don't block auth state change
-        loadUserProfile(session.user.id).then(() => {
-          console.log('Auth: Profile loading completed')
-        }).catch(error => {
-          console.error('Profile loading failed:', error)
-        })
-      } else {
-        sessionStorage.setItem('auth-status', 'unauthenticated')
-        setProfile(null)
-      }
-      
-      console.log('Auth: State change handler completed for event:', event)
     })
 
     // Initialize auth after setting up the listener
@@ -198,9 +165,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (data?.user) {
         // Always try to create user profile, regardless of confirmation status
-        // Wait a bit for the trigger to potentially create the profile first
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
         try {
           const { error: profileError } = await supabase
             .from('users')
@@ -356,8 +320,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  console.log('Auth Provider rendering with authReady:', authReady, 'initialized:', initialized, 'loading:', loading)
-  
   const value = {
     user,
     profile,
