@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initializeAuth = async () => {
       if (!isMounted) return
       
-      console.log('Auth: Fast initialization starting...')
+      console.log('Auth: Fast initialization starting... [NEW CODE v2]')
       setLoading(true)
       setInitialized(false)
       
@@ -119,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth: State changed:', event, !!session?.user, 'isMounted:', isMounted)
+      console.log('Auth: State changed [NEW CODE v2]:', event, !!session?.user, 'isMounted:', isMounted)
       console.log('Auth: About to check isMounted condition...')
       
       if (!isMounted) {
