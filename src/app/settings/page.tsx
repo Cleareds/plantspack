@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/lib/auth-simple'
+import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { Save, User, Mail } from 'lucide-react'
 import SimpleAvatarUpload from '@/components/ui/SimpleAvatarUpload'

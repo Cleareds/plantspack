@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/lib/auth-simple'
+import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Image as ImageIcon, Globe, Users, Send, X } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'

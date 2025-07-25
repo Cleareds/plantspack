@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useAuth } from '@/lib/auth-simple'
+import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import PostCard from './PostCard'
 import CreatePost from './CreatePost'

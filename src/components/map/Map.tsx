@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import { useAuth } from '@/lib/auth-simple'
+import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search } from 'lucide-react'
 import { Tables } from '@/lib/supabase'

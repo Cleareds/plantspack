@@ -73,8 +73,16 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       {/* Profile Header */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
         <div className="flex items-start space-x-6">
-          <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center">
-            <User className="h-12 w-12 text-green-600" />
+          <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center overflow-hidden">
+            {profile.avatar_url ? (
+              <img 
+                src={profile.avatar_url} 
+                alt={profile.first_name && profile.last_name ? `${profile.first_name} ${profile.last_name}` : profile.username}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <User className="h-12 w-12 text-green-600" />
+            )}
           </div>
           
           <div className="flex-1">

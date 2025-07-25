@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useAuth } from '@/lib/auth-simple'
+import { useAuth } from '@/lib/auth'
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 
 interface SignupFormProps {
