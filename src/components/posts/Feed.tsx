@@ -148,10 +148,10 @@ export default function Feed() {
 
   // Initialize feed when auth is ready
   useEffect(() => {
-    console.log('🔄 Feed useEffect - authReady:', authReady, 'user:', user?.id)
+    console.log('🔄 Feed useEffect - authReady:', authReady, 'user:', user?.id, 'timestamp:', Date.now())
     
     if (!authReady) {
-      console.log('⏳ Waiting for auth to be ready...')
+      console.log('⏳ Waiting for auth to be ready... authReady is FALSE')
       return
     }
     
