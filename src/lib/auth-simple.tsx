@@ -52,12 +52,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const clearBrowserCache = () => {
+    try {
+      // Clear localStorage related to our app
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('vegan')) {
+          localStorage.removeItem(key)
+        }
+      })
+      
+      // Clear sessionStorage related to our app  
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('vegan')) {
+          sessionStorage.removeItem(key)
+        }
+      })
+    } catch (error) {
+      console.log('Could not clear browser cache:', error)
+    }
+  }
+
   const initializeAuth = async () => {
     try {
       console.log('🔄 Starting auth initialization...')
       setLoading(true)
+      setInitialized(false)
 
-      // Get current session
+      // Clear any cached data to prevent stale state
+      clearBrowserCache()
+
+      // Add a small delay to ensure proper state reset
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      // Get current session - force fresh fetch, no cache
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error) {
@@ -65,20 +92,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
         setProfile(null)
         setSession(null)
+        setLoading(false)
+        setInitialized(true)
         return
       }
 
-      console.log('📝 Session data:', session?.user?.id ? 'User found' : 'No user')
+      console.log('📝 Session data:', session?.user?.id ? `User found: ${session.user.id}` : 'No user')
       
       setSession(session)
       setUser(session?.user ?? null)
 
       if (session?.user) {
+        console.log('🔄 Fetching user profile...')
         // Fetch user profile
         const profileData = await fetchProfile(session.user.id)
         setProfile(profileData)
+        console.log('✅ Profile loaded:', profileData?.username || 'No username')
       } else {
         setProfile(null)
+        console.log('ℹ️ No user session found')
       }
 
     } catch (error) {
@@ -89,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false)
       setInitialized(true)
-      console.log('✅ Auth initialization complete')
+      console.log('✅ Auth initialization complete - initialized:', true)
     }
   }
 
@@ -112,7 +144,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     })
 
-    return () => subscription.unsubscribe()
+    // Listen for visibility changes to refresh auth when tab becomes visible
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('🔄 Tab became visible, refreshing auth...')
+        initializeAuth()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      subscription.unsubscribe()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [])
 
   const signUp = async (email: string, password: string, userData: { username: string; firstName?: string; lastName?: string }) => {

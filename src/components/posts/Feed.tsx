@@ -25,7 +25,7 @@ export default function Feed() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
-  const { user, initialized } = useAuth()
+  const { user, initialized, loading: authLoading } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
@@ -148,12 +148,14 @@ export default function Feed() {
 
   // Initialize feed when auth is ready
   useEffect(() => {
-    console.log('🔄 Feed useEffect - initialized:', initialized, 'user:', user?.id)
+    console.log('🔄 Feed useEffect - initialized:', initialized, 'user:', user?.id, 'authLoading:', authLoading)
     
-    if (!initialized) {
-      console.log('⏳ Waiting for auth initialization...')
+    if (!initialized || authLoading) {
+      console.log('⏳ Waiting for auth initialization...', { initialized, authLoading })
       return
     }
+    
+    console.log('✅ Auth ready, initializing feed...')
     
     const initializeFeed = async () => {
       // Reset all state
@@ -212,7 +214,22 @@ export default function Feed() {
     }
 
     initializeFeed()
-  }, [user, initialized])
+  }, [user, initialized, authLoading])
+
+  // Add page focus listener to refresh feed when page regains focus
+  useEffect(() => {
+    const handleFocus = () => {
+      if (initialized && !authLoading) {
+        console.log('🔄 Page focused, refreshing feed...')
+        setPosts([])
+        setLoading(true)
+        fetchPosts(false)
+      }
+    }
+
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [initialized, authLoading, fetchPosts])
 
   // Handle post creation - refresh the entire feed
   const handlePostCreated = useCallback(async () => {
