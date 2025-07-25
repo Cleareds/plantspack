@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 import { supabase } from '@/lib/supabase'
 import PostCard from './PostCard'
 import CreatePost from './CreatePost'
@@ -146,23 +146,14 @@ export default function Feed() {
     }
   }, [hasMore, loadingMore, loadMorePosts, posts.length])
 
-  // Add timeout for auth initialization
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!initialized) {
-        console.warn('Auth initialization taking too long, proceeding anyway')
-        setLoading(false)
-        setError('Authentication is taking longer than expected. Please refresh the page.')
-      }
-    }, 10000) // 10 second timeout
-
-    return () => clearTimeout(timeout)
-  }, [initialized])
-
   // Initialize feed when auth is ready
   useEffect(() => {
-    if (!initialized) return // Wait for auth to initialize
+    console.log('🔄 Feed useEffect - initialized:', initialized, 'user:', user?.id)
     
+    if (!initialized) {
+      console.log('⏳ Waiting for auth initialization...')
+      return
+    }
     
     const initializeFeed = async () => {
       // Reset all state

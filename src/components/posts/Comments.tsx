@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'

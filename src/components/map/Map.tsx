@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
@@ -406,22 +406,14 @@ export default function Map() {
     fetchedRef.current = false
   }, [user])
 
-  // Add timeout for auth initialization
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!initialized) {
-        console.warn('Auth initialization taking too long, proceeding anyway')
-        setLoading(false)
-      }
-    }, 10000) // 10 second timeout
-
-    return () => clearTimeout(timeout)
-  }, [initialized])
-
   // Initialize map and data when auth is ready
   useEffect(() => {
-    if (!initialized) return // Wait for auth to initialize
+    console.log('🔄 Map useEffect - initialized:', initialized, 'user:', user?.id)
     
+    if (!initialized) {
+      console.log('⏳ Waiting for auth initialization...')
+      return
+    }
     
     if (!fetchedRef.current) {
       fetchedRef.current = true

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 import { Leaf, Menu, X, Home, Map, User, LogOut, Settings } from 'lucide-react'
 
 export default function Header() {

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 import { supabase } from '@/lib/supabase'
 import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2 } from 'lucide-react'
 import { Tables } from '@/lib/supabase'

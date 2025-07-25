@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 import { useRouter } from 'next/navigation'
 import { Save, User, Mail } from 'lucide-react'
 import AvatarUpload from '@/components/ui/AvatarUpload'
@@ -13,20 +13,20 @@ export default function SettingsPage() {
   const [lastName, setLastName] = useState('')
   const [bio, setBio] = useState('')
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
   
-  const { user, profile, updateProfile, loading: authLoading, initialized } = useAuth()
+  const { user, profile, updateProfile, loading, initialized } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (initialized && !authLoading && !user) {
+    if (initialized && !loading && !user) {
       router.push('/auth')
       return
     }
 
-    if (initialized && !authLoading && user && !initialDataLoaded) {
+    if (initialized && !loading && user && !initialDataLoaded) {
       console.log('Loading user data:', { user, profile })
       
       // Load data once auth is ready
@@ -49,23 +49,23 @@ export default function SettingsPage() {
       }
       setInitialDataLoaded(true)
     }
-  }, [user, profile, authLoading, initialized, router, initialDataLoaded])
+  }, [user, profile, loading, initialized, router, initialDataLoaded])
 
   // Add a timeout fallback for stuck loading
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (authLoading && !initialDataLoaded) {
+      if (loading && !initialDataLoaded) {
         // Force loading to false after 10 seconds
         setInitialDataLoaded(true)
       }
     }, 10000)
 
     return () => clearTimeout(timeout)
-  }, [authLoading, initialDataLoaded])
+  }, [loading, initialDataLoaded])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setSaving(true)
     setMessage('')
 
     console.log('Submitting profile update:', {
@@ -91,7 +91,7 @@ export default function SettingsPage() {
       setMessage('Profile updated successfully!')
     }
     
-    setLoading(false)
+    setSaving(false)
   }
 
   const handleAvatarUpdate = (newAvatarUrl: string) => {
@@ -99,7 +99,7 @@ export default function SettingsPage() {
     setMessage('Avatar updated successfully!')
   }
 
-  if (!initialized || (authLoading && !initialDataLoaded)) {
+  if (!initialized || (loading && !initialDataLoaded)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -226,11 +226,11 @@ export default function SettingsPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={saving}
             className="flex items-center space-x-2 w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-medium py-2 px-4 rounded-md transition-colors"
           >
             <Save className="h-4 w-4" />
-            <span>{loading ? 'Saving...' : 'Save Changes'}</span>
+            <span>{saving ? 'Saving...' : 'Save Changes'}</span>
           </button>
         </form>
         </div>

@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react'
 import { Upload, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth-simple'
 
 interface AvatarUploadProps {
   currentAvatar?: string | null
