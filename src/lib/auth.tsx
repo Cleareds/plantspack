@@ -112,9 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    initializeAuth()
-    
-    // Listen for auth changes (login/logout events)
+    // Listen for auth changes (login/logout events) - set up first
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -126,6 +124,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (event !== 'INITIAL_SESSION') {
         setAuthReady(false)
         setLoading(true)
+      } else {
+        // For INITIAL_SESSION, ensure authReady is true
+        setAuthReady(true)
       }
       
       try {
@@ -153,6 +154,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     })
+
+    // Initialize auth after setting up the listener
+    initializeAuth()
 
     return () => {
       isMounted = false
