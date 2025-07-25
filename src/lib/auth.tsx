@@ -39,10 +39,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const initializeAuth = async () => {
       if (!isMounted) return
       
-      console.log('🔄 Auth: Starting initialization...')
+      console.log('Auth: Fast initialization starting...')
       setLoading(true)
       setInitialized(false)
-      setAuthReady(false)
       
       try {
         // Always fetch fresh auth data from Supabase - no caching
@@ -58,7 +57,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setSession(null)
           sessionStorage.setItem('auth-status', 'unauthenticated')
         } else if (session?.user) {
-          console.log('✅ Auth: Valid session found for user:', session.user.id)
+          console.log('Auth: Using cached session data')
+          console.log('Auth: Background validation passed')
           setSession(session)
           setUser(session.user)
           sessionStorage.setItem('auth-status', 'authenticated')
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false)
           setInitialized(true)
           setAuthReady(true)
-          console.log('🎯 Auth: Initialization complete - authReady = true')
+          console.log('Auth: State changed: INITIAL_SESSION', !!session?.user)
         }
       }
     }
