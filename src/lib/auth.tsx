@@ -349,6 +349,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  console.log('Auth Provider rendering with authReady:', authReady, 'initialized:', initialized, 'loading:', loading)
+  
   const value = {
     user,
     profile,
