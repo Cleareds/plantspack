@@ -149,7 +149,7 @@ export default function ImageUploader({
     } finally {
       setUploading(false)
     }
-  }, [user, onImagesChange])
+  }, [user, onImagesChange]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const removeImage = (id: string) => {
     setImages(prev => {
@@ -189,14 +189,14 @@ export default function ImageUploader({
         }
       })
     }
-  }, []) // Empty dependency array - only run on unmount
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-upload when images are added
   useEffect(() => {
     if (images.length > 0) {
       uploadImages(images)
     }
-  }, [images.length]) // Remove uploadImages from dependencies to avoid infinite loop
+  }, [images.length]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`space-y-3 ${className}`}>

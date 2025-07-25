@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Image, Globe, Users, Send, X } from 'lucide-react'
+import { Image as ImageIcon, Globe, Users, Send, X } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import ImageSlider from '../ui/ImageSlider'
 
@@ -134,7 +134,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                       : 'text-gray-500'
                   }`}
                 >
-                  <Image className="h-5 w-5" />
+                  <ImageIcon className="h-5 w-5" />
                   <span className="text-sm">Photo</span>
                 </button>
                 
