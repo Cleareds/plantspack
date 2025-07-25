@@ -25,11 +25,10 @@ export default function Feed() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
-  const { user, initialized, loading: authLoading } = useAuth()
+  const { user, authReady } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
-  const fetchedRef = useRef(false)
 
   const fetchPosts = useCallback(async (loadMore: boolean = false) => {
     try {
@@ -147,156 +146,37 @@ export default function Feed() {
     }
   }, [hasMore, loadingMore, loadMorePosts, posts.length])
 
-  // Reset fetch flag when user changes  
-  useEffect(() => {
-    fetchedRef.current = false
-  }, [user])
-
   // Initialize feed when auth is ready
   useEffect(() => {
-    console.log('🔄 Feed useEffect - initialized:', initialized, 'user:', user?.id, 'authLoading:', authLoading)
+    console.log('🔄 Feed useEffect - authReady:', authReady, 'user:', user?.id)
     
-    if (!initialized || authLoading) {
-      console.log('⏳ Waiting for auth initialization...', { initialized, authLoading })
+    if (!authReady) {
+      console.log('⏳ Waiting for auth to be ready...')
       return
     }
     
-    if (!fetchedRef.current) {
-      fetchedRef.current = true
-      console.log('✅ Auth ready, initializing feed...')
-      
-      const initializeFeed = async () => {
-        // Reset all state
-        setPosts([])
-        setLoading(true)
-        setLoadingMore(false)
-        setError(null)
-        setHasMore(true)
-        offsetRef.current = 0
-        
-        // Fetch initial posts
-        try {
-          let query = supabase
-            .from('posts')
-            .select(`
-              *,
-              users (
-                id,
-                username,
-                first_name,
-                last_name,
-                avatar_url
-              ),
-              post_likes (
-                id,
-                user_id
-              ),
-              comments (
-                id
-              )
-            `)
-            .order('created_at', { ascending: false })
-            .range(0, POSTS_PER_PAGE - 1)
-
-          // If user is not logged in, only show public posts
-          if (!user) {
-            query = query.eq('privacy', 'public')
-          }
-
-          const { data, error } = await query
-
-          if (error) throw error
-
-          const newPosts = data || []
-          setPosts(newPosts)
-          offsetRef.current = POSTS_PER_PAGE
-          setHasMore(newPosts.length === POSTS_PER_PAGE)
-          
-        } catch (err) {
-          console.error('Error fetching posts:', err)
-          setError('Failed to load posts. Please try again.')
-          setPosts([])
-        } finally {
-          setLoading(false)
-        }
-      }
-
-      initializeFeed()
-    }
-  }, [user, initialized, authLoading])
+    console.log('✅ Auth ready, fetching posts...')
+    fetchPosts(false)
+  }, [authReady, fetchPosts])
 
   // Add page focus listener to refresh feed when page regains focus
   useEffect(() => {
     const handleFocus = () => {
-      if (initialized && !authLoading && fetchedRef.current) {
+      if (authReady) {
         console.log('🔄 Page focused, refreshing feed...')
-        fetchedRef.current = false // Reset to allow refetch
-        setPosts([])
-        setLoading(true)
         fetchPosts(false)
       }
     }
 
     window.addEventListener('focus', handleFocus)
     return () => window.removeEventListener('focus', handleFocus)
-  }, [initialized, authLoading, fetchPosts])
+  }, [authReady, fetchPosts])
 
   // Handle post creation - refresh the entire feed
-  const handlePostCreated = useCallback(async () => {
-    // Reset all state
-    fetchedRef.current = false // Allow refetch
-    setPosts([])
-    setLoading(true)
-    setLoadingMore(false)
-    setError(null)
-    setHasMore(true)
-    offsetRef.current = 0
-    
-    // Fetch fresh posts
-    try {
-      let query = supabase
-        .from('posts')
-        .select(`
-          *,
-          users (
-            id,
-            username,
-            first_name,
-            last_name,
-            avatar_url
-          ),
-          post_likes (
-            id,
-            user_id
-          ),
-          comments (
-            id
-          )
-        `)
-        .order('created_at', { ascending: false })
-        .range(0, POSTS_PER_PAGE - 1)
-
-      // If user is not logged in, only show public posts
-      if (!user) {
-        query = query.eq('privacy', 'public')
-      }
-
-      const { data, error } = await query
-
-      if (error) throw error
-
-      const newPosts = data || []
-      setPosts(newPosts)
-      offsetRef.current = POSTS_PER_PAGE
-      setHasMore(newPosts.length === POSTS_PER_PAGE)
-    } catch (err) {
-      console.error('Error fetching posts:', err)
-      setError('Failed to load posts. Please try again.')
-      setPosts([])
-    } finally {
-      setLoading(false)
-    }
-  }, [user])
+  const handlePostCreated = useCallback(() => {
+    console.log('🔄 Post created, refreshing feed...')
+    fetchPosts(false)
+  }, [fetchPosts])
 
   if (loading && posts.length === 0) {
     return (

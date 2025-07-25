@@ -8,17 +8,16 @@ import SignupForm from '@/components/auth/SignupForm'
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
-  const { user, loading } = useAuth()
+  const { user, authReady } = useAuth()
   const router = useRouter()
 
-
   useEffect(() => {
-    if (!loading && user) {
+    if (authReady && user) {
       router.push('/')
     }
-  }, [user, loading, router])
+  }, [user, authReady, router])
 
-  if (loading) {
+  if (!authReady) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>

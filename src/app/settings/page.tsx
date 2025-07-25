@@ -17,17 +17,22 @@ export default function SettingsPage() {
   const [message, setMessage] = useState('')
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
   
-  const { user, profile, updateProfile, loading, initialized } = useAuth()
+  const { user, profile, updateProfile, authReady } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (initialized && !loading && !user) {
+    if (!authReady) {
+      console.log('⏳ Waiting for auth to be ready...')
+      return
+    }
+
+    if (!user) {
       router.push('/auth')
       return
     }
 
-    if (initialized && !loading && user && !initialDataLoaded) {
-      console.log('Loading user data:', { user, profile })
+    if (!initialDataLoaded) {
+      console.log('✅ Auth ready, loading user data:', { user, profile })
       
       // Load data once auth is ready
       if (profile) {
@@ -49,19 +54,7 @@ export default function SettingsPage() {
       }
       setInitialDataLoaded(true)
     }
-  }, [user, profile, loading, initialized, router, initialDataLoaded])
-
-  // Add a timeout fallback for stuck loading
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (loading && !initialDataLoaded) {
-        // Force loading to false after 10 seconds
-        setInitialDataLoaded(true)
-      }
-    }, 10000)
-
-    return () => clearTimeout(timeout)
-  }, [loading, initialDataLoaded])
+  }, [user, profile, authReady, router, initialDataLoaded])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,7 +92,7 @@ export default function SettingsPage() {
     setMessage('Avatar updated successfully!')
   }
 
-  if (!initialized || (loading && !initialDataLoaded)) {
+  if (!authReady || !initialDataLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

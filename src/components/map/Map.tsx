@@ -41,8 +41,7 @@ export default function Map() {
   })
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
-  const { user, initialized, loading: authLoading } = useAuth()
-  const fetchedRef = useRef(false)
+  const { user, authReady } = useAuth()
 
   const categories = [
     { value: 'all', label: 'All Places', icon: MapPin },
@@ -401,26 +400,19 @@ export default function Map() {
     })
   }, [])
 
-  // Reset fetch flag when user changes
-  useEffect(() => {
-    fetchedRef.current = false
-  }, [user])
-
   // Initialize map and data when auth is ready
   useEffect(() => {
-    console.log('🔄 Map useEffect - initialized:', initialized, 'user:', user?.id, 'authLoading:', authLoading)
+    console.log('🔄 Map useEffect - authReady:', authReady, 'user:', user?.id)
     
-    if (!initialized || authLoading) {
-      console.log('⏳ Waiting for auth initialization...', { initialized, authLoading })
+    if (!authReady) {
+      console.log('⏳ Waiting for auth to be ready...')
       return
     }
     
-    if (!fetchedRef.current) {
-      fetchedRef.current = true
-      getCurrentLocation()
-      fetchPlaces()
-    }
-  }, [initialized, authLoading, getCurrentLocation, fetchPlaces])
+    console.log('✅ Auth ready, initializing map...')
+    getCurrentLocation()
+    fetchPlaces()
+  }, [authReady, getCurrentLocation, fetchPlaces])
 
   // Set up map event listeners
   useEffect(() => {
@@ -438,10 +430,10 @@ export default function Map() {
 
   // Refetch when category changes
   useEffect(() => {
-    if (initialized && fetchedRef.current) {
+    if (authReady) {
       fetchPlaces()
     }
-  }, [selectedCategory, initialized, authLoading, fetchPlaces])
+  }, [selectedCategory, authReady, fetchPlaces])
 
   if (!userLocation || !mapCenter) {
     return (
