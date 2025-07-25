@@ -27,14 +27,18 @@ export default function SettingsPage() {
     }
 
     if (initialized && !authLoading && user && !initialDataLoaded) {
+      console.log('Loading user data:', { user, profile })
+      
       // Load data once auth is ready
       if (profile) {
+        console.log('Using profile data:', profile)
         setUsername(profile.username || '')
         setFirstName(profile.first_name || '')
         setLastName(profile.last_name || '')
         setBio(profile.bio || '')
         setAvatarUrl(profile.avatar_url || null)
       } else {
+        console.log('Using user metadata fallback:', user.user_metadata)
         // Fallback to user metadata if profile isn't loaded
         const metadata = user.user_metadata
         setUsername(metadata?.username || '')
@@ -64,15 +68,25 @@ export default function SettingsPage() {
     setLoading(true)
     setMessage('')
 
-    const { error } = await updateProfile({
+    console.log('Submitting profile update:', {
       username,
       first_name: firstName,
       last_name: lastName,
       bio,
     })
 
-    if (error) {
-      setMessage('Error updating profile. Please try again.')
+    const result = await updateProfile({
+      username,
+      first_name: firstName,
+      last_name: lastName,
+      bio,
+    })
+
+    console.log('Profile update result:', result)
+
+    if (result.error) {
+      console.error('Profile update error:', result.error)
+      setMessage(`Error updating profile: ${result.error.message || 'Please try again.'}`)
     } else {
       setMessage('Profile updated successfully!')
     }

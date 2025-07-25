@@ -406,6 +406,18 @@ export default function Map() {
     fetchedRef.current = false
   }, [user])
 
+  // Add timeout for auth initialization
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!initialized) {
+        console.warn('Auth initialization taking too long, proceeding anyway')
+        setLoading(false)
+      }
+    }, 10000) // 10 second timeout
+
+    return () => clearTimeout(timeout)
+  }, [initialized])
+
   // Initialize map and data when auth is ready
   useEffect(() => {
     if (!initialized) return // Wait for auth to initialize

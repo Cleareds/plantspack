@@ -146,6 +146,19 @@ export default function Feed() {
     }
   }, [hasMore, loadingMore, loadMorePosts, posts.length])
 
+  // Add timeout for auth initialization
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!initialized) {
+        console.warn('Auth initialization taking too long, proceeding anyway')
+        setLoading(false)
+        setError('Authentication is taking longer than expected. Please refresh the page.')
+      }
+    }, 10000) // 10 second timeout
+
+    return () => clearTimeout(timeout)
+  }, [initialized])
+
   // Initialize feed when auth is ready
   useEffect(() => {
     if (!initialized) return // Wait for auth to initialize
