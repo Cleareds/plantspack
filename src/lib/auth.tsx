@@ -61,7 +61,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           sessionStorage.setItem('auth-status', 'unauthenticated')
         } else if (session?.user) {
           console.log('Auth: Using cached session data')
-          console.log('Auth: Background validation passed')
           setSession(session)
           setUser(session.user)
           sessionStorage.setItem('auth-status', 'authenticated')
@@ -134,7 +133,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, ensure authReady is true
         setAuthReady(true)
+        setLoading(false)
+        setInitialized(true)
         console.log('Auth: authReady set to TRUE for event:', event)
+        console.log('Auth: Background validation passed')
       }
       
       try {
