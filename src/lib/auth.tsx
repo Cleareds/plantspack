@@ -117,11 +117,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!isMounted) return
       
-      console.log('🔄 Auth: State changed:', event, !!session?.user)
+      console.log('Auth: State changed:', event, !!session?.user)
       
-      // Reset auth ready state during transitions
-      setAuthReady(false)
-      setLoading(true)
+      // Only reset auth state for actual sign in/out events, not initial session
+      if (event !== 'INITIAL_SESSION') {
+        setAuthReady(false)
+        setLoading(true)
+      }
       
       try {
         setSession(session)
@@ -139,9 +141,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sessionStorage.setItem('auth-status', 'error')
       } finally {
         if (isMounted) {
-          setLoading(false)
+          // Only update loading state if we set it earlier
+          if (event !== 'INITIAL_SESSION') {
+            setLoading(false)
+          }
           setAuthReady(true)
-          console.log('🎯 Auth: State change complete - authReady = true')
+          console.log('Auth: State changed:', event, !!session?.user)
         }
       }
     })
