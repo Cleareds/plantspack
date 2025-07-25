@@ -235,34 +235,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const fetchProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single()
-
-      if (error) {
-        // If profile doesn't exist, that's ok - we'll use fallback data
-        if (error.code === 'PGRST116') { // No rows returned
-          setProfile(null)
-        } else {
-          console.error('Profile fetch error:', error)
-          setProfile(null)
-        }
-      } else {
-        setProfile(data)
-        // Cache profile data
-        sessionStorage.setItem('sb-profile', JSON.stringify(data))
-      }
-    } catch (error) {
-      console.error('Error fetching profile:', error)
-      setProfile(null)
-    } finally {
-      // Note: loading state is managed in the main auth flow
-    }
-  }
 
 
   const signUp = async (email: string, password: string, userData: { username: string; firstName?: string; lastName?: string }) => {

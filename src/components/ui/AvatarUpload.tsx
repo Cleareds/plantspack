@@ -113,40 +113,57 @@ export default function AvatarUpload({ currentAvatar, onAvatarUpdate, className 
   }, [])
 
   const handleCropComplete = useCallback(async () => {
-    if (!imgRef.current || !completedCrop || !user) return
+    if (!imgRef.current || !completedCrop || !user) {
+      console.log('Missing required data:', { hasImgRef: !!imgRef.current, hasCompletedCrop: !!completedCrop, hasUser: !!user })
+      return
+    }
 
     try {
       setIsUploading(true)
       setError(null)
+      console.log('Starting upload process...')
 
       // Get the cropped image blob
+      console.log('Creating cropped image blob...')
       const croppedImageBlob = await getCroppedImg(imgRef.current, completedCrop)
+      console.log('Cropped image blob created:', { size: croppedImageBlob.size, type: croppedImageBlob.type })
 
       // Create a unique filename
       const fileName = `avatar-${user.id}-${Date.now()}.jpg`
+      console.log('Uploading file:', fileName)
 
       // Upload to Supabase Storage
-      const { error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, croppedImageBlob, {
           cacheControl: '3600',
           upsert: false
         })
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        console.error('Upload error:', uploadError)
+        throw uploadError
+      }
+      console.log('Upload successful:', uploadData)
 
       // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName)
+      console.log('Public URL:', publicUrl)
 
       // Update the user profile with new avatar URL
+      console.log('Updating user profile...')
       const { error: updateError } = await supabase
         .from('users')
         .update({ avatar_url: publicUrl })
         .eq('id', user.id)
 
-      if (updateError) throw updateError
+      if (updateError) {
+        console.error('Profile update error:', updateError)
+        throw updateError
+      }
+      console.log('Profile updated successfully')
 
       // Call the callback to update the UI
       onAvatarUpdate(publicUrl)
@@ -161,9 +178,11 @@ export default function AvatarUpload({ currentAvatar, onAvatarUpdate, className 
         fileInputRef.current.value = ''
       }
 
+      console.log('Upload process completed successfully')
+
     } catch (err) {
       console.error('Error uploading avatar:', err)
-      setError('Failed to upload avatar. Please try again.')
+      setError(`Failed to upload avatar: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again.`)
     } finally {
       setIsUploading(false)
     }
@@ -242,7 +261,7 @@ export default function AvatarUpload({ currentAvatar, onAvatarUpdate, className 
 
       {/* Crop Modal */}
       {showCropModal && imageSrc && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{backgroundColor: 'rgba(0,0,0,0.3)'}}>
           <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Crop Your Avatar</h3>

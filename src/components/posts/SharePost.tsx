@@ -76,7 +76,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
   if (!isOpen || !user) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{backgroundColor: 'rgba(0,0,0,0.3)'}}>
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">

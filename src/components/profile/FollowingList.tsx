@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
@@ -18,13 +18,7 @@ export default function FollowingList({ className = '' }: FollowingListProps) {
   const [error, setError] = useState<string | null>(null)
   const { user } = useAuth()
 
-  useEffect(() => {
-    if (user) {
-      fetchFollowing()
-    }
-  }, [user])
-
-  const fetchFollowing = async () => {
+  const fetchFollowing = useCallback(async () => {
     if (!user) return
 
     try {
@@ -48,7 +42,7 @@ export default function FollowingList({ className = '' }: FollowingListProps) {
 
       if (fetchError) throw fetchError
 
-      const followingUsers = data?.map(item => item.users).filter(Boolean) as UserProfile[]
+      const followingUsers = data?.map(item => item.users).filter(Boolean) as unknown as UserProfile[]
       setFollowing(followingUsers || [])
     } catch (err) {
       console.error('Error fetching following:', err)
@@ -56,7 +50,13 @@ export default function FollowingList({ className = '' }: FollowingListProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      fetchFollowing()
+    }
+  }, [user, fetchFollowing])
 
   const handleUnfollow = async (userToUnfollow: UserProfile) => {
     if (!user) return
@@ -80,7 +80,7 @@ export default function FollowingList({ className = '' }: FollowingListProps) {
   if (!user) {
     return (
       <div className={`text-center py-8 ${className}`}>
-        <p className="text-gray-500">Please log in to see who you're following.</p>
+        <p className="text-gray-500">Please log in to see who you&apos;re following.</p>
       </div>
     )
   }
@@ -121,7 +121,7 @@ export default function FollowingList({ className = '' }: FollowingListProps) {
         <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">No one yet</h3>
         <p className="text-gray-500">
-          When you follow other users, they'll appear here.
+          When you follow other users, they&apos;ll appear here.
         </p>
       </div>
     )

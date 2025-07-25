@@ -28,7 +28,7 @@ interface PostCardProps {
 function PostCard({ post, onUpdate }: PostCardProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.post_likes?.length || 0)
-  const [commentCount, setCommentCount] = useState(post.comments?.length || 0)
+  const commentCount = post.comments?.length || 0
   const [loading, setLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [showShare, setShowShare] = useState(false)
@@ -75,26 +75,6 @@ function PostCard({ post, onUpdate }: PostCardProps) {
     }
   }
 
-  const handleCommentsUpdate = () => {
-    // Refresh comment count
-    const fetchCommentCount = async () => {
-      try {
-        const { count } = await supabase
-          .from('comments')
-          .select('*', { count: 'exact', head: true })
-          .eq('post_id', post.id)
-
-        if (count !== null) {
-          setCommentCount(count)
-        }
-      } catch (error) {
-        console.error('Error fetching comment count:', error)
-      }
-    }
-
-    fetchCommentCount()
-    onUpdate?.()
-  }
 
   const isQuotePost = post.post_type === 'quote'
   const isRepost = post.post_type === 'share'
