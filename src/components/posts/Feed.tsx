@@ -156,8 +156,65 @@ export default function Feed() {
     }
     
     console.log('✅ Auth ready, fetching posts...')
-    fetchPosts(false)
-  }, [authReady, fetchPosts])
+    
+    // Always fetch fresh posts when auth is ready
+    const loadInitialPosts = async () => {
+      console.log('📡 Fetching initial posts...')
+      setLoading(true)
+      setError(null)
+      offsetRef.current = 0
+      setPosts([])
+      setHasMore(true)
+
+      try {
+        let query = supabase
+          .from('posts')
+          .select(`
+            *,
+            users (
+              id,
+              username,
+              first_name,
+              last_name,
+              avatar_url
+            ),
+            post_likes (
+              id,
+              user_id
+            ),
+            comments (
+              id
+            )
+          `)
+          .order('created_at', { ascending: false })
+          .range(0, POSTS_PER_PAGE - 1)
+
+        // If user is not logged in, only show public posts
+        if (!user) {
+          query = query.eq('privacy', 'public')
+        }
+
+        const { data, error } = await query
+
+        if (error) throw error
+
+        const newPosts = data || []
+        console.log('✅ Loaded', newPosts.length, 'posts')
+        setPosts(newPosts)
+        offsetRef.current = POSTS_PER_PAGE
+        setHasMore(newPosts.length === POSTS_PER_PAGE)
+        
+      } catch (err) {
+        console.error('❌ Error fetching posts:', err)
+        setError('Failed to load posts. Please try again.')
+        setPosts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadInitialPosts()
+  }, [authReady, user])
 
   // Add page focus listener to refresh feed when page regains focus
   useEffect(() => {

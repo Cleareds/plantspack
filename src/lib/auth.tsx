@@ -34,84 +34,64 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authReady, setAuthReady] = useState(false)
 
   useEffect(() => {
+    let isMounted = true // Prevent state updates if component unmounts
+    
     const initializeAuth = async () => {
-      console.log('Auth: Initializing authentication...')
+      if (!isMounted) return
+      
+      console.log('🔄 Auth: Starting initialization...')
       setLoading(true)
       setInitialized(false)
       setAuthReady(false)
       
       try {
-        // First try cached data for instant UI (no validation yet)
-        const cachedUser = sessionStorage.getItem('sb-user')
-        const cachedProfile = sessionStorage.getItem('sb-profile')
-        const cachedSession = sessionStorage.getItem('sb-session')
-        const cacheTimestamp = sessionStorage.getItem('sb-cache-time')
-        
-        // Check if cache is recent (1 hour)
-        const isCacheRecent = cacheTimestamp && 
-          (Date.now() - parseInt(cacheTimestamp)) < (60 * 60 * 1000)
-        
-        if (cachedUser && cachedProfile && cachedSession && isCacheRecent) {
-          console.log('Auth: Loading cached data for instant UI...')
-          try {
-            const userData = JSON.parse(cachedUser)
-            const profileData = JSON.parse(cachedProfile)
-            const sessionData = JSON.parse(cachedSession)
-            
-            // Set cached data immediately for instant UI
-            setUser(userData)
-            setProfile(profileData)
-            setSession(sessionData)
-          } catch (parseError) {
-            console.error('Auth: Cache parse error:', parseError)
-          }
-        }
-        
-        // Always verify with database for definitive auth state
-        console.log('Auth: Verifying session with database...')
+        // Always fetch fresh auth data from Supabase - no caching
+        console.log('📡 Auth: Fetching session from Supabase...')
         const { data: { session }, error } = await supabase.auth.getSession()
         
+        if (!isMounted) return
+        
         if (error) {
-          console.error('Auth: Session verification error:', error)
-          clearAuthCache()
+          console.error('❌ Auth: Session error:', error)
           setUser(null)
           setProfile(null)
           setSession(null)
+          sessionStorage.setItem('auth-status', 'unauthenticated')
         } else if (session?.user) {
-          console.log('Auth: Valid session found, loading profile...')
+          console.log('✅ Auth: Valid session found for user:', session.user.id)
           setSession(session)
           setUser(session.user)
+          sessionStorage.setItem('auth-status', 'authenticated')
           
-          // Cache session data
-          sessionStorage.setItem('sb-user', JSON.stringify(session.user))
-          sessionStorage.setItem('sb-session', JSON.stringify(session))
-          sessionStorage.setItem('sb-cache-time', Date.now().toString())
-          
-          // Fetch profile
+          // Always fetch fresh profile data
           await loadUserProfile(session.user.id)
         } else {
-          console.log('Auth: No active session')
-          clearAuthCache()
+          console.log('ℹ️ Auth: No active session')
           setUser(null)
           setProfile(null)
           setSession(null)
+          sessionStorage.setItem('auth-status', 'unauthenticated')
         }
       } catch (error) {
-        console.error('Auth: Initialization error:', error)
-        clearAuthCache()
+        if (!isMounted) return
+        console.error('❌ Auth: Initialization error:', error)
         setUser(null)
         setProfile(null)
         setSession(null)
+        sessionStorage.setItem('auth-status', 'error')
       } finally {
-        setLoading(false)
-        setInitialized(true)
-        setAuthReady(true) // Components can now safely fetch data
-        console.log('Auth: Initialization complete - authReady = true')
+        if (isMounted) {
+          setLoading(false)
+          setInitialized(true)
+          setAuthReady(true)
+          console.log('🎯 Auth: Initialization complete - authReady = true')
+        }
       }
     }
 
     const loadUserProfile = async (userId: string) => {
       try {
+        console.log('Auth: Fetching fresh profile for user:', userId)
         const { data, error } = await supabase
           .from('users')
           .select('*')
@@ -120,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!error && data) {
           setProfile(data)
-          sessionStorage.setItem('sb-profile', JSON.stringify(data))
+          console.log('Auth: Profile loaded successfully')
         } else if (error) {
           console.error('Profile fetch error:', error)
         }
@@ -129,20 +109,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    const clearAuthCache = () => {
-      sessionStorage.removeItem('sb-user')
-      sessionStorage.removeItem('sb-profile')
-      sessionStorage.removeItem('sb-session')
-      sessionStorage.removeItem('sb-cache-time')
-    }
-
     initializeAuth()
     
     // Listen for auth changes (login/logout events)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth: State changed:', event, !!session?.user)
+      if (!isMounted) return
+      
+      console.log('🔄 Auth: State changed:', event, !!session?.user)
       
       // Reset auth ready state during transitions
       setAuthReady(false)
@@ -153,28 +128,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null)
         
         if (session?.user) {
-          // Update cache on auth changes
-          sessionStorage.setItem('sb-user', JSON.stringify(session.user))
-          sessionStorage.setItem('sb-session', JSON.stringify(session))
-          sessionStorage.setItem('sb-cache-time', Date.now().toString())
-          
-          // Load profile
+          sessionStorage.setItem('auth-status', 'authenticated')
           await loadUserProfile(session.user.id)
         } else {
-          // Clear cache on logout
-          clearAuthCache()
+          sessionStorage.setItem('auth-status', 'unauthenticated')
           setProfile(null)
         }
       } catch (error) {
-        console.error('Auth: State change error:', error)
+        console.error('❌ Auth: State change error:', error)
+        sessionStorage.setItem('auth-status', 'error')
       } finally {
-        setLoading(false)
-        setAuthReady(true) // Ready for components to fetch data
-        console.log('Auth: State change complete - authReady = true')
+        if (isMounted) {
+          setLoading(false)
+          setAuthReady(true)
+          console.log('🎯 Auth: State change complete - authReady = true')
+        }
       }
     })
 
     return () => {
+      isMounted = false
       subscription.unsubscribe()
     }
   }, [])
@@ -330,9 +303,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error
       
       setProfile(data)
-      // Update cache with new profile data
-      sessionStorage.setItem('sb-profile', JSON.stringify(data))
-      sessionStorage.setItem('sb-cache-time', Date.now().toString())
+      console.log('Profile updated successfully')
       
       return { data, error: null }
     } catch (error) {
@@ -346,11 +317,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error || !session) {
-        console.log('Auth: Session validation failed, clearing cache')
-        sessionStorage.removeItem('sb-user')
-        sessionStorage.removeItem('sb-profile')
-        sessionStorage.removeItem('sb-session')
-        sessionStorage.removeItem('sb-cache-time')
+        console.log('Auth: Session validation failed')
+        sessionStorage.setItem('auth-status', 'unauthenticated')
         setUser(null)
         setProfile(null)
         setSession(null)
