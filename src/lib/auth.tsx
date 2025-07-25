@@ -121,15 +121,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       console.log('Auth: State changed:', event, !!session?.user)
       
-      // Only reset auth state for actual sign in/out events, not initial session
-      if (event !== 'INITIAL_SESSION') {
+      // Only reset auth state for actual sign out events, not sign in or initial session
+      if (event === 'SIGNED_OUT') {
         console.log('Auth: Resetting authReady to FALSE for event:', event)
         setAuthReady(false)
         setLoading(true)
       } else {
-        // For INITIAL_SESSION, ensure authReady is true
+        // For INITIAL_SESSION, SIGNED_IN, TOKEN_REFRESHED, ensure authReady is true
         setAuthReady(true)
-        console.log('Auth: authReady set to TRUE in INITIAL_SESSION event')
+        console.log('Auth: authReady set to TRUE for event:', event)
       }
       
       try {
@@ -148,8 +148,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sessionStorage.setItem('auth-status', 'error')
       } finally {
         if (isMounted) {
-          // Only update loading state if we set it earlier
-          if (event !== 'INITIAL_SESSION') {
+          // Only update loading state if we set it earlier (for SIGNED_OUT)
+          if (event === 'SIGNED_OUT') {
             setLoading(false)
           }
           setAuthReady(true)
