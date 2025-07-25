@@ -43,10 +43,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true)
       setInitialized(false)
       
+      let currentSession = null
+      
       try {
         // Always fetch fresh auth data from Supabase - no caching
         console.log('📡 Auth: Fetching session from Supabase...')
         const { data: { session }, error } = await supabase.auth.getSession()
+        currentSession = session
         
         if (!isMounted) return
         
@@ -84,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false)
           setInitialized(true)
           setAuthReady(true)
-          console.log('Auth: State changed: INITIAL_SESSION', !!session?.user)
+          console.log('Auth: State changed: INITIAL_SESSION', !!currentSession?.user)
         }
       }
     }
