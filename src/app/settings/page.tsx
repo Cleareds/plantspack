@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth-simple'
 import { useRouter } from 'next/navigation'
 import { Save, User, Mail } from 'lucide-react'
-import AvatarUpload from '@/components/ui/AvatarUpload'
+import SimpleAvatarUpload from '@/components/ui/SimpleAvatarUpload'
 import FollowingList from '@/components/profile/FollowingList'
 
 export default function SettingsPage() {
@@ -139,7 +139,7 @@ export default function SettingsPage() {
               Profile Picture
             </label>
             <div className="flex items-center space-x-4">
-              <AvatarUpload
+              <SimpleAvatarUpload
                 currentAvatar={avatarUrl}
                 onAvatarUpdate={handleAvatarUpdate}
               />

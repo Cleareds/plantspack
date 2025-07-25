@@ -3,7 +3,10 @@
     "allow": [
       "Bash(grep:*)",
       "Bash(npm run build:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(find:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }
