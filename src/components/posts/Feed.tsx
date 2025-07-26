@@ -291,14 +291,94 @@ export default function Feed({ onPostCreated }: FeedProps) {
   }, [authReady, user, activeTab])
 
   // Handle tab change
-  const handleTabChange = (tab: 'all' | 'public' | 'friends') => {
+  const handleTabChange = useCallback(async (tab: 'all' | 'public' | 'friends') => {
     setActiveTab(tab)
-    // Reset state and reload posts
     setPosts([])
     setHasMore(true)
     offsetRef.current = 0
-    fetchPosts(false)
-  }
+    setLoading(true)
+    setError(null)
+
+    try {
+      const currentOffset = 0
+      const range = { from: 0, to: POSTS_PER_PAGE - 1 }
+
+      let query = supabase
+        .from('posts')
+        .select(`
+          *,
+          users (
+            id,
+            username,
+            first_name,
+            last_name,
+            avatar_url
+          ),
+          post_likes (
+            id,
+            user_id
+          ),
+          comments (
+            id
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .range(range.from, range.to)
+
+      // Apply filters based on the NEW tab selection
+      if (tab === 'public') {
+        query = query.eq('privacy', 'public')
+      } else if (tab === 'friends' && user) {
+        query = query.eq('privacy', 'friends')
+        
+        const { data: followingData } = await supabase
+          .from('follows')
+          .select('following_id')
+          .eq('follower_id', user.id)
+        
+        const followingIds = followingData?.map(f => f.following_id) || []
+        followingIds.push(user.id)
+        
+        if (followingIds.length > 0) {
+          query = query.in('user_id', followingIds)
+        } else {
+          query = query.eq('user_id', user.id)
+        }
+      } else if (tab === 'all' && user) {
+        const { data: followingData } = await supabase
+          .from('follows')
+          .select('following_id')
+          .eq('follower_id', user.id)
+        
+        const followingIds = followingData?.map(f => f.following_id) || []
+        followingIds.push(user.id)
+        
+        if (followingIds.length > 0) {
+          query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.in.(${followingIds.join(',')}))`)
+        } else {
+          query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.eq.${user.id})`)
+        }
+      } else {
+        query = query.eq('privacy', 'public')
+      }
+
+      const { data, error } = await query
+
+      if (error) throw error
+
+      const newPosts = data || []
+      setPosts(newPosts)
+      offsetRef.current = POSTS_PER_PAGE
+      setHasMore(newPosts.length === POSTS_PER_PAGE)
+      
+    } catch (err) {
+      console.error('Error fetching posts for tab:', tab, err)
+      setError('Failed to load posts. Please try again.')
+      setPosts([])
+    } finally {
+      setLoading(false)
+    }
+  }, [user])
 
 
   // Handle post creation - refresh the entire feed

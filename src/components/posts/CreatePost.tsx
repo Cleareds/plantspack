@@ -11,12 +11,11 @@ import Link from 'next/link'
 
 interface CreatePostProps {
   onPostCreated: () => void
-  className?: string
 }
 
 const DRAFT_KEY = 'createpost_draft'
 
-export default function CreatePost({ onPostCreated, className = '' }: CreatePostProps) {
+export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const { user, profile } = useAuth()
   const maxChars = 500
 
@@ -133,7 +132,7 @@ export default function CreatePost({ onPostCreated, className = '' }: CreatePost
   if (!user) return null
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 ${className}`}>
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <form onSubmit={handleSubmit}>
         <div className="flex space-x-3">
           <Link href={`/user/${profile?.username}`} className="flex-shrink-0">

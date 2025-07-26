@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           {/* Main Feed - Left Side */}
           <div className="flex-1 min-w-0">
             <div className="max-w-2xl">
@@ -27,8 +27,8 @@ export default function Home() {
           </div>
 
           {/* Desktop Sidebar - Right Side */}
-          <div className="hidden lg:block w-96 flex-shrink-0">
-            <div className="sticky top-20 space-y-4 overflow-hidden">
+          <div className="hidden lg:block w-[420px] flex-shrink-0">
+            <div className="sticky top-20 space-y-4">
               {user && (
                 <>
                   {/* Welcome Message */}
@@ -42,9 +42,7 @@ export default function Home() {
                   </div>
 
                   {/* Create Post Form */}
-                  <div className="w-full">
-                    <CreatePost onPostCreated={handlePostCreated} className="w-full max-w-none" />
-                  </div>
+                  <CreatePost onPostCreated={handlePostCreated} />
                 </>
               )}
 
@@ -96,8 +94,8 @@ export default function Home() {
                     <X className="h-5 w-5" />
                   </button>
                 </div>
-                <div className="p-4 overflow-hidden">
-                  <CreatePost onPostCreated={handlePostCreated} className="w-full max-w-none" />
+                <div className="p-4">
+                  <CreatePost onPostCreated={handlePostCreated} />
                 </div>
               </div>
             </>
