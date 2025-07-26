@@ -10,6 +10,7 @@ import FollowButton from '../social/FollowButton'
 import Comments from './Comments'
 import SharePost from './SharePost'
 import ImageSlider from '../ui/ImageSlider'
+import LinkPreview, { extractUrls } from './LinkPreview'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'>
@@ -207,15 +208,34 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         <div className={isQuotePost ? 'mb-2' : 'mb-4'}>
           <p className="text-gray-800 whitespace-pre-wrap">{post.content}</p>
           {/* Handle both new images array and legacy image_url */}
-          {((post.images && post.images.length > 0) || post.image_url) && (
-            <div className="mt-3">
-              <ImageSlider 
-                images={post.images && post.images.length > 0 ? post.images : (post.image_url ? [post.image_url] : [])} 
-                aspectRatio="auto"
-                className="max-w-full"
-              />
-            </div>
-          )}
+          {(() => {
+            const imagesToShow = post.images && post.images.length > 0 
+              ? post.images 
+              : (post.image_url ? [post.image_url] : [])
+              
+            return imagesToShow.length > 0 ? (
+              <div className="mt-3">
+                <ImageSlider 
+                  images={imagesToShow} 
+                  aspectRatio="auto"
+                  className="max-w-full"
+                />
+              </div>
+            ) : null
+          })()}
+          
+          {/* Link Preview */}
+          {(() => {
+            const urls = extractUrls(post.content)
+            return urls.length > 0 ? (
+              <div className="mt-3">
+                <LinkPreview
+                  url={urls[0]}
+                  className="max-w-full"
+                />
+              </div>
+            ) : null
+          })()}
         </div>
 
         {/* Quote post author info (for the quoted post) */}

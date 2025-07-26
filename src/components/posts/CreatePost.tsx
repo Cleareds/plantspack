@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Image as ImageIcon, Globe, Users, Send, X } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import ImageSlider from '../ui/ImageSlider'
+import LinkPreview, { extractUrls } from './LinkPreview'
 
 interface CreatePostProps {
   onPostCreated: () => void
@@ -18,6 +19,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [charCount, setCharCount] = useState(0)
   const [showImageUploader, setShowImageUploader] = useState(false)
   const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [detectedUrls, setDetectedUrls] = useState<string[]>([])
+  const [showLinkPreview, setShowLinkPreview] = useState(true)
   const { user, profile } = useAuth()
 
   const maxChars = 500
@@ -29,6 +32,12 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       setCharCount(text.length)
     }
   }
+
+  // Detect URLs in content
+  useEffect(() => {
+    const urls = extractUrls(content)
+    setDetectedUrls(urls)
+  }, [content])
 
   const handleImagesChange = (urls: string[]) => {
     setImageUrls(urls)
@@ -79,12 +88,20 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
       <form onSubmit={handleSubmit}>
         <div className="flex space-x-3">
-          <div className="flex-shrink-0">
-            <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-              <span className="text-green-600 font-medium text-sm">
-                {profile?.first_name?.[0] || profile?.username?.[0] || 'U'}
-              </span>
-            </div>
+          <div className="flex-shrink-0 avatar-container">
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={`${profile.first_name || profile.username}'s avatar`}
+                className="h-10 w-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                <span className="text-green-600 font-medium text-sm">
+                  {profile?.first_name?.[0] || profile?.username?.[0] || 'U'}
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex-1">
             <textarea
@@ -119,6 +136,17 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 <ImageUploader
                   onImagesChange={handleImagesChange}
                   maxImages={3}
+                />
+              </div>
+            )}
+
+            {/* Link Preview */}
+            {detectedUrls.length > 0 && showLinkPreview && (
+              <div className="mt-3">
+                <LinkPreview
+                  url={detectedUrls[0]}
+                  onRemove={() => setShowLinkPreview(false)}
+                  className="max-w-full"
                 />
               </div>
             )}
