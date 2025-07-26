@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
 import { User, Calendar, MapPin, Heart } from 'lucide-react'
+import ProfileFollowers from '@/components/profile/ProfileFollowers'
 
 interface ProfilePageProps {
   params: Promise<{
@@ -143,8 +144,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           </div>
         </div>
 
-        {/* Places Sidebar */}
+        {/* Sidebar */}
         <div className="space-y-6">
+          {/* Following/Followers */}
+          <ProfileFollowers userId={profile.id} />
+          
           {/* My Added Places */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="p-4 border-b border-gray-200">

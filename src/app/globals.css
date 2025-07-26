@@ -4,11 +4,16 @@
 .avatar-container {
   position: relative;
   display: inline-block;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
 .avatar-container img {
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 50%;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 :root {
