@@ -42,7 +42,7 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
 
       // Fetch following
       const { data: followingData, error: followingError } = await supabase
-        .from('user_follows')
+        .from('follows')
         .select(`
           following:following_id (
             id,
@@ -58,7 +58,7 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
 
       // Fetch followers
       const { data: followersData, error: followersError } = await supabase
-        .from('user_follows')
+        .from('follows')
         .select(`
           follower:follower_id (
             id,
@@ -90,7 +90,7 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
 
     try {
       const { error } = await supabase
-        .from('user_follows')
+        .from('follows')
         .delete()
         .eq('follower_id', user.id)
         .eq('following_id', userToUnfollow.id)
