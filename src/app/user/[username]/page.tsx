@@ -70,8 +70,8 @@ export default function UserProfilePage() {
         .eq('user_id', userData.id)
         .limit(6)
 
-      const places = placesData?.map(fp => fp.places).filter((place): place is Place => place !== null) || []
-      setPlaces(places)
+      const places = placesData?.map(fp => fp.places).filter(place => place !== null).flat() || []
+      setPlaces(places as Place[])
 
       // Fetch followers (limited to 3)
       const { data: followersData } = await supabase
