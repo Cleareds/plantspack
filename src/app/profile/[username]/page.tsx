@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase-server'
 import { notFound } from 'next/navigation'
-import { User, Calendar, MapPin, Heart } from 'lucide-react'
+import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 
 interface ProfilePageProps {
@@ -67,6 +67,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       month: 'long',
       day: 'numeric'
     })
+  }
+
+  const generateGoogleMapsUrl = (address: string, name: string) => {
+    const query = encodeURIComponent(`${name}, ${address}`)
+    return `https://www.google.com/maps/search/?api=1&query=${query}`
   }
 
   return (
@@ -168,18 +173,53 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               <div className="divide-y divide-gray-200">
                 {addedPlaces.slice(0, 5).map((place) => (
                   <div key={place.id} className="p-4">
-                    <h4 className="font-medium text-gray-900 text-sm">{place.name}</h4>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
-                        {place.category}
-                      </span>
-                      {place.is_pet_friendly && (
-                        <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs">
-                          Pet Friendly
-                        </span>
-                      )}
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <h4 className="font-medium text-gray-900 text-sm truncate">{place.name}</h4>
+                          {place.is_pet_friendly && (
+                            <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" title="Pet Friendly" />
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
+                            {place.category}
+                          </span>
+                          {place.is_pet_friendly && (
+                            <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
+                              <PawPrint className="h-3 w-3" />
+                              <span>Pet Friendly</span>
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-600 mb-2">{place.address}</p>
+                        {place.description && (
+                          <p className="text-xs text-gray-500 line-clamp-2">{place.description}</p>
+                        )}
+                      </div>
+                      <a
+                        href={generateGoogleMapsUrl(place.address, place.name)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-3 flex-shrink-0 p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
+                        title="Open in Google Maps"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{place.address}</p>
+                    {place.website && (
+                      <div className="mt-2 pt-2 border-t border-gray-100">
+                        <a
+                          href={place.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          <span>Visit Website</span>
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {addedPlaces.length > 5 && (
@@ -210,22 +250,62 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               </div>
             ) : (
               <div className="divide-y divide-gray-200">
-                {favoritePlaces.slice(0, 5).map((favorite) => (
-                  <div key={favorite.id} className="p-4">
-                    <h4 className="font-medium text-gray-900 text-sm">{favorite.places.name}</h4>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
-                        {favorite.places.category}
-                      </span>
-                      {favorite.places.is_pet_friendly && (
-                        <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs">
-                          Pet Friendly
-                        </span>
+                {favoritePlaces.slice(0, 5).map((favorite) => {
+                  const place = favorite.places
+                  if (!place) return null
+                  
+                  return (
+                    <div key={favorite.id} className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="font-medium text-gray-900 text-sm truncate">{place.name}</h4>
+                            {place.is_pet_friendly && (
+                              <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" title="Pet Friendly" />
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
+                              {place.category}
+                            </span>
+                            {place.is_pet_friendly && (
+                              <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
+                                <PawPrint className="h-3 w-3" />
+                                <span>Pet Friendly</span>
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-600 mb-2">{place.address}</p>
+                          {place.description && (
+                            <p className="text-xs text-gray-500 line-clamp-2">{place.description}</p>
+                          )}
+                        </div>
+                        <a
+                          href={generateGoogleMapsUrl(place.address, place.name)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-3 flex-shrink-0 p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
+                          title="Open in Google Maps"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </div>
+                      {place.website && (
+                        <div className="mt-2 pt-2 border-t border-gray-100">
+                          <a
+                            href={place.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            <span>Visit Website</span>
+                          </a>
+                        </div>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{favorite.places.address}</p>
-                  </div>
-                ))}
+                  )
+                })}
                 {favoritePlaces.length > 5 && (
                   <div className="p-4 text-center">
                     <span className="text-sm text-gray-500">
