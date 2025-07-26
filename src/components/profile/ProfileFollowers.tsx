@@ -8,6 +8,14 @@ import { Users, UserMinus } from 'lucide-react'
 
 type UserProfile = Tables<'users'>
 
+interface FollowingResponse {
+  following: UserProfile | null
+}
+
+interface FollowersResponse {
+  follower: UserProfile | null
+}
+
 interface ProfileFollowersProps {
   userId: string
 }
@@ -44,7 +52,7 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
             avatar_url
           )
         `)
-        .eq('follower_id', userId)
+        .eq('follower_id', userId) as { data: FollowingResponse[] | null, error: any }
 
       if (followingError) throw followingError
 
@@ -60,12 +68,15 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
             avatar_url
           )
         `)
-        .eq('following_id', userId)
+        .eq('following_id', userId) as { data: FollowersResponse[] | null, error: any }
 
       if (followersError) throw followersError
 
-      setFollowing(followingData?.map(item => item.following).filter(Boolean) || [])
-      setFollowers(followersData?.map(item => item.follower).filter(Boolean) || [])
+      const followingList = followingData?.map(item => item.following).filter((user): user is UserProfile => user !== null) || []
+      const followersList = followersData?.map(item => item.follower).filter((user): user is UserProfile => user !== null) || []
+      
+      setFollowing(followingList)
+      setFollowers(followersList)
     } catch (err) {
       console.error('Error fetching follow data:', err)
       setError('Failed to load follow data')
