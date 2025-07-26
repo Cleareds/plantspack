@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "VeganConnect - Social Network for Vegans",
-  description: "Connect with fellow vegans, discover vegan places, and share your plant-based journey",
+  title: "PlantsPack - Social Network for Plant-Based Living",
+  description: "Connect with fellow plant-based enthusiasts, discover vegan places, and share your green journey",
 };
 
 export default function RootLayout({

@@ -24,7 +24,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Leaf className="h-8 w-8 text-green-600" />
-            <span className="text-xl font-bold text-gray-900">VeganConnect</span>
+            <span className="text-xl font-bold text-gray-900">PlantsPack</span>
           </Link>
 
           {/* Desktop Navigation */}

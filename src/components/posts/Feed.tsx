@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import PostCard from './PostCard'
-import CreatePost from './CreatePost'
 import { Tables } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
 
@@ -19,7 +18,11 @@ type Post = Tables<'posts'> & {
 
 const POSTS_PER_PAGE = 5
 
-export default function Feed() {
+interface FeedProps {
+  onPostCreated?: () => void
+}
+
+export default function Feed({ onPostCreated }: FeedProps) {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -264,7 +267,8 @@ export default function Feed() {
   const handlePostCreated = useCallback(() => {
     console.log('🔄 Post created, refreshing feed...')
     fetchPosts(false)
-  }, [fetchPosts])
+    onPostCreated?.() // Call parent callback if provided
+  }, [fetchPosts, onPostCreated])
 
   if (loading && posts.length === 0) {
     return (
@@ -304,9 +308,7 @@ export default function Feed() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4">
-      {user && <CreatePost onPostCreated={handlePostCreated} />}
-      
+    <div className="w-full">
       {/* Feed Tabs */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
         <div className="flex border-b border-gray-200">
@@ -347,7 +349,7 @@ export default function Feed() {
       
       {posts.length === 0 && !loading ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-          <p className="text-gray-500 mb-4">No posts yet. Be the first to share something!</p>
+          <p className="text-gray-500 mb-4">No posts yet.</p>
           {!user && (
             <p className="text-sm text-gray-400">
               <a href="/auth" className="text-green-600 hover:underline">
