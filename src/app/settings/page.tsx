@@ -22,7 +22,6 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (!authReady) {
-      console.log('⏳ Waiting for auth to be ready...')
       return
     }
 
@@ -32,18 +31,14 @@ export default function SettingsPage() {
     }
 
     if (!initialDataLoaded) {
-      console.log('✅ Auth ready, loading user data:', { user, profile })
-      
       // Load data once auth is ready
       if (profile) {
-        console.log('Using profile data:', profile)
         setUsername(profile.username || '')
         setFirstName(profile.first_name || '')
         setLastName(profile.last_name || '')
         setBio(profile.bio || '')
         setAvatarUrl(profile.avatar_url || null)
       } else {
-        console.log('Using user metadata fallback:', user.user_metadata)
         // Fallback to user metadata if profile isn't loaded
         const metadata = user.user_metadata
         setUsername(metadata?.username || '')
@@ -61,21 +56,12 @@ export default function SettingsPage() {
     setSaving(true)
     setMessage('')
 
-    console.log('Submitting profile update:', {
-      username,
-      first_name: firstName,
-      last_name: lastName,
-      bio,
-    })
-
     const result = await updateProfile({
       username,
       first_name: firstName,
       last_name: lastName,
       bio,
     })
-
-    console.log('Profile update result:', result)
 
     if (result.error) {
       console.error('Profile update error:', result.error)

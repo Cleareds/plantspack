@@ -108,7 +108,7 @@ export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, clas
       
       <button
         onClick={() => fileInputRef.current?.click()}
-        className="relative group"
+        className="relative group avatar-container"
         disabled={isUploading}
         type="button"
       >

@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Ensure all avatars maintain proper aspect ratio and circular shape */
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-container img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
