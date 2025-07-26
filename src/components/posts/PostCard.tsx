@@ -89,10 +89,13 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         <div className="flex items-center space-x-2 text-gray-500 text-sm mb-3">
           <Repeat2 className="h-4 w-4" />
           <span>
-            {post.users.first_name 
-              ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
-              : post.users.username
-            } reposted
+            <Link href={`/user/${post.users.username}`} className="hover:text-green-600 transition-colors">
+              {post.users.first_name 
+                ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
+                : post.users.username
+              }
+            </Link>
+            {' '}reposted
           </span>
         </div>
       )}
@@ -102,7 +105,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
-              <Link href={`/user/${post.users.username}`} className="flex-shrink-0">
+              <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
                   <img
                     src={post.users.avatar_url}
@@ -119,8 +122,8 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               </Link>
               <div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`}>
-                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors">
+                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
                         ? `${post.users.first_name} ${post.users.last_name}`
                         : post.users.username}
@@ -132,8 +135,8 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`}>
-                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors">@{post.users.username}</span>
+                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
                   {post.privacy === 'public' ? (
                     <Globe className="h-3 w-3 text-gray-400" />
@@ -167,7 +170,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         {!isQuotePost && (
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
-              <Link href={`/user/${post.users.username}`} className="flex-shrink-0">
+              <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
                   <img
                     src={post.users.avatar_url}
@@ -184,8 +187,8 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               </Link>
               <div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`}>
-                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors">
+                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
                         ? `${post.users.first_name} ${post.users.last_name}`
                         : post.users.username}
@@ -197,8 +200,8 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`}>
-                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors">@{post.users.username}</span>
+                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
                   {post.privacy === 'public' ? (
                     <Globe className="h-3 w-3 text-gray-400" />
