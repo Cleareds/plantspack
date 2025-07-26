@@ -74,28 +74,47 @@ export default function Feed({ onPostCreated }: FeedProps) {
         .range(range.from, range.to)
 
       // Apply filters based on tab selection and user status
-      if (!user || activeTab === 'public') {
+      if (activeTab === 'public') {
+        // Public tab: only public posts
         query = query.eq('privacy', 'public')
-      } else if (activeTab === 'friends') {
-        // Only show friends posts - posts from people the user follows
+      } else if (activeTab === 'friends' && user) {
+        // Friends tab: only friends posts from people the user follows
         query = query.eq('privacy', 'friends')
-        // Add a subquery to filter for followed users
-        if (user) {
-          const { data: followingData } = await supabase
-            .from('follows')
-            .select('following_id')
-            .eq('follower_id', user.id)
-          
-          const followingIds = followingData?.map(f => f.following_id) || []
-          followingIds.push(user.id) // Include user's own posts
-          
-          if (followingIds.length > 0) {
-            query = query.in('user_id', followingIds)
-          } else {
-            // If not following anyone, only show own posts
-            query = query.eq('user_id', user.id)
-          }
+        
+        const { data: followingData } = await supabase
+          .from('follows')
+          .select('following_id')
+          .eq('follower_id', user.id)
+        
+        const followingIds = followingData?.map(f => f.following_id) || []
+        followingIds.push(user.id) // Include user's own posts
+        
+        if (followingIds.length > 0) {
+          query = query.in('user_id', followingIds)
+        } else {
+          // If not following anyone, only show own posts
+          query = query.eq('user_id', user.id)
         }
+      } else if (activeTab === 'all' && user) {
+        // All tab: show both public posts and friends posts from followed users
+        const { data: followingData } = await supabase
+          .from('follows')
+          .select('following_id')
+          .eq('follower_id', user.id)
+        
+        const followingIds = followingData?.map(f => f.following_id) || []
+        followingIds.push(user.id) // Include user's own posts
+        
+        // Show public posts OR friends posts from people you follow
+        if (followingIds.length > 0) {
+          query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.in.(${followingIds.join(',')}))`)
+        } else {
+          // If not following anyone, show public posts + own posts
+          query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.eq.${user.id})`)
+        }
+      } else {
+        // Not logged in or fallback: only public posts
+        query = query.eq('privacy', 'public')
       }
 
       const { data, error } = await query
@@ -207,28 +226,47 @@ export default function Feed({ onPostCreated }: FeedProps) {
           .range(0, POSTS_PER_PAGE - 1)
 
         // Apply filters based on tab selection and user status
-        if (!user || activeTab === 'public') {
+        if (activeTab === 'public') {
+          // Public tab: only public posts
           query = query.eq('privacy', 'public')
-        } else if (activeTab === 'friends') {
-          // Only show friends posts - posts from people the user follows
+        } else if (activeTab === 'friends' && user) {
+          // Friends tab: only friends posts from people the user follows
           query = query.eq('privacy', 'friends')
-          // Add a subquery to filter for followed users
-          if (user) {
-            const { data: followingData } = await supabase
-              .from('follows')
-              .select('following_id')
-              .eq('follower_id', user.id)
-            
-            const followingIds = followingData?.map(f => f.following_id) || []
-            followingIds.push(user.id) // Include user's own posts
-            
-            if (followingIds.length > 0) {
-              query = query.in('user_id', followingIds)
-            } else {
-              // If not following anyone, only show own posts
-              query = query.eq('user_id', user.id)
-            }
+          
+          const { data: followingData } = await supabase
+            .from('follows')
+            .select('following_id')
+            .eq('follower_id', user.id)
+          
+          const followingIds = followingData?.map(f => f.following_id) || []
+          followingIds.push(user.id) // Include user's own posts
+          
+          if (followingIds.length > 0) {
+            query = query.in('user_id', followingIds)
+          } else {
+            // If not following anyone, only show own posts
+            query = query.eq('user_id', user.id)
           }
+        } else if (activeTab === 'all' && user) {
+          // All tab: show both public posts and friends posts from followed users
+          const { data: followingData } = await supabase
+            .from('follows')
+            .select('following_id')
+            .eq('follower_id', user.id)
+          
+          const followingIds = followingData?.map(f => f.following_id) || []
+          followingIds.push(user.id) // Include user's own posts
+          
+          // Show public posts OR friends posts from people you follow
+          if (followingIds.length > 0) {
+            query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.in.(${followingIds.join(',')}))`)
+          } else {
+            // If not following anyone, show public posts + own posts
+            query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.eq.${user.id})`)
+          }
+        } else {
+          // Not logged in or fallback: only public posts
+          query = query.eq('privacy', 'public')
         }
 
         const { data, error } = await query

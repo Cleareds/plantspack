@@ -20,12 +20,14 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex gap-6">
           {/* Main Feed - Left Side */}
-          <div className="flex-1 max-w-3xl">
-            <Feed onPostCreated={handlePostCreated} />
+          <div className="flex-1 min-w-0">
+            <div className="max-w-2xl">
+              <Feed onPostCreated={handlePostCreated} />
+            </div>
           </div>
 
           {/* Desktop Sidebar - Right Side */}
-          <div className="hidden lg:block w-80">
+          <div className="hidden lg:block w-96 flex-shrink-0">
             <div className="sticky top-20 space-y-6">
               {user && (
                 <>
@@ -35,7 +37,7 @@ export default function Home() {
                       Hello, {profile?.first_name || profile?.username || 'Friend'}! 👋
                     </h2>
                     <p className="text-sm text-gray-600">
-                      Share your plant-based journey with the PlantsPack community
+                      Share your plant-based animal-friendly journey with the PlantsPack community
                     </p>
                   </div>
 
@@ -76,7 +78,7 @@ export default function Home() {
           {/* Mobile Sidebar Overlay */}
           {isSidebarOpen && (
             <>
-              <div 
+              <div
                 className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
                 onClick={() => setIsSidebarOpen(false)}
               />
