@@ -27,7 +27,7 @@ export default function Home() {
           </div>
 
           {/* Desktop Sidebar - Right Side */}
-          <div className="hidden lg:block w-[440px] flex-shrink-0">
+          <div className="hidden lg:block w-[480px] flex-shrink-0">
             <div className="sticky top-20 space-y-4">
               {user && (
                 <>
