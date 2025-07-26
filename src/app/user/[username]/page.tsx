@@ -18,8 +18,8 @@ type Post = Tables<'posts'> & {
 
 type Place = Tables<'places'>
 type Follow = Tables<'follows'> & {
-  follower_user: Tables<'users'>
-  following_user: Tables<'users'>
+  follower_user?: Tables<'users'>
+  following_user?: Tables<'users'>
 }
 
 const POSTS_PER_PAGE = 10
@@ -70,7 +70,8 @@ export default function UserProfilePage() {
         .eq('user_id', userData.id)
         .limit(6)
 
-      setPlaces(placesData?.map(fp => fp.places).filter(Boolean) || [])
+      const places = placesData?.map(fp => fp.places).filter((place): place is Place => place !== null) || []
+      setPlaces(places)
 
       // Fetch followers (limited to 3)
       const { data: followersData } = await supabase
@@ -369,7 +370,7 @@ export default function UserProfilePage() {
               <p className="text-gray-500 text-sm">Not following anyone yet.</p>
             ) : (
               <div className="space-y-3">
-                {following.map((follow) => (
+                {following.map((follow) => follow.following_user && (
                   <Link key={follow.id} href={`/user/${follow.following_user.username}`}>
                     <div className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       {follow.following_user.avatar_url ? (
@@ -417,7 +418,7 @@ export default function UserProfilePage() {
               <p className="text-gray-500 text-sm">No followers yet.</p>
             ) : (
               <div className="space-y-3">
-                {followers.map((follow) => (
+                {followers.map((follow) => follow.follower_user && (
                   <Link key={follow.id} href={`/user/${follow.follower_user.username}`}>
                     <div className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       {follow.follower_user.avatar_url ? (

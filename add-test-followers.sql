@@ -28,14 +28,17 @@ BEGIN
     RAISE NOTICE 'Found user with ID: %', main_user_id;
 
     -- Create some test users if they don't exist
-    INSERT INTO users (id, email, username, first_name, last_name, bio) VALUES
+    INSERT INTO users (id, email, username, first_name, last_name, bio) 
+    SELECT * FROM (VALUES
         (gen_random_uuid(), 'alice@example.com', 'alice_green', 'Alice', 'Green', 'Plant-based chef and recipe creator 🌱'),
         (gen_random_uuid(), 'bob@example.com', 'bob_vegan', 'Bob', 'Johnson', 'Vegan activist and fitness enthusiast 💪'),
         (gen_random_uuid(), 'carol@example.com', 'carol_cook', 'Carol', 'Smith', 'Food blogger sharing vegan adventures 🥗'),
         (gen_random_uuid(), 'david@example.com', 'david_nature', 'David', 'Brown', 'Environmental scientist and nature lover 🌍'),
         (gen_random_uuid(), 'emma@example.com', 'emma_wellness', 'Emma', 'Wilson', 'Wellness coach and meditation teacher 🧘')
-    ON CONFLICT (email) DO NOTHING
-    ON CONFLICT (username) DO NOTHING;
+    ) AS v(id, email, username, first_name, last_name, bio)
+    WHERE NOT EXISTS (
+        SELECT 1 FROM users WHERE users.email = v.email OR users.username = v.username
+    );
 
     -- Get the IDs of test users
     SELECT ARRAY_AGG(id) INTO test_user_ids
@@ -45,28 +48,42 @@ BEGIN
     -- Make test users follow the main user
     FOR i IN 1..array_length(test_user_ids, 1) LOOP
         INSERT INTO follows (follower_id, following_id)
-        VALUES (test_user_ids[i], main_user_id)
-        ON CONFLICT DO NOTHING;
+        SELECT test_user_ids[i], main_user_id
+        WHERE NOT EXISTS (
+            SELECT 1 FROM follows 
+            WHERE follower_id = test_user_ids[i] AND following_id = main_user_id
+        );
 
         RAISE NOTICE 'Added follower: %', test_user_ids[i];
     END LOOP;
 
     -- Make the main user follow some test users back
-    INSERT INTO follows (follower_id, following_id) VALUES
-        (main_user_id, test_user_ids[1]),
-        (main_user_id, test_user_ids[3]),
-        (main_user_id, test_user_ids[5])
-    ON CONFLICT DO NOTHING;
+    INSERT INTO follows (follower_id, following_id) 
+    SELECT main_user_id, test_user_ids[1]
+    WHERE NOT EXISTS (SELECT 1 FROM follows WHERE follower_id = main_user_id AND following_id = test_user_ids[1]);
+    
+    INSERT INTO follows (follower_id, following_id) 
+    SELECT main_user_id, test_user_ids[3]
+    WHERE NOT EXISTS (SELECT 1 FROM follows WHERE follower_id = main_user_id AND following_id = test_user_ids[3]);
+    
+    INSERT INTO follows (follower_id, following_id) 
+    SELECT main_user_id, test_user_ids[5]
+    WHERE NOT EXISTS (SELECT 1 FROM follows WHERE follower_id = main_user_id AND following_id = test_user_ids[5]);
 
-    -- Create some cross-follows between test users
-    INSERT INTO follows (follower_id, following_id) VALUES
+    -- Create some cross-follows between test users (simplified approach)
+    INSERT INTO follows (follower_id, following_id) 
+    SELECT f.follower_id, f.following_id FROM (VALUES
         (test_user_ids[1], test_user_ids[2]),
         (test_user_ids[2], test_user_ids[1]),
         (test_user_ids[3], test_user_ids[4]),
         (test_user_ids[4], test_user_ids[3]),
         (test_user_ids[1], test_user_ids[5]),
         (test_user_ids[5], test_user_ids[1])
-    ON CONFLICT DO NOTHING;
+    ) AS f(follower_id, following_id)
+    WHERE NOT EXISTS (
+        SELECT 1 FROM follows 
+        WHERE follower_id = f.follower_id AND following_id = f.following_id
+    );
 
     RAISE NOTICE 'Test followers setup complete!';
 
