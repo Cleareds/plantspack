@@ -42,11 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(true)
       setInitialized(false)
       
-      let currentSession = null
-      
       try {
         const { data: { session }, error } = await supabase.auth.getSession()
-        currentSession = session
         
         if (!isMounted) return
         

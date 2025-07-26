@@ -12,6 +12,7 @@ import SharePost from './SharePost'
 import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import LinkifiedText from '../ui/LinkifiedText'
+import SignUpModal from '../guest/SignUpModal'
 import Link from 'next/link'
 
 type Post = Tables<'posts'> & {
@@ -35,6 +36,8 @@ function PostCard({ post, onUpdate }: PostCardProps) {
   const [loading, setLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [showShare, setShowShare] = useState(false)
+  const [showSignUpModal, setShowSignUpModal] = useState(false)
+  const [signUpAction, setSignUpAction] = useState<'like' | 'comment' | 'share'>('like')
   const { user } = useAuth()
 
   useEffect(() => {
@@ -48,7 +51,13 @@ function PostCard({ post, onUpdate }: PostCardProps) {
   }, [user, post.post_likes])
 
   const handleLike = async () => {
-    if (!user || loading) return
+    if (!user) {
+      setSignUpAction('like')
+      setShowSignUpModal(true)
+      return
+    }
+    
+    if (loading) return
 
     setLoading(true)
     try {
@@ -76,6 +85,24 @@ function PostCard({ post, onUpdate }: PostCardProps) {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleComment = () => {
+    if (!user) {
+      setSignUpAction('comment')
+      setShowSignUpModal(true)
+      return
+    }
+    setShowComments(true)
+  }
+
+  const handleShare = () => {
+    if (!user) {
+      setSignUpAction('share')
+      setShowSignUpModal(true)
+      return
+    }
+    setShowShare(true)
   }
 
 
@@ -283,22 +310,20 @@ function PostCard({ post, onUpdate }: PostCardProps) {
             </button>
             
             <button
-              onClick={() => setShowComments(true)}
+              onClick={handleComment}
               className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
             >
               <MessageCircle className="h-5 w-5" />
               <span className="text-sm">{commentCount}</span>
             </button>
             
-            {user && (
-              <button
-                onClick={() => setShowShare(true)}
-                className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
-              >
-                <Share className="h-5 w-5" />
-                <span className="text-sm">Share</span>
-              </button>
-            )}
+            <button
+              onClick={handleShare}
+              className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
+            >
+              <Share className="h-5 w-5" />
+              <span className="text-sm">Share</span>
+            </button>
           </div>
         </div>
       )}
@@ -318,6 +343,13 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         isOpen={showShare}
         onClose={() => setShowShare(false)}
         onShared={() => onUpdate?.()}
+      />
+
+      {/* Sign Up Modal for guests */}
+      <SignUpModal
+        isOpen={showSignUpModal}
+        onClose={() => setShowSignUpModal(false)}
+        action={signUpAction}
       />
     </div>
   )

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Feed from "@/components/posts/Feed"
 import CreatePost from "@/components/posts/CreatePost"
+import GuestWelcome from "@/components/guest/GuestWelcome"
 import { useAuth } from "@/lib/auth"
 import { MessageSquare, X } from 'lucide-react'
 
@@ -22,6 +23,8 @@ export default function Home() {
           {/* Main Feed - Left Side */}
           <div className="flex-1 min-w-0">
             <div className="max-w-2xl">
+              {/* Guest Welcome - Show above feed for unauthorized users */}
+              {!user && <GuestWelcome />}
               <Feed onPostCreated={handlePostCreated} />
             </div>
           </div>
@@ -46,22 +49,6 @@ export default function Home() {
                 </>
               )}
 
-              {!user && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                    Welcome to PlantsPack! 🌱
-                  </h2>
-                  <p className="text-gray-600 mb-4">
-                    Connect with fellow plant-based enthusiasts, share your green journey, and discover amazing vegan places.
-                  </p>
-                  <a
-                    href="/auth"
-                    className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium transition-colors"
-                  >
-                    Join PlantsPack
-                  </a>
-                </div>
-              )}
             </div>
           </div>
 

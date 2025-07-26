@@ -178,7 +178,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                         <div className="flex items-center space-x-2 mb-1">
                           <h4 className="font-medium text-gray-900 text-sm truncate">{place.name}</h4>
                           {place.is_pet_friendly && (
-                            <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" title="Pet Friendly" />
+                            <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" />
                           )}
                         </div>
                         <div className="flex items-center space-x-2 mb-2">
@@ -261,7 +261,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                           <div className="flex items-center space-x-2 mb-1">
                             <h4 className="font-medium text-gray-900 text-sm truncate">{place.name}</h4>
                             {place.is_pet_friendly && (
-                              <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" title="Pet Friendly" />
+                              <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" />
                             )}
                           </div>
                           <div className="flex items-center space-x-2 mb-2">

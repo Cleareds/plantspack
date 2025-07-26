@@ -300,7 +300,6 @@ export default function Feed({ onPostCreated }: FeedProps) {
     setError(null)
 
     try {
-      const currentOffset = 0
       const range = { from: 0, to: POSTS_PER_PAGE - 1 }
 
       let query = supabase
@@ -427,9 +426,8 @@ export default function Feed({ onPostCreated }: FeedProps) {
 
   return (
     <div className="w-full">
-      {/* Feed Tabs */}
-      {user ? (
-        /* Logged in users see all tabs */
+      {/* Feed Tabs - Only for logged in users */}
+      {user && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
           <div className="flex border-b border-gray-200">
             <button
@@ -462,20 +460,6 @@ export default function Feed({ onPostCreated }: FeedProps) {
             >
               Friends
             </button>
-          </div>
-        </div>
-      ) : (
-        /* Guest users see simple header */
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
-          <div className="px-4 py-3 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 text-center">
-              Public Posts
-            </h2>
-            <p className="text-sm text-gray-500 text-center mt-1">
-              <a href="/auth" className="text-green-600 hover:underline">
-                Sign in
-              </a> to see friends posts and connect with the community
-            </p>
           </div>
         </div>
       )}

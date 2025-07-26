@@ -1,13 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useAuth } from '@/lib/auth'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import LoginForm from '@/components/auth/LoginForm'
 import SignupForm from '@/components/auth/SignupForm'
 
-export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true)
+function AuthContent() {
+  const searchParams = useSearchParams()
+  const mode = searchParams.get('mode')
+  const [isLogin, setIsLogin] = useState(mode !== 'signup')
   const { user, authReady } = useAuth()
   const router = useRouter()
 
@@ -16,6 +18,11 @@ export default function AuthPage() {
       router.push('/')
     }
   }, [user, authReady, router])
+
+  // Update form mode when URL parameter changes
+  useEffect(() => {
+    setIsLogin(mode !== 'signup')
+  }, [mode])
 
   if (!authReady) {
     return (
@@ -39,5 +46,17 @@ export default function AuthPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
+    }>
+      <AuthContent />
+    </Suspense>
   )
 }
