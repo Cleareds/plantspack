@@ -208,18 +208,6 @@ export default function Feed() {
     loadInitialPosts()
   }, [authReady, user])
 
-  // Add page focus listener to refresh feed when page regains focus
-  useEffect(() => {
-    const handleFocus = () => {
-      if (authReady) {
-        console.log('🔄 Page focused, refreshing feed...')
-        fetchPosts(false)
-      }
-    }
-
-    window.addEventListener('focus', handleFocus)
-    return () => window.removeEventListener('focus', handleFocus)
-  }, [authReady, fetchPosts])
 
   // Handle post creation - refresh the entire feed
   const handlePostCreated = useCallback(() => {

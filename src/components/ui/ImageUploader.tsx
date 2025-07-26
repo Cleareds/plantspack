@@ -68,17 +68,25 @@ export default function ImageUploader({
     })
   }, [])
 
-  const validateFile = (file: File): boolean => {
+  const validateFile = (file: File, existingImages: ImageFile[]): boolean => {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
-    const maxSize = 10 * 1024 * 1024 // 10MB
+    const maxSizePerFile = 5 * 1024 * 1024 // 5MB per file
+    const maxTotalSize = 10 * 1024 * 1024 // 10MB total
 
     if (!validTypes.includes(file.type)) {
       alert('Please upload only JPEG, PNG, or WebP images.')
       return false
     }
 
-    if (file.size > maxSize) {
-      alert('Image must be smaller than 10MB.')
+    if (file.size > maxSizePerFile) {
+      alert('Each image must be smaller than 5MB.')
+      return false
+    }
+
+    // Check total size including existing images
+    const existingTotalSize = existingImages.reduce((total, img) => total + img.file.size, 0)
+    if (existingTotalSize + file.size > maxTotalSize) {
+      alert('Total size of all images cannot exceed 10MB.')
       return false
     }
 
@@ -86,17 +94,30 @@ export default function ImageUploader({
   }
 
   const handleFiles = useCallback(async (files: FileList) => {
-    if (!user) return
+    if (!user) {
+      console.error('No user logged in for image upload')
+      return
+    }
 
+    console.log('Handling files:', files.length, 'files')
     const validFiles: File[] = []
+    
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      if (validateFile(file) && images.length + validFiles.length < maxImages) {
+      console.log('Validating file:', file.name, 'size:', file.size, 'type:', file.type)
+      
+      if (validateFile(file, images) && images.length + validFiles.length < maxImages) {
         validFiles.push(file)
+        console.log('File validated successfully:', file.name)
+      } else {
+        console.log('File validation failed or too many images:', file.name)
       }
     }
 
-    if (validFiles.length === 0) return
+    if (validFiles.length === 0) {
+      console.log('No valid files to process')
+      return
+    }
 
     const newImages: ImageFile[] = []
     for (const file of validFiles) {
@@ -109,21 +130,39 @@ export default function ImageUploader({
       })
     }
 
+    console.log('Adding images to state:', newImages.length)
     setImages(prev => [...prev, ...newImages])
+    
+    // Upload images immediately
+    console.log('Uploading images immediately')
+    const uploadedUrls = await uploadImages(newImages)
+    console.log('Upload completed, URLs:', uploadedUrls)
   }, [user, images.length, maxImages, compressImage])
 
   const uploadImages = useCallback(async (imagesToUpload?: ImageFile[]) => {
     const targetImages = imagesToUpload || images
-    if (!user || targetImages.length === 0) return []
+    console.log('Upload images called with:', targetImages.length, 'images')
+    
+    if (!user) {
+      console.error('No user for upload')
+      return []
+    }
+    
+    if (targetImages.length === 0) {
+      console.log('No images to upload')
+      return []
+    }
 
     setUploading(true)
     const uploadedUrls: string[] = []
 
     try {
       for (const imageFile of targetImages) {
+        console.log('Uploading:', imageFile.file.name, 'size:', imageFile.file.size)
         const fileExt = imageFile.file.name.split('.').pop()
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`
 
+        console.log('Storage path:', fileName)
         const { data, error } = await supabase.storage
           .from('post-images')
           .upload(fileName, imageFile.file, {
@@ -131,15 +170,21 @@ export default function ImageUploader({
             upsert: false
           })
 
-        if (error) throw error
+        if (error) {
+          console.error('Storage upload error:', error)
+          throw error
+        }
 
+        console.log('Upload success, path:', data.path)
         const { data: { publicUrl } } = supabase.storage
           .from('post-images')
           .getPublicUrl(data.path)
 
+        console.log('Public URL generated:', publicUrl)
         uploadedUrls.push(publicUrl)
       }
 
+      console.log('All uploads complete:', uploadedUrls)
       onImagesChange(uploadedUrls)
       return uploadedUrls
     } catch (error) {
@@ -191,12 +236,7 @@ export default function ImageUploader({
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-upload when images are added
-  useEffect(() => {
-    if (images.length > 0) {
-      uploadImages(images)
-    }
-  }, [images.length]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Images are uploaded immediately in handleFiles, no need for auto-upload effect
 
   return (
     <div className={`space-y-3 ${className}`}>

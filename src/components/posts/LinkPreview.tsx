@@ -95,40 +95,31 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
       )}
       
       <div onClick={handleClick} className="p-3">
-        <div className="flex space-x-3">
-          {previewData.image && (
-            <div className="flex-shrink-0">
-              <img
-                src={previewData.image}
-                alt=""
-                className="w-16 h-16 object-cover rounded"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                }}
-              />
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0 mt-1">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <ExternalLink className="h-5 w-5 text-blue-600" />
             </div>
-          )}
+          </div>
           
           <div className="flex-1 min-w-0">
             {previewData.title && (
-              <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">
+              <h3 className="text-sm font-medium text-gray-900 line-clamp-1 mb-1">
                 {previewData.title}
               </h3>
             )}
             
-            {previewData.description && (
-              <p className="text-xs text-gray-600 line-clamp-2 mb-2">
-                {previewData.description}
-              </p>
-            )}
-            
-            <div className="flex items-center space-x-1 text-xs text-gray-500">
-              <ExternalLink className="h-3 w-3" />
+            <div className="flex items-center space-x-1 text-xs text-gray-500 mb-1">
               <span className="truncate">
                 {previewData.siteName || new URL(previewData.url).hostname}
               </span>
             </div>
+            
+            {previewData.description && previewData.description !== previewData.url && (
+              <p className="text-xs text-gray-600 line-clamp-1">
+                {previewData.description}
+              </p>
+            )}
           </div>
         </div>
       </div>
