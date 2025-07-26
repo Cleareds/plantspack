@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
 import { Users, UserMinus } from 'lucide-react'
+import Link from 'next/link'
 
 type UserProfile = Tables<'users'>
 
@@ -169,29 +170,29 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
         <div className="divide-y divide-gray-200 max-h-80 overflow-y-auto">
           {activeList.map((person) => (
             <div key={person.id} className="p-4 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
+              <Link href={`/user/${person.username}`} className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-gray-50 -m-2 p-2 rounded-md transition-colors">
                 <div className="flex-shrink-0 avatar-container">
                   {person.avatar_url ? (
                     <img
                       src={person.avatar_url}
                       alt={`${person.first_name} ${person.last_name}`}
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-10 h-10 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
                       <Users className="w-5 h-5 text-gray-400" />
                     </div>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-gray-900 truncate hover:text-green-600 transition-colors">
                     {person.first_name && person.last_name
                       ? `${person.first_name} ${person.last_name}`
                       : person.username}
                   </p>
-                  <p className="text-sm text-gray-500 truncate">@{person.username}</p>
+                  <p className="text-sm text-gray-500 truncate hover:text-green-600 transition-colors">@{person.username}</p>
                 </div>
-              </div>
+              </Link>
               
               {isOwnProfile && activeTab === 'following' && (
                 <button
