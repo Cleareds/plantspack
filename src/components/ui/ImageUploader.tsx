@@ -73,55 +73,85 @@ export default function ImageUploader({
     const maxSizePerFile = 5 * 1024 * 1024 // 5MB per file
     const maxTotalSize = 10 * 1024 * 1024 // 10MB total
 
+    console.log('🔍 Validating file:', file.name)
+    console.log('File details:', {
+      type: file.type,
+      size: file.size,
+      sizeInMB: (file.size / 1024 / 1024).toFixed(2) + 'MB'
+    })
+
     if (!validTypes.includes(file.type)) {
+      console.error('❌ Invalid file type:', file.type, 'Valid types:', validTypes)
       alert('Please upload only JPEG, PNG, or WebP images.')
       return false
     }
 
     if (file.size > maxSizePerFile) {
+      console.error('❌ File too large:', file.size, 'bytes. Max:', maxSizePerFile, 'bytes')
       alert('Each image must be smaller than 5MB.')
       return false
     }
 
     // Check total size including existing images
     const existingTotalSize = existingImages.reduce((total, img) => total + img.file.size, 0)
-    if (existingTotalSize + file.size > maxTotalSize) {
+    const totalAfterAdding = existingTotalSize + file.size
+    
+    console.log('📊 Size check:', {
+      existingTotalSize: (existingTotalSize / 1024 / 1024).toFixed(2) + 'MB',
+      newFileSize: (file.size / 1024 / 1024).toFixed(2) + 'MB',
+      totalAfterAdding: (totalAfterAdding / 1024 / 1024).toFixed(2) + 'MB',
+      maxTotalSize: (maxTotalSize / 1024 / 1024).toFixed(2) + 'MB'
+    })
+    
+    if (totalAfterAdding > maxTotalSize) {
+      console.error('❌ Total size would exceed limit:', totalAfterAdding, 'bytes. Max:', maxTotalSize, 'bytes')
       alert('Total size of all images cannot exceed 10MB.')
       return false
     }
 
+    console.log('✅ File validation passed for:', file.name)
     return true
   }
 
   const handleFiles = useCallback(async (files: FileList) => {
     if (!user) {
-      console.error('No user logged in for image upload')
+      console.error('❌ No user logged in for image upload')
       return
     }
 
-    console.log('Handling files:', files.length, 'files')
+    console.log('📁 Handling files:', files.length, 'files')
     const validFiles: File[] = []
     
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      console.log('Validating file:', file.name, 'size:', file.size, 'type:', file.type)
+      console.log('🔍 Validating file:', {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: new Date(file.lastModified).toISOString()
+      })
       
       if (validateFile(file, images) && images.length + validFiles.length < maxImages) {
         validFiles.push(file)
-        console.log('File validated successfully:', file.name)
+        console.log('✅ File validated successfully:', file.name)
       } else {
-        console.log('File validation failed or too many images:', file.name)
+        console.log('❌ File validation failed or too many images:', file.name)
+        console.log('Current images count:', images.length, 'Max images:', maxImages, 'Valid files so far:', validFiles.length)
       }
     }
 
     if (validFiles.length === 0) {
-      console.log('No valid files to process')
+      console.log('⚠️ No valid files to process')
       return
     }
 
+    console.log('🔄 Compressing', validFiles.length, 'files...')
     const newImages: ImageFile[] = []
     for (const file of validFiles) {
+      console.log('🗜️ Compressing:', file.name)
       const compressedFile = await compressImage(file)
+      console.log('✅ Compressed:', file.name, 'original size:', file.size, 'compressed size:', compressedFile.size)
+      
       const preview = URL.createObjectURL(compressedFile)
       newImages.push({
         file: compressedFile,
@@ -130,26 +160,26 @@ export default function ImageUploader({
       })
     }
 
-    console.log('Adding images to state:', newImages.length)
+    console.log('📊 Adding', newImages.length, 'images to state')
     setImages(prev => [...prev, ...newImages])
     
     // Upload images immediately
-    console.log('Uploading images immediately')
+    console.log('🚀 Starting immediate upload...')
     const uploadedUrls = await uploadImages(newImages)
-    console.log('Upload completed, URLs:', uploadedUrls)
+    console.log('🏁 Upload completed, URLs:', uploadedUrls)
   }, [user, images.length, maxImages, compressImage])
 
   const uploadImages = useCallback(async (imagesToUpload?: ImageFile[]) => {
     const targetImages = imagesToUpload || images
-    console.log('Upload images called with:', targetImages.length, 'images')
+    console.log('🔄 Upload images called with:', targetImages.length, 'images')
     
     if (!user) {
-      console.error('No user for upload')
+      console.error('❌ No user for upload')
       return []
     }
     
     if (targetImages.length === 0) {
-      console.log('No images to upload')
+      console.log('⚠️ No images to upload')
       return []
     }
 
@@ -158,11 +188,13 @@ export default function ImageUploader({
 
     try {
       for (const imageFile of targetImages) {
-        console.log('Uploading:', imageFile.file.name, 'size:', imageFile.file.size)
+        console.log('📤 Uploading:', imageFile.file.name, 'size:', imageFile.file.size, 'type:', imageFile.file.type)
         const fileExt = imageFile.file.name.split('.').pop()
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`
 
-        console.log('Storage path:', fileName)
+        console.log('📁 Storage path:', fileName)
+        
+        // Add more detailed error handling
         const { data, error } = await supabase.storage
           .from('post-images')
           .upload(fileName, imageFile.file, {
@@ -171,25 +203,41 @@ export default function ImageUploader({
           })
 
         if (error) {
-          console.error('Storage upload error:', error)
+          console.error('❌ Storage upload error:', error)
+          console.error('Error details:', {
+            message: error.message,
+            name: error.name,
+            cause: error.cause
+          })
           throw error
         }
 
-        console.log('Upload success, path:', data.path)
+        if (!data || !data.path) {
+          console.error('❌ Upload succeeded but no path returned:', data)
+          throw new Error('Upload succeeded but no path returned')
+        }
+
+        console.log('✅ Upload success, path:', data.path)
         const { data: { publicUrl } } = supabase.storage
           .from('post-images')
           .getPublicUrl(data.path)
 
-        console.log('Public URL generated:', publicUrl)
+        console.log('🔗 Public URL generated:', publicUrl)
+        
+        if (!publicUrl) {
+          console.error('❌ Failed to generate public URL')
+          throw new Error('Failed to generate public URL')
+        }
+        
         uploadedUrls.push(publicUrl)
       }
 
-      console.log('All uploads complete:', uploadedUrls)
+      console.log('🎉 All uploads complete:', uploadedUrls)
       onImagesChange(uploadedUrls)
       return uploadedUrls
     } catch (error) {
-      console.error('Error uploading images:', error)
-      alert('Failed to upload images. Please try again.')
+      console.error('💥 Error uploading images:', error)
+      alert(`Failed to upload images: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`)
       return []
     } finally {
       setUploading(false)

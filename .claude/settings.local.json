@@ -7,7 +7,8 @@
       "Bash(find:*)",
       "Bash(npm uninstall:*)",
       "Bash(rm:*)",
-      "Bash(npx supabase db diff:*)"
+      "Bash(npx supabase db diff:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

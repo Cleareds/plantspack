@@ -28,7 +28,7 @@ export default function Feed({ onPostCreated }: FeedProps) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
-  const [activeTab, setActiveTab] = useState<'all' | 'public' | 'friends'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'public' | 'friends'>('public')
   const { user, authReady } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -428,29 +428,30 @@ export default function Feed({ onPostCreated }: FeedProps) {
   return (
     <div className="w-full">
       {/* Feed Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
-        <div className="flex border-b border-gray-200">
-          <button
-            onClick={() => handleTabChange('all')}
-            className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
-              activeTab === 'all'
-                ? 'border-green-500 text-green-600 bg-green-50'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            All Posts
-          </button>
-          <button
-            onClick={() => handleTabChange('public')}
-            className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
-              activeTab === 'public'
-                ? 'border-green-500 text-green-600 bg-green-50'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            Public
-          </button>
-          {user && (
+      {user ? (
+        /* Logged in users see all tabs */
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => handleTabChange('all')}
+              className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
+                activeTab === 'all'
+                  ? 'border-green-500 text-green-600 bg-green-50'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              All Posts
+            </button>
+            <button
+              onClick={() => handleTabChange('public')}
+              className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
+                activeTab === 'public'
+                  ? 'border-green-500 text-green-600 bg-green-50'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Public
+            </button>
             <button
               onClick={() => handleTabChange('friends')}
               className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
@@ -461,9 +462,23 @@ export default function Feed({ onPostCreated }: FeedProps) {
             >
               Friends
             </button>
-          )}
+          </div>
         </div>
-      </div>
+      ) : (
+        /* Guest users see simple header */
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+          <div className="px-4 py-3 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900 text-center">
+              Public Posts
+            </h2>
+            <p className="text-sm text-gray-500 text-center mt-1">
+              <a href="/auth" className="text-green-600 hover:underline">
+                Sign in
+              </a> to see friends posts and connect with the community
+            </p>
+          </div>
+        </div>
+      )}
       
       {posts.length === 0 && !loading ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
