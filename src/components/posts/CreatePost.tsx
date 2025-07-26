@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Image as ImageIcon, Globe, Users, Send, X } from 'lucide-react'
@@ -12,18 +12,62 @@ interface CreatePostProps {
   onPostCreated: () => void
 }
 
-export default function CreatePost({ onPostCreated }: CreatePostProps) {
-  const [content, setContent] = useState('')
-  const [privacy, setPrivacy] = useState<'public' | 'friends'>('public')
-  const [loading, setLoading] = useState(false)
-  const [charCount, setCharCount] = useState(0)
-  const [showImageUploader, setShowImageUploader] = useState(false)
-  const [imageUrls, setImageUrls] = useState<string[]>([])
-  const [detectedUrls, setDetectedUrls] = useState<string[]>([])
-  const [showLinkPreview, setShowLinkPreview] = useState(true)
-  const { user, profile } = useAuth()
+const DRAFT_KEY = 'createpost_draft'
 
+export default function CreatePost({ onPostCreated }: CreatePostProps) {
+  const { user, profile } = useAuth()
   const maxChars = 500
+
+  // Load draft from localStorage on mount
+  const loadDraft = useCallback(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const draft = localStorage.getItem(DRAFT_KEY)
+      return draft ? JSON.parse(draft) : null
+    } catch {
+      return null
+    }
+  }, [])
+
+  const [content, setContent] = useState(() => loadDraft()?.content || '')
+  const [privacy, setPrivacy] = useState<'public' | 'friends'>(() => loadDraft()?.privacy || 'public')
+  const [loading, setLoading] = useState(false)
+  const [charCount, setCharCount] = useState(() => loadDraft()?.content?.length || 0)
+  const [showImageUploader, setShowImageUploader] = useState(() => loadDraft()?.showImageUploader || false)
+  const [imageUrls, setImageUrls] = useState<string[]>(() => loadDraft()?.imageUrls || [])
+  const [detectedUrls, setDetectedUrls] = useState<string[]>([])
+  const [showLinkPreview, setShowLinkPreview] = useState(() => loadDraft()?.showLinkPreview !== false)
+
+  // Save draft to localStorage
+  const saveDraft = useCallback(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const draft = {
+        content,
+        privacy,
+        showImageUploader,
+        imageUrls,
+        showLinkPreview
+      }
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [content, privacy, showImageUploader, imageUrls, showLinkPreview])
+
+  // Save draft when form state changes
+  useEffect(() => {
+    if (content || imageUrls.length > 0) {
+      saveDraft()
+    }
+  }, [content, privacy, showImageUploader, imageUrls, showLinkPreview, saveDraft])
+
+  // Clear draft
+  const clearDraft = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(DRAFT_KEY)
+    }
+  }, [])
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value
@@ -74,6 +118,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       setPrivacy('public')
       setImageUrls([])
       setShowImageUploader(false)
+      setShowLinkPreview(true)
+      clearDraft()
       onPostCreated()
     } catch (error) {
       console.error('Error creating post:', error)

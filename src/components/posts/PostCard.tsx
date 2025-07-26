@@ -11,6 +11,7 @@ import Comments from './Comments'
 import SharePost from './SharePost'
 import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
+import LinkifiedText from '../ui/LinkifiedText'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'>
@@ -147,7 +148,10 @@ function PostCard({ post, onUpdate }: PostCardProps) {
 
           {/* Quote author's commentary */}
           <div className="mb-3">
-            <p className="text-gray-800 whitespace-pre-wrap">{post.quote_content}</p>
+            <LinkifiedText 
+              text={post.quote_content} 
+              className="text-gray-800 whitespace-pre-wrap" 
+            />
           </div>
         </div>
       )}
@@ -206,7 +210,10 @@ function PostCard({ post, onUpdate }: PostCardProps) {
 
         {/* Content */}
         <div className={isQuotePost ? 'mb-2' : 'mb-4'}>
-          <p className="text-gray-800 whitespace-pre-wrap">{post.content}</p>
+          <LinkifiedText 
+            text={post.content} 
+            className="text-gray-800 whitespace-pre-wrap" 
+          />
           {/* Handle both new images array and legacy image_url */}
           {(() => {
             const imagesToShow = post.images && post.images.length > 0 
