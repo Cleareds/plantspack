@@ -25,6 +25,7 @@ export default function Feed() {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
+  const [activeTab, setActiveTab] = useState<'all' | 'public' | 'friends'>('all')
   const { user, authReady } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -69,9 +70,29 @@ export default function Feed() {
         .order('created_at', { ascending: false })
         .range(range.from, range.to)
 
-      // If user is not logged in, only show public posts
-      if (!user) {
+      // Apply filters based on tab selection and user status
+      if (!user || activeTab === 'public') {
         query = query.eq('privacy', 'public')
+      } else if (activeTab === 'friends') {
+        // Only show friends posts - posts from people the user follows
+        query = query.eq('privacy', 'friends')
+        // Add a subquery to filter for followed users
+        if (user) {
+          const { data: followingData } = await supabase
+            .from('follows')
+            .select('following_id')
+            .eq('follower_id', user.id)
+          
+          const followingIds = followingData?.map(f => f.following_id) || []
+          followingIds.push(user.id) // Include user's own posts
+          
+          if (followingIds.length > 0) {
+            query = query.in('user_id', followingIds)
+          } else {
+            // If not following anyone, only show own posts
+            query = query.eq('user_id', user.id)
+          }
+        }
       }
 
       const { data, error } = await query
@@ -106,7 +127,7 @@ export default function Feed() {
       setLoading(false)
       setLoadingMore(false)
     }
-  }, [user]) // Stable dependencies - only recreate when user changes
+  }, [user, activeTab]) // Recreate when user or tab changes
 
   const loadMorePosts = useCallback(() => {
     if (!loadingMore && hasMore) {
@@ -182,9 +203,29 @@ export default function Feed() {
           .order('created_at', { ascending: false })
           .range(0, POSTS_PER_PAGE - 1)
 
-        // If user is not logged in, only show public posts
-        if (!user) {
+        // Apply filters based on tab selection and user status
+        if (!user || activeTab === 'public') {
           query = query.eq('privacy', 'public')
+        } else if (activeTab === 'friends') {
+          // Only show friends posts - posts from people the user follows
+          query = query.eq('privacy', 'friends')
+          // Add a subquery to filter for followed users
+          if (user) {
+            const { data: followingData } = await supabase
+              .from('follows')
+              .select('following_id')
+              .eq('follower_id', user.id)
+            
+            const followingIds = followingData?.map(f => f.following_id) || []
+            followingIds.push(user.id) // Include user's own posts
+            
+            if (followingIds.length > 0) {
+              query = query.in('user_id', followingIds)
+            } else {
+              // If not following anyone, only show own posts
+              query = query.eq('user_id', user.id)
+            }
+          }
         }
 
         const { data, error } = await query
@@ -206,7 +247,17 @@ export default function Feed() {
     }
     
     loadInitialPosts()
-  }, [authReady, user])
+  }, [authReady, user, activeTab])
+
+  // Handle tab change
+  const handleTabChange = (tab: 'all' | 'public' | 'friends') => {
+    setActiveTab(tab)
+    // Reset state and reload posts
+    setPosts([])
+    setHasMore(true)
+    offsetRef.current = 0
+    fetchPosts(false)
+  }
 
 
   // Handle post creation - refresh the entire feed
@@ -255,6 +306,44 @@ export default function Feed() {
   return (
     <div className="max-w-2xl mx-auto px-4">
       {user && <CreatePost onPostCreated={handlePostCreated} />}
+      
+      {/* Feed Tabs */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
+        <div className="flex border-b border-gray-200">
+          <button
+            onClick={() => handleTabChange('all')}
+            className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
+              activeTab === 'all'
+                ? 'border-green-500 text-green-600 bg-green-50'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            All Posts
+          </button>
+          <button
+            onClick={() => handleTabChange('public')}
+            className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
+              activeTab === 'public'
+                ? 'border-green-500 text-green-600 bg-green-50'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Public
+          </button>
+          {user && (
+            <button
+              onClick={() => handleTabChange('friends')}
+              className={`flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 transition-colors ${
+                activeTab === 'friends'
+                  ? 'border-green-500 text-green-600 bg-green-50'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Friends
+            </button>
+          )}
+        </div>
+      </div>
       
       {posts.length === 0 && !loading ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">

@@ -12,6 +12,7 @@ import SharePost from './SharePost'
 import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import LinkifiedText from '../ui/LinkifiedText'
+import Link from 'next/link'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'>
@@ -101,35 +102,39 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
+              <Link href={`/user/${post.users.username}`} className="flex-shrink-0">
                 {post.users.avatar_url ? (
                   <img
                     src={post.users.avatar_url}
                     alt={`${post.users.username}'s avatar`}
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
                     <span className="text-green-600 font-medium text-sm">
                       {post.users.first_name?.[0] || post.users.username[0].toUpperCase()}
                     </span>
                   </div>
                 )}
-              </div>
+              </Link>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h3 className="font-medium text-gray-900">
-                    {post.users.first_name && post.users.last_name
-                      ? `${post.users.first_name} ${post.users.last_name}`
-                      : post.users.username}
-                  </h3>
+                  <Link href={`/user/${post.users.username}`}>
+                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors">
+                      {post.users.first_name && post.users.last_name
+                        ? `${post.users.first_name} ${post.users.last_name}`
+                        : post.users.username}
+                    </h3>
+                  </Link>
                   <span className="text-gray-500">•</span>
                   <span className="text-gray-500 text-sm">
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-500 text-xs">@{post.users.username}</span>
+                  <Link href={`/user/${post.users.username}`}>
+                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors">@{post.users.username}</span>
+                  </Link>
                   {post.privacy === 'public' ? (
                     <Globe className="h-3 w-3 text-gray-400" />
                   ) : (
@@ -162,35 +167,39 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         {!isQuotePost && (
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
+              <Link href={`/user/${post.users.username}`} className="flex-shrink-0">
                 {post.users.avatar_url ? (
                   <img
                     src={post.users.avatar_url}
                     alt={`${post.users.username}'s avatar`}
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
                     <span className="text-green-600 font-medium text-sm">
                       {post.users.first_name?.[0] || post.users.username[0].toUpperCase()}
                     </span>
                   </div>
                 )}
-              </div>
+              </Link>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h3 className="font-medium text-gray-900">
-                    {post.users.first_name && post.users.last_name
-                      ? `${post.users.first_name} ${post.users.last_name}`
-                      : post.users.username}
-                  </h3>
+                  <Link href={`/user/${post.users.username}`}>
+                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors">
+                      {post.users.first_name && post.users.last_name
+                        ? `${post.users.first_name} ${post.users.last_name}`
+                        : post.users.username}
+                    </h3>
+                  </Link>
                   <span className="text-gray-500">•</span>
                   <span className="text-gray-500 text-sm">
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-500 text-xs">@{post.users.username}</span>
+                  <Link href={`/user/${post.users.username}`}>
+                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors">@{post.users.username}</span>
+                  </Link>
                   {post.privacy === 'public' ? (
                     <Globe className="h-3 w-3 text-gray-400" />
                   ) : (
