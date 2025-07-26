@@ -30,23 +30,22 @@ export default function SettingsPage() {
       return
     }
 
-    if (!initialDataLoaded) {
-      // Load data once auth is ready
-      if (profile) {
-        setUsername(profile.username || '')
-        setFirstName(profile.first_name || '')
-        setLastName(profile.last_name || '')
-        setBio(profile.bio || '')
-        setAvatarUrl(profile.avatar_url || null)
-      } else {
-        // Fallback to user metadata if profile isn't loaded
-        const metadata = user.user_metadata
-        setUsername(metadata?.username || '')
-        setFirstName(metadata?.first_name || '')
-        setLastName(metadata?.last_name || '')
-        setBio('') // Bio won't be in metadata
-        setAvatarUrl(null)
-      }
+    // Always update data when profile changes, not just on first load
+    if (profile) {
+      setUsername(profile.username || '')
+      setFirstName(profile.first_name || '')
+      setLastName(profile.last_name || '')
+      setBio(profile.bio || '')
+      setAvatarUrl(profile.avatar_url || null)
+      setInitialDataLoaded(true)
+    } else if (user && !initialDataLoaded) {
+      // Fallback to user metadata if profile isn't loaded yet
+      const metadata = user.user_metadata
+      setUsername(metadata?.username || '')
+      setFirstName(metadata?.first_name || '')
+      setLastName(metadata?.last_name || '')
+      setBio('') // Bio won't be in metadata
+      setAvatarUrl(null)
       setInitialDataLoaded(true)
     }
   }, [user, profile, authReady, router, initialDataLoaded])
@@ -78,7 +77,7 @@ export default function SettingsPage() {
     setMessage('Avatar updated successfully!')
   }
 
-  if (!authReady || !initialDataLoaded) {
+  if (!authReady) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
