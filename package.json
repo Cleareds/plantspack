@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:test": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -19,24 +20,35 @@
     "db:standalone": "node scripts/standalone-setup.js",
     "db:fix-auth": "node scripts/fix-auth-users.js",
     "db:studio": "echo 'Open Supabase Studio at: http://localhost:54323'",
-    "dev:full": "npm run db:start && npm run dev"
+    "dev:full": "npm run db:start && npm run dev",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:chrome": "playwright test --project=chromium",
+    "test:setup": "npm run db:start && npm run db:seed",
+    "test:quick": "playwright test",
+    "test:teardown": "npm run db:stop"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^7.7.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.52.0",
     "@types/leaflet": "^1.9.20",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
     "next": "15.4.3",
     "psql": "^0.0.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-leaflet": "^5.0.0"
+    "react-leaflet": "^5.0.0",
+    "stripe": "^18.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.54.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

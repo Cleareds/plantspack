@@ -66,20 +66,7 @@ export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, clas
 
       console.log('📝 Public URL:', publicUrl)
 
-      // Update user profile
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user.id)
-
-      if (updateError) {
-        console.error('❌ Profile update error:', updateError)
-        throw updateError
-      }
-
-      console.log('✅ Profile updated successfully')
-
-      // Update UI
+      // Update UI - let parent component handle database update
       onAvatarUpdate(publicUrl)
       
       // Clear file input

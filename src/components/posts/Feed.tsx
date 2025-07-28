@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase'
 import PostCard from './PostCard'
 import { Tables } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
+import FeedSorting, { type SortOption } from './FeedSorting'
+import { getFeedPosts, recordUserInteraction, type FeedPost } from '@/lib/feed-algorithm'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'>
@@ -29,6 +31,7 @@ export default function Feed({ onPostCreated }: FeedProps) {
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
   const [activeTab, setActiveTab] = useState<'all' | 'public' | 'friends'>('public')
+  const [sortOption, setSortOption] = useState<SortOption>('relevancy')
   const { user, authReady } = useAuth()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -47,6 +50,30 @@ export default function Feed({ onPostCreated }: FeedProps) {
       }
 
       const currentOffset = loadMore ? offsetRef.current : 0
+
+      // Use new algorithm for public feed with sorting
+      if (activeTab === 'public') {
+        const newPosts = await getFeedPosts({
+          sortBy: sortOption,
+          limit: POSTS_PER_PAGE,
+          offset: currentOffset,
+          userId: user?.id,
+          includeAnalytics: true
+        })
+
+        if (loadMore) {
+          setPosts(prevPosts => [...prevPosts, ...newPosts])
+        } else {
+          setPosts(newPosts)
+        }
+
+        setHasMore(newPosts.length === POSTS_PER_PAGE)
+        offsetRef.current = currentOffset + newPosts.length
+
+        return
+      }
+
+      // Legacy logic for friends/all tabs
       const range = loadMore ? 
         { from: currentOffset, to: currentOffset + POSTS_PER_PAGE - 1 } :
         { from: 0, to: POSTS_PER_PAGE - 1 }
@@ -60,7 +87,8 @@ export default function Feed({ onPostCreated }: FeedProps) {
             username,
             first_name,
             last_name,
-            avatar_url
+            avatar_url,
+            subscription_tier
           ),
           post_likes (
             id,
@@ -73,11 +101,8 @@ export default function Feed({ onPostCreated }: FeedProps) {
         .order('created_at', { ascending: false })
         .range(range.from, range.to)
 
-      // Apply filters based on tab selection and user status
-      if (activeTab === 'public') {
-        // Public tab: only public posts
-        query = query.eq('privacy', 'public')
-      } else if (activeTab === 'friends' && user) {
+      // Apply filters for friends/all tabs
+      if (activeTab === 'friends' && user) {
         // Friends tab: only friends posts from people the user follows
         query = query.eq('privacy', 'friends')
         
@@ -149,7 +174,7 @@ export default function Feed({ onPostCreated }: FeedProps) {
       setLoading(false)
       setLoadingMore(false)
     }
-  }, [user, activeTab]) // Recreate when user or tab changes
+  }, [user, activeTab, sortOption]) // Recreate when user, tab, or sort changes
 
   const loadMorePosts = useCallback(() => {
     if (!loadingMore && hasMore) {
@@ -311,7 +336,8 @@ export default function Feed({ onPostCreated }: FeedProps) {
             username,
             first_name,
             last_name,
-            avatar_url
+            avatar_url,
+            subscription_tier
           ),
           post_likes (
             id,
@@ -461,6 +487,23 @@ export default function Feed({ onPostCreated }: FeedProps) {
               Friends
             </button>
           </div>
+          
+          {/* Feed Sorting - Only for public tab */}
+          {activeTab === 'public' && (
+            <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-600">
+                  Sort posts by:
+                </div>
+                <FeedSorting
+                  currentSort={sortOption}
+                  onSortChange={setSortOption}
+                  isPublicFeed={activeTab === 'public'}
+                  postCount={posts.length}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
       

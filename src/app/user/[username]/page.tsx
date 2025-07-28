@@ -8,6 +8,7 @@ import { Tables } from '@/lib/supabase'
 import PostCard from '@/components/posts/PostCard'
 import { Loader2, MapPin, Users, UserPlus } from 'lucide-react'
 import FollowButton from '@/components/social/FollowButton'
+import TierBadge from '@/components/ui/TierBadge'
 import Link from 'next/link'
 
 type Post = Tables<'posts'> & {
@@ -52,7 +53,7 @@ export default function UserProfilePage() {
       
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('*')
+        .select('*, subscription_tier')
         .eq('username', username)
         .single()
 
@@ -125,7 +126,8 @@ export default function UserProfilePage() {
             username,
             first_name,
             last_name,
-            avatar_url
+            avatar_url,
+            subscription_tier
           ),
           post_likes (
             id,
@@ -258,11 +260,16 @@ export default function UserProfilePage() {
               )}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {profileUser.first_name && profileUser.last_name
-                  ? `${profileUser.first_name} ${profileUser.last_name}`
-                  : profileUser.username}
-              </h1>
+              <div className="flex items-center space-x-3 mb-1">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {profileUser.first_name && profileUser.last_name
+                    ? `${profileUser.first_name} ${profileUser.last_name}`
+                    : profileUser.username}
+                </h1>
+                {profileUser.subscription_tier && profileUser.subscription_tier !== 'free' && (
+                  <TierBadge tier={profileUser.subscription_tier as 'medium' | 'premium'} size="md" />
+                )}
+              </div>
               <p className="text-gray-500">@{profileUser.username}</p>
               {profileUser.bio && (
                 <p className="text-gray-700 mt-2">{profileUser.bio}</p>

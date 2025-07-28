@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
-import { Save, User, Mail } from 'lucide-react'
+import { Save, User, Mail, Crown } from 'lucide-react'
 import SimpleAvatarUpload from '@/components/ui/SimpleAvatarUpload'
+import Link from 'next/link'
 
 export default function SettingsPage() {
   const [username, setUsername] = useState('')
@@ -19,6 +20,9 @@ export default function SettingsPage() {
   const { user, profile, updateProfile, authReady } = useAuth()
   const router = useRouter()
 
+  // Track if user has made changes to prevent overriding their input
+  const [hasUserMadeChanges, setHasUserMadeChanges] = useState(false)
+
   useEffect(() => {
     if (!authReady) {
       return
@@ -29,15 +33,15 @@ export default function SettingsPage() {
       return
     }
 
-    // Always update data when profile changes, not just on first load
-    if (profile) {
+    // Only update form data if user hasn't made changes and we have fresh profile data
+    if (profile && !hasUserMadeChanges && !initialDataLoaded) {
       setUsername(profile.username || '')
       setFirstName(profile.first_name || '')
       setLastName(profile.last_name || '')
       setBio(profile.bio || '')
       setAvatarUrl(profile.avatar_url || null)
       setInitialDataLoaded(true)
-    } else if (user && !initialDataLoaded) {
+    } else if (user && !initialDataLoaded && !profile) {
       // Fallback to user metadata if profile isn't loaded yet
       const metadata = user.user_metadata
       setUsername(metadata?.username || '')
@@ -47,7 +51,15 @@ export default function SettingsPage() {
       setAvatarUrl(null)
       setInitialDataLoaded(true)
     }
-  }, [user, profile, authReady, router, initialDataLoaded])
+  }, [user, profile, authReady, router, initialDataLoaded, hasUserMadeChanges])
+
+  // Mark that user has made changes when they interact with form fields
+  const handleInputChange = (setter: (value: string) => void, value: string) => {
+    if (!hasUserMadeChanges) {
+      setHasUserMadeChanges(true)
+    }
+    setter(value)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -59,6 +71,7 @@ export default function SettingsPage() {
       first_name: firstName,
       last_name: lastName,
       bio,
+      avatar_url: avatarUrl, // Include avatar URL in the update
     })
 
     if (result.error) {
@@ -66,14 +79,27 @@ export default function SettingsPage() {
       setMessage(`Error updating profile: ${result.error.message || 'Please try again.'}`)
     } else {
       setMessage('Profile updated successfully!')
+      setHasUserMadeChanges(false) // Reset the change tracking after successful save
     }
     
     setSaving(false)
   }
 
-  const handleAvatarUpdate = (newAvatarUrl: string) => {
+  const handleAvatarUpdate = async (newAvatarUrl: string) => {
     setAvatarUrl(newAvatarUrl)
-    setMessage('Avatar updated successfully!')
+    setHasUserMadeChanges(true)
+    
+    // Automatically save the avatar to the database
+    const result = await updateProfile({
+      avatar_url: newAvatarUrl
+    })
+    
+    if (result.error) {
+      console.error('Avatar update error:', result.error)
+      setMessage(`Error updating avatar: ${result.error.message || 'Please try again.'}`)
+    } else {
+      setMessage('Avatar updated successfully!')
+    }
   }
 
   if (!authReady) {
@@ -93,9 +119,32 @@ export default function SettingsPage() {
 
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h1>
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Settings Navigation */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Settings</h2>
+            <nav className="space-y-2">
+              <div className="flex items-center space-x-3 px-3 py-2 bg-green-50 text-green-700 rounded-md">
+                <User className="h-4 w-4" />
+                <span className="text-sm font-medium">Profile</span>
+              </div>
+              <Link 
+                href="/settings/subscription"
+                className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                <Crown className="h-4 w-4" />
+                <span className="text-sm font-medium">Subscription</span>
+              </Link>
+            </nav>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="lg:col-span-3">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h1>
 
         {message && (
           <div className={`mb-4 p-3 rounded ${
@@ -154,7 +203,7 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s/g, ''))}
+                onChange={(e) => handleInputChange(setUsername, e.target.value.toLowerCase().replace(/\s/g, ''))}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 required
               />
@@ -169,7 +218,7 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => handleInputChange(setFirstName, e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -180,7 +229,7 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => handleInputChange(setLastName, e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -192,7 +241,7 @@ export default function SettingsPage() {
             </label>
             <textarea
               value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              onChange={(e) => handleInputChange(setBio, e.target.value)}
               rows={4}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
               placeholder="Tell others about yourself and your vegan journey..."
@@ -208,6 +257,8 @@ export default function SettingsPage() {
             <span>{saving ? 'Saving...' : 'Save Changes'}</span>
           </button>
         </form>
+          </div>
+        </div>
       </div>
     </div>
   )

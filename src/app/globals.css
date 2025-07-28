@@ -38,6 +38,13 @@
   overflow: hidden;
 }
 
+/* Search result highlighting */
+mark {
+  background-color: rgb(254 240 138);
+  color: rgb(17 24 39);
+  padding: 0;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

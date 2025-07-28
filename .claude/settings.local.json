@@ -8,7 +8,19 @@
       "Bash(npm uninstall:*)",
       "Bash(rm:*)",
       "Bash(npx supabase db diff:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebFetch(domain:pagespeed.web.dev)",
+      "WebFetch(domain:www.googleapis.com)",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:gtmetrix.com)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm run test:chrome:*)",
+      "Bash(npx supabase:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

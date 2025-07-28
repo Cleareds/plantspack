@@ -276,6 +276,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         first_name: updates.first_name || profile?.first_name || user.user_metadata?.first_name || '',
         last_name: updates.last_name || profile?.last_name || user.user_metadata?.last_name || '',
         bio: updates.bio !== undefined ? updates.bio : (profile?.bio || ''),
+        avatar_url: updates.avatar_url !== undefined ? updates.avatar_url : (profile?.avatar_url || null),
         ...updates // This ensures any passed updates override the defaults
       }
 

@@ -3,11 +3,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Image as ImageIcon, Globe, Users, Send, X } from 'lucide-react'
+import { Image as ImageIcon, Globe, Users, Send, X, MapPin, Tag } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import Link from 'next/link'
+import { analyzePostContent, getCurrentLocation, detectLanguage, type LocationData, type PostMetadata } from '@/lib/post-analytics'
+import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription } from '@/lib/stripe'
 
 interface CreatePostProps {
   onPostCreated: () => void
@@ -17,7 +19,10 @@ const DRAFT_KEY = 'createpost_draft'
 
 export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const { user, profile } = useAuth()
-  const maxChars = 500
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null)
+  
+  // Get max characters based on subscription tier
+  const maxChars = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxPostLength : 250
 
   // Load draft from localStorage on mount
   const loadDraft = useCallback(() => {
@@ -38,6 +43,19 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [imageUrls, setImageUrls] = useState<string[]>(() => loadDraft()?.imageUrls || [])
   const [detectedUrls, setDetectedUrls] = useState<string[]>([])
   const [showLinkPreview, setShowLinkPreview] = useState(() => loadDraft()?.showLinkPreview !== false)
+  
+  // Enhanced metadata state
+  const [locationData, setLocationData] = useState<LocationData | null>(null)
+  const [shareLocation, setShareLocation] = useState(false)
+  const [analyzedMetadata, setAnalyzedMetadata] = useState<Pick<PostMetadata, 'tags' | 'contentType' | 'mood'> | null>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+
+  // Load user subscription on mount
+  useEffect(() => {
+    if (user) {
+      getUserSubscription(user.id).then(setSubscription)
+    }
+  }, [user])
 
   // Save draft to localStorage
   const saveDraft = useCallback(() => {
@@ -48,13 +66,15 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         privacy,
         showImageUploader,
         imageUrls,
-        showLinkPreview
+        showLinkPreview,
+        shareLocation,
+        locationData
       }
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
     } catch {
       // Ignore localStorage errors
     }
-  }, [content, privacy, showImageUploader, imageUrls, showLinkPreview])
+  }, [content, privacy, showImageUploader, imageUrls, showLinkPreview, shareLocation, locationData])
 
   // Save draft when form state changes
   useEffect(() => {
@@ -84,6 +104,41 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     setDetectedUrls(urls)
   }, [content])
 
+  // Analyze content for metadata when content changes
+  useEffect(() => {
+    if (content.trim().length < 10) {
+      setAnalyzedMetadata(null)
+      return
+    }
+
+    const timeoutId = setTimeout(() => {
+      setIsAnalyzing(true)
+      const metadata = analyzePostContent(content)
+      setAnalyzedMetadata(metadata)
+      setIsAnalyzing(false)
+    }, 500) // Debounce analysis
+
+    return () => clearTimeout(timeoutId)
+  }, [content])
+
+  // Get location when user wants to share it
+  const handleLocationToggle = useCallback(async () => {
+    if (!shareLocation) {
+      setShareLocation(true)
+      if (!locationData) {
+        try {
+          const location = await getCurrentLocation()
+          setLocationData(location)
+        } catch (error) {
+          console.warn('Failed to get location:', error)
+          setShareLocation(false)
+        }
+      }
+    } else {
+      setShareLocation(false)
+    }
+  }, [shareLocation, locationData])
+
   const handleImagesChange = (urls: string[]) => {
     setImageUrls(urls)
   }
@@ -99,27 +154,45 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
     setLoading(true)
     try {
+      // Get final content analysis
+      const finalMetadata = analyzedMetadata || analyzePostContent(content)
+      const detectedLang = detectLanguage(content)
+      
       const postData: any = {
         user_id: user.id,
         content: content.trim(),
         privacy,
+        tags: finalMetadata.tags,
+        content_type: finalMetadata.contentType,
+        mood: finalMetadata.mood,
+        language: detectedLang
+      }
+
+      // Add location data if user chose to share
+      if (shareLocation && locationData) {
+        if (locationData.city) postData.location_city = locationData.city
+        if (locationData.region) postData.location_region = locationData.region
       }
 
       // Only add images field if we have images to avoid database errors
       if (imageUrls.length > 0) {
-        postData.images = imageUrls
+        postData.image_urls = imageUrls
       }
 
       const { error } = await supabase.from('posts').insert(postData)
 
       if (error) throw error
 
+      // Reset form
       setContent('')
       setCharCount(0)
       setPrivacy('public')
       setImageUrls([])
       setShowImageUploader(false)
       setShowLinkPreview(true)
+      setShareLocation(false)
+      setLocationData(null)
+      setAnalyzedMetadata(null)
       clearDraft()
       onPostCreated()
     } catch (error) {
@@ -200,6 +273,44 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               </div>
             )}
 
+            {/* Content Analysis Preview */}
+            {analyzedMetadata && (
+              <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Tag className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">Content Analysis</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                    {analyzedMetadata.contentType.replace('_', ' ')}
+                  </span>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                    {analyzedMetadata.mood}
+                  </span>
+                  {analyzedMetadata.tags.map((tag, index) => (
+                    <span key={index} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Location Preview */}
+            {shareLocation && locationData && (
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg border">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm text-blue-800">
+                    Sharing location: {locationData.city && locationData.region 
+                      ? `${locationData.city}, ${locationData.region}`
+                      : locationData.city || locationData.region || 'Current location'
+                    }
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center justify-between mt-3">
               <div className="flex items-center space-x-4">
                 <button
@@ -213,6 +324,19 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 >
                   <ImageIcon className="h-5 w-5" />
                   <span className="text-sm">Photo</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleLocationToggle}
+                  className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
+                    shareLocation 
+                      ? 'text-blue-600' 
+                      : 'text-gray-500'
+                  }`}
+                >
+                  <MapPin className="h-5 w-5" />
+                  <span className="text-sm">Location</span>
                 </button>
                 
                 <div className="flex items-center space-x-2">
@@ -242,9 +366,19 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               </div>
 
               <div className="flex items-center space-x-3">
-                <span className={`text-sm ${charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
-                  {charCount}/{maxChars}
-                </span>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-sm ${charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
+                    {charCount}/{maxChars}
+                  </span>
+                  {subscription?.tier === 'free' && charCount > 200 && (
+                    <Link
+                      href="/pricing"
+                      className="text-xs text-green-600 hover:text-green-700 underline"
+                    >
+                      Upgrade for 1000 chars
+                    </Link>
+                  )}
+                </div>
                 <button
                   type="submit"
                   disabled={(!content.trim() && imageUrls.length === 0) || loading || charCount > maxChars}

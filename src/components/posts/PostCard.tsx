@@ -13,14 +13,19 @@ import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import LinkifiedText from '../ui/LinkifiedText'
 import SignUpModal from '../guest/SignUpModal'
+import TierBadge from '../ui/TierBadge'
 import Link from 'next/link'
 
 type Post = Tables<'posts'> & {
-  users: Tables<'users'>
+  users: Tables<'users'> & {
+    subscription_tier?: 'free' | 'medium' | 'premium'
+  }
   post_likes: { id: string; user_id: string }[]
   comments: { id: string }[]
   parent_post?: (Tables<'posts'> & {
-    users: Tables<'users'>
+    users: Tables<'users'> & {
+      subscription_tier?: 'free' | 'medium' | 'premium'
+    }
   }) | null
 }
 
@@ -156,6 +161,9 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                         : post.users.username}
                     </h3>
                   </Link>
+                  {post.users.subscription_tier && post.users.subscription_tier !== 'free' && (
+                    <TierBadge tier={post.users.subscription_tier} size="sm" />
+                  )}
                   <span className="text-gray-500">•</span>
                   <span className="text-gray-500 text-sm">
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
@@ -221,6 +229,9 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                         : post.users.username}
                     </h3>
                   </Link>
+                  {post.users.subscription_tier && post.users.subscription_tier !== 'free' && (
+                    <TierBadge tier={post.users.subscription_tier} size="sm" />
+                  )}
                   <span className="text-gray-500">•</span>
                   <span className="text-gray-500 text-sm">
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}

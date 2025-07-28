@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
-import { Leaf, Menu, X, Home, Map, User, LogOut, Settings } from 'lucide-react'
+import { Leaf, Menu, X, Home, Map, User, LogOut, Settings, Crown } from 'lucide-react'
+import SearchBar from '@/components/search/SearchBar'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -27,6 +28,13 @@ export default function Header() {
             <span className="text-xl font-bold text-gray-900">PlantsPack</span>
           </Link>
 
+          {/* Search Bar - Only for logged in users */}
+          {user && (
+            <div className="hidden md:block flex-1 max-w-lg mx-8">
+              <SearchBar />
+            </div>
+          )}
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
@@ -42,6 +50,13 @@ export default function Header() {
             >
               <Map className="h-5 w-5" />
               <span>Map</span>
+            </Link>
+            <Link
+              href="/pricing"
+              className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors"
+            >
+              <Crown className="h-5 w-5" />
+              <span>Pricing</span>
             </Link>
             {user && username && (
               <>
@@ -92,6 +107,12 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-2 pt-2 pb-3 space-y-1">
+            {/* Mobile Search Bar - Only for logged in users */}
+            {user && (
+              <div className="px-3 py-2">
+                <SearchBar />
+              </div>
+            )}
             <Link
               href="/"
               onClick={() => setIsMenuOpen(false)}
@@ -107,6 +128,14 @@ export default function Header() {
             >
               <Map className="h-5 w-5" />
               <span>Map</span>
+            </Link>
+            <Link
+              href="/pricing"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50"
+            >
+              <Crown className="h-5 w-5" />
+              <span>Pricing</span>
             </Link>
             {user && username && (
               <>
