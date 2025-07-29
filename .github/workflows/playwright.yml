@@ -4,10 +4,11 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   test:
-    timeout-minutes: 60
+    timeout-minutes: 30  # Reduced for faster feedback
     runs-on: ubuntu-latest
     services:
       postgres:

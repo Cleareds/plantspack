@@ -20,7 +20,8 @@
       "Bash(npx supabase:*)",
       "Bash(pkill:*)",
       "Bash(true)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }

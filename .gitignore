@@ -10,8 +10,43 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# testing artifacts (keep test source files for deployment)
 /coverage
+/playwright-report/
+/test-results/
+playwright-report/
+test-results/
+playwright/.cache/
+.playwright/
+test-output/
+screenshots/
+videos/
+traces/
+downloads/
+# Test build artifacts
+*.spec.js.map
+*.test.js.map
+# Test media files (but keep test source code)
+test-results/**/*.png
+test-results/**/*.webm  
+test-results/**/*.mp4
+playwright-report/**/*.png
+playwright-report/**/*.webm
+playwright-report/**/*.mp4
+# But keep source images in public and src
+!/public/**/*.png
+!/public/**/*.jpg
+!/public/**/*.jpeg
+!/public/**/*.gif
+!/public/**/*.svg
+!/src/**/*.png
+!/src/**/*.jpg
+!/src/**/*.jpeg
+# Keep all test source files for deployment
+!/tests/**/*.ts
+!/tests/**/*.js
+!playwright.config.ts
+!playwright.config.ci.ts
 
 # next.js
 /.next/
