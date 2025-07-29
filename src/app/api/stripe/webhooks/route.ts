@@ -2,13 +2,20 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { supabase } from '@/lib/supabase'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-06-30.basil',
-})
+}) : null
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
+  if (!stripe) {
+    return NextResponse.json(
+      { error: 'Stripe not configured' },
+      { status: 500 }
+    )
+  }
+
   try {
     const body = await request.text()
     const signature = request.headers.get('stripe-signature')!
@@ -65,6 +72,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  if (!stripe) return
+  
   const userId = session.metadata?.userId
   const tierId = session.metadata?.tierId as 'medium' | 'premium'
 
@@ -97,6 +106,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+  if (!stripe) return
+  
   const subscriptionId = (invoice as any).subscription as string
   
   try {
@@ -126,6 +137,8 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  if (!stripe) return
+  
   const subscriptionId = (invoice as any).subscription as string
   
   try {

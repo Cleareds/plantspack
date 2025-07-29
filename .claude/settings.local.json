@@ -21,7 +21,10 @@
       "Bash(pkill:*)",
       "Bash(true)",
       "Bash(ls:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(gh repo view:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
