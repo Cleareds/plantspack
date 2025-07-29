@@ -32,8 +32,9 @@
     "test:fast": "playwright test --project=chromium --workers=1 --reporter=list",
     "test:setup": "npm run db:start && npm run db:seed",
     "test:quick": "playwright test --reporter=list",
-    "test:teardown": "npm run db:stop",
-    "test:clean": "bash scripts/clean-test-artifacts.sh"
+    "test:teardown": "npm run db:stop", 
+    "test:clean": "bash scripts/clean-test-artifacts.sh",
+    "fix:github-actions": "bash scripts/github-actions-cleanup.sh"
   },
   "dependencies": {
     "@stripe/stripe-js": "^7.7.0",
