@@ -62,9 +62,9 @@ export default function Feed({ onPostCreated }: FeedProps) {
         })
 
         if (loadMore) {
-          setPosts(prevPosts => [...prevPosts, ...newPosts])
+          setPosts(prevPosts => [...prevPosts, ...(newPosts as any)])
         } else {
-          setPosts(newPosts)
+          setPosts(newPosts as any)
         }
 
         setHasMore(newPosts.length === POSTS_PER_PAGE)

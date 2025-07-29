@@ -86,8 +86,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       new_status: 'active',
       stripe_sub_id: subscription.id,
       stripe_cust_id: subscription.customer as string,
-      period_start: subscription.current_period_start ? new Date(subscription.current_period_start * 1000).toISOString() : null,
-      period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : null
+      period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000).toISOString() : null,
+      period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000).toISOString() : null
     })
 
     console.log(`Subscription activated for user ${userId}, tier: ${tierId}`)
@@ -97,7 +97,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
-  const subscriptionId = invoice.subscription as string
+  const subscriptionId = (invoice as any).subscription as string
   
   try {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
@@ -115,8 +115,8 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       new_status: 'active',
       stripe_sub_id: subscription.id,
       stripe_cust_id: subscription.customer as string,
-      period_start: subscription.current_period_start ? new Date(subscription.current_period_start * 1000).toISOString() : null,
-      period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : null
+      period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000).toISOString() : null,
+      period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000).toISOString() : null
     })
 
     console.log(`Payment succeeded for user ${userId}`)
@@ -126,7 +126,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  const subscriptionId = invoice.subscription as string
+  const subscriptionId = (invoice as any).subscription as string
   
   try {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
@@ -167,8 +167,8 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       new_status: status,
       stripe_sub_id: subscription.id,
       stripe_cust_id: subscription.customer as string,
-      period_start: subscription.current_period_start ? new Date(subscription.current_period_start * 1000).toISOString() : null,
-      period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : null
+      period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000).toISOString() : null,
+      period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000).toISOString() : null
     })
 
     console.log(`Subscription updated for user ${userId}, status: ${status}`)

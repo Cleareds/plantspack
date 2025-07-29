@@ -336,7 +336,7 @@ function calculateQualityScore(post: FeedPost): number {
   const engagementRate = (likeCount + commentCount) / Math.max(viewCount, 1)
   
   // Content quality indicators
-  const hasImages = post.image_urls && post.image_urls.length > 0
+  const hasImages = (post as any).image_urls && (post as any).image_urls.length > 0
   const contentLength = post.content.length
   const optimalLength = contentLength >= 50 && contentLength <= 500 // Sweet spot
 

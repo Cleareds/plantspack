@@ -1,7 +1,4 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm ci",
   "framework": "nextjs",
   "regions": ["iad1"],
   "functions": {
@@ -18,12 +15,5 @@
     "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret",
     "NEXTAUTH_SECRET": "@nextauth_secret",
     "NEXTAUTH_URL": "@nextauth_url"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
-      "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1"
-    }
   }
 }

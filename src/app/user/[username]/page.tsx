@@ -266,8 +266,8 @@ export default function UserProfilePage() {
                     ? `${profileUser.first_name} ${profileUser.last_name}`
                     : profileUser.username}
                 </h1>
-                {profileUser.subscription_tier && profileUser.subscription_tier !== 'free' && (
-                  <TierBadge tier={profileUser.subscription_tier as 'medium' | 'premium'} size="md" />
+                {(profileUser as any).subscription_tier && (profileUser as any).subscription_tier !== 'free' && (
+                  <TierBadge tier={(profileUser as any).subscription_tier as 'medium' | 'premium'} size="md" />
                 )}
               </div>
               <p className="text-gray-500">@{profileUser.username}</p>
