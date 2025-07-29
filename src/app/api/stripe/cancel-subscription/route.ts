@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
       })
       .eq('stripe_subscription_id', subscriptionId)
 
+    // Return subscription status with proper type casting
     return NextResponse.json({ 
       success: true,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
