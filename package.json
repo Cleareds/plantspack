@@ -25,6 +25,7 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:chrome": "playwright test --project=chromium",
+    "test:ci": "playwright test --config=playwright.config.ci.ts",
     "test:setup": "npm run db:start && npm run db:seed",
     "test:quick": "playwright test",
     "test:teardown": "npm run db:stop"

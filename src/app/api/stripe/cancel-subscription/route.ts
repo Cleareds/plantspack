@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+      currentPeriodEnd: subscription.current_period_end ? new Date(subscription.current_period_end * 1000) : null
     })
   } catch (error) {
     console.error('Error canceling subscription:', error)

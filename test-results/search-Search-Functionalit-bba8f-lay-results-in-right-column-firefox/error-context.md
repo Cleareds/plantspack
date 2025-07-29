@@ -1,0 +1,112 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - link "PlantsPack":
+    - /url: /
+  - textbox "Search posts and users...": testuser
+  - button "Clear search"
+  - paragraph: No results found for "testuser"
+  - navigation:
+    - link "Feed":
+      - /url: /
+    - link "Map":
+      - /url: /map
+    - link "Pricing":
+      - /url: /pricing
+    - link "Profile":
+      - /url: /profile/testuser1
+    - link "Settings":
+      - /url: /settings
+    - button "Sign Out"
+- main:
+  - button "All Posts"
+  - button "Public"
+  - button "Friends"
+  - text: "Sort posts by:"
+  - button "Relevancy 5"
+  - link "M":
+    - /url: /user/marcusplant
+  - link "Marcus Plant":
+    - /url: /user/marcusplant
+    - heading "Marcus Plant" [level=3]
+  - text: • 4 days ago
+  - link "@marcusplant":
+    - /url: /user/marcusplant
+  - button "Follow"
+  - button
+  - text: "Pre-workout fuel: banana with almond butter and a green smoothie 🍌💚 Plant protein is all you need for strength training!"
+  - button "0"
+  - button "0"
+  - button "Share"
+  - link "M":
+    - /url: /user/marcusplant
+  - link "Marcus Plant":
+    - /url: /user/marcusplant
+    - heading "Marcus Plant" [level=3]
+  - text: • 4 days ago
+  - link "@marcusplant":
+    - /url: /user/marcusplant
+  - button "Follow"
+  - button
+  - text: Completed my first plant-powered marathon today! 🏃‍♂️💨 Proving once again that you don't need animal products for peak performance. Fueled entirely by fruits, nuts, and determination!
+  - button "0"
+  - button "0"
+  - button "Share"
+  - link "E":
+    - /url: /user/emmagreen
+  - link "Emma Green":
+    - /url: /user/emmagreen
+    - heading "Emma Green" [level=3]
+  - text: • 4 days ago
+  - link "@emmagreen":
+    - /url: /user/emmagreen
+  - button "Follow"
+  - button
+  - text: "Just discovered this amazing cashew-based cheese recipe! 🧀 The texture is so creamy and the flavor is incredible. Plant-based alternatives keep getting better! #VeganCheese #PlantBased"
+  - button "0"
+  - button "0"
+  - button "Share"
+  - link "E":
+    - /url: /user/emmagreen
+  - link "Emma Green":
+    - /url: /user/emmagreen
+    - heading "Emma Green" [level=3]
+  - text: • 4 days ago
+  - link "@emmagreen":
+    - /url: /user/emmagreen
+  - button "Follow"
+  - button
+  - text: Morning smoothie bowl with fresh berries, granola, and almond butter 🍓🥣 Starting the day with plants gives me so much energy!
+  - button "0"
+  - button "0"
+  - button "Share"
+  - link "L":
+    - /url: /user/lilyherbs
+  - link "Lily Herbs":
+    - /url: /user/lilyherbs
+    - heading "Lily Herbs" [level=3]
+  - text: • 4 days ago
+  - link "@lilyherbs":
+    - /url: /user/lilyherbs
+  - button "Follow"
+  - button
+  - text: "Harvested fresh herbs from my garden today 🌿 There's something magical about growing your own medicine. Today's haul: basil, rosemary, thyme, and lavender."
+  - button "0"
+  - button "0"
+  - button "Share"
+  - button "Load More Posts"
+  - heading "Hello, Friend! 👋" [level=2]
+  - paragraph: Share your plant-based animal-friendly journey with the PlantsPack community
+  - link "U":
+    - /url: /user/undefined
+  - textbox "Share your vegan journey..."
+  - button "Photo"
+  - button "Location"
+  - radio "Public" [checked]
+  - text: Public
+  - radio "Friends"
+  - text: Friends 0/250
+  - button "Post" [disabled]
+- alert
+```

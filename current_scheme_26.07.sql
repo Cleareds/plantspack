@@ -9,8 +9,8 @@ CREATE TABLE public.comments (
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   CONSTRAINT comments_pkey PRIMARY KEY (id),
-  CONSTRAINT comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id),
-  CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+  CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id)
 );
 CREATE TABLE public.favorite_places (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -18,8 +18,8 @@ CREATE TABLE public.favorite_places (
   place_id uuid NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   CONSTRAINT favorite_places_pkey PRIMARY KEY (id),
-  CONSTRAINT favorite_places_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
-  CONSTRAINT favorite_places_place_id_fkey FOREIGN KEY (place_id) REFERENCES public.places(id)
+  CONSTRAINT favorite_places_place_id_fkey FOREIGN KEY (place_id) REFERENCES public.places(id),
+  CONSTRAINT favorite_places_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 CREATE TABLE public.follows (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -66,9 +66,10 @@ CREATE TABLE public.posts (
   parent_post_id uuid,
   created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  images jsonb DEFAULT '[]'::jsonb,
   CONSTRAINT posts_pkey PRIMARY KEY (id),
-  CONSTRAINT posts_parent_post_id_fkey FOREIGN KEY (parent_post_id) REFERENCES public.posts(id),
-  CONSTRAINT posts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+  CONSTRAINT posts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT posts_parent_post_id_fkey FOREIGN KEY (parent_post_id) REFERENCES public.posts(id)
 );
 CREATE TABLE public.users (
   id uuid NOT NULL,
