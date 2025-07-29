@@ -1,9 +1,12 @@
 import { defineConfig, devices } from '@playwright/test'
-import dotenv from 'dotenv'
 import path from 'path'
 
-// Load test environment variables
-dotenv.config({ path: path.resolve(__dirname, '.env.test.local') })
+// Load test environment variables from .env.test.local if it exists
+try {
+  require('dotenv').config({ path: path.resolve(__dirname, '.env.test.local') })
+} catch (e) {
+  // dotenv is not available, which is fine for production builds
+}
 
 /**
  * @see https://playwright.dev/docs/test-configuration

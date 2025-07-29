@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Ensure all avatars maintain proper aspect ratio and circular shape */
 .avatar-container {
