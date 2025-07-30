@@ -4,7 +4,9 @@ import { loadStripe } from '@stripe/stripe-js'
 import { supabase } from './supabase'
 
 // Initialize Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+  : Promise.resolve(null)
 
 export { stripePromise }
 
@@ -171,7 +173,9 @@ export async function redirectToCheckout(
 ) {
   try {
     const stripe = await stripePromise
-    if (!stripe) throw new Error('Stripe not loaded')
+    if (!stripe) {
+      throw new Error('Stripe is not properly configured. Please check your environment variables.')
+    }
 
     const sessionId = await createCheckoutSession(
       tierId,

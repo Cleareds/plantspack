@@ -53,7 +53,8 @@ function PricingContent() {
       await redirectToCheckout(tierId, user.id)
     } catch (error) {
       console.error('Error starting checkout:', error)
-      alert('Failed to start checkout. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to start checkout. Please try again.'
+      alert(errorMessage)
     } finally {
       setLoading(false)
     }
