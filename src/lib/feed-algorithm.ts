@@ -122,23 +122,6 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
  */
 async function getRelevancyRankedPosts(userId: string, limit: number, offset: number): Promise<FeedPost[]> {
   try {
-    // Get user preferences and interaction patterns
-    const [preferencesResult, patternsResult] = await Promise.all([
-      supabase
-        .from('user_preferences')
-        .select('*')
-        .eq('user_id', userId)
-        .single(),
-      supabase
-        .from('user_interaction_patterns')
-        .select('*')
-        .eq('user_id', userId)
-        .single()
-    ])
-
-    const preferences = preferencesResult.data
-    const patterns = patternsResult.data
-
     // Get base posts with extended data for ranking
     const { data: posts, error } = await supabase
       .from('posts')
@@ -166,18 +149,13 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
     if (error) throw error
     if (!posts || posts.length === 0) return []
 
-    // Calculate relevancy score for each post
-    const rankedPosts = await Promise.all(
-      posts.map(async (post) => {
-        const relevancyScore = await calculateRelevancyScore(
-          post as FeedPost,
-          userId,
-          preferences,
-          patterns
-        )
-        return { ...post, relevancyScore }
-      })
-    )
+    // For now, use engagement-based relevancy since we don't have user preferences tables yet
+    const rankedPosts = posts.map((post) => {
+      const engagementScore = (post as any).post_likes.length + (post as any).comments.length
+      const recencyBoost = calculateRecencyBoost(post.created_at)
+      const relevancyScore = (engagementScore * 0.7) + (recencyBoost * 0.3)
+      return { ...post, relevancyScore }
+    })
 
     // Sort by relevancy score and apply pagination
     rankedPosts.sort((a, b) => b.relevancyScore - a.relevancyScore)
@@ -186,7 +164,7 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
   } catch (error) {
     console.error('Error in relevancy ranking:', error)
     // Fallback to engagement-based ranking
-    return getFeedPosts({ sortBy: 'liked_today', limit, offset })
+    return getFeedPosts({ sortBy: 'recent', limit, offset })
   }
 }
 

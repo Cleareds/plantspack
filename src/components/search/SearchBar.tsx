@@ -135,7 +135,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                     {posts.map((post) => (
                       <Link
                         key={post.id}
-                        href={`/user/${post.users.username}`}
+                        href={`/post/${post.id}`}
                         onClick={handleResultClick}
                         className="block p-3 hover:bg-gray-50 transition-colors"
                       >

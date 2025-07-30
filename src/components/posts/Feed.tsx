@@ -18,7 +18,7 @@ type Post = Tables<'posts'> & {
   }) | null
 }
 
-const POSTS_PER_PAGE = 5
+const POSTS_PER_PAGE = 10
 
 interface FeedProps {
   onPostCreated?: () => void
@@ -220,190 +220,14 @@ export default function Feed({ onPostCreated }: FeedProps) {
       return
     }
     
-    const loadInitialPosts = async () => {
-      setLoading(true)
-      setError(null)
-      offsetRef.current = 0
-      setPosts([])
-      setHasMore(true)
-
-      try {
-        let query = supabase
-          .from('posts')
-          .select(`
-            *,
-            users (
-              id,
-              username,
-              first_name,
-              last_name,
-              avatar_url
-            ),
-            post_likes (
-              id,
-              user_id
-            ),
-            comments (
-              id
-            )
-          `)
-          .order('created_at', { ascending: false })
-          .range(0, POSTS_PER_PAGE - 1)
-
-        // Apply filters based on tab selection and user status
-        if (activeTab === 'public') {
-          // Public tab: only public posts
-          query = query.eq('privacy', 'public')
-        } else if (activeTab === 'friends' && user) {
-          // Friends tab: only friends posts from people the user follows
-          query = query.eq('privacy', 'friends')
-          
-          const { data: followingData } = await supabase
-            .from('follows')
-            .select('following_id')
-            .eq('follower_id', user.id)
-          
-          const followingIds = followingData?.map(f => f.following_id) || []
-          followingIds.push(user.id) // Include user's own posts
-          
-          if (followingIds.length > 0) {
-            query = query.in('user_id', followingIds)
-          } else {
-            // If not following anyone, only show own posts
-            query = query.eq('user_id', user.id)
-          }
-        } else if (activeTab === 'all' && user) {
-          // All tab: show both public posts and friends posts from followed users
-          const { data: followingData } = await supabase
-            .from('follows')
-            .select('following_id')
-            .eq('follower_id', user.id)
-          
-          const followingIds = followingData?.map(f => f.following_id) || []
-          followingIds.push(user.id) // Include user's own posts
-          
-          // Show public posts OR friends posts from people you follow
-          if (followingIds.length > 0) {
-            query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.in.(${followingIds.join(',')}))`)
-          } else {
-            // If not following anyone, show public posts + own posts
-            query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.eq.${user.id})`)
-          }
-        } else {
-          // Not logged in or fallback: only public posts
-          query = query.eq('privacy', 'public')
-        }
-
-        const { data, error } = await query
-
-        if (error) throw error
-
-        const newPosts = data || []
-        setPosts(newPosts)
-        offsetRef.current = POSTS_PER_PAGE
-        setHasMore(newPosts.length === POSTS_PER_PAGE)
-        
-      } catch (err) {
-        console.error('Error fetching posts:', err)
-        setError('Failed to load posts. Please try again.')
-        setPosts([])
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    loadInitialPosts()
-  }, [authReady, user, activeTab])
+    fetchPosts(false)
+  }, [authReady, fetchPosts])
 
   // Handle tab change
-  const handleTabChange = useCallback(async (tab: 'all' | 'public' | 'friends') => {
+  const handleTabChange = useCallback((tab: 'all' | 'public' | 'friends') => {
     setActiveTab(tab)
-    setPosts([])
-    setHasMore(true)
-    offsetRef.current = 0
-    setLoading(true)
-    setError(null)
-
-    try {
-      const range = { from: 0, to: POSTS_PER_PAGE - 1 }
-
-      let query = supabase
-        .from('posts')
-        .select(`
-          *,
-          users (
-            id,
-            username,
-            first_name,
-            last_name,
-            avatar_url,
-            subscription_tier
-          ),
-          post_likes (
-            id,
-            user_id
-          ),
-          comments (
-            id
-          )
-        `)
-        .order('created_at', { ascending: false })
-        .range(range.from, range.to)
-
-      // Apply filters based on the NEW tab selection
-      if (tab === 'public') {
-        query = query.eq('privacy', 'public')
-      } else if (tab === 'friends' && user) {
-        query = query.eq('privacy', 'friends')
-        
-        const { data: followingData } = await supabase
-          .from('follows')
-          .select('following_id')
-          .eq('follower_id', user.id)
-        
-        const followingIds = followingData?.map(f => f.following_id) || []
-        followingIds.push(user.id)
-        
-        if (followingIds.length > 0) {
-          query = query.in('user_id', followingIds)
-        } else {
-          query = query.eq('user_id', user.id)
-        }
-      } else if (tab === 'all' && user) {
-        const { data: followingData } = await supabase
-          .from('follows')
-          .select('following_id')
-          .eq('follower_id', user.id)
-        
-        const followingIds = followingData?.map(f => f.following_id) || []
-        followingIds.push(user.id)
-        
-        if (followingIds.length > 0) {
-          query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.in.(${followingIds.join(',')}))`)
-        } else {
-          query = query.or(`privacy.eq.public,and(privacy.eq.friends,user_id.eq.${user.id})`)
-        }
-      } else {
-        query = query.eq('privacy', 'public')
-      }
-
-      const { data, error } = await query
-
-      if (error) throw error
-
-      const newPosts = data || []
-      setPosts(newPosts)
-      offsetRef.current = POSTS_PER_PAGE
-      setHasMore(newPosts.length === POSTS_PER_PAGE)
-      
-    } catch (err) {
-      console.error('Error fetching posts for tab:', tab, err)
-      setError('Failed to load posts. Please try again.')
-      setPosts([])
-    } finally {
-      setLoading(false)
-    }
-  }, [user])
+    // fetchPosts will be called due to dependency change
+  }, [])
 
 
   // Handle post creation - refresh the entire feed

@@ -165,9 +165,13 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                     <TierBadge tier={post.users.subscription_tier} size="sm" />
                   )}
                   <span className="text-gray-500">•</span>
-                  <span className="text-gray-500 text-sm">
+                  <Link 
+                    href={`/post/${post.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
+                  >
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                  </span>
+                  </Link>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
@@ -233,9 +237,13 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                     <TierBadge tier={post.users.subscription_tier} size="sm" />
                   )}
                   <span className="text-gray-500">•</span>
-                  <span className="text-gray-500 text-sm">
+                  <Link 
+                    href={`/post/${post.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
+                  >
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                  </span>
+                  </Link>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
