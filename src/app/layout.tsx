@@ -4,6 +4,7 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { AuthProvider } from "@/lib/auth";
 import Header from "@/components/layout/Header";
+import BetaBanner from "@/components/layout/BetaBanner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-gray-50`}>
         <AuthProvider>
           <Header />
+          <BetaBanner />
           <main className="min-h-screen">
             {children}
           </main>

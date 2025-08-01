@@ -25,7 +25,12 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Leaf className="h-8 w-8 text-green-600" />
-            <span className="text-xl font-bold text-gray-900">PlantsPack</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-xl font-bold text-gray-900">PlantsPack</span>
+              <span className="text-xs font-semibold text-white bg-orange-500 px-2 py-1 rounded-full">
+                BETA
+              </span>
+            </div>
           </Link>
 
           {/* Search Bar - Only for logged in users */}
