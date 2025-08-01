@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 
 // Initialize Stripe with secret key
 const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-06-30.basil',
+  apiVersion: '2024-06-20',
 }) : null
 
 const PRICE_IDS = {
@@ -13,93 +13,187 @@ const PRICE_IDS = {
 }
 
 export async function POST(request: NextRequest) {
+  // Enhanced logging for debugging
+  console.log('=== Stripe Checkout Session Creation ===')
+  console.log('Environment check:')
+  console.log('- STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? 'Set' : 'Missing')
+  console.log('- STRIPE_MEDIUM_PRICE_ID:', process.env.STRIPE_MEDIUM_PRICE_ID || 'Missing')
+  console.log('- STRIPE_PREMIUM_PRICE_ID:', process.env.STRIPE_PREMIUM_PRICE_ID || 'Missing')
+
   if (!stripe) {
+    console.error('Stripe not initialized - missing STRIPE_SECRET_KEY')
     return NextResponse.json(
-      { error: 'Stripe not configured' },
+      { error: 'Stripe not configured - missing secret key' },
+      { status: 500 }
+    )
+  }
+
+  // Check if price IDs are configured
+  if (!process.env.STRIPE_MEDIUM_PRICE_ID || !process.env.STRIPE_PREMIUM_PRICE_ID) {
+    console.error('Missing Stripe price IDs in environment variables')
+    return NextResponse.json(
+      { 
+        error: 'Stripe price IDs not configured',
+        details: {
+          medium: process.env.STRIPE_MEDIUM_PRICE_ID ? 'Set' : 'Missing',
+          premium: process.env.STRIPE_PREMIUM_PRICE_ID ? 'Set' : 'Missing'
+        }
+      },
       { status: 500 }
     )
   }
 
   try {
-    const { tierId, userId, successUrl, cancelUrl } = await request.json()
+    const body = await request.json()
+    console.log('Request body:', body)
+    
+    const { tierId, userId, successUrl, cancelUrl } = body
 
     if (!tierId || !userId) {
+      console.error('Missing required parameters:', { tierId, userId })
       return NextResponse.json(
-        { error: 'Missing required parameters' },
+        { error: 'Missing required parameters: tierId and userId are required' },
         { status: 400 }
       )
     }
 
     if (!PRICE_IDS[tierId as keyof typeof PRICE_IDS]) {
+      console.error('Invalid tier ID:', tierId, 'Available:', Object.keys(PRICE_IDS))
       return NextResponse.json(
-        { error: 'Invalid tier ID' },
+        { 
+          error: 'Invalid tier ID',
+          details: {
+            received: tierId,
+            available: Object.keys(PRICE_IDS)
+          }
+        },
         { status: 400 }
       )
     }
 
+    console.log('Using price ID:', PRICE_IDS[tierId as keyof typeof PRICE_IDS])
+
     // Get user details
+    console.log('Fetching user details for ID:', userId)
     const { data: user, error: userError } = await supabase
       .from('users')
       .select('email, stripe_customer_id')
       .eq('id', userId)
       .single()
 
-    if (userError || !user) {
+    if (userError) {
+      console.error('Database error fetching user:', userError)
+      return NextResponse.json(
+        { 
+          error: 'Database error',
+          details: userError.message
+        },
+        { status: 500 }
+      )
+    }
+
+    if (!user) {
+      console.error('User not found:', userId)
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       )
     }
 
+    console.log('User found:', { email: user.email, hasStripeCustomer: !!user.stripe_customer_id })
+
     // Create or retrieve Stripe customer
     let customerId = user.stripe_customer_id
 
     if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: user.email,
-        metadata: {
-          userId: userId,
-        },
-      })
-      customerId = customer.id
+      console.log('Creating new Stripe customer for:', user.email)
+      try {
+        const customer = await stripe.customers.create({
+          email: user.email,
+          metadata: {
+            userId: userId,
+          },
+        })
+        customerId = customer.id
+        console.log('Created Stripe customer:', customerId)
 
-      // Update user with Stripe customer ID
-      await supabase
-        .from('users')
-        .update({ stripe_customer_id: customerId })
-        .eq('id', userId)
+        // Update user with Stripe customer ID
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ stripe_customer_id: customerId })
+          .eq('id', userId)
+
+        if (updateError) {
+          console.error('Failed to update user with Stripe customer ID:', updateError)
+          // Don't fail the request, just log the error
+        }
+      } catch (stripeError) {
+        console.error('Failed to create Stripe customer:', stripeError)
+        return NextResponse.json(
+          { 
+            error: 'Failed to create Stripe customer',
+            details: stripeError instanceof Error ? stripeError.message : 'Unknown error'
+          },
+          { status: 500 }
+        )
+      }
+    } else {
+      console.log('Using existing Stripe customer:', customerId)
     }
 
     // Create checkout session
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price: PRICE_IDS[tierId as keyof typeof PRICE_IDS],
-          quantity: 1,
-        },
-      ],
-      mode: 'subscription',
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: {
-        userId: userId,
-        tierId: tierId,
-      },
-      subscription_data: {
+    console.log('Creating checkout session with params:', {
+      customerId,
+      priceId: PRICE_IDS[tierId as keyof typeof PRICE_IDS],
+      tierId,
+      successUrl,
+      cancelUrl
+    })
+
+    try {
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: PRICE_IDS[tierId as keyof typeof PRICE_IDS],
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: successUrl,
+        cancel_url: cancelUrl,
         metadata: {
           userId: userId,
           tierId: tierId,
         },
-      },
-    })
+        subscription_data: {
+          metadata: {
+            userId: userId,
+            tierId: tierId,
+          },
+        },
+      })
 
-    return NextResponse.json({ sessionId: session.id })
+      console.log('Checkout session created successfully:', session.id)
+      return NextResponse.json({ sessionId: session.id })
+    } catch (stripeError) {
+      console.error('Failed to create checkout session:', stripeError)
+      return NextResponse.json(
+        { 
+          error: 'Failed to create checkout session',
+          details: stripeError instanceof Error ? stripeError.message : 'Unknown Stripe error'
+        },
+        { status: 500 }
+      )
+    }
   } catch (error) {
-    console.error('Error creating checkout session:', error)
+    console.error('Unexpected error in checkout session creation:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
