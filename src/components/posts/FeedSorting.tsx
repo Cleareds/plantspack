@@ -17,7 +17,7 @@ const SORT_OPTIONS: SortConfig[] = [
     value: 'relevancy',
     label: 'Relevancy',
     icon: Target,
-    description: 'Personalized recommendations based on your interests'
+    description: 'Smart ranking based on engagement and recency'
   },
   {
     value: 'recent',
@@ -152,11 +152,6 @@ export default function FeedSorting({
                         }`}>
                           {option.label}
                         </span>
-                        {isRelevancy && (
-                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                            AI
-                          </span>
-                        )}
                         {isSelected && (
                           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
                             Current
@@ -183,10 +178,10 @@ export default function FeedSorting({
               </div>
               <div>
                 <p className="text-xs text-blue-800 font-medium">
-                  Personalized Recommendations
+                  Smart Ranking
                 </p>
                 <p className="text-xs text-blue-600 mt-1">
-                  The relevancy algorithm learns from your interactions to show content you&apos;ll love most.
+                  The relevancy algorithm combines engagement signals and recency to surface the most interesting content.
                 </p>
               </div>
             </div>
