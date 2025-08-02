@@ -74,34 +74,80 @@ export async function POST(request: NextRequest) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   if (!stripe) return
   
+  console.log('=== Handling Checkout Completed ===')
+  console.log('Session ID:', session.id)
+  console.log('Metadata:', session.metadata)
+  
   const userId = session.metadata?.userId
   const tierId = session.metadata?.tierId as 'medium' | 'premium'
 
   if (!userId || !tierId) {
-    console.error('Missing metadata in checkout session')
+    console.error('Missing metadata in checkout session:', { userId, tierId })
     return
   }
 
   try {
     // Get subscription details
+    console.log('Retrieving subscription:', session.subscription)
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
     )
 
+    const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
+    const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
+
+    console.log('Updating user subscription with params:', {
+      target_user_id: userId,
+      new_tier: tierId,
+      new_status: 'active',
+      stripe_sub_id: subscription.id,
+      stripe_cust_id: subscription.customer,
+      period_start: periodStart,
+      period_end: periodEnd
+    })
+
     // Update user subscription
-    await supabase.rpc('update_user_subscription', {
+    const { data, error } = await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
       stripe_sub_id: subscription.id,
       stripe_cust_id: subscription.customer as string,
-      period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000).toISOString() : null,
-      period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000).toISOString() : null
+      period_start: periodStart,
+      period_end: periodEnd
     })
 
-    console.log(`Subscription activated for user ${userId}, tier: ${tierId}`)
+    if (error) {
+      console.error('Database RPC error:', error)
+      throw error
+    }
+
+    console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: subscription.id })
   } catch (error) {
-    console.error('Error handling checkout completion:', error)
+    console.error('❌ Error handling checkout completion:', error)
+    
+    // Fallback: direct database update if RPC fails
+    try {
+      console.log('Attempting fallback direct database update...')
+      const { error: fallbackError } = await supabase
+        .from('users')
+        .update({
+          subscription_tier: tierId,
+          subscription_status: 'active',
+          stripe_subscription_id: session.subscription,
+          stripe_customer_id: session.customer,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId)
+
+      if (fallbackError) {
+        console.error('Fallback update also failed:', fallbackError)
+      } else {
+        console.log('✅ Fallback update succeeded')
+      }
+    } catch (fallbackError) {
+      console.error('❌ Fallback update failed:', fallbackError)
+    }
   }
 }
 

@@ -28,7 +28,11 @@
       "Bash(git commit:*)",
       "Bash(node:*)",
       "Bash(mv:*)",
-      "Bash(npx vercel env:*)"
+      "Bash(npx vercel env:*)",
+      "Bash(nvm use:*)",
+      "Bash(npm config:*)",
+      "Bash(cat:*)",
+      "Bash(npm:*)"
     ],
     "deny": []
   }
