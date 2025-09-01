@@ -90,18 +90,19 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Get subscription details
     console.log('Retrieving subscription:', session.subscription)
     const subscription = await stripe.subscriptions.retrieve(
-      session.subscription as string
+      session.subscription as string,
+      { expand: ['latest_invoice', 'default_payment_method'] }
     )
 
-    const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
-    const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
+    const periodStart = new Date((subscription as any).current_period_start * 1000).toISOString()
+    const periodEnd = new Date((subscription as any).current_period_end * 1000).toISOString()
 
     console.log('Updating user subscription with params:', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
-      stripe_sub_id: subscription.id,
-      stripe_cust_id: subscription.customer,
+      stripe_sub_id: (subscription as any).id,
+      stripe_cust_id: (subscription as any).customer,
       period_start: periodStart,
       period_end: periodEnd
     })
@@ -111,8 +112,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
-      stripe_sub_id: subscription.id,
-      stripe_cust_id: subscription.customer as string,
+      stripe_sub_id: (subscription as any).id,
+      stripe_cust_id: (subscription as any).customer as string,
       period_start: periodStart,
       period_end: periodEnd
     })
@@ -122,7 +123,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       throw error
     }
 
-    console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: subscription.id })
+    console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: (subscription as any).id })
   } catch (error) {
     console.error('❌ Error handling checkout completion:', error)
     
