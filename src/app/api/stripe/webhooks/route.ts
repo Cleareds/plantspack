@@ -124,6 +124,23 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: (subscription as any).id })
+
+    // Check for early purchaser promotion after successful subscription activation
+    if (tierId === 'medium') {
+      try {
+        const { error: promoError } = await supabase.rpc('grant_early_purchaser_subscription', {
+          target_user_id: userId
+        })
+        
+        if (promoError && !promoError.message?.includes('not eligible') && !promoError.message?.includes('no longer available')) {
+          console.error('Error checking early purchaser promotion:', promoError)
+        } else if (!promoError) {
+          console.log('🎉 Early purchaser promotion granted to user:', userId)
+        }
+      } catch (promoCheckError) {
+        console.error('Error during early purchaser promotion check:', promoCheckError)
+      }
+    }
   } catch (error) {
     console.error('❌ Error handling checkout completion:', error)
     

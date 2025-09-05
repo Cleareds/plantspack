@@ -15,6 +15,8 @@ export interface FeedPost {
   location_region?: string
   engagement_score: number
   view_count: number
+  image_urls?: string[] | null
+  video_urls?: string[] | null
   created_at: string
   updated_at: string
   users: {

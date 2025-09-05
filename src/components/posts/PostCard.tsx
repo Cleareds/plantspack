@@ -288,6 +288,26 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               </div>
             ) : null
           })()}
+
+          {/* Videos */}
+          {post.video_urls && post.video_urls.length > 0 && (
+            <div className="mt-3 space-y-3">
+              {post.video_urls.map((videoUrl, index) => (
+                <div key={index} className="relative">
+                  <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
+                    <video
+                      src={videoUrl}
+                      className="w-full h-full object-cover"
+                      controls
+                      preload="metadata"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           
           {/* Link Preview */}
           {(() => {

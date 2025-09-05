@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search } from 'lucide-react'
@@ -333,6 +334,35 @@ export default function Map() {
     }
   }
 
+  const handleDeletePlace = async (placeId: string) => {
+    if (!user) return
+
+    const place = places.find(p => p.id === placeId)
+    if (!place || place.created_by !== user.id) {
+      alert('You can only delete places you created')
+      return
+    }
+
+    if (!confirm(`Are you sure you want to delete "${place.name}"? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const { error } = await supabase
+        .from('places')
+        .delete()
+        .eq('id', placeId)
+        .eq('created_by', user.id) // Extra security check
+
+      if (error) throw error
+      
+      fetchPlaces()
+    } catch (error) {
+      console.error('Error deleting place:', error)
+      alert('Failed to delete place. Please try again.')
+    }
+  }
+
   const handleAddPlace = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -506,7 +536,7 @@ export default function Map() {
             )}
           </div>
 
-          {user && (
+          {user ? (
             <button
               onClick={() => {
                 setShowAddForm(true)
@@ -516,6 +546,17 @@ export default function Map() {
               <Plus className="h-4 w-4" />
               <span>Add Place</span>
             </button>
+          ) : (
+            <div className="text-center">
+              <p className="text-sm text-gray-600 mb-2">Sign up to add places</p>
+              <Link 
+                href="/auth" 
+                className="inline-flex items-center space-x-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Sign Up</span>
+              </Link>
+            </div>
           )}
         </div>
       </div>
@@ -633,18 +674,29 @@ export default function Map() {
                   <div className="p-2 min-w-[200px]">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="font-semibold text-gray-900">{place.name}</h3>
-                      {user && (
-                        <button
-                          onClick={() => toggleFavorite(place.id)}
-                          className={`ml-2 p-1 rounded ${
-                            place.favorite_places.some(fav => fav.user_id === user.id)
-                              ? 'text-red-600'
-                              : 'text-gray-400 hover:text-red-600'
-                          }`}
-                        >
-                          <Heart className="h-4 w-4" />
-                        </button>
-                      )}
+                      <div className="flex items-center space-x-1">
+                        {user && (
+                          <button
+                            onClick={() => toggleFavorite(place.id)}
+                            className={`p-1 rounded ${
+                              place.favorite_places.some(fav => fav.user_id === user.id)
+                                ? 'text-red-600'
+                                : 'text-gray-400 hover:text-red-600'
+                            }`}
+                          >
+                            <Heart className="h-4 w-4" />
+                          </button>
+                        )}
+                        {user && user.id === place.created_by && (
+                          <button
+                            onClick={() => handleDeletePlace(place.id)}
+                            className="p-1 rounded text-gray-400 hover:text-red-600"
+                            title="Delete place"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                     
                     <div className="space-y-1 text-sm text-gray-600">

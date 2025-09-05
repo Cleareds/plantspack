@@ -14,7 +14,8 @@ import {
   Headphones, 
   Palette,
   ArrowLeft,
-  Loader2
+  Loader2,
+  X
 } from 'lucide-react'
 import { 
   SUBSCRIPTION_TIERS, 
@@ -23,6 +24,7 @@ import {
   createPortalSession,
   type UserSubscription 
 } from '@/lib/stripe'
+import { getPromotionalInfo, getUserPromotionalStatus, type PromotionalInfo } from '@/lib/promotional'
 
 function PricingContent() {
   const { user } = useAuth()
@@ -31,15 +33,22 @@ function PricingContent() {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null)
   const [loading, setLoading] = useState(false)
   const [managingSubscription, setManagingSubscription] = useState(false)
+  const [promotionalInfo, setPromotionalInfo] = useState<PromotionalInfo | null>(null)
+  const [userPromoStatus, setUserPromoStatus] = useState<any>(null)
 
-  // Handle success/cancel messages
+  // Handle success/cancel/error messages
   const success = searchParams.get('success')
   const canceled = searchParams.get('canceled')
+  const error = searchParams.get('error')
 
   useEffect(() => {
     if (user) {
       getUserSubscription(user.id).then(setSubscription)
+      getUserPromotionalStatus(user.id).then(setUserPromoStatus)
     }
+    
+    // Load promotional info regardless of user status
+    getPromotionalInfo().then(setPromotionalInfo)
   }, [user])
 
   const handleUpgrade = async (tierId: 'medium' | 'premium') => {
@@ -107,14 +116,40 @@ function PricingContent() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Success/Cancel Messages */}
+        {/* Success/Cancel/Error Messages */}
         {success && (
           <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg">
             <div className="flex items-center space-x-2">
               <Check className="h-5 w-5 text-green-600" />
-              <p className="text-green-800 font-medium">
-                Subscription activated successfully! Welcome to the community! 🌱
-              </p>
+              <div>
+                <p className="text-green-800 font-medium">
+                  🎉 Subscription activated successfully! Welcome to the community! 🌱
+                </p>
+                <p className="text-green-700 text-sm mt-1">
+                  You now have access to all premium features. Start creating amazing content!
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <X className="h-5 w-5 text-red-600" />
+              <div>
+                <p className="text-red-800 font-medium">
+                  Something went wrong with your subscription
+                </p>
+                <p className="text-red-700 text-sm mt-1">
+                  {error === 'payment_failed' 
+                    ? 'Payment could not be processed. Please check your payment method and try again.'
+                    : error === 'session_expired'
+                    ? 'Your checkout session has expired. Please start the process again.'
+                    : 'An unexpected error occurred. Please contact support or try again later.'
+                  }
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -151,6 +186,69 @@ function PricingContent() {
             </div>
           )}
         </div>
+
+        {/* Promotional Banners */}
+        {promotionalInfo && (
+          <div className="mb-12 space-y-4">
+            {/* Early Bird Promotion Banner */}
+            {promotionalInfo.earlyBirdAvailable && !userPromoStatus?.isPromotionalSubscriber && (
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-xl p-6">
+                <div className="text-center">
+                  <div className="flex justify-center items-center space-x-2 mb-3">
+                    <Star className="h-6 w-6 text-green-600" />
+                    <h3 className="text-xl font-bold text-green-800">🎉 Early Bird Special!</h3>
+                    <Star className="h-6 w-6 text-green-600" />
+                  </div>
+                  <p className="text-green-700 text-lg mb-2">
+                    <strong>First 100 registered users get Supporter tier FREE for 1 year!</strong>
+                  </p>
+                  <p className="text-green-600 text-sm">
+                    Only <span className="font-bold">{promotionalInfo.earlyBirdUsersLeft}</span> spots left! 
+                    {!user && ' Sign up now to claim your free subscription.'}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Early Purchaser Promotion Banner */}
+            {promotionalInfo.earlyPurchaserAvailable && (
+              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200 rounded-xl p-6">
+                <div className="text-center">
+                  <div className="flex justify-center items-center space-x-2 mb-3">
+                    <Crown className="h-6 w-6 text-purple-600" />
+                    <h3 className="text-xl font-bold text-purple-800">💫 Purchaser Bonus!</h3>
+                    <Crown className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <p className="text-purple-700 text-lg mb-2">
+                    <strong>First 100 Supporter subscribers get upgraded to Premium FREE for 1 year!</strong>
+                  </p>
+                  <p className="text-purple-600 text-sm">
+                    Only <span className="font-bold">{promotionalInfo.earlyPurchasersLeft}</span> upgrade spots left! 
+                    Subscribe to Supporter ($3/month) and get Premium ($10/month) automatically.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* User's Promotional Status */}
+            {userPromoStatus?.isPromotionalSubscriber && (
+              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 border border-yellow-200 rounded-xl p-6">
+                <div className="text-center">
+                  <div className="flex justify-center items-center space-x-2 mb-3">
+                    <Check className="h-6 w-6 text-yellow-600" />
+                    <h3 className="text-xl font-bold text-yellow-800">🎊 You&apos;re a Special Member!</h3>
+                  </div>
+                  <p className="text-yellow-700 text-lg">
+                    {userPromoStatus.promotionalType === 'early_bird' 
+                      ? `You&apos;re user #${userPromoStatus.registrationNumber}! Enjoying FREE Supporter benefits until ${new Date(userPromoStatus.promotionalGrantedAt).getFullYear() + 1}.`
+                      : 'You received a free Premium upgrade for being an early supporter! Thank you for believing in our community.'
+                    }
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
@@ -294,15 +392,21 @@ function PricingContent() {
               <tbody className="divide-y divide-gray-100">
                 <tr>
                   <td className="py-4 pr-4 font-medium">Post Length</td>
-                  <td className="text-center py-4 px-4">250 characters</td>
+                  <td className="text-center py-4 px-4">500 characters</td>
                   <td className="text-center py-4 px-4">1000 characters</td>
-                  <td className="text-center py-4 px-4">1000 characters</td>
+                  <td className="text-center py-4 px-4">Unlimited</td>
                 </tr>
                 <tr>
                   <td className="py-4 pr-4 font-medium">Images per Post</td>
-                  <td className="text-center py-4 px-4">1</td>
                   <td className="text-center py-4 px-4">3</td>
-                  <td className="text-center py-4 px-4">5</td>
+                  <td className="text-center py-4 px-4">7</td>
+                  <td className="text-center py-4 px-4">Unlimited</td>
+                </tr>
+                <tr>
+                  <td className="py-4 pr-4 font-medium">Video Uploads</td>
+                  <td className="text-center py-4 px-4">❌</td>
+                  <td className="text-center py-4 px-4">1 per post (64MB)</td>
+                  <td className="text-center py-4 px-4">3 per post (256MB)</td>
                 </tr>
                 <tr>
                   <td className="py-4 pr-4 font-medium flex items-center space-x-2">

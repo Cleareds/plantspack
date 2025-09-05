@@ -19,6 +19,8 @@ export interface SubscriptionTier {
   features: string[]
   maxPostLength: number
   maxImages: number
+  maxVideos: number
+  maxVideoSize: number
   badge: {
     text: string
     color: string
@@ -34,13 +36,15 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     currency: 'USD',
     interval: 'month',
     features: [
-      '250 character posts',
-      '1 image per post',
+      '500 character posts',
+      '3 images per post',
       'Basic feed access',
       'Community support'
     ],
-    maxPostLength: 250,
-    maxImages: 1,
+    maxPostLength: 500,
+    maxImages: 3,
+    maxVideos: 0,
+    maxVideoSize: 0,
     badge: {
       text: 'Free',
       color: '#6B7280',
@@ -50,19 +54,22 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
   medium: {
     id: 'medium',
     name: 'Supporter',
-    price: 1,
+    price: 3,
     currency: 'USD',
     interval: 'month',
     features: [
       '1000 character posts',
-      '3 images per post',
+      '7 images per post',
+      '1 video per post (64MB max)',
       'Location sharing',
       'Post analytics',
       'Priority in relevancy algorithm',
       'Community support'
     ],
     maxPostLength: 1000,
-    maxImages: 3,
+    maxImages: 7,
+    maxVideos: 1,
+    maxVideoSize: 64 * 1024 * 1024, // 64MB in bytes
     badge: {
       text: 'Supporter',
       color: '#059669',
@@ -76,8 +83,9 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     currency: 'USD',
     interval: 'month',
     features: [
-      '1000 character posts',
-      '5 images per post',
+      'Unlimited character posts',
+      'Unlimited images per post',
+      '3 videos per post (256MB max each)',
       'Location sharing',
       'Advanced post analytics',
       'Highest priority in relevancy algorithm',
@@ -85,8 +93,10 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
       'Priority support',
       'Custom profile themes'
     ],
-    maxPostLength: 1000,
-    maxImages: 5,
+    maxPostLength: -1, // -1 means unlimited
+    maxImages: -1, // -1 means unlimited
+    maxVideos: 3,
+    maxVideoSize: 256 * 1024 * 1024, // 256MB in bytes
     badge: {
       text: 'Premium',
       color: '#7C3AED',
@@ -247,7 +257,7 @@ export async function cancelSubscription(subscriptionId: string) {
  */
 export function canPerformAction(
   subscription: UserSubscription,
-  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'see_analytics'
+  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'see_analytics' | 'upload_video'
 ): boolean {
   if (subscription.status !== 'active') {
     return action === 'create_long_post' ? false : subscription.tier !== 'free'
@@ -257,9 +267,11 @@ export function canPerformAction(
   
   switch (action) {
     case 'create_long_post':
-      return tier.maxPostLength > 250
+      return tier.maxPostLength > 500 || tier.maxPostLength === -1
     case 'multiple_images':
-      return tier.maxImages > 1
+      return tier.maxImages > 3 || tier.maxImages === -1
+    case 'upload_video':
+      return tier.maxVideos > 0
     case 'use_location':
       return subscription.tier !== 'free'
     case 'see_analytics':

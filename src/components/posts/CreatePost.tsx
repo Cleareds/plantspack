@@ -3,13 +3,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Image as ImageIcon, Globe, Users, Send, X, MapPin, Tag } from 'lucide-react'
+import { Image as ImageIcon, Globe, Users, Send, X, MapPin, Tag, Video } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import ImageSlider from '../ui/ImageSlider'
+import VideoUploader from '../ui/VideoUploader'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import Link from 'next/link'
 import { analyzePostContent, getCurrentLocation, detectLanguage, type LocationData, type PostMetadata } from '@/lib/post-analytics'
-import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription } from '@/lib/stripe'
+import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription, canPerformAction } from '@/lib/stripe'
 
 interface CreatePostProps {
   onPostCreated: () => void
@@ -22,7 +23,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null)
   
   // Get max characters based on subscription tier
-  const maxChars = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxPostLength : 250
+  const maxChars = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxPostLength : 500
 
   // Load draft from localStorage on mount
   const loadDraft = useCallback(() => {
@@ -41,6 +42,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [charCount, setCharCount] = useState(() => loadDraft()?.content?.length || 0)
   const [showImageUploader, setShowImageUploader] = useState(() => loadDraft()?.showImageUploader || false)
   const [imageUrls, setImageUrls] = useState<string[]>(() => loadDraft()?.imageUrls || [])
+  const [showVideoUploader, setShowVideoUploader] = useState(() => loadDraft()?.showVideoUploader || false)
+  const [videoUrls, setVideoUrls] = useState<string[]>(() => loadDraft()?.videoUrls || [])
   const [detectedUrls, setDetectedUrls] = useState<string[]>([])
   const [showLinkPreview, setShowLinkPreview] = useState(() => loadDraft()?.showLinkPreview !== false)
   
@@ -66,6 +69,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         privacy,
         showImageUploader,
         imageUrls,
+        showVideoUploader,
+        videoUrls,
         showLinkPreview,
         shareLocation,
         locationData
@@ -78,10 +83,10 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
   // Save draft when form state changes
   useEffect(() => {
-    if (content || imageUrls.length > 0) {
+    if (content || imageUrls.length > 0 || videoUrls.length > 0) {
       saveDraft()
     }
-  }, [content, privacy, showImageUploader, imageUrls, showLinkPreview, saveDraft])
+  }, [content, privacy, showImageUploader, imageUrls, showVideoUploader, videoUrls, showLinkPreview, saveDraft])
 
   // Clear draft
   const clearDraft = useCallback(() => {
@@ -92,7 +97,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value
-    if (text.length <= maxChars) {
+    // Allow unlimited for premium tier (-1), otherwise respect the limit
+    if (maxChars === -1 || text.length <= maxChars) {
       setContent(text)
       setCharCount(text.length)
     }
@@ -148,9 +154,18 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     setShowImageUploader(false)
   }
 
+  const handleVideosChange = (urls: string[]) => {
+    setVideoUrls(urls)
+  }
+
+  const removeAllVideos = () => {
+    setVideoUrls([])
+    setShowVideoUploader(false)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user || (!content.trim() && imageUrls.length === 0)) return
+    if (!user || (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0)) return
 
     setLoading(true)
     try {
@@ -178,6 +193,11 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       if (imageUrls.length > 0) {
         postData.image_urls = imageUrls
       }
+      
+      // Only add videos field if we have videos
+      if (videoUrls.length > 0) {
+        postData.video_urls = videoUrls
+      }
 
       const { error } = await supabase.from('posts').insert(postData)
 
@@ -188,7 +208,9 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       setCharCount(0)
       setPrivacy('public')
       setImageUrls([])
+      setVideoUrls([])
       setShowImageUploader(false)
+      setShowVideoUploader(false)
       setShowLinkPreview(true)
       setShareLocation(false)
       setLocationData(null)
@@ -202,7 +224,34 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     }
   }
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="text-center">
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Join the conversation!
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Sign up or log in to start sharing your vegan journey with the community.
+          </p>
+          <div className="flex justify-center space-x-3">
+            <Link 
+              href="/auth" 
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+            >
+              Sign Up
+            </Link>
+            <Link 
+              href="/auth" 
+              className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md font-medium transition-colors"
+            >
+              Log In
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -257,7 +306,45 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               <div className="mt-3">
                 <ImageUploader
                   onImagesChange={handleImagesChange}
-                  maxImages={3}
+                  maxImages={subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxImages : 3}
+                />
+              </div>
+            )}
+
+            {/* Video Previews */}
+            {videoUrls.length > 0 && (
+              <div className="mt-3 space-y-3">
+                {videoUrls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
+                      <video
+                        src={url}
+                        className="w-full h-full object-cover"
+                        controls
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                      
+                      <button
+                        type="button"
+                        onClick={removeAllVideos}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Video Uploader */}
+            {showVideoUploader && (
+              <div className="mt-3">
+                <VideoUploader
+                  onVideosChange={handleVideosChange}
+                  subscription={subscription}
                 />
               </div>
             )}
@@ -326,6 +413,21 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                   <span className="text-sm">Photo</span>
                 </button>
 
+                {subscription && canPerformAction(subscription, 'upload_video') && (
+                  <button
+                    type="button"
+                    onClick={() => setShowVideoUploader(!showVideoUploader)}
+                    className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
+                      showVideoUploader || videoUrls.length > 0 
+                        ? 'text-purple-600' 
+                        : 'text-gray-500'
+                    }`}
+                  >
+                    <Video className="h-5 w-5" />
+                    <span className="text-sm">Video</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={handleLocationToggle}
@@ -367,21 +469,21 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
-                  <span className={`text-sm ${charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
-                    {charCount}/{maxChars}
+                  <span className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
+                    {charCount}{maxChars === -1 ? '' : `/${maxChars}`}
                   </span>
-                  {subscription?.tier === 'free' && charCount > 200 && (
+                  {subscription?.tier === 'free' && charCount > 400 && (
                     <Link
                       href="/pricing"
                       className="text-xs text-green-600 hover:text-green-700 underline"
                     >
-                      Upgrade for 1000 chars
+                      Upgrade for unlimited chars
                     </Link>
                   )}
                 </div>
                 <button
                   type="submit"
-                  disabled={(!content.trim() && imageUrls.length === 0) || loading || charCount > maxChars}
+                  disabled={(!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) || loading || (maxChars !== -1 && charCount > maxChars)}
                   className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-md font-medium transition-colors"
                 >
                   <Send className="h-4 w-4" />

@@ -55,6 +55,8 @@ export interface Database {
           privacy: 'public' | 'friends'
           images?: string[] | null
           image_url?: string | null // Backward compatibility
+          image_urls?: string[] | null
+          video_urls?: string[] | null
           parent_post_id?: string | null
           post_type?: 'original' | 'share' | 'quote'
           quote_content?: string | null
@@ -68,6 +70,8 @@ export interface Database {
           privacy?: 'public' | 'friends'
           images?: string[] | null
           image_url?: string | null // Backward compatibility
+          image_urls?: string[] | null
+          video_urls?: string[] | null
           parent_post_id?: string | null
           post_type?: 'original' | 'share' | 'quote'
           quote_content?: string | null
@@ -81,6 +85,8 @@ export interface Database {
           privacy?: 'public' | 'friends'
           images?: string[] | null
           image_url?: string | null // Backward compatibility
+          image_urls?: string[] | null
+          video_urls?: string[] | null
           parent_post_id?: string | null
           post_type?: 'original' | 'share' | 'quote'
           quote_content?: string | null
