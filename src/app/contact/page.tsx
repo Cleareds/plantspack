@@ -98,7 +98,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions about PlantsPack? We&apos;d love to hear from you. 
+            Have questions about Vegan Social? We&apos;d love to hear from you. 
             Send us a message and we&apos;ll respond as soon as possible.
           </p>
         </div>
@@ -230,7 +230,7 @@ export default function ContactPage() {
                   <Mail className="h-5 w-5 text-green-600 mt-1" />
                   <div>
                     <p className="font-medium text-gray-900">Email</p>
-                    <p className="text-gray-600 text-sm">hello@plantspack.com</p>
+                    <p className="text-gray-600 text-sm">hell@cleareds.com</p>
                   </div>
                 </div>
               </div>

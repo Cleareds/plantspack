@@ -93,12 +93,12 @@ async function sendEmailNotification(data: ContactFormData & { submissionId: str
     const resend = new Resend(process.env.RESEND_API_KEY)
 
     await resend.emails.send({
-      from: 'PlantsPack Contact <noreply@plantspack.com>',
-      to: [process.env.CONTACT_EMAIL || 'hello@plantspack.com'],
+      from: 'Vegan Social Contact <noreply@cleareds.com>',
+      to: [process.env.CONTACT_EMAIL || 'hell@cleareds.com'],
       subject: `New Contact Form: ${data.subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #16a34a;">New Contact Form Submission</h2>
+          <h2 style="color: #16a34a;">New Vegan Social Contact Form Submission</h2>
           
           <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <p><strong>Name:</strong> ${data.name}</p>
