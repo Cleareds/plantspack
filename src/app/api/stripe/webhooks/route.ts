@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { supabase } from '@/lib/supabase'
 
+// Extended Stripe subscription type to include period fields
+interface ExtendedStripeSubscription extends Stripe.Subscription {
+  current_period_start: number
+  current_period_end: number
+}
+
 const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-06-30.basil',
 }) : null
@@ -89,13 +95,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   try {
     // Get subscription details
     console.log('Retrieving subscription:', session.subscription)
-    const subscription = await stripe.subscriptions.retrieve(
+    const subscriptionResponse = await stripe.subscriptions.retrieve(
       session.subscription as string,
       { expand: ['latest_invoice', 'default_payment_method'] }
     )
+    const subscription = subscriptionResponse as unknown as ExtendedStripeSubscription
 
-    const periodStart = new Date((subscription as any).current_period_start * 1000).toISOString()
-    const periodEnd = new Date((subscription as any).current_period_end * 1000).toISOString()
+    const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
+    const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
 
     console.log('Updating user subscription with params:', {
       target_user_id: userId,
@@ -112,8 +119,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
-      stripe_sub_id: (subscription as any).id,
-      stripe_cust_id: (subscription as any).customer as string,
+      stripe_sub_id: subscription.id,
+      stripe_cust_id: subscription.customer as string,
       period_start: periodStart,
       period_end: periodEnd
     })
@@ -123,7 +130,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       throw error
     }
 
-    console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: (subscription as any).id })
+    console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: subscription.id })
 
     // Check for early purchaser promotion after successful subscription activation
     if (tierId === 'medium') {
@@ -175,7 +182,8 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   const subscriptionId = (invoice as any).subscription as string
   
   try {
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId)
+    const subscription = subscriptionResponse as unknown as ExtendedStripeSubscription
     const userId = subscription.metadata.userId
 
     if (!userId) {
@@ -190,8 +198,8 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       new_status: 'active',
       stripe_sub_id: subscription.id,
       stripe_cust_id: subscription.customer as string,
-      period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000).toISOString() : null,
-      period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000).toISOString() : null
+      period_start: subscription.current_period_start ? new Date(subscription.current_period_start * 1000).toISOString() : null,
+      period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : null
     })
 
     console.log(`Payment succeeded for user ${userId}`)
@@ -227,8 +235,9 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  const userId = subscription.metadata.userId
-  const tierId = subscription.metadata.tierId as 'medium' | 'premium'
+  const extendedSubscription = subscription as unknown as ExtendedStripeSubscription
+  const userId = extendedSubscription.metadata.userId
+  const tierId = extendedSubscription.metadata.tierId as 'medium' | 'premium'
 
   if (!userId) {
     console.error('No userId in subscription metadata')
@@ -236,16 +245,16 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   }
 
   try {
-    const status = mapStripeStatusToLocal(subscription.status)
+    const status = mapStripeStatusToLocal(extendedSubscription.status)
     
     await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: status,
-      stripe_sub_id: subscription.id,
-      stripe_cust_id: subscription.customer as string,
-      period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000).toISOString() : null,
-      period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000).toISOString() : null
+      stripe_sub_id: extendedSubscription.id,
+      stripe_cust_id: extendedSubscription.customer as string,
+      period_start: extendedSubscription.current_period_start ? new Date(extendedSubscription.current_period_start * 1000).toISOString() : null,
+      period_end: extendedSubscription.current_period_end ? new Date(extendedSubscription.current_period_end * 1000).toISOString() : null
     })
 
     console.log(`Subscription updated for user ${userId}, status: ${status}`)
