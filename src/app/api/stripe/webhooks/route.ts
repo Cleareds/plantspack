@@ -115,7 +115,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     })
 
     // Update user subscription
-    const { data, error } = await supabase.rpc('update_user_subscription', {
+    const { error } = await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',

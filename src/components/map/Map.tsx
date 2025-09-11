@@ -11,10 +11,23 @@ const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapCo
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
+const Circle = dynamic(() => import('react-leaflet').then(mod => mod.Circle), { ssr: false })
+const useMapEvents = dynamic(() => import('react-leaflet').then(mod => mod.useMapEvents), { ssr: false })
 
 type Place = Tables<'places'> & {
   users: Tables<'users'>
   favorite_places: { id: string; user_id: string }[]
+}
+
+// Map click handler component
+function MapClickHandler({ onMapClick }: { onMapClick: (latlng: [number, number]) => void }) {
+  useMapEvents({
+    click: (e) => {
+      const { lat, lng } = e.latlng
+      onMapClick([lat, lng])
+    }
+  })
+  return null
 }
 
 export default function Map() {
@@ -30,6 +43,8 @@ export default function Map() {
   const [addressSearchQuery, setAddressSearchQuery] = useState('')
   const [addressSearchResults, setAddressSearchResults] = useState<any[]>([])
   const [showAddressSearchResults, setShowAddressSearchResults] = useState(false)
+  const [searchRadius, setSearchRadius] = useState(50) // Default 50km radius
+  const [customCenter, setCustomCenter] = useState<[number, number] | null>(null)
   const [newPlace, setNewPlace] = useState({
     name: '',
     category: 'restaurant',
@@ -171,13 +186,16 @@ export default function Map() {
   const handleSearchSelect = useCallback((result: any) => {
     const lat = parseFloat(result.lat)
     const lon = parseFloat(result.lon)
-    setMapCenter([lat, lon])
+    const newCenter: [number, number] = [lat, lon]
+    
+    setMapCenter(newCenter)
+    setCustomCenter(newCenter) // Set as new search center
     setSearchQuery(result.display_name)
     setShowSearchResults(false)
     
     // Pan the map to the selected location
     if (mapRef.current) {
-      mapRef.current.setView([lat, lon], 15)
+      mapRef.current.setView(newCenter, 15)
     }
   }, [])
 
@@ -280,22 +298,33 @@ export default function Map() {
     return R * c
   }
 
-  // Memoize places sorted by distance from map center
+  // Get the effective search center (custom center or map center or user location)
+  const getSearchCenter = useCallback(() => {
+    return customCenter || mapCenter || userLocation
+  }, [customCenter, mapCenter, userLocation])
+
+  // Memoize places sorted by distance from search center
   const placesByDistance = useMemo(() => {
-    if (!mapCenter) return []
+    const searchCenter = getSearchCenter()
+    if (!searchCenter) return []
     
     const placesWithDistance = places.map(place => ({
       ...place,
-      distance: calculateDistance(mapCenter[0], mapCenter[1], place.latitude, place.longitude)
+      distance: calculateDistance(searchCenter[0], searchCenter[1], place.latitude, place.longitude)
     }))
     
     return placesWithDistance.sort((a, b) => a.distance - b.distance)
-  }, [places, mapCenter])
+  }, [places, getSearchCenter])
 
-  // Memoize closest places for sidebar (max 5, within 200km)
+  // Memoize filtered places within the search radius
+  const filteredPlaces = useMemo(() => {
+    return placesByDistance.filter(place => place.distance <= searchRadius)
+  }, [placesByDistance, searchRadius])
+
+  // Memoize closest places for sidebar (within search radius, max 10)
   const sidebarPlaces = useMemo(() => {
-    return placesByDistance.filter(place => place.distance <= 200).slice(0, 5)
-  }, [placesByDistance])
+    return filteredPlaces.slice(0, 10)
+  }, [filteredPlaces])
 
   // Handle map center change
   const handleMapMove = useCallback(() => {
@@ -303,6 +332,12 @@ export default function Map() {
       const center = mapRef.current.getCenter()
       setMapCenter([center.lat, center.lng])
     }
+  }, [])
+
+  // Handle map click to set custom search center
+  const handleMapClick = useCallback((latlng: [number, number]) => {
+    setCustomCenter(latlng)
+    console.log('Map clicked, new search center:', latlng)
   }, [])
 
   const toggleFavorite = async (placeId: string) => {
@@ -474,6 +509,7 @@ export default function Map() {
   }
 
   const hasNearbyPlaces = sidebarPlaces.length > 0
+  const searchCenter = getSearchCenter()
 
   return (
     <div className="flex flex-col h-screen max-h-screen">
@@ -493,6 +529,33 @@ export default function Map() {
                 </option>
               ))}
             </select>
+            
+            {/* Radius Selector */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">Radius:</span>
+              <select
+                value={searchRadius}
+                onChange={(e) => setSearchRadius(Number(e.target.value))}
+                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value={5}>5km</option>
+                <option value={10}>10km</option>
+                <option value={25}>25km</option>
+                <option value={50}>50km</option>
+                <option value={100}>100km</option>
+                <option value={200}>200km</option>
+              </select>
+            </div>
+
+            {/* Reset Center Button */}
+            {customCenter && (
+              <button
+                onClick={() => setCustomCenter(null)}
+                className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded border"
+              >
+                Reset Center
+              </button>
+            )}
           </div>
           
           {/* Search Bar */}
@@ -566,19 +629,29 @@ export default function Map() {
         {/* Sidebar */}
         <div className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto z-20">
           <div className="p-4">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">
-              Nearby Places
+            <h2 className="text-lg font-medium text-gray-900 mb-2">
+              Places within {searchRadius}km
             </h2>
+            {customCenter && (
+              <p className="text-xs text-blue-600 mb-4">
+                📍 Searching from custom location
+              </p>
+            )}
+            {!hasNearbyPlaces && (
+              <p className="text-xs text-gray-500 mb-4">
+                Found {filteredPlaces.length} total places
+              </p>
+            )}
             
             {!hasNearbyPlaces ? (
               <div className="text-center py-8">
                 <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm">
-                  No places found within 200km radius.
+                  No places found within {searchRadius}km radius.
                 </p>
                 {user && (
                   <p className="text-gray-400 text-xs mt-2">
-                    Be the first to add one!
+                    Click on the map to change search center or increase radius!
                   </p>
                 )}
               </div>
@@ -638,6 +711,12 @@ export default function Map() {
 
         {/* Map */}
         <div className="flex-1 relative min-h-0">
+          {/* Map Instructions */}
+          <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-gray-200 max-w-xs">
+            <p className="text-xs text-gray-700">
+              <strong>💡 Tip:</strong> Click anywhere on the map to set a new search center and find places within your selected radius.
+            </p>
+          </div>
           <MapContainer
             ref={mapRef}
             center={userLocation}
@@ -650,8 +729,47 @@ export default function Map() {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             
+            {/* Map click handler */}
+            <MapClickHandler onMapClick={handleMapClick} />
+            
+            {/* Search radius circle */}
+            {searchCenter && (
+              <Circle
+                center={searchCenter}
+                radius={searchRadius * 1000} // Convert km to meters
+                pathOptions={{
+                  color: '#10b981',
+                  fillColor: '#10b981',
+                  fillOpacity: 0.1,
+                  weight: 2,
+                  dashArray: '5, 5'
+                }}
+              />
+            )}
+            
+            {/* Custom search center marker */}
+            {customCenter && leafletIcon && (
+              <Marker
+                position={customCenter}
+                icon={leafletIcon}
+              >
+                <Popup>
+                  <div className="p-2">
+                    <h3 className="font-semibold text-green-600">Search Center</h3>
+                    <p className="text-sm text-gray-600">Places within {searchRadius}km of this point</p>
+                    <button
+                      onClick={() => setCustomCenter(null)}
+                      className="mt-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                    >
+                      Reset to your location
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            )}
+            
             {/* User Location Marker */}
-            {userLocation && leafletIcon && (
+            {userLocation && leafletIcon && !customCenter && (
               <Marker
                 position={userLocation}
                 icon={leafletIcon}
@@ -665,7 +783,7 @@ export default function Map() {
               </Marker>
             )}
             
-            {places.map((place) => (
+            {filteredPlaces.map((place) => (
               <Marker
                 key={place.id}
                 position={[place.latitude, place.longitude]}

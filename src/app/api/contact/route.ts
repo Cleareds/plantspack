@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Send email notification (if email service is configured)
+    // Send email notification (if SMTP is configured)
     try {
       await sendEmailNotification({
         name,
@@ -82,19 +82,28 @@ export async function POST(request: NextRequest) {
 }
 
 async function sendEmailNotification(data: ContactFormData & { submissionId: string }) {
-  // Check if email service is configured
-  if (!process.env.RESEND_API_KEY) {
-    console.log('No email service configured, skipping email notification')
+  // Check if Gmail SMTP is configured
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('No SMTP credentials configured, skipping email notification')
     return
   }
 
   try {
-    const { Resend } = await import('resend')
-    const resend = new Resend(process.env.RESEND_API_KEY)
+    const nodemailer = await import('nodemailer')
+    
+    // Create Gmail SMTP transporter
+    const transporter = nodemailer.default.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_USER, // your-email@gmail.com
+        pass: process.env.SMTP_PASS  // app-specific password
+      }
+    })
 
-    await resend.emails.send({
-      from: 'Vegan Social Contact <noreply@cleareds.com>',
-      to: [process.env.CONTACT_EMAIL || 'hell@cleareds.com'],
+    await transporter.sendMail({
+      from: `"Vegan Social Contact" <${process.env.SMTP_USER}>`,
+      to: process.env.CONTACT_EMAIL || 'hello@cleareds.com',
+      replyTo: data.email,
       subject: `New Contact Form: ${data.subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -118,8 +127,7 @@ async function sendEmailNotification(data: ContactFormData & { submissionId: str
             </p>
           </div>
         </div>
-      `,
-      replyTo: data.email, // Allow direct replies to the sender
+      `
     })
 
     console.log('Email notification sent successfully')
