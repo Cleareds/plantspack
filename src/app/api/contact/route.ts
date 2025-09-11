@@ -92,7 +92,7 @@ async function sendEmailNotification(data: ContactFormData & { submissionId: str
     const nodemailer = await import('nodemailer')
     
     // Create Gmail SMTP transporter
-    const transporter = nodemailer.default.createTransporter({
+    const transporter = nodemailer.default.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.SMTP_USER, // your-email@gmail.com
