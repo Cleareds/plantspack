@@ -99,8 +99,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       session.subscription as string,
       { expand: ['latest_invoice', 'default_payment_method'] }
     )
-    const subscription = subscriptionResponse as unknown as ExtendedStripeSubscription
-
+    
+    // Type assertion with proper casting
+    const subscription = subscriptionResponse as any
     const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
     const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
 
@@ -108,8 +109,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
-      stripe_sub_id: (subscription as any).id,
-      stripe_cust_id: (subscription as any).customer,
+      stripe_sub_id: subscription.id,
+      stripe_cust_id: subscription.customer,
       period_start: periodStart,
       period_end: periodEnd
     })
@@ -183,7 +184,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   
   try {
     const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId)
-    const subscription = subscriptionResponse as unknown as ExtendedStripeSubscription
+    const subscription = subscriptionResponse as any
     const userId = subscription.metadata.userId
 
     if (!userId) {
@@ -235,7 +236,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
-  const extendedSubscription = subscription as unknown as ExtendedStripeSubscription
+  const extendedSubscription = subscription as any
   const userId = extendedSubscription.metadata.userId
   const tierId = extendedSubscription.metadata.tierId as 'medium' | 'premium'
 
