@@ -7,28 +7,34 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
+
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
 const Circle = dynamic(() => import('react-leaflet').then(mod => mod.Circle), { ssr: false })
-const useMapEvents = dynamic(() => import('react-leaflet').then(mod => mod.useMapEvents), { ssr: false })
 
 type Place = Tables<'places'> & {
   users: Tables<'users'>
   favorite_places: { id: string; user_id: string }[]
 }
 
-// Map click handler component
-function MapClickHandler({ onMapClick }: { onMapClick: (latlng: [number, number]) => void }) {
-  useMapEvents({
-    click: (e) => {
-      const { lat, lng } = e.latlng
-      onMapClick([lat, lng])
+// Map click handler component - must be dynamically imported since it uses useMapEvents
+const MapClickHandler = dynamic(() => 
+  import('react-leaflet').then(mod => {
+    const { useMapEvents } = mod
+    return function MapClickHandlerComponent({ onMapClick }: { onMapClick: (latlng: [number, number]) => void }) {
+      useMapEvents({
+        click: (e) => {
+          const { lat, lng } = e.latlng
+          onMapClick([lat, lng])
+        }
+      })
+      return null
     }
-  })
-  return null
-}
+  }), 
+  { ssr: false }
+)
 
 export default function Map() {
   const [places, setPlaces] = useState<Place[]>([])
