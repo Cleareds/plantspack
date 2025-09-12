@@ -29,42 +29,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Store in Supabase
-    const { data, error: dbError } = await supabase
-      .from('contact_submissions')
-      .insert([
-        {
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          subject: subject.trim(),
-          message: message.trim(),
-          status: 'new',
-          created_at: new Date().toISOString()
-        }
-      ])
-      .select()
-      .single()
-
-    if (dbError) {
-      console.error('Database error:', dbError)
-      return NextResponse.json(
-        { error: 'Failed to save message' },
-        { status: 500 }
-      )
-    }
-
-    // Send email notification (if SMTP is configured)
+    // Send email notification
     try {
       await sendEmailNotification({
-        name,
-        email,
-        subject,
-        message,
-        submissionId: data.id
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        subject: subject.trim(),
+        message: message.trim()
       })
     } catch (emailError) {
       console.error('Email notification failed:', emailError)
-      // Don't fail the request if email fails, the message is still saved
+      return NextResponse.json(
+        { error: 'Failed to send message. Please try again.' },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({
@@ -81,7 +59,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function sendEmailNotification(data: ContactFormData & { submissionId: string }) {
+async function sendEmailNotification(data: ContactFormData) {
   // Check if Gmail SMTP is configured
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
     console.log('No SMTP credentials configured, skipping email notification')
@@ -113,7 +91,6 @@ async function sendEmailNotification(data: ContactFormData & { submissionId: str
             <p><strong>Name:</strong> ${data.name}</p>
             <p><strong>Email:</strong> ${data.email}</p>
             <p><strong>Subject:</strong> ${data.subject}</p>
-            <p><strong>Submission ID:</strong> ${data.submissionId}</p>
           </div>
           
           <div style="background: white; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">

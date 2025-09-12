@@ -236,24 +236,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Response Times</h3>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">General Questions</span>
-                  <span className="font-medium text-gray-900">24-48 hours</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Technical Support</span>
-                  <span className="font-medium text-gray-900">12-24 hours</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Premium Support</span>
-                  <span className="font-medium text-green-600">2-6 hours</span>
-                </div>
-              </div>
-            </div>
 
             <div className="bg-green-50 rounded-2xl border border-green-200 p-6">
               <h3 className="text-xl font-bold text-green-900 mb-4">💡 Quick Tips</h3>
@@ -262,7 +244,7 @@ export default function ContactPage() {
                 <li>• Check our <Link href="/help" className="underline hover:no-underline">Help Center</Link> for common questions</li>
                 <li>• Include screenshots for technical issues</li>
                 <li>• Be specific about what you&apos;re trying to achieve</li>
-                <li>• Premium users get priority support!</li>
+                <li>• We respond to all messages as quickly as possible!</li>
               </ul>
             </div>
           </div>
