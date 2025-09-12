@@ -62,9 +62,19 @@ export async function POST(request: NextRequest) {
 async function sendEmailNotification(data: ContactFormData) {
   // Check if Gmail SMTP is configured
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log('No SMTP credentials configured, skipping email notification')
-    return
+    console.error('SMTP credentials not configured. Missing:', {
+      SMTP_USER: !process.env.SMTP_USER ? 'missing' : 'configured',
+      SMTP_PASS: !process.env.SMTP_PASS ? 'missing' : 'configured',
+      CONTACT_EMAIL: !process.env.CONTACT_EMAIL ? 'missing' : 'configured'
+    })
+    throw new Error('Email service not configured. Please contact support.')
   }
+
+  console.log('Attempting to send email with config:', {
+    from: process.env.SMTP_USER,
+    to: process.env.CONTACT_EMAIL || 'hello@cleareds.com',
+    subject: `New Contact Form: ${data.subject}`
+  })
 
   try {
     const nodemailer = await import('nodemailer')
@@ -107,7 +117,7 @@ async function sendEmailNotification(data: ContactFormData) {
       `
     })
 
-    console.log('Email notification sent successfully')
+    console.log('✅ Email notification sent successfully to:', process.env.CONTACT_EMAIL || 'hello@cleareds.com')
   } catch (error) {
     console.error('Failed to send email notification:', error)
     throw error
