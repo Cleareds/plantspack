@@ -17,15 +17,15 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/plantspack.png' },
-      { url: '/plantspack.png', sizes: '192x192', type: 'image/png' },
-      { url: '/plantspack.png', sizes: '512x512', type: 'image/png' },
+      { url: '/plantspack1.png' },
+      { url: '/plantspack1.png', sizes: '192x192', type: 'image/png' },
+      { url: '/plantspack1.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/plantspack.png' },
-      { url: '/plantspack.png', sizes: '180x180', type: 'image/png' },
+      { url: '/plantspack1.png' },
+      { url: '/plantspack1.png', sizes: '180x180', type: 'image/png' },
     ],
-    shortcut: '/plantspack.png',
+    shortcut: '/plantspack1.png',
   },
   appleWebApp: {
     capable: true,
