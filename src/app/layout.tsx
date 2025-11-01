@@ -14,6 +14,24 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "PlantsPack - Social Network for Plant-Based Living",
   description: "Connect with fellow plant-based enthusiasts, discover vegan places, and share your green journey",
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/plantspack.png' },
+      { url: '/plantspack.png', sizes: '192x192', type: 'image/png' },
+      { url: '/plantspack.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/plantspack.png' },
+      { url: '/plantspack.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/plantspack.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'PlantsPack',
+  },
 };
 
 export default function RootLayout({

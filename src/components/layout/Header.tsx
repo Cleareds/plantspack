@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/lib/auth'
-import { Leaf, Menu, X, Home, Map, User, LogOut, Settings, Crown } from 'lucide-react'
+import { Menu, X, Home, Map, User, LogOut, Settings, Crown } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 
 export default function Header() {
@@ -23,10 +24,16 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Leaf className="h-8 w-8 text-green-600" />
+          <Link href="/" className="flex items-center space-x-3">
+            <Image
+              src="/plantspack.png"
+              alt="PlantsPack Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-gray-900">PlantsPack</span>
+              <span className="text-xl font-bold text-gray-900">PLANTSPACK</span>
               <span className="text-xs font-semibold text-white bg-orange-500 px-2 py-1 rounded-full">
                 BETA
               </span>
