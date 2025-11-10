@@ -110,7 +110,7 @@ export default function ProfileSettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">Show Activity Status</p>
-                    <p className="text-sm text-gray-500">Let others see when you're online</p>
+                    <p className="text-sm text-gray-500">Let others see when you&apos;re online</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
