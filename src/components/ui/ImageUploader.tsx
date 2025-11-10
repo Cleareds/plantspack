@@ -246,12 +246,11 @@ export default function ImageUploader({
 
   const removeImage = (id: string) => {
     setImages(prev => {
-      const updated = prev.filter(img => img.id !== id)
       const removedImage = prev.find(img => img.id === id)
-      if (removedImage) {
+      if (removedImage && removedImage.preview) {
         URL.revokeObjectURL(removedImage.preview)
       }
-      return updated
+      return prev.filter(img => img.id !== id)
     })
   }
 

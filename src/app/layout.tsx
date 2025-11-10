@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
-import { AuthProvider } from "@/lib/auth";
+import ClientProviders from "@/components/providers/ClientProviders";
 import Header from "@/components/layout/Header";
 import BetaBanner from "@/components/layout/BetaBanner";
 
@@ -30,13 +30,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased bg-gray-50`}>
-        <AuthProvider>
+        <ClientProviders>
           <Header />
           <BetaBanner />
           <main className="min-h-screen">
             {children}
           </main>
-        </AuthProvider>
+        </ClientProviders>
       </body>
     </html>
   );

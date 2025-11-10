@@ -32,7 +32,7 @@ export default function GuestWelcome() {
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
             <div className="text-2xl mb-1">🍽️</div>
-            <p className="text-xs text-gray-600">Share vegan recipes</p>
+            <p className="text-xs text-gray-600">Share vegan lifestyle</p>
           </div>
           <div>
             <div className="text-2xl mb-1">📍</div>

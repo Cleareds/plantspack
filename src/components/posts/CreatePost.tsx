@@ -39,6 +39,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [content, setContent] = useState(() => loadDraft()?.content || '')
   const [privacy, setPrivacy] = useState<'public' | 'friends'>(() => loadDraft()?.privacy || 'public')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [charCount, setCharCount] = useState(() => loadDraft()?.content?.length || 0)
   const [showImageUploader, setShowImageUploader] = useState(() => loadDraft()?.showImageUploader || false)
   const [imageUrls, setImageUrls] = useState<string[]>(() => loadDraft()?.imageUrls || [])
@@ -165,14 +166,26 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user || (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0)) return
+
+    // Validation
+    if (!user) {
+      setError('You must be logged in to create a post')
+      return
+    }
+
+    if (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) {
+      setError('Please add some content, images, or videos')
+      return
+    }
 
     setLoading(true)
+    setError(null)
+
     try {
       // Get final content analysis
       const finalMetadata = analyzedMetadata || analyzePostContent(content)
       const detectedLang = detectLanguage(content)
-      
+
       const postData: any = {
         user_id: user.id,
         content: content.trim(),
@@ -193,17 +206,20 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       if (imageUrls.length > 0) {
         postData.image_urls = imageUrls
       }
-      
+
       // Only add videos field if we have videos
       if (videoUrls.length > 0) {
         postData.video_urls = videoUrls
       }
 
-      const { error } = await supabase.from('posts').insert(postData)
+      const { error: dbError } = await supabase.from('posts').insert(postData)
 
-      if (error) throw error
+      if (dbError) {
+        console.error('Database error:', dbError)
+        throw new Error(dbError.message || 'Failed to create post')
+      }
 
-      // Reset form
+      // Reset form only on success
       setContent('')
       setCharCount(0)
       setPrivacy('public')
@@ -215,10 +231,12 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       setShareLocation(false)
       setLocationData(null)
       setAnalyzedMetadata(null)
+      setError(null)
       clearDraft()
       onPostCreated()
-    } catch (error) {
-      console.error('Error creating post:', error)
+    } catch (err) {
+      console.error('Error creating post:', err)
+      setError(err instanceof Error ? err.message : 'Failed to create post. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -256,6 +274,13 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <form onSubmit={handleSubmit}>
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-800">{error}</p>
+          </div>
+        )}
+
         <div className="flex space-x-3">
           <Link href={`/user/${profile?.username}`} className="flex-shrink-0">
             {profile?.avatar_url ? (
