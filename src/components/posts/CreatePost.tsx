@@ -466,31 +466,32 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                   </label>
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3 mt-4">
+                  <button
+                      type="submit"
+                      disabled={(!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) || loading || (maxChars !== -1 && charCount > maxChars)}
+                      className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                  >
+                      <Send className="h-4 w-4" />
+                      <span>{loading ? 'Posting...' : 'Post'}</span>
+                  </button>
+                  <div className="flex items-center space-x-2">
                   <span className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
                     {charCount}{maxChars === -1 ? '' : `/${maxChars}`}
                   </span>
-                  {subscription?.tier === 'free' && charCount > 400 && (
-                    <Link
-                      href="/pricing"
-                      className="text-xs text-green-600 hover:text-green-700 underline"
-                    >
-                      Upgrade for unlimited chars
-                    </Link>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  disabled={(!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) || loading || (maxChars !== -1 && charCount > maxChars)}
-                  className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-4 py-2 rounded-md font-medium transition-colors"
-                >
-                  <Send className="h-4 w-4" />
-                  <span>{loading ? 'Posting...' : 'Post'}</span>
-                </button>
+                      {subscription?.tier === 'free' && charCount > 400 && (
+                          <Link
+                              href="/pricing"
+                              className="text-xs text-green-600 hover:text-green-700 underline"
+                          >
+                              Upgrade for unlimited chars
+                          </Link>
+                      )}
+                  </div>
               </div>
-            </div>
+
           </div>
         </div>
       </form>

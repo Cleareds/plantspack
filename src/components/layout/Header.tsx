@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/lib/auth'
-import { Menu, X, Home, Map, User, LogOut, Settings, Crown } from 'lucide-react'
+import { Menu, X, Home, Map, User, LogOut, Crown } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 
 export default function Header() {
@@ -79,13 +79,6 @@ export default function Header() {
                   <User className="h-5 w-5" />
                   <span>Profile</span>
                 </Link>
-                <Link
-                  href="/settings"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors"
-                >
-                  <Settings className="h-5 w-5" />
-                  <span>Settings</span>
-                </Link>
                 <button
                   onClick={handleSignOut}
                   className="flex items-center space-x-1 text-gray-700 hover:text-red-600 transition-colors"
@@ -158,14 +151,6 @@ export default function Header() {
                 >
                   <User className="h-5 w-5" />
                   <span>Profile</span>
-                </Link>
-                <Link
-                  href="/settings"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50"
-                >
-                  <Settings className="h-5 w-5" />
-                  <span>Settings</span>
                 </Link>
                 <button
                   onClick={handleSignOut}

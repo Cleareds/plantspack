@@ -54,7 +54,6 @@ const SORT_OPTIONS: SortConfig[] = [
 interface FeedSortingProps {
   currentSort: SortOption
   onSortChange: (sort: SortOption) => void
-  isPublicFeed?: boolean
   className?: string
   postCount?: number
 }
@@ -62,36 +61,28 @@ interface FeedSortingProps {
 export default function FeedSorting({ 
   currentSort, 
   onSortChange, 
-  isPublicFeed = true,
   className = '',
   postCount
 }: FeedSortingProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [sortPreference, setSortPreference] = useState<SortOption>('relevancy')
 
   // Load saved preference from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('feed_sort_preference')
     if (saved && SORT_OPTIONS.some(opt => opt.value === saved)) {
-      setSortPreference(saved as SortOption)
       if (currentSort !== saved) {
         onSortChange(saved as SortOption)
       }
     }
-  }, [])
+  }, [currentSort, onSortChange])
 
   // Save preference when changed
   const handleSortChange = (sort: SortOption) => {
-    setSortPreference(sort)
     localStorage.setItem('feed_sort_preference', sort)
     onSortChange(sort)
     setIsOpen(false)
   }
 
-  // If not public feed, don't show sorting options
-  if (!isPublicFeed) {
-    return null
-  }
 
   const currentConfig = SORT_OPTIONS.find(opt => opt.value === currentSort) || SORT_OPTIONS[0]
   const CurrentIcon = currentConfig.icon
@@ -120,15 +111,14 @@ export default function FeedSorting({
         <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
           <div className="p-2 border-b border-gray-100">
             <h3 className="text-sm font-semibold text-gray-700 px-2 py-1">
-              Sort Public Feed
+              Sort Feed
             </h3>
           </div>
           <div className="max-h-80 overflow-y-auto">
             {SORT_OPTIONS.map((option) => {
               const Icon = option.icon
               const isSelected = currentSort === option.value
-              const isRelevancy = option.value === 'relevancy'
-              
+
               return (
                 <button
                   key={option.value}
