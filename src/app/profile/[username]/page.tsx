@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
@@ -221,9 +222,12 @@ export default function ProfilePage() {
                 {posts.map((post) => (
                   <div key={post.id} className="p-6">
                     <div className="mb-2">
-                      <span className="text-sm text-gray-500">
+                      <Link
+                        href={`/post/${post.id}`}
+                        className="text-sm text-gray-500 hover:text-green-600 hover:underline transition-colors"
+                      >
                         {new Date(post.created_at).toLocaleDateString()}
-                      </span>
+                      </Link>
                     </div>
                     <p className="text-gray-800 whitespace-pre-wrap mb-3">{post.content}</p>
                     <div className="flex items-center space-x-4 text-sm text-gray-500">

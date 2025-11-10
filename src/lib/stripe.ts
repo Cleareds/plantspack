@@ -63,7 +63,6 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
       '1 video per post (64MB max)',
       'Location sharing',
       'Post analytics',
-      'Priority in relevancy algorithm',
       'Community support'
     ],
     maxPostLength: 1000,
@@ -88,10 +87,8 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
       '3 videos per post (256MB max each)',
       'Location sharing',
       'Advanced post analytics',
-      'Highest priority in relevancy algorithm',
       'Early access to new features',
-      'Priority support',
-      'Custom profile themes'
+      'Priority support'
     ],
     maxPostLength: -1, // -1 means unlimited
     maxImages: -1, // -1 means unlimited

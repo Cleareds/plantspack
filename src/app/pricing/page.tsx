@@ -192,18 +192,18 @@ function PricingContent() {
           <div className="mb-12 space-y-4">
             {/* Early Bird Promotion Banner */}
             {promotionalInfo.earlyBirdAvailable && !userPromoStatus?.isPromotionalSubscriber && (
-              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-xl p-6">
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-lg p-4">
                 <div className="text-center">
-                  <div className="flex justify-center items-center space-x-2 mb-3">
-                    <Star className="h-6 w-6 text-green-600" />
-                    <h3 className="text-xl font-bold text-green-800">🎉 Early Bird Special!</h3>
-                    <Star className="h-6 w-6 text-green-600" />
+                  <div className="flex justify-center items-center space-x-2 mb-2">
+                    <Star className="h-4 w-4 text-green-600" />
+                    <h3 className="text-base font-bold text-green-800">🎉 Early Bird Special!</h3>
+                    <Star className="h-4 w-4 text-green-600" />
                   </div>
-                  <p className="text-green-700 text-lg mb-2">
+                  <p className="text-green-700 text-sm mb-1">
                     <strong>First 100 registered users get Supporter tier FREE for 1 year!</strong>
                   </p>
-                  <p className="text-green-600 text-sm">
-                    Only <span className="font-bold">{promotionalInfo.earlyBirdUsersLeft}</span> spots left! 
+                  <p className="text-green-600 text-xs">
+                    Only <span className="font-bold">{promotionalInfo.earlyBirdUsersLeft}</span> spots left!
                     {!user && ' Sign up now to claim your free subscription.'}
                   </p>
                 </div>
@@ -212,18 +212,18 @@ function PricingContent() {
 
             {/* Early Purchaser Promotion Banner */}
             {promotionalInfo.earlyPurchaserAvailable && (
-              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200 rounded-xl p-6">
+              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200 rounded-lg p-4">
                 <div className="text-center">
-                  <div className="flex justify-center items-center space-x-2 mb-3">
-                    <Crown className="h-6 w-6 text-purple-600" />
-                    <h3 className="text-xl font-bold text-purple-800">💫 Purchaser Bonus!</h3>
-                    <Crown className="h-6 w-6 text-purple-600" />
+                  <div className="flex justify-center items-center space-x-2 mb-2">
+                    <Crown className="h-4 w-4 text-purple-600" />
+                    <h3 className="text-base font-bold text-purple-800">💫 Purchaser Bonus!</h3>
+                    <Crown className="h-4 w-4 text-purple-600" />
                   </div>
-                  <p className="text-purple-700 text-lg mb-2">
+                  <p className="text-purple-700 text-sm mb-1">
                     <strong>First 100 Supporter subscribers get upgraded to Premium FREE for 1 year!</strong>
                   </p>
-                  <p className="text-purple-600 text-sm">
-                    Only <span className="font-bold">{promotionalInfo.earlyPurchasersLeft}</span> upgrade spots left! 
+                  <p className="text-purple-600 text-xs">
+                    Only <span className="font-bold">{promotionalInfo.earlyPurchasersLeft}</span> upgrade spots left!
                     Subscribe to Supporter ($3/month) and get Premium ($10/month) automatically.
                   </p>
                 </div>
@@ -427,12 +427,6 @@ function PricingContent() {
                   <td className="text-center py-4 px-4">Advanced</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 font-medium">Algorithm Priority</td>
-                  <td className="text-center py-4 px-4">Standard</td>
-                  <td className="text-center py-4 px-4">Higher</td>
-                  <td className="text-center py-4 px-4">Highest</td>
-                </tr>
-                <tr>
                   <td className="py-4 pr-4 font-medium flex items-center space-x-2">
                     <Headphones className="h-4 w-4" />
                     <span>Support</span>
@@ -440,15 +434,6 @@ function PricingContent() {
                   <td className="text-center py-4 px-4">Community</td>
                   <td className="text-center py-4 px-4">Community</td>
                   <td className="text-center py-4 px-4">Priority</td>
-                </tr>
-                <tr>
-                  <td className="py-4 pr-4 font-medium flex items-center space-x-2">
-                    <Palette className="h-4 w-4" />
-                    <span>Profile Themes</span>
-                  </td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">✅</td>
                 </tr>
               </tbody>
             </table>

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Plus, MapPin, Heart, X, Search } from 'lucide-react'
+import { Plus, MapPin, Heart, X, Search, PawPrint } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -695,8 +695,9 @@ export default function Map() {
                           {place.category}
                         </span>
                         {place.is_pet_friendly && (
-                          <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs">
-                            Pet Friendly
+                          <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
+                            <PawPrint className="h-3 w-3" />
+                            <span>Pet Friendly</span>
                           </span>
                         )}
                       </div>
@@ -827,8 +828,9 @@ export default function Map() {
                       <div className="flex items-center space-x-1">
                         <span className="capitalize">{place.category}</span>
                         {place.is_pet_friendly && (
-                          <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs">
-                            Pet Friendly
+                          <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
+                            <PawPrint className="h-3 w-3" />
+                            <span>Pet Friendly</span>
                           </span>
                         )}
                       </div>

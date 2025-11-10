@@ -131,7 +131,7 @@ export default function ImageUploader({
         lastModified: new Date(file.lastModified).toISOString()
       })
       
-      if (validateFile(file, images) && images.length + validFiles.length < maxImages) {
+      if (validateFile(file, images) && (maxImages === -1 || images.length + validFiles.length < maxImages)) {
         validFiles.push(file)
         console.log('✅ File validated successfully:', file.name)
       } else {
@@ -289,7 +289,7 @@ export default function ImageUploader({
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Upload Area */}
-      {images.length < maxImages && (
+      {(maxImages === -1 || images.length < maxImages) && (
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -306,7 +306,7 @@ export default function ImageUploader({
             Drop images here or click to select
           </p>
           <p className="text-xs text-gray-400">
-            {images.length}/{maxImages} images • JPEG, PNG, WebP up to 10MB
+            {images.length}/{maxImages === -1 ? 'Unlimited' : maxImages} images • JPEG, PNG, WebP up to 10MB
           </p>
           <input
             ref={fileInputRef}
