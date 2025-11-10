@@ -32,12 +32,13 @@ export default function Header() {
               height={40}
               className="object-contain"
             />
-            <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-gray-900">PLANTSPACK</span>
-              <span className="text-xs font-semibold text-white bg-orange-500 px-2 py-1 rounded-full">
-                BETA
-              </span>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-gray-900 leading-[1.1]">PLANTS PACK</span>
+              <span className="text-sm font-light text-gray-600 leading-[1.1]">vegan syndicate</span>
             </div>
+            <span className="text-xs font-semibold text-white bg-orange-500 px-2 py-1 rounded-full">
+              BETA
+            </span>
           </Link>
 
           {/* Search Bar - Only for logged in users */}
@@ -68,7 +69,7 @@ export default function Header() {
               className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors"
             >
               <Crown className="h-5 w-5" />
-              <span>Pricing</span>
+              <span>Support</span>
             </Link>
             {user && username && (
               <>

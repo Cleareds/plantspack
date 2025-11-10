@@ -189,10 +189,10 @@ function PricingContent() {
 
         {/* Promotional Banners */}
         {promotionalInfo && (
-          <div className="mb-12 space-y-4">
+          <div className="mb-24 flex justify-between">
             {/* Early Bird Promotion Banner */}
             {promotionalInfo.earlyBirdAvailable && !userPromoStatus?.isPromotionalSubscriber && (
-              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-lg p-4">
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-lg p-4 mr-[2%] flex-1 min-h-[100%]">
                 <div className="text-center">
                   <div className="flex justify-center items-center space-x-2 mb-2">
                     <Star className="h-4 w-4 text-green-600" />
@@ -212,7 +212,7 @@ function PricingContent() {
 
             {/* Early Purchaser Promotion Banner */}
             {promotionalInfo.earlyPurchaserAvailable && (
-              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200 rounded-lg p-4">
+              <div className="bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200 rounded-lg p-4 w-[49%] flex-1 min-h-[100%]">
                 <div className="text-center">
                   <div className="flex justify-center items-center space-x-2 mb-2">
                     <Crown className="h-4 w-4 text-purple-600" />
