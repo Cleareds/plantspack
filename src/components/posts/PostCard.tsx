@@ -1,20 +1,22 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2 } from 'lucide-react'
+import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2 } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
 import Comments from './Comments'
 import SharePost from './SharePost'
+import EditPost from './EditPost'
 import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import LinkifiedText from '../ui/LinkifiedText'
 import SignUpModal from '../guest/SignUpModal'
 import TierBadge from '../ui/TierBadge'
 import Link from 'next/link'
+import { usePostActions } from '@/hooks/usePostActions'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {
@@ -41,9 +43,16 @@ function PostCard({ post, onUpdate }: PostCardProps) {
   const [loading, setLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [showShare, setShowShare] = useState(false)
+  const [showEdit, setShowEdit] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showSignUpModal, setShowSignUpModal] = useState(false)
   const [signUpAction, setSignUpAction] = useState<'like' | 'comment' | 'share'>('like')
+  const menuRef = useRef<HTMLDivElement>(null)
   const { user } = useAuth()
+  const { deletePost, loading: deleting } = usePostActions()
+
+  const isOwnPost = user?.id === post.user_id
 
   useEffect(() => {
     if (user && post.post_likes) {
@@ -55,18 +64,39 @@ function PostCard({ post, onUpdate }: PostCardProps) {
     }
   }, [user, post.post_likes])
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   const handleLike = async () => {
     if (!user) {
       setSignUpAction('like')
       setShowSignUpModal(true)
       return
     }
-    
-    if (loading) return
+
+    if (loading) return // Prevent double-clicks
+
+    // Store previous state for rollback
+    const previousState = isLiked
+    const previousCount = likeCount
 
     setLoading(true)
+
+    // Optimistic update - update UI immediately
+    setIsLiked(!isLiked)
+    setLikeCount(prev => isLiked ? prev - 1 : prev + 1)
+
     try {
-      if (isLiked) {
+      if (previousState) {
+        // Unlike
         const { error } = await supabase
           .from('post_likes')
           .delete()
@@ -74,18 +104,18 @@ function PostCard({ post, onUpdate }: PostCardProps) {
           .eq('user_id', user.id)
 
         if (error) throw error
-        setIsLiked(false)
-        setLikeCount(prev => prev - 1)
       } else {
+        // Like
         const { error } = await supabase
           .from('post_likes')
           .insert({ post_id: post.id, user_id: user.id })
 
         if (error) throw error
-        setIsLiked(true)
-        setLikeCount(prev => prev + 1)
       }
     } catch (error) {
+      // Rollback on error
+      setIsLiked(previousState)
+      setLikeCount(previousCount)
       console.error('Error toggling like:', error)
     } finally {
       setLoading(false)
@@ -110,6 +140,18 @@ function PostCard({ post, onUpdate }: PostCardProps) {
     setShowShare(true)
   }
 
+  const handleDelete = async () => {
+    const success = await deletePost(post.id)
+    if (success) {
+      setShowDeleteConfirm(false)
+      onUpdate?.() // Refresh feed
+    }
+  }
+
+  const handleEditSave = () => {
+    setShowEdit(false)
+    onUpdate?.() // Refresh feed
+  }
 
   const isQuotePost = post.post_type === 'quote'
   const isRepost = post.post_type === 'share'
@@ -187,9 +229,42 @@ function PostCard({ post, onUpdate }: PostCardProps) {
             </div>
             <div className="flex items-center space-x-2">
               <FollowButton userId={post.users.id} />
-              <button className="text-gray-400 hover:text-gray-600">
-                <MoreHorizontal className="h-5 w-5" />
-              </button>
+              {isOwnPost && (
+                <div ref={menuRef} className="relative">
+                  <button
+                    onClick={() => setShowMenu(!showMenu)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {showMenu && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+                      <button
+                        onClick={() => {
+                          setShowEdit(true)
+                          setShowMenu(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        <span>Edit post</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowDeleteConfirm(true)
+                          setShowMenu(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span>Delete post</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -259,9 +334,42 @@ function PostCard({ post, onUpdate }: PostCardProps) {
             </div>
             <div className="flex items-center space-x-2">
               <FollowButton userId={post.users.id} />
-              <button className="text-gray-400 hover:text-gray-600">
-                <MoreHorizontal className="h-5 w-5" />
-              </button>
+              {isOwnPost && (
+                <div ref={menuRef} className="relative">
+                  <button
+                    onClick={() => setShowMenu(!showMenu)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {showMenu && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+                      <button
+                        onClick={() => {
+                          setShowEdit(true)
+                          setShowMenu(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        <span>Edit post</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowDeleteConfirm(true)
+                          setShowMenu(false)
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span>Delete post</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -390,6 +498,43 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         onClose={() => setShowSignUpModal(false)}
         action={signUpAction}
       />
+
+      {/* Edit Modal */}
+      {showEdit && (
+        <EditPost
+          post={post}
+          isOpen={showEdit}
+          onClose={() => setShowEdit(false)}
+          onSaved={handleEditSave}
+        />
+      )}
+
+      {/* Delete Confirmation */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold mb-2">Delete Post?</h3>
+            <p className="text-gray-600 mb-4">
+              This action cannot be undone. Your post will be permanently removed.
+            </p>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md disabled:bg-gray-400"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

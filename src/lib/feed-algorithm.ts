@@ -124,6 +124,12 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
  */
 async function getRelevancyRankedPosts(userId: string, limit: number, offset: number): Promise<FeedPost[]> {
   try {
+    // For first page, fetch extra posts for better ranking
+    // For subsequent pages, use direct offset-based pagination
+    const isFirstPage = offset === 0
+    const fetchLimit = isFirstPage ? Math.min(limit * 2, 30) : limit
+    const fetchOffset = isFirstPage ? 0 : offset
+
     // Get base posts with extended data for ranking
     const { data: posts, error } = await supabase
       .from('posts')
@@ -145,24 +151,30 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
         )
       `)
       .eq('privacy', 'public')
-      .order('created_at', { ascending: false })
-      .limit(limit * 3) // Get more posts to rank and filter
+      .is('deleted_at', null) // Exclude soft-deleted posts
+      .order('engagement_score', { ascending: false }) // Pre-sort by engagement
+      .range(fetchOffset, fetchOffset + fetchLimit - 1)
 
     if (error) throw error
     if (!posts || posts.length === 0) return []
 
-    // For now, use engagement-based relevancy since we don't have user preferences tables yet
-    const rankedPosts = posts.map((post) => {
-      const engagementScore = (post as any).post_likes.length + (post as any).comments.length
-      const recencyBoost = calculateRecencyBoost(post.created_at)
-      const relevancyScore = (engagementScore * 0.7) + (recencyBoost * 0.3)
-      return { ...post, relevancyScore }
-    })
+    // For first page, apply relevancy ranking
+    if (isFirstPage) {
+      const rankedPosts = posts.map((post) => {
+        const engagementScore = (post as any).post_likes.length + (post as any).comments.length
+        const recencyBoost = calculateRecencyBoost(post.created_at)
+        const relevancyScore = (engagementScore * 0.7) + (recencyBoost * 0.3)
+        return { ...post, relevancyScore }
+      })
 
-    // Sort by relevancy score and apply pagination
-    rankedPosts.sort((a, b) => b.relevancyScore - a.relevancyScore)
-    
-    return rankedPosts.slice(offset, offset + limit).map(({ relevancyScore, ...post }) => post) as FeedPost[]
+      // Sort by relevancy score and take only what we need
+      rankedPosts.sort((a, b) => b.relevancyScore - a.relevancyScore)
+
+      return rankedPosts.slice(0, limit).map(({ relevancyScore, ...post }) => post) as FeedPost[]
+    }
+
+    // For subsequent pages, return as-is (already sorted by engagement_score)
+    return posts as FeedPost[]
   } catch (error) {
     console.error('Error in relevancy ranking:', error)
     // Fallback to engagement-based ranking

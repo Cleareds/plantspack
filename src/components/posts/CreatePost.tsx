@@ -253,11 +253,11 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
             Sign up or log in to start sharing your vegan journey with the community.
           </p>
           <div className="flex justify-center space-x-3">
-            <Link 
-              href="/auth" 
+            <Link
+              href="/auth"
               className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
             >
-              Sign Up
+              Sign Up - Free Forever
             </Link>
             <Link 
               href="/auth" 

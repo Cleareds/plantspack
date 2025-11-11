@@ -22,13 +22,25 @@ interface CommentsProps {
 function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(0)
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const { user, profile } = useAuth()
 
-  const fetchComments = useCallback(async () => {
+  const COMMENTS_PER_PAGE = 20
+
+  const fetchComments = useCallback(async (pageNumber: number = 0, append: boolean = false) => {
     try {
-      setLoading(true)
+      if (!append) {
+        setLoading(true)
+      } else {
+        setLoadingMore(true)
+      }
+
+      const offset = pageNumber * COMMENTS_PER_PAGE
+
       const { data, error } = await supabase
         .from('comments')
         .select(`
@@ -42,10 +54,12 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
           )
         `)
         .eq('post_id', postId)
-        .order('created_at', { ascending: true })
+        .is('deleted_at', null) // Exclude soft-deleted comments
+        .order('created_at', { ascending: false }) // Newest first
+        .range(offset, offset + COMMENTS_PER_PAGE - 1)
 
       if (error) throw error
-      
+
       // Deduplicate comments by ID to prevent React key errors
       const uniqueComments = (data || []).reduce((acc: Comment[], current) => {
         const existingIndex = acc.findIndex(comment => comment.id === current.id)
@@ -54,15 +68,31 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
         }
         return acc
       }, [])
-      
-      setComments(uniqueComments)
+
+      // Check if there are more comments to load
+      setHasMore(uniqueComments.length === COMMENTS_PER_PAGE)
+
+      if (append) {
+        setComments(prev => [...prev, ...uniqueComments])
+      } else {
+        setComments(uniqueComments)
+      }
     } catch (error) {
       console.error('Error fetching comments:', error)
-      setComments([]) // Reset to empty array on error
+      if (!append) {
+        setComments([]) // Reset to empty array on error
+      }
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
   }, [postId])
+
+  const loadMoreComments = () => {
+    const nextPage = page + 1
+    setPage(nextPage)
+    fetchComments(nextPage, true)
+  }
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -94,9 +124,9 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
 
       if (error) throw error
 
-      // Add the new comment to the existing list instead of refetching all
+      // Add the new comment at the beginning (newest first)
       if (data) {
-        setComments(prevComments => [...prevComments, data])
+        setComments(prevComments => [data, ...prevComments])
       }
     } catch (error) {
       console.error('Error submitting comment:', error)
@@ -108,7 +138,9 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
 
   useEffect(() => {
     if (isOpen) {
-      fetchComments()
+      setPage(0)
+      setHasMore(true)
+      fetchComments(0, false)
     }
   }, [isOpen, fetchComments])
 
@@ -185,6 +217,19 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                   </div>
                 )
               })
+          )}
+
+          {/* Load More Button */}
+          {!loading && hasMore && comments.length > 0 && (
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={loadMoreComments}
+                disabled={loadingMore}
+                className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+              >
+                {loadingMore ? 'Loading...' : 'Load more comments'}
+              </button>
+            </div>
           )}
         </div>
 
@@ -324,6 +369,19 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                   </div>
                 )
               })
+          )}
+
+          {/* Load More Button */}
+          {!loading && hasMore && comments.length > 0 && (
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={loadMoreComments}
+                disabled={loadingMore}
+                className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+              >
+                {loadingMore ? 'Loading...' : 'Load more comments'}
+              </button>
+            </div>
           )}
         </div>
 

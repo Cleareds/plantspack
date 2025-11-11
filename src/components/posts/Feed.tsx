@@ -5,9 +5,10 @@ import {useAuth} from '@/lib/auth'
 import {supabase} from '@/lib/supabase'
 import PostCard from './PostCard'
 import {Tables} from '@/lib/supabase'
-import {Loader2} from 'lucide-react'
+import {Loader2, ArrowUp} from 'lucide-react'
 import FeedSorting, {type SortOption} from './FeedSorting'
 import {getFeedPosts} from '@/lib/feed-algorithm'
+import {useRealtimePosts} from '@/hooks/useRealtimePosts'
 
 type Post = Tables<'posts'> & {
     users: Tables<'users'>
@@ -36,6 +37,47 @@ export default function Feed({onPostCreated}: FeedProps) {
     const observerRef = useRef<IntersectionObserver | null>(null)
     const loadMoreRef = useRef<HTMLDivElement>(null)
     const offsetRef = useRef(0)
+    const {newPosts: realtimeNewPosts, clearNew, hasNewPosts, newPostCount} = useRealtimePosts()
+
+    // Handle loading new posts from realtime
+    const handleLoadNewPosts = useCallback(async () => {
+        if (realtimeNewPosts.length === 0) return
+
+        // Fetch full post data for the new posts (they only have basic data from realtime)
+        const postIds = realtimeNewPosts.map(p => p.id)
+        const {data} = await supabase
+            .from('posts')
+            .select(`
+                *,
+                users (
+                    id,
+                    username,
+                    first_name,
+                    last_name,
+                    avatar_url,
+                    subscription_tier
+                ),
+                post_likes (
+                    id,
+                    user_id
+                ),
+                comments (
+                    id
+                )
+            `)
+            .in('id', postIds)
+
+        if (data) {
+            // Add new posts to the top of the feed
+            setPosts(prevPosts => [...(data as Post[]), ...prevPosts])
+        }
+
+        // Clear the realtime new posts queue
+        clearNew()
+
+        // Scroll to top
+        window.scrollTo({top: 0, behavior: 'smooth'})
+    }, [realtimeNewPosts, clearNew])
 
     const fetchPosts = useCallback(async (loadMore: boolean = false) => {
         try {
@@ -316,6 +358,21 @@ export default function Feed({onPostCreated}: FeedProps) {
                             />
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* New Posts Banner - only show in public feed */}
+            {hasNewPosts && activeTab === 'public' && (
+                <div className="mb-4 sticky top-16 z-30 animate-slide-down">
+                    <button
+                        onClick={handleLoadNewPosts}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg shadow-md font-medium transition-all flex items-center justify-center space-x-2"
+                    >
+                        <ArrowUp className="h-5 w-5" />
+                        <span>
+                            {newPostCount} new post{newPostCount > 1 ? 's' : ''} available
+                        </span>
+                    </button>
                 </div>
             )}
 

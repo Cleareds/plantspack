@@ -65,7 +65,7 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
                 className="block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 onClick={onClose}
               >
-                Join PlantsPack
+                Join PlantsPack - Free Forever
               </Link>
               
               <Link

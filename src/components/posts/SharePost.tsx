@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
-import { Share, MessageSquareQuote, Repeat2, X } from 'lucide-react'
+import { Share, MessageSquareQuote, Repeat2, X, Facebook, Twitter, Instagram, Link as LinkIcon } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import ImageSlider from '../ui/ImageSlider'
 
@@ -24,7 +24,11 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
   const [quoteContent, setQuoteContent] = useState('')
   const [privacy, setPrivacy] = useState<'public' | 'friends'>('public')
   const [submitting, setSubmitting] = useState(false)
+  const [copied, setCopied] = useState(false)
   const { user } = useAuth()
+
+  const postUrl = typeof window !== 'undefined' ? `${window.location.origin}/post/${post.id}` : ''
+  const shareText = `Check out this post by ${post.users.first_name || post.users.username} on PlantsPack: ${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}`
 
   const handleShare = async () => {
     if (!user || submitting) return
@@ -73,6 +77,43 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
     }
   }
 
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(postUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error('Error copying link:', error)
+    }
+  }
+
+  const handleShareToFacebook = () => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
+    window.open(facebookUrl, '_blank', 'width=600,height=400')
+  }
+
+  const handleShareToTwitter = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(shareText)}`
+    window.open(twitterUrl, '_blank', 'width=600,height=400')
+  }
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'PlantsPack Post',
+          text: shareText,
+          url: postUrl
+        })
+      } catch (error) {
+        // User cancelled or error occurred
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error sharing:', error)
+        }
+      }
+    }
+  }
+
   if (!isOpen || !user) return null
 
   return (
@@ -93,31 +134,72 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
         </div>
 
         <div className="p-4 space-y-4">
-          {/* Share Type Selection */}
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setShareType('share')}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                shareType === 'share'
-                  ? 'bg-green-100 text-green-700 border border-green-300'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <Repeat2 className="h-4 w-4" />
-              <span>Share</span>
-            </button>
-            <button
-              onClick={() => setShareType('quote')}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                shareType === 'quote'
-                  ? 'bg-green-100 text-green-700 border border-green-300'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              <MessageSquareQuote className="h-4 w-4" />
-              <span>Quote</span>
-            </button>
+          {/* Social Media Sharing */}
+          <div>
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Share to social media</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button
+                onClick={handleCopyLink}
+                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <LinkIcon className="h-5 w-5 text-gray-600 mb-1" />
+                <span className="text-xs text-gray-600">{copied ? 'Copied!' : 'Copy Link'}</span>
+              </button>
+              <button
+                onClick={handleShareToFacebook}
+                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                <Facebook className="h-5 w-5 text-blue-600 mb-1" />
+                <span className="text-xs text-gray-600">Facebook</span>
+              </button>
+              <button
+                onClick={handleShareToTwitter}
+                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-sky-50 transition-colors"
+              >
+                <Twitter className="h-5 w-5 text-sky-500 mb-1" />
+                <span className="text-xs text-gray-600">X (Twitter)</span>
+              </button>
+              {navigator.share && (
+                <button
+                  onClick={handleNativeShare}
+                  className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-purple-50 transition-colors"
+                >
+                  <Instagram className="h-5 w-5 text-purple-600 mb-1" />
+                  <span className="text-xs text-gray-600">More</span>
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Share within PlantsPack */}
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Share within PlantsPack</h3>
+
+            {/* Share Type Selection */}
+            <div className="flex space-x-2 mb-4">
+              <button
+                onClick={() => setShareType('share')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-md font-medium transition-colors ${
+                  shareType === 'share'
+                    ? 'bg-green-100 text-green-700 border border-green-300'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Repeat2 className="h-4 w-4" />
+                <span>Share</span>
+              </button>
+              <button
+                onClick={() => setShareType('quote')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-md font-medium transition-colors ${
+                  shareType === 'quote'
+                    ? 'bg-green-100 text-green-700 border border-green-300'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <MessageSquareQuote className="h-4 w-4" />
+                <span>Quote</span>
+              </button>
+            </div>
 
           {/* Info message about basic mode */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
@@ -211,21 +293,22 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex space-x-3 pt-4">
-            <button
-              onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleShare}
-              disabled={submitting}
-              className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-md font-medium transition-colors"
-            >
-              {submitting ? 'Sharing...' : shareType === 'share' ? 'Share Post' : 'Post Quote'}
-            </button>
+            {/* Action Buttons */}
+            <div className="flex space-x-3 pt-4">
+              <button
+                onClick={onClose}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleShare}
+                disabled={submitting}
+                className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-md font-medium transition-colors"
+              >
+                {submitting ? 'Sharing...' : shareType === 'share' ? 'Share Post' : 'Post Quote'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

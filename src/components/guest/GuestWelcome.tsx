@@ -17,7 +17,7 @@ export default function GuestWelcome() {
           href="/auth?mode=signup"
           className="inline-block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
-          Join PlantsPack
+          Join PlantsPack - Free Forever
         </Link>
         
         <p className="text-sm text-gray-500">
