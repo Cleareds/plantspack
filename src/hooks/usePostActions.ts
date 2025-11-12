@@ -12,7 +12,8 @@ export function usePostActions() {
 
     try {
       const response = await fetch(`/api/posts/${postId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       })
 
       if (!response.ok) {
@@ -40,6 +41,7 @@ export function usePostActions() {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({ content, privacy })
       })
 

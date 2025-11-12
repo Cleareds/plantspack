@@ -85,6 +85,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(body)
       })
 

@@ -56,10 +56,25 @@ export async function PUT(
     const supabase = await createClient()
     const { id } = await context.params
 
+    // Debug: Check cookies
+    console.log('=== PUT /api/posts/[id] Debug ===')
+    console.log('Request cookies:', request.cookies.getAll())
+
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    console.log('Auth result:', { user: user?.id, error: authError?.message })
+
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      console.error('Auth failed:', authError)
+      return NextResponse.json({
+        error: 'Unauthorized',
+        debug: {
+          hasUser: !!user,
+          authError: authError?.message,
+          cookies: request.cookies.getAll().map(c => c.name)
+        }
+      }, { status: 401 })
     }
 
     // Get request body
@@ -141,10 +156,25 @@ export async function DELETE(
     const supabase = await createClient()
     const { id } = await context.params
 
+    // Debug: Check cookies
+    console.log('=== DELETE /api/posts/[id] Debug ===')
+    console.log('Request cookies:', request.cookies.getAll())
+
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    console.log('Auth result:', { user: user?.id, error: authError?.message })
+
     if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      console.error('Auth failed:', authError)
+      return NextResponse.json({
+        error: 'Unauthorized',
+        debug: {
+          hasUser: !!user,
+          authError: authError?.message,
+          cookies: request.cookies.getAll().map(c => c.name)
+        }
+      }, { status: 401 })
     }
 
     // Check if user owns the post
