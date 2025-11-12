@@ -65,10 +65,10 @@ export async function PUT(
 
     // Get request body
     const body = await request.json()
-    const { content, privacy } = body
+    const { content, quote_content, privacy } = body
 
-    // Validate content
-    if (!content || content.trim().length === 0) {
+    // Validate that at least one content field is provided
+    if (!content && !quote_content) {
       return NextResponse.json(
         { error: 'Content cannot be empty' },
         { status: 400 }
@@ -78,7 +78,7 @@ export async function PUT(
     // Check if user owns the post
     const { data: existingPost, error: fetchError } = await supabase
       .from('posts')
-      .select('user_id, deleted_at')
+      .select('user_id, deleted_at, post_type')
       .eq('id', id)
       .single()
 
@@ -97,14 +97,24 @@ export async function PUT(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
+    // Build update object based on post type
+    const updateData: any = {
+      privacy: privacy || 'public',
+      updated_at: new Date().toISOString()
+    }
+
+    // For quote posts, update quote_content (user's commentary)
+    // For original posts, update content
+    if (existingPost.post_type === 'quote' && quote_content !== undefined) {
+      updateData.quote_content = quote_content.trim()
+    } else if (content !== undefined) {
+      updateData.content = content.trim()
+    }
+
     // Update the post
     const { data, error } = await supabase
       .from('posts')
-      .update({
-        content: content.trim(),
-        privacy: privacy || 'public',
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single()

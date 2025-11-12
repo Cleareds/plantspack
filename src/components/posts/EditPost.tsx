@@ -8,6 +8,8 @@ interface EditPostProps {
     id: string
     content: string
     privacy: 'public' | 'friends'
+    post_type?: 'original' | 'share' | 'quote'
+    quote_content?: string | null
   }
   isOpen: boolean
   onClose: () => void
@@ -15,12 +17,44 @@ interface EditPostProps {
 }
 
 export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostProps) {
-  const [content, setContent] = useState(post.content)
+  // For quote posts, edit the quote_content (user's commentary)
+  // For original posts, edit the content
+  // For share posts, we shouldn't be able to edit (no user content)
+  const isQuotePost = post.post_type === 'quote'
+  const isSharePost = post.post_type === 'share'
+  const initialContent = isQuotePost && post.quote_content ? post.quote_content : post.content
+
+  const [content, setContent] = useState(initialContent)
   const [privacy, setPrivacy] = useState<'public' | 'friends'>(post.privacy)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   if (!isOpen) return null
+
+  // Don't allow editing share posts (they have no user content)
+  if (isSharePost) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="bg-white rounded-lg w-full max-w-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Cannot Edit</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <p className="text-gray-600 mb-4">
+            Shared posts cannot be edited. You can only delete them or view the original post.
+          </p>
+          <button
+            onClick={onClose}
+            className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
+          >
+            Got it
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,15 +68,24 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
     setError(null)
 
     try {
+      const body: any = {
+        privacy
+      }
+
+      // For quote posts, update quote_content (user's commentary)
+      // For original posts, update content
+      if (isQuotePost) {
+        body.quote_content = content.trim()
+      } else {
+        body.content = content.trim()
+      }
+
       const response = await fetch(`/api/posts/${post.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          content: content.trim(),
-          privacy
-        })
+        body: JSON.stringify(body)
       })
 
       if (!response.ok) {
@@ -64,7 +107,9 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Edit Post</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {isQuotePost ? 'Edit Your Quote' : 'Edit Post'}
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
@@ -75,6 +120,15 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          {/* Info message for quote posts */}
+          {isQuotePost && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-800">
+                <strong>Note:</strong> You&apos;re editing your commentary on the quoted post. The original post content cannot be changed.
+              </p>
+            </div>
+          )}
+
           {/* Error Message */}
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -84,13 +138,16 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
 
           {/* Content */}
           <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {isQuotePost ? 'Your commentary' : 'Post content'}
+            </label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
               rows={6}
               maxLength={500}
-              placeholder="What's on your mind?"
+              placeholder={isQuotePost ? "What do you think about this post?" : "What's on your mind?"}
             />
             <div className="flex justify-between items-center mt-1">
               <span className={`text-xs ${content.length > 450 ? 'text-red-500' : 'text-gray-400'}`}>
