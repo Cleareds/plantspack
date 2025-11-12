@@ -204,7 +204,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
       // Only add images field if we have images to avoid database errors
       if (imageUrls.length > 0) {
-        postData.image_urls = imageUrls
+        postData.images = imageUrls
       }
 
       // Only add videos field if we have videos
@@ -318,11 +318,6 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 >
                   <X className="h-4 w-4" />
                 </button>
-                <ImageSlider 
-                  images={imageUrls} 
-                  aspectRatio="wide"
-                  className="max-w-full"
-                />
               </div>
             )}
 
@@ -443,8 +438,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                     type="button"
                     onClick={() => setShowVideoUploader(!showVideoUploader)}
                     className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
-                      showVideoUploader || videoUrls.length > 0 
-                        ? 'text-purple-600' 
+                      showVideoUploader || videoUrls.length > 0
+                        ? 'text-purple-600'
                         : 'text-gray-500'
                     }`}
                   >
@@ -453,18 +448,21 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                   </button>
                 )}
 
-                <button
-                  type="button"
-                  onClick={handleLocationToggle}
-                  className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
-                    shareLocation 
-                      ? 'text-blue-600' 
-                      : 'text-gray-500'
-                  }`}
-                >
-                  <MapPin className="h-5 w-5" />
-                  <span className="text-sm">Location</span>
-                </button>
+                {/* Only show Location for paid users */}
+                {subscription && subscription.tier !== 'free' && (
+                  <button
+                    type="button"
+                    onClick={handleLocationToggle}
+                    className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
+                      shareLocation
+                        ? 'text-blue-600'
+                        : 'text-gray-500'
+                    }`}
+                  >
+                    <MapPin className="h-5 w-5" />
+                    <span className="text-sm">Location</span>
+                  </button>
+                )}
                 
                 <div className="flex items-center space-x-2">
                   <label className="flex items-center space-x-1 cursor-pointer">
@@ -493,7 +491,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               </div>
             </div>
 
-              <div className="flex items-center space-x-3 mt-4">
+              <div className="flex flex-col space-y-2 mt-4">
+                <div className="flex items-center space-x-3">
                   <button
                       type="submit"
                       disabled={(!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) || loading || (maxChars !== -1 && charCount > maxChars)}
@@ -503,9 +502,9 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                       <span>{loading ? 'Posting...' : 'Post'}</span>
                   </button>
                   <div className="flex items-center space-x-2">
-                  <span className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
-                    {charCount}{maxChars === -1 ? '' : `/${maxChars}`}
-                  </span>
+                    <span className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
+                      {charCount}{maxChars === -1 ? '' : `/${maxChars}`}
+                    </span>
                       {subscription?.tier === 'free' && charCount > 400 && (
                           <Link
                               href="/pricing"
@@ -515,6 +514,20 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                           </Link>
                       )}
                   </div>
+                </div>
+
+                {/* Promotional note for free tier users */}
+                {(!subscription || subscription.tier === 'free') && (
+                  <p className="text-xs text-gray-600">
+                    Get more posting freedom by{' '}
+                    <Link
+                      href="/pricing"
+                      className="text-green-600 hover:text-green-700 underline font-medium"
+                    >
+                      supporting us
+                    </Link>
+                  </p>
+                )}
               </div>
 
           </div>
