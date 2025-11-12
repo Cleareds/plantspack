@@ -2,14 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
+type RouteContext = {
+  params: Promise<{ id: string }>
+}
+
 // GET /api/posts/[id] - Get single post
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: RouteContext
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
-    const { id } = await params
+    const { id } = await context.params
 
     const { data: post, error } = await supabase
       .from('posts')
@@ -47,11 +51,11 @@ export async function GET(
 // PUT /api/posts/[id] - Edit post
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: RouteContext
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
-    const { id } = await params
+    const { id } = await context.params
 
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -122,11 +126,11 @@ export async function PUT(
 // DELETE /api/posts/[id] - Soft delete post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: RouteContext
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
-    const { id } = await params
+    const { id } = await context.params
 
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()

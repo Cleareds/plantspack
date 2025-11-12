@@ -69,7 +69,7 @@ export default function Header() {
               className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors"
             >
               <Crown className="h-5 w-5" />
-              <span>Support</span>
+              <span>Support Us</span>
             </Link>
             {user && username && (
               <>
