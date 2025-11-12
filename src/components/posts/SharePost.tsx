@@ -159,7 +159,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
                 <Twitter className="h-5 w-5 text-sky-500 mb-1" />
                 <span className="text-xs text-gray-600">X (Twitter)</span>
               </button>
-              {navigator.share && (
+              {typeof navigator !== 'undefined' && typeof navigator.share !== 'undefined' && (
                 <button
                   onClick={handleNativeShare}
                   className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-purple-50 transition-colors"

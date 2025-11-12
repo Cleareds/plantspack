@@ -143,14 +143,14 @@ export async function getCurrentLocation(): Promise<LocationData | null> {
             longitude,
             ...locationData
           })
-        } catch (error) {
+        } catch {
           // Return coordinates even if reverse geocoding fails
           resolve({ latitude, longitude })
         }
       },
-      (error) => {
+      (err) => {
         clearTimeout(timeoutId)
-        console.log('Location access denied or failed:', error.message)
+        console.log('Location access denied or failed:', err.message)
         resolve(null)
       },
       {

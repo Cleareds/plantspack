@@ -5,10 +5,11 @@ import { cookies } from 'next/headers'
 // GET /api/posts/[id] - Get single post
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
+    const { id } = await params
 
     const { data: post, error } = await supabase
       .from('posts')
@@ -25,7 +26,7 @@ export async function GET(
         post_likes (id, user_id),
         comments (id)
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .is('deleted_at', null)
       .single()
 
@@ -46,10 +47,11 @@ export async function GET(
 // PUT /api/posts/[id] - Edit post
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
+    const { id } = await params
 
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -73,7 +75,7 @@ export async function PUT(
     const { data: existingPost, error: fetchError } = await supabase
       .from('posts')
       .select('user_id, deleted_at')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (fetchError || !existingPost) {
@@ -99,7 +101,7 @@ export async function PUT(
         privacy: privacy || 'public',
         updated_at: new Date().toISOString()
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -120,10 +122,11 @@ export async function PUT(
 // DELETE /api/posts/[id] - Soft delete post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
+    const { id } = await params
 
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -135,7 +138,7 @@ export async function DELETE(
     const { data: existingPost, error: fetchError } = await supabase
       .from('posts')
       .select('user_id, deleted_at')
-      .eq('id', params.id)
+      .eq('id', id)
       .single()
 
     if (fetchError || !existingPost) {
@@ -159,7 +162,7 @@ export async function DELETE(
       .update({
         deleted_at: new Date().toISOString()
       })
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { useParams } from 'next/navigation'
@@ -9,6 +9,7 @@ import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown } from 'lu
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import { getUserSubscription, SUBSCRIPTION_TIERS } from '@/lib/stripe'
+import PostCard from '@/components/posts/PostCard'
 
 export default function ProfilePage() {
   const params = useParams()
@@ -24,34 +25,42 @@ export default function ProfilePage() {
 
   const isOwnProfile = currentUserProfile?.username === username
 
-  useEffect(() => {
-    async function loadProfileData() {
-      setLoading(true)
+  const loadProfileData = useCallback(async () => {
+    setLoading(true)
 
-      // Fetch profile
-      const { data: profileData, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('username', username)
-        .single()
+    // Fetch profile
+    const { data: profileData, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .single()
 
-      if (error || !profileData) {
-        setLoading(false)
-        return
-      }
+    if (error || !profileData) {
+      setLoading(false)
+      return
+    }
 
-      setProfile(profileData)
+    setProfile(profileData)
 
-      // Fetch posts
+      // Fetch posts with full data for PostCard
       const { data: postsData } = await supabase
         .from('posts')
         .select(`
           *,
-          post_likes (id),
+          users (
+            id,
+            username,
+            first_name,
+            last_name,
+            avatar_url,
+            subscription_tier
+          ),
+          post_likes (id, user_id),
           comments (id)
         `)
         .eq('user_id', profileData.id)
         .eq('privacy', 'public')
+        .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
       setPosts(postsData || [])
@@ -98,10 +107,11 @@ export default function ProfilePage() {
       }
 
       setLoading(false)
-    }
-
-    loadProfileData()
   }, [username, user])
+
+  useEffect(() => {
+    loadProfileData()
+  }, [loadProfileData])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -206,39 +216,27 @@ export default function ProfilePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Posts */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Posts ({posts?.length || 0})
-              </h2>
-            </div>
-            
-            {!posts || posts.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <p>No public posts yet.</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-gray-200">
-                {posts.map((post) => (
-                  <div key={post.id} className="p-6">
-                    <div className="mb-2">
-                      <Link
-                        href={`/post/${post.id}`}
-                        className="text-sm text-gray-500 hover:text-green-600 hover:underline transition-colors"
-                      >
-                        {new Date(post.created_at).toLocaleDateString()}
-                      </Link>
-                    </div>
-                    <p className="text-gray-800 whitespace-pre-wrap mb-3">{post.content}</p>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>{post.post_likes?.length || 0} likes</span>
-                      <span>{post.comments?.length || 0} comments</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Posts ({posts?.length || 0})
+            </h2>
           </div>
+
+          {!posts || posts.length === 0 ? (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center text-gray-500">
+              <p>No public posts yet.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onUpdate={loadProfileData}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}

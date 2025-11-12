@@ -51,7 +51,7 @@ export interface FeedOptions {
  * Fetches posts with intelligent sorting and ranking
  */
 export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
-  const { sortBy, limit = 10, offset = 0, userId, includeAnalytics = false } = options
+  const { sortBy, limit = 10, offset = 0, userId } = options
 
   try {
     let query = supabase
@@ -170,7 +170,10 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
       // Sort by relevancy score and take only what we need
       rankedPosts.sort((a, b) => b.relevancyScore - a.relevancyScore)
 
-      return rankedPosts.slice(0, limit).map(({ relevancyScore, ...post }) => post) as FeedPost[]
+      return rankedPosts.slice(0, limit).map(({ relevancyScore, ...post }) => {
+        void relevancyScore // Explicitly ignore relevancyScore
+        return post
+      }) as FeedPost[]
     }
 
     // For subsequent pages, return as-is (already sorted by engagement_score)
@@ -184,7 +187,9 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
 
 /**
  * Calculates relevancy score for a post based on user preferences
+ * Note: Currently unused but kept for future AI-powered relevancy ranking
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function calculateRelevancyScore(
   post: FeedPost,
   userId: string,
@@ -298,7 +303,7 @@ async function calculateSocialSignals(post: FeedPost, userId: string): Promise<n
 
     // Scale to 0-1 range
     return Math.min(1, networkRatio * 2) // Double the ratio, cap at 1
-  } catch (error) {
+  } catch {
     return 0.3 // Conservative baseline on error
   }
 }

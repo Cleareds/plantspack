@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import { getUserSubscription, canPerformAction, SUBSCRIPTION_TIERS, type UserSubscription } from '@/lib/stripe'
 
@@ -10,18 +10,9 @@ export function useSubscription() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (user) {
-      loadSubscription()
-    } else {
-      setSubscription(null)
-      setLoading(false)
-    }
-  }, [user])
-
-  const loadSubscription = async () => {
+  const loadSubscription = useCallback(async () => {
     if (!user) return
-    
+
     try {
       setLoading(true)
       setError(null)
@@ -38,7 +29,16 @@ export function useSubscription() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      loadSubscription()
+    } else {
+      setSubscription(null)
+      setLoading(false)
+    }
+  }, [user, loadSubscription])
 
   const refresh = () => {
     if (user) {
