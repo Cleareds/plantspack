@@ -63,7 +63,8 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
           username,
           first_name,
           last_name,
-          avatar_url
+          avatar_url,
+          subscription_tier
         ),
         post_likes (
           id,
@@ -71,6 +72,22 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
         ),
         comments (
           id
+        ),
+        parent_post:parent_post_id (
+          id,
+          user_id,
+          content,
+          images,
+          image_url,
+          created_at,
+          users (
+            id,
+            username,
+            first_name,
+            last_name,
+            avatar_url,
+            subscription_tier
+          )
         )
       `)
       .eq('privacy', 'public') // Only public posts for main feed
@@ -140,7 +157,8 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
           username,
           first_name,
           last_name,
-          avatar_url
+          avatar_url,
+          subscription_tier
         ),
         post_likes (
           id,
@@ -148,6 +166,22 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
         ),
         comments (
           id
+        ),
+        parent_post:parent_post_id (
+          id,
+          user_id,
+          content,
+          images,
+          image_url,
+          created_at,
+          users (
+            id,
+            username,
+            first_name,
+            last_name,
+            avatar_url,
+            subscription_tier
+          )
         )
       `)
       .eq('privacy', 'public')
@@ -413,7 +447,8 @@ async function getPopularPosts(period: 'today' | 'week' | 'month', limit: number
           username,
           first_name,
           last_name,
-          avatar_url
+          avatar_url,
+          subscription_tier
         ),
         post_likes (
           id,
@@ -421,6 +456,22 @@ async function getPopularPosts(period: 'today' | 'week' | 'month', limit: number
         ),
         comments (
           id
+        ),
+        parent_post:parent_post_id (
+          id,
+          user_id,
+          content,
+          images,
+          image_url,
+          created_at,
+          users (
+            id,
+            username,
+            first_name,
+            last_name,
+            avatar_url,
+            subscription_tier
+          )
         )
       `)
       .eq('privacy', 'public')

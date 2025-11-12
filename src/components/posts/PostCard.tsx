@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2 } from 'lucide-react'
+import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2, ExternalLink } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
@@ -278,10 +278,77 @@ function PostCard({ post, onUpdate }: PostCardProps) {
         </div>
       )}
 
-      {/* Original post content */}
-      <div className={`${isQuotePost ? 'border border-gray-200 rounded-lg p-3 bg-gray-50' : ''}`}>
-        {/* Header for original post or non-quote posts */}
-        {!isQuotePost && (
+      {/* Display parent post for shares and quotes */}
+      {(isRepost || isQuotePost) && post.parent_post ? (
+        <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+          {/* Parent post header */}
+          <div className="flex items-center space-x-3 mb-3">
+            <Link href={`/user/${post.parent_post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+              {post.parent_post.users.avatar_url ? (
+                <img
+                  src={post.parent_post.users.avatar_url}
+                  alt={`${post.parent_post.users.username}'s avatar`}
+                  className="h-8 w-8 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
+                />
+              ) : (
+                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
+                  <span className="text-green-600 font-medium text-xs">
+                    {post.parent_post.users.first_name?.[0] || post.parent_post.users.username[0].toUpperCase()}
+                  </span>
+                </div>
+              )}
+            </Link>
+            <div>
+              <div className="flex items-center space-x-2">
+                <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                  <h4 className="font-medium text-gray-900 text-sm hover:text-green-600 transition-colors cursor-pointer">
+                    {post.parent_post.users.first_name && post.parent_post.users.last_name
+                      ? `${post.parent_post.users.first_name} ${post.parent_post.users.last_name}`
+                      : post.parent_post.users.username}
+                  </h4>
+                </Link>
+                {post.parent_post.users.subscription_tier && post.parent_post.users.subscription_tier !== 'free' && (
+                  <TierBadge tier={post.parent_post.users.subscription_tier} size="sm" />
+                )}
+                <span className="text-gray-500">•</span>
+                <Link
+                  href={`/post/${post.parent_post.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer"
+                >
+                  {formatDistanceToNow(new Date(post.parent_post.created_at), { addSuffix: true })}
+                </Link>
+              </div>
+              <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.parent_post.users.username}</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Parent post content */}
+          <div className="mb-2">
+            <LinkifiedText
+              text={post.parent_post.content}
+              className="text-gray-700 text-sm whitespace-pre-wrap"
+            />
+          </div>
+
+          {/* Link to original post */}
+          <div className="mt-2 pt-2 border-t border-gray-200">
+            <Link
+              href={`/post/${post.parent_post.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center space-x-1 transition-colors"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              <span>View original post</span>
+            </Link>
+          </div>
+        </div>
+      ) : (
+        /* Original post content for non-share/non-quote posts */
+        <div>
+          {/* Header for original posts */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
               <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -312,7 +379,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                     <TierBadge tier={post.users.subscription_tier} size="sm" />
                   )}
                   <span className="text-gray-500">•</span>
-                  <Link 
+                  <Link
                     href={`/post/${post.id}`}
                     onClick={(e) => e.stopPropagation()}
                     className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
@@ -372,72 +439,65 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               )}
             </div>
           </div>
-        )}
 
-        {/* Content */}
-        <div className={isQuotePost ? 'mb-2' : 'mb-4'}>
-          <LinkifiedText 
-            text={post.content} 
-            className="text-gray-800 whitespace-pre-wrap" 
-          />
-          {/* Handle both new images array and legacy image_url */}
-          {(() => {
-            const imagesToShow = post.images && post.images.length > 0 
-              ? post.images 
-              : (post.image_url ? [post.image_url] : [])
-              
-            return imagesToShow.length > 0 ? (
-              <div className="mt-3">
-                <ImageSlider 
-                  images={imagesToShow} 
-                  aspectRatio="auto"
-                  className="max-w-full"
-                />
-              </div>
-            ) : null
-          })()}
+          {/* Content */}
+          <div className="mb-4">
+            <LinkifiedText
+              text={post.content}
+              className="text-gray-800 whitespace-pre-wrap"
+            />
+            {/* Handle both new images array and legacy image_url */}
+            {(() => {
+              const imagesToShow = post.images && post.images.length > 0
+                ? post.images
+                : (post.image_url ? [post.image_url] : [])
 
-          {/* Videos */}
-          {post.video_urls && post.video_urls.length > 0 && (
-            <div className="mt-3 space-y-3">
-              {post.video_urls.map((videoUrl, index) => (
-                <div key={index} className="relative">
-                  <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
-                    <video
-                      src={videoUrl}
-                      className="w-full h-full object-cover"
-                      controls
-                      preload="metadata"
-                    >
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
+              return imagesToShow.length > 0 ? (
+                <div className="mt-3">
+                  <ImageSlider
+                    images={imagesToShow}
+                    aspectRatio="auto"
+                    className="max-w-full"
+                  />
                 </div>
-              ))}
-            </div>
-          )}
-          
-          {/* Link Preview */}
-          {(() => {
-            const urls = extractUrls(post.content)
-            return urls.length > 0 ? (
-              <div className="mt-3">
-                <LinkPreview
-                  url={urls[0]}
-                  className="max-w-full"
-                />
-              </div>
-            ) : null
-          })()}
-        </div>
+              ) : null
+            })()}
 
-        {/* Quote post author info (for the quoted post) */}
-        {isQuotePost && (
-          <div className="text-xs text-gray-500">
-            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+            {/* Videos */}
+            {post.video_urls && post.video_urls.length > 0 && (
+              <div className="mt-3 space-y-3">
+                {post.video_urls.map((videoUrl, index) => (
+                  <div key={index} className="relative">
+                    <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
+                      <video
+                        src={videoUrl}
+                        className="w-full h-full object-cover"
+                        controls
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Link Preview */}
+            {(() => {
+              const urls = extractUrls(post.content)
+              return urls.length > 0 ? (
+                <div className="mt-3">
+                  <LinkPreview
+                    url={urls[0]}
+                    className="max-w-full"
+                  />
+                </div>
+              ) : null
+            })()}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Actions */}
       {!isQuotePost && (

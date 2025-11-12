@@ -128,16 +128,29 @@ export default function ProfileSettingsPage() {
               </div>
 
               <div className="space-y-4">
+                {/* Translation Notice */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    <span className="font-semibold">ℹ️ Note:</span> PlantsPack currently works only in English.
+                    Multi-language support is in progress and will be available soon.
+                  </p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Language
                   </label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    disabled
+                  >
                     <option>English</option>
-                    <option>Spanish</option>
-                    <option>French</option>
-                    <option>German</option>
+                    <option disabled>Ukrainian (Coming Soon)</option>
+                    <option disabled>Spanish (Coming Soon)</option>
+                    <option disabled>French (Coming Soon)</option>
+                    <option disabled>German (Coming Soon)</option>
                   </select>
+                  <p className="text-xs text-gray-500 mt-1">Language selection will be enabled once translations are complete</p>
                 </div>
 
                 <div>
@@ -145,10 +158,12 @@ export default function ProfileSettingsPage() {
                     Time Zone
                   </label>
                   <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                    <option>UTC-08:00 Pacific Time</option>
-                    <option>UTC-05:00 Eastern Time</option>
+                    <option>UTC-08:00 Pacific Time (US & Canada)</option>
+                    <option>UTC-05:00 Eastern Time (US & Canada)</option>
                     <option>UTC+00:00 London</option>
-                    <option>UTC+01:00 Paris</option>
+                    <option>UTC+01:00 Paris, Berlin</option>
+                    <option>UTC+02:00 Kyiv, Athens, Istanbul</option>
+                    <option>UTC+03:00 Moscow</option>
                   </select>
                 </div>
               </div>

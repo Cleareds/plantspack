@@ -56,7 +56,23 @@ export default function ProfilePage() {
             subscription_tier
           ),
           post_likes (id, user_id),
-          comments (id)
+          comments (id),
+          parent_post:parent_post_id (
+            id,
+            user_id,
+            content,
+            images,
+            image_url,
+            created_at,
+            users (
+              id,
+              username,
+              first_name,
+              last_name,
+              avatar_url,
+              subscription_tier
+            )
+          )
         `)
         .eq('user_id', profileData.id)
         .eq('privacy', 'public')

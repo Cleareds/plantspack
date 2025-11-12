@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
-import { Share, MessageSquareQuote, Repeat2, X, Facebook, Twitter, Instagram, Link as LinkIcon } from 'lucide-react'
+import { Share, MessageSquareQuote, Repeat2, X, Facebook, Twitter, Instagram, Link as LinkIcon, MessageCircle } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import ImageSlider from '../ui/ImageSlider'
 
@@ -25,10 +25,15 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
   const [privacy, setPrivacy] = useState<'public' | 'friends'>('public')
   const [submitting, setSubmitting] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
   const { user } = useAuth()
 
   const postUrl = typeof window !== 'undefined' ? `${window.location.origin}/post/${post.id}` : ''
-  const shareText = `Check out this post by ${post.users.first_name || post.users.username} on PlantsPack: ${post.content.substring(0, 100)}${post.content.length > 100 ? '...' : ''}`
+  // Create share text with content excerpt
+  const contentExcerpt = post.content.length > 120
+    ? post.content.substring(0, 120) + '...'
+    : post.content
+  const shareText = `${contentExcerpt}`
 
   const handleShare = async () => {
     if (!user || submitting) return
@@ -36,30 +41,26 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
     try {
       setSubmitting(true)
 
-      // Create share content based on type
-      let shareContent = ''
-      
-      if (shareType === 'quote' && quoteContent.trim()) {
-        // Quote post format
-        shareContent = `${quoteContent.trim()}\n\n📝 Quoting @${post.users.username}:\n"${post.content}"`
-      } else {
-        // Simple share format
-        shareContent = `🔄 Shared from @${post.users.username}:\n\n${post.content}`
-      }
-
-      // Create base share data that works with current database schema
+      // Create share data with proper post_type and parent_post_id
       const shareData: any = {
         user_id: user.id,
-        content: shareContent,
+        parent_post_id: post.id,
+        post_type: shareType,
         privacy
       }
 
-      // Add image if the original post has one (backward compatibility)
-      if (post.images && post.images.length > 0) {
-        shareData.image_url = post.images[0] // Use first image for backward compatibility
-      } else if (post.image_url) {
-        shareData.image_url = post.image_url
+      if (shareType === 'quote' && quoteContent.trim()) {
+        // Quote post - store user's quote text in quote_content
+        shareData.quote_content = quoteContent.trim()
+        // Content is still the original post content for reference
+        shareData.content = post.content
+      } else {
+        // Simple share - no quote content needed
+        shareData.quote_content = null
+        shareData.content = post.content
       }
+
+      // Don't copy images - parent post preview will show text only with link
 
       const { error } = await supabase
         .from('posts')
@@ -67,9 +68,14 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
 
       if (error) throw error
 
-      onShared()
-      onClose()
-      setQuoteContent('')
+      // Show success notification
+      setShowSuccess(true)
+      setTimeout(() => {
+        setShowSuccess(false)
+        onShared()
+        onClose()
+        setQuoteContent('')
+      }, 1500)
     } catch (error) {
       console.error('Error sharing post:', error)
     } finally {
@@ -88,20 +94,34 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
   }
 
   const handleShareToFacebook = () => {
+    // Facebook uses Open Graph tags from the URL, no need for text parameter
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`
     window.open(facebookUrl, '_blank', 'width=600,height=400')
   }
 
   const handleShareToTwitter = () => {
-    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(shareText)}`
+    // Twitter will use Twitter Card meta tags and include the text
+    const twitterText = `${shareText}\n\nvia @PlantsPack`
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(twitterText)}`
     window.open(twitterUrl, '_blank', 'width=600,height=400')
+  }
+
+  const handleShareToWhatsApp = () => {
+    // WhatsApp needs both text and URL in the message
+    const whatsappText = `${shareText}\n\n${postUrl}`
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`
+    window.open(whatsappUrl, '_blank', 'width=600,height=400')
   }
 
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
+        const userName = post.users.first_name
+          ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
+          : post.users.username
+
         await navigator.share({
-          title: 'PlantsPack Post',
+          title: `${userName} on PlantsPack`,
           text: shareText,
           url: postUrl
         })
@@ -137,7 +157,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
           {/* Social Media Sharing */}
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-3">Share to social media</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               <button
                 onClick={handleCopyLink}
                 className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
@@ -159,12 +179,19 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
                 <Twitter className="h-5 w-5 text-sky-500 mb-1" />
                 <span className="text-xs text-gray-600">X (Twitter)</span>
               </button>
+              <button
+                onClick={handleShareToWhatsApp}
+                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-green-50 transition-colors"
+              >
+                <MessageCircle className="h-5 w-5 text-green-600 mb-1" />
+                <span className="text-xs text-gray-600">WhatsApp</span>
+              </button>
               {typeof navigator !== 'undefined' && typeof navigator.share !== 'undefined' && (
                 <button
                   onClick={handleNativeShare}
                   className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-purple-50 transition-colors"
                 >
-                  <Instagram className="h-5 w-5 text-purple-600 mb-1" />
+                  <Share className="h-5 w-5 text-purple-600 mb-1" />
                   <span className="text-xs text-gray-600">More</span>
                 </button>
               )}
@@ -311,6 +338,18 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
             </div>
           </div>
         </div>
+
+        {/* Success Notification */}
+        {showSuccess && (
+          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-[60] flex items-center space-x-2 animate-slide-down">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="font-medium">
+              {shareType === 'quote' ? 'Quote posted successfully!' : 'Post shared successfully!'}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )

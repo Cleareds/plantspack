@@ -63,6 +63,22 @@ export default function Feed({onPostCreated}: FeedProps) {
                 ),
                 comments (
                     id
+                ),
+                parent_post:parent_post_id (
+                    id,
+                    user_id,
+                    content,
+                    images,
+                    image_url,
+                    created_at,
+                    users (
+                        id,
+                        username,
+                        first_name,
+                        last_name,
+                        avatar_url,
+                        subscription_tier
+                    )
                 )
             `)
             .in('id', postIds)
@@ -144,6 +160,22 @@ export default function Feed({onPostCreated}: FeedProps) {
           ),
           comments (
             id
+          ),
+          parent_post:parent_post_id (
+            id,
+            user_id,
+            content,
+            images,
+            image_url,
+            created_at,
+            users (
+              id,
+              username,
+              first_name,
+              last_name,
+              avatar_url,
+              subscription_tier
+            )
           )
         `)
                     .eq('privacy', 'friends')
