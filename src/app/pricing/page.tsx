@@ -4,18 +4,20 @@ import { useState, useEffect, Suspense } from 'react'
 import { useAuth } from '@/lib/auth'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { 
-  Check, 
-  Star, 
-  Crown, 
-  Leaf, 
-  MapPin, 
-  BarChart3, 
-  Headphones, 
+import Image from 'next/image'
+import {
+  Check,
+  Star,
+  Crown,
+  Leaf,
+  MapPin,
+  BarChart3,
+  Headphones,
   Palette,
   ArrowLeft,
   Loader2,
-  X
+  X,
+  Coffee
 } from 'lucide-react'
 import { 
   SUBSCRIPTION_TIERS, 
@@ -35,6 +37,7 @@ function PricingContent() {
   const [managingSubscription, setManagingSubscription] = useState(false)
   const [promotionalInfo, setPromotionalInfo] = useState<PromotionalInfo | null>(null)
   const [userPromoStatus, setUserPromoStatus] = useState<any>(null)
+  const [showBMC, setShowBMC] = useState(true)
 
   // Handle success/cancel/error messages
   const success = searchParams.get('success')
@@ -46,10 +49,21 @@ function PricingContent() {
       getUserSubscription(user.id).then(setSubscription)
       getUserPromotionalStatus(user.id).then(setUserPromoStatus)
     }
-    
+
     // Load promotional info regardless of user status
     getPromotionalInfo().then(setPromotionalInfo)
+
+    // Load BMC visibility state from localStorage
+    const bmcHidden = localStorage.getItem('bmc_hidden')
+    if (bmcHidden === 'true') {
+      setShowBMC(false)
+    }
   }, [user])
+
+  const handleCloseBMC = () => {
+    setShowBMC(false)
+    localStorage.setItem('bmc_hidden', 'true')
+  }
 
   const handleUpgrade = async (tierId: 'medium' | 'premium') => {
     if (!user) {
@@ -498,6 +512,52 @@ function PricingContent() {
           </div>
         </div>
       </div>
+
+      {/* Buy Me a Coffee Floating Block */}
+      {showBMC && (
+        <div className="fixed bottom-6 left-6 z-50">
+          <div className="relative bg-white rounded-2xl shadow-2xl border-2 border-yellow-400 p-4 max-w-[160px]">
+            {/* Close Button */}
+            <button
+              onClick={handleCloseBMC}
+              className="absolute -top-2 -right-2 p-1.5 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-lg transition-colors z-10"
+              aria-label="Close"
+            >
+              <X className="h-3 w-3" />
+            </button>
+
+            <a
+              href="https://buymeacoffee.com/plantspack"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block hover:opacity-90 transition-opacity"
+            >
+              <div className="flex items-start space-x-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-bold text-gray-900 mb-1">
+                    Support Us! ☕
+                  </h3>
+                  <p className="text-xs text-gray-600 mb-3">
+                    Buy us a coffee and help keep PlantsPack growing! 🌱
+                  </p>
+                  <div className="flex justify-left">
+                    <Image
+                      src="/bmc_qr.png"
+                      alt="Buy Me a Coffee QR Code"
+                      width={120}
+                      height={120}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    Scan to donate
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

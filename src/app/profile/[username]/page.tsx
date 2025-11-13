@@ -14,7 +14,7 @@ import PostCard from '@/components/posts/PostCard'
 export default function ProfilePage() {
   const params = useParams()
   const username = params.username as string
-  const { user, profile: currentUserProfile } = useAuth()
+  const { user, profile: currentUserProfile, loading: authLoading } = useAuth()
 
   const [profile, setProfile] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
@@ -24,6 +24,13 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true)
 
   const isOwnProfile = currentUserProfile?.username === username
+
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!authLoading && !user) {
+      window.location.href = '/auth'
+    }
+  }, [authLoading, user])
 
   const loadProfileData = useCallback(async () => {
     setLoading(true)

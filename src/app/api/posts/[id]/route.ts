@@ -56,25 +56,11 @@ export async function PUT(
     const supabase = await createClient()
     const { id } = await context.params
 
-    // Debug: Check cookies
-    console.log('=== PUT /api/posts/[id] Debug ===')
-    console.log('Request cookies:', request.cookies.getAll())
-
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    console.log('Auth result:', { user: user?.id, error: authError?.message })
-
     if (authError || !user) {
-      console.error('Auth failed:', authError)
-      return NextResponse.json({
-        error: 'Unauthorized',
-        debug: {
-          hasUser: !!user,
-          authError: authError?.message,
-          cookies: request.cookies.getAll().map(c => c.name)
-        }
-      }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Get request body
@@ -156,59 +142,30 @@ export async function DELETE(
     const supabase = await createClient()
     const { id } = await context.params
 
-    // Debug: Check cookies
-    console.log('=== DELETE /api/posts/[id] Debug ===')
-    console.log('Request cookies:', request.cookies.getAll())
-
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    console.log('Auth result:', { user: user?.id, error: authError?.message })
-
     if (authError || !user) {
-      console.error('Auth failed:', authError)
-      return NextResponse.json({
-        error: 'Unauthorized',
-        debug: {
-          hasUser: !!user,
-          authError: authError?.message,
-          cookies: request.cookies.getAll().map(c => c.name)
-        }
-      }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check if user owns the post
-    const { data: existingPost, error: fetchError } = await supabase
-      .from('posts')
-      .select('user_id, deleted_at')
-      .eq('id', id)
-      .single()
+    // Use RPC function to delete post (bypasses RLS issues with WITH CHECK clause)
+    const { data: rpcResult, error: rpcError } = await supabase
+      .rpc('delete_post', { post_id: id })
 
-    if (fetchError || !existingPost) {
-      return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+    if (rpcError) {
+      console.error('RPC error:', rpcError)
+      return NextResponse.json({ error: rpcError.message }, { status: 500 })
     }
 
-    if (existingPost.deleted_at) {
-      return NextResponse.json(
-        { error: 'Post already deleted' },
-        { status: 410 }
-      )
-    }
-
-    if (existingPost.user_id !== user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    // Soft delete the post
-    const { error } = await supabase
-      .from('posts')
-      .update({
-        deleted_at: new Date().toISOString()
-      })
-      .eq('id', id)
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    // Check the result from the function
+    if (!rpcResult?.success) {
+      const errorMsg = rpcResult?.error || 'Failed to delete post'
+      const statusCode = errorMsg === 'Not authenticated' ? 401 :
+                        errorMsg === 'Not authorized' ? 403 :
+                        errorMsg === 'Post not found' ? 404 :
+                        errorMsg === 'Post already deleted' ? 410 : 400
+      return NextResponse.json({ error: errorMsg }, { status: statusCode })
     }
 
     return NextResponse.json({ success: true })

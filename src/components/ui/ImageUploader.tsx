@@ -28,10 +28,12 @@ export default function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
 
-  const compressImage = useCallback((file: File, maxWidth: number = 1200, quality: number = 0.8): Promise<File> => {
+  const compressImage = useCallback((file: File, maxWidth: number = 1200, quality: number = 0.85): Promise<File> => {
     return new Promise((resolve) => {
+      // Convert all images to WebP format (supports transparency, better compression)
+      const outputType = 'image/webp'
       const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { alpha: true }) // Enable transparency
       const img = new Image()
 
       img.onload = () => {
@@ -45,13 +47,21 @@ export default function ImageUploader({
         canvas.width = width
         canvas.height = height
 
-        // Draw and compress
+        // Clear canvas with transparency
+        if (ctx) {
+          ctx.clearRect(0, 0, width, height)
+        }
+
+        // Draw image (preserves transparency)
         ctx?.drawImage(img, 0, 0, width, height)
+
         canvas.toBlob(
           (blob) => {
             if (blob) {
-              const compressedFile = new File([blob], file.name, {
-                type: 'image/jpeg',
+              // Change file extension to .webp
+              const fileName = file.name.replace(/\.(jpg|jpeg|png|gif)$/i, '.webp')
+              const compressedFile = new File([blob], fileName, {
+                type: outputType,
                 lastModified: Date.now()
               })
               resolve(compressedFile)
@@ -59,7 +69,7 @@ export default function ImageUploader({
               resolve(file)
             }
           },
-          'image/jpeg',
+          outputType,
           quality
         )
       }

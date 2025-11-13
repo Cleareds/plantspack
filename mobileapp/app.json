@@ -1,0 +1,75 @@
+{
+  "expo": {
+    "name": "VeganConnect",
+    "slug": "veganconnect",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "veganconnect",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#10b981"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.veganconnect.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to show nearby vegan places on the map.",
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library to let you share images in your posts.",
+        "NSCameraUsageDescription": "We need camera access to let you take photos for your posts."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#10b981"
+      },
+      "package": "com.veganconnect.app",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow VeganConnect to access your photos to share in posts.",
+          "cameraPermission": "Allow VeganConnect to use your camera to take photos for posts."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow VeganConnect to use your location to show nearby vegan places."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
+  }
+}

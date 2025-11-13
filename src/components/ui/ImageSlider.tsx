@@ -63,7 +63,7 @@ export default function ImageSlider({
       <div className={`relative overflow-hidden rounded-lg ${className}`}>
         <div className={`grid gap-1 ${getLayoutClass()}`}>
           {images.map((image, index) => (
-            <div key={index} className={`relative ${getAspectRatioClass()}`}>
+            <div key={index} className={`relative bg-gray-50 ${getAspectRatioClass()}`}>
               {!isLoaded[index] && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
@@ -71,7 +71,7 @@ export default function ImageSlider({
                 src={image}
                 alt={`Image ${index + 1}`}
                 onLoad={() => handleImageLoad(index)}
-                className={`w-full h-full object-cover transition-opacity duration-200 ${
+                className={`w-full h-full object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 }`}
               />
@@ -86,16 +86,16 @@ export default function ImageSlider({
   return (
     <div className={`relative overflow-hidden rounded-lg ${className}`}>
       {/* Main Image Container */}
-      <div 
+      <div
         ref={sliderRef}
-        className={`relative ${getAspectRatioClass()} overflow-hidden`}
+        className={`relative ${getAspectRatioClass()} overflow-hidden bg-gray-50`}
       >
-        <div 
+        <div
           className="flex transition-transform duration-300 ease-in-out h-full"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {images.map((image, index) => (
-            <div key={index} className="w-full h-full flex-shrink-0 relative">
+            <div key={index} className="w-full h-full flex-shrink-0 relative bg-gray-50">
               {!isLoaded[index] && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
@@ -103,7 +103,7 @@ export default function ImageSlider({
                 src={image}
                 alt={`Image ${index + 1}`}
                 onLoad={() => handleImageLoad(index)}
-                className={`w-full h-full object-cover transition-opacity duration-200 ${
+                className={`w-full h-full object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 }`}
               />

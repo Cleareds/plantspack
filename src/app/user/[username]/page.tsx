@@ -28,22 +28,29 @@ const POSTS_PER_PAGE = 10
 export default function UserProfilePage() {
   const params = useParams()
   const username = params.username as string
-  const { user: currentUser } = useAuth()
-  
+  const { user: currentUser, loading: authLoading } = useAuth()
+
   const [profileUser, setProfileUser] = useState<Tables<'users'> | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
   const [places, setPlaces] = useState<Place[]>([])
   const [followers, setFollowers] = useState<Follow[]>([])
   const [following, setFollowing] = useState<Follow[]>([])
-  
+
   const [loading, setLoading] = useState(true)
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [hasMorePosts, setHasMorePosts] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
+
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const offsetRef = useRef(0)
+
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!authLoading && !currentUser) {
+      window.location.href = '/auth'
+    }
+  }, [authLoading, currentUser])
 
   // Fetch user profile
   const fetchProfile = useCallback(async () => {
