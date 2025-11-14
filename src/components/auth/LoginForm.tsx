@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useAuth } from '@/lib/auth'
 import { Lock, User, Eye, EyeOff } from 'lucide-react'
+import Link from 'next/link'
 
 interface LoginFormProps {
   onToggle: () => void
@@ -84,6 +85,15 @@ export default function LoginForm({ onToggle }: LoginFormProps) {
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
             </div>
+          </div>
+
+          <div className="flex items-center justify-end">
+            <Link
+              href="/auth/reset-password"
+              className="text-sm text-green-600 hover:text-green-700 font-medium"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <button

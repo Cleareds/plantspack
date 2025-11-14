@@ -17,6 +17,7 @@ import SignUpModal from '../guest/SignUpModal'
 import TierBadge from '../ui/TierBadge'
 import Link from 'next/link'
 import { usePostActions } from '@/hooks/usePostActions'
+import ReportButton from '../moderation/ReportButton'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {
@@ -515,7 +516,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
               <span className="text-sm">{likeCount}</span>
             </button>
-            
+
             <button
               onClick={handleComment}
               className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
@@ -523,7 +524,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               <MessageCircle className="h-5 w-5" />
               <span className="text-sm">{commentCount}</span>
             </button>
-            
+
             <button
               onClick={handleShare}
               className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
@@ -532,6 +533,14 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               <span className="text-sm">Share</span>
             </button>
           </div>
+
+          {!isOwnPost && (
+            <ReportButton
+              reportedType="post"
+              reportedId={post.id}
+              className="px-2 py-1"
+            />
+          )}
         </div>
       )}
 

@@ -3,8 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import ClientProviders from "@/components/providers/ClientProviders";
-import Header from "@/components/layout/Header";
-import BetaBanner from "@/components/layout/BetaBanner";
+import ConditionalHeader from "@/components/layout/ConditionalHeader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,8 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased bg-gray-50`}>
         <ClientProviders>
-          <Header />
-          <BetaBanner />
+          <ConditionalHeader />
           <main className="min-h-screen">
             {children}
           </main>

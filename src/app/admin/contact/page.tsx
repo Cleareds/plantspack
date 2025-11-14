@@ -2,8 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { formatDistanceToNow } from 'date-fns'
-import { Mail, Clock, User, Tag, MessageSquare, RefreshCw } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
+import {
+  Search,
+  Mail,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  XCircle
+} from 'lucide-react'
 
 interface ContactSubmission {
   id: string
@@ -11,196 +21,385 @@ interface ContactSubmission {
   email: string
   subject: string
   message: string
-  status: 'new' | 'in_progress' | 'resolved' | 'closed'
+  status: string
+  user_id: string | null
+  reviewed_by: string | null
+  reviewed_at: string | null
+  admin_notes: string | null
   created_at: string
-  updated_at: string
+  users: {
+    username: string
+  } | null
 }
 
-export default function ContactAdminPage() {
-  const [submissions, setSubmissions] = useState<ContactSubmission[]>([])
-  const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState<'all' | 'new' | 'in_progress' | 'resolved' | 'closed'>('all')
+const CONTACTS_PER_PAGE = 20
 
-  const fetchSubmissions = async () => {
+export default function ContactAdminPage() {
+  const { user } = useAuth()
+  const [contacts, setContacts] = useState<ContactSubmission[]>([])
+  const [loading, setLoading] = useState(true)
+  const [totalContacts, setTotalContacts] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
+  const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null)
+  const [adminNotes, setAdminNotes] = useState('')
+
+  useEffect(() => {
+    loadContacts()
+  }, [currentPage, searchQuery, filterStatus])
+
+  const loadContacts = async () => {
     setLoading(true)
     try {
       let query = supabase
         .from('contact_submissions')
-        .select('*')
-        .order('created_at', { ascending: false })
+        .select('*, users(username)', { count: 'exact' })
 
-      if (filter !== 'all') {
-        query = query.eq('status', filter)
+      if (searchQuery) {
+        query = query.or(`name.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%,subject.ilike.%${searchQuery}%`)
       }
 
-      const { data, error } = await query
+      if (filterStatus !== 'all') {
+        query = query.eq('status', filterStatus)
+      }
+
+      const from = (currentPage - 1) * CONTACTS_PER_PAGE
+      const to = from + CONTACTS_PER_PAGE - 1
+      query = query.range(from, to).order('created_at', { ascending: false })
+
+      const { data, error, count } = await query
 
       if (error) throw error
-      setSubmissions(data || [])
+
+      setContacts(data as any || [])
+      setTotalContacts(count || 0)
     } catch (error) {
-      console.error('Error fetching submissions:', error)
+      console.error('Error loading contacts:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const updateStatus = async (id: string, status: ContactSubmission['status']) => {
+  const handleUpdateStatus = async (contactId: string, newStatus: string) => {
     try {
       const { error } = await supabase
         .from('contact_submissions')
-        .update({ status })
-        .eq('id', id)
+        .update({
+          status: newStatus,
+          reviewed_by: user?.id,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', contactId)
 
       if (error) throw error
-      
-      // Update local state
-      setSubmissions(prev => prev.map(sub => 
-        sub.id === id ? { ...sub, status } : sub
-      ))
+
+      loadContacts()
+      if (selectedContact?.id === contactId) {
+        setSelectedContact(null)
+      }
     } catch (error) {
       console.error('Error updating status:', error)
+      alert('Failed to update status')
     }
   }
 
-  useEffect(() => {
-    fetchSubmissions()
-  }, [filter])
+  const handleSaveNotes = async () => {
+    if (!selectedContact) return
 
-  const getStatusColor = (status: string) => {
+    try {
+      const { error } = await supabase
+        .from('contact_submissions')
+        .update({
+          admin_notes: adminNotes,
+          reviewed_by: user?.id,
+          reviewed_at: new Date().toISOString()
+        })
+        .eq('id', selectedContact.id)
+
+      if (error) throw error
+
+      alert('Notes saved successfully')
+      loadContacts()
+      setSelectedContact(null)
+      setAdminNotes('')
+    } catch (error) {
+      console.error('Error saving notes:', error)
+      alert('Failed to save notes')
+    }
+  }
+
+  const totalPages = Math.ceil(totalContacts / CONTACTS_PER_PAGE)
+
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-800'
-      case 'in_progress': return 'bg-yellow-100 text-yellow-800'
-      case 'resolved': return 'bg-green-100 text-green-800'
-      case 'closed': return 'bg-gray-100 text-gray-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'new':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <Mail className="h-3 w-3 mr-1" />
+            New
+          </span>
+        )
+      case 'in_progress':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            <Clock className="h-3 w-3 mr-1" />
+            In Progress
+          </span>
+        )
+      case 'resolved':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Resolved
+          </span>
+        )
+      case 'closed':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            <XCircle className="h-3 w-3 mr-1" />
+            Closed
+          </span>
+        )
+      default:
+        return null
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-      </div>
-    )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Contact Submissions</h1>
-            <p className="text-gray-600 mt-2">Manage contact form submissions</p>
-          </div>
-          <button
-            onClick={fetchSubmissions}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-          >
-            <RefreshCw className="h-4 w-4" />
-            <span>Refresh</span>
-          </button>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Contact Forms</h1>
+        <p className="text-gray-600 mt-1">Manage contact form submissions</p>
+      </div>
 
-        {/* Filters */}
-        <div className="flex space-x-2 mb-6">
-          {['all', 'new', 'in_progress', 'resolved', 'closed'].map((status) => (
-            <button
-              key={status}
-              onClick={() => setFilter(status as typeof filter)}
-              className={`px-4 py-2 rounded-md text-sm font-medium ${
-                filter === status
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border'
-              }`}
-            >
-              {status === 'all' ? 'All' : status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-            </button>
-          ))}
-        </div>
-
-        {/* Submissions */}
-        <div className="space-y-4">
-          {submissions.length === 0 ? (
-            <div className="text-center py-12">
-              <Mail className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No contact submissions found</p>
+      <div className="bg-white rounded-lg shadow p-6 space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search by name, email, or subject..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setCurrentPage(1)
+                }}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
             </div>
-          ) : (
-            submissions.map((submission) => (
-              <div key={submission.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <User className="h-5 w-5 text-green-600" />
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-1">
-                        <h3 className="text-lg font-semibold text-gray-900">{submission.name}</h3>
-                        <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(submission.status)}`}>
-                          {submission.status.replace('_', ' ')}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
-                        <div className="flex items-center space-x-1">
-                          <Mail className="h-4 w-4" />
-                          <a href={`mailto:${submission.email}`} className="hover:text-green-600">
-                            {submission.email}
-                          </a>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-4 w-4" />
-                          <span>{formatDistanceToNow(new Date(submission.created_at))} ago</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-1 mb-3">
-                        <Tag className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-700">{submission.subject}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Status Actions */}
-                  <div className="flex space-x-2">
-                    <select
-                      value={submission.status}
-                      onChange={(e) => updateStatus(submission.id, e.target.value as ContactSubmission['status'])}
-                      className="text-sm border border-gray-300 rounded-md px-2 py-1"
-                    >
-                      <option value="new">New</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="resolved">Resolved</option>
-                      <option value="closed">Closed</option>
-                    </select>
-                  </div>
-                </div>
+          </div>
 
-                {/* Message */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center space-x-1 mb-2">
-                    <MessageSquare className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm font-medium text-gray-700">Message:</span>
-                  </div>
-                  <p className="text-gray-900 whitespace-pre-line">{submission.message}</p>
-                </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              value={filterStatus}
+              onChange={(e) => {
+                setFilterStatus(e.target.value)
+                setCurrentPage(1)
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+              <option value="all">All Statuses</option>
+              <option value="new">New</option>
+              <option value="in_progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
 
-                {/* Quick Reply */}
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <a
-                    href={`mailto:${submission.email}?subject=Re: ${submission.subject}&body=Hi ${submission.name},%0D%0A%0D%0AThank you for contacting us.%0D%0A%0D%0ABest regards,%0D%0AVegan Social Team`}
-                    className="inline-flex items-center space-x-1 text-sm text-green-600 hover:text-green-700"
-                  >
-                    <Mail className="h-4 w-4" />
-                    <span>Quick Reply</span>
-                  </a>
-                </div>
-              </div>
-            ))
-          )}
+        <div className="flex items-center justify-between pt-4 border-t">
+          <p className="text-sm text-gray-600">
+            Showing {contacts.length} of {totalContacts} submissions
+          </p>
+          <p className="text-sm text-gray-600">
+            Page {currentPage} of {totalPages}
+          </p>
         </div>
       </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
+          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        </div>
+      ) : contacts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
+          <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
+          <p className="text-gray-600">No contact submissions found</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {contacts.map((contact) => (
+            <div key={contact.id} className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {contact.subject}
+                    </h3>
+                    {getStatusBadge(contact.status)}
+                  </div>
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <span className="font-medium">{contact.name}</span>
+                    <span>{contact.email}</span>
+                    {contact.users && (
+                      <span className="text-gray-500">
+                        (User: {contact.users.username})
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Submitted {new Date(contact.created_at).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-md p-4 mb-4">
+                <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                  {contact.message}
+                </p>
+              </div>
+
+              {contact.admin_notes && (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
+                  <p className="text-xs font-medium text-blue-900 mb-1">Admin Notes:</p>
+                  <p className="text-sm text-blue-800 whitespace-pre-wrap">
+                    {contact.admin_notes}
+                  </p>
+                </div>
+              )}
+
+              {selectedContact?.id === contact.id ? (
+                <div className="space-y-3 pt-3 border-t">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Admin Notes
+                    </label>
+                    <textarea
+                      value={adminNotes}
+                      onChange={(e) => setAdminNotes(e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Add notes about this submission..."
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleSaveNotes}
+                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
+                    >
+                      Save Notes
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedContact(null)
+                        setAdminNotes('')
+                      }}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2 pt-3 border-t">
+                  <button
+                    onClick={() => handleUpdateStatus(contact.id, 'in_progress')}
+                    disabled={contact.status === 'in_progress'}
+                    className="inline-flex items-center px-3 py-1.5 border border-yellow-300 rounded-md text-xs font-medium text-yellow-700 bg-yellow-50 hover:bg-yellow-100 disabled:opacity-50"
+                  >
+                    <Clock className="h-3 w-3 mr-1" />
+                    In Progress
+                  </button>
+                  <button
+                    onClick={() => handleUpdateStatus(contact.id, 'resolved')}
+                    disabled={contact.status === 'resolved'}
+                    className="inline-flex items-center px-3 py-1.5 border border-green-300 rounded-md text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50"
+                  >
+                    <CheckCircle className="h-3 w-3 mr-1" />
+                    Resolve
+                  </button>
+                  <button
+                    onClick={() => handleUpdateStatus(contact.id, 'closed')}
+                    disabled={contact.status === 'closed'}
+                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                  >
+                    <XCircle className="h-3 w-3 mr-1" />
+                    Close
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedContact(contact)
+                      setAdminNotes(contact.admin_notes || '')
+                    }}
+                    className="ml-auto inline-flex items-center px-3 py-1.5 border border-blue-300 rounded-md text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100"
+                  >
+                    Add Notes
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="bg-white rounded-lg shadow px-6 py-4 flex items-center justify-between">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Previous
+          </button>
+
+          <div className="flex items-center space-x-2">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum
+              if (totalPages <= 5) {
+                pageNum = i + 1
+              } else if (currentPage <= 3) {
+                pageNum = i + 1
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i
+              } else {
+                pageNum = currentPage - 2 + i
+              }
+
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium ${
+                    currentPage === pageNum
+                      ? 'bg-green-600 text-white'
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              )
+            })}
+          </div>
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </button>
+        </div>
+      )}
     </div>
   )
 }

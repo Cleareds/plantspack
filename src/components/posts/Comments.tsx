@@ -7,6 +7,7 @@ import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import { MessageCircle, Send } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
+import ReportButton from '../moderation/ReportButton'
 
 type Comment = Tables<'comments'> & {
   users: Tables<'users'>
@@ -27,9 +28,36 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
   const [page, setPage] = useState(0)
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
   const { user, profile } = useAuth()
 
   const COMMENTS_PER_PAGE = 20
+
+  // Fetch blocked users
+  useEffect(() => {
+    const fetchBlockedUsers = async () => {
+      if (!user) {
+        setBlockedUserIds([])
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('user_blocks')
+          .select('blocked_id')
+          .eq('blocker_id', user.id)
+
+        if (error) throw error
+
+        setBlockedUserIds(data?.map(b => b.blocked_id) || [])
+      } catch (error) {
+        console.error('Error fetching blocked users:', error)
+        setBlockedUserIds([])
+      }
+    }
+
+    fetchBlockedUsers()
+  }, [user])
 
   const fetchComments = useCallback(async (pageNumber: number = 0, append: boolean = false) => {
     try {
@@ -103,6 +131,18 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
     setSubmitting(true)
 
     try {
+      // Check rate limit before creating comment
+      const { data: rateLimitData, error: rateLimitError } = await supabase
+        .rpc('check_rate_limit_comments', { p_user_id: user.id })
+
+      if (rateLimitError) {
+        console.error('Rate limit check error:', rateLimitError)
+        // Continue anyway if rate limit check fails
+      } else if (rateLimitData === false) {
+        setNewComment(commentContent) // Restore comment
+        throw new Error('Rate limit exceeded. Please wait before commenting again.')
+      }
+
       const { data, error } = await supabase
         .from('comments')
         .insert({
@@ -131,6 +171,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
     } catch (error) {
       console.error('Error submitting comment:', error)
       setNewComment(commentContent) // Restore comment on error
+      alert(error instanceof Error ? error.message : 'Failed to submit comment. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -172,9 +213,10 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
             </div>
           ) : (
             comments
-              .filter((comment, index, array) => 
+              .filter((comment, index, array) =>
                 array.findIndex(c => c.id === comment.id) === index
               )
+              .filter(comment => !blockedUserIds.includes(comment.user_id))
               .map((comment, index) => {
                 const key = comment.id || `comment-${index}-${comment.created_at}`
                 
@@ -198,7 +240,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="font-medium text-gray-900">
-                          {comment.users?.first_name 
+                          {comment.users?.first_name
                             ? `${comment.users.first_name} ${comment.users.last_name || ''}`.trim()
                             : comment.users?.username || 'Unknown User'
                           }
@@ -210,6 +252,12 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                         </span>
                         {comment.users?.id && (
                           <FollowButton userId={comment.users.id} showText={false} className="ml-auto" />
+                        )}
+                        {user && comment.user_id !== user.id && (
+                          <ReportButton
+                            reportedType="comment"
+                            reportedId={comment.id}
+                          />
                         )}
                       </div>
                       <p className="text-gray-700 text-sm">{comment.content}</p>
@@ -322,10 +370,11 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
             </div>
           ) : (
             comments
-              .filter((comment, index, array) => 
+              .filter((comment, index, array) =>
                 // Additional deduplication filter to ensure unique keys
                 array.findIndex(c => c.id === comment.id) === index
               )
+              .filter(comment => !blockedUserIds.includes(comment.user_id))
               .map((comment, index) => {
                 // Use fallback key in case of missing ID
                 const key = comment.id || `comment-${index}-${comment.created_at}`
@@ -350,7 +399,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="font-medium text-gray-900">
-                          {comment.users?.first_name 
+                          {comment.users?.first_name
                             ? `${comment.users.first_name} ${comment.users.last_name || ''}`.trim()
                             : comment.users?.username || 'Unknown User'
                           }
@@ -362,6 +411,12 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                         </span>
                         {comment.users?.id && (
                           <FollowButton userId={comment.users.id} showText={false} className="ml-auto" />
+                        )}
+                        {user && comment.user_id !== user.id && (
+                          <ReportButton
+                            reportedType="comment"
+                            reportedId={comment.id}
+                          />
                         )}
                       </div>
                       <p className="text-gray-700 text-sm">{comment.content}</p>

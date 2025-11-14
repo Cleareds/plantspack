@@ -8,6 +8,9 @@ import { Tables } from '@/lib/supabase'
 import PostCard from '@/components/posts/PostCard'
 import { Loader2, MapPin, Users, UserPlus } from 'lucide-react'
 import FollowButton from '@/components/social/FollowButton'
+import BlockButton from '@/components/social/BlockButton'
+import MuteButton from '@/components/social/MuteButton'
+import ReportButton from '@/components/moderation/ReportButton'
 import TierBadge from '@/components/ui/TierBadge'
 import Link from 'next/link'
 
@@ -284,7 +287,16 @@ export default function UserProfilePage() {
             </div>
           </div>
           {currentUser && currentUser.id !== profileUser.id && (
-            <FollowButton userId={profileUser.id} />
+            <div className="flex items-center space-x-2">
+              <FollowButton userId={profileUser.id} />
+              <MuteButton userId={profileUser.id} />
+              <BlockButton userId={profileUser.id} />
+              <ReportButton
+                reportedType="user"
+                reportedId={profileUser.id}
+                className="px-2 py-1"
+              />
+            </div>
           )}
         </div>
       </div>

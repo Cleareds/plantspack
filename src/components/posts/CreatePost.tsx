@@ -182,6 +182,17 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     setError(null)
 
     try {
+      // Check rate limit before creating post
+      const { data: rateLimitData, error: rateLimitError } = await supabase
+        .rpc('check_rate_limit_posts', { p_user_id: user.id })
+
+      if (rateLimitError) {
+        console.error('Rate limit check error:', rateLimitError)
+        // Continue anyway if rate limit check fails
+      } else if (rateLimitData === false) {
+        throw new Error('Rate limit exceeded. Please wait a few minutes before posting again.')
+      }
+
       // Get final content analysis
       const finalMetadata = analyzedMetadata || analyzePostContent(content)
       const detectedLang = detectLanguage(content)

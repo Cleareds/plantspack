@@ -33,11 +33,65 @@ export default function Feed({onPostCreated}: FeedProps) {
     const [hasMore, setHasMore] = useState(true)
     const [activeTab, setActiveTab] = useState<'public' | 'friends'>('public')
     const [sortOption, setSortOption] = useState<SortOption>('relevancy')
+    const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
+    const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
     const {user, authReady} = useAuth()
     const observerRef = useRef<IntersectionObserver | null>(null)
     const loadMoreRef = useRef<HTMLDivElement>(null)
     const offsetRef = useRef(0)
     const {newPosts: realtimeNewPosts, clearNew, hasNewPosts, newPostCount} = useRealtimePosts()
+
+    // Fetch blocked users
+    useEffect(() => {
+        const fetchBlockedUsers = async () => {
+            if (!user) {
+                setBlockedUserIds([])
+                return
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('user_blocks')
+                    .select('blocked_id')
+                    .eq('blocker_id', user.id)
+
+                if (error) throw error
+
+                setBlockedUserIds(data?.map(b => b.blocked_id) || [])
+            } catch (error) {
+                console.error('Error fetching blocked users:', error)
+                setBlockedUserIds([])
+            }
+        }
+
+        fetchBlockedUsers()
+    }, [user])
+
+    // Fetch muted users
+    useEffect(() => {
+        const fetchMutedUsers = async () => {
+            if (!user) {
+                setMutedUserIds([])
+                return
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('user_mutes')
+                    .select('muted_id')
+                    .eq('muter_id', user.id)
+
+                if (error) throw error
+
+                setMutedUserIds(data?.map(m => m.muted_id) || [])
+            } catch (error) {
+                console.error('Error fetching muted users:', error)
+                setMutedUserIds([])
+            }
+        }
+
+        fetchMutedUsers()
+    }, [user])
 
     // Handle loading new posts from realtime
     const handleLoadNewPosts = useCallback(async () => {
@@ -423,9 +477,11 @@ export default function Feed({onPostCreated}: FeedProps) {
             ) : (
                 <>
                     <div className="space-y-4">
-                        {posts.map((post) => (
-                            <PostCard key={post.id} post={post} onUpdate={handlePostCreated}/>
-                        ))}
+                        {posts
+                            .filter(post => !blockedUserIds.includes(post.user_id) && !mutedUserIds.includes(post.user_id))
+                            .map((post) => (
+                                <PostCard key={post.id} post={post} onUpdate={handlePostCreated}/>
+                            ))}
                     </div>
 
                     {/* Infinite scroll trigger - always render for intersection observer */}
