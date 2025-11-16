@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Image as ImageIcon, Globe, Users, Send, X, MapPin, Tag, Video } from 'lucide-react'
@@ -8,9 +8,12 @@ import ImageUploader from '../ui/ImageUploader'
 import ImageSlider from '../ui/ImageSlider'
 import VideoUploader from '../ui/VideoUploader'
 import LinkPreview, { extractUrls } from './LinkPreview'
+import MentionAutocomplete from './MentionAutocomplete'
 import Link from 'next/link'
 import { analyzePostContent, getCurrentLocation, detectLanguage, type LocationData, type PostMetadata } from '@/lib/post-analytics'
 import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription, canPerformAction } from '@/lib/stripe'
+import { moderateContent, shouldBlockContent } from '@/lib/moderation'
+import { extractHashtags, extractMentions, resolveUsernames, getOrCreateHashtags, linkHashtagsToPost } from '@/lib/hashtags'
 
 interface CreatePostProps {
   onPostCreated: () => void
@@ -47,6 +50,13 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [videoUrls, setVideoUrls] = useState<string[]>(() => loadDraft()?.videoUrls || [])
   const [detectedUrls, setDetectedUrls] = useState<string[]>([])
   const [showLinkPreview, setShowLinkPreview] = useState(() => loadDraft()?.showLinkPreview !== false)
+
+  // Mention autocomplete state
+  const [mentionQuery, setMentionQuery] = useState('')
+  const [mentionStartPos, setMentionStartPos] = useState(-1)
+  const [showMentionAutocomplete, setShowMentionAutocomplete] = useState(false)
+  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 })
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   
   // Enhanced metadata state
   const [locationData, setLocationData] = useState<LocationData | null>(null)
@@ -193,6 +203,26 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         throw new Error('Rate limit exceeded. Please wait a few minutes before posting again.')
       }
 
+      // Check content moderation before posting
+      let moderationResult = null
+      let contentWarnings: string[] = []
+      let isSensitive = false
+
+      if (content.trim()) {
+        moderationResult = await moderateContent(content.trim(), imageUrls[0])
+
+        // Block content if it violates serious policies
+        if (shouldBlockContent(moderationResult)) {
+          throw new Error('This content violates our community guidelines and cannot be posted. Please review our community standards.')
+        }
+
+        // If flagged but not blocked, add content warnings
+        if (moderationResult.flagged && moderationResult.warnings.length > 0) {
+          contentWarnings = moderationResult.warnings
+          isSensitive = true
+        }
+      }
+
       // Get final content analysis
       const finalMetadata = analyzedMetadata || analyzePostContent(content)
       const detectedLang = detectLanguage(content)
@@ -204,7 +234,9 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         tags: finalMetadata.tags,
         content_type: finalMetadata.contentType,
         mood: finalMetadata.mood,
-        language: detectedLang
+        language: detectedLang,
+        content_warnings: contentWarnings.length > 0 ? contentWarnings : null,
+        is_sensitive: isSensitive
       }
 
       // Add location data if user chose to share
@@ -223,11 +255,69 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         postData.video_urls = videoUrls
       }
 
-      const { error: dbError } = await supabase.from('posts').insert(postData)
+      // Extract hashtags and mentions before creating post
+      const hashtags = extractHashtags(content)
+      const mentions = extractMentions(content)
+
+      // Resolve mentions to user IDs
+      let mentionedUserIds: string[] = []
+      if (mentions.length > 0) {
+        mentionedUserIds = await resolveUsernames(mentions)
+        if (mentionedUserIds.length > 0) {
+          postData.mentioned_users = mentionedUserIds
+        }
+      }
+
+      const { data: createdPost, error: dbError } = await supabase
+        .from('posts')
+        .insert(postData)
+        .select('id')
+        .single()
 
       if (dbError) {
         console.error('Database error:', dbError)
         throw new Error(dbError.message || 'Failed to create post')
+      }
+
+      if (!createdPost) {
+        throw new Error('Post created but ID not returned')
+      }
+
+      // Process hashtags (create and link to post)
+      if (hashtags.length > 0) {
+        try {
+          const hashtagIds = await getOrCreateHashtags(hashtags)
+          if (hashtagIds.length > 0) {
+            await linkHashtagsToPost(createdPost.id, hashtagIds)
+          }
+        } catch (hashtagError) {
+          console.error('Error processing hashtags:', hashtagError)
+          // Don't fail the post creation if hashtag processing fails
+        }
+      }
+
+      // Send notifications to mentioned users
+      if (mentionedUserIds.length > 0) {
+        try {
+          for (const mentionedUserId of mentionedUserIds) {
+            // Don't notify if user mentioned themselves
+            if (mentionedUserId !== user.id) {
+              await fetch('/api/notifications/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  userId: mentionedUserId,
+                  type: 'mention',
+                  entityType: 'post',
+                  entityId: createdPost.id,
+                }),
+              })
+            }
+          }
+        } catch (notifError) {
+          console.error('Error sending mention notifications:', notifError)
+          // Don't fail the post creation if notification fails
+        }
       }
 
       // Reset form only on success

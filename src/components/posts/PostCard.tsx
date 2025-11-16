@@ -18,6 +18,8 @@ import TierBadge from '../ui/TierBadge'
 import Link from 'next/link'
 import { usePostActions } from '@/hooks/usePostActions'
 import ReportButton from '../moderation/ReportButton'
+import SensitiveContentWarning from '../moderation/SensitiveContentWarning'
+import ReactionButtons from '../reactions/ReactionButtons'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {
@@ -112,6 +114,25 @@ function PostCard({ post, onUpdate }: PostCardProps) {
           .insert({ post_id: post.id, user_id: user.id })
 
         if (error) throw error
+
+        // Create notification for post author (if not liking own post)
+        if (post.user_id !== user.id) {
+          try {
+            await fetch('/api/notifications/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: post.user_id,
+                type: 'like',
+                entityType: 'post',
+                entityId: post.id,
+              }),
+            })
+          } catch (notifError) {
+            // Don't fail the like if notification fails
+            console.error('Failed to create notification:', notifError)
+          }
+        }
       }
     } catch (error) {
       // Rollback on error
@@ -453,15 +474,30 @@ function PostCard({ post, onUpdate }: PostCardProps) {
                 ? post.images
                 : (post.image_url ? [post.image_url] : [])
 
-              return imagesToShow.length > 0 ? (
+              if (imagesToShow.length === 0) return null
+
+              const imageSlider = (
+                <ImageSlider
+                  images={imagesToShow}
+                  aspectRatio="auto"
+                  className="max-w-full"
+                />
+              )
+
+              return (
                 <div className="mt-3">
-                  <ImageSlider
-                    images={imagesToShow}
-                    aspectRatio="auto"
-                    className="max-w-full"
-                  />
+                  {post.is_sensitive && post.content_warnings && post.content_warnings.length > 0 ? (
+                    <SensitiveContentWarning
+                      warnings={post.content_warnings}
+                      type="image"
+                    >
+                      {imageSlider}
+                    </SensitiveContentWarning>
+                  ) : (
+                    imageSlider
+                  )}
                 </div>
-              ) : null
+              )
             })()}
 
             {/* Videos */}
@@ -504,18 +540,14 @@ function PostCard({ post, onUpdate }: PostCardProps) {
       {!isQuotePost && (
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="flex items-center space-x-4">
-            <button
-              onClick={handleLike}
-              disabled={loading}
-              className={`flex items-center space-x-1 px-2 py-1 rounded-md transition-colors ${
-                isLiked
-                  ? 'text-red-600 bg-red-50 hover:bg-red-100'
-                  : 'text-gray-500 hover:text-red-600 hover:bg-red-50'
-              }`}
-            >
-              <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
-              <span className="text-sm">{likeCount}</span>
-            </button>
+            <ReactionButtons
+              postId={post.id}
+              onReactionChange={onUpdate}
+              showSignUpModal={(action) => {
+                setSignUpAction('like')
+                setShowSignUpModal(true)
+              }}
+            />
 
             <button
               onClick={handleComment}

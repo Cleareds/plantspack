@@ -2,15 +2,25 @@
 
 import { useAuth } from '@/lib/auth'
 import { useRouter, useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
-import { Bell, Lock, Globe, Trash2 } from 'lucide-react'
+import { Bell, Lock, Globe, Trash2, Ban, VolumeX, User, Download, Shield } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 export default function ProfileSettingsPage() {
   const params = useParams()
   const username = params.username as string
   const { user, profile, authReady } = useAuth()
   const router = useRouter()
+
+  const [blockedUsers, setBlockedUsers] = useState<any[]>([])
+  const [mutedUsers, setMutedUsers] = useState<any[]>([])
+  const [loadingBlocked, setLoadingBlocked] = useState(true)
+  const [loadingMuted, setLoadingMuted] = useState(true)
+  const [deletePassword, setDeletePassword] = useState('')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     if (authReady && !user) {
@@ -22,6 +32,184 @@ export default function ProfileSettingsPage() {
       router.push(`/profile/${username}`)
     }
   }, [user, profile, authReady, router, username])
+
+  // Fetch blocked users
+  useEffect(() => {
+    const fetchBlockedUsers = async () => {
+      if (!user) {
+        setLoadingBlocked(false)
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('user_blocks')
+          .select(`
+            *,
+            blocked_user:users!user_blocks_blocked_id_fkey (
+              id,
+              username,
+              first_name,
+              last_name,
+              avatar_url
+            )
+          `)
+          .eq('blocker_id', user.id)
+
+        if (error) throw error
+        setBlockedUsers(data || [])
+      } catch (error) {
+        console.error('Error fetching blocked users:', error)
+      } finally {
+        setLoadingBlocked(false)
+      }
+    }
+
+    fetchBlockedUsers()
+  }, [user])
+
+  // Fetch muted users
+  useEffect(() => {
+    const fetchMutedUsers = async () => {
+      if (!user) {
+        setLoadingMuted(false)
+        return
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('user_mutes')
+          .select(`
+            *,
+            muted_user:users!user_mutes_muted_id_fkey (
+              id,
+              username,
+              first_name,
+              last_name,
+              avatar_url
+            )
+          `)
+          .eq('muter_id', user.id)
+
+        if (error) throw error
+        setMutedUsers(data || [])
+      } catch (error) {
+        console.error('Error fetching muted users:', error)
+      } finally {
+        setLoadingMuted(false)
+      }
+    }
+
+    fetchMutedUsers()
+  }, [user])
+
+  const handleUnblock = async (userId: string) => {
+    if (!user) return
+
+    try {
+      const { error } = await supabase
+        .from('user_blocks')
+        .delete()
+        .eq('blocker_id', user.id)
+        .eq('blocked_id', userId)
+
+      if (error) throw error
+
+      // Remove from state
+      setBlockedUsers(prev => prev.filter(b => b.blocked_id !== userId))
+    } catch (error) {
+      console.error('Error unblocking user:', error)
+      alert('Failed to unblock user')
+    }
+  }
+
+  const handleUnmute = async (userId: string) => {
+    if (!user) return
+
+    try {
+      const { error } = await supabase
+        .from('user_mutes')
+        .delete()
+        .eq('muter_id', user.id)
+        .eq('muted_id', userId)
+
+      if (error) throw error
+
+      // Remove from state
+      setMutedUsers(prev => prev.filter(m => m.muted_id !== userId))
+    } catch (error) {
+      console.error('Error unmuting user:', error)
+      alert('Failed to unmute user')
+    }
+  }
+
+  const handleExportData = async () => {
+    setExporting(true)
+    try {
+      const response = await fetch('/api/account/export')
+
+      if (!response.ok) {
+        throw new Error('Failed to export data')
+      }
+
+      // Download the file
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `plantspack_data_export_${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+      alert('Your data has been exported successfully!')
+    } catch (error) {
+      console.error('Error exporting data:', error)
+      alert('Failed to export data. Please try again.')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleDeleteAccount = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!deletePassword) {
+      alert('Please enter your password to confirm deletion')
+      return
+    }
+
+    const finalConfirm = confirm(
+      'Are you absolutely sure? This action CANNOT be undone. All your posts, comments, and data will be permanently deleted.'
+    )
+
+    if (!finalConfirm) return
+
+    setDeleting(true)
+    try {
+      const response = await fetch('/api/account/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: deletePassword }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to delete account')
+      }
+
+      // Sign out and redirect
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch (error) {
+      console.error('Error deleting account:', error)
+      alert(error instanceof Error ? error.message : 'Failed to delete account')
+      setDeleting(false)
+    }
+  }
 
   if (!authReady) {
     return (
@@ -169,6 +357,139 @@ export default function ProfileSettingsPage() {
               </div>
             </div>
 
+            {/* Blocked & Muted Users */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <Ban className="h-5 w-5 text-green-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Blocked & Muted Users</h2>
+              </div>
+
+              <div className="space-y-6">
+                {/* Blocked Users */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Blocked Users ({blockedUsers.length})</h3>
+                  {loadingBlocked ? (
+                    <div className="text-sm text-gray-500">Loading...</div>
+                  ) : blockedUsers.length === 0 ? (
+                    <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
+                      You haven&apos;t blocked anyone yet.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {blockedUsers.map((block) => (
+                        <div key={block.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            {block.blocked_user?.avatar_url ? (
+                              <img
+                                src={block.blocked_user.avatar_url}
+                                alt={block.blocked_user.username}
+                                className="h-10 w-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                <User className="h-5 w-5 text-gray-500" />
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                {block.blocked_user?.first_name && block.blocked_user?.last_name
+                                  ? `${block.blocked_user.first_name} ${block.blocked_user.last_name}`
+                                  : block.blocked_user?.username}
+                              </p>
+                              <p className="text-sm text-gray-500">@{block.blocked_user?.username}</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleUnblock(block.blocked_id)}
+                            className="px-3 py-1 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                          >
+                            Unblock
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Muted Users */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Muted Users ({mutedUsers.length})</h3>
+                  {loadingMuted ? (
+                    <div className="text-sm text-gray-500">Loading...</div>
+                  ) : mutedUsers.length === 0 ? (
+                    <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
+                      You haven&apos;t muted anyone yet.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {mutedUsers.map((mute) => (
+                        <div key={mute.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            {mute.muted_user?.avatar_url ? (
+                              <img
+                                src={mute.muted_user.avatar_url}
+                                alt={mute.muted_user.username}
+                                className="h-10 w-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                <User className="h-5 w-5 text-gray-500" />
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                {mute.muted_user?.first_name && mute.muted_user?.last_name
+                                  ? `${mute.muted_user.first_name} ${mute.muted_user.last_name}`
+                                  : mute.muted_user?.username}
+                              </p>
+                              <p className="text-sm text-gray-500">@{mute.muted_user?.username}</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => handleUnmute(mute.muted_id)}
+                            className="px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                          >
+                            Unmute
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* GDPR & Privacy Controls */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <Shield className="h-5 w-5 text-green-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Privacy & Data</h2>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    <span className="font-semibold">GDPR Compliance:</span> You have the right to access, export, and delete your personal data at any time.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 mb-2">Export Your Data</h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Download all your data including posts, comments, likes, and profile information in JSON format.
+                  </p>
+                  <button
+                    onClick={handleExportData}
+                    disabled={exporting}
+                    className="inline-flex items-center px-4 py-2 border border-green-300 rounded-md text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    {exporting ? 'Exporting...' : 'Export My Data'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Danger Zone */}
             <div className="bg-white rounded-lg shadow-sm border border-red-200 p-6">
               <div className="flex items-center space-x-3 mb-4">
@@ -177,14 +498,67 @@ export default function ProfileSettingsPage() {
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Once you delete your account, there is no going back. Please be certain.
-                  </p>
-                  <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors">
-                    Delete Account
-                  </button>
-                </div>
+                {!showDeleteConfirm ? (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Once you delete your account, there is no going back. All your data will be permanently deleted.
+                    </p>
+                    <button
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors"
+                    >
+                      Delete Account
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleDeleteAccount} className="space-y-4">
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                      <p className="text-sm text-red-800 font-semibold mb-2">
+                        ⚠️ Warning: This action is permanent and cannot be undone!
+                      </p>
+                      <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
+                        <li>All your posts will be soft-deleted</li>
+                        <li>Your comments, likes, and interactions will be removed</li>
+                        <li>Your profile will be anonymized</li>
+                        <li>You will be logged out immediately</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Enter your password to confirm deletion:
+                      </label>
+                      <input
+                        type="password"
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        placeholder="Your password"
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="submit"
+                        disabled={deleting}
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowDeleteConfirm(false)
+                          setDeletePassword('')
+                        }}
+                        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>

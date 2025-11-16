@@ -5,9 +5,10 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown } from 'lucide-react'
+import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
+import UserStatsCompact from '@/components/profile/UserStatsCompact'
 import { getUserSubscription, SUBSCRIPTION_TIERS } from '@/lib/stripe'
 import PostCard from '@/components/posts/PostCard'
 
@@ -177,7 +178,7 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar - only show for own profile */}
         {isOwnProfile && (
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
             <ProfileSidebar username={username} />
           </div>
         )}
@@ -186,11 +187,11 @@ export default function ProfilePage() {
         <div className={isOwnProfile ? "lg:col-span-3" : "lg:col-span-4"}>
           {/* Profile Header */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <div className="flex items-start space-x-6">
+        <div className="flex items-start space-x-6 mb-4">
           <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center overflow-hidden flex-shrink-0 avatar-container">
             {profile.avatar_url ? (
-              <img 
-                src={profile.avatar_url} 
+              <img
+                src={profile.avatar_url}
                 alt={profile.first_name && profile.last_name ? `${profile.first_name} ${profile.last_name}` : profile.username}
                 className="h-24 w-24 object-cover rounded-full"
               />
@@ -198,7 +199,7 @@ export default function ProfilePage() {
               <User className="h-12 w-12 text-green-600" />
             )}
           </div>
-          
+
           <div className="flex-1">
             <div className="flex items-center space-x-3 mb-2">
               <h1 className="text-2xl font-bold text-gray-900">
@@ -218,6 +219,12 @@ export default function ProfilePage() {
                   <span>{subscriptionTier.badge.text}</span>
                 </div>
               )}
+              {profile.is_banned && (
+                <div className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                  <Ban className="h-4 w-4" />
+                  <span>Banned</span>
+                </div>
+              )}
             </div>
             <p className="text-gray-600 mb-2">@{profile.username}</p>
 
@@ -232,6 +239,11 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Compact Stats */}
+        <div className="pt-4 border-t border-gray-100 flex justify-end">
+          <UserStatsCompact userId={profile.id} />
         </div>
       </div>
 

@@ -229,10 +229,16 @@ export default function ContactAdminPage() {
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
           <Loader2 className="h-8 w-8 animate-spin text-green-600" />
         </div>
+      ) : contacts.length === 0 && !searchQuery && filterStatus === 'all' ? (
+        <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
+          <Mail className="h-12 w-12 text-gray-400 mb-2" />
+          <p className="text-gray-600">No contact submissions yet</p>
+          <p className="text-sm text-gray-500 mt-2">Contact form submissions will appear here</p>
+        </div>
       ) : contacts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
           <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">No contact submissions found</p>
+          <p className="text-gray-600">No contact submissions found matching your filters</p>
         </div>
       ) : (
         <div className="space-y-4">

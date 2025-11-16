@@ -12,7 +12,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Plus,
+  X,
+  Flag
 } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 
@@ -28,6 +31,17 @@ export default function UsersManagement() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'admin'>('all')
   const [filterBanned, setFilterBanned] = useState<'all' | 'banned' | 'active'>('all')
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [createForm, setCreateForm] = useState({
+    email: '',
+    password: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+    role: 'user' as 'user' | 'admin'
+  })
+  const [creating, setCreating] = useState(false)
+  const [reportCounts, setReportCounts] = useState<Record<string, number>>({})
 
   useEffect(() => {
     loadUsers()
@@ -69,6 +83,22 @@ export default function UsersManagement() {
 
       setUsers(data || [])
       setTotalUsers(count || 0)
+
+      // Fetch report counts for these users
+      if (data && data.length > 0) {
+        const userIds = data.map(u => u.id)
+        const { data: reportsData } = await supabase
+          .from('reports')
+          .select('reported_id')
+          .eq('reported_type', 'user')
+          .in('reported_id', userIds)
+
+        const counts: Record<string, number> = {}
+        reportsData?.forEach(report => {
+          counts[report.reported_id] = (counts[report.reported_id] || 0) + 1
+        })
+        setReportCounts(counts)
+      }
     } catch (error) {
       console.error('Error loading users:', error)
     } finally {
@@ -103,18 +133,24 @@ export default function UsersManagement() {
     if (!confirm(`Change user role to "${newRole}"?`)) return
 
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ role: newRole })
-        .eq('id', userId)
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role: newRole }),
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to change user role')
+      }
 
       // Reload users
       loadUsers()
     } catch (error) {
       console.error('Error changing role:', error)
-      alert('Failed to change user role')
+      alert(error instanceof Error ? error.message : 'Failed to change user role')
     }
   }
 
@@ -122,18 +158,61 @@ export default function UsersManagement() {
     if (!confirm(`Are you sure you want to delete user "${username}"? This action cannot be undone!`)) return
 
     try {
-      const { error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', userId)
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to delete user')
+      }
 
       // Reload users
       loadUsers()
     } catch (error) {
       console.error('Error deleting user:', error)
-      alert('Failed to delete user')
+      alert(error instanceof Error ? error.message : 'Failed to delete user')
+    }
+  }
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setCreating(true)
+
+    try {
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createForm),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to create user')
+      }
+
+      // Reset form and close modal
+      setCreateForm({
+        email: '',
+        password: '',
+        username: '',
+        first_name: '',
+        last_name: '',
+        role: 'user'
+      })
+      setShowCreateModal(false)
+
+      // Reload users
+      loadUsers()
+
+      alert('User created successfully!')
+    } catch (error) {
+      console.error('Error creating user:', error)
+      alert(error instanceof Error ? error.message : 'Failed to create user')
+    } finally {
+      setCreating(false)
     }
   }
 
@@ -142,9 +221,18 @@ export default function UsersManagement() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-        <p className="text-gray-600 mt-1">Manage all registered users</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+          <p className="text-gray-600 mt-1">Manage all registered users</p>
+        </div>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="inline-flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors"
+        >
+          <Plus className="h-5 w-5" />
+          <span>Create User</span>
+        </button>
       </div>
 
       {/* Filters */}
@@ -249,6 +337,9 @@ export default function UsersManagement() {
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Reports
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Joined
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -314,6 +405,16 @@ export default function UsersManagement() {
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Active
                         </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {reportCounts[user.id] ? (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                          <Flag className="h-3 w-3 mr-1" />
+                          {reportCounts[user.id]} {reportCounts[user.id] === 1 ? 'report' : 'reports'}
+                        </span>
+                      ) : (
+                        <span className="text-sm text-gray-400">No reports</span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -415,6 +516,123 @@ export default function UsersManagement() {
             Next
             <ChevronRight className="h-4 w-4 ml-1" />
           </button>
+        </div>
+      )}
+
+      {/* Create User Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Create New User</h2>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={createForm.email}
+                  onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={8}
+                  value={createForm.password}
+                  onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">Min 8 characters</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Username *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={createForm.username}
+                  onChange={(e) => setCreateForm({ ...createForm, username: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={createForm.first_name}
+                    onChange={(e) => setCreateForm({ ...createForm, first_name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={createForm.last_name}
+                    onChange={(e) => setCreateForm({ ...createForm, last_name: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Role
+                </label>
+                <select
+                  value={createForm.role}
+                  onChange={(e) => setCreateForm({ ...createForm, role: e.target.value as 'user' | 'admin' })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-3 pt-4">
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                >
+                  {creating ? 'Creating...' : 'Create User'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

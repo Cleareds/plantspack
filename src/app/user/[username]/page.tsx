@@ -6,12 +6,13 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
 import PostCard from '@/components/posts/PostCard'
-import { Loader2, MapPin, Users, UserPlus } from 'lucide-react'
+import { Loader2, MapPin, Users, UserPlus, Ban } from 'lucide-react'
 import FollowButton from '@/components/social/FollowButton'
 import BlockButton from '@/components/social/BlockButton'
 import MuteButton from '@/components/social/MuteButton'
 import ReportButton from '@/components/moderation/ReportButton'
 import TierBadge from '@/components/ui/TierBadge'
+import UserStatsCompact from '@/components/profile/UserStatsCompact'
 import Link from 'next/link'
 
 type Post = Tables<'posts'> & {
@@ -252,7 +253,7 @@ export default function UserProfilePage() {
     <div className="max-w-4xl mx-auto px-4 py-6">
       {/* Profile Header */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
               {profileUser.avatar_url ? (
@@ -279,6 +280,12 @@ export default function UserProfilePage() {
                 {(profileUser as any).subscription_tier && (profileUser as any).subscription_tier !== 'free' && (
                   <TierBadge tier={(profileUser as any).subscription_tier as 'medium' | 'premium'} size="md" />
                 )}
+                {profileUser.is_banned && (
+                  <div className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                    <Ban className="h-4 w-4" />
+                    <span>Banned</span>
+                  </div>
+                )}
               </div>
               <p className="text-gray-500">@{profileUser.username}</p>
               {profileUser.bio && (
@@ -298,6 +305,11 @@ export default function UserProfilePage() {
               />
             </div>
           )}
+        </div>
+
+        {/* Compact Stats */}
+        <div className="pt-4 border-t border-gray-100 flex justify-end">
+          <UserStatsCompact userId={profileUser.id} />
         </div>
       </div>
 

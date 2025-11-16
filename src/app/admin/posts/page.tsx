@@ -116,18 +116,20 @@ export default function PostsManagement() {
     if (!confirm('Are you sure you want to PERMANENTLY delete this post? This action cannot be undone!')) return
 
     try {
-      const { error } = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId)
+      const response = await fetch(`/api/admin/posts/${postId}`, {
+        method: 'DELETE',
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to delete post')
+      }
 
       // Reload posts
       loadPosts()
     } catch (error) {
       console.error('Error permanently deleting post:', error)
-      alert('Failed to permanently delete post')
+      alert(error instanceof Error ? error.message : 'Failed to permanently delete post')
     }
   }
 

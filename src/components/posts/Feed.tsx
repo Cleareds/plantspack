@@ -103,13 +103,14 @@ export default function Feed({onPostCreated}: FeedProps) {
             .from('posts')
             .select(`
                 *,
-                users (
+                users!inner (
                     id,
                     username,
                     first_name,
                     last_name,
                     avatar_url,
-                    subscription_tier
+                    subscription_tier,
+                    is_banned
                 ),
                 post_likes (
                     id,
@@ -135,6 +136,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                     )
                 )
             `)
+            .eq('users.is_banned', false)
             .in('id', postIds)
 
         if (data) {
@@ -174,7 +176,11 @@ export default function Feed({onPostCreated}: FeedProps) {
                 })
 
                 if (loadMore) {
-                    setPosts(prevPosts => [...prevPosts, ...(newPosts as any)])
+                    setPosts(prevPosts => {
+                        const existingIds = new Set(prevPosts.map(p => p.id))
+                        const uniqueNewPosts = (newPosts as any).filter((p: any) => !existingIds.has(p.id))
+                        return [...prevPosts, ...uniqueNewPosts]
+                    })
                 } else {
                     setPosts(newPosts as any)
                 }
@@ -200,13 +206,14 @@ export default function Feed({onPostCreated}: FeedProps) {
                     .from('posts')
                     .select(`
           *,
-          users (
+          users!inner (
             id,
             username,
             first_name,
             last_name,
             avatar_url,
-            subscription_tier
+            subscription_tier,
+            is_banned
           ),
           post_likes (
             id,
@@ -233,6 +240,7 @@ export default function Feed({onPostCreated}: FeedProps) {
           )
         `)
                     .eq('privacy', 'friends')
+                    .eq('users.is_banned', false)
                     .in('user_id', followingIds)
 
                 // Apply sorting
@@ -286,7 +294,11 @@ export default function Feed({onPostCreated}: FeedProps) {
             })
 
             if (loadMore) {
-                setPosts(prevPosts => [...prevPosts, ...(newPosts as any)])
+                setPosts(prevPosts => {
+                    const existingIds = new Set(prevPosts.map(p => p.id))
+                    const uniqueNewPosts = (newPosts as any).filter((p: any) => !existingIds.has(p.id))
+                    return [...prevPosts, ...uniqueNewPosts]
+                })
             } else {
                 setPosts(newPosts as any)
             }

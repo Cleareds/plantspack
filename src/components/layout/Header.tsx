@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useAuth } from '@/lib/auth'
 import { Menu, X, Home, Map, User, LogOut, Crown } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
+import NotificationBell from '@/components/notifications/NotificationBell'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -73,6 +74,7 @@ export default function Header() {
             </Link>
             {user && username && (
               <>
+                <NotificationBell />
                 <Link
                   href={`/profile/${username}`}
                   className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors"
@@ -145,6 +147,9 @@ export default function Header() {
             </Link>
             {user && username && (
               <>
+                <div className="px-3 py-2">
+                  <NotificationBell />
+                </div>
                 <Link
                   href={`/profile/${username}`}
                   onClick={() => setIsMenuOpen(false)}

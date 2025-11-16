@@ -69,6 +69,21 @@ function FollowButton({ userId, className = '', showText = true }: FollowButtonP
 
         if (error) throw error
         setIsFollowing(true)
+
+        // Create notification for the user being followed
+        try {
+          await fetch('/api/notifications/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: userId,
+              type: 'follow',
+            }),
+          })
+        } catch (notifError) {
+          // Don't fail the follow if notification fails
+          console.error('Failed to create notification:', notifError)
+        }
       }
     } catch (error) {
       console.error('Error toggling follow:', error)

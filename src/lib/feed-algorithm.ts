@@ -58,13 +58,14 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
       .from('posts')
       .select(`
         *,
-        users (
+        users!inner (
           id,
           username,
           first_name,
           last_name,
           avatar_url,
-          subscription_tier
+          subscription_tier,
+          is_banned
         ),
         post_likes (
           id,
@@ -91,6 +92,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
         )
       `)
       .eq('privacy', 'public') // Only public posts for main feed
+      .eq('users.is_banned', false) // Exclude banned users
 
     // Apply sorting based on selected option
     switch (sortBy) {
@@ -152,13 +154,14 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
       .from('posts')
       .select(`
         *,
-        users (
+        users!inner (
           id,
           username,
           first_name,
           last_name,
           avatar_url,
-          subscription_tier
+          subscription_tier,
+          is_banned
         ),
         post_likes (
           id,
@@ -185,6 +188,7 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
         )
       `)
       .eq('privacy', 'public')
+      .eq('users.is_banned', false) // Exclude banned users
       .is('deleted_at', null) // Exclude soft-deleted posts
       .order('engagement_score', { ascending: false }) // Pre-sort by engagement
       .range(fetchOffset, fetchOffset + fetchLimit - 1)
@@ -442,13 +446,14 @@ async function getPopularPosts(period: 'today' | 'week' | 'month', limit: number
       .from('posts')
       .select(`
         *,
-        users (
+        users!inner (
           id,
           username,
           first_name,
           last_name,
           avatar_url,
-          subscription_tier
+          subscription_tier,
+          is_banned
         ),
         post_likes (
           id,
@@ -475,6 +480,7 @@ async function getPopularPosts(period: 'today' | 'week' | 'month', limit: number
         )
       `)
       .eq('privacy', 'public')
+      .eq('users.is_banned', false) // Exclude banned users
       .gte('created_at', startDate.toISOString())
       .order('engagement_score', { ascending: false })
       .range(offset, offset + limit - 1)

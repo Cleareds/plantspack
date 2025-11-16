@@ -48,13 +48,61 @@ export default function ReportsManagement() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState<string>('pending')
   const [filterType, setFilterType] = useState<string>('all')
+  const [filterUser, setFilterUser] = useState<string>('all')
+  const [reportedUsers, setReportedUsers] = useState<{id: string, username: string, count: number}[]>([])
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [resolution, setResolution] = useState('')
   const [adminNotes, setAdminNotes] = useState('')
 
   useEffect(() => {
     loadReports()
-  }, [currentPage, searchQuery, filterStatus, filterType])
+  }, [currentPage, searchQuery, filterStatus, filterType, filterUser])
+
+  // Fetch list of reported users with counts
+  useEffect(() => {
+    const fetchReportedUsers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('reports')
+          .select('reported_id, reported_type')
+          .eq('reported_type', 'user')
+
+        if (error) throw error
+
+        // Get unique user IDs and count reports
+        const userCounts: Record<string, number> = {}
+        data?.forEach(report => {
+          userCounts[report.reported_id] = (userCounts[report.reported_id] || 0) + 1
+        })
+
+        // Fetch user details
+        const userIds = Object.keys(userCounts)
+        if (userIds.length > 0) {
+          const { data: usersData, error: usersError } = await supabase
+            .from('users')
+            .select('id, username')
+            .in('id', userIds)
+
+          if (usersError) throw usersError
+
+          const usersWithCounts = usersData?.map(u => ({
+            id: u.id,
+            username: u.username,
+            count: userCounts[u.id]
+          })) || []
+
+          // Sort by report count descending
+          usersWithCounts.sort((a, b) => b.count - a.count)
+
+          setReportedUsers(usersWithCounts)
+        }
+      } catch (error) {
+        console.error('Error fetching reported users:', error)
+      }
+    }
+
+    fetchReportedUsers()
+  }, [])
 
   const loadReports = async () => {
     setLoading(true)
@@ -73,6 +121,10 @@ export default function ReportsManagement() {
 
       if (filterType !== 'all') {
         query = query.eq('reported_type', filterType)
+      }
+
+      if (filterUser !== 'all') {
+        query = query.eq('reported_id', filterUser)
       }
 
       const from = (currentPage - 1) * REPORTS_PER_PAGE
@@ -192,7 +244,7 @@ export default function ReportsManagement() {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Search
@@ -249,6 +301,27 @@ export default function ReportsManagement() {
               <option value="reviewing">Reviewing</option>
               <option value="resolved">Resolved</option>
               <option value="dismissed">Dismissed</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Reported User
+            </label>
+            <select
+              value={filterUser}
+              onChange={(e) => {
+                setFilterUser(e.target.value)
+                setCurrentPage(1)
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+              <option value="all">All Users</option>
+              {reportedUsers.map(u => (
+                <option key={u.id} value={u.id}>
+                  @{u.username} ({u.count} {u.count === 1 ? 'report' : 'reports'})
+                </option>
+              ))}
             </select>
           </div>
         </div>

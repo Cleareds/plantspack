@@ -8,6 +8,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { MessageCircle, Send } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
 import ReportButton from '../moderation/ReportButton'
+import CommentReactions from '../reactions/CommentReactions'
 
 type Comment = Tables<'comments'> & {
   users: Tables<'users'>
@@ -167,6 +168,32 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
       // Add the new comment at the beginning (newest first)
       if (data) {
         setComments(prevComments => [data, ...prevComments])
+
+        // Create notification for post author
+        try {
+          // Fetch post to get author's user_id
+          const { data: postData } = await supabase
+            .from('posts')
+            .select('user_id')
+            .eq('id', postId)
+            .single()
+
+          if (postData && postData.user_id !== user.id) {
+            await fetch('/api/notifications/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: postData.user_id,
+                type: 'comment',
+                entityType: 'post',
+                entityId: postId,
+              }),
+            })
+          }
+        } catch (notifError) {
+          // Don't fail the comment if notification fails
+          console.error('Failed to create notification:', notifError)
+        }
       }
     } catch (error) {
       console.error('Error submitting comment:', error)
@@ -260,7 +287,11 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           />
                         )}
                       </div>
-                      <p className="text-gray-700 text-sm">{comment.content}</p>
+                      <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
+                      <CommentReactions
+                        commentId={comment.id}
+                        onReactionChange={() => fetchComments(0, false)}
+                      />
                     </div>
                   </div>
                 )
@@ -419,7 +450,11 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           />
                         )}
                       </div>
-                      <p className="text-gray-700 text-sm">{comment.content}</p>
+                      <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
+                      <CommentReactions
+                        commentId={comment.id}
+                        onReactionChange={() => fetchComments(0, false)}
+                      />
                     </div>
                   </div>
                 )

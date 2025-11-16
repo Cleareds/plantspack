@@ -12,7 +12,9 @@ import {
   AlertCircle,
   MapPin,
   Star,
-  Edit
+  Edit,
+  Plus,
+  X
 } from 'lucide-react'
 
 interface Place {
@@ -40,6 +42,16 @@ export default function PlacesManagement() {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterCategory, setFilterCategory] = useState<string>('all')
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    description: '',
+    address: '',
+    latitude: '',
+    longitude: '',
+    category: 'restaurant'
+  })
+  const [creating, setCreating] = useState(false)
 
   useEffect(() => {
     loadPlaces()
@@ -81,17 +93,73 @@ export default function PlacesManagement() {
     if (!confirm(`Are you sure you want to delete "${placeName}"?`)) return
 
     try {
-      const { error } = await supabase
-        .from('places')
-        .delete()
-        .eq('id', placeId)
+      const response = await fetch(`/api/admin/places/${placeId}`, {
+        method: 'DELETE',
+      })
 
-      if (error) throw error
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to delete place')
+      }
 
       loadPlaces()
     } catch (error) {
       console.error('Error deleting place:', error)
-      alert('Failed to delete place')
+      alert(error instanceof Error ? error.message : 'Failed to delete place')
+    }
+  }
+
+  const handleCreatePlace = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setCreating(true)
+
+    try {
+      // Validate coordinates
+      const lat = parseFloat(createForm.latitude)
+      const lng = parseFloat(createForm.longitude)
+
+      if (isNaN(lat) || isNaN(lng)) {
+        throw new Error('Invalid coordinates. Please enter valid numbers.')
+      }
+
+      const response = await fetch('/api/admin/places', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: createForm.name,
+          description: createForm.description || null,
+          address: createForm.address,
+          latitude: lat,
+          longitude: lng,
+          category: createForm.category,
+        }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to create place')
+      }
+
+      // Reset form and close modal
+      setCreateForm({
+        name: '',
+        description: '',
+        address: '',
+        latitude: '',
+        longitude: '',
+        category: 'restaurant'
+      })
+      setShowCreateModal(false)
+
+      loadPlaces()
+      alert('Place created successfully!')
+    } catch (error) {
+      console.error('Error creating place:', error)
+      alert(error instanceof Error ? error.message : 'Failed to create place')
+    } finally {
+      setCreating(false)
     }
   }
 
@@ -99,9 +167,18 @@ export default function PlacesManagement() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Places Management</h1>
-        <p className="text-gray-600 mt-1">Manage all vegan places</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Places Management</h1>
+          <p className="text-gray-600 mt-1">Manage all vegan places</p>
+        </div>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Create Place
+        </button>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
@@ -274,6 +351,137 @@ export default function PlacesManagement() {
             Next
             <ChevronRight className="h-4 w-4 ml-1" />
           </button>
+        </div>
+      )}
+
+      {/* Create Place Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-900">Create New Place</h2>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreatePlace} className="px-6 py-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Place Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={createForm.name}
+                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter place name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  value={createForm.description}
+                  onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                  rows={3}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter place description (optional)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={createForm.address}
+                  onChange={(e) => setCreateForm({ ...createForm, address: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter full address"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Latitude *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={createForm.latitude}
+                    onChange={(e) => setCreateForm({ ...createForm, latitude: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="e.g., 40.7128"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Longitude *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={createForm.longitude}
+                    onChange={(e) => setCreateForm({ ...createForm, longitude: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="e.g., -74.0060"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Category *
+                </label>
+                <select
+                  required
+                  value={createForm.category}
+                  onChange={(e) => setCreateForm({ ...createForm, category: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="restaurant">Restaurant</option>
+                  <option value="cafe">Cafe</option>
+                  <option value="store">Store</option>
+                  <option value="market">Market</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end space-x-3 pt-4 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {creating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    'Create Place'
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
