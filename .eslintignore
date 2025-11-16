@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Mobile app (separate project)
+mobileapp
+
+# Next.js build output
+.next
+out
+
+# Production build
+build
+dist
+
+# Cache
+.cache
+
+# Environment files
+.env*.local

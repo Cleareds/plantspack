@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9535adfd-7deb-4631-8719-60b2fd020e3f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.eslintignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/ADMIN_IMPLEMENTATION_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/ADMIN_MODERATION_IMPLEMENTATION.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/ADMIN_SETUP_README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/APPLY_MIGRATIONS_STEPS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/CLEANUP_COMPLETE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/COMPLETED_FIXES_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/DEPLOYMENT_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/DEPLOYMENT_INSTRUCTIONS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/FEATURES_IMPLEMENTED.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/FEED_ALGORITHM.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/FEED_ANALYSIS_SUMMARY.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/FEED_RELEVANCY_ALGORITHM.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/HASHTAGS_AND_MENTIONS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/HASHTAG_FIX_INSTRUCTIONS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/IMPLEMENTATION_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/LAUNCH_READINESS_SUMMARY.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/LOCAL_GOOGLE_LOGIN_TEST.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/MIGRATION_FIX_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/MIGRATION_TROUBLESHOOTING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/OAUTH_SETUP_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/PRODUCTION_READINESS_PLAN.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/PRODUCTION_READY_FINAL_STATUS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/QUICK_FIX_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/QUICK_LAUNCH_CHECKLIST.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/REACTIONS_SYSTEM.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/SENTRY_QUICK_TEST.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/SENTRY_SETUP_COMPLETE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/SENTRY_TESTING_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/SOFT_LAUNCH_CHECKLIST.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/UPDATES_APPLIED.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/USER_STATISTICS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/cleanup-for-launch.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/test-production-readiness.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/validate-sentry.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sentry.edge.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sentry.server.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/global-error.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/instrumentation-client.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/instrumentation.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/rate-limit.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/migrations/20251116000001_fix_contact_submissions.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/migrations/COMPLETE_ADMIN_SETUP.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vegan-social.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_IMPLEMENTATION_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_MODERATION_IMPLEMENTATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ADMIN_SETUP_README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/APPLY_MIGRATIONS_STEPS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMPLETE_ADMIN_SETUP.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEPLOYMENT_INSTRUCTIONS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FEATURES_IMPLEMENTED.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FEED_ALGORITHM.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FEED_ANALYSIS_SUMMARY.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FEED_RELEVANCY_ALGORITHM.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HASHTAGS_AND_MENTIONS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HASHTAG_FIX_INSTRUCTIONS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IMPLEMENTATION_SUMMARY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LOCAL_GOOGLE_LOGIN_TEST.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MIGRATION_FIX_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MIGRATION_TROUBLESHOOTING.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAUTH_SETUP_GUIDE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/REACTIONS_SYSTEM.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/USER_STATISTICS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/contact/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/contact/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/notifications/create/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/notifications/create/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/contact/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/contact/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/pricing/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/posts/CreatePost.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/posts/CreatePost.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/posts/Feed.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/posts/Feed.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/social/BlockButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/social/BlockButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ui/AvatarUpload.tsx.backup" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/stripe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/stripe.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vercel.json.backup" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/usr/local/Cellar/php/8.3.3_1/bin/php" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="34tY8ZJ6duIOv5sp1kGQNP1czMC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/antonkravchuk/sidep/Cleareds/plantspack/public&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/antonkravchuk/sidep/Cleareds/plantspack/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PS-252.27397.112" />
+        <option value="bundled-php-predefined-a98d8de5180a-b35feea871ed-com.jetbrains.php.sharedIndexes-PS-252.27397.112" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9535adfd-7deb-4631-8719-60b2fd020e3f" name="Changes" comment="" />
+      <created>1762034176165</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1762034176165</updated>
+      <workItem from="1762034177290" duration="1393000" />
+      <workItem from="1762450401133" duration="2676000" />
+      <workItem from="1762812437809" duration="11597000" />
+      <workItem from="1763020625503" duration="21103000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

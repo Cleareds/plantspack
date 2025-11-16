@@ -8,14 +8,14 @@ export async function POST(request: NextRequest) {
     const { userId, type, entityType, entityId, message } = await request.json()
 
     // Get actor session
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
+        global: {
+          headers: {
+            Cookie: cookieStore.toString(),
           },
         },
       }
@@ -46,8 +46,17 @@ export async function POST(request: NextRequest) {
       .single()
 
     // Skip if user has disabled this type of notification
-    const prefKey = `push_${type}s` as keyof typeof prefs
-    if (prefs && prefs[prefKey] === false) {
+    // Map notification type to preference field name
+    const typeToFieldMap: Record<string, keyof typeof prefs> = {
+      'like': 'push_likes',
+      'comment': 'push_comments',
+      'reply': 'push_comments', // replies use comment preference
+      'follow': 'push_follows',
+      'mention': 'push_mentions',
+    }
+
+    const prefKey = typeToFieldMap[type]
+    if (prefs && prefKey && prefs[prefKey] === false) {
       return NextResponse.json({ success: true, skipped: true })
     }
 

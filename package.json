@@ -32,6 +32,7 @@
     "test:clean": "bash scripts/clean-test-artifacts.sh"
   },
   "dependencies": {
+    "@sentry/nextjs": "^10.25.0",
     "@stripe/stripe-js": "^7.7.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",

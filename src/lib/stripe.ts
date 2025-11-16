@@ -187,8 +187,8 @@ export async function redirectToCheckout(
     const sessionId = await createCheckoutSession(
       tierId,
       userId,
-      `${window.location.origin}/pricing?success=true`,
-      `${window.location.origin}/pricing?canceled=true`
+      `${window.location.origin}/support?success=true`,
+      `${window.location.origin}/support?canceled=true`
     )
 
     const { error } = await stripe.redirectToCheckout({ sessionId })

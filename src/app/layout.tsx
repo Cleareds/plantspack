@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   title: "PlantsPack - Social Network for Plant-Based Living",
   description: "Connect with fellow plant-based enthusiasts, discover vegan places, and share your green journey",
   manifest: '/manifest.json',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

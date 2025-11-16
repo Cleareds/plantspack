@@ -608,7 +608,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                     </span>
                       {subscription?.tier === 'free' && charCount > 400 && (
                           <Link
-                              href="/pricing"
+                              href="/support"
                               className="text-xs text-green-600 hover:text-green-700 underline"
                           >
                               Upgrade for unlimited chars
@@ -622,7 +622,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                   <p className="text-xs text-gray-600">
                     Get more posting freedom by{' '}
                     <Link
-                      href="/pricing"
+                      href="/support"
                       className="text-green-600 hover:text-green-700 underline font-medium"
                     >
                       supporting us

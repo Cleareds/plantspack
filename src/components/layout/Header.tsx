@@ -66,7 +66,7 @@ export default function Header() {
               <span>Map</span>
             </Link>
             <Link
-              href="/pricing"
+              href="/support"
               className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors"
             >
               <Crown className="h-5 w-5" />
@@ -138,12 +138,12 @@ export default function Header() {
               <span>Map</span>
             </Link>
             <Link
-              href="/pricing"
+              href="/support"
               onClick={() => setIsMenuOpen(false)}
               className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:text-green-600 hover:bg-gray-50"
             >
               <Crown className="h-5 w-5" />
-              <span>Pricing</span>
+              <span>Support Us</span>
             </Link>
             {user && username && (
               <>

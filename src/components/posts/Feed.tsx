@@ -420,8 +420,8 @@ export default function Feed({onPostCreated}: FeedProps) {
         <div className="w-full">
             {/* Feed Controls - Horizontal Layout with Tabs on Left, Sorting on Right */}
             {user && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-4 py-3">
-                    <div className="flex items-center justify-between gap-4">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-4 py-2.5">
+                    <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
                         {/* Tabs on the Left */}
                         <div className="flex gap-2">
                             <button
@@ -448,7 +448,7 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                         {/* Sorting on the Right */}
                         <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-600">Sort by:</span>
+                            <span className="text-sm text-gray-600 hidden sm:inline">Sort by:</span>
                             <FeedSorting
                                 currentSort={sortOption}
                                 onSortChange={setSortOption}

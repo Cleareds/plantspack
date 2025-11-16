@@ -134,7 +134,7 @@ export default function BlockButton({ userId, showText = true, className = '' }:
             </h3>
 
             <p className="text-sm text-gray-600 text-center mb-6">
-              They won't be able to see your posts or interact with you. You won't see their content either.
+              They won&apos;t be able to see your posts or interact with you. You won&apos;t see their content either.
             </p>
 
             <div className="flex items-center space-x-3">

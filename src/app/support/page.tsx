@@ -568,7 +568,7 @@ export default function PricingPage() {
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex items-center justify-center">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin text-green-600" />
-          <span className="text-green-600">Loading pricing...</span>
+          <span className="text-green-600">Loading support options...</span>
         </div>
       </div>
     }>

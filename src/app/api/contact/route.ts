@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { RateLimitPresets, getClientIp } from '@/lib/rate-limit'
 
 interface ContactFormData {
   name: string
@@ -10,6 +11,20 @@ interface ContactFormData {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting: 3 submissions per hour per IP
+    const clientIp = getClientIp(request)
+    const rateLimitResult = RateLimitPresets.contactForm(clientIp)
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Too many submissions. Please try again later.',
+          resetIn: Math.ceil(rateLimitResult.resetIn / 1000 / 60) // minutes
+        },
+        { status: 429 }
+      )
+    }
+
     const { name, email, subject, message }: ContactFormData = await request.json()
 
     // Validate required fields
