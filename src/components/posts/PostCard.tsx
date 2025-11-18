@@ -39,9 +39,11 @@ type Post = Tables<'posts'> & {
 interface PostCardProps {
   post: Post
   onUpdate?: () => void
+  reactions?: any[]  // Bulk-loaded reactions for performance
+  isFollowing?: boolean  // Bulk-loaded follow status for performance
 }
 
-function PostCard({ post, onUpdate }: PostCardProps) {
+function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.post_likes?.length || 0)
   const commentCount = post.comments?.length || 0
@@ -252,7 +254,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <FollowButton userId={post.users.id} />
+              <FollowButton userId={post.users.id} initialIsFollowing={isFollowing} />
               {isOwnPost && (
                 <div ref={menuRef} className="relative">
                   <button
@@ -424,7 +426,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <FollowButton userId={post.users.id} />
+              <FollowButton userId={post.users.id} initialIsFollowing={isFollowing} />
               {isOwnPost && (
                 <div ref={menuRef} className="relative">
                   <button
@@ -548,6 +550,7 @@ function PostCard({ post, onUpdate }: PostCardProps) {
               setSignUpAction('like')
               setShowSignUpModal(true)
             }}
+            initialReactions={reactions}
           />
 
           <button

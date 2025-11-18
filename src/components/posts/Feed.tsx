@@ -17,6 +17,8 @@ type Post = Tables<'posts'> & {
     parent_post?: (Tables<'posts'> & {
         users: Tables<'users'>
     }) | null
+    _reactions?: any[]  // Bulk-loaded reactions for performance
+    _isFollowing?: boolean  // Bulk-loaded follow status for performance
 }
 
 const POSTS_PER_PAGE = 10
@@ -93,6 +95,51 @@ export default function Feed({onPostCreated}: FeedProps) {
         fetchMutedUsers()
     }, [user])
 
+    // Bulk load reactions and follows to prevent N+1 queries
+    const enrichPostsWithMetadata = async (posts: Post[], currentUserId: string | undefined) => {
+        if (posts.length === 0) return posts
+
+        const postIds = posts.map(p => p.id)
+
+        // Bulk load all reactions for all posts in a single query
+        let reactionsByPost: Record<string, any[]> = {}
+        const { data: allReactions } = await supabase
+            .from('post_reactions')
+            .select('reaction_type, user_id, post_id')
+            .in('post_id', postIds)
+
+        // Group reactions by post_id
+        if (allReactions) {
+            reactionsByPost = allReactions.reduce((acc, reaction) => {
+                if (!acc[reaction.post_id]) acc[reaction.post_id] = []
+                acc[reaction.post_id].push(reaction)
+                return acc
+            }, {} as Record<string, any[]>)
+        }
+
+        // Bulk load follow status for all unique authors in a single query
+        let followingSet = new Set<string>()
+        if (currentUserId) {
+            const authorIds = [...new Set(posts.map(p => p.user_id))]
+            const { data: follows } = await supabase
+                .from('follows')
+                .select('following_id')
+                .eq('follower_id', currentUserId)
+                .in('following_id', authorIds)
+
+            if (follows) {
+                followingSet = new Set(follows.map(f => f.following_id))
+            }
+        }
+
+        // Attach metadata to each post
+        return posts.map(post => ({
+            ...post,
+            _reactions: reactionsByPost[post.id] || [],
+            _isFollowing: followingSet.has(post.user_id)
+        }))
+    }
+
     // Handle loading new posts from realtime
     const handleLoadNewPosts = useCallback(async () => {
         if (realtimeNewPosts.length === 0) return
@@ -140,8 +187,11 @@ export default function Feed({onPostCreated}: FeedProps) {
             .in('id', postIds)
 
         if (data) {
+            // Bulk load reactions and follows for performance
+            const postsWithMetadata = await enrichPostsWithMetadata(data as Post[], user?.id)
+
             // Add new posts to the top of the feed
-            setPosts(prevPosts => [...(data as Post[]), ...prevPosts])
+            setPosts(prevPosts => [...postsWithMetadata, ...prevPosts])
         }
 
         // Clear the realtime new posts queue
@@ -149,7 +199,7 @@ export default function Feed({onPostCreated}: FeedProps) {
 
         // Scroll to top
         window.scrollTo({top: 0, behavior: 'smooth'})
-    }, [realtimeNewPosts, clearNew])
+    }, [realtimeNewPosts, clearNew, user])
 
     const fetchPosts = useCallback(async (loadMore: boolean = false) => {
         try {
@@ -175,14 +225,17 @@ export default function Feed({onPostCreated}: FeedProps) {
                     includeAnalytics: true
                 })
 
+                // Bulk load reactions and follows for performance (prevents N+1 queries)
+                const postsWithMetadata = await enrichPostsWithMetadata(newPosts as any, user?.id)
+
                 if (loadMore) {
                     setPosts(prevPosts => {
                         const existingIds = new Set(prevPosts.map(p => p.id))
-                        const uniqueNewPosts = (newPosts as any).filter((p: any) => !existingIds.has(p.id))
+                        const uniqueNewPosts = postsWithMetadata.filter((p: any) => !existingIds.has(p.id))
                         return [...prevPosts, ...uniqueNewPosts]
                     })
                 } else {
-                    setPosts(newPosts as any)
+                    setPosts(postsWithMetadata as any)
                 }
 
                 setHasMore(newPosts.length === POSTS_PER_PAGE)
@@ -268,15 +321,18 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                 const newPosts = data || []
 
+                // Bulk load reactions and follows for performance (prevents N+1 queries)
+                const postsWithMetadata = await enrichPostsWithMetadata(newPosts, user.id)
+
                 if (loadMore) {
                     setPosts(prevPosts => {
                         const existingIds = new Set(prevPosts.map(p => p.id))
-                        const uniqueNewPosts = newPosts.filter(p => !existingIds.has(p.id))
+                        const uniqueNewPosts = postsWithMetadata.filter(p => !existingIds.has(p.id))
                         return [...prevPosts, ...uniqueNewPosts]
                     })
                     offsetRef.current = currentOffset + POSTS_PER_PAGE
                 } else {
-                    setPosts(newPosts)
+                    setPosts(postsWithMetadata)
                     offsetRef.current = POSTS_PER_PAGE
                 }
 
@@ -293,14 +349,17 @@ export default function Feed({onPostCreated}: FeedProps) {
                 includeAnalytics: true
             })
 
+            // Bulk load reactions and follows for performance (prevents N+1 queries)
+            const postsWithMetadata = await enrichPostsWithMetadata(newPosts as any, undefined)
+
             if (loadMore) {
                 setPosts(prevPosts => {
                     const existingIds = new Set(prevPosts.map(p => p.id))
-                    const uniqueNewPosts = (newPosts as any).filter((p: any) => !existingIds.has(p.id))
+                    const uniqueNewPosts = postsWithMetadata.filter((p: any) => !existingIds.has(p.id))
                     return [...prevPosts, ...uniqueNewPosts]
                 })
             } else {
-                setPosts(newPosts as any)
+                setPosts(postsWithMetadata as any)
             }
 
             setHasMore(newPosts.length === POSTS_PER_PAGE)
@@ -510,7 +569,13 @@ export default function Feed({onPostCreated}: FeedProps) {
                         {posts
                             .filter(post => !blockedUserIds.includes(post.user_id) && !mutedUserIds.includes(post.user_id))
                             .map((post) => (
-                                <PostCard key={post.id} post={post} onUpdate={handlePostCreated}/>
+                                <PostCard
+                                    key={post.id}
+                                    post={post}
+                                    onUpdate={handlePostCreated}
+                                    reactions={post._reactions}
+                                    isFollowing={post._isFollowing}
+                                />
                             ))}
                     </div>
 

@@ -9,9 +9,10 @@ interface FollowButtonProps {
   userId: string
   className?: string
   showText?: boolean
+  initialIsFollowing?: boolean  // Bulk-loaded follow status for performance
 }
 
-function FollowButton({ userId, className = '', showText = true }: FollowButtonProps) {
+function FollowButton({ userId, className = '', showText = true, initialIsFollowing }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(false)
   const [loading, setLoading] = useState(false)
   const { user } = useAuth()
@@ -19,28 +20,34 @@ function FollowButton({ userId, className = '', showText = true }: FollowButtonP
   useEffect(() => {
     if (!user || user.id === userId) return
 
-    const checkFollowStatus = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('follows')
-          .select('id')
-          .eq('follower_id', user.id)
-          .eq('following_id', userId)
-          .maybeSingle()
+    // Use bulk-loaded follow status if provided, otherwise fetch
+    if (initialIsFollowing !== undefined) {
+      setIsFollowing(initialIsFollowing)
+    } else {
+      // Fallback: fetch follow status if not provided
+      const checkFollowStatus = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('follows')
+            .select('id')
+            .eq('follower_id', user.id)
+            .eq('following_id', userId)
+            .maybeSingle()
 
-        if (error && error.code !== 'PGRST116') {
-          throw error
+          if (error && error.code !== 'PGRST116') {
+            throw error
+          }
+
+          setIsFollowing(!!data)
+        } catch (error) {
+          console.error('Error checking follow status:', error)
+          setIsFollowing(false)
         }
-
-        setIsFollowing(!!data)
-      } catch (error) {
-        console.error('Error checking follow status:', error)
-        setIsFollowing(false)
       }
-    }
 
-    checkFollowStatus()
-  }, [user, userId])
+      checkFollowStatus()
+    }
+  }, [user, userId, initialIsFollowing])
 
   const handleFollow = async () => {
     if (!user || user.id === userId || loading) return

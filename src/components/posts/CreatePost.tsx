@@ -275,13 +275,20 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     setError(null)
 
     try {
-      // Check rate limit before creating post
+      // Check rate limit before creating post (optional - skip if function doesn't exist)
       const { data: rateLimitData, error: rateLimitError } = await supabase
         .rpc('check_rate_limit_posts', { p_user_id: user.id })
 
       if (rateLimitError) {
-        console.error('Rate limit check error:', rateLimitError)
+        // Silently skip rate limiting if function doesn't exist (404 error)
+        if (rateLimitError.code !== '42883' && !rateLimitError.message?.includes('does not exist')) {
+          console.warn('Rate limit check unavailable:', rateLimitError.message)
+        }
         // Continue anyway if rate limit check fails
+      } else if (rateLimitData && typeof rateLimitData === 'object' && 'allowed' in rateLimitData) {
+        if (!rateLimitData.allowed) {
+          throw new Error('Rate limit exceeded. Please wait before posting again.')
+        }
       } else if (rateLimitData === false) {
         throw new Error('Rate limit exceeded. Please wait a few minutes before posting again.')
       }

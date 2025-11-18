@@ -26,6 +26,7 @@ interface ReactionButtonsProps {
   onReactionChange?: () => void
   showSignUpModal?: (action: string) => void
   className?: string
+  initialReactions?: any[]  // Bulk-loaded reactions for performance
 }
 
 const reactionConfig = {
@@ -63,7 +64,8 @@ export default function ReactionButtons({
   postId,
   onReactionChange,
   showSignUpModal,
-  className = ''
+  className = '',
+  initialReactions
 }: ReactionButtonsProps) {
   const { user } = useAuth()
   const [counts, setCounts] = useState<ReactionCounts>({
@@ -80,9 +82,39 @@ export default function ReactionButtons({
   })
   const [loading, setLoading] = useState<ReactionType | null>(null)
 
+  // Initialize from bulk-loaded reactions if provided, otherwise fetch
   useEffect(() => {
-    fetchReactions()
-  }, [postId, user])
+    if (initialReactions) {
+      // Use provided reactions (bulk-loaded for performance)
+      const newCounts: ReactionCounts = {
+        like: 0,
+        helpful: 0,
+        inspiring: 0,
+        thoughtful: 0
+      }
+
+      const newUserReactions: UserReactions = {
+        like: false,
+        helpful: false,
+        inspiring: false,
+        thoughtful: false
+      }
+
+      initialReactions.forEach(reaction => {
+        const type = reaction.reaction_type as ReactionType
+        newCounts[type]++
+        if (user && reaction.user_id === user.id) {
+          newUserReactions[type] = true
+        }
+      })
+
+      setCounts(newCounts)
+      setUserReactions(newUserReactions)
+    } else {
+      // Fallback: fetch reactions if not provided
+      fetchReactions()
+    }
+  }, [postId, user, initialReactions])
 
   const fetchReactions = async () => {
     try {

@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
         const { data: created, error: createError } = await supabase
           .from('hashtags')
           .insert({
-            tag: tag,
+            tag: normalizedTag,  // Use normalized tag for consistency
             normalized_tag: normalizedTag,
             usage_count: 1
           })
@@ -83,8 +83,9 @@ export async function POST(request: NextRequest) {
 
         if (created && !createError) {
           hashtagIds.push(created.id)
+          console.log(`[Hashtags] Created new hashtag: ${normalizedTag}`)
         } else {
-          console.error('Error creating hashtag:', createError)
+          console.error(`[Hashtags] Error creating hashtag ${normalizedTag}:`, createError)
         }
       }
     }
@@ -96,23 +97,30 @@ export async function POST(request: NextRequest) {
         hashtag_id: hashtagId
       }))
 
+      console.log(`[Hashtags] Linking ${hashtagIds.length} hashtags to post ${postId}`)
+
       const { error: linkError } = await supabase
         .from('post_hashtags')
         .insert(insertData)
 
       if (linkError) {
-        console.error('Error linking hashtags:', linkError)
+        console.error(`[Hashtags] Error linking hashtags to post ${postId}:`, linkError)
         return NextResponse.json(
-          { error: 'Failed to link hashtags' },
+          { error: 'Failed to link hashtags', details: linkError },
           { status: 500 }
         )
       }
+
+      console.log(`[Hashtags] Successfully linked ${hashtagIds.length} hashtags to post ${postId}`)
+    } else {
+      console.log(`[Hashtags] No hashtags to link for post ${postId}`)
     }
 
     return NextResponse.json({
       success: true,
       hashtagIds,
-      count: hashtagIds.length
+      count: hashtagIds.length,
+      hashtags
     })
   } catch (error) {
     console.error('Error processing hashtags:', error)
