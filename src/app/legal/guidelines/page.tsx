@@ -40,8 +40,8 @@ export default function CommunityGuidelines() {
             <ul className="list-disc pl-6 text-gray-700 mb-4 space-y-2">
               <li>Focus on positive sharing and constructive dialogue</li>
               <li>Disagree respectfully without being disagreeable</li>
-              <li>Avoid "calling out" or public shaming of individuals</li>
-              <li>Don't engage in or escalate arguments</li>
+              <li>Avoid &quot;calling out&quot; or public shaming of individuals</li>
+              <li>Don&apos;t engage in or escalate arguments</li>
               <li>Report concerning behavior instead of responding with hostility</li>
             </ul>
 

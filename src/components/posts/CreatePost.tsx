@@ -108,11 +108,94 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value
+    const cursorPos = e.target.selectionStart
+
     // Allow unlimited for premium tier (-1), otherwise respect the limit
     if (maxChars === -1 || text.length <= maxChars) {
       setContent(text)
       setCharCount(text.length)
+
+      // Detect @ mention
+      const beforeCursor = text.substring(0, cursorPos)
+      const lastAtSymbol = beforeCursor.lastIndexOf('@')
+
+      if (lastAtSymbol !== -1) {
+        const textAfterAt = text.substring(lastAtSymbol + 1, cursorPos)
+        // Check if there's no space after @ (still typing the mention)
+        if (!textAfterAt.includes(' ') && !textAfterAt.includes('\n')) {
+          setMentionQuery(textAfterAt)
+          setMentionStartPos(lastAtSymbol)
+          setShowMentionAutocomplete(true)
+
+          // Calculate cursor position for dropdown
+          if (textareaRef.current) {
+            const textarea = textareaRef.current
+            const { top, left } = getCaretCoordinates(textarea, cursorPos)
+            setCursorPosition({ top, left })
+          }
+        } else {
+          setShowMentionAutocomplete(false)
+        }
+      } else {
+        setShowMentionAutocomplete(false)
+      }
     }
+  }
+
+  // Helper function to get caret coordinates
+  const getCaretCoordinates = (element: HTMLTextAreaElement, position: number) => {
+    const rect = element.getBoundingClientRect()
+    const div = document.createElement('div')
+    const style = window.getComputedStyle(element)
+
+    div.style.position = 'absolute'
+    div.style.visibility = 'hidden'
+    div.style.whiteSpace = 'pre-wrap'
+    div.style.wordWrap = 'break-word'
+    div.style.font = style.font
+    div.style.padding = style.padding
+    div.style.border = style.border
+    div.style.width = element.offsetWidth + 'px'
+
+    const text = element.value.substring(0, position)
+    div.textContent = text
+
+    document.body.appendChild(div)
+    const span = document.createElement('span')
+    span.textContent = element.value.substring(position) || '.'
+    div.appendChild(span)
+
+    const coordinates = {
+      top: rect.top + span.offsetTop - element.scrollTop,
+      left: rect.left + span.offsetLeft - element.scrollLeft
+    }
+
+    document.body.removeChild(div)
+    return coordinates
+  }
+
+  const handleMentionSelect = (username: string) => {
+    if (mentionStartPos === -1) return
+
+    const beforeMention = content.substring(0, mentionStartPos)
+    const afterCursor = content.substring(textareaRef.current?.selectionStart || content.length)
+    const newContent = beforeMention + '@' + username + ' ' + afterCursor
+
+    setContent(newContent)
+    setCharCount(newContent.length)
+    setShowMentionAutocomplete(false)
+    setMentionQuery('')
+    setMentionStartPos(-1)
+
+    // Set cursor position after the inserted mention
+    setTimeout(() => {
+      if (textareaRef.current) {
+        const newCursorPos = beforeMention.length + username.length + 2
+        textareaRef.current.selectionStart = newCursorPos
+        textareaRef.current.selectionEnd = newCursorPos
+        textareaRef.current.focus()
+      }
+    }, 0)
   }
 
   // Detect URLs in content
@@ -401,13 +484,26 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
             )}
           </Link>
           <div className="flex-1">
-            <textarea
-              value={content}
-              onChange={handleContentChange}
-              placeholder="Share your vegan journey..."
-              className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              rows={3}
-            />
+            <div className="relative">
+              <textarea
+                ref={textareaRef}
+                value={content}
+                onChange={handleContentChange}
+                placeholder="Share your vegan journey..."
+                className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                rows={3}
+              />
+
+              {/* Mention Autocomplete */}
+              {showMentionAutocomplete && (
+                <MentionAutocomplete
+                  searchQuery={mentionQuery}
+                  onSelect={handleMentionSelect}
+                  onClose={() => setShowMentionAutocomplete(false)}
+                  cursorPosition={cursorPosition}
+                />
+              )}
+            </div>
 
             {/* Image Preview */}
             {imageUrls.length > 0 && (

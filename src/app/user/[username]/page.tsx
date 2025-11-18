@@ -14,6 +14,7 @@ import ReportButton from '@/components/moderation/ReportButton'
 import TierBadge from '@/components/ui/TierBadge'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'>
@@ -257,9 +258,11 @@ export default function UserProfilePage() {
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
               {profileUser.avatar_url ? (
-                <img
+                <Image
                   src={profileUser.avatar_url}
                   alt={`${profileUser.username}'s avatar`}
+                  width={80}
+                  height={80}
                   className="h-20 w-20 rounded-full object-cover"
                 />
               ) : (
@@ -280,7 +283,7 @@ export default function UserProfilePage() {
                 {(profileUser as any).subscription_tier && (profileUser as any).subscription_tier !== 'free' && (
                   <TierBadge tier={(profileUser as any).subscription_tier as 'medium' | 'premium'} size="md" />
                 )}
-                {profileUser.is_banned && (
+                {(profileUser as any).is_banned && (
                   <div className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
                     <Ban className="h-4 w-4" />
                     <span>Banned</span>
@@ -412,9 +415,11 @@ export default function UserProfilePage() {
                   <Link key={follow.id} href={`/user/${follow.following_user.username}`}>
                     <div className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       {follow.following_user.avatar_url ? (
-                        <img
+                        <Image
                           src={follow.following_user.avatar_url}
                           alt={`${follow.following_user.username}'s avatar`}
+                          width={32}
+                          height={32}
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
@@ -460,9 +465,11 @@ export default function UserProfilePage() {
                   <Link key={follow.id} href={`/user/${follow.follower_user.username}`}>
                     <div className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       {follow.follower_user.avatar_url ? (
-                        <img
+                        <Image
                           src={follow.follower_user.avatar_url}
                           alt={`${follow.follower_user.username}'s avatar`}
+                          width={32}
+                          height={32}
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (

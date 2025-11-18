@@ -13,11 +13,9 @@ import {
   MapPin,
   BarChart3,
   Headphones,
-  Palette,
   ArrowLeft,
   Loader2,
-  X,
-  Coffee
+  X
 } from 'lucide-react'
 import { 
   SUBSCRIPTION_TIERS, 

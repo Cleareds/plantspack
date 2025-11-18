@@ -537,44 +537,42 @@ function PostCard({ post, onUpdate }: PostCardProps) {
       )}
 
       {/* Actions */}
-      {!isQuotePost && (
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-          <div className="flex items-center space-x-4">
-            <ReactionButtons
-              postId={post.id}
-              onReactionChange={onUpdate}
-              showSignUpModal={(action) => {
-                setSignUpAction('like')
-                setShowSignUpModal(true)
-              }}
-            />
+      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+        <div className="flex items-center space-x-4">
+          <ReactionButtons
+            postId={post.id}
+            onReactionChange={onUpdate}
+            showSignUpModal={(action) => {
+              setSignUpAction('like')
+              setShowSignUpModal(true)
+            }}
+          />
 
-            <button
-              onClick={handleComment}
-              className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-            >
-              <MessageCircle className="h-5 w-5" />
-              <span className="text-sm">{commentCount}</span>
-            </button>
+          <button
+            onClick={handleComment}
+            className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+          >
+            <MessageCircle className="h-5 w-5" />
+            <span className="text-sm">{commentCount}</span>
+          </button>
 
-            <button
-              onClick={handleShare}
-              className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
-            >
-              <Share className="h-5 w-5" />
-              <span className="text-sm">Share</span>
-            </button>
-          </div>
-
-          {!isOwnPost && (
-            <ReportButton
-              reportedType="post"
-              reportedId={post.id}
-              className="px-2 py-1"
-            />
-          )}
+          <button
+            onClick={handleShare}
+            className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
+          >
+            <Share className="h-5 w-5" />
+            <span className="text-sm">Share</span>
+          </button>
         </div>
-      )}
+
+        {!isOwnPost && (
+          <ReportButton
+            reportedType="post"
+            reportedId={post.id}
+            className="px-2 py-1"
+          />
+        )}
+      </div>
 
       {/* Comments Modal */}
       {showComments && (

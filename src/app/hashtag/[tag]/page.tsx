@@ -178,7 +178,7 @@ export default function HashtagPage() {
           {!hasMore && posts.length > 0 && (
             <div className="mt-6 text-center">
               <p className="text-gray-500 text-sm">
-                You've reached the end!
+                You&apos;ve reached the end!
               </p>
             </div>
           )}

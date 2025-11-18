@@ -356,13 +356,24 @@ export default function Feed({onPostCreated}: FeedProps) {
         }
     }, [hasMore, loadingMore, loadMorePosts, posts.length])
 
-    // Initialize feed when auth is ready
+    // Initialize feed when auth is ready OR after a timeout (for guests)
     useEffect(() => {
-        if (!authReady) {
-            return
+        let timeoutId: NodeJS.Timeout
+
+        if (authReady) {
+            // Auth is ready, fetch immediately
+            fetchPosts(false)
+        } else {
+            // Set a timeout to fetch posts anyway after 2 seconds (for guests or slow auth)
+            timeoutId = setTimeout(() => {
+                console.log('Auth taking too long, fetching posts anyway...')
+                fetchPosts(false)
+            }, 2000)
         }
 
-        fetchPosts(false)
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId)
+        }
     }, [authReady, fetchPosts])
 
     // Handle tab change
@@ -419,10 +430,10 @@ export default function Feed({onPostCreated}: FeedProps) {
     return (
         <div className="w-full">
             {/* Feed Controls - Horizontal Layout with Tabs on Left, Sorting on Right */}
-            {user && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-4 py-2.5">
-                    <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
-                        {/* Tabs on the Left */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-4 py-2.5">
+                <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
+                    {/* Tabs on the Left - Only for logged in users */}
+                    {user && (
                         <div className="flex gap-2">
                             <button
                                 onClick={() => handleTabChange('public')}
@@ -445,19 +456,26 @@ export default function Feed({onPostCreated}: FeedProps) {
                                 Friends
                             </button>
                         </div>
+                    )}
 
-                        {/* Sorting on the Right */}
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-600 hidden sm:inline">Sort by:</span>
-                            <FeedSorting
-                                currentSort={sortOption}
-                                onSortChange={setSortOption}
-                                postCount={posts.length}
-                            />
+                    {/* Guest label for non-authenticated users */}
+                    {!user && (
+                        <div className="text-sm font-medium text-gray-700">
+                            Public Feed
                         </div>
+                    )}
+
+                    {/* Sorting on the Right - Always show */}
+                    <div className="flex items-center gap-2 ml-auto">
+                        <span className="text-sm text-gray-600 hidden sm:inline">Sort by:</span>
+                        <FeedSorting
+                            currentSort={sortOption}
+                            onSortChange={setSortOption}
+                            postCount={posts.length}
+                        />
                     </div>
                 </div>
-            )}
+            </div>
 
             {/* New Posts Banner - only show in public feed */}
             {hasNewPosts && activeTab === 'public' && (
