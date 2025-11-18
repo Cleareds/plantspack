@@ -39,7 +39,7 @@ export default function UserStatsCompact({ userId, className = '' }: UserStatsCo
 
       if (error) throw error
 
-      setStats(data)
+      setStats(data as Stats)
     } catch (error) {
       console.error('Error fetching user stats:', error)
     } finally {

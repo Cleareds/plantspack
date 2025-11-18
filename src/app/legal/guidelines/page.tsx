@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 
+/* eslint-disable react/no-unescaped-entities */
 export default function CommunityGuidelines() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">

@@ -366,15 +366,27 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         throw new Error('Post created but ID not returned')
       }
 
-      // Process hashtags (create and link to post)
+      // Process hashtags via API endpoint (uses service role)
       if (hashtags.length > 0) {
         try {
-          const hashtagIds = await getOrCreateHashtags(hashtags)
-          if (hashtagIds.length > 0) {
-            await linkHashtagsToPost(createdPost.id, hashtagIds)
+          const response = await fetch('/api/posts/hashtags', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              postId: createdPost.id,
+              hashtags: hashtags
+            })
+          })
+
+          if (!response.ok) {
+            const errorData = await response.json()
+            console.error('[Hashtags] API error:', errorData)
+          } else {
+            const result = await response.json()
+            console.log('[Hashtags] Successfully processed:', result)
           }
         } catch (hashtagError) {
-          console.error('Error processing hashtags:', hashtagError)
+          console.error('[Hashtags] Error processing hashtags:', hashtagError)
           // Don't fail the post creation if hashtag processing fails
         }
       }

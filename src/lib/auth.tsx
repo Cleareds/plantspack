@@ -5,7 +5,7 @@ import { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { Tables } from './supabase'
 
-type UserProfile = Tables<'users'>
+type UserProfile = Tables<'users'> & { role?: string }
 
 interface AuthContextType {
   user: User | null
@@ -87,12 +87,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const { data, error } = await supabase
           .from('users')
-          .select('*')
+          .select('*, role')
           .eq('id', userId)
           .single()
 
         if (!error && data) {
-          setProfile(data)
+          setProfile(data as any)
         }
       } catch (error) {
         console.error('Profile fetch error:', error)

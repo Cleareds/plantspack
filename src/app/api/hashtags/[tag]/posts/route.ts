@@ -3,10 +3,10 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { tag: string } }
+  { params }: { params: Promise<{ tag: string }> }
 ) {
+  const { tag } = await params
   try {
-    const tag = params.tag
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
@@ -95,7 +95,7 @@ export async function GET(
     // Filter out deleted posts and extract post data
     const filteredPosts = postHashtags
       ?.map(item => item.posts)
-      .filter(post => post && post.deleted_at === null && post.privacy === 'public')
+      .filter((post: any) => post && post.deleted_at === null && post.privacy === 'public')
       .filter(Boolean) || []
 
     // Count actual visible posts for this hashtag

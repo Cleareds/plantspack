@@ -32,6 +32,8 @@ type Post = Tables<'posts'> & {
       subscription_tier?: 'free' | 'medium' | 'premium'
     }
   }) | null
+  is_sensitive?: boolean
+  content_warnings?: string[] | null
 }
 
 interface PostCardProps {
