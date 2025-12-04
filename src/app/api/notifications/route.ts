@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Build query
+    // Build query - get notifications data
     let query = supabase
       .from('notifications')
       .select(`
@@ -41,16 +41,24 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    // Get unread count
-    const { count } = await supabase
-      .from('notifications')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', session.user.id)
-      .eq('read', false)
+    // Get unread count with same query (optimized - single query)
+    // If we're already fetching unread only and limit >= results, use that count
+    let unreadCount = 0
+    if (unreadOnly && data && data.length < limit) {
+      unreadCount = data.length
+    } else {
+      // Otherwise, do a separate count (only when needed)
+      const { count } = await supabase
+        .from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', session.user.id)
+        .eq('read', false)
+      unreadCount = count || 0
+    }
 
     return NextResponse.json({
       notifications: data || [],
-      unreadCount: count || 0
+      unreadCount
     })
   } catch (error) {
     console.error('Error fetching notifications:', error)

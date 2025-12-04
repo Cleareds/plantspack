@@ -208,7 +208,7 @@ export default function ImageUploader({
         const { data, error } = await supabase.storage
           .from('post-images')
           .upload(fileName, imageFile.file, {
-            cacheControl: '3600',
+            cacheControl: 'public, max-age=2592000, immutable', // 30 days - filenames are unique
             upsert: false
           })
 

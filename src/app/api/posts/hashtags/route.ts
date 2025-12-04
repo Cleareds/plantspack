@@ -48,45 +48,59 @@ export async function POST(request: NextRequest) {
     )
 
     const hashtagIds: string[] = []
+    const normalizedTags = hashtags.map(tag => tag.toLowerCase())
 
-    // Create or get each hashtag
-    for (const tag of hashtags) {
-      const normalizedTag = tag.toLowerCase()
+    // Batch query: Get all existing hashtags in one query
+    const { data: existingHashtags } = await supabase
+      .from('hashtags')
+      .select('id, normalized_tag')
+      .in('normalized_tag', normalizedTags)
 
-      // Try to get existing hashtag
-      const { data: existing } = await supabase
-        .from('hashtags')
-        .select('id')
-        .eq('normalized_tag', normalizedTag)
-        .single()
+    const existingTagMap = new Map(
+      (existingHashtags || []).map(h => [h.normalized_tag, h.id])
+    )
 
-      if (existing) {
-        hashtagIds.push(existing.id)
-        // Update timestamp (usage_count is managed by database triggers)
-        await supabase
-          .from('hashtags')
-          .update({
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', existing.id)
+    // Separate into existing and new hashtags
+    const existingIds: string[] = []
+    const newTags: string[] = []
+
+    for (const tag of normalizedTags) {
+      if (existingTagMap.has(tag)) {
+        existingIds.push(existingTagMap.get(tag)!)
       } else {
-        // Create new hashtag
-        const { data: created, error: createError } = await supabase
-          .from('hashtags')
-          .insert({
-            tag: normalizedTag,  // Use normalized tag for consistency
-            normalized_tag: normalizedTag,
-            usage_count: 1
-          })
-          .select('id')
-          .single()
+        newTags.push(tag)
+      }
+    }
 
-        if (created && !createError) {
-          hashtagIds.push(created.id)
-          console.log(`[Hashtags] Created new hashtag: ${normalizedTag}`)
-        } else {
-          console.error(`[Hashtags] Error creating hashtag ${normalizedTag}:`, createError)
-        }
+    // Add existing hashtag IDs
+    hashtagIds.push(...existingIds)
+
+    // Batch update timestamps for existing hashtags
+    if (existingIds.length > 0) {
+      await supabase
+        .from('hashtags')
+        .update({ updated_at: new Date().toISOString() })
+        .in('id', existingIds)
+    }
+
+    // Batch create new hashtags
+    if (newTags.length > 0) {
+      const newHashtagsData = newTags.map(tag => ({
+        tag,
+        normalized_tag: tag,
+        usage_count: 1
+      }))
+
+      const { data: created, error: createError } = await supabase
+        .from('hashtags')
+        .insert(newHashtagsData)
+        .select('id')
+
+      if (created && !createError) {
+        hashtagIds.push(...created.map(h => h.id))
+        console.log(`[Hashtags] Created ${created.length} new hashtags:`, newTags)
+      } else {
+        console.error(`[Hashtags] Error creating hashtags:`, createError)
       }
     }
 

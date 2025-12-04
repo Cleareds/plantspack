@@ -70,6 +70,7 @@ export default function ImageSlider({
               <img
                 src={image}
                 alt={`Image ${index + 1}`}
+                loading="lazy"
                 onLoad={() => handleImageLoad(index)}
                 className={`w-full h-full object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
@@ -102,6 +103,7 @@ export default function ImageSlider({
               <img
                 src={image}
                 alt={`Image ${index + 1}`}
+                loading="lazy"
                 onLoad={() => handleImageLoad(index)}
                 className={`w-full h-full object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'

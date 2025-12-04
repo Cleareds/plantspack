@@ -26,8 +26,8 @@ export async function GET(
           avatar_url,
           subscription_tier
         ),
-        post_likes (id, user_id),
-        comments (id)
+        post_likes!limit(10) (id, user_id),
+        comments!limit(5) (id)
       `)
       .eq('id', id)
       .is('deleted_at', null)
@@ -149,6 +149,22 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Fetch post data to get images/videos before deletion
+    const { data: post } = await supabase
+      .from('posts')
+      .select('images, video_urls, user_id')
+      .eq('id', id)
+      .single()
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+    }
+
+    // Verify ownership
+    if (post.user_id !== user.id) {
+      return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
+    }
+
     // Use RPC function to delete post (bypasses RLS issues with WITH CHECK clause)
     const { data: rpcResult, error: rpcError } = await supabase
       .rpc('delete_post', { post_id: id })
@@ -166,6 +182,44 @@ export async function DELETE(
                         errorMsg === 'Post not found' ? 404 :
                         errorMsg === 'Post already deleted' ? 410 : 400
       return NextResponse.json({ error: errorMsg }, { status: statusCode })
+    }
+
+    // Delete images from storage (async, non-blocking)
+    if (post.images && post.images.length > 0) {
+      const imagePaths = post.images.map((url: string) => {
+        // Extract path from full URL: https://...supabase.co/storage/v1/object/public/post-images/PATH
+        const match = url.match(/\/post-images\/(.+)$/)
+        return match ? match[1] : null
+      }).filter(Boolean)
+
+      if (imagePaths.length > 0) {
+        supabase.storage
+          .from('post-images')
+          .remove(imagePaths)
+          .then(({ error }) => {
+            if (error) console.error('Error deleting post images:', error)
+            else console.log(`Deleted ${imagePaths.length} images for post ${id}`)
+          })
+      }
+    }
+
+    // Delete videos from storage (async, non-blocking)
+    if (post.video_urls && post.video_urls.length > 0) {
+      const videoPaths = post.video_urls.map((url: string) => {
+        // Extract path from full URL
+        const match = url.match(/\/media\/(.+)$/)
+        return match ? match[1] : null
+      }).filter(Boolean)
+
+      if (videoPaths.length > 0) {
+        supabase.storage
+          .from('media')
+          .remove(videoPaths)
+          .then(({ error }) => {
+            if (error) console.error('Error deleting post videos:', error)
+            else console.log(`Deleted ${videoPaths.length} videos for post ${id}`)
+          })
+      }
     }
 
     return NextResponse.json({ success: true })

@@ -35,7 +35,7 @@ export default function VideoUploader({
     const { data, error } = await supabase.storage
       .from('media')
       .upload(filePath, file, {
-        cacheControl: '3600',
+        cacheControl: 'public, max-age=2592000, immutable', // 30 days - filenames are unique
         upsert: false
       })
 

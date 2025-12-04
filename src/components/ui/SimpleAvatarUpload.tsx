@@ -48,7 +48,7 @@ export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, clas
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, file, {
-          cacheControl: '3600',
+          cacheControl: 'public, max-age=2592000, immutable', // 30 days - filenames are unique
           upsert: false
         })
 
