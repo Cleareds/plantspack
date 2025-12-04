@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { User, Edit, Crown, Settings } from 'lucide-react'
+import { User, Edit, Crown, Settings, LogOut } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
 
 interface ProfileSidebarProps {
   username: string
@@ -10,6 +11,11 @@ interface ProfileSidebarProps {
 
 export default function ProfileSidebar({ username }: ProfileSidebarProps) {
   const pathname = usePathname()
+  const { signOut } = useAuth()
+
+  const handleSignOut = async () => {
+    await signOut()
+  }
 
   const navItems = [
     {
@@ -62,6 +68,17 @@ export default function ProfileSidebar({ username }: ProfileSidebarProps) {
           )
         })}
       </nav>
+
+      {/* Sign Out Button */}
+      <div className="mt-4 pt-4 border-t border-gray-200">
+        <button
+          onClick={handleSignOut}
+          className="flex items-center space-x-3 px-3 py-2 rounded-md text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors w-full"
+        >
+          <LogOut className="h-4 w-4" />
+          <span className="text-sm font-medium">Sign Out</span>
+        </button>
+      </div>
     </div>
   )
 }

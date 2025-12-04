@@ -4,21 +4,16 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/lib/auth'
-import { Menu, X, Home, Map, User, LogOut, Crown } from 'lucide-react'
+import { Menu, X, Home, Map, User, Crown } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 import NotificationBell from '@/components/notifications/NotificationBell'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user, profile, signOut } = useAuth()
-  
+  const { user, profile } = useAuth()
+
   // Get username from profile or fall back to user metadata
   const username = profile?.username || user?.user_metadata?.username
-
-  const handleSignOut = async () => {
-    await signOut()
-    setIsMenuOpen(false)
-  }
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -82,13 +77,6 @@ export default function Header() {
                   <User className="h-5 w-5" />
                   <span>Profile</span>
                 </Link>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-red-600 transition-colors"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Sign Out</span>
-                </button>
               </>
             )}
             {!user && (
@@ -158,13 +146,6 @@ export default function Header() {
                   <User className="h-5 w-5" />
                   <span>Profile</span>
                 </Link>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:text-red-600 hover:bg-gray-50 w-full text-left"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Sign Out</span>
-                </button>
               </>
             )}
             {!user && (
