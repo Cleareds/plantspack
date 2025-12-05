@@ -166,7 +166,7 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
           {!loading && packs.length === 0 && (
             <div className="text-center py-8">
               <Package className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 mb-2">You don't manage any packs yet</p>
+              <p className="text-gray-600 mb-2">You don&apos;t manage any packs yet</p>
               <p className="text-sm text-gray-500">
                 Create a pack to start curating content
               </p>

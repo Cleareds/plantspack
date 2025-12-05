@@ -150,7 +150,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">You don't have permission to edit this pack</p>
+          <p className="text-gray-600 mb-4">You don&apos;t have permission to edit this pack</p>
           <Link
             href={`/packs/${id}`}
             className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium"

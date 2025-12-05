@@ -5,10 +5,10 @@ import { useAuth } from '@/lib/auth'
 import { PackWithStats, PackCategory } from '@/types/packs'
 import PackCard from '@/components/packs/PackCard'
 import Link from 'next/link'
-import { Plus, Search, Filter } from 'lucide-react'
+import { Plus, Search, Crown } from 'lucide-react'
 
 export default function PacksPage() {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const [packs, setPacks] = useState<PackWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -50,6 +50,10 @@ export default function PacksPage() {
     fetchPacks()
   }, [search, category])
 
+  // Check if user can create packs (not on free tier)
+  const subscriptionTier = (profile as any)?.subscription_tier
+  const canCreatePacks = subscriptionTier && subscriptionTier !== 'free'
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -65,13 +69,39 @@ export default function PacksPage() {
           </div>
 
           {user && (
-            <Link
-              href="/packs/create"
-              className="mt-4 md:mt-0 inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-            >
-              <Plus className="h-5 w-5" />
-              <span>Create Pack</span>
-            </Link>
+            <div className="mt-4 md:mt-0">
+              {canCreatePacks ? (
+                <Link
+                  href="/packs/create"
+                  className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Create Pack</span>
+                </Link>
+              ) : (
+                <div className="flex flex-col items-end gap-2">
+                  <button
+                    disabled
+                    className="inline-flex items-center gap-2 bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded-md font-medium opacity-60"
+                  >
+                    <Plus className="h-5 w-5" />
+                    <span>Create Pack</span>
+                  </button>
+                  <div className="bg-blue-50 border border-blue-200 rounded-md px-4 py-2 max-w-xs">
+                    <p className="text-sm text-blue-900 flex items-center gap-2">
+                      <Crown className="h-4 w-4 text-blue-600" />
+                      <span>
+                        Upgrade to{' '}
+                        <Link href="/support" className="font-semibold underline hover:text-blue-700">
+                          Mid or Premium
+                        </Link>
+                        {' '}to create packs
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
@@ -140,13 +170,39 @@ export default function PacksPage() {
                 : 'Be the first to create a pack!'}
             </p>
             {user && (
-              <Link
-                href="/packs/create"
-                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-              >
-                <Plus className="h-5 w-5" />
-                <span>Create Pack</span>
-              </Link>
+              <>
+                {canCreatePacks ? (
+                  <Link
+                    href="/packs/create"
+                    className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                  >
+                    <Plus className="h-5 w-5" />
+                    <span>Create Pack</span>
+                  </Link>
+                ) : (
+                  <div className="flex flex-col items-center gap-3">
+                    <button
+                      disabled
+                      className="inline-flex items-center gap-2 bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded-md font-medium opacity-60"
+                    >
+                      <Plus className="h-5 w-5" />
+                      <span>Create Pack</span>
+                    </button>
+                    <div className="bg-blue-50 border border-blue-200 rounded-md px-4 py-3 max-w-md">
+                      <p className="text-sm text-blue-900 flex items-center justify-center gap-2">
+                        <Crown className="h-4 w-4 text-blue-600" />
+                        <span>
+                          Upgrade to{' '}
+                          <Link href="/support" className="font-semibold underline hover:text-blue-700">
+                            Mid or Premium
+                          </Link>
+                          {' '}to create packs
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

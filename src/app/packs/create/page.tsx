@@ -5,11 +5,11 @@ import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { PackCategory } from '@/types/packs'
 import SimpleAvatarUpload from '@/components/ui/SimpleAvatarUpload'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, Loader2, Crown } from 'lucide-react'
 import Link from 'next/link'
 
 export default function CreatePackPage() {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -83,6 +83,44 @@ export default function CreatePackPage() {
           >
             Sign In
           </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user is on free tier
+  const subscriptionTier = (profile as any)?.subscription_tier
+  const isFreeTier = !subscriptionTier || subscriptionTier === 'free'
+
+  if (isFreeTier) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md mx-auto px-4">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Crown className="h-8 w-8 text-blue-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Upgrade Required</h2>
+            <p className="text-gray-600 mb-6">
+              Creating packs is available for Mid and Premium tier subscribers. Upgrade your account to start curating amazing content collections!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/support"
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors"
+              >
+                <Crown className="h-5 w-5" />
+                <span>View Plans</span>
+              </Link>
+              <Link
+                href="/packs"
+                className="inline-flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-md font-medium transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5" />
+                <span>Back to Packs</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     )

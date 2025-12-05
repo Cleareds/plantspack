@@ -2,10 +2,9 @@ import {withSentryConfig} from '@sentry/nextjs';
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Temporarily ignore ESLint warnings during build
-  // TODO: Fix ESLint warnings and re-enable
+  // ESLint enabled - all warnings should be fixed
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
     ignoreBuildErrors: false,

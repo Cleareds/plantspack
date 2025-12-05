@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { supabase } from '@/lib/supabase'
 
-// Extended Stripe subscription type to include period fields
-interface ExtendedStripeSubscription extends Stripe.Subscription {
-  current_period_start: number
-  current_period_end: number
-}
-
 const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-06-30.basil',
 }) : null
