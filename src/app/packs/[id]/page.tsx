@@ -164,8 +164,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
                 <PostCard
                   key={packPost.id}
                   post={packPost.posts as any}
-                  onDelete={() => fetchPosts()}
-                  currentUserId={user?.id}
+                  onUpdate={() => fetchPosts()}
                 />
               ))}
             </div>

@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
+import Image from 'next/image'
 import {
   Search,
   Trash2,
@@ -40,11 +41,7 @@ export default function CommentsManagement() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showDeleted, setShowDeleted] = useState(false)
 
-  useEffect(() => {
-    loadComments()
-  }, [currentPage, searchQuery, showDeleted])
-
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     setLoading(true)
     try {
       // Build query
@@ -80,7 +77,11 @@ export default function CommentsManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentPage, searchQuery, showDeleted])
+
+  useEffect(() => {
+    loadComments()
+  }, [loadComments])
 
   const handleDeleteComment = async (commentId: string, isDeleted: boolean) => {
     const action = isDeleted ? 'restore' : 'delete'
@@ -204,9 +205,11 @@ export default function CommentsManagement() {
                 {/* User Avatar */}
                 <div className="flex-shrink-0">
                   {comment.users?.avatar_url ? (
-                    <img
+                    <Image
                       src={comment.users.avatar_url}
                       alt={comment.users.username}
+                      width={40}
+                      height={40}
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (

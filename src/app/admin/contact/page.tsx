@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import {
@@ -45,11 +45,7 @@ export default function ContactAdminPage() {
   const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null)
   const [adminNotes, setAdminNotes] = useState('')
 
-  useEffect(() => {
-    loadContacts()
-  }, [currentPage, searchQuery, filterStatus])
-
-  const loadContacts = async () => {
+  const loadContacts = useCallback(async () => {
     setLoading(true)
     try {
       let query = supabase
@@ -79,7 +75,11 @@ export default function ContactAdminPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentPage, searchQuery, filterStatus])
+
+  useEffect(() => {
+    loadContacts()
+  }, [loadContacts])
 
   const handleUpdateStatus = async (contactId: string, newStatus: string) => {
     try {

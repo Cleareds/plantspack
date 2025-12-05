@@ -242,9 +242,8 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Banner Image</label>
             <SimpleAvatarUpload
-              currentAvatarUrl={formData.banner_url}
-              onAvatarChange={(url) => setFormData({ ...formData, banner_url: url })}
-              aspectRatio="banner"
+              currentAvatar={formData.banner_url}
+              onAvatarUpdate={(url) => setFormData({ ...formData, banner_url: url })}
             />
           </div>
 

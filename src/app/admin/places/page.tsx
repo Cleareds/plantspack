@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
   Search,
@@ -12,7 +12,6 @@ import {
   AlertCircle,
   MapPin,
   Star,
-  Edit,
   Plus,
   X
 } from 'lucide-react'
@@ -53,11 +52,7 @@ export default function PlacesManagement() {
   })
   const [creating, setCreating] = useState(false)
 
-  useEffect(() => {
-    loadPlaces()
-  }, [currentPage, searchQuery, filterCategory])
-
-  const loadPlaces = async () => {
+  const loadPlaces = useCallback(async () => {
     setLoading(true)
     try {
       let query = supabase
@@ -87,7 +82,11 @@ export default function PlacesManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentPage, searchQuery, filterCategory])
+
+  useEffect(() => {
+    loadPlaces()
+  }, [loadPlaces])
 
   const handleDeletePlace = async (placeId: string, placeName: string) => {
     if (!confirm(`Are you sure you want to delete "${placeName}"?`)) return

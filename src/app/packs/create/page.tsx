@@ -184,9 +184,8 @@ export default function CreatePackPage() {
               Banner Image
             </label>
             <SimpleAvatarUpload
-              currentAvatarUrl={formData.banner_url}
-              onAvatarChange={(url) => setFormData({ ...formData, banner_url: url })}
-              aspectRatio="banner"
+              currentAvatar={formData.banner_url}
+              onAvatarUpdate={(url) => setFormData({ ...formData, banner_url: url })}
             />
             <p className="text-sm text-gray-500 mt-1">Recommended: 1200x400px</p>
           </div>

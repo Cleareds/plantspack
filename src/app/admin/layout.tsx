@@ -25,7 +25,6 @@ export default function AdminLayout({
 }) {
   const { user, profile, authReady } = useAuth()
   const router = useRouter()
-  const [loading, setLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -44,7 +43,6 @@ export default function AdminLayout({
       } else {
         console.log('Admin access granted. User role:', profile?.role)
         setIsAuthorized(true)
-        setLoading(false)
       }
     } else if (authReady && !user) {
       // No user logged in
