@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2, ExternalLink } from 'lucide-react'
+import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2, ExternalLink, Package } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
@@ -20,6 +20,7 @@ import { usePostActions } from '@/hooks/usePostActions'
 import ReportButton from '../moderation/ReportButton'
 import SensitiveContentWarning from '../moderation/SensitiveContentWarning'
 import ReactionButtons from '../reactions/ReactionButtons'
+import AddToPackModal from '../packs/AddToPackModal'
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {
@@ -54,12 +55,15 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
   const [showMenu, setShowMenu] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showSignUpModal, setShowSignUpModal] = useState(false)
+  const [showAddToPack, setShowAddToPack] = useState(false)
   const [signUpAction, setSignUpAction] = useState<'like' | 'comment' | 'share'>('like')
   const menuRef = useRef<HTMLDivElement>(null)
   const { user } = useAuth()
   const { deletePost, loading: deleting } = usePostActions()
 
   const isOwnPost = user?.id === post.user_id
+  const isPublicPost = post.privacy === 'public'
+  const shouldShowMenu = user && (isOwnPost || isPublicPost)
 
   useEffect(() => {
     if (user && post.post_likes) {
@@ -255,7 +259,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
             </div>
             <div className="flex items-center space-x-2">
               <FollowButton userId={post.users.id} initialIsFollowing={isFollowing} />
-              {isOwnPost && (
+              {shouldShowMenu && (
                 <div ref={menuRef} className="relative">
                   <button
                     onClick={() => setShowMenu(!showMenu)}
@@ -267,26 +271,42 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   {/* Dropdown Menu */}
                   {showMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
-                      <button
-                        onClick={() => {
-                          setShowEdit(true)
-                          setShowMenu(false)
-                        }}
-                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span>Edit post</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowDeleteConfirm(true)
-                          setShowMenu(false)
-                        }}
-                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span>Delete post</span>
-                      </button>
+                      {isPublicPost && (
+                        <button
+                          onClick={() => {
+                            setShowAddToPack(true)
+                            setShowMenu(false)
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                        >
+                          <Package className="h-4 w-4" />
+                          <span>Add to Pack</span>
+                        </button>
+                      )}
+                      {isOwnPost && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setShowEdit(true)
+                              setShowMenu(false)
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                          >
+                            <Edit className="h-4 w-4" />
+                            <span>Edit post</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowDeleteConfirm(true)
+                              setShowMenu(false)
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span>Delete post</span>
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -427,7 +447,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
             </div>
             <div className="flex items-center space-x-2">
               <FollowButton userId={post.users.id} initialIsFollowing={isFollowing} />
-              {isOwnPost && (
+              {shouldShowMenu && (
                 <div ref={menuRef} className="relative">
                   <button
                     onClick={() => setShowMenu(!showMenu)}
@@ -439,26 +459,42 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   {/* Dropdown Menu */}
                   {showMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
-                      <button
-                        onClick={() => {
-                          setShowEdit(true)
-                          setShowMenu(false)
-                        }}
-                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span>Edit post</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowDeleteConfirm(true)
-                          setShowMenu(false)
-                        }}
-                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span>Delete post</span>
-                      </button>
+                      {isPublicPost && (
+                        <button
+                          onClick={() => {
+                            setShowAddToPack(true)
+                            setShowMenu(false)
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                        >
+                          <Package className="h-4 w-4" />
+                          <span>Add to Pack</span>
+                        </button>
+                      )}
+                      {isOwnPost && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setShowEdit(true)
+                              setShowMenu(false)
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                          >
+                            <Edit className="h-4 w-4" />
+                            <span>Edit post</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowDeleteConfirm(true)
+                              setShowMenu(false)
+                            }}
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span>Delete post</span>
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -639,6 +675,16 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
           </div>
         </div>
       )}
+
+      {/* Add to Pack Modal */}
+      <AddToPackModal
+        postId={post.id}
+        isOpen={showAddToPack}
+        onClose={() => setShowAddToPack(false)}
+        onSuccess={() => {
+          // Optionally refresh something or show a notification
+        }}
+      />
     </div>
   )
 }
