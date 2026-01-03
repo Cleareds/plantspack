@@ -89,10 +89,70 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .from('users')
           .select('*, role')
           .eq('id', userId)
-          .single()
+          .maybeSingle()
 
         if (!error && data) {
           setProfile(data as any)
+        } else if (!data) {
+          // Profile doesn't exist, try to create it
+          console.log('Profile not found, attempting to create one...')
+
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            // Extract user data from OAuth metadata or auth user
+            const userMetadata = user.user_metadata || {}
+            const email = user.email || ''
+
+            // Generate username from email or OAuth data
+            let username = userMetadata.preferred_username ||
+                          userMetadata.user_name ||
+                          userMetadata.username ||
+                          email.split('@')[0] ||
+                          `user_${user.id.slice(0, 8)}`
+
+            // Make username unique
+            let finalUsername = username
+            let counter = 1
+            let usernameExists = true
+
+            while (usernameExists && counter < 100) {
+              const { data: existingUser } = await supabase
+                .from('users')
+                .select('username')
+                .eq('username', finalUsername)
+                .maybeSingle()
+
+              if (!existingUser) {
+                usernameExists = false
+              } else {
+                finalUsername = `${username}${counter}`
+                counter++
+              }
+            }
+
+            // Create profile
+            const { data: newProfile, error: createError } = await supabase
+              .from('users')
+              .insert({
+                id: user.id,
+                email: email,
+                username: finalUsername,
+                first_name: userMetadata.given_name || userMetadata.first_name || '',
+                last_name: userMetadata.family_name || userMetadata.last_name || '',
+                full_name: userMetadata.full_name || userMetadata.name || '',
+                avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
+                bio: '',
+              })
+              .select()
+              .single()
+
+            if (!createError && newProfile) {
+              console.log('Profile created successfully:', finalUsername)
+              setProfile(newProfile as any)
+            } else {
+              console.error('Failed to create profile:', createError)
+            }
+          }
         }
       } catch (error) {
         console.error('Profile fetch error:', error)
