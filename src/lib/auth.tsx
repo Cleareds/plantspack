@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { Tables } from './supabase'
@@ -32,6 +32,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [initialized, setInitialized] = useState(false)
   const [authReady, setAuthReady] = useState(false)
+
+  // Guards to prevent duplicate profile creation
+  const profileCreationInProgress = useRef(false)
+  const profileCache = useRef<Map<string, UserProfile>>(new Map())
 
   useEffect(() => {
     let isMounted = true // Prevent state updates if component unmounts
@@ -85,6 +89,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const loadUserProfile = async (userId: string) => {
       try {
+        // Check cache first
+        const cached = profileCache.current.get(userId)
+        if (cached) {
+          setProfile(cached as any)
+          return
+        }
+
         const { data, error } = await supabase
           .from('users')
           .select('*, role')
@@ -92,9 +103,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .maybeSingle()
 
         if (!error && data) {
+          profileCache.current.set(userId, data as any)
           setProfile(data as any)
-        } else if (!data) {
-          // Profile doesn't exist, try to create it via API route
+        } else if (!data && !profileCreationInProgress.current) {
+          // Profile doesn't exist and not already creating
+          profileCreationInProgress.current = true
           console.log('Profile not found, attempting to create one...')
 
           try {
@@ -108,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (response.ok) {
               const result = await response.json()
               if (result.profile) {
+                profileCache.current.set(userId, result.profile as any)
                 setProfile(result.profile as any)
                 console.log('Profile created successfully:', result.profile.username)
               }
@@ -117,10 +131,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           } catch (fetchError) {
             console.error('Error calling create-profile API:', fetchError)
+          } finally {
+            profileCreationInProgress.current = false
           }
         }
       } catch (error) {
         console.error('Profile fetch error:', error)
+        profileCreationInProgress.current = false
       }
     }
 

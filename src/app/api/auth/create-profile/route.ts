@@ -84,6 +84,22 @@ export async function POST() {
       .single()
 
     if (createError) {
+      // If profile already exists (duplicate key error), fetch and return it
+      if (createError.code === '23505') {
+        const { data: existingProfile } = await adminClient
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+
+        if (existingProfile) {
+          return NextResponse.json(
+            { message: 'Profile already exists', profile: existingProfile },
+            { status: 200 }
+          )
+        }
+      }
+
       console.error('Error creating profile:', createError)
       return NextResponse.json(
         { error: 'Failed to create profile', details: createError.message },
