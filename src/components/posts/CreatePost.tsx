@@ -707,7 +707,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                     <span className="text-sm">Location</span>
                   </button>
                 )}
-                
+                </div>
+                <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center space-x-2">
                   <label className="flex items-center space-x-1 cursor-pointer">
                     <input
