@@ -56,15 +56,17 @@ export async function GET(request: NextRequest) {
           }
 
           // Create user profile using admin client to bypass RLS
+          const fullName = userMetadata.full_name || userMetadata.name || ''
+          const nameParts = fullName.split(' ')
+
           const { error: createError } = await adminClient
             .from('users')
             .insert({
               id: data.user.id,
               email: email,
               username: finalUsername,
-              first_name: userMetadata.given_name || userMetadata.first_name || '',
-              last_name: userMetadata.family_name || userMetadata.last_name || '',
-              full_name: userMetadata.full_name || userMetadata.name || '',
+              first_name: userMetadata.given_name || userMetadata.first_name || nameParts[0] || '',
+              last_name: userMetadata.family_name || userMetadata.last_name || nameParts.slice(1).join(' ') || '',
               avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
               bio: '',
             })
