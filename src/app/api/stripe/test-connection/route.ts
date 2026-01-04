@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
+// Force Node.js runtime (not Edge)
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const stripe = process.env.STRIPE_SECRET_KEY
@@ -70,10 +74,22 @@ export async function GET() {
       }
     })
   } catch (error) {
+    console.error('Stripe test error:', error)
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-      keyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 15) + '...'
+      errorType: error?.constructor?.name,
+      errorDetails: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack?.split('\n').slice(0, 3),
+        cause: error.cause
+      } : null,
+      keyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 15) + '...',
+      envVars: {
+        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ? 'Set (' + process.env.STRIPE_SECRET_KEY.substring(0, 20) + '...)' : 'Missing',
+        STRIPE_MEDIUM_PRICE_ID: process.env.STRIPE_MEDIUM_PRICE_ID || 'Missing',
+        STRIPE_PREMIUM_PRICE_ID: process.env.STRIPE_PREMIUM_PRICE_ID || 'Missing',
+      }
     })
   }
 }
