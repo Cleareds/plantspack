@@ -42,11 +42,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create portal session
+    // Create portal session with PlantsPack configuration
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripe_customer_id,
       return_url: `${baseUrl}/settings`,
+      // Use the PlantsPack portal configuration
+      configuration: 'bpc_1Slz6vAqP7U8Au3xYpLZ2VX9',
     })
 
     return NextResponse.json({ url: session.url })
