@@ -40,7 +40,7 @@ async function checkContentModeration(content: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { content, imageUrl } = await request.json()
+    const { content, imageUrl, antiVeganDetection } = await request.json()
 
     // Get user session
     const supabase = await createClient()
@@ -68,8 +68,12 @@ export async function POST(request: NextRequest) {
       imageModeration = { flagged: false, unsafe: false }
     }
 
+    // Check for anti-vegan content (passed from client)
+    const hasAntiVeganContent = antiVeganDetection?.detected || false
+    const antiVeganSeverity = antiVeganDetection?.severity || 'none'
+
     // Combine results
-    const isFlagged = textModeration.flagged || imageModeration.flagged
+    const isFlagged = textModeration.flagged || imageModeration.flagged || hasAntiVeganContent
 
     // Determine severity and warnings
     const warnings: string[] = []
@@ -81,13 +85,36 @@ export async function POST(request: NextRequest) {
     if (categories.violence) warnings.push('violence')
     if (categories['self-harm']) warnings.push('self-harm content')
 
+    // Add anti-vegan warning
+    if (hasAntiVeganContent) {
+      warnings.push('anti-vegan content')
+    }
+
+    // Determine recommendation based on all checks
+    let recommendation: 'allow' | 'content_warning' | 'block' = 'allow'
+
+    // Block for severe violations
+    if (categories['violence/graphic'] || categories['self-harm'] || categories['sexual/minors']) {
+      recommendation = 'block'
+    }
+    // Block for high/medium severity anti-vegan content
+    else if (hasAntiVeganContent && (antiVeganSeverity === 'high' || antiVeganSeverity === 'medium')) {
+      recommendation = 'block'
+    }
+    // Content warning for other flagged content
+    else if (isFlagged) {
+      recommendation = 'content_warning'
+    }
+
     return NextResponse.json({
       flagged: isFlagged,
       warnings,
       categories: textModeration.categories,
       categoryScores: textModeration.categoryScores,
-      recommendation: isFlagged ? 'content_warning' : 'allow',
-      imageModeration
+      recommendation,
+      imageModeration,
+      antiVeganContent: hasAntiVeganContent,
+      antiVeganMatches: antiVeganDetection?.matches || []
     })
   } catch (error) {
     console.error('Error in moderation check:', error)

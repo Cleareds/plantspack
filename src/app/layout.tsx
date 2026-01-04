@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import ClientProviders from "@/components/providers/ClientProviders";
 import ConditionalHeader from "@/components/layout/ConditionalHeader";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import PageViewTracker from "@/components/analytics/PageViewTracker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +37,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased bg-gray-50`}>
+        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <PageViewTracker />
+        </Suspense>
         <ClientProviders>
           <ConditionalHeader />
           <main className="min-h-screen">

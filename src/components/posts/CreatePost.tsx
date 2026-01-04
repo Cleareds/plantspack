@@ -303,6 +303,14 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
 
         // Block content if it violates serious policies
         if (shouldBlockContent(moderationResult)) {
+          // Provide specific error message for anti-vegan content
+          if (moderationResult.antiVeganContent) {
+            const matches = moderationResult.antiVeganMatches?.slice(0, 3).join(', ') || 'content promoting animal products'
+            throw new Error(
+              `This is a vegan platform. Posts promoting or celebrating animal products are not allowed. Detected: "${matches}". ` +
+              'Please share content that aligns with our vegan community values.'
+            )
+          }
           throw new Error('This content violates our community guidelines and cannot be posted. Please review our community standards.')
         }
 
