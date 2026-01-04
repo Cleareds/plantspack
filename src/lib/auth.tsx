@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const email = user.email || ''
 
             // Generate username from email or OAuth data
-            let username = userMetadata.preferred_username ||
+            const username = userMetadata.preferred_username ||
                           userMetadata.user_name ||
                           userMetadata.username ||
                           email.split('@')[0] ||

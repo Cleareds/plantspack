@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
           const email = data.user.email || ''
 
           // Generate username from email or OAuth data
-          let username = userMetadata.preferred_username ||
+          const username = userMetadata.preferred_username ||
                         userMetadata.user_name ||
                         userMetadata.username ||
                         email.split('@')[0]
