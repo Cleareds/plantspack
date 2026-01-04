@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -31,13 +32,16 @@ export async function GET(request: NextRequest) {
                         userMetadata.username ||
                         email.split('@')[0]
 
+          // Use admin client for all user table operations during OAuth
+          const adminClient = createAdminClient()
+
           // Make username unique by checking if it exists
           let finalUsername = username
           let counter = 1
           let usernameExists = true
 
           while (usernameExists) {
-            const { data: existingUser } = await supabase
+            const { data: existingUser } = await adminClient
               .from('users')
               .select('username')
               .eq('username', finalUsername)
@@ -51,8 +55,8 @@ export async function GET(request: NextRequest) {
             }
           }
 
-          // Create user profile
-          const { error: createError } = await supabase
+          // Create user profile using admin client to bypass RLS
+          const { error: createError } = await adminClient
             .from('users')
             .insert({
               id: data.user.id,
