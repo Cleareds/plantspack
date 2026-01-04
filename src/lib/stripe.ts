@@ -78,7 +78,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
   premium: {
     id: 'premium',
     name: 'Premium',
-    price: 10,
+    price: 7,
     currency: 'USD',
     interval: 'month',
     features: [
