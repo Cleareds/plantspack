@@ -177,9 +177,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   if (!stripe) return
-  
+
   const subscriptionId = (invoice as any).subscription as string
-  
+
   try {
     const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId)
     const subscription = subscriptionResponse as any
@@ -190,10 +190,20 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       return
     }
 
+    // Determine tier from actual price ID (not metadata, which doesn't update on plan changes)
+    const priceId = subscription.items.data[0]?.price?.id
+    let tierId: 'medium' | 'premium' | 'free' = 'free'
+
+    if (priceId === process.env.STRIPE_PREMIUM_PRICE_ID) {
+      tierId = 'premium'
+    } else if (priceId === process.env.STRIPE_MEDIUM_PRICE_ID) {
+      tierId = 'medium'
+    }
+
     // Update subscription status
     await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
-      new_tier: subscription.metadata.tierId as 'medium' | 'premium',
+      new_tier: tierId,
       new_status: 'active',
       stripe_sub_id: subscription.id,
       stripe_cust_id: subscription.customer as string,
@@ -201,7 +211,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : null
     })
 
-    console.log(`Payment succeeded for user ${userId}`)
+    console.log(`✅ Payment succeeded for user ${userId}: ${tierId}`)
   } catch (error) {
     console.error('Error handling payment success:', error)
   }
@@ -236,7 +246,6 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const extendedSubscription = subscription as any
   const userId = extendedSubscription.metadata.userId
-  const tierId = extendedSubscription.metadata.tierId as 'medium' | 'premium'
 
   if (!userId) {
     console.error('No userId in subscription metadata')
@@ -244,8 +253,22 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   }
 
   try {
+    // Determine tier from actual price ID (not metadata, which doesn't update on plan changes)
+    const priceId = extendedSubscription.items.data[0]?.price?.id
+    let tierId: 'medium' | 'premium' | 'free' = 'free'
+
+    if (priceId === process.env.STRIPE_PREMIUM_PRICE_ID) {
+      tierId = 'premium'
+    } else if (priceId === process.env.STRIPE_MEDIUM_PRICE_ID) {
+      tierId = 'medium'
+    } else {
+      console.warn(`Unknown price ID: ${priceId}, defaulting to free tier`)
+    }
+
     const status = mapStripeStatusToLocal(extendedSubscription.status)
-    
+
+    console.log(`Subscription update: userId=${userId}, priceId=${priceId}, tier=${tierId}, status=${status}`)
+
     await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
@@ -256,7 +279,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       period_end: extendedSubscription.current_period_end ? new Date(extendedSubscription.current_period_end * 1000).toISOString() : null
     })
 
-    console.log(`Subscription updated for user ${userId}, status: ${status}`)
+    console.log(`✅ Subscription updated for user ${userId}: ${tierId} (${status})`)
   } catch (error) {
     console.error('Error handling subscription update:', error)
   }
