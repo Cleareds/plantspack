@@ -28,10 +28,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user's Stripe customer ID
+    // Get user's Stripe customer ID and username
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, username')
       .eq('id', userId)
       .single()
 
@@ -44,9 +44,13 @@ export async function POST(request: NextRequest) {
 
     // Create portal session with PlantsPack configuration
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    const returnUrl = user.username
+      ? `${baseUrl}/profile/${user.username}/subscription`
+      : `${baseUrl}/settings`
+
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripe_customer_id,
-      return_url: `${baseUrl}/settings`,
+      return_url: returnUrl,
       // Use the PlantsPack portal configuration
       configuration: 'bpc_1Slz6vAqP7U8Au3xYpLZ2VX9',
     })
