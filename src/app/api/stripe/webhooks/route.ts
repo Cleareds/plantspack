@@ -13,7 +13,10 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
+  console.log('🔔 ===== STRIPE WEBHOOK RECEIVED =====')
+
   if (!stripe) {
+    console.error('❌ Stripe not configured - missing STRIPE_SECRET_KEY')
     return NextResponse.json(
       { error: 'Stripe not configured' },
       { status: 500 }
@@ -23,13 +26,17 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.text()
     const signature = request.headers.get('stripe-signature')!
+    console.log('📝 Webhook signature present:', !!signature)
 
     let event: Stripe.Event
 
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
+      console.log('✅ Signature verified successfully')
+      console.log('📋 Event type:', event.type)
+      console.log('🆔 Event ID:', event.id)
     } catch (err) {
-      console.error('Webhook signature verification failed:', err)
+      console.error('❌ Webhook signature verification failed:', err)
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 400 }
@@ -37,37 +44,46 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle the event
+    console.log(`🔄 Processing event: ${event.type}`)
     switch (event.type) {
       case 'checkout.session.completed':
+        console.log('💳 Handling checkout completion...')
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
         break
 
       case 'invoice.payment_succeeded':
+        console.log('💰 Handling payment success...')
         await handlePaymentSucceeded(event.data.object as Stripe.Invoice)
         break
 
       case 'invoice.payment_failed':
+        console.log('⚠️  Handling payment failure...')
         await handlePaymentFailed(event.data.object as Stripe.Invoice)
         break
 
       case 'customer.subscription.updated':
+        console.log('🔄 Handling subscription update...')
         await handleSubscriptionUpdated(event.data.object as Stripe.Subscription)
         break
 
       case 'customer.subscription.deleted':
+        console.log('🗑️  Handling subscription deletion...')
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
         break
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        console.log(`⚠️  Unhandled event type: ${event.type}`)
     }
 
     // Log the event
     await logWebhookEvent(event)
 
+    console.log('✅ ===== WEBHOOK PROCESSED SUCCESSFULLY =====')
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('Webhook processing error:', error)
+    console.error('❌ ===== WEBHOOK PROCESSING ERROR =====')
+    console.error('Error details:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }
@@ -244,32 +260,55 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  console.log('📊 ===== SUBSCRIPTION UPDATE HANDLER =====')
   const extendedSubscription = subscription as any
+
+  console.log('🔍 Subscription ID:', extendedSubscription.id)
+  console.log('👤 Customer ID:', extendedSubscription.customer)
+  console.log('📋 Subscription metadata:', JSON.stringify(extendedSubscription.metadata))
+
   const userId = extendedSubscription.metadata.userId
 
   if (!userId) {
-    console.error('No userId in subscription metadata')
+    console.error('❌ No userId in subscription metadata!')
+    console.error('   Subscription ID:', extendedSubscription.id)
+    console.error('   Available metadata:', JSON.stringify(extendedSubscription.metadata))
     return
   }
+
+  console.log('✅ User ID found:', userId)
 
   try {
     // Determine tier from actual price ID (not metadata, which doesn't update on plan changes)
     const priceId = extendedSubscription.items.data[0]?.price?.id
+    console.log('💰 Price ID from subscription:', priceId)
+    console.log('🔧 Expected Premium Price ID:', process.env.STRIPE_PREMIUM_PRICE_ID)
+    console.log('🔧 Expected Medium Price ID:', process.env.STRIPE_MEDIUM_PRICE_ID)
+
     let tierId: 'medium' | 'premium' | 'free' = 'free'
 
     if (priceId === process.env.STRIPE_PREMIUM_PRICE_ID) {
       tierId = 'premium'
+      console.log('✅ Detected tier: PREMIUM')
     } else if (priceId === process.env.STRIPE_MEDIUM_PRICE_ID) {
       tierId = 'medium'
+      console.log('✅ Detected tier: SUPPORTER (medium)')
     } else {
-      console.warn(`Unknown price ID: ${priceId}, defaulting to free tier`)
+      console.warn(`⚠️  Unknown price ID: ${priceId}, defaulting to free tier`)
+      console.warn('   This price ID does not match any configured tiers!')
     }
 
     const status = mapStripeStatusToLocal(extendedSubscription.status)
+    console.log('📊 Subscription status:', extendedSubscription.status, '→', status)
 
-    console.log(`Subscription update: userId=${userId}, priceId=${priceId}, tier=${tierId}, status=${status}`)
+    console.log('💾 Calling RPC function with params:')
+    console.log('   target_user_id:', userId)
+    console.log('   new_tier:', tierId)
+    console.log('   new_status:', status)
+    console.log('   stripe_sub_id:', extendedSubscription.id)
+    console.log('   stripe_cust_id:', extendedSubscription.customer)
 
-    await supabase.rpc('update_user_subscription', {
+    const { data: rpcData, error: rpcError } = await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: status,
@@ -279,9 +318,41 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       period_end: extendedSubscription.current_period_end ? new Date(extendedSubscription.current_period_end * 1000).toISOString() : null
     })
 
-    console.log(`✅ Subscription updated for user ${userId}: ${tierId} (${status})`)
+    if (rpcError) {
+      console.error('❌ RPC Error:', rpcError)
+      console.error('   Code:', rpcError.code)
+      console.error('   Message:', rpcError.message)
+      console.error('   Details:', rpcError.details)
+      console.error('   Hint:', rpcError.hint)
+
+      // Try direct table update as fallback
+      console.log('🔄 Attempting fallback direct table update...')
+      const { error: fallbackError } = await supabase
+        .from('users')
+        .update({
+          subscription_tier: tierId,
+          subscription_status: status,
+          stripe_subscription_id: extendedSubscription.id,
+          stripe_customer_id: extendedSubscription.customer as string,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId)
+
+      if (fallbackError) {
+        console.error('❌ Fallback update also failed:', fallbackError)
+      } else {
+        console.log('✅ Fallback update succeeded!')
+      }
+    } else {
+      console.log('✅ RPC function succeeded!')
+      console.log('   Response data:', rpcData)
+    }
+
+    console.log(`✅ ===== SUBSCRIPTION UPDATE COMPLETE: ${tierId} (${status}) =====`)
   } catch (error) {
-    console.error('Error handling subscription update:', error)
+    console.error('❌ ===== ERROR IN SUBSCRIPTION UPDATE =====')
+    console.error('Error:', error)
+    console.error('Stack:', error instanceof Error ? error.stack : 'No stack')
   }
 }
 
