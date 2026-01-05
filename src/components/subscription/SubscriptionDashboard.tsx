@@ -46,16 +46,11 @@ export default function SubscriptionDashboard() {
     try {
       setActionLoading(true)
       setError(null)
+      // This will automatically redirect to portal if user has active subscription
       await redirectToCheckout(tierId, user.id)
     } catch (err) {
       console.error('Error upgrading subscription:', err)
-
-      // Check if user already has active subscription
-      if (err instanceof Error && err.message === 'ACTIVE_SUBSCRIPTION_EXISTS') {
-        setError('You already have an active subscription. Please use "Manage Subscription" to change your plan.')
-      } else {
-        setError('Failed to start upgrade process')
-      }
+      setError('Failed to start upgrade process')
     } finally {
       setActionLoading(false)
     }

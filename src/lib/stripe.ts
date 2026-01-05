@@ -162,14 +162,15 @@ export async function createCheckoutSession(
     const data = await response.json()
 
     if (!response.ok) {
-      // Check if user already has active subscription
-      if (data.hasActiveSubscription) {
-        throw new Error('ACTIVE_SUBSCRIPTION_EXISTS')
-      }
       throw new Error(data.error || 'Failed to create checkout session')
     }
 
-    return data.sessionId
+    // Check if we should redirect to portal instead (user has active subscription)
+    if (data.redirectToPortal) {
+      return { redirectToPortal: true, portalUrl: data.portalUrl }
+    }
+
+    return { sessionId: data.sessionId }
   } catch (error) {
     console.error('Error creating checkout session:', error)
     throw error
@@ -189,15 +190,24 @@ export async function redirectToCheckout(
       throw new Error('Stripe is not properly configured. Please check your environment variables.')
     }
 
-    const sessionId = await createCheckoutSession(
+    const result = await createCheckoutSession(
       tierId,
       userId,
       `${window.location.origin}/support?success=true`,
       `${window.location.origin}/support?canceled=true`
     )
 
-    const { error } = await stripe.redirectToCheckout({ sessionId })
-    if (error) throw error
+    // If user has active subscription, redirect to portal instead
+    if ('redirectToPortal' in result && result.redirectToPortal) {
+      window.location.href = result.portalUrl
+      return
+    }
+
+    // Otherwise, proceed with checkout
+    if ('sessionId' in result) {
+      const { error } = await stripe.redirectToCheckout({ sessionId: result.sessionId })
+      if (error) throw error
+    }
   } catch (error) {
     console.error('Error redirecting to checkout:', error)
     throw error

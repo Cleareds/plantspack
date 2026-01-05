@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     console.log('Fetching user details for ID:', userId)
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('email, stripe_customer_id')
+      .select('email, stripe_customer_id, username')
       .eq('id', userId)
       .single()
 
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     console.log('User found:', { email: user.email, hasStripeCustomer: !!user.stripe_customer_id })
 
-    // Check for existing active subscriptions to prevent duplicates
+    // Check for existing active subscriptions and redirect to portal if found
     if (user.stripe_customer_id) {
       console.log('Checking for existing active subscriptions...')
       try {
@@ -117,14 +117,24 @@ export async function POST(request: NextRequest) {
         })
 
         if (existingSubscriptions.data.length > 0) {
-          console.error('User already has active subscription(s):', existingSubscriptions.data.map(s => s.id))
-          return NextResponse.json(
-            {
-              error: 'You already have an active subscription. Please use "Manage Subscription" to change your plan.',
-              hasActiveSubscription: true,
-            },
-            { status: 400 }
-          )
+          console.log('User already has active subscription(s) - redirecting to portal:', existingSubscriptions.data.map(s => s.id))
+
+          // Create portal session instead of checkout
+          const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+          const returnUrl = user.username
+            ? `${baseUrl}/profile/${user.username}/subscription`
+            : `${baseUrl}/settings`
+
+          const portalSession = await stripe.billingPortal.sessions.create({
+            customer: user.stripe_customer_id,
+            return_url: returnUrl,
+            configuration: 'bpc_1Slz6vAqP7U8Au3xYpLZ2VX9',
+          })
+
+          return NextResponse.json({
+            redirectToPortal: true,
+            portalUrl: portalSession.url,
+          })
         }
         console.log('No active subscriptions found - OK to create checkout')
       } catch (error) {
