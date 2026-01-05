@@ -106,6 +106,33 @@ export async function POST(request: NextRequest) {
 
     console.log('User found:', { email: user.email, hasStripeCustomer: !!user.stripe_customer_id })
 
+    // Check for existing active subscriptions to prevent duplicates
+    if (user.stripe_customer_id) {
+      console.log('Checking for existing active subscriptions...')
+      try {
+        const existingSubscriptions = await stripe.subscriptions.list({
+          customer: user.stripe_customer_id,
+          status: 'active',
+          limit: 10,
+        })
+
+        if (existingSubscriptions.data.length > 0) {
+          console.error('User already has active subscription(s):', existingSubscriptions.data.map(s => s.id))
+          return NextResponse.json(
+            {
+              error: 'You already have an active subscription. Please use "Manage Subscription" to change your plan.',
+              hasActiveSubscription: true,
+            },
+            { status: 400 }
+          )
+        }
+        console.log('No active subscriptions found - OK to create checkout')
+      } catch (error) {
+        console.error('Error checking existing subscriptions:', error)
+        // Continue anyway - better to allow duplicate than block legitimate checkout
+      }
+    }
+
     // Create or retrieve Stripe customer
     let customerId = user.stripe_customer_id
 

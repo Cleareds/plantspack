@@ -159,12 +159,17 @@ export async function createCheckoutSession(
       }),
     })
 
+    const data = await response.json()
+
     if (!response.ok) {
-      throw new Error('Failed to create checkout session')
+      // Check if user already has active subscription
+      if (data.hasActiveSubscription) {
+        throw new Error('ACTIVE_SUBSCRIPTION_EXISTS')
+      }
+      throw new Error(data.error || 'Failed to create checkout session')
     }
 
-    const { sessionId } = await response.json()
-    return sessionId
+    return data.sessionId
   } catch (error) {
     console.error('Error creating checkout session:', error)
     throw error

@@ -42,13 +42,20 @@ export default function SubscriptionDashboard() {
 
   const handleUpgrade = async (tierId: 'medium' | 'premium') => {
     if (!user) return
-    
+
     try {
       setActionLoading(true)
+      setError(null)
       await redirectToCheckout(tierId, user.id)
     } catch (err) {
       console.error('Error upgrading subscription:', err)
-      setError('Failed to start upgrade process')
+
+      // Check if user already has active subscription
+      if (err instanceof Error && err.message === 'ACTIVE_SUBSCRIPTION_EXISTS') {
+        setError('You already have an active subscription. Please use "Manage Subscription" to change your plan.')
+      } else {
+        setError('Failed to start upgrade process')
+      }
     } finally {
       setActionLoading(false)
     }
