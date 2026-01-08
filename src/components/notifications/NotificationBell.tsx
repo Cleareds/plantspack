@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
 export default function NotificationBell() {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -244,7 +244,7 @@ export default function NotificationBell() {
 
           <div className="p-3 border-t border-gray-200">
             <Link
-              href={`/profile/${user.id}/notifications`}
+              href={profile?.username ? `/profile/${profile.username}/notifications` : '#'}
               onClick={() => setIsOpen(false)}
               className="block text-center text-sm text-green-600 hover:text-green-700 font-medium"
             >

@@ -213,19 +213,34 @@ export default function ReactionButtons({
             .single()
 
           if (post && post.user_id !== user.id) {
-            await fetch('/api/notifications/create', {
+            // Map reaction types to custom messages
+            const reactionMessages: Record<ReactionType, string> = {
+              like: 'liked your post',
+              helpful: 'found your post helpful',
+              inspiring: 'found your post inspiring',
+              thoughtful: 'found your post thoughtful'
+            }
+
+            const response = await fetch('/api/notifications/create', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 userId: post.user_id,
-                type: reactionType, // Use reaction type as notification type
+                type: 'like', // All reactions use 'like' type for now
                 entityType: 'post',
                 entityId: postId,
+                message: reactionMessages[reactionType]
               }),
             })
+
+            if (!response.ok) {
+              const errorText = await response.text()
+              console.error('[Notification] Failed to create notification:', errorText)
+            }
           }
         } catch (notifError) {
-          console.error('Failed to create notification:', notifError)
+          console.error('[Notification] Error creating notification:', notifError)
+          // Don't fail the reaction - notification is not critical
         }
       }
 
