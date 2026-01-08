@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 const SYSTEM_PROMPT = `You are a content moderation system for PlantsPack, a vegan social media platform focused on positive community building.
 
@@ -124,6 +125,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // IP-based rate limiting (First line of defense)
+    const clientIp = getClientIp(request)
+    const ipRateLimit = rateLimit({
+      identifier: `content-analysis-ip:${clientIp}`,
+      limit: 30, // Max 30 requests per minute per IP
+      windowMs: 60 * 1000
+    })
+
+    if (!ipRateLimit.success) {
+      console.warn(`[SECURITY] IP rate limit exceeded: ${clientIp}`)
+      return NextResponse.json(
+        {
+          error: 'Too many requests from this IP. Please try again later.',
+          resetIn: Math.ceil(ipRateLimit.resetIn / 1000)
+        },
+        { status: 429 }
+      )
+    }
+
     // Get user session
     const supabase = await createClient()
     const { data: { session } } = await supabase.auth.getSession()
@@ -132,7 +152,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Rate limiting
+    // User-based rate limiting (Second line of defense)
     if (!checkRateLimit(session.user.id)) {
       return NextResponse.json(
         { error: 'Rate limit exceeded. Please wait a moment before analyzing again.' },
@@ -162,13 +182,17 @@ export async function POST(request: NextRequest) {
     // Analyze with GPT
     const analysis = await analyzeWithGPT(content)
 
-    // Log analysis for monitoring
-    console.log('Content analysis:', {
+    // Log analysis for monitoring and cost tracking
+    console.log('[OPENAI_USAGE] Content analysis:', {
       userId: session.user.id,
+      userEmail: session.user.email,
+      clientIp,
       contentLength: content.length,
       sentiment: analysis.sentiment,
       isAntiVegan: analysis.isAntiVegan,
-      shouldBlock: analysis.shouldBlock
+      shouldBlock: analysis.shouldBlock,
+      estimatedCost: 0.00015,
+      timestamp: new Date().toISOString()
     })
 
     return NextResponse.json(analysis)
