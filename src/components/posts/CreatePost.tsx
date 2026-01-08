@@ -234,7 +234,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     return () => clearTimeout(timeoutId)
   }, [content])
 
-  // GPT-based content analysis with 5-second debounce
+  // GPT-based content analysis with 1-second debounce
   useEffect(() => {
     if (content.trim().length < 10) {
       setGptAnalysis(null)
@@ -254,7 +254,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
           const result = await response.json()
           setGptAnalysis(result)
         } else {
-          // Fallback to neutral if API fails
+          // Fallback to neutral if API fails - don't block posting
           setGptAnalysis({
             sentiment: 'neutral',
             tags: [],
@@ -278,7 +278,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       } finally {
         setIsGptAnalyzing(false)
       }
-    }, 5000) // 5 seconds debounce
+    }, 1000) // 1 second debounce - faster response
 
     return () => clearTimeout(timeoutId)
   }, [content])
@@ -688,96 +688,45 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               </div>
             )}
 
-            {/* Content Analysis Preview */}
-            {(analyzedMetadata || gptAnalysis || isGptAnalyzing) && (
-              <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Tag className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">
-                    Content Analysis
-                    {isGptAnalyzing && <span className="ml-2 text-xs text-gray-500">(analyzing...)</span>}
-                  </span>
-                </div>
-
-                {/* GPT Analysis Results */}
-                {gptAnalysis && (
-                  <div className="space-y-2">
-                    {/* Block Warning */}
-                    {gptAnalysis.shouldBlock && (
-                      <div className="p-2 bg-red-50 border border-red-200 rounded">
-                        <div className="flex items-start space-x-2">
-                          <span className="text-red-600 text-lg">⚠️</span>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-red-800">Cannot post this content</p>
-                            <p className="text-xs text-red-700 mt-1">{gptAnalysis.reasoning}</p>
-                            {gptAnalysis.antiVeganReason && (
-                              <p className="text-xs text-red-600 mt-1 italic">{gptAnalysis.antiVeganReason}</p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Anti-Vegan Warning (but not blocking) */}
-                    {gptAnalysis.isAntiVegan && !gptAnalysis.shouldBlock && (
-                      <div className="p-2 bg-yellow-50 border border-yellow-200 rounded">
-                        <div className="flex items-start space-x-2">
-                          <span className="text-yellow-600 text-lg">⚠️</span>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-yellow-800">Content flagged</p>
-                            <p className="text-xs text-yellow-700 mt-1">{gptAnalysis.antiVeganReason || gptAnalysis.reasoning}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Positive Analysis */}
-                    {!gptAnalysis.shouldBlock && !gptAnalysis.isAntiVegan && (
-                      <div className="flex flex-wrap gap-2">
-                        {/* Sentiment Badge */}
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          gptAnalysis.sentiment === 'positive' ? 'bg-green-100 text-green-800' :
-                          gptAnalysis.sentiment === 'negative' ? 'bg-red-100 text-red-800' :
-                          gptAnalysis.sentiment === 'question' ? 'bg-blue-100 text-blue-800' :
-                          gptAnalysis.sentiment === 'educational' ? 'bg-purple-100 text-purple-800' :
-                          gptAnalysis.sentiment === 'celebration' ? 'bg-pink-100 text-pink-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
-                          {gptAnalysis.sentiment}
-                        </span>
-
-                        {/* GPT Tags */}
-                        {gptAnalysis.tags.map((tag, index) => (
-                          <span key={index} className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">
-                            {tag.replace('_', ' ')}
-                          </span>
-                        ))}
-
-                        {/* Fallback/Error Indicator */}
-                        {(gptAnalysis.fallback || gptAnalysis.error) && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                            Basic analysis
-                          </span>
-                        )}
-                      </div>
-                    )}
+            {/* Content Analysis Preview - Only show warnings/blocks */}
+            {gptAnalysis && (gptAnalysis.shouldBlock || gptAnalysis.isAntiVegan || isGptAnalyzing) && (
+              <div className="mt-3">
+                {/* Analyzing indicator */}
+                {isGptAnalyzing && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                      <span className="text-sm text-blue-800">Checking content...</span>
+                    </div>
                   </div>
                 )}
 
-                {/* Local Metadata Analysis (shown if GPT not ready yet) */}
-                {analyzedMetadata && !gptAnalysis && (
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                      {analyzedMetadata.contentType.replace('_', ' ')}
-                    </span>
-                    <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                      {analyzedMetadata.mood}
-                    </span>
-                    {analyzedMetadata.tags.map((tag, index) => (
-                      <span key={index} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
-                        {tag}
-                      </span>
-                    ))}
+                {/* Block Warning */}
+                {gptAnalysis.shouldBlock && !isGptAnalyzing && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-red-600 text-lg">🚫</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-red-800">Cannot post this content</p>
+                        <p className="text-xs text-red-700 mt-1">{gptAnalysis.reasoning}</p>
+                        {gptAnalysis.antiVeganReason && (
+                          <p className="text-xs text-red-600 mt-1 italic">{gptAnalysis.antiVeganReason}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Warning (flagged but not blocking) */}
+                {gptAnalysis.isAntiVegan && !gptAnalysis.shouldBlock && !isGptAnalyzing && (
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-yellow-600 text-lg">⚠️</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-yellow-800">Content flagged</p>
+                        <p className="text-xs text-yellow-700 mt-1">{gptAnalysis.antiVeganReason || gptAnalysis.reasoning}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -880,16 +829,21 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                         (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) ||
                         loading ||
                         (maxChars !== -1 && charCount > maxChars) ||
+                        isGptAnalyzing ||
                         (gptAnalysis?.shouldBlock === true) ||
-                        isGptAnalyzing
+                        // Disable if content has text but hasn't been analyzed yet (or analysis pending)
+                        (content.trim().length >= 10 && !gptAnalysis) ||
+                        // Disable if content is negative/hateful
+                        (gptAnalysis?.sentiment === 'negative' && !gptAnalysis?.error)
                       }
                       className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md font-medium transition-colors"
                   >
                       <Send className="h-4 w-4" />
                       <span>
                         {loading ? 'Posting...' :
-                         isGptAnalyzing ? 'Analyzing...' :
-                         gptAnalysis?.shouldBlock ? 'Content Blocked' :
+                         isGptAnalyzing ? 'Checking...' :
+                         gptAnalysis?.shouldBlock ? 'Blocked' :
+                         (content.trim().length >= 10 && !gptAnalysis) ? 'Checking...' :
                          'Post'}
                       </span>
                   </button>
