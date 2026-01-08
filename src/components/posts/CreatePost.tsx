@@ -12,7 +12,6 @@ import MentionAutocomplete from './MentionAutocomplete'
 import Link from 'next/link'
 import { analyzePostContent, getCurrentLocation, detectLanguage, type LocationData, type PostMetadata } from '@/lib/post-analytics'
 import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription, canPerformAction } from '@/lib/stripe'
-import { moderateContent, shouldBlockContent } from '@/lib/moderation'
 import { extractHashtags, extractMentions, resolveUsernames, getOrCreateHashtags, linkHashtagsToPost } from '@/lib/hashtags'
 
 interface CreatePostProps {
@@ -355,33 +354,9 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         throw new Error('Rate limit exceeded. Please wait a few minutes before posting again.')
       }
 
-      // Check content moderation before posting
-      let moderationResult = null
-      let contentWarnings: string[] = []
-      let isSensitive = false
-
-      if (content.trim()) {
-        moderationResult = await moderateContent(content.trim(), imageUrls[0])
-
-        // Block content if it violates serious policies
-        if (shouldBlockContent(moderationResult)) {
-          // Provide specific error message for anti-vegan content
-          if (moderationResult.antiVeganContent) {
-            const matches = moderationResult.antiVeganMatches?.slice(0, 3).join(', ') || 'content promoting animal products'
-            throw new Error(
-              `This is a vegan platform. Posts promoting or celebrating animal products are not allowed. Detected: "${matches}". ` +
-              'Please share content that aligns with our vegan community values.'
-            )
-          }
-          throw new Error('This content violates our community guidelines and cannot be posted. Please review our community standards.')
-        }
-
-        // If flagged but not blocked, add content warnings
-        if (moderationResult.flagged && moderationResult.warnings.length > 0) {
-          contentWarnings = moderationResult.warnings
-          isSensitive = true
-        }
-      }
+      // Content is already checked by GPT analysis in real-time
+      // No need for additional moderation check here
+      // The GPT analysis prevents posting if shouldBlock is true (see submit button disabled state)
 
       // Get final content analysis
       const finalMetadata = analyzedMetadata || analyzePostContent(content)
@@ -394,9 +369,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         tags: finalMetadata.tags,
         content_type: finalMetadata.contentType,
         mood: finalMetadata.mood,
-        language: detectedLang,
-        content_warnings: contentWarnings.length > 0 ? contentWarnings : null,
-        is_sensitive: isSensitive
+        language: detectedLang
       }
 
       // Add location data if user chose to share
@@ -832,9 +805,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                         isGptAnalyzing ||
                         (gptAnalysis?.shouldBlock === true) ||
                         // Disable if content has text but hasn't been analyzed yet (or analysis pending)
-                        (content.trim().length >= 10 && !gptAnalysis) ||
-                        // Disable if content is negative/hateful
-                        (gptAnalysis?.sentiment === 'negative' && !gptAnalysis?.error)
+                        (content.trim().length >= 10 && !gptAnalysis)
                       }
                       className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md font-medium transition-colors"
                   >
