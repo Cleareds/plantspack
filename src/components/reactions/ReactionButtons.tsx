@@ -221,6 +221,12 @@ export default function ReactionButtons({
               thoughtful: 'found your post thoughtful'
             }
 
+            console.log('[ReactionButtons] Creating notification:', {
+              postAuthor: post.user_id,
+              reactionType,
+              postId
+            })
+
             const response = await fetch('/api/notifications/create', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -236,6 +242,9 @@ export default function ReactionButtons({
             if (!response.ok) {
               const errorText = await response.text()
               console.error('[Notification] Failed to create notification:', errorText)
+            } else {
+              const result = await response.json()
+              console.log('[ReactionButtons] Notification result:', result)
             }
           }
         } catch (notifError) {

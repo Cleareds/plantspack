@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // Skip if user has disabled this type of notification
     // Map notification type to preference field name
-    const typeToFieldMap: Record<string, keyof typeof prefs> = {
+    const typeToFieldMap: Record<string, string> = {
       'like': 'push_likes',
       'comment': 'push_comments',
       'reply': 'push_comments', // replies use comment preference
@@ -44,9 +44,19 @@ export async function POST(request: NextRequest) {
     }
 
     const prefKey = typeToFieldMap[type]
-    if (prefs && prefKey && prefs[prefKey] === false) {
+    if (prefs && prefKey && (prefs as any)[prefKey] === false) {
+      console.log('[Notification] Skipping - user disabled', type, 'notifications')
       return NextResponse.json({ success: true, skipped: true })
     }
+
+    console.log('[Notification] Creating notification:', {
+      type,
+      userId,
+      actorId: session.user.id,
+      entityType,
+      entityId,
+      hasPrefs: !!prefs
+    })
 
     // Create notification
     const { data, error } = await adminClient
@@ -62,7 +72,12 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('[Notification] Database error:', error)
+      throw error
+    }
+
+    console.log('[Notification] Successfully created:', data.id)
 
     // TODO: Send email notification if enabled
     // This would integrate with SendGrid/AWS SES/etc

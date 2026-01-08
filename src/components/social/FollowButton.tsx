@@ -79,6 +79,7 @@ function FollowButton({ userId, className = '', showText = true, initialIsFollow
 
         // Create notification for the user being followed
         try {
+          console.log('[FollowButton] Creating follow notification for user:', userId)
           const response = await fetch('/api/notifications/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -91,6 +92,9 @@ function FollowButton({ userId, className = '', showText = true, initialIsFollow
           if (!response.ok) {
             const errorText = await response.text()
             console.error('[Notification] Failed to create follow notification:', errorText)
+          } else {
+            const result = await response.json()
+            console.log('[FollowButton] Follow notification result:', result)
           }
         } catch (notifError) {
           // Don't fail the follow if notification fails

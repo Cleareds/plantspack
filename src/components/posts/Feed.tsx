@@ -572,7 +572,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                                 <PostCard
                                     key={post.id}
                                     post={post}
-                                    onUpdate={handlePostCreated}
+                                    onUpdate={() => {}}
                                     reactions={post._reactions}
                                     isFollowing={post._isFollowing}
                                 />
