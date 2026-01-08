@@ -9,10 +9,12 @@ import { MessageSquare, X } from 'lucide-react'
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
   const { user, profile } = useAuth()
 
   const handlePostCreated = () => {
-    // This will be passed to the Feed component to refresh
+    // Trigger feed refresh by changing key
+    setRefreshKey(prev => prev + 1)
     setIsSidebarOpen(false) // Close sidebar on mobile after posting
   }
 
@@ -25,7 +27,7 @@ export default function Home() {
             <div className={user ? "max-w-2xl" : ""}>
               {/* Guest Welcome - Show above feed for unauthorized users */}
               {!user && <GuestWelcome />}
-              <Feed onPostCreated={handlePostCreated} />
+              <Feed key={refreshKey} onPostCreated={handlePostCreated} />
             </div>
           </div>
 

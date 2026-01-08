@@ -42,6 +42,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   const [privacy, setPrivacy] = useState<'public' | 'friends'>(() => loadDraft()?.privacy || 'public')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const [charCount, setCharCount] = useState(() => loadDraft()?.content?.length || 0)
   const [showImageUploader, setShowImageUploader] = useState(() => loadDraft()?.showImageUploader || false)
   const [imageUrls, setImageUrls] = useState<string[]>(() => loadDraft()?.imageUrls || [])
@@ -481,6 +482,11 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
       setIsGptAnalyzing(false)
       setError(null)
       clearDraft()
+
+      // Show success message
+      setSuccess(true)
+      setTimeout(() => setSuccess(false), 3000) // Hide after 3 seconds
+
       onPostCreated()
     } catch (err) {
       console.error('Error creating post:', err)
@@ -522,6 +528,13 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <form onSubmit={handleSubmit}>
+        {/* Success Message */}
+        {success && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800 font-medium">✅ Post created successfully! Check your feed.</p>
+          </div>
+        )}
+
         {/* Error Message */}
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -661,8 +674,8 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               </div>
             )}
 
-            {/* Content Analysis Preview - Only show warnings/blocks */}
-            {gptAnalysis && (gptAnalysis.shouldBlock || gptAnalysis.isAntiVegan || isGptAnalyzing) && (
+            {/* Content Analysis Preview */}
+            {(gptAnalysis || isGptAnalyzing) && (
               <div className="mt-3">
                 {/* Analyzing indicator */}
                 {isGptAnalyzing && (
@@ -675,7 +688,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 )}
 
                 {/* Block Warning */}
-                {gptAnalysis.shouldBlock && !isGptAnalyzing && (
+                {gptAnalysis && gptAnalysis.shouldBlock && !isGptAnalyzing && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                     <div className="flex items-start space-x-2">
                       <span className="text-red-600 text-lg">🚫</span>
@@ -691,13 +704,40 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 )}
 
                 {/* Warning (flagged but not blocking) */}
-                {gptAnalysis.isAntiVegan && !gptAnalysis.shouldBlock && !isGptAnalyzing && (
+                {gptAnalysis && gptAnalysis.isAntiVegan && !gptAnalysis.shouldBlock && !isGptAnalyzing && (
                   <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <div className="flex items-start space-x-2">
                       <span className="text-yellow-600 text-lg">⚠️</span>
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-yellow-800">Content flagged</p>
                         <p className="text-xs text-yellow-700 mt-1">{gptAnalysis.antiVeganReason || gptAnalysis.reasoning}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Positive Feedback */}
+                {gptAnalysis && !gptAnalysis.shouldBlock && !gptAnalysis.isAntiVegan && !isGptAnalyzing && (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 text-lg">✅</span>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-green-800">
+                          {gptAnalysis.sentiment === 'positive' && 'Great content!'}
+                          {gptAnalysis.sentiment === 'transformation' && 'Inspiring journey!'}
+                          {gptAnalysis.sentiment === 'question' && 'Great question!'}
+                          {gptAnalysis.sentiment === 'educational' && 'Educational content!'}
+                          {gptAnalysis.sentiment === 'neutral' && 'Ready to post'}
+                        </p>
+                        {gptAnalysis.tags && gptAnalysis.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {gptAnalysis.tags.slice(0, 5).map((tag, index) => (
+                              <span key={index} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
