@@ -118,9 +118,17 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
       .from('users')
       .select('subscription_tier, subscription_status, subscription_ends_at')
       .eq('id', userId)
-      .single()
+      .maybeSingle() // Use maybeSingle() to handle new users without throwing error
 
     if (error) throw error
+
+    // If no user found or no subscription data, return free tier
+    if (!user) {
+      return {
+        tier: 'free',
+        status: 'active'
+      }
+    }
 
     return {
       tier: user.subscription_tier || 'free',

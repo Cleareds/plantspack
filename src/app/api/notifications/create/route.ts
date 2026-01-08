@@ -1,26 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
 import type { NotificationType, NotificationEntityType } from '@/types/notifications'
 
 export async function POST(request: NextRequest) {
   try {
     const { userId, type, entityType, entityId, message } = await request.json()
 
-    // Get actor session
-    const cookieStore = await cookies()
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Cookie: cookieStore.toString(),
-          },
-        },
-      }
-    )
-
+    // Get actor session using proper server client
+    const supabase = await createServerClient()
     const { data: { session } } = await supabase.auth.getSession()
 
     if (!session) {
@@ -43,7 +31,7 @@ export async function POST(request: NextRequest) {
       .from('notification_preferences')
       .select('*')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle() // Use maybeSingle() for new users who may not have preferences yet
 
     // Skip if user has disabled this type of notification
     // Map notification type to preference field name
