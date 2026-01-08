@@ -5,6 +5,7 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import ClientProviders from "@/components/providers/ClientProviders";
 import ConditionalHeader from "@/components/layout/ConditionalHeader";
+import Footer from "@/components/layout/Footer";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 
@@ -36,16 +37,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-gray-50`}>
+      <body className={`${inter.className} antialiased bg-gray-50 flex flex-col min-h-screen`}>
         <GoogleAnalytics />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>
         <ClientProviders>
           <ConditionalHeader />
-          <main className="min-h-screen">
+          <main className="flex-1">
             {children}
           </main>
+          <Footer />
         </ClientProviders>
       </body>
     </html>
