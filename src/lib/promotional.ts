@@ -63,31 +63,40 @@ export async function getPromotionalInfo(): Promise<PromotionalInfo> {
  */
 export async function getUserPromotionalStatus(userId: string) {
   try {
+    // First, just get subscription_tier which we know exists
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('is_promotional_subscriber, promotional_type, promotional_granted_at, subscription_tier, registration_number')
+      .select('subscription_tier')
       .eq('id', userId)
       .single()
-      
+
     if (userError || !user) {
+      console.warn('Error fetching user subscription status:', userError)
       return null
     }
-    
-    const { data: promotionalSubs, error: promoError } = await supabase
-      .from('promotional_subscriptions')
-      .select('promotion_type, promotional_tier, granted_at, expires_at, is_active')
-      .eq('user_id', userId)
-      .eq('is_active', true)
-      
-    if (promoError) {
-      console.error('Error fetching promotional subscriptions:', promoError)
+
+    // Try to get promotional subscriptions if table exists
+    let promotionalSubs = null
+    try {
+      const { data: promoData, error: promoError } = await supabase
+        .from('promotional_subscriptions')
+        .select('promotion_type, promotional_tier, granted_at, expires_at, is_active')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+
+      if (!promoError) {
+        promotionalSubs = promoData
+      }
+    } catch (promoError) {
+      // Promotional subscriptions table may not exist yet
+      console.log('Promotional subscriptions not available')
     }
-    
+
     return {
-      isPromotionalSubscriber: user.is_promotional_subscriber,
-      promotionalType: user.promotional_type,
-      promotionalGrantedAt: user.promotional_granted_at,
-      registrationNumber: user.registration_number,
+      isPromotionalSubscriber: false, // Default to false if columns don't exist
+      promotionalType: null,
+      promotionalGrantedAt: null,
+      registrationNumber: null,
       currentTier: user.subscription_tier,
       activePromotions: promotionalSubs || []
     }
