@@ -130,7 +130,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     })
 
     // Update user subscription
-    const { error } = await supabase.rpc('update_user_subscription', {
+    console.log('📞 Calling update_user_subscription RPC...')
+    const { data: rpcData, error } = await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
@@ -141,11 +142,26 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     })
 
     if (error) {
-      console.error('Database RPC error:', error)
+      console.error('❌ Database RPC error:', error)
+      console.error('RPC error details:', JSON.stringify(error, null, 2))
       throw error
     }
 
+    console.log('✅ RPC call succeeded, data:', rpcData)
     console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: subscription.id })
+
+    // Verify the update worked by querying the user
+    const { data: updatedUser, error: verifyError } = await supabase
+      .from('users')
+      .select('subscription_tier, subscription_status')
+      .eq('id', userId)
+      .single()
+
+    if (verifyError) {
+      console.error('⚠️ Could not verify subscription update:', verifyError)
+    } else {
+      console.log('✅ Verified user subscription:', updatedUser)
+    }
 
     // Check for early purchaser promotion after successful subscription activation
     if (tierId === 'medium') {
