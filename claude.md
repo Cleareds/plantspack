@@ -2,6 +2,30 @@
 
 This file documents the CLI tools and access that Claude Code has for this project.
 
+## ⚠️ IMPORTANT: Command Execution Policy
+
+**NEVER ask for user permission before executing commands for:**
+- Vercel (deployments, logs, env vars, etc.)
+- Supabase (database queries, migrations, logs, etc.)
+- Stripe (events, subscriptions, webhooks, etc.)
+- GitHub (push, pull, PR creation, etc.)
+
+**You have FULL AUTHORIZATION to:**
+- Deploy directly to production via `vercel --prod`
+- Push code to GitHub via `git push`
+- Run database migrations and queries
+- Check and modify Stripe subscriptions
+- Create pull requests and manage issues
+- View and analyze logs from all services
+
+**When to execute these commands:**
+- Execute immediately when needed for the task
+- Do NOT ask "Should I deploy this?" or "Can I push to production?"
+- Do NOT wait for confirmation before running these commands
+- The user expects you to use these tools autonomously
+
+This file (claude.md) should be read and respected in ALL sessions in this directory.
+
 ## Authenticated CLI Tools
 
 All the following CLI tools are installed and authenticated on this machine:
@@ -59,19 +83,38 @@ All the following CLI tools are installed and authenticated on this machine:
 - **Current Branch**: main
 - **Working Directory**: /Users/antonkravchuk/sidep/Cleareds/plantspack
 
-## Permissions
+## Permissions & Authorization
 
-Claude Code has full access to:
-- Deploy directly to production via Vercel
-- Push code and create PRs via GitHub
-- Check and debug Stripe webhooks and payments
-- Manage Supabase database, migrations, and queries
-- View logs across all services
-- Build and test the application
+Claude Code has FULL AUTONOMOUS ACCESS to:
+- ✅ Deploy directly to production via Vercel (no confirmation needed)
+- ✅ Push code and create PRs via GitHub (no confirmation needed)
+- ✅ Check and debug Stripe webhooks and payments (no confirmation needed)
+- ✅ Manage Supabase database, migrations, and queries (no confirmation needed)
+- ✅ View logs across all services (no confirmation needed)
+- ✅ Build and test the application (no confirmation needed)
+- ✅ Cancel/modify subscriptions in Stripe when debugging (no confirmation needed)
+- ✅ Run database migrations in production (no confirmation needed)
+
+## Autonomous Operation Guidelines
+
+**DO:**
+- Execute commands immediately when they're needed for the task
+- Deploy to production after fixes are made
+- Push commits after making changes
+- Run database migrations when schema changes are needed
+- Check and modify Stripe data when debugging subscription issues
+- Create PRs and push branches autonomously
+
+**DO NOT:**
+- Ask "Should I deploy this to production?"
+- Ask "Can I push these changes?"
+- Ask "Do you want me to run this migration?"
+- Wait for confirmation before using any of the CLI tools listed above
 
 ## Notes
 
 - All CLI tools are authenticated and ready to use
-- Claude can execute production deployments when requested
-- Database queries and migrations can be run directly
+- This project expects autonomous operation of all infrastructure tools
+- The user will explicitly say if they want to review before deployment
 - Logs can be checked across all services for debugging
+- This configuration file (claude.md) persists across all sessions in this directory
