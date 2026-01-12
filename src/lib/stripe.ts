@@ -201,7 +201,7 @@ export async function redirectToCheckout(
     const result = await createCheckoutSession(
       tierId,
       userId,
-      `${window.location.origin}/support?success=true`,
+      `${window.location.origin}/support?success=true&tier=${tierId}`,
       `${window.location.origin}/support?canceled=true`
     )
 

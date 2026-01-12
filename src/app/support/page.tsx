@@ -41,6 +41,7 @@ function PricingContent() {
   const success = searchParams.get('success')
   const canceled = searchParams.get('canceled')
   const error = searchParams.get('error')
+  const tierFromUrl = searchParams.get('tier') as 'medium' | 'premium' | null
 
   useEffect(() => {
     if (user) {
@@ -138,7 +139,7 @@ function PricingContent() {
                   🎉 Subscription activated successfully! Welcome to the community! 🌱
                 </p>
                 <p className="text-green-700 text-sm mt-1">
-                  You now have access to all {subscription?.tier === 'medium' ? 'Supporter' : 'Premium'} features. Start creating amazing content!
+                  You now have access to all {tierFromUrl === 'medium' ? 'Supporter' : tierFromUrl === 'premium' ? 'Premium' : subscription?.tier === 'medium' ? 'Supporter' : 'Premium'} features. Start creating amazing content!
                 </p>
               </div>
             </div>
