@@ -75,30 +75,17 @@ export async function getUserPromotionalStatus(userId: string) {
       return null
     }
 
-    // Try to get promotional subscriptions if table exists
-    let promotionalSubs = null
-    try {
-      const { data: promoData, error: promoError } = await supabase
-        .from('promotional_subscriptions')
-        .select('promotion_type, promotional_tier, granted_at, expires_at, is_active')
-        .eq('user_id', userId)
-        .eq('is_active', true)
-
-      if (!promoError) {
-        promotionalSubs = promoData
-      }
-    } catch (promoError) {
-      // Promotional subscriptions table may not exist yet
-      console.log('Promotional subscriptions not available')
-    }
+    // Note: promotional_subscriptions table is not yet created in production
+    // Returning default response for now to avoid 404 errors
+    // TODO: Run migration 20250905000000_promotional_subscriptions.sql
 
     return {
-      isPromotionalSubscriber: false, // Default to false if columns don't exist
+      isPromotionalSubscriber: false,
       promotionalType: null,
       promotionalGrantedAt: null,
       registrationNumber: null,
       currentTier: user.subscription_tier,
-      activePromotions: promotionalSubs || []
+      activePromotions: []
     }
   } catch (error) {
     console.error('Error getting user promotional status:', error)
