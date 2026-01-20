@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { supabase } from '@/lib/supabase'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 // Force Node.js runtime (required for Stripe SDK)
 export const runtime = 'nodejs'
@@ -93,11 +93,14 @@ export async function POST(request: NextRequest) {
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   if (!stripe) return
-  
+
+  // Use admin client to bypass RLS for webhook operations
+  const supabase = createAdminClient()
+
   console.log('=== Handling Checkout Completed ===')
   console.log('Session ID:', session.id)
   console.log('Metadata:', session.metadata)
-  
+
   const userId = session.metadata?.userId
   const tierId = session.metadata?.tierId as 'medium' | 'premium'
 
@@ -113,7 +116,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       session.subscription as string,
       { expand: ['latest_invoice', 'default_payment_method'] }
     )
-    
+
     // Type assertion with proper casting
     const subscription = subscriptionResponse as any
     const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
@@ -169,7 +172,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         const { error: promoError } = await supabase.rpc('grant_early_purchaser_subscription', {
           target_user_id: userId
         })
-        
+
         if (promoError && !promoError.message?.includes('not eligible') && !promoError.message?.includes('no longer available')) {
           console.error('Error checking early purchaser promotion:', promoError)
         } else if (!promoError) {
@@ -181,7 +184,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
   } catch (error) {
     console.error('❌ Error handling checkout completion:', error)
-    
+
     // Fallback: direct database update if RPC fails
     try {
       console.log('Attempting fallback direct database update...')
@@ -209,6 +212,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   if (!stripe) return
+
+  // Use admin client to bypass RLS for webhook operations
+  const supabase = createAdminClient()
 
   const subscriptionId = (invoice as any).subscription as string
 
@@ -251,9 +257,12 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   if (!stripe) return
-  
+
+  // Use admin client to bypass RLS for webhook operations
+  const supabase = createAdminClient()
+
   const subscriptionId = (invoice as any).subscription as string
-  
+
   try {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
     const userId = subscription.metadata.userId
@@ -276,6 +285,9 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 }
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+  // Use admin client to bypass RLS for webhook operations
+  const supabase = createAdminClient()
+
   console.log('📊 ===== SUBSCRIPTION UPDATE HANDLER =====')
   const extendedSubscription = subscription as any
 
@@ -373,6 +385,9 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 }
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  // Use admin client to bypass RLS for webhook operations
+  const supabase = createAdminClient()
+
   const userId = subscription.metadata.userId
 
   if (!userId) {
@@ -399,6 +414,9 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 }
 
 async function logWebhookEvent(event: Stripe.Event) {
+  // Use admin client to bypass RLS for webhook operations
+  const supabase = createAdminClient()
+
   try {
     // Extract subscription ID if available
     let subscriptionId = null
