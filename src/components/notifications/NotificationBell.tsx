@@ -248,7 +248,7 @@ export default function NotificationBell() {
               onClick={() => setIsOpen(false)}
               className="block text-center text-sm text-green-600 hover:text-green-700 font-medium"
             >
-              View all notifications
+              Notifications settings
             </Link>
           </div>
         </div>
