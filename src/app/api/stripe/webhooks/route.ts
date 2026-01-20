@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { sendSubscriptionEmail } from '@/lib/email'
 
 // Force Node.js runtime (required for Stripe SDK)
 export const runtime = 'nodejs'
@@ -156,7 +157,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Verify the update worked by querying the user
     const { data: updatedUser, error: verifyError } = await supabase
       .from('users')
-      .select('subscription_tier, subscription_status')
+      .select('subscription_tier, subscription_status, email, username')
       .eq('id', userId)
       .single()
 
@@ -164,6 +165,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       console.error('⚠️ Could not verify subscription update:', verifyError)
     } else {
       console.log('✅ Verified user subscription:', updatedUser)
+
+      // Send subscription confirmation email
+      if (updatedUser.email && updatedUser.username) {
+        sendSubscriptionEmail(
+          updatedUser.email,
+          updatedUser.username,
+          tierId
+        ).catch((err) => {
+          console.error('Failed to send subscription email:', err)
+        })
+      }
     }
 
     // Check for early purchaser promotion after successful subscription activation

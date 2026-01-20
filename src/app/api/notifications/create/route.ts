@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createClient } from '@supabase/supabase-js'
 import type { NotificationType, NotificationEntityType } from '@/types/notifications'
+import { sendNotificationEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -79,8 +80,47 @@ export async function POST(request: NextRequest) {
 
     console.log('[Notification] Successfully created:', data.id)
 
-    // TODO: Send email notification if enabled
-    // This would integrate with SendGrid/AWS SES/etc
+    // Send email notification if enabled
+    // Map notification type to email preference field name
+    const emailPrefMap: Record<string, string> = {
+      'like': 'email_likes',
+      'comment': 'email_comments',
+      'reply': 'email_comments',
+      'follow': 'email_follows',
+      'mention': 'email_mentions',
+    }
+
+    const emailPrefKey = emailPrefMap[type]
+    const shouldSendEmail = !prefs || (prefs as any)[emailPrefKey] !== false
+
+    if (shouldSendEmail) {
+      // Get user and actor details for the email
+      const [userResult, actorResult] = await Promise.all([
+        adminClient.from('users').select('email, username').eq('id', userId).single(),
+        adminClient.from('users').select('username').eq('id', session.user.id).single()
+      ])
+
+      if (userResult.data?.email && actorResult.data?.username) {
+        // Build entity URL
+        let entityUrl: string | undefined
+        if (entityType === 'post' && entityId) {
+          entityUrl = `https://www.plantspack.com/post/${entityId}`
+        } else if (entityType === 'user' && actorResult.data.username) {
+          entityUrl = `https://www.plantspack.com/profile/${actorResult.data.username}`
+        }
+
+        // Send email in background (don't await)
+        sendNotificationEmail(
+          userResult.data.email,
+          userResult.data.username,
+          type as 'like' | 'comment' | 'reply' | 'follow' | 'mention',
+          actorResult.data.username,
+          entityUrl
+        ).catch((err) => {
+          console.error('[Notification] Failed to send email:', err)
+        })
+      }
+    }
 
     return NextResponse.json({ success: true, notification: data })
   } catch (error) {

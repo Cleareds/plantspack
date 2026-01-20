@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { NextResponse } from 'next/server'
+import { sendWelcomeEmail } from '@/lib/email'
 
 /**
  * API route to create user profile during OAuth sign-in
@@ -105,6 +106,13 @@ export async function POST() {
         { error: 'Failed to create profile', details: createError.message },
         { status: 500 }
       )
+    }
+
+    // Send welcome email to new user (don't await - send in background)
+    if (email) {
+      sendWelcomeEmail(email, finalUsername).catch((err) => {
+        console.error('Failed to send welcome email:', err)
+      })
     }
 
     return NextResponse.json(
