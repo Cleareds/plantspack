@@ -2,8 +2,8 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-// Use Resend's test domain for now - replace with your verified domain later
-const FROM_EMAIL = 'Plantspack <onboarding@resend.dev>'
+// Verified domain
+const FROM_EMAIL = 'Plantspack <hello@plantspack.com>'
 const SUPPORT_EMAIL = 'hello@cleareds.com'
 
 export interface SendEmailOptions {
