@@ -132,9 +132,14 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
     setSubmitting(true)
 
     try {
-      // Check rate limit before creating comment
+      // Check rate limit before creating comment (max 30 comments per 5 minutes)
       const { data: rateLimitData, error: rateLimitError } = await supabase
-        .rpc('check_rate_limit_comments', { p_user_id: user.id })
+        .rpc('check_rate_limit', {
+          p_user_id: user.id,
+          p_action_type: 'comment',
+          p_max_actions: 30,
+          p_window_minutes: 5
+        })
 
       if (rateLimitError) {
         console.error('Rate limit check error:', rateLimitError)
