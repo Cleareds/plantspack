@@ -23,7 +23,7 @@ export default function CreatePackPage() {
     twitter_url: '',
     instagram_url: '',
     tiktok_url: '',
-    category: '' as PackCategory | '',
+    categories: [] as PackCategory[],
     is_published: false
   })
 
@@ -32,8 +32,18 @@ export default function CreatePackPage() {
     { value: 'places', label: 'Places', icon: '📍', description: 'Vegan restaurants, cafes, shops' },
     { value: 'products', label: 'Products', icon: '🛍️', description: 'Product reviews and recommendations' },
     { value: 'resources', label: 'Resources', icon: '📚', description: 'Educational content and guides' },
-    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱', description: 'Lifestyle tips and inspiration' }
+    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱', description: 'Lifestyle tips and inspiration' },
+    { value: 'other', label: 'Other', icon: '📦', description: 'Other types of content' }
   ]
+
+  const toggleCategory = (value: PackCategory) => {
+    setFormData(prev => ({
+      ...prev,
+      categories: prev.categories.includes(value)
+        ? prev.categories.filter(c => c !== value)
+        : [...prev.categories, value]
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,7 +64,7 @@ export default function CreatePackPage() {
           ...formData,
           title: formData.title.trim(),
           description: formData.description.trim() || null,
-          category: formData.category || null
+          categories: formData.categories
         })
       })
 
@@ -187,19 +197,20 @@ export default function CreatePackPage() {
             <p className="text-sm text-gray-500 mt-1">{formData.description.length}/500</p>
           </div>
 
-          {/* Category */}
+          {/* Categories (multi-select) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Category
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Categories
             </label>
+            <p className="text-sm text-gray-500 mb-3">Select one or more categories</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {categories.map((cat) => (
                 <button
                   key={cat.value}
                   type="button"
-                  onClick={() => setFormData({ ...formData, category: cat.value })}
+                  onClick={() => toggleCategory(cat.value)}
                   className={`p-4 border-2 rounded-lg text-left transition-colors ${
-                    formData.category === cat.value
+                    formData.categories.includes(cat.value)
                       ? 'border-green-600 bg-green-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}

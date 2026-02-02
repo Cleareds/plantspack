@@ -31,6 +31,7 @@ export async function GET(
         instagram_url,
         tiktok_url,
         category,
+        categories,
         is_published,
         view_count,
         created_at,
@@ -163,6 +164,7 @@ export async function PATCH(
       instagram_url,
       tiktok_url,
       category,
+      categories,
       is_published
     } = body
 
@@ -184,7 +186,12 @@ export async function PATCH(
     if (twitter_url !== undefined) updates.twitter_url = twitter_url || null
     if (instagram_url !== undefined) updates.instagram_url = instagram_url || null
     if (tiktok_url !== undefined) updates.tiktok_url = tiktok_url || null
-    if (category !== undefined) updates.category = category || null
+    if (categories !== undefined) {
+      updates.categories = Array.isArray(categories) ? categories : []
+      updates.category = updates.categories[0] || null
+    } else if (category !== undefined) {
+      updates.category = category || null
+    }
     if (is_published !== undefined) updates.is_published = is_published
 
     // Update pack

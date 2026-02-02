@@ -10,27 +10,25 @@ interface PackCardProps {
 }
 
 export default function PackCard({ pack }: PackCardProps) {
-  const getCategoryIcon = (category: string | null) => {
+  const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'recipes':
-        return '🍽️'
-      case 'places':
-        return '📍'
-      case 'products':
-        return '🛍️'
-      case 'resources':
-        return '📚'
-      case 'lifestyle':
-        return '🌱'
-      default:
-        return '📦'
+      case 'recipes': return '🍽️'
+      case 'places': return '📍'
+      case 'products': return '🛍️'
+      case 'resources': return '📚'
+      case 'lifestyle': return '🌱'
+      case 'other': return '📦'
+      default: return '📦'
     }
   }
 
-  const getCategoryLabel = (category: string | null) => {
-    if (!category) return ''
+  const getCategoryLabel = (category: string) => {
     return category.charAt(0).toUpperCase() + category.slice(1)
   }
+
+  const packCategories: string[] = (pack as any).categories?.length > 0
+    ? (pack as any).categories
+    : (pack.category ? [pack.category] : [])
 
   return (
     <Link href={`/packs/${pack.id}`}>
@@ -46,13 +44,17 @@ export default function PackCard({ pack }: PackCardProps) {
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-6xl">
-              {getCategoryIcon(pack.category)}
+              {packCategories.length > 0 ? getCategoryIcon(packCategories[0]) : '📦'}
             </div>
           )}
-          {/* Category Badge */}
-          {pack.category && (
-            <div className="absolute top-2 left-2 bg-white px-2 py-1 rounded-full text-xs font-medium text-gray-700">
-              {getCategoryIcon(pack.category)} {getCategoryLabel(pack.category)}
+          {/* Category Badges */}
+          {packCategories.length > 0 && (
+            <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+              {packCategories.map((cat) => (
+                <div key={cat} className="bg-white px-2 py-1 rounded-full text-xs font-medium text-gray-700">
+                  {getCategoryIcon(cat)} {getCategoryLabel(cat)}
+                </div>
+              ))}
             </div>
           )}
         </div>

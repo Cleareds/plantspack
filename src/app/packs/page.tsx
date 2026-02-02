@@ -21,7 +21,8 @@ export default function PacksPage() {
     { value: 'places', label: 'Places', icon: '📍' },
     { value: 'products', label: 'Products', icon: '🛍️' },
     { value: 'resources', label: 'Resources', icon: '📚' },
-    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' }
+    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' },
+    { value: 'other', label: 'Other', icon: '📦' }
   ]
 
   const fetchPacks = async () => {

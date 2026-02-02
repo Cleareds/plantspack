@@ -2,7 +2,7 @@
  * TypeScript types for Packs system
  */
 
-export type PackCategory = 'recipes' | 'places' | 'products' | 'resources' | 'lifestyle'
+export type PackCategory = 'recipes' | 'places' | 'products' | 'resources' | 'lifestyle' | 'other'
 
 export type PackMemberRole = 'admin' | 'moderator' | 'member'
 
@@ -18,6 +18,7 @@ export interface Pack {
   instagram_url: string | null
   tiktok_url: string | null
   category: PackCategory | null
+  categories: PackCategory[]
   is_published: boolean
   view_count: number
   created_at: string
@@ -112,6 +113,7 @@ export interface CreatePackInput {
   instagram_url?: string
   tiktok_url?: string
   category?: PackCategory
+  categories?: PackCategory[]
   is_published?: boolean
 }
 
@@ -125,6 +127,7 @@ export interface UpdatePackInput {
   instagram_url?: string
   tiktok_url?: string
   category?: PackCategory
+  categories?: PackCategory[]
   is_published?: boolean
 }
 

@@ -40,16 +40,21 @@ export default function PackHeader({ pack, onJoin, onLeave, onFollow, onUnfollow
     }
   }
 
-  const getCategoryIcon = (category: string | null) => {
+  const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'recipes': return '🍽️'
       case 'places': return '📍'
       case 'products': return '🛍️'
       case 'resources': return '📚'
       case 'lifestyle': return '🌱'
+      case 'other': return '📦'
       default: return '📦'
     }
   }
+
+  const packCategories: string[] = (pack as any).categories?.length > 0
+    ? (pack as any).categories
+    : (pack.category ? [pack.category] : [])
 
   return (
     <div className="bg-white border-b border-gray-200">
@@ -64,7 +69,7 @@ export default function PackHeader({ pack, onJoin, onLeave, onFollow, onUnfollow
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-8xl">
-            {getCategoryIcon(pack.category)}
+            {packCategories.length > 0 ? getCategoryIcon(packCategories[0]) : '📦'}
           </div>
         )}
       </div>
@@ -73,11 +78,15 @@ export default function PackHeader({ pack, onJoin, onLeave, onFollow, onUnfollow
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="flex-1">
-            {/* Category */}
-            {pack.category && (
-              <div className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium mb-3">
-                <span>{getCategoryIcon(pack.category)}</span>
-                <span>{pack.category.charAt(0).toUpperCase() + pack.category.slice(1)}</span>
+            {/* Categories */}
+            {packCategories.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {packCategories.map((cat) => (
+                  <div key={cat} className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    <span>{getCategoryIcon(cat)}</span>
+                    <span>{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                  </div>
+                ))}
               </div>
             )}
 

@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
         description,
         banner_url,
         category,
+        categories,
         is_published,
         view_count,
         created_at,
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     // Apply filters
     if (category) {
-      query = query.eq('category', category)
+      query = query.contains('categories', [category])
     }
 
     if (search) {
@@ -210,6 +211,7 @@ export async function POST(request: NextRequest) {
       instagram_url,
       tiktok_url,
       category,
+      categories,
       is_published
     } = body
 
@@ -222,6 +224,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create pack
+    const resolvedCategories = Array.isArray(categories) && categories.length > 0
+      ? categories
+      : (category ? [category] : [])
+
     const { data: pack, error: createError } = await supabase
       .from('packs')
       .insert({
@@ -234,7 +240,8 @@ export async function POST(request: NextRequest) {
         twitter_url: twitter_url || null,
         instagram_url: instagram_url || null,
         tiktok_url: tiktok_url || null,
-        category: category || null,
+        category: resolvedCategories[0] || null,
+        categories: resolvedCategories,
         is_published: is_published || false
       })
       .select()

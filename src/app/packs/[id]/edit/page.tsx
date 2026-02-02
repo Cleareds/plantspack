@@ -27,7 +27,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
     twitter_url: '',
     instagram_url: '',
     tiktok_url: '',
-    category: '' as PackCategory | '',
+    categories: [] as PackCategory[],
     is_published: false
   })
 
@@ -36,8 +36,18 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
     { value: 'places', label: 'Places', icon: '📍' },
     { value: 'products', label: 'Products', icon: '🛍️' },
     { value: 'resources', label: 'Resources', icon: '📚' },
-    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' }
+    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' },
+    { value: 'other', label: 'Other', icon: '📦' }
   ]
+
+  const toggleCategory = (value: PackCategory) => {
+    setFormData(prev => ({
+      ...prev,
+      categories: prev.categories.includes(value)
+        ? prev.categories.filter(c => c !== value)
+        : [...prev.categories, value]
+    }))
+  }
 
   useEffect(() => {
     const fetchPack = async () => {
@@ -56,7 +66,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
             twitter_url: data.pack.twitter_url || '',
             instagram_url: data.pack.instagram_url || '',
             tiktok_url: data.pack.tiktok_url || '',
-            category: data.pack.category || '',
+            categories: data.pack.categories || (data.pack.category ? [data.pack.category] : []),
             is_published: data.pack.is_published
           })
         } else {
@@ -92,7 +102,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
           ...formData,
           title: formData.title.trim(),
           description: formData.description.trim() || null,
-          category: formData.category || null
+          categories: formData.categories
         })
       })
 
@@ -216,17 +226,18 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
             />
           </div>
 
-          {/* Category */}
+          {/* Categories (multi-select) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
+            <p className="text-sm text-gray-500 mb-3">Select one or more categories</p>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <button
                   key={cat.value}
                   type="button"
-                  onClick={() => setFormData({ ...formData, category: cat.value })}
+                  onClick={() => toggleCategory(cat.value)}
                   className={`flex items-center gap-1 px-4 py-2 rounded-md font-medium transition-colors ${
-                    formData.category === cat.value
+                    formData.categories.includes(cat.value)
                       ? 'bg-green-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
