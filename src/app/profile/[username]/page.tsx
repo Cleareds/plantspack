@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban } from 'lucide-react'
+import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
@@ -21,6 +21,7 @@ export default function ProfilePage() {
   const [posts, setPosts] = useState<any[]>([])
   const [addedPlaces, setAddedPlaces] = useState<any[]>([])
   const [favoritePlaces, setFavoritePlaces] = useState<any[]>([])
+  const [userPacks, setUserPacks] = useState<any[]>([])
   const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -119,6 +120,17 @@ export default function ProfilePage() {
         .order('created_at', { ascending: false })
 
       setFavoritePlaces(favoritePlacesData || [])
+
+      // Fetch user's packs
+      try {
+        const packsRes = await fetch(`/api/packs?creator_id=${profileData.id}&limit=10`)
+        const packsData = await packsRes.json()
+        if (packsRes.ok) {
+          setUserPacks(packsData.packs || [])
+        }
+      } catch (err) {
+        console.error('Error loading packs:', err)
+      }
 
       // Fetch subscription if viewing own profile
       if (user && profileData.id === user.id) {
@@ -441,6 +453,57 @@ export default function ProfilePage() {
               </div>
             )}
             </div>
+
+          {/* My Packs */}
+          {userPacks.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Package className="h-5 w-5 text-green-600" />
+                    <h3 className="font-semibold text-gray-900">
+                      Packs ({userPacks.length})
+                    </h3>
+                  </div>
+                  <Link href="/packs" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                    View all
+                  </Link>
+                </div>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {userPacks.slice(0, 5).map((pack: any) => (
+                  <Link key={pack.id} href={`/packs/${pack.id}`} className="block p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium text-gray-900 text-sm truncate">{pack.title}</h4>
+                          {!pack.is_published && (
+                            <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs">
+                              Draft
+                            </span>
+                          )}
+                        </div>
+                        {pack.description && (
+                          <p className="text-xs text-gray-500 line-clamp-2">{pack.description}</p>
+                        )}
+                        <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                          <span>{pack.member_count || 0} members</span>
+                          <span>{pack.post_count || 0} posts</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+                {userPacks.length > 5 && (
+                  <div className="p-4 text-center">
+                    <Link href="/packs" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                      +{userPacks.length - 5} more packs
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
           </div>
         </div>
         </div>

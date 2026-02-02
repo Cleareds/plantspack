@@ -46,7 +46,15 @@ export async function GET(request: NextRequest) {
           subscription_tier
         )
       `, { count: 'exact' })
-      .eq('is_published', true)
+
+    // Show unpublished packs only if the creator is viewing their own packs
+    if (creatorId && userId && creatorId === userId) {
+      query = query.eq('creator_id', creatorId)
+    } else if (creatorId) {
+      query = query.eq('creator_id', creatorId).eq('is_published', true)
+    } else {
+      query = query.eq('is_published', true)
+    }
 
     // Apply filters
     if (category) {
@@ -55,10 +63,6 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`)
-    }
-
-    if (creatorId) {
-      query = query.eq('creator_id', creatorId)
     }
 
     // Apply sorting

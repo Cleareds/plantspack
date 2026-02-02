@@ -10,7 +10,9 @@ import { Plus, Search, Crown } from 'lucide-react'
 export default function PacksPage() {
   const { user, profile } = useAuth()
   const [packs, setPacks] = useState<PackWithStats[]>([])
+  const [myPacks, setMyPacks] = useState<PackWithStats[]>([])
   const [loading, setLoading] = useState(true)
+  const [myPacksLoading, setMyPacksLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<PackCategory | ''>('')
   const [hasMore, setHasMore] = useState(false)
@@ -47,9 +49,33 @@ export default function PacksPage() {
     }
   }
 
+  const fetchMyPacks = async () => {
+    if (!user) {
+      setMyPacks([])
+      setMyPacksLoading(false)
+      return
+    }
+    try {
+      setMyPacksLoading(true)
+      const response = await fetch(`/api/packs?creator_id=${user.id}&limit=50`)
+      const data = await response.json()
+      if (response.ok) {
+        setMyPacks(data.packs)
+      }
+    } catch (error) {
+      console.error('Error fetching my packs:', error)
+    } finally {
+      setMyPacksLoading(false)
+    }
+  }
+
   useEffect(() => {
     fetchPacks()
   }, [search, category])
+
+  useEffect(() => {
+    fetchMyPacks()
+  }, [user])
 
   // Check if user can create packs (not on free tier)
   const subscriptionTier = (profile as any)?.subscription_tier
@@ -105,6 +131,20 @@ export default function PacksPage() {
             </div>
           )}
         </div>
+
+        {/* My Packs */}
+        {user && !myPacksLoading && myPacks.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">My Packs</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myPacks.map((pack) => (
+                <PackCard key={pack.id} pack={pack} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Search and Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">

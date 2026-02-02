@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase-server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
+const serviceSupabase = createServiceClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 // Follow a pack
@@ -19,33 +14,18 @@ export async function POST(
 ) {
   try {
     const { id } = await params
-    const authHeader = request.headers.get('cookie')
-
-    if (!authHeader) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const supabase = await createClient()
 
     // Get user from session
-    const userSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            cookie: authHeader
-          }
-        }
-      }
-    )
-
-    const { data: { user }, error: authError } = await userSupabase.auth.getUser()
-
-    if (authError || !user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const userId = session.user.id
+
     // Check if pack exists
-    const { data: pack, error: packError } = await supabase
+    const { data: pack, error: packError } = await serviceSupabase
       .from('packs')
       .select('id')
       .eq('id', id)
@@ -56,11 +36,11 @@ export async function POST(
     }
 
     // Check if already following
-    const { data: existing } = await supabase
+    const { data: existing } = await serviceSupabase
       .from('pack_follows')
       .select('id')
       .eq('pack_id', id)
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .single()
 
     if (existing) {
@@ -68,11 +48,11 @@ export async function POST(
     }
 
     // Follow the pack
-    const { error: followError } = await supabase
+    const { error: followError } = await serviceSupabase
       .from('pack_follows')
       .insert({
         pack_id: id,
-        user_id: user.id
+        user_id: userId
       })
 
     if (followError) {
@@ -94,37 +74,22 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    const authHeader = request.headers.get('cookie')
-
-    if (!authHeader) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const supabase = await createClient()
 
     // Get user from session
-    const userSupabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            cookie: authHeader
-          }
-        }
-      }
-    )
-
-    const { data: { user }, error: authError } = await userSupabase.auth.getUser()
-
-    if (authError || !user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const userId = session.user.id
+
     // Unfollow the pack
-    const { error: unfollowError } = await supabase
+    const { error: unfollowError } = await serviceSupabase
       .from('pack_follows')
       .delete()
       .eq('pack_id', id)
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
 
     if (unfollowError) {
       console.error('Error unfollowing pack:', unfollowError)

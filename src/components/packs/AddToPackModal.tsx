@@ -34,7 +34,7 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
       setError('')
 
       // Fetch packs where user is admin or moderator
-      const response = await fetch(`/api/packs?creator=${user?.id}&limit=100`)
+      const response = await fetch(`/api/packs?creator_id=${user?.id}&limit=100`)
       const data = await response.json()
 
       if (response.ok) {

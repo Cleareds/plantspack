@@ -57,6 +57,12 @@ export default function PackCard({ pack }: PackCardProps) {
               ))}
             </div>
           )}
+          {/* Draft badge */}
+          {!pack.is_published && (
+            <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+              Draft
+            </div>
+          )}
         </div>
 
         {/* Content */}
