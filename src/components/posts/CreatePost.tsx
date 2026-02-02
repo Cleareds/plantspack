@@ -9,6 +9,7 @@ import ImageSlider from '../ui/ImageSlider'
 import VideoUploader from '../ui/VideoUploader'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import MentionAutocomplete from './MentionAutocomplete'
+import LocationPicker from './LocationPicker'
 import Link from 'next/link'
 import { analyzePostContent, getCurrentLocation, detectLanguage, type LocationData, type PostMetadata } from '@/lib/post-analytics'
 import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription, canPerformAction } from '@/lib/stripe'
@@ -61,6 +62,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
   // Enhanced metadata state
   const [locationData, setLocationData] = useState<LocationData | null>(null)
   const [shareLocation, setShareLocation] = useState(false)
+  const [showLocationPicker, setShowLocationPicker] = useState(false)
   const [analyzedMetadata, setAnalyzedMetadata] = useState<Pick<PostMetadata, 'tags' | 'contentType' | 'mood'> | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
@@ -283,23 +285,21 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
     return () => clearTimeout(timeoutId)
   }, [content])
 
-  // Get location when user wants to share it
-  const handleLocationToggle = useCallback(async () => {
-    if (!shareLocation) {
-      setShareLocation(true)
-      if (!locationData) {
-        try {
-          const location = await getCurrentLocation()
-          setLocationData(location)
-        } catch (error) {
-          console.warn('Failed to get location:', error)
-          setShareLocation(false)
-        }
-      }
-    } else {
+  // Open location picker modal or remove location
+  const handleLocationToggle = useCallback(() => {
+    if (shareLocation) {
       setShareLocation(false)
+      setLocationData(null)
+    } else {
+      setShowLocationPicker(true)
     }
-  }, [shareLocation, locationData])
+  }, [shareLocation])
+
+  const handleLocationSelect = useCallback((location: LocationData) => {
+    setLocationData(location)
+    setShareLocation(true)
+    setShowLocationPicker(false)
+  }, [])
 
   const handleImagesChange = (urls: string[]) => {
     setImageUrls(urls)
@@ -625,34 +625,6 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
               </div>
             )}
 
-            {/* Video Previews */}
-            {videoUrls.length > 0 && (
-              <div className="mt-3 space-y-3">
-                {videoUrls.map((url, index) => (
-                  <div key={index} className="relative">
-                    <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
-                      <video
-                        src={url}
-                        className="w-full h-full object-cover"
-                        controls
-                        preload="metadata"
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                      
-                      <button
-                        type="button"
-                        onClick={removeAllVideos}
-                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
             {/* Video Uploader */}
             {showVideoUploader && (
               <div className="mt-3">
@@ -890,6 +862,15 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
           </div>
         </div>
       </form>
+
+      {/* Location Picker Modal */}
+      {showLocationPicker && (
+        <LocationPicker
+          onSelect={handleLocationSelect}
+          onClose={() => setShowLocationPicker(false)}
+          currentLocation={locationData}
+        />
+      )}
     </div>
   )
 }

@@ -159,29 +159,32 @@ export default function VideoUploader({
         </div>
       )}
 
-      {/* Video Previews */}
+      {/* Video Previews - small thumbnails matching image preview size */}
       {videoUrls.length > 0 && (
-        <div className="space-y-3">
+        <div className="grid grid-cols-3 gap-2">
           {videoUrls.map((url, index) => (
-            <div key={index} className="relative">
-              <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
+            <div key={index} className="relative group">
+              <div className="relative bg-gray-100 rounded-lg overflow-hidden h-24">
                 <video
                   src={url}
-                  className="w-full h-full object-cover"
-                  controls
+                  className="w-full h-24 object-cover rounded-lg"
                   preload="metadata"
-                >
-                  Your browser does not support the video tag.
-                </video>
-                
-                <button
-                  type="button"
-                  onClick={() => removeVideo(index)}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+                  muted
+                />
+                {/* Play icon overlay */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="bg-black bg-opacity-40 rounded-full p-1.5">
+                    <Play className="h-4 w-4 text-white fill-white" />
+                  </div>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => removeVideo(index)}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <X className="h-3 w-3" />
+              </button>
             </div>
           ))}
         </div>

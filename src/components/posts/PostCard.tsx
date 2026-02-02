@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2, ExternalLink, Package } from 'lucide-react'
+import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
@@ -254,6 +254,15 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   ) : (
                     <Users className="h-3 w-3 text-gray-400" />
                   )}
+                  {(post as any).location_city && (
+                    <>
+                      <span className="text-gray-400">·</span>
+                      <span className="flex items-center text-xs text-gray-500">
+                        <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
+                        {(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -441,6 +450,15 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                     <Globe className="h-3 w-3 text-gray-400" />
                   ) : (
                     <Users className="h-3 w-3 text-gray-400" />
+                  )}
+                  {(post as any).location_city && (
+                    <>
+                      <span className="text-gray-400">·</span>
+                      <span className="flex items-center text-xs text-gray-500">
+                        <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
+                        {(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}
+                      </span>
+                    </>
                   )}
                 </div>
               </div>
