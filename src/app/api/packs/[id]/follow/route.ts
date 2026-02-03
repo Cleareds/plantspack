@@ -44,7 +44,7 @@ export async function POST(
       .single()
 
     if (existing) {
-      return NextResponse.json({ error: 'Already following this pack' }, { status: 400 })
+      return NextResponse.json({ success: true })
     }
 
     // Follow the pack
