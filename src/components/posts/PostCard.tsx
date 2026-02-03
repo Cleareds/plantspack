@@ -257,10 +257,14 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   {(post as any).location_city && (
                     <>
                       <span className="text-gray-400">·</span>
-                      <span className="flex items-center text-xs text-gray-500">
+                      <Link
+                        href={`/map?location=${encodeURIComponent((post as any).location_city + ((post as any).location_region ? `, ${(post as any).location_region}` : ''))}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center text-xs text-gray-500 hover:text-green-600 transition-colors"
+                      >
                         <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
                         {(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}
-                      </span>
+                      </Link>
                     </>
                   )}
                 </div>
@@ -454,10 +458,14 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   {(post as any).location_city && (
                     <>
                       <span className="text-gray-400">·</span>
-                      <span className="flex items-center text-xs text-gray-500">
+                      <Link
+                        href={`/map?location=${encodeURIComponent((post as any).location_city + ((post as any).location_region ? `, ${(post as any).location_region}` : ''))}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center text-xs text-gray-500 hover:text-green-600 transition-colors"
+                      >
                         <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
                         {(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}
-                      </span>
+                      </Link>
                     </>
                   )}
                 </div>

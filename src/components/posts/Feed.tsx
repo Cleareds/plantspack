@@ -184,6 +184,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                 )
             `)
             .eq('users.is_banned', false)
+            .is('deleted_at', null)
             .in('id', postIds)
 
         if (data) {
@@ -294,6 +295,7 @@ export default function Feed({onPostCreated}: FeedProps) {
         `)
                     .eq('privacy', 'friends')
                     .eq('users.is_banned', false)
+                    .is('deleted_at', null)
                     .in('user_id', followingIds)
 
                 // Apply sorting
@@ -304,11 +306,14 @@ export default function Feed({onPostCreated}: FeedProps) {
                     case 'recent':
                         query = query.order('created_at', { ascending: false })
                         break
-                    case 'liked_today':
-                    case 'liked_week':
-                    case 'liked_month':
+                    case 'liked_week': {
+                        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+                        query = query
+                            .gte('created_at', weekAgo.toISOString())
+                            .order('engagement_score', { ascending: false })
+                        break
+                    }
                     case 'liked_all_time':
-                        // For popularity-based sorts, order by engagement score
                         query = query.order('engagement_score', { ascending: false })
                         break
                     default:
@@ -319,7 +324,14 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                 if (error) throw error
 
-                const newPosts = data || []
+                let newPosts = data || []
+
+                // For like-based sorts, re-sort by actual like count
+                if (sortOption === 'liked_week' || sortOption === 'liked_all_time') {
+                    newPosts = [...newPosts].sort((a, b) =>
+                        (b.post_likes?.length || 0) - (a.post_likes?.length || 0)
+                    )
+                }
 
                 // Bulk load reactions and follows for performance (prevents N+1 queries)
                 const postsWithMetadata = await enrichPostsWithMetadata(newPosts, user.id)

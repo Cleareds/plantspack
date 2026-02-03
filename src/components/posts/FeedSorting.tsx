@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChevronDown, TrendingUp, Clock, Heart, Calendar, BarChart3, Target } from 'lucide-react'
+import { ChevronDown, TrendingUp, Clock, BarChart3, Target } from 'lucide-react'
 
-export type SortOption = 'relevancy' | 'recent' | 'liked_today' | 'liked_week' | 'liked_month' | 'liked_all_time'
+export type SortOption = 'relevancy' | 'recent' | 'liked_week' | 'liked_all_time'
 
 interface SortConfig {
   value: SortOption
@@ -26,28 +26,16 @@ const SORT_OPTIONS: SortConfig[] = [
     description: 'Newest posts first'
   },
   {
-    value: 'liked_today',
-    label: 'Most Liked Today',
-    icon: Heart,
-    description: 'Posts with the most likes in the last 24 hours'
-  },
-  {
     value: 'liked_week',
-    label: 'Most Liked This Week',
+    label: 'Most Liked',
     icon: TrendingUp,
     description: 'Top posts from the past week'
-  },
-  {
-    value: 'liked_month',
-    label: 'Most Liked This Month',
-    icon: Calendar,
-    description: 'Monthly engagement champions'
   },
   {
     value: 'liked_all_time',
     label: 'Most Liked All Time',
     icon: BarChart3,
-    description: 'Historical top performers'
+    description: 'All-time most liked posts'
   }
 ]
 

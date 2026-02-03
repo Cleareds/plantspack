@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search, PawPrint } from 'lucide-react'
@@ -37,6 +38,8 @@ const MapClickHandler = dynamic(() =>
 )
 
 export default function Map() {
+  const searchParams = useSearchParams()
+  const initialLocation = searchParams.get('location')
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
@@ -268,14 +271,19 @@ export default function Map() {
         (position) => {
           const location: [number, number] = [position.coords.latitude, position.coords.longitude]
           setUserLocation(location)
-          setMapCenter(location)
+          // Don't override mapCenter if we have an initial location from URL
+          if (!initialLocation) {
+            setMapCenter(location)
+          }
         },
         (error) => {
           console.error('Error getting location:', error)
-          // Default to Hasselt, Belgium area 
+          // Default to Hasselt, Belgium area
           const defaultLocation: [number, number] = [50.9307, 5.3378]
           setUserLocation(defaultLocation)
-          setMapCenter(defaultLocation)
+          if (!initialLocation) {
+            setMapCenter(defaultLocation)
+          }
         },
         {
           timeout: 10000,
@@ -287,9 +295,11 @@ export default function Map() {
       // Default to Hasselt, Belgium area
       const defaultLocation: [number, number] = [50.9307, 5.3378]
       setUserLocation(defaultLocation)
-      setMapCenter(defaultLocation)
+      if (!initialLocation) {
+        setMapCenter(defaultLocation)
+      }
     }
-  }, [])
+  }, [initialLocation])
 
   // Calculate distance between two points in kilometers
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -473,17 +483,42 @@ export default function Map() {
 
   // Initialize map and data when auth is ready
   useEffect(() => {
-    console.log('🔄 Map useEffect - authReady:', authReady, 'user:', user?.id)
-    
-    if (!authReady) {
-      console.log('⏳ Waiting for auth to be ready...')
-      return
-    }
-    
-    console.log('✅ Auth ready, initializing map...')
+    if (!authReady) return
     getCurrentLocation()
     fetchPlaces()
   }, [authReady, getCurrentLocation, fetchPlaces])
+
+  // Geocode initial location from URL param (e.g., from post location link)
+  useEffect(() => {
+    if (!initialLocation || !authReady) return
+
+    const geocodeInitialLocation = async () => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(initialLocation)}&limit=1`
+        )
+        const data = await response.json()
+
+        if (data && data.length > 0) {
+          const lat = parseFloat(data[0].lat)
+          const lon = parseFloat(data[0].lon)
+          const newCenter: [number, number] = [lat, lon]
+
+          setMapCenter(newCenter)
+          setCustomCenter(newCenter)
+          setSearchQuery(initialLocation)
+
+          if (mapRef.current) {
+            mapRef.current.setView(newCenter, 13)
+          }
+        }
+      } catch (error) {
+        console.error('Error geocoding initial location:', error)
+      }
+    }
+
+    geocodeInitialLocation()
+  }, [initialLocation, authReady])
 
   // Set up map event listeners
   useEffect(() => {

@@ -93,15 +93,14 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
       `)
       .eq('privacy', 'public') // Only public posts for main feed
       .eq('users.is_banned', false) // Exclude banned users
+      .is('deleted_at', null) // Exclude soft-deleted posts
 
     // Apply sorting based on selected option
     switch (sortBy) {
       case 'relevancy':
         if (userId) {
-          // Use AI-powered relevancy ranking
           return await getRelevancyRankedPosts(userId, limit, offset)
         } else {
-          // Fallback to engagement score for non-authenticated users
           query = query.order('engagement_score', { ascending: false })
         }
         break
@@ -110,18 +109,11 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
         query = query.order('created_at', { ascending: false })
         break
 
-      case 'liked_today':
-        return await getPopularPosts('today', limit, offset)
-
       case 'liked_week':
-        return await getPopularPosts('week', limit, offset)
-
-      case 'liked_month':
-        return await getPopularPosts('month', limit, offset)
+        return await getPopularPosts(limit, offset)
 
       case 'liked_all_time':
-        query = query.order('engagement_score', { ascending: false })
-        break
+        return await getMostLikedAllTime(limit, offset)
 
       default:
         query = query.order('created_at', { ascending: false })
@@ -422,74 +414,102 @@ function calculateDiversityFactor(post: FeedPost, patterns: any): number {
   return Math.min(1, 0.5 + diversityBonus)
 }
 
-/**
- * Gets popular posts by time period
- */
-async function getPopularPosts(period: 'today' | 'week' | 'month', limit: number, offset: number): Promise<FeedPost[]> {
-  const now = new Date()
-  let startDate: Date
+const POPULAR_SELECT = `
+  *,
+  users!inner (
+    id,
+    username,
+    first_name,
+    last_name,
+    avatar_url,
+    subscription_tier,
+    is_banned
+  ),
+  post_likes (
+    id,
+    user_id
+  ),
+  comments (
+    id
+  ),
+  parent_post:parent_post_id (
+    id,
+    user_id,
+    content,
+    images,
+    image_url,
+    created_at,
+    users (
+      id,
+      username,
+      first_name,
+      last_name,
+      avatar_url,
+      subscription_tier
+    )
+  )
+`
 
-  switch (period) {
-    case 'today':
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-      break
-    case 'week':
-      startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-      break
-    case 'month':
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1)
-      break
-  }
+/**
+ * Gets most liked posts from the past week, sorted by actual like count
+ */
+async function getPopularPosts(limit: number, offset: number): Promise<FeedPost[]> {
+  const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  const fetchSize = Math.max(50, (offset + limit) * 3)
 
   try {
     const { data, error } = await supabase
       .from('posts')
-      .select(`
-        *,
-        users!inner (
-          id,
-          username,
-          first_name,
-          last_name,
-          avatar_url,
-          subscription_tier,
-          is_banned
-        ),
-        post_likes (
-          id,
-          user_id
-        ),
-        comments (
-          id
-        ),
-        parent_post:parent_post_id (
-          id,
-          user_id,
-          content,
-          images,
-          image_url,
-          created_at,
-          users (
-            id,
-            username,
-            first_name,
-            last_name,
-            avatar_url,
-            subscription_tier
-          )
-        )
-      `)
+      .select(POPULAR_SELECT)
       .eq('privacy', 'public')
-      .eq('users.is_banned', false) // Exclude banned users
+      .eq('users.is_banned', false)
+      .is('deleted_at', null)
       .gte('created_at', startDate.toISOString())
       .order('engagement_score', { ascending: false })
-      .range(offset, offset + limit - 1)
+      .range(0, fetchSize - 1)
 
     if (error) throw error
+    if (!data) return []
 
-    return data as FeedPost[] || []
+    // Re-sort by actual like count
+    const sorted = [...data].sort((a: any, b: any) =>
+      (b.post_likes?.length || 0) - (a.post_likes?.length || 0)
+    )
+
+    return sorted.slice(offset, offset + limit) as FeedPost[]
   } catch (error) {
-    console.error(`Error fetching ${period} popular posts:`, error)
+    console.error('Error fetching popular posts:', error)
+    return []
+  }
+}
+
+/**
+ * Gets most liked posts of all time, sorted by actual like count (no time decay)
+ */
+async function getMostLikedAllTime(limit: number, offset: number): Promise<FeedPost[]> {
+  const fetchSize = Math.max(50, (offset + limit) * 3)
+
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select(POPULAR_SELECT)
+      .eq('privacy', 'public')
+      .eq('users.is_banned', false)
+      .is('deleted_at', null)
+      .order('engagement_score', { ascending: false })
+      .range(0, fetchSize - 1)
+
+    if (error) throw error
+    if (!data) return []
+
+    // Re-sort by actual like count (not engagement_score with time decay)
+    const sorted = [...data].sort((a: any, b: any) =>
+      (b.post_likes?.length || 0) - (a.post_likes?.length || 0)
+    )
+
+    return sorted.slice(offset, offset + limit) as FeedPost[]
+  } catch (error) {
+    console.error('Error fetching most liked all time:', error)
     return []
   }
 }
