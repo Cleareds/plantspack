@@ -508,12 +508,20 @@ export default function Map() {
           setCustomCenter(newCenter)
           setSearchQuery(initialLocation)
 
-          if (mapRef.current) {
-            mapRef.current.setView(newCenter, 13)
-          }
+          // Give the map time to render before panning
+          setTimeout(() => {
+            if (mapRef.current) {
+              mapRef.current.setView(newCenter, 13)
+            }
+          }, 100)
         }
       } catch (error) {
         console.error('Error geocoding initial location:', error)
+        // Fallback: set mapCenter to default so the map still renders
+        if (!mapCenter) {
+          const defaultLocation: [number, number] = [50.9307, 5.3378]
+          setMapCenter(defaultLocation)
+        }
       }
     }
 
@@ -761,7 +769,7 @@ export default function Map() {
           </div>
           <MapContainer
             ref={mapRef}
-            center={userLocation}
+            center={mapCenter || userLocation}
             zoom={13}
             style={{ height: '100%', width: '100%', minHeight: '400px' }}
             className="z-10"
