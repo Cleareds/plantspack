@@ -273,6 +273,9 @@ export default function Feed({onPostCreated}: FeedProps) {
             id,
             user_id
           ),
+          post_reactions (
+            id
+          ),
           comments (
             id
           ),
@@ -326,11 +329,13 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                 let newPosts = data || []
 
-                // For like-based sorts, re-sort by actual like count
+                // For like-based sorts, re-sort by total reactions
                 if (sortOption === 'liked_week' || sortOption === 'liked_all_time') {
-                    newPosts = [...newPosts].sort((a, b) =>
-                        (b.post_likes?.length || 0) - (a.post_likes?.length || 0)
-                    )
+                    newPosts = [...newPosts].sort((a: any, b: any) => {
+                        const aTotal = (a.post_likes?.length || 0) + (a.post_reactions?.length || 0)
+                        const bTotal = (b.post_likes?.length || 0) + (b.post_reactions?.length || 0)
+                        return bTotal - aTotal
+                    })
                 }
 
                 // Bulk load reactions and follows for performance (prevents N+1 queries)

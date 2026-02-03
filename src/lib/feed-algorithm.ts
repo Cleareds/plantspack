@@ -429,6 +429,9 @@ const POPULAR_SELECT = `
     id,
     user_id
   ),
+  post_reactions (
+    id
+  ),
   comments (
     id
   ),
@@ -449,6 +452,10 @@ const POPULAR_SELECT = `
     )
   )
 `
+
+function getTotalReactions(post: any): number {
+  return (post.post_reactions?.length || 0) + (post.post_likes?.length || 0)
+}
 
 /**
  * Gets most liked posts from the past week, sorted by actual like count
@@ -471,9 +478,9 @@ async function getPopularPosts(limit: number, offset: number): Promise<FeedPost[
     if (error) throw error
     if (!data) return []
 
-    // Re-sort by actual like count
+    // Sort by total reactions (post_reactions + post_likes)
     const sorted = [...data].sort((a: any, b: any) =>
-      (b.post_likes?.length || 0) - (a.post_likes?.length || 0)
+      getTotalReactions(b) - getTotalReactions(a)
     )
 
     return sorted.slice(offset, offset + limit) as FeedPost[]
@@ -502,9 +509,9 @@ async function getMostLikedAllTime(limit: number, offset: number): Promise<FeedP
     if (error) throw error
     if (!data) return []
 
-    // Re-sort by actual like count (not engagement_score with time decay)
+    // Sort by total reactions (post_reactions + post_likes, no time decay)
     const sorted = [...data].sort((a: any, b: any) =>
-      (b.post_likes?.length || 0) - (a.post_likes?.length || 0)
+      getTotalReactions(b) - getTotalReactions(a)
     )
 
     return sorted.slice(offset, offset + limit) as FeedPost[]
