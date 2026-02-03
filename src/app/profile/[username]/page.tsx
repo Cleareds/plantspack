@@ -94,7 +94,7 @@ export default function ProfilePage() {
       const { data: addedPlacesData } = await supabase
         .from('places')
         .select('*')
-        .eq('user_id', profileData.id)
+        .eq('created_by', profileData.id)
         .order('created_at', { ascending: false })
 
       setAddedPlaces(addedPlacesData || [])
