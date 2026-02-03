@@ -394,9 +394,14 @@ export default function Feed({onPostCreated}: FeedProps) {
         }
     }, [user, activeTab, sortOption]) // Recreate when user, tab, or sort changes
 
+    const isLoadingMoreRef = useRef(false)
+
     const loadMorePosts = useCallback(() => {
-        if (!loadingMore && hasMore) {
-            fetchPosts(true)
+        if (!isLoadingMoreRef.current && !loadingMore && hasMore) {
+            isLoadingMoreRef.current = true
+            fetchPosts(true).finally(() => {
+                isLoadingMoreRef.current = false
+            })
         }
     }, [fetchPosts, loadingMore, hasMore])
 

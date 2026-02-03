@@ -35,6 +35,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate max lengths
+    if (name.length > 100 || subject.length > 200 || message.length > 5000 || email.length > 254) {
+      return NextResponse.json(
+        { error: 'Input exceeds maximum length' },
+        { status: 400 }
+      )
+    }
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
@@ -45,9 +53,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Supabase client with service role key for server-side operations
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing SUPABASE_SERVICE_ROLE_KEY for contact form')
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      )
+    }
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY
     )
 
     // Save to database

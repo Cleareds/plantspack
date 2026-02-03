@@ -36,13 +36,7 @@ export async function POST(request: NextRequest) {
   if (!process.env.STRIPE_MEDIUM_PRICE_ID || !process.env.STRIPE_PREMIUM_PRICE_ID) {
     console.error('Missing Stripe price IDs in environment variables')
     return NextResponse.json(
-      { 
-        error: 'Stripe price IDs not configured',
-        details: {
-          medium: process.env.STRIPE_MEDIUM_PRICE_ID ? 'Set' : 'Missing',
-          premium: process.env.STRIPE_PREMIUM_PRICE_ID ? 'Set' : 'Missing'
-        }
-      },
+      { error: 'Payment configuration error. Please try again later.' },
       { status: 500 }
     )
   }
@@ -64,13 +58,7 @@ export async function POST(request: NextRequest) {
     if (!PRICE_IDS[tierId as keyof typeof PRICE_IDS]) {
       console.error('Invalid tier ID:', tierId, 'Available:', Object.keys(PRICE_IDS))
       return NextResponse.json(
-        { 
-          error: 'Invalid tier ID',
-          details: {
-            received: tierId,
-            available: Object.keys(PRICE_IDS)
-          }
-        },
+        { error: 'Invalid subscription tier' },
         { status: 400 }
       )
     }
@@ -88,10 +76,7 @@ export async function POST(request: NextRequest) {
     if (userError) {
       console.error('Database error fetching user:', userError)
       return NextResponse.json(
-        { 
-          error: 'Database error',
-          details: userError.message
-        },
+        { error: 'Failed to load user data' },
         { status: 500 }
       )
     }
@@ -171,10 +156,7 @@ export async function POST(request: NextRequest) {
       } catch (stripeError) {
         console.error('Failed to create Stripe customer:', stripeError)
         return NextResponse.json(
-          { 
-            error: 'Failed to create Stripe customer',
-            details: stripeError instanceof Error ? stripeError.message : 'Unknown error'
-          },
+          { error: 'Failed to create payment account' },
           { status: 500 }
         )
       }
@@ -221,20 +203,14 @@ export async function POST(request: NextRequest) {
     } catch (stripeError) {
       console.error('Failed to create checkout session:', stripeError)
       return NextResponse.json(
-        { 
-          error: 'Failed to create checkout session',
-          details: stripeError instanceof Error ? stripeError.message : 'Unknown Stripe error'
-        },
+        { error: 'Failed to create checkout session' },
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('Unexpected error in checkout session creation:', error)
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

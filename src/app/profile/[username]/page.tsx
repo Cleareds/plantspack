@@ -87,6 +87,7 @@ export default function ProfilePage() {
         .eq('privacy', 'public')
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
+        .limit(50)
 
       setPosts(postsData || [])
 
@@ -96,6 +97,7 @@ export default function ProfilePage() {
         .select('*')
         .eq('created_by', profileData.id)
         .order('created_at', { ascending: false })
+        .limit(20)
 
       setAddedPlaces(addedPlacesData || [])
 
@@ -118,6 +120,7 @@ export default function ProfilePage() {
         `)
         .eq('user_id', profileData.id)
         .order('created_at', { ascending: false })
+        .limit(20)
 
       setFavoritePlaces(favoritePlacesData || [])
 
@@ -204,7 +207,7 @@ export default function ProfilePage() {
             {profile.avatar_url ? (
               <img
                 src={profile.avatar_url}
-                alt={profile.first_name && profile.last_name ? `${profile.first_name} ${profile.last_name}` : profile.username}
+                alt={profile.username}
                 className="h-24 w-24 object-cover rounded-full"
               />
             ) : (

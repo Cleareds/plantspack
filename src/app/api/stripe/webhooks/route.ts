@@ -11,7 +11,7 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
   apiVersion: '2025-06-30.basil',
 }) : null
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
 export async function POST(request: NextRequest) {
   console.log('🔔 ===== STRIPE WEBHOOK RECEIVED =====')
@@ -20,6 +20,14 @@ export async function POST(request: NextRequest) {
     console.error('❌ Stripe not configured - missing STRIPE_SECRET_KEY')
     return NextResponse.json(
       { error: 'Stripe not configured' },
+      { status: 500 }
+    )
+  }
+
+  if (!webhookSecret) {
+    console.error('❌ Missing STRIPE_WEBHOOK_SECRET environment variable')
+    return NextResponse.json(
+      { error: 'Webhook not configured' },
       { status: 500 }
     )
   }

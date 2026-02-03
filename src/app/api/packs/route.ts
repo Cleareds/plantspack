@@ -89,56 +89,68 @@ export async function GET(request: NextRequest) {
       throw error
     }
 
-    // For each pack, get member count, post count, and user's membership status
-    const packsWithStats = await Promise.all(
-      (packs || []).map(async (pack) => {
-        const [memberCount, postCount, membership, isFollowing] = await Promise.all([
-          // Get member count
-          supabase
+    // Batch load stats for all packs (prevents N+1 queries)
+    const packIds = (packs || []).map(p => p.id)
+
+    const [membersResult, postsResult, userMemberships, userFollows] = await Promise.all([
+      // Get member counts for all packs in one query
+      supabase
+        .from('pack_members')
+        .select('pack_id')
+        .in('pack_id', packIds),
+
+      // Get post counts for all packs in one query
+      supabase
+        .from('pack_posts')
+        .select('pack_id')
+        .in('pack_id', packIds),
+
+      // Get user's memberships for all packs in one query
+      userId
+        ? supabase
             .from('pack_members')
-            .select('*', { count: 'exact', head: true })
-            .eq('pack_id', pack.id)
-            .then(({ count }) => count || 0),
+            .select('pack_id, role')
+            .eq('user_id', userId)
+            .in('pack_id', packIds)
+        : Promise.resolve({ data: null }),
 
-          // Get post count
-          supabase
-            .from('pack_posts')
-            .select('*', { count: 'exact', head: true })
-            .eq('pack_id', pack.id)
-            .then(({ count }) => count || 0),
+      // Get user's follows for all packs in one query
+      userId
+        ? supabase
+            .from('pack_follows')
+            .select('pack_id')
+            .eq('user_id', userId)
+            .in('pack_id', packIds)
+        : Promise.resolve({ data: null })
+    ])
 
-          // Check if user is a member
-          userId
-            ? supabase
-                .from('pack_members')
-                .select('role')
-                .eq('pack_id', pack.id)
-                .eq('user_id', userId)
-                .maybeSingle()
-            : Promise.resolve({ data: null }),
+    // Build lookup maps
+    const memberCounts: Record<string, number> = {}
+    const postCounts: Record<string, number> = {}
+    const membershipMap: Record<string, string> = {}
+    const followSet = new Set<string>()
 
-          // Check if user is following
-          userId
-            ? supabase
-                .from('pack_follows')
-                .select('id')
-                .eq('pack_id', pack.id)
-                .eq('user_id', userId)
-                .maybeSingle()
-                .then(({ data }) => !!data)
-            : Promise.resolve(false)
-        ])
+    for (const row of membersResult.data || []) {
+      memberCounts[row.pack_id] = (memberCounts[row.pack_id] || 0) + 1
+    }
+    for (const row of postsResult.data || []) {
+      postCounts[row.pack_id] = (postCounts[row.pack_id] || 0) + 1
+    }
+    for (const row of userMemberships.data || []) {
+      membershipMap[row.pack_id] = row.role
+    }
+    for (const row of userFollows.data || []) {
+      followSet.add(row.pack_id)
+    }
 
-        return {
-          ...pack,
-          member_count: memberCount,
-          post_count: postCount,
-          is_member: !!membership.data,
-          is_following: isFollowing,
-          user_role: membership.data?.role || null
-        }
-      })
-    )
+    const packsWithStats = (packs || []).map(pack => ({
+      ...pack,
+      member_count: memberCounts[pack.id] || 0,
+      post_count: postCounts[pack.id] || 0,
+      is_member: !!membershipMap[pack.id],
+      is_following: followSet.has(pack.id),
+      user_role: membershipMap[pack.id] || null
+    }))
 
     return NextResponse.json({
       packs: packsWithStats,
