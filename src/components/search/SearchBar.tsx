@@ -93,7 +93,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
       {/* Dropdown Results */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-hidden" data-testid="search-dropdown">
+        <div className="sm:min-w-[720px] absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-hidden" data-testid="search-dropdown">
           {loading && (
             <div className="p-4 text-center">
               <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-green-600" />

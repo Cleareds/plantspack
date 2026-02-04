@@ -52,7 +52,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!isMounted) return
         
         if (error) {
-          console.error('Auth session error:', error)
           setUser(null)
           setProfile(null)
           setSession(null)
@@ -197,34 +196,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           },
         },
       })
-      
+
       if (error) {
         return { data, error }
       }
-      
-      if (data?.user) {
-        // Always try to create user profile, regardless of confirmation status
+
+      if (data?.user && data?.session) {
+        // User is immediately authenticated (email confirmation disabled)
+        // Call API route to create profile using admin client (bypasses RLS)
         try {
-          const { error: profileError } = await supabase
-            .from('users')
-            .upsert({
-              id: data.user.id,
-              email: data.user.email || '',
-              username: userData.username,
-              first_name: userData.firstName || '',
-              last_name: userData.lastName || '',
-              bio: '',
-              avatar_url: null,
-            }, { onConflict: 'id' })
-          
-          if (profileError) {
-            console.error('Error creating user profile:', profileError)
+          const profileResponse = await fetch('/api/auth/create-profile', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          if (!profileResponse.ok) {
+            const errorData = await profileResponse.json()
           }
         } catch (profileError) {
-          console.error('Error creating user profile:', profileError)
         }
       }
-      
+
       return { data, error }
     } catch (error) {
       return { data: null, error }

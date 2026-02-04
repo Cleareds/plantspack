@@ -431,20 +431,20 @@ function PricingContent() {
                   <td className="text-center py-4 px-4">✅</td>
                 </tr>
                 <tr>
-                  <td className="py-4 pr-4 font-medium flex items-center space-x-2">
-                    <BarChart3 className="h-4 w-4" />
-                    <span>Post Analytics</span>
-                  </td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">Basic</td>
-                  <td className="text-center py-4 px-4">Advanced</td>
+                    <td className="py-4 pr-4 font-medium flex items-center space-x-2">
+                        <MapPin className="h-4 w-4" />
+                        <span>Community chat rooms</span>
+                    </td>
+                    <td className="text-center py-4 px-4">❌</td>
+                    <td className="text-center py-4 px-4">✅</td>
+                    <td className="text-center py-4 px-4">✅</td>
                 </tr>
                 <tr>
                   <td className="py-4 pr-4 font-medium flex items-center space-x-2">
                     <Headphones className="h-4 w-4" />
                     <span>Support</span>
                   </td>
-                  <td className="text-center py-4 px-4">Community</td>
+                  <td className="text-center py-4 px-4">Basic</td>
                   <td className="text-center py-4 px-4">Community</td>
                   <td className="text-center py-4 px-4">Priority</td>
                 </tr>

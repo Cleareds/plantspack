@@ -83,15 +83,7 @@ export default function ImageUploader({
     const maxSizePerFile = 5 * 1024 * 1024 // 5MB per file
     const maxTotalSize = 10 * 1024 * 1024 // 10MB total
 
-    console.log('🔍 Validating file:', file.name)
-    console.log('File details:', {
-      type: file.type,
-      size: file.size,
-      sizeInMB: (file.size / 1024 / 1024).toFixed(2) + 'MB'
-    })
-
     if (!validTypes.includes(file.type)) {
-      console.error('❌ Invalid file type:', file.type, 'Valid types:', validTypes)
       alert('Please upload only JPEG, PNG, or WebP images.')
       return false
     }

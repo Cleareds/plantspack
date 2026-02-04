@@ -35,14 +35,14 @@ export async function POST() {
       )
     }
 
-    // Extract user data from OAuth metadata
+    // Extract user data from auth metadata (includes signup form data)
     const userMetadata = user.user_metadata || {}
     const email = user.email || ''
 
-    // Generate username from email or OAuth data
-    const baseUsername = userMetadata.preferred_username ||
+    // Generate username from metadata (prioritize form data for email/password signup)
+    const baseUsername = userMetadata.username ||
+                        userMetadata.preferred_username ||
                         userMetadata.user_name ||
-                        userMetadata.username ||
                         email.split('@')[0] ||
                         `user_${user.id.slice(0, 8)}`
 
@@ -67,8 +67,23 @@ export async function POST() {
     }
 
     // Create user profile using admin client to bypass RLS
+    // Priority: 1) Form data (first_name/last_name from signup)
+    //           2) OAuth data (given_name/family_name)
+    //           3) Full name parsing
+    const firstName = userMetadata.first_name ||
+                     userMetadata.given_name ||
+                     ''
+
+    const lastName = userMetadata.last_name ||
+                    userMetadata.family_name ||
+                    ''
+
+    // Fallback: parse full_name or name if first/last not provided
     const fullName = userMetadata.full_name || userMetadata.name || ''
     const nameParts = fullName.split(' ')
+
+    const finalFirstName = firstName || nameParts[0] || ''
+    const finalLastName = lastName || nameParts.slice(1).join(' ') || ''
 
     const { data: newProfile, error: createError } = await adminClient
       .from('users')
@@ -76,8 +91,8 @@ export async function POST() {
         id: user.id,
         email: email,
         username: finalUsername,
-        first_name: userMetadata.given_name || userMetadata.first_name || nameParts[0] || '',
-        last_name: userMetadata.family_name || userMetadata.last_name || nameParts.slice(1).join(' ') || '',
+        first_name: finalFirstName,
+        last_name: finalLastName,
         avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
         bio: '',
       })
