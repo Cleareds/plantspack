@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search, PawPrint } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
+import { geocodingService } from '@/lib/geocoding'
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -155,7 +156,7 @@ export default function Map() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Search for addresses using Nominatim
+  // Search for addresses with rate limiting
   const searchAddresses = useCallback(async (query: string) => {
     if (query.length < 3) {
       setSearchResults([])
@@ -164,10 +165,12 @@ export default function Map() {
     }
 
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1&extratags=1&namedetails=1&bounded=0&dedupe=1`
-      )
-      const data = await response.json()
+      const data = await geocodingService.search(query, {
+        limit: 8,
+        addressDetails: true,
+        extraTags: true,
+        nameDetails: true
+      })
       setSearchResults(data)
       setShowSearchResults(true)
     } catch (error) {
@@ -208,7 +211,7 @@ export default function Map() {
     }
   }, [])
 
-  // Search for addresses in the add form
+  // Search for addresses in the add form with rate limiting
   const searchFormAddresses = useCallback(async (query: string) => {
     if (query.length < 3) {
       setAddressSearchResults([])
@@ -217,10 +220,12 @@ export default function Map() {
     }
 
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1&extratags=1&namedetails=1&bounded=0&dedupe=1`
-      )
-      const data = await response.json()
+      const data = await geocodingService.search(query, {
+        limit: 8,
+        addressDetails: true,
+        extraTags: true,
+        nameDetails: true
+      })
       setAddressSearchResults(data)
       setShowAddressSearchResults(true)
     } catch (error) {
@@ -488,16 +493,13 @@ export default function Map() {
     fetchPlaces()
   }, [authReady, getCurrentLocation, fetchPlaces])
 
-  // Geocode initial location from URL param (e.g., from post location link)
+  // Geocode initial location from URL param (e.g., from post location link) with rate limiting
   useEffect(() => {
     if (!initialLocation || !authReady) return
 
     const geocodeInitialLocation = async () => {
       try {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(initialLocation)}&limit=1`
-        )
-        const data = await response.json()
+        const data = await geocodingService.search(initialLocation, { limit: 1 })
 
         if (data && data.length > 0) {
           const lat = parseFloat(data[0].lat)

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { MapPin, Search, Navigation, X, Loader2 } from 'lucide-react'
 import { getCurrentLocation, type LocationData } from '@/lib/post-analytics'
+import { geocodingService } from '@/lib/geocoding'
 
 interface LocationPickerProps {
   onSelect: (location: LocationData) => void
@@ -60,7 +61,7 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
     return () => document.removeEventListener('keydown', handleEsc)
   }, [onClose])
 
-  // Debounced search
+  // Debounced search with rate limiting
   useEffect(() => {
     if (query.length < 3) {
       setResults([])
@@ -70,10 +71,7 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
     const timeoutId = setTimeout(async () => {
       setSearching(true)
       try {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&addressdetails=1`
-        )
-        const data = await response.json()
+        const data = await geocodingService.search(query, { limit: 6 })
         setResults(data)
       } catch (error) {
         console.error('Location search error:', error)
