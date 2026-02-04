@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2 } from 'lucide-react'
 
 interface SignupFormProps {
   onToggle: () => void
@@ -19,8 +19,53 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle')
+  const [usernameError, setUsernameError] = useState('')
 
-  const { signUp, signInWithGoogle, signInWithFacebook } = useAuth()
+  const { signUp, signInWithGoogle, signInWithFacebook} = useAuth()
+
+  // Debounced username availability check
+  const checkUsernameAvailability = useCallback(async (username: string) => {
+    if (!username || username.length < 3) {
+      setUsernameStatus('idle')
+      setUsernameError('')
+      return
+    }
+
+    setUsernameStatus('checking')
+    setUsernameError('')
+
+    try {
+      const response = await fetch(`/api/auth/check-username?username=${encodeURIComponent(username)}`)
+      const data = await response.json()
+
+      if (response.ok) {
+        if (data.available) {
+          setUsernameStatus('available')
+        } else {
+          setUsernameStatus('taken')
+          setUsernameError(data.error || 'Username is already taken')
+        }
+      } else {
+        setUsernameStatus('invalid')
+        setUsernameError(data.error || 'Failed to check username')
+      }
+    } catch (err) {
+      setUsernameStatus('idle')
+      setUsernameError('')
+    }
+  }, [])
+
+  // Debounce username check
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (username) {
+        checkUsernameAvailability(username)
+      }
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [username, checkUsernameAvailability])
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,6 +79,19 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
       // Validation
       if (!email || !username || !password) {
         setError('Please fill in all required fields')
+        setLoading(false)
+        return
+      }
+
+      // Check username availability
+      if (usernameStatus === 'taken') {
+        setError('Username is already taken. Please choose another.')
+        setLoading(false)
+        return
+      }
+
+      if (usernameStatus === 'invalid') {
+        setError('Username format is invalid. Use 3-20 characters (letters, numbers, _ or -)')
         setLoading(false)
         return
       }
@@ -130,11 +188,34 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/\s/g, ''))}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className={`w-full pl-10 pr-10 py-2 border rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent ${
+                  usernameStatus === 'available' ? 'border-green-500' :
+                  usernameStatus === 'taken' || usernameStatus === 'invalid' ? 'border-red-500' :
+                  'border-gray-300'
+                }`}
                 placeholder="Choose a username"
                 required
               />
+              {/* Status indicator */}
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                {usernameStatus === 'checking' && (
+                  <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+                )}
+                {usernameStatus === 'available' && (
+                  <Check className="h-5 w-5 text-green-600" />
+                )}
+                {(usernameStatus === 'taken' || usernameStatus === 'invalid') && (
+                  <X className="h-5 w-5 text-red-600" />
+                )}
+              </div>
             </div>
+            {/* Error message */}
+            {usernameError && (
+              <p className="mt-1 text-sm text-red-600">{usernameError}</p>
+            )}
+            {usernameStatus === 'available' && (
+              <p className="mt-1 text-sm text-green-600">Username is available!</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
