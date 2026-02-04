@@ -127,6 +127,12 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
     e.preventDefault()
     if (!user || !newComment.trim() || submitting) return
 
+    // Check if user is banned
+    if (profile?.is_banned) {
+      alert('Your account has been suspended and cannot create comments')
+      return
+    }
+
     const commentContent = newComment.trim()
     setNewComment('') // Clear immediately to prevent double submissions
     setSubmitting(true)

@@ -340,6 +340,12 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             return
         }
 
+        // Check if user is banned
+        if (profile?.is_banned) {
+            setError('Your account has been suspended and cannot create posts')
+            return
+        }
+
         if (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) {
             setError('Please add some content, images, or videos')
             return

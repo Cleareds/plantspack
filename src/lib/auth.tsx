@@ -5,7 +5,7 @@ import { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { Tables } from './supabase'
 
-type UserProfile = Tables<'users'> & { role?: string }
+type UserProfile = Tables<'users'> & { role?: string; is_banned?: boolean }
 
 interface AuthContextType {
   user: User | null

@@ -181,16 +181,24 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id
 
-    // Get user's subscription tier
+    // Get user's subscription tier and ban status
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('subscription_tier')
+      .select('subscription_tier, is_banned')
       .eq('id', userId)
       .single()
 
     if (userError) {
       console.error('[Packs API] Error fetching user:', userError)
       throw userError
+    }
+
+    // Check if user is banned
+    if (user?.is_banned) {
+      return NextResponse.json(
+        { error: 'Your account has been suspended and cannot create packs' },
+        { status: 403 }
+      )
     }
 
     const tier = (user?.subscription_tier || 'free') as SubscriptionTier
