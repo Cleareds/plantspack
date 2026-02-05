@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 // Create Supabase client
 const getSupabase = () => createClient(
@@ -60,16 +62,26 @@ export async function POST(
 ) {
   try {
     const { id } = await params
-    const supabase = getSupabase()
 
-    // Get session
-    const authHeader = request.headers.get('authorization')
-    if (authHeader) {
-      supabase.auth.setSession({
-        access_token: authHeader.replace('Bearer ', ''),
-        refresh_token: ''
-      })
-    }
+    // Create Supabase client with cookies for auth
+    const cookieStore = await cookies()
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options)
+            })
+          },
+        },
+      }
+    )
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
@@ -202,7 +214,26 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    const supabase = getSupabase()
+
+    // Create Supabase client with cookies for auth
+    const cookieStore = await cookies()
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options)
+            })
+          },
+        },
+      }
+    )
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {

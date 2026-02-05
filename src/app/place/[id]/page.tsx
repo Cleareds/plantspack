@@ -22,6 +22,8 @@ type PlaceData = {
   latitude: number
   longitude: number
   tags: string[]
+  opening_hours: Record<string, string> | null
+  event_time: { start: string; end: string } | null
   created_at: string
   created_by: string
   users: {
@@ -172,9 +174,30 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-sm font-medium text-gray-900">Address</div>
-                  <div className="text-sm text-gray-600">{place.address}</div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-gray-900 mb-1">Address</div>
+                  <div className="text-sm text-gray-600 mb-2">{place.address}</div>
+                  <div className="flex gap-2">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Google Maps
+                    </a>
+                    <span className="text-gray-300">•</span>
+                    <a
+                      href={`http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.address)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Apple Maps
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -206,6 +229,47 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                     >
                       {place.phone}
                     </a>
+                  </div>
+                </div>
+              )}
+
+              {place.opening_hours && (place.category === 'restaurant' || place.category === 'cafe') && (
+                <div className="flex items-start gap-3 md:col-span-2">
+                  <Calendar className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-900 mb-2">Opening Hours</div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      {Object.entries(place.opening_hours).map(([day, hours]) => (
+                        <div key={day} className="flex justify-between">
+                          <span className="text-gray-600 capitalize">{day}:</span>
+                          <span className="text-gray-900">{hours}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {place.event_time && place.category === 'event' && (
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">Event Time</div>
+                    <div className="text-sm text-gray-600">
+                      {new Date(place.event_time.start).toLocaleString('en-US', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short'
+                      })}
+                      {place.event_time.end && (
+                        <>
+                          {' - '}
+                          {new Date(place.event_time.end).toLocaleString('en-US', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short'
+                          })}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
