@@ -22,7 +22,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
             <Image
-              src="/logo.svg"
+              src="/plantspack9.png"
               alt="PlantsPack Logo"
               width={64}
               height={64}
