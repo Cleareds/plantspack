@@ -198,10 +198,13 @@ export async function POST(
       { review, updated: isUpdate },
       { status: isUpdate ? 200 : 201 }
     )
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Place Reviews API] Error:', error)
     return NextResponse.json(
-      { error: 'Failed to create review' },
+      {
+        error: 'Failed to create review',
+        details: error?.message || String(error)
+      },
       { status: 500 }
     )
   }
