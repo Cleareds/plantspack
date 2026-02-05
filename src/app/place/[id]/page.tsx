@@ -8,6 +8,7 @@ import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import PlaceReviews from '@/components/places/PlaceReviews'
 import PlaceMap from '@/components/places/PlaceMap'
 import FavoriteButton from '@/components/social/FavoriteButton'
+import AddToPackButton from '@/components/places/AddToPackButton'
 import { formatDistanceToNow } from 'date-fns'
 
 type PlaceData = {
@@ -152,12 +153,13 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   </div>
                 )}
               </div>
-              <div className="ml-4">
+              <div className="ml-4 flex items-start gap-2">
                 <FavoriteButton
                   entityType="place"
                   entityId={place.id}
                   initialFavorites={place.favorite_places}
                 />
+                <AddToPackButton placeId={place.id} placeName={place.name} />
               </div>
             </div>
           </div>

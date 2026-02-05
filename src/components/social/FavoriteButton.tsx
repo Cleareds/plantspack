@@ -40,20 +40,30 @@ export default function FavoriteButton({
 
     setLoading(true)
 
+    // Optimistic update
+    const wasAlreadyFavorited = isFavorited
+    if (wasAlreadyFavorited) {
+      setFavorites(prev => prev.filter(fav => fav.user_id !== user.id))
+    } else {
+      setFavorites(prev => [...prev, { id: 'temp', user_id: user.id }])
+    }
+
     try {
       const tableName = entityType === 'place' ? 'favorite_places' : 'favorite_posts'
       const columnName = entityType === 'place' ? 'place_id' : 'post_id'
 
-      if (isFavorited) {
+      if (wasAlreadyFavorited) {
         const { error } = await supabase
           .from(tableName)
           .delete()
           .eq(columnName, entityId)
           .eq('user_id', user.id)
 
-        if (error) throw error
-
-        setFavorites(prev => prev.filter(fav => fav.user_id !== user.id))
+        if (error) {
+          // Revert optimistic update on error
+          setFavorites(prev => [...prev, { id: 'temp', user_id: user.id }])
+          throw error
+        }
       } else {
         const { data, error } = await supabase
           .from(tableName)
@@ -61,13 +71,29 @@ export default function FavoriteButton({
           .select()
           .single()
 
-        if (error) throw error
+        if (error) {
+          // Check if it's a duplicate key error (already favorited)
+          if (error.code === '23505') {
+            // Already favorited, just fetch the current state
+            const { data: favorites } = await supabase
+              .from(tableName)
+              .select('id, user_id')
+              .eq(columnName, entityId)
 
-        setFavorites(prev => [...prev, data])
+            setFavorites(favorites || [])
+            return
+          }
+
+          // Revert optimistic update on other errors
+          setFavorites(prev => prev.filter(fav => fav.user_id !== user.id))
+          throw error
+        }
+
+        // Update with real data
+        setFavorites(prev => prev.filter(fav => fav.id !== 'temp').concat(data))
       }
     } catch (error) {
       console.error('Error toggling favorite:', error)
-      alert('Failed to update favorite. Please try again.')
     } finally {
       setLoading(false)
     }
