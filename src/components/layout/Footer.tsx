@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Heart, Mail, HelpCircle, Leaf } from 'lucide-react'
+import Image from "next/image";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -12,10 +13,22 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Leaf className="h-5 w-5 text-green-600" />
-              </div>
-              <span className="font-bold text-lg text-gray-900">PlantsPack</span>
+                <Link href="/" className="flex items-center space-x-3">
+                    <Image
+                        src="/logo.svg"
+                        alt="PlantsPack Logo"
+                        width={64}
+                        height={64}
+                        className="object-contain"
+                    />
+                    <div className="flex flex-col">
+                        <span className="text-xl font-bold text-gray-900 leading-[1.1]">PLANTS PACK</span>
+                        <span className="text-sm font-light text-gray-600 leading-[1.1]">vegan syndicate</span>
+                    </div>
+                    <span className="text-xs font-semibold text-white bg-orange-500 px-2 py-1 rounded-full">
+              BETA
+            </span>
+                </Link>
             </div>
             <p className="text-sm text-gray-600 mb-4">
               The world&apos;s most supportive plant-based social network.
