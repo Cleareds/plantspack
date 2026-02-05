@@ -56,7 +56,7 @@ export async function GET(
     }
 
     // Get stats
-    const [memberCount, postCount, membership, isFollowing] = await Promise.all([
+    const [memberCount, postCount, placesCount, membership, isFollowing] = await Promise.all([
       // Member count
       supabase
         .from('pack_members')
@@ -67,6 +67,13 @@ export async function GET(
       // Post count
       supabase
         .from('pack_posts')
+        .select('*', { count: 'exact', head: true })
+        .eq('pack_id', id)
+        .then(({ count }) => count || 0),
+
+      // Places count
+      supabase
+        .from('pack_places')
         .select('*', { count: 'exact', head: true })
         .eq('pack_id', id)
         .then(({ count }) => count || 0),
@@ -97,6 +104,7 @@ export async function GET(
       ...pack,
       member_count: memberCount,
       post_count: postCount,
+      places_count: placesCount,
       is_member: !!membership.data,
       is_following: isFollowing,
       user_role: membership.data?.role || null

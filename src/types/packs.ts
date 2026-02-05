@@ -39,6 +39,7 @@ export interface PackWithCreator extends Pack {
 export interface PackWithStats extends PackWithCreator {
   member_count: number
   post_count: number
+  places_count: number
   is_member: boolean
   is_following: boolean
   user_role: PackMemberRole | null

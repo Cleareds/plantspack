@@ -182,7 +182,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
                 }
               `}
             >
-              Places
+              Places ({pack.places_count || 0})
             </button>
             <button
               onClick={() => handleTabChange('members')}
