@@ -316,7 +316,12 @@ export default function ProfilePage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-1">
-                          <h4 className="font-medium text-gray-900 text-sm truncate">{place.name}</h4>
+                          <Link
+                            href={`/place/${place.id}`}
+                            className="font-medium text-gray-900 text-sm truncate hover:text-green-600 transition-colors"
+                          >
+                            {place.name}
+                          </Link>
                           {place.is_pet_friendly && (
                             <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" />
                           )}
@@ -399,7 +404,12 @@ export default function ProfilePage() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-medium text-gray-900 text-sm truncate">{place.name}</h4>
+                            <Link
+                              href={`/place/${place.id}`}
+                              className="font-medium text-gray-900 text-sm truncate hover:text-green-600 transition-colors"
+                            >
+                              {place.name}
+                            </Link>
                             {place.is_pet_friendly && (
                               <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" />
                             )}

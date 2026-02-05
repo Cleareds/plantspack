@@ -716,7 +716,13 @@ export default function Map() {
                          }
                        }}>
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-gray-900 text-sm">{place.name}</h3>
+                      <Link
+                        href={`/place/${place.id}`}
+                        className="font-semibold text-gray-900 text-sm hover:text-green-600 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {place.name}
+                      </Link>
                       {user && (
                         <button
                           onClick={(e) => {
@@ -843,7 +849,12 @@ export default function Map() {
                 <Popup>
                   <div className="p-2 min-w-[200px]">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-gray-900">{place.name}</h3>
+                      <Link
+                        href={`/place/${place.id}`}
+                        className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                      >
+                        {place.name}
+                      </Link>
                       <div className="flex items-center space-x-1">
                         {user && (
                           <button
