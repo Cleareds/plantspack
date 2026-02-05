@@ -14,12 +14,13 @@ interface PlaceMapProps {
 
 export default function PlaceMap({ latitude, longitude, name }: PlaceMapProps) {
   return (
-    <div className="h-64 rounded-lg overflow-hidden border border-gray-200">
+    <div className="h-64 rounded-lg overflow-hidden border border-gray-200 relative z-0">
       <MapContainer
         center={[latitude, longitude]}
         zoom={15}
-        style={{ height: '100%', width: '100%' }}
+        style={{ height: '100%', width: '100%', zIndex: 0 }}
         scrollWheelZoom={false}
+        zoomControl={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
