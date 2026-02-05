@@ -5,16 +5,21 @@ import { useAuth } from '@/lib/auth'
 import { PackWithStats, PackPostWithPost } from '@/types/packs'
 import PackHeader from '@/components/packs/PackHeader'
 import PostCard from '@/components/posts/PostCard'
-import { useRouter } from 'next/navigation'
+import PackPlacesTab from '@/components/packs/PackPlacesTab'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+type TabType = 'posts' | 'places' | 'members'
 
 export default function PackDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user } = useAuth()
   const [pack, setPack] = useState<PackWithStats | null>(null)
   const [posts, setPosts] = useState<PackPostWithPost[]>([])
   const [loading, setLoading] = useState(true)
   const [postsLoading, setPostsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'posts')
 
   const fetchPack = async () => {
     try {
@@ -134,6 +139,13 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
     )
   }
 
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab)
+    const url = new URL(window.location.href)
+    url.searchParams.set('tab', tab)
+    window.history.pushState({}, '', url.toString())
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <PackHeader
@@ -145,45 +157,105 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Posts Section */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Posts ({pack.post_count})
-          </h2>
-
-          {postsLoading && (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-              <p className="mt-2 text-gray-600">Loading posts...</p>
-            </div>
-          )}
-
-          {!postsLoading && posts.length > 0 && (
-            <div className="space-y-6">
-              {posts.map((packPost) => (
-                <PostCard
-                  key={packPost.id}
-                  post={packPost.posts as any}
-                  onUpdate={() => fetchPosts()}
-                />
-              ))}
-            </div>
-          )}
-
-          {!postsLoading && posts.length === 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-              <div className="text-6xl mb-4">📭</div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No posts yet
-              </h3>
-              <p className="text-gray-600">
-                {pack.user_role === 'admin' || pack.user_role === 'moderator'
-                  ? 'Start adding posts to this pack from the post menu'
-                  : 'This pack is waiting for posts to be added'}
-              </p>
-            </div>
-          )}
+        {/* Tab Navigation */}
+        <div className="border-b border-gray-200 mb-6">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => handleTabChange('posts')}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${activeTab === 'posts'
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }
+              `}
+            >
+              Posts ({pack.post_count})
+            </button>
+            <button
+              onClick={() => handleTabChange('places')}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${activeTab === 'places'
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }
+              `}
+            >
+              Places
+            </button>
+            <button
+              onClick={() => handleTabChange('members')}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${activeTab === 'members'
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }
+              `}
+            >
+              Members ({pack.member_count})
+            </button>
+          </nav>
         </div>
+
+        {/* Tab Content */}
+        {activeTab === 'posts' && (
+          <div className="mb-6">
+            {postsLoading && (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <p className="mt-2 text-gray-600">Loading posts...</p>
+              </div>
+            )}
+
+            {!postsLoading && posts.length > 0 && (
+              <div className="space-y-6">
+                {posts.map((packPost) => (
+                  <PostCard
+                    key={packPost.id}
+                    post={packPost.posts as any}
+                    onUpdate={() => fetchPosts()}
+                  />
+                ))}
+              </div>
+            )}
+
+            {!postsLoading && posts.length === 0 && (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                <div className="text-6xl mb-4">📭</div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No posts yet
+                </h3>
+                <p className="text-gray-600">
+                  {pack.user_role === 'admin' || pack.user_role === 'moderator'
+                    ? 'Start adding posts to this pack from the post menu'
+                    : 'This pack is waiting for posts to be added'}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'places' && (
+          <PackPlacesTab
+            packId={id}
+            userRole={pack.user_role}
+            userId={user?.id || null}
+          />
+        )}
+
+        {activeTab === 'members' && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <div className="text-6xl mb-4">👥</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Members Tab
+            </h3>
+            <p className="text-gray-600">
+              Members list coming soon
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
