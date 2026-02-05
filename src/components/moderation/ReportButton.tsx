@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 
 interface ReportButtonProps {
-  reportedType: 'post' | 'comment' | 'user' | 'place'
+  reportedType: 'post' | 'comment' | 'user' | 'place' | 'review'
   reportedId: string
   className?: string
 }
