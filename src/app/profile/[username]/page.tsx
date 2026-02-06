@@ -201,14 +201,14 @@ export default function ProfilePage() {
         {/* Main Content */}
         <div className={isOwnProfile ? "lg:col-span-3" : "lg:col-span-4"}>
           {/* Profile Header */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-6">
         <div className="flex items-start space-x-6 mb-4">
-          <div className="h-24 w-24 rounded-full bg-green-100 flex items-center justify-center overflow-hidden flex-shrink-0 avatar-container">
+          <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center overflow-hidden flex-shrink-0 avatar-container">
             {profile.avatar_url ? (
               <img
                 src={profile.avatar_url}
                 alt={profile.username}
-                className="h-24 w-24 object-cover rounded-full"
+                className="h-20 w-20 object-cover rounded-full"
               />
             ) : (
               <User className="h-12 w-12 text-green-600" />
@@ -224,14 +224,14 @@ export default function ProfilePage() {
               </h1>
               {isOwnProfile && subscriptionTier && (
                 <div
-                  className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium"
+                  className="flex items-center space-x-1 px-1 sm:px-3 py-1 rounded-full text-sm font-medium"
                   style={{
                     color: subscriptionTier.badge.color,
                     backgroundColor: subscriptionTier.badge.bgColor
                   }}
                 >
                   <Crown className="h-4 w-4" />
-                  <span>{subscriptionTier.badge.text}</span>
+                  <span className={"hidden sm:inline"}>{subscriptionTier.badge.text}</span>
                 </div>
               )}
               {profile.is_banned && (

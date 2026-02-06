@@ -57,16 +57,16 @@ export default function UserStatsCompact({ userId, className = '' }: UserStatsCo
   ].filter(r => r.count > 0)
 
   return (
-    <div className={`flex flex-wrap items-center gap-3 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-1 sm:gap-3 ${className}`}>
       {/* Reactions */}
       {reactions.length > 0 && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {reactions.map((reaction, index) => {
             const Icon = reaction.icon
             return (
               <div
                 key={index}
-                className={`flex items-center space-x-1 px-2 py-1 rounded-md ${reaction.bgColor}`}
+                className={`flex items-center space-x-1 px-1 py-1 rounded-md ${reaction.bgColor}`}
               >
                 <Icon className={`h-4 w-4 ${reaction.color}`} />
                 <span className={`text-sm font-semibold ${reaction.color}`}>
@@ -80,14 +80,14 @@ export default function UserStatsCompact({ userId, className = '' }: UserStatsCo
 
       {/* Followers/Following */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center space-x-1 px-2 py-1 rounded-md bg-green-50">
+        <div className="flex items-center space-x-1 px-1 py-1 rounded-md bg-green-50">
           <Users className="h-4 w-4 text-green-600" />
           <span className="text-sm font-semibold text-green-600">
             {stats.followers_count.toLocaleString()}
           </span>
           <span className="text-xs text-gray-500">followers</span>
         </div>
-        <div className="flex items-center space-x-1 px-2 py-1 rounded-md bg-green-50">
+        <div className="flex items-center space-x-1 px-1 py-1 rounded-md bg-green-50">
           <UserPlus className="h-4 w-4 text-green-600" />
           <span className="text-sm font-semibold text-green-600">
             {stats.following_count.toLocaleString()}
