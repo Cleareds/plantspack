@@ -24,7 +24,7 @@ export default function CreatePackPage() {
     instagram_url: '',
     tiktok_url: '',
     categories: [] as PackCategory[],
-    is_published: false
+    is_published: true
   })
 
   const categories: { value: PackCategory; label: string; icon: string; description: string }[] = [
@@ -281,19 +281,6 @@ export default function CreatePackPage() {
             </div>
           </div>
 
-          {/* Publish Option */}
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="is_published"
-              checked={formData.is_published}
-              onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-            />
-            <label htmlFor="is_published" className="text-sm text-gray-700">
-              Publish immediately (you can add posts later)
-            </label>
-          </div>
 
           {/* Submit */}
           <div className="flex gap-3 pt-4">
