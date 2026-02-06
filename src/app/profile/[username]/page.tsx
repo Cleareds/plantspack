@@ -22,6 +22,7 @@ export default function ProfilePage() {
   const [addedPlaces, setAddedPlaces] = useState<any[]>([])
   const [favoritePlaces, setFavoritePlaces] = useState<any[]>([])
   const [userPacks, setUserPacks] = useState<any[]>([])
+  const [joinedPacks, setJoinedPacks] = useState<any[]>([])
   const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -124,7 +125,7 @@ export default function ProfilePage() {
 
       setFavoritePlaces(favoritePlacesData || [])
 
-      // Fetch user's packs
+      // Fetch user's packs (created by user)
       try {
         const packsRes = await fetch(`/api/packs?creator_id=${profileData.id}&limit=10`)
         const packsData = await packsRes.json()
@@ -133,6 +134,43 @@ export default function ProfilePage() {
         }
       } catch (err) {
         console.error('Error loading packs:', err)
+      }
+
+      // Fetch packs user has joined (as member or moderator, excluding creator)
+      try {
+        const { data: memberData } = await supabase
+          .from('pack_members')
+          .select(`
+            role,
+            joined_at,
+            packs:pack_id (
+              id,
+              title,
+              description,
+              category,
+              categories,
+              banner_url,
+              is_published,
+              creator_id
+            )
+          `)
+          .eq('user_id', profileData.id)
+          .neq('role', 'admin')
+          .order('joined_at', { ascending: false })
+          .limit(5)
+
+        if (memberData) {
+          // Filter out nulls and map to pack objects with role
+          const joinedPacksData = memberData
+            .filter((m: any) => m.packs)
+            .map((m: any) => ({
+              ...m.packs,
+              member_role: m.role
+            }))
+          setJoinedPacks(joinedPacksData)
+        }
+      } catch (err) {
+        console.error('Error loading joined packs:', err)
       }
 
       // Fetch subscription if viewing own profile
@@ -514,6 +552,50 @@ export default function ProfilePage() {
                     </Link>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Joined Packs */}
+          {joinedPacks.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Package className="h-5 w-5 text-blue-600" />
+                    <h3 className="font-semibold text-gray-900">
+                      Joined Packs ({joinedPacks.length})
+                    </h3>
+                  </div>
+                  <Link href="/packs" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                    View all
+                  </Link>
+                </div>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {joinedPacks.slice(0, 5).map((pack: any) => (
+                  <Link key={pack.id} href={`/packs/${pack.id}`} className="block p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium text-gray-900 text-sm truncate">{pack.title}</h4>
+                          {pack.member_role && (
+                            <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs capitalize">
+                              {pack.member_role}
+                            </span>
+                          )}
+                        </div>
+                        {pack.description && (
+                          <p className="text-xs text-gray-500 line-clamp-2">{pack.description}</p>
+                        )}
+                        <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                          <span>{pack.member_count || 0} members</span>
+                          <span>{pack.post_count || 0} posts</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           )}
