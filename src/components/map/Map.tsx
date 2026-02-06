@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Plus, MapPin, Heart, X, Search, PawPrint, Menu, ChevronLeft } from 'lucide-react'
+import { Plus, MapPin, Heart, X, Search, PawPrint, Menu, ChevronLeft, CheckCircle } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { geocodingService } from '@/lib/geocoding'
 
@@ -39,6 +39,7 @@ const MapClickHandler = dynamic(() =>
 )
 
 export default function Map() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const initialLocation = searchParams.get('location')
   const [places, setPlaces] = useState<Place[]>([])
@@ -56,6 +57,7 @@ export default function Map() {
   const [searchRadius, setSearchRadius] = useState(50) // Default 50km radius
   const [customCenter, setCustomCenter] = useState<[number, number] | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false) // Closed by default for mobile
+  const [successMessage, setSuccessMessage] = useState('')
   const [newPlace, setNewPlace] = useState({
     name: '',
     category: 'restaurant',
@@ -422,7 +424,7 @@ export default function Map() {
 
   const handleAddPlace = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!user) {
       return
     }
@@ -434,7 +436,7 @@ export default function Map() {
     }
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('places')
         .insert({
           ...newPlace,
@@ -446,8 +448,8 @@ export default function Map() {
         console.error('Supabase error:', error)
         throw error
       }
-      
 
+      // Close form and reset
       setShowAddForm(false)
       setNewPlace({
         name: '',
@@ -462,7 +464,16 @@ export default function Map() {
       setAddressSearchQuery('')
       setAddressSearchResults([])
       setShowAddressSearchResults(false)
-      fetchPlaces()
+
+      // Show success message
+      setSuccessMessage(`✅ "${newPlace.name}" has been added successfully!`)
+      setTimeout(() => setSuccessMessage(''), 5000)
+
+      // Refresh the places list
+      await fetchPlaces()
+
+      // Refresh the page to clear any cache
+      router.refresh()
     } catch (error) {
       console.error('Error adding place:', error)
       alert('Failed to add place. Please try again.')
@@ -583,6 +594,16 @@ export default function Map() {
 
   return (
     <div className="flex flex-col h-screen max-h-screen">
+      {/* Success Message */}
+      {successMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-fade-in">
+          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+            <p className="text-sm font-medium text-green-800">{successMessage}</p>
+          </div>
+        </div>
+      )}
+
       {/* Controls */}
       <div className="bg-white border-b border-gray-200 p-3 md:p-4 flex-shrink-0">
         <div className="max-w-full mx-auto">

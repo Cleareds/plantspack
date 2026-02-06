@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9535adfd-7deb-4631-8719-60b2fd020e3f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/place/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/place/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/guest/GuestWelcome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/guest/GuestWelcome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/posts/Feed.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/posts/Feed.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/posts/PostCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/posts/PostCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/profile/[username]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/profile/[username]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/profile/UserStatsCompact.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/profile/UserStatsCompact.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +97,7 @@
       <workItem from="1767878089748" duration="3651000" />
       <workItem from="1768231163136" duration="529000" />
       <workItem from="1768831374725" duration="632000" />
-      <workItem from="1770130952585" duration="12653000" />
+      <workItem from="1770130952585" duration="13694000" />
     </task>
     <servers />
   </component>
