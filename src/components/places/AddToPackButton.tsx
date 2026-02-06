@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase'
 
 interface Pack {
   id: string
-  name: string
+  title: string
   description: string | null
   user_role: 'admin' | 'moderator' | 'member' | null
 }
@@ -42,7 +42,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
           role,
           packs!inner (
             id,
-            name,
+            title,
             description
           )
         `)
@@ -55,7 +55,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
         .filter((pm: any) => pm.packs)
         .map((pm: any) => ({
           id: pm.packs.id,
-          name: pm.packs.name,
+          title: pm.packs.title,
           description: pm.packs.description,
           user_role: pm.role
         }))
@@ -151,7 +151,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-gray-900 mb-1">{pack.name}</h3>
+                          <h3 className="font-medium text-gray-900 mb-1">{pack.title}</h3>
                           {pack.description && (
                             <p className="text-sm text-gray-600 line-clamp-2">
                               {pack.description}
