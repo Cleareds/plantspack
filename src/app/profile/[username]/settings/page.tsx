@@ -4,7 +4,7 @@ import { useAuth } from '@/lib/auth'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
-import { Bell, Lock, Globe, Trash2, Ban, VolumeX, User, Download, Shield } from 'lucide-react'
+import { Bell, Lock, Globe, Trash2, Ban, VolumeX, User, Download, Shield, Settings } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function ProfileSettingsPage() {
@@ -21,6 +21,8 @@ export default function ProfileSettingsPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [exporting, setExporting] = useState(false)
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true)
+  const [savingNotifications, setSavingNotifications] = useState(false)
 
   useEffect(() => {
     if (authReady && !user) {
@@ -103,6 +105,33 @@ export default function ProfileSettingsPage() {
     fetchMutedUsers()
   }, [user])
 
+  // Fetch notification preferences
+  useEffect(() => {
+    const fetchNotificationPrefs = async () => {
+      if (!user) return
+
+      try {
+        const { data, error } = await supabase
+          .from('notification_preferences')
+          .select('*')
+          .eq('user_id', user.id)
+          .single()
+
+        if (error && error.code !== 'PGRST116') throw error
+
+        // If preferences exist, check if all notification types are enabled
+        if (data) {
+          const allEnabled = data.likes && data.comments && data.follows && data.mentions
+          setNotificationsEnabled(allEnabled)
+        }
+      } catch (error) {
+        console.error('Error fetching notification preferences:', error)
+      }
+    }
+
+    fetchNotificationPrefs()
+  }, [user])
+
   const handleUnblock = async (userId: string) => {
     if (!user) return
 
@@ -140,6 +169,32 @@ export default function ProfileSettingsPage() {
     } catch (error) {
       console.error('Error unmuting user:', error)
       alert('Failed to unmute user')
+    }
+  }
+
+  const handleToggleNotifications = async (enabled: boolean) => {
+    if (!user) return
+
+    setSavingNotifications(true)
+    try {
+      const { error } = await supabase
+        .from('notification_preferences')
+        .upsert({
+          user_id: user.id,
+          likes: enabled,
+          comments: enabled,
+          follows: enabled,
+          mentions: enabled
+        })
+
+      if (error) throw error
+
+      setNotificationsEnabled(enabled)
+    } catch (error) {
+      console.error('Error updating notification preferences:', error)
+      alert('Failed to update notification preferences')
+    } finally {
+      setSavingNotifications(false)
     }
   }
 
@@ -253,25 +308,32 @@ export default function ProfileSettingsPage() {
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Email Notifications</p>
-                    <p className="text-sm text-gray-500">Receive email updates about your activity</p>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900">Enable Notifications</p>
+                    <p className="text-sm text-gray-500">
+                      Get notified about likes, comments, follows, and mentions
+                    </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" defaultChecked />
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={notificationsEnabled}
+                      onChange={(e) => handleToggleNotifications(e.target.checked)}
+                      disabled={savingNotifications}
+                    />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
                   </label>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Push Notifications</p>
-                    <p className="text-sm text-gray-500">Get notified about new followers and likes</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                  </label>
+                <div className="pt-3 border-t border-gray-200">
+                  <a
+                    href={`/profile/${username}/notifications`}
+                    className="inline-flex items-center gap-2 text-sm text-green-600 hover:text-green-700 font-medium"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Advanced notification settings
+                  </a>
                 </div>
               </div>
             </div>

@@ -4,7 +4,7 @@ import { useAuth } from '@/lib/auth'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
-import { Bell, Mail, Smartphone, Save, Loader2 } from 'lucide-react'
+import { Bell, Save, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { NotificationPreferences } from '@/types/notifications'
 
@@ -71,14 +71,10 @@ export default function NotificationPreferencesPage() {
       const { error } = await supabase
         .from('notification_preferences')
         .update({
-          email_likes: preferences.email_likes,
-          email_comments: preferences.email_comments,
-          email_follows: preferences.email_follows,
-          email_mentions: preferences.email_mentions,
-          push_likes: preferences.push_likes,
-          push_comments: preferences.push_comments,
-          push_follows: preferences.push_follows,
-          push_mentions: preferences.push_mentions,
+          likes: preferences.likes,
+          comments: preferences.comments,
+          follows: preferences.follows,
+          mentions: preferences.mentions,
           updated_at: new Date().toISOString(),
         })
         .eq('user_id', user.id)
@@ -130,24 +126,24 @@ export default function NotificationPreferencesPage() {
           </div>
 
           <div className="space-y-6">
-            {/* Email Notifications */}
+            {/* Notifications */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Mail className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Email Notifications</h2>
+                <Bell className="h-5 w-5 text-green-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Notification Preferences</h2>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">Likes</p>
-                    <p className="text-sm text-gray-500">Receive emails when someone likes your post</p>
+                    <p className="text-sm text-gray-500">Get notified when someone likes your post</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={preferences.email_likes}
-                      onChange={(e) => updatePreference('email_likes', e.target.checked)}
+                      checked={preferences.likes}
+                      onChange={(e) => updatePreference('likes', e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
@@ -157,13 +153,13 @@ export default function NotificationPreferencesPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">Comments</p>
-                    <p className="text-sm text-gray-500">Receive emails when someone comments on your post</p>
+                    <p className="text-sm text-gray-500">Get notified when someone comments on your post</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={preferences.email_comments}
-                      onChange={(e) => updatePreference('email_comments', e.target.checked)}
+                      checked={preferences.comments}
+                      onChange={(e) => updatePreference('comments', e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
@@ -173,13 +169,13 @@ export default function NotificationPreferencesPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">New Followers</p>
-                    <p className="text-sm text-gray-500">Receive emails when someone follows you</p>
+                    <p className="text-sm text-gray-500">Get notified when someone follows you</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={preferences.email_follows}
-                      onChange={(e) => updatePreference('email_follows', e.target.checked)}
+                      checked={preferences.follows}
+                      onChange={(e) => updatePreference('follows', e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
@@ -189,87 +185,13 @@ export default function NotificationPreferencesPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900">Mentions</p>
-                    <p className="text-sm text-gray-500">Receive emails when someone mentions you</p>
+                    <p className="text-sm text-gray-500">Get notified when someone mentions you</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={preferences.email_mentions}
-                      onChange={(e) => updatePreference('email_mentions', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Push Notifications */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <Smartphone className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">In-App Notifications</h2>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Likes</p>
-                    <p className="text-sm text-gray-500">Show notification bell updates for likes</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.push_likes}
-                      onChange={(e) => updatePreference('push_likes', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Comments</p>
-                    <p className="text-sm text-gray-500">Show notification bell updates for comments</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.push_comments}
-                      onChange={(e) => updatePreference('push_comments', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">New Followers</p>
-                    <p className="text-sm text-gray-500">Show notification bell updates for followers</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.push_follows}
-                      onChange={(e) => updatePreference('push_follows', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-gray-900">Mentions</p>
-                    <p className="text-sm text-gray-500">Show notification bell updates for mentions</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={preferences.push_mentions}
-                      onChange={(e) => updatePreference('push_mentions', e.target.checked)}
+                      checked={preferences.mentions}
+                      onChange={(e) => updatePreference('mentions', e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
