@@ -604,7 +604,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <ReactionButtons
             postId={post.id}
             onReactionChange={onUpdate}

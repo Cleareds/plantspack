@@ -265,7 +265,7 @@ export default function ReactionButtons({
   }
 
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
+    <div className={`flex items-center space-x-1 ${className}`}>
       {(Object.keys(reactionConfig) as ReactionType[]).map(reactionType => {
         const config = reactionConfig[reactionType]
         const Icon = config.icon
