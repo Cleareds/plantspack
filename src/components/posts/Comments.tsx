@@ -268,7 +268,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-start justify-center">
+                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
                           <span className="text-sm font-medium text-green-600">
                             {comment.users?.first_name?.[0] || comment.users?.username?.[0]?.toUpperCase() || '?'}
                           </span>
@@ -432,7 +432,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-start justify-center">
+                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
                           <span className="text-sm font-medium text-green-600">
                             {comment.users?.first_name?.[0] || comment.users?.username?.[0]?.toUpperCase() || '?'}
                           </span>
