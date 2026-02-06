@@ -64,11 +64,12 @@ All the following CLI tools are installed and authenticated on this machine:
   - Manage products and subscriptions
   - View logs and debug payment issues
 
-### 4. Supabase CLI
+### 4. Supabase CLI & Admin Access
 - **Status**: ✅ Authenticated
 - **Version**: 2.67.1
 - **Organization**: ptaoqgevccjhnasapenf
-- **Projects**: Multiple projects accessible (fantasy-check, etc.)
+- **Project**: plantspack (mfeelaqjbtnypoojhfjp)
+- **Database Access**: ✅ Full admin access via service role key
 - **Capabilities**:
   - List projects: `supabase projects list`
   - Run migrations: `supabase db push`
@@ -76,6 +77,33 @@ All the following CLI tools are installed and authenticated on this machine:
   - Check database status
   - View logs: `supabase logs`
   - Manage functions and storage
+  - **Execute raw SQL**: Via admin client or scripts
+  - **Apply migrations**: Create and run migration files
+  - **Fix RLS policies**: Update security policies as needed
+
+### 5. Running SQL Migrations
+
+**You MUST run SQL migrations directly when:**
+- RLS policies need fixes
+- Schema changes are required
+- Database issues need immediate fixes
+
+**How to run SQL:**
+1. Create TypeScript script using `@supabase/supabase-js` with service role key
+2. Execute SQL via admin client
+3. Or use `supabase db push` to apply migration files
+4. Test the changes immediately after applying
+
+**Example:**
+```typescript
+const supabase = createClient(url, serviceRoleKey)
+// Execute SQL or run migrations
+```
+
+**Project Details:**
+- Service role key is in `.env.local`
+- Project ref: `mfeelaqjbtnypoojhfjp`
+- Migrations are in `supabase/migrations/`
 
 ## Project Information
 
