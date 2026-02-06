@@ -27,12 +27,31 @@ Three dedicated test users are configured with different subscription tiers:
 
 These credentials are stored in `.env.test` and are safe for public repositories as they're only for testing purposes.
 
-**Creating Test Users**: Run the script to create all test users:
+**Creating Test Users**:
+
+⚠️ **IMPORTANT SECURITY NOTE**: Test users should **NEVER** be created in production!
+
+**For Local Development:**
 ```bash
+# Make sure you're connected to local Supabase or a staging database
 npx tsx scripts/create-test-user.ts
 ```
 
+**For Production E2E Tests:**
+- DO NOT create test users in production database
+- Use a separate staging environment with its own database
+- Or run tests against localhost only
+
 The script will create all three users with their respective subscription tiers. If users already exist, it will skip creation.
+
+**Securing Production**: If test users were accidentally created in production:
+```bash
+# List test users
+npx tsx scripts/secure-test-users.ts list
+
+# Delete test users from production
+npx tsx scripts/secure-test-users.ts delete
+```
 
 ## Testing with Different Subscription Tiers
 

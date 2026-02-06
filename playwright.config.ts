@@ -13,7 +13,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'https://plantspack.com',
+    // Default to localhost for safety - set PLAYWRIGHT_BASE_URL to test against production
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
