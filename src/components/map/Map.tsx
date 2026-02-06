@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Plus, MapPin, Heart, X, Search, PawPrint } from 'lucide-react'
+import { Plus, MapPin, Heart, X, Search, PawPrint, Menu, ChevronLeft } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { geocodingService } from '@/lib/geocoding'
 
@@ -55,6 +55,7 @@ export default function Map() {
   const [showAddressSearchResults, setShowAddressSearchResults] = useState(false)
   const [searchRadius, setSearchRadius] = useState(50) // Default 50km radius
   const [customCenter, setCustomCenter] = useState<[number, number] | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false) // Closed by default for mobile
   const [newPlace, setNewPlace] = useState({
     name: '',
     category: 'restaurant',
@@ -493,6 +494,24 @@ export default function Map() {
     fetchPlaces()
   }, [authReady, getCurrentLocation, fetchPlaces])
 
+  // Set sidebar open on desktop by default
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(true)
+      } else {
+        setSidebarOpen(false)
+      }
+    }
+
+    // Set initial state
+    handleResize()
+
+    // Listen for window resize
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   // Geocode initial location from URL param (e.g., from post location link) with rate limiting
   useEffect(() => {
     if (!initialLocation || !authReady) return
@@ -565,52 +584,83 @@ export default function Map() {
   return (
     <div className="flex flex-col h-screen max-h-screen">
       {/* Controls */}
-      <div className="bg-white border-b border-gray-200 p-4 flex-shrink-0">
-        <div className="max-w-full mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-semibold text-gray-900">Vegan Places</h1>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+      <div className="bg-white border-b border-gray-200 p-3 md:p-4 flex-shrink-0">
+        <div className="max-w-full mx-auto">
+          {/* Mobile: Single row with menu button and title */}
+          <div className="flex items-center justify-between gap-2 mb-3 lg:hidden">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+              aria-label="Toggle sidebar"
             >
-              {categories.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
-            
-            {/* Radius Selector */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Radius:</span>
-              <select
-                value={searchRadius}
-                onChange={(e) => setSearchRadius(Number(e.target.value))}
-                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value={5}>5km</option>
-                <option value={10}>10km</option>
-                <option value={25}>25km</option>
-                <option value={50}>50km</option>
-                <option value={100}>100km</option>
-                <option value={200}>200km</option>
-              </select>
-            </div>
-
-            {/* Reset Center Button */}
-            {customCenter && (
+              <Menu className="h-5 w-5 text-gray-700" />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900 flex-1">Vegan Places</h1>
+            {user ? (
               <button
-                onClick={() => setCustomCenter(null)}
-                className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded border"
+                onClick={() => setShowAddForm(true)}
+                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                Reset Center
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Add</span>
               </button>
+            ) : (
+              <Link
+                href="/auth"
+                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign Up</span>
+              </Link>
             )}
           </div>
-          
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md mx-4 relative search-container">
+
+          {/* Desktop: All controls in one row */}
+          <div className="hidden lg:flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <h1 className="text-xl font-semibold text-gray-900">Vegan Places</h1>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                {categories.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
+
+              {/* Radius Selector */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Radius:</span>
+                <select
+                  value={searchRadius}
+                  onChange={(e) => setSearchRadius(Number(e.target.value))}
+                  className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value={5}>5km</option>
+                  <option value={10}>10km</option>
+                  <option value={25}>25km</option>
+                  <option value={50}>50km</option>
+                  <option value={100}>100km</option>
+                  <option value={200}>200km</option>
+                </select>
+              </div>
+
+              {/* Reset Center Button */}
+              {customCenter && (
+                <button
+                  onClick={() => setCustomCenter(null)}
+                  className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded border"
+                >
+                  Reset Center
+                </button>
+              )}
+            </div>
+
+            {/* Search Bar */}
+            <div className="flex-1 max-w-md relative search-container">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
@@ -647,38 +697,82 @@ export default function Map() {
                   </button>
                 ))}
               </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          {user ? (
-            <button
-              onClick={() => {
-                setShowAddForm(true)
-              }}
-              className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add Place</span>
-            </button>
-          ) : (
-            <div className="text-center">
-              <p className="text-sm text-gray-600 mb-2">Sign up to add places</p>
-              <Link 
-                href="/auth" 
-                className="inline-flex items-center space-x-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors"
+            {user ? (
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Add Place</span>
+              </button>
+            ) : (
+              <Link
+                href="/auth"
+                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 <span>Sign Up</span>
               </Link>
+            )}
+          </div>
+
+          {/* Mobile: Filters and search in separate rows */}
+          <div className="lg:hidden space-y-3">
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                {categories.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={searchRadius}
+                onChange={(e) => setSearchRadius(Number(e.target.value))}
+                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value={5}>5km</option>
+                <option value={10}>10km</option>
+                <option value={25}>25km</option>
+                <option value={50}>50km</option>
+                <option value={100}>100km</option>
+                <option value={200}>200km</option>
+              </select>
             </div>
-          )}
-        </div>
-      </div>
+
+            {/* Mobile Search Bar */}
+            <div className="relative search-container">
 
       {/* Main Content - Sidebar and Map */}
-      <div className="flex-1 flex overflow-hidden max-h-full">
-        {/* Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto z-20">
+      <div className="flex-1 flex overflow-hidden max-h-full relative">
+        {/* Sidebar - Mobile: overlay, Desktop: static */}
+        <div
+          className={`
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            fixed lg:static inset-y-0 left-0 z-30
+            w-80 bg-white border-r border-gray-200
+            flex-shrink-0 overflow-y-auto
+            transition-transform duration-300 ease-in-out
+            lg:transition-none
+          `}
+          style={{ top: 'var(--header-height, 0)' }}
+        >
+          {/* Mobile close button */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-md transition-colors z-10"
+            aria-label="Close sidebar"
+          >
+            <ChevronLeft className="h-5 w-5 text-gray-700" />
+          </button>
           <div className="p-4">
             <h2 className="text-lg font-medium text-gray-900 mb-2">
               Places within {searchRadius}km
@@ -767,10 +861,35 @@ export default function Map() {
           </div>
         </div>
 
+        {/* Mobile sidebar backdrop */}
+        {sidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-20"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
         {/* Map */}
-        <div className="flex-1 relative min-h-0">
+        <div className="flex-1 relative min-h-0 w-full">
+          {/* Floating sidebar toggle button (mobile only, when sidebar closed) */}
+          {!sidebarOpen && (
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden absolute top-4 left-4 z-30 bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg border border-gray-200 transition-colors"
+              aria-label="Show places list"
+            >
+              <div className="flex items-center gap-2">
+                <Menu className="h-5 w-5 text-gray-700" />
+                <span className="text-sm font-medium text-gray-700">
+                  {sidebarPlaces.length} places
+                </span>
+              </div>
+            </button>
+          )}
+
           {/* Map Instructions */}
-          <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-gray-200 max-w-xs">
+          <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-gray-200 max-w-xs hidden md:block">
             <p className="text-xs text-gray-700">
               <strong>💡 Tip:</strong> Click anywhere on the map to set a new search center and find places within your selected radius.
             </p>
