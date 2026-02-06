@@ -70,6 +70,16 @@ npx playwright show-report
 - Form validation
 - Sign-in flow (tested in auth.setup.ts)
 
+### 6. Feed and Posts (06-feed-and-posts.spec.ts)
+- Feed page loads with posts
+- Post cards display key elements
+- Navigate to create post
+- Create text post
+- Like/react to posts
+- Open post detail page
+- Comment on posts
+- Filter feed by tabs
+
 ## Environment Variables
 
 Test environment variables are configured in `.env.test`:
