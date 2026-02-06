@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-
-const getSupabase = () => createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { createClient } from '@/lib/supabase-server'
 
 // GET /api/packs/[id]/places - Get places in a pack
 export async function GET(
@@ -19,7 +12,7 @@ export async function GET(
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    const supabase = getSupabase()
+    const supabase = await createClient()
 
     const { data: packPlaces, error, count } = await supabase
       .from('pack_places')
@@ -94,25 +87,7 @@ export async function POST(
 ) {
   try {
     const { id } = await params
-
-    // Create Supabase client with cookies for auth
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
-            })
-          },
-        },
-      }
-    )
+    const supabase = await createClient()
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
