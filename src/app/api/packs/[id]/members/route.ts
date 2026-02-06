@@ -58,17 +58,23 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check if already a member
+    // Check if already a member (including admin/moderator)
     const { data: existing } = await supabase
       .from('pack_members')
-      .select('id')
+      .select('id, role')
       .eq('pack_id', id)
       .eq('user_id', session.user.id)
       .maybeSingle()
 
     if (existing) {
       return NextResponse.json(
-        { error: 'Already a member' },
+        {
+          error: 'Already a member',
+          role: existing.role,
+          message: existing.role === 'admin'
+            ? 'You are the pack creator/admin'
+            : `You are already a ${existing.role} of this pack`
+        },
         { status: 400 }
       )
     }
@@ -84,13 +90,26 @@ export async function POST(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('[Pack Members API] Insert error:', {
+        error,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
+      throw error
+    }
 
     return NextResponse.json({ member }, { status: 201 })
-  } catch (error) {
-    console.error('[Pack Members API] Error:', error)
+  } catch (error: any) {
+    console.error('[Pack Members API] Error:', {
+      error,
+      message: error?.message,
+      stack: error?.stack
+    })
     return NextResponse.json(
-      { error: 'Failed to join pack' },
+      { error: error?.message || 'Failed to join pack' },
       { status: 500 }
     )
   }

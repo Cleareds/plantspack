@@ -7,6 +7,7 @@ import PackHeader from '@/components/packs/PackHeader'
 import PostCard from '@/components/posts/PostCard'
 import PackPlacesTab from '@/components/packs/PackPlacesTab'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { CheckCircle, AlertCircle } from 'lucide-react'
 
 type TabType = 'posts' | 'places' | 'members'
 
@@ -20,6 +21,8 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
   const [loading, setLoading] = useState(true)
   const [postsLoading, setPostsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'posts')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const fetchPack = async () => {
     try {
@@ -66,11 +69,20 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         method: 'POST'
       })
 
+      const data = await response.json()
+
       if (response.ok) {
+        setSuccessMessage('✅ Successfully joined the pack!')
+        setTimeout(() => setSuccessMessage(''), 3000)
         fetchPack() // Refresh pack data
+      } else {
+        setErrorMessage(data.message || data.error || 'Failed to join pack')
+        setTimeout(() => setErrorMessage(''), 5000)
       }
     } catch (error) {
       console.error('Error joining pack:', error)
+      setErrorMessage('Failed to join pack. Please try again.')
+      setTimeout(() => setErrorMessage(''), 5000)
     }
   }
 
@@ -81,10 +93,18 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
       })
 
       if (response.ok) {
+        setSuccessMessage('✅ Successfully left the pack')
+        setTimeout(() => setSuccessMessage(''), 3000)
         fetchPack() // Refresh pack data
+      } else {
+        const data = await response.json()
+        setErrorMessage(data.error || 'Failed to leave pack')
+        setTimeout(() => setErrorMessage(''), 5000)
       }
     } catch (error) {
       console.error('Error leaving pack:', error)
+      setErrorMessage('Failed to leave pack. Please try again.')
+      setTimeout(() => setErrorMessage(''), 5000)
     }
   }
 
@@ -95,10 +115,18 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
       })
 
       if (response.ok) {
+        setSuccessMessage('✅ Now following this pack')
+        setTimeout(() => setSuccessMessage(''), 3000)
         fetchPack() // Refresh pack data
+      } else {
+        const data = await response.json()
+        setErrorMessage(data.error || 'Failed to follow pack')
+        setTimeout(() => setErrorMessage(''), 5000)
       }
     } catch (error) {
       console.error('Error following pack:', error)
+      setErrorMessage('Failed to follow pack. Please try again.')
+      setTimeout(() => setErrorMessage(''), 5000)
     }
   }
 
@@ -109,10 +137,18 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
       })
 
       if (response.ok) {
+        setSuccessMessage('✅ Unfollowed pack')
+        setTimeout(() => setSuccessMessage(''), 3000)
         fetchPack() // Refresh pack data
+      } else {
+        const data = await response.json()
+        setErrorMessage(data.error || 'Failed to unfollow pack')
+        setTimeout(() => setErrorMessage(''), 5000)
       }
     } catch (error) {
       console.error('Error unfollowing pack:', error)
+      setErrorMessage('Failed to unfollow pack. Please try again.')
+      setTimeout(() => setErrorMessage(''), 5000)
     }
   }
 
@@ -148,6 +184,26 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Success Message */}
+      {successMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-fade-in">
+          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+            <p className="text-sm font-medium text-green-800">{successMessage}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-fade-in">
+          <div className="bg-red-50 border border-red-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+            <p className="text-sm font-medium text-red-800">{errorMessage}</p>
+          </div>
+        </div>
+      )}
+
       <PackHeader
         pack={pack}
         onJoin={handleJoin}
