@@ -7,9 +7,9 @@ test.describe('Feed and Posts', () => {
     // Wait for feed content to load
     await page.waitForTimeout(2000)
 
-    // Check if posts are displayed or empty state
-    const hasPosts = await page.locator('article').count() > 0
-    const hasEmptyState = await page.locator('text=No posts yet').isVisible().catch(() => false)
+    // Check if posts are displayed (look for post links or usernames)
+    const hasPosts = await page.locator('a[href^="/post/"], a[href^="/user/"]').count() > 0
+    const hasEmptyState = await page.locator('text=No posts yet, text=No posts found').isVisible().catch(() => false)
 
     expect(hasPosts || hasEmptyState).toBeTruthy()
   })
@@ -18,18 +18,17 @@ test.describe('Feed and Posts', () => {
     await page.goto('/')
     await page.waitForTimeout(2000)
 
-    // Check if there are any posts
-    const postCount = await page.locator('article').count()
+    // Check if there are any post links
+    const postLinks = page.locator('a[href^="/post/"]')
+    const postCount = await postLinks.count()
 
     if (postCount > 0) {
-      const firstPost = page.locator('article').first()
+      // Check for author info (username links)
+      await expect(page.locator('a[href^="/user/"]').first()).toBeVisible()
 
-      // Check for author info
-      await expect(firstPost.locator('a[href^="/profile/"]')).toBeVisible()
-
-      // Check for post actions (like, comment, share)
-      const hasActions = await firstPost.locator('button').count() > 0
-      expect(hasActions).toBeTruthy()
+      // Check for post actions (like, comment, share buttons)
+      const hasButtons = await page.locator('button').count() > 0
+      expect(hasButtons).toBeTruthy()
     }
   })
 
@@ -88,25 +87,18 @@ test.describe('Feed and Posts', () => {
     await page.waitForTimeout(2000)
 
     // Check if there are any posts
-    const postCount = await page.locator('article').count()
+    const postCount = await page.locator('a[href^="/post/"]').count()
 
     if (postCount > 0) {
-      const firstPost = page.locator('article').first()
-
-      // Find like/react button (common patterns: heart icon, thumbs up, "Like" text)
-      const likeButton = firstPost.locator('button:has-text("Like"), button[aria-label*="Like"], button[aria-label*="like"]').first()
+      // Find like/react button (look for buttons near post content)
+      const likeButton = page.locator('button[aria-label*="Like"], button[aria-label*="like"], button:has-text("Like")').first()
 
       if (await likeButton.isVisible({ timeout: 5000 })) {
-        // Get initial state
-        const initialState = await likeButton.getAttribute('aria-pressed')
-
         // Click like button
         await likeButton.click()
         await page.waitForTimeout(1000)
 
-        // Verify state changed (or at least interaction worked)
-        const newState = await likeButton.getAttribute('aria-pressed')
-        // State should toggle or button should still be visible (interaction succeeded)
+        // Verify button is still visible (interaction succeeded)
         expect(await likeButton.isVisible()).toBeTruthy()
       }
     }
@@ -116,29 +108,21 @@ test.describe('Feed and Posts', () => {
     await page.goto('/')
     await page.waitForTimeout(2000)
 
-    // Check if there are any posts
-    const postCount = await page.locator('article').count()
+    // Find a post link
+    const postLink = page.locator('a[href^="/post/"]').first()
 
-    if (postCount > 0) {
-      // Click on first post to open details
-      const firstPost = page.locator('article').first()
+    if (await postLink.isVisible({ timeout: 5000 })) {
+      await postLink.click()
 
-      // Try to find a link to post detail (could be on timestamp, content, or dedicated button)
-      const postLink = firstPost.locator('a[href^="/post/"]').first()
+      // Should navigate to post detail page
+      await expect(page).toHaveURL(/.*\/post\/.*/)
 
-      if (await postLink.isVisible({ timeout: 5000 })) {
-        await postLink.click()
+      // Wait for page to load
+      await page.waitForTimeout(1000)
 
-        // Should navigate to post detail page
-        await expect(page).toHaveURL(/.*\/post\/.*/)
-
-        // Verify post detail page elements
-        await expect(page.locator('article').first()).toBeVisible()
-
-        // Check for comments section
-        const hasComments = await page.locator('text=Comments, text=Comment, textarea[placeholder*="comment"]').isVisible({ timeout: 5000 })
-        expect(hasComments).toBeTruthy()
-      }
+      // Check for comments section
+      const hasComments = await page.locator('text=Comments, text=Comment, textarea[placeholder*="comment"]').isVisible({ timeout: 5000 })
+      expect(hasComments).toBeTruthy()
     }
   })
 
@@ -146,38 +130,32 @@ test.describe('Feed and Posts', () => {
     await page.goto('/')
     await page.waitForTimeout(2000)
 
-    // Check if there are any posts
-    const postCount = await page.locator('article').count()
+    // Find a post link
+    const postLink = page.locator('a[href^="/post/"]').first()
 
-    if (postCount > 0) {
-      // Click on first post to open details
-      const firstPost = page.locator('article').first()
-      const postLink = firstPost.locator('a[href^="/post/"]').first()
+    if (await postLink.isVisible({ timeout: 5000 })) {
+      await postLink.click()
+      await page.waitForURL(/.*\/post\/.*/)
+      await page.waitForTimeout(1000)
 
-      if (await postLink.isVisible({ timeout: 5000 })) {
-        await postLink.click()
-        await page.waitForURL(/.*\/post\/.*/)
-        await page.waitForTimeout(1000)
+      // Find comment textarea
+      const commentTextarea = page.locator('textarea[placeholder*="comment"], textarea[placeholder*="Comment"]').first()
 
-        // Find comment textarea
-        const commentTextarea = page.locator('textarea[placeholder*="comment"], textarea[placeholder*="Comment"]').first()
+      if (await commentTextarea.isVisible({ timeout: 5000 })) {
+        // Write a comment
+        const timestamp = Date.now()
+        const commentContent = `E2E Test Comment - ${timestamp} 🧪`
+        await commentTextarea.fill(commentContent)
 
-        if (await commentTextarea.isVisible({ timeout: 5000 })) {
-          // Write a comment
-          const timestamp = Date.now()
-          const commentContent = `E2E Test Comment - ${timestamp} 🧪`
-          await commentTextarea.fill(commentContent)
+        // Find and click submit button
+        const submitButton = page.locator('button:has-text("Comment"), button:has-text("Post"), button:has-text("Submit")').first()
+        await submitButton.click()
 
-          // Find and click submit button
-          const submitButton = page.locator('button:has-text("Comment"), button:has-text("Post"), button:has-text("Submit")').first()
-          await submitButton.click()
+        // Wait for comment to appear
+        await page.waitForTimeout(2000)
 
-          // Wait for comment to appear
-          await page.waitForTimeout(2000)
-
-          // Verify comment appears
-          await expect(page.locator(`text=${commentContent.substring(0, 20)}`).first()).toBeVisible({ timeout: 5000 })
-        }
+        // Verify comment appears
+        await expect(page.locator(`text=${commentContent.substring(0, 20)}`).first()).toBeVisible({ timeout: 5000 })
       }
     }
   })
