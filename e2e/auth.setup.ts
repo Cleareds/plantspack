@@ -6,12 +6,15 @@ setup('authenticate', async ({ page }) => {
   // Go to auth page
   await page.goto('/auth')
 
-  // Fill in credentials
-  await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'e2e.test@plantspack.com')
-  await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD || 'TestPassword123!')
+  // Wait for page to load
+  await page.waitForLoadState('networkidle')
 
-  // Click sign in
-  await page.click('button[type="submit"]')
+  // Fill in credentials using placeholder text
+  await page.getByPlaceholder('Enter email or username').fill(process.env.TEST_USER_EMAIL || 'e2e.test@plantspack.com')
+  await page.getByPlaceholder('Enter password').fill(process.env.TEST_USER_PASSWORD || 'TestPassword123!')
+
+  // Click sign in button
+  await page.getByRole('button', { name: 'Sign In' }).click()
 
   // Wait for redirect to homepage
   await page.waitForURL('/', { timeout: 10000 })
