@@ -5,13 +5,26 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const error_description = searchParams.get('error_description')
+  const error_code = searchParams.get('error')
   const next = searchParams.get('next') ?? '/'
+
+  // Handle OAuth errors
+  if (error_code) {
+    console.error('OAuth error:', error_code, error_description)
+    return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent(error_description || 'Authentication failed')}`)
+  }
 
   if (code) {
     const supabase = await createClient()
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
-    if (!error && data.user) {
+    if (error) {
+      console.error('Error exchanging code for session:', error)
+      return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent(error.message || 'Authentication failed')}`)
+    }
+
+    if (data.user) {
       // Check if user profile exists in users table
       const { data: existingProfile, error: profileError } = await supabase
         .from('users')
@@ -22,7 +35,7 @@ export async function GET(request: NextRequest) {
       // If no profile exists, create one
       if (!existingProfile && !profileError) {
         try {
-          // Extract user data from OAuth metadata
+          // Extract user data from OAuth or email confirmation metadata
           const userMetadata = data.user.user_metadata || {}
           const email = data.user.email || ''
 
@@ -75,7 +88,7 @@ export async function GET(request: NextRequest) {
             console.error('Error creating user profile:', createError)
             // Continue anyway - the auth context will handle profile creation
           } else {
-            console.log('OAuth user profile created:', finalUsername)
+            console.log('User profile created successfully:', finalUsername)
           }
         } catch (profileCreationError) {
           console.error('Error in profile creation:', profileCreationError)
@@ -87,6 +100,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  // Return the user to auth page with error
+  return NextResponse.redirect(`${origin}/auth?error=Authentication%20failed.%20Please%20try%20again.`)
 }

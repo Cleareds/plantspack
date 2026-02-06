@@ -119,16 +119,30 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         firstName,
         lastName,
       })
-      
+
       if (result.error) {
-        setError(result.error.message || 'Registration failed. Please try again.')
+        // Provide user-friendly error messages
+        const errorMsg = result.error.message || ''
+        if (errorMsg.toLowerCase().includes('already registered') || errorMsg.toLowerCase().includes('already exists')) {
+          setError('An account with this email already exists. Please sign in instead.')
+        } else if (errorMsg.toLowerCase().includes('password')) {
+          setError('Password is too weak. Please use at least 6 characters.')
+        } else {
+          setError(result.error.message || 'Registration failed. Please try again.')
+        }
       } else if (result.data?.user) {
-        // Since registration is working and users can log in immediately,
-        // show success message regardless of confirmation status
-        setSuccess('Account created successfully! You can now log in.')
-        setTimeout(() => {
-          onToggle()
-        }, 2000)
+        // Check if email confirmation is required
+        if (result.data?.session) {
+          // Email confirmation disabled - user can log in immediately
+          setSuccess('Account created successfully! Redirecting...')
+          setTimeout(() => {
+            // Auth context will automatically redirect
+          }, 1500)
+        } else {
+          // Email confirmation enabled - user needs to verify email
+          setSuccess('Account created! Please check your email to verify your address before signing in.')
+          // Don't auto-toggle to login, let user read the message
+        }
       } else {
         setError('Registration failed. Please try again.')
       }

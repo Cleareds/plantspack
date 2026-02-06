@@ -189,6 +189,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             username: userData.username,
             first_name: userData.firstName,
@@ -201,22 +202,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { data, error }
       }
 
-      if (data?.user && data?.session) {
-        // User is immediately authenticated (email confirmation disabled)
-        // Call API route to create profile using admin client (bypasses RLS)
-        try {
-          const profileResponse = await fetch('/api/auth/create-profile', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
+      // If email confirmation is enabled, data.user exists but data.session is null
+      // If email confirmation is disabled, both exist
+      if (data?.user) {
+        if (data?.session) {
+          // User is immediately authenticated (email confirmation disabled)
+          // Call API route to create profile using admin client (bypasses RLS)
+          try {
+            const profileResponse = await fetch('/api/auth/create-profile', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
 
-          if (!profileResponse.ok) {
-            const errorData = await profileResponse.json()
+            if (!profileResponse.ok) {
+              const errorData = await profileResponse.json()
+              console.error('Profile creation failed:', errorData.error)
+            }
+          } catch (profileError) {
+            console.error('Profile creation request failed:', profileError)
           }
-        } catch (profileError) {
         }
+        // If no session, user needs to confirm email
       }
 
       return { data, error }
@@ -229,13 +237,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       // Determine if identifier is email or username
       const isEmail = identifier.includes('@')
-      
+
       if (isEmail) {
         // Direct email login
-        return await supabase.auth.signInWithPassword({
+        const result = await supabase.auth.signInWithPassword({
           email: identifier,
           password,
         })
+
+        // Provide better error messages
+        if (result.error) {
+          const errorMsg = result.error.message.toLowerCase()
+          if (errorMsg.includes('invalid login credentials') || errorMsg.includes('invalid password')) {
+            return { data: null, error: { message: 'Invalid email or password' } }
+          } else if (errorMsg.includes('email not confirmed')) {
+            return { data: null, error: { message: 'Please verify your email address before signing in. Check your inbox for the confirmation link.' } }
+          } else if (errorMsg.includes('user not found')) {
+            return { data: null, error: { message: 'No account found with this email address' } }
+          }
+        }
+
+        return result
       } else {
         // Username login - first get the email associated with the username
         const { data: userData, error: userError } = await supabase
@@ -244,37 +266,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .eq('username', identifier)
           .single()
 
-        if (userError) {
+        if (userError || !userData) {
           // Try fallback: attempt direct login in case it's actually an email without @
           const fallbackResult = await supabase.auth.signInWithPassword({
             email: identifier,
             password,
           })
-          
+
           if (fallbackResult.error) {
-            return { 
-              data: null, 
-              error: { message: 'Invalid username or password' } 
+            return {
+              data: null,
+              error: { message: 'Invalid username or password' }
             }
           }
           return fallbackResult
         }
 
-        if (!userData) {
-          return { 
-            data: null, 
-            error: { message: 'Username not found' } 
-          }
-        }
-
         // Now sign in with the email
-        return await supabase.auth.signInWithPassword({
+        const result = await supabase.auth.signInWithPassword({
           email: userData.email,
           password,
         })
+
+        // Provide better error messages
+        if (result.error) {
+          const errorMsg = result.error.message.toLowerCase()
+          if (errorMsg.includes('invalid login credentials') || errorMsg.includes('invalid password')) {
+            return { data: null, error: { message: 'Invalid username or password' } }
+          } else if (errorMsg.includes('email not confirmed')) {
+            return { data: null, error: { message: 'Please verify your email address before signing in. Check your inbox for the confirmation link.' } }
+          }
+        }
+
+        return result
       }
     } catch (error) {
-      return { data: null, error }
+      console.error('Sign in error:', error)
+      return { data: null, error: { message: 'An error occurred during sign in. Please try again.' } }
     }
   }
 
