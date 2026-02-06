@@ -750,6 +750,45 @@ export default function Map() {
 
             {/* Mobile Search Bar */}
             <div className="relative search-container">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for places..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+              />
+
+              {/* Search Results Dropdown */}
+              {showSearchResults && searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-50 max-h-60 overflow-y-auto">
+                  {searchResults.map((result, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleSearchSelect(result)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                    >
+                      <div className="text-sm font-medium text-gray-900 truncate">
+                        {result.display_name}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {result.type && <span className="capitalize">{result.type}</span>}
+                        {result.address && (
+                          <span className="ml-2">
+                            {[result.address.country, result.address.state, result.address.city]
+                              .filter(Boolean)
+                              .join(', ')}
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content - Sidebar and Map */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
