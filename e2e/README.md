@@ -6,6 +6,16 @@ Playwright-based end-to-end tests for PlantsPack.
 
 Tests are already configured. Playwright was installed as a dev dependency.
 
+### Test User Credentials
+
+A dedicated test user is configured for authenticated tests:
+- **Email**: e2e.test@plantspack.com
+- **Password**: TestPassword123!
+
+These credentials are stored in `.env.test` and are safe for public repositories as they're only for testing purposes.
+
+**Important**: Before running tests for the first time, ensure the test user exists in your Supabase database. If you're running against production, the user should already exist. For local testing, you may need to sign up this user manually at `/auth`.
+
 ## Running Tests
 
 ### Run all tests
@@ -45,41 +55,43 @@ npx playwright show-report
 - Navigation to place details
 
 ### 3. Place Details (03-place-details.spec.ts)
-- Place detail page displays correctly
-- Reviews section visible
-- Sign-in prompt for non-authenticated users
+- Navigate to place from map
+- Review form visible for authenticated users
+- External map links (Google Maps, Apple Maps)
 
 ### 4. Packs (04-packs.spec.ts)
 - Packs listing page
 - Pack detail page with tabs (Posts, Places, Members)
+- Tab switching functionality
 - Navigation between packs
 
 ### 5. Authentication (05-authentication.spec.ts)
 - Auth page loads
 - Form validation
-- Sign-in flow (requires credentials)
+- Sign-in flow (tested in auth.setup.ts)
 
 ## Environment Variables
 
-For tests that require authentication or specific IDs:
+Test environment variables are configured in `.env.test`:
 
 ```bash
-# .env.test (optional)
-TEST_USER_EMAIL=test@example.com
-TEST_USER_PASSWORD=testpassword123
-TEST_PLACE_ID=some-place-id
-TEST_PACK_ID=some-pack-id
+# .env.test (committed to repo)
+TEST_USER_EMAIL=e2e.test@plantspack.com
+TEST_USER_PASSWORD=TestPassword123!
 PLAYWRIGHT_BASE_URL=https://plantspack.com
 ```
 
-## Skipped Tests
+You can override these for local testing by creating `.env.test.local` (not committed to repo).
 
-Some tests are marked with `test.skip()` because they require:
-- Valid authentication credentials
-- Specific database IDs
-- Authenticated user state
+## Authentication
 
-These can be run manually when needed with proper setup.
+Tests automatically authenticate using the test user credentials before running authenticated test suites. The authentication setup:
+
+1. **Setup Project** (`e2e/auth.setup.ts`): Runs first, signs in the test user, and saves the authentication state
+2. **Authenticated Tests**: Use the saved authentication state for tests that require a signed-in user
+3. **Unauthenticated Tests**: Homepage and public pages run without authentication
+
+The authentication state is saved to `e2e/.auth/user.json` (not committed to repo).
 
 ## CI/CD Integration
 

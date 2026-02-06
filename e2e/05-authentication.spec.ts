@@ -20,15 +20,6 @@ test.describe('Authentication', () => {
     expect(await emailInput.evaluate(el => (el as HTMLInputElement).validationMessage)).toBeTruthy()
   })
 
-  test.skip('should allow sign in with valid credentials', async ({ page }) => {
-    // Skip in automated tests - requires valid test credentials
-    await page.goto('/auth')
-    
-    await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'test@example.com')
-    await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD || 'password')
-    await page.click('button[type="submit"]')
-    
-    // Should redirect after successful login
-    await page.waitForURL('/', { timeout: 10000 })
-  })
+  // Note: Actual sign-in is tested in auth.setup.ts
+  // This setup runs before all other tests to authenticate the user
 })

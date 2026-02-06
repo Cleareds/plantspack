@@ -3,11 +3,11 @@ import { test, expect } from '@playwright/test'
 test.describe('Homepage and Navigation', () => {
   test('should load homepage and display key elements', async ({ page }) => {
     await page.goto('/')
-    
-    // Check header elements
-    await expect(page.locator('text=PLANTS PACK')).toBeVisible()
+
+    // Check header elements (use .first() to avoid strict mode violation with duplicate text in footer)
+    await expect(page.locator('text=PLANTS PACK').first()).toBeVisible()
     await expect(page.locator('text=BETA')).toBeVisible()
-    
+
     // Check navigation links
     await expect(page.locator('a[href="/map"]')).toBeVisible()
     await expect(page.locator('a[href="/packs"]')).toBeVisible()
