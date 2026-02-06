@@ -34,6 +34,52 @@ npx tsx scripts/create-test-user.ts
 
 The script will create all three users with their respective subscription tiers. If users already exist, it will skip creation.
 
+## Testing with Different Subscription Tiers
+
+By default, tests run with the free tier user. To test subscription-specific features:
+
+### Method 1: Switch Test User (Temporary)
+
+1. Modify `e2e/auth.setup.ts` to use a different user:
+   ```typescript
+   // Change from:
+   await page.getByPlaceholder('Enter email or username').fill(process.env.TEST_USER_EMAIL || 'e2e.free@plantspack.com')
+
+   // To:
+   await page.getByPlaceholder('Enter email or username').fill(process.env.TEST_USER_SUPPORTER_EMAIL || 'e2e.supporter@plantspack.com')
+   ```
+
+2. Delete the auth state file:
+   ```bash
+   rm e2e/.auth/user.json
+   ```
+
+3. Run tests - they will re-authenticate with the new user
+
+### Method 2: Environment Variables
+
+Set the TEST_USER_EMAIL to use a specific tier:
+```bash
+TEST_USER_EMAIL=e2e.supporter@plantspack.com npx playwright test
+```
+
+### Method 3: Create Tier-Specific Test Files
+
+See `e2e/07-subscription-features.spec.ts` for examples of subscription-specific tests. These tests demonstrate:
+- Checking subscription tier on support page
+- Testing feature availability by tier
+- Verifying upgrade prompts for free users
+
+### Available Test Users
+
+| Tier | Email | Features |
+|------|-------|----------|
+| Free | e2e.free@plantspack.com | Basic features, upgrade prompts |
+| Supporter | e2e.supporter@plantspack.com | Medium tier features, active subscription |
+| Premium | e2e.premium@plantspack.com | Premium features, active subscription |
+
+All users share the same password: `TestPassword123!`
+
 ## Running Tests
 
 ### Run all tests
@@ -97,6 +143,13 @@ npx playwright show-report
 - Open post detail page
 - Comment on posts
 - Filter feed by tabs
+
+### 7. Subscription Features (07-subscription-features.spec.ts)
+- Free users see upgrade prompts
+- Display current subscription tier
+- Supporter tier features (skipped by default)
+- Premium tier features (skipped by default)
+- Subscription limits testing examples
 
 ## Environment Variables
 
