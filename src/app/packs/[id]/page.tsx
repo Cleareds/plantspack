@@ -108,50 +108,6 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
     }
   }
 
-  const handleFollow = async () => {
-    try {
-      const response = await fetch(`/api/packs/${id}/follow`, {
-        method: 'POST'
-      })
-
-      if (response.ok) {
-        setSuccessMessage('✅ Now following this pack')
-        setTimeout(() => setSuccessMessage(''), 3000)
-        fetchPack() // Refresh pack data
-      } else {
-        const data = await response.json()
-        setErrorMessage(data.error || 'Failed to follow pack')
-        setTimeout(() => setErrorMessage(''), 5000)
-      }
-    } catch (error) {
-      console.error('Error following pack:', error)
-      setErrorMessage('Failed to follow pack. Please try again.')
-      setTimeout(() => setErrorMessage(''), 5000)
-    }
-  }
-
-  const handleUnfollow = async () => {
-    try {
-      const response = await fetch(`/api/packs/${id}/follow`, {
-        method: 'DELETE'
-      })
-
-      if (response.ok) {
-        setSuccessMessage('✅ Unfollowed pack')
-        setTimeout(() => setSuccessMessage(''), 3000)
-        fetchPack() // Refresh pack data
-      } else {
-        const data = await response.json()
-        setErrorMessage(data.error || 'Failed to unfollow pack')
-        setTimeout(() => setErrorMessage(''), 5000)
-      }
-    } catch (error) {
-      console.error('Error unfollowing pack:', error)
-      setErrorMessage('Failed to unfollow pack. Please try again.')
-      setTimeout(() => setErrorMessage(''), 5000)
-    }
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -208,8 +164,6 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         pack={pack}
         onJoin={handleJoin}
         onLeave={handleLeave}
-        onFollow={handleFollow}
-        onUnfollow={handleUnfollow}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

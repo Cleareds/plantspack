@@ -4,19 +4,16 @@ import { useState } from 'react'
 import { PackWithStats } from '@/types/packs'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Heart, Check } from 'lucide-react'
+import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check } from 'lucide-react'
 
 interface PackHeaderProps {
   pack: PackWithStats
   onJoin?: () => void
   onLeave?: () => void
-  onFollow?: () => void
-  onUnfollow?: () => void
 }
 
-export default function PackHeader({ pack, onJoin, onLeave, onFollow, onUnfollow }: PackHeaderProps) {
+export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
   const [isJoining, setIsJoining] = useState(false)
-  const [isFollowing, setIsFollowing] = useState(false)
 
   const handleJoin = async () => {
     setIsJoining(true)
@@ -24,19 +21,6 @@ export default function PackHeader({ pack, onJoin, onLeave, onFollow, onUnfollow
       await onJoin?.()
     } finally {
       setIsJoining(false)
-    }
-  }
-
-  const handleFollow = async () => {
-    setIsFollowing(true)
-    try {
-      if (pack.is_following) {
-        await onUnfollow?.()
-      } else {
-        await onFollow?.()
-      }
-    } finally {
-      setIsFollowing(false)
     }
   }
 
@@ -218,19 +202,6 @@ export default function PackHeader({ pack, onJoin, onLeave, onFollow, onUnfollow
                 <span>Leave Pack</span>
               </button>
             )}
-
-            <button
-              onClick={handleFollow}
-              disabled={isFollowing}
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                pack.is_following
-                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  : 'border-2 border-green-600 text-green-600 hover:bg-green-50'
-              }`}
-            >
-              <Heart className={`h-4 w-4 ${pack.is_following ? 'fill-current' : ''}`} />
-              <span>{pack.is_following ? 'Following' : 'Follow'}</span>
-            </button>
           </div>
         </div>
       </div>
