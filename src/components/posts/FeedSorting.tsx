@@ -80,7 +80,7 @@ export default function FeedSorting({
       {/* Sort Selector Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:ring-2 focus:ring-green-500 focus:border-transparent"
       >
         <CurrentIcon className="h-4 w-4 text-gray-600" />
         <span className="text-sm font-medium text-gray-700">
@@ -96,7 +96,7 @@ export default function FeedSorting({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+        <div className="absolute top-full right-0 sm:right-auto sm:left-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
           <div className="p-2 border-b border-gray-100">
             <h3 className="text-sm font-semibold text-gray-700 px-2 py-1">
               Sort Feed

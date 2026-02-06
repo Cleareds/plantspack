@@ -129,7 +129,7 @@ function FollowButton({ userId, className = '', showText = true, initialIsFollow
         <UserPlus className="h-4 w-4" />
       )}
       {showText && (
-        <span className="text-sm">
+        <span className="text-sm hidden sm:inline">
           {loading ? '...' : isFollowing ? 'Following' : 'Follow'}
         </span>
       )}

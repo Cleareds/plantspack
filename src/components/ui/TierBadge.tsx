@@ -56,7 +56,7 @@ export default function TierBadge({
       }}
     >
       {showIcon && getIcon()}
-      <span>{badge.text}</span>
+      <span className={"hidden sm:inline"}>{badge.text}</span>
     </span>
   )
 }

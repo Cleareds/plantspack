@@ -249,11 +249,6 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
-                  {post.privacy === 'public' ? (
-                    <Globe className="h-3 w-3 text-gray-400" />
-                  ) : (
-                    <Users className="h-3 w-3 text-gray-400" />
-                  )}
                   {(post as any).location_city && (
                     <>
                       <span className="text-gray-400">·</span>
@@ -628,7 +623,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
             className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
           >
             <Share className="h-5 w-5" />
-            <span className="text-sm">Share</span>
+            <span className="text-sm hidden sm:inline">Share</span>
           </button>
         </div>
 
