@@ -122,19 +122,21 @@ export function analyzePostContent(content: string): Pick<PostMetadata, 'tags' |
 export async function getCurrentLocation(): Promise<LocationData | null> {
   return new Promise((resolve) => {
     if (!navigator.geolocation) {
+      console.warn('Geolocation is not supported by this browser')
       resolve(null)
       return
     }
-    
+
     const timeoutId = setTimeout(() => {
+      console.warn('Geolocation request timed out after 10 seconds')
       resolve(null)
     }, 10000) // 10 second timeout
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         clearTimeout(timeoutId)
         const { latitude, longitude } = position.coords
-        
+
         try {
           // Reverse geocoding to get city/region
           const locationData = await reverseGeocode(latitude, longitude)
@@ -143,14 +145,21 @@ export async function getCurrentLocation(): Promise<LocationData | null> {
             longitude,
             ...locationData
           })
-        } catch {
+        } catch (error) {
+          console.warn('Reverse geocoding failed, returning coordinates only:', error)
           // Return coordinates even if reverse geocoding fails
           resolve({ latitude, longitude })
         }
       },
       (err) => {
         clearTimeout(timeoutId)
-        console.log('Location access denied or failed:', err.message)
+        console.warn('Geolocation error:', {
+          code: err.code,
+          message: err.message,
+          PERMISSION_DENIED: err.code === 1 ? 'User denied location permission' : '',
+          POSITION_UNAVAILABLE: err.code === 2 ? 'Location unavailable' : '',
+          TIMEOUT: err.code === 3 ? 'Location request timed out' : ''
+        })
         resolve(null)
       },
       {

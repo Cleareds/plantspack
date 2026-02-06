@@ -33,6 +33,7 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
   const [results, setResults] = useState<NominatimResult[]>([])
   const [searching, setSearching] = useState(false)
   const [gettingCurrent, setGettingCurrent] = useState(false)
+  const [locationError, setLocationError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
 
@@ -63,6 +64,11 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
 
   // Debounced search with rate limiting
   useEffect(() => {
+    // Clear location error when user starts searching
+    if (query.length > 0) {
+      setLocationError(null)
+    }
+
     if (query.length < 3) {
       setResults([])
       return
@@ -101,13 +107,17 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
 
   const handleUseCurrentLocation = useCallback(async () => {
     setGettingCurrent(true)
+    setLocationError(null)
     try {
       const location = await getCurrentLocation()
       if (location) {
         onSelect(location)
+      } else {
+        setLocationError('Unable to get your location. Please check your browser permissions and try again.')
       }
     } catch (error) {
       console.warn('Failed to get current location:', error)
+      setLocationError('Failed to access location. Please enable location services.')
     } finally {
       setGettingCurrent(false)
     }
@@ -155,6 +165,13 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
               <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 animate-spin" />
             )}
           </div>
+
+          {/* Location Error */}
+          {locationError && (
+            <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-800">{locationError}</p>
+            </div>
+          )}
         </div>
 
         {/* Results */}
