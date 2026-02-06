@@ -268,7 +268,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-start justify-center">
                           <span className="text-sm font-medium text-green-600">
                             {comment.users?.first_name?.[0] || comment.users?.username?.[0]?.toUpperCase() || '?'}
                           </span>
@@ -276,7 +276,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2 mb-1">
+                      <div className="flex items-start space-x-2 mb-1">
                         <span className="font-medium text-gray-900">
                           {comment.users?.first_name
                             ? `${comment.users.first_name} ${comment.users.last_name || ''}`.trim()
@@ -284,7 +284,8 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           }
                         </span>
                         <span className="text-gray-400">@{comment.users?.username || 'unknown'}</span>
-                        <span className="text-gray-400">·</span>
+                      </div>
+                          <div className="flex items-start space-x-2 mb-1">
                         <span className="text-gray-400 text-sm">
                           {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                         </span>
