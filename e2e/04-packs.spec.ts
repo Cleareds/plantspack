@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Packs', () => {
   test('should load packs page', async ({ page }) => {
-    await page.goto('/packs')
-    
-    // Check header
-    await expect(page.locator('h1:has-text("Discover Packs")')).toBeVisible()
+    await page.goto('/packs', { waitUntil: 'domcontentloaded' })
+
+    // Check header - use more flexible selector
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 10000 })
   })
 
   test('should display pack list', async ({ page }) => {

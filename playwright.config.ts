@@ -24,7 +24,13 @@ export default defineConfig({
       name: 'setup',
       testMatch: /.*\.setup\.ts/,
     },
-    // Authenticated tests
+    // Unauthenticated tests (homepage, map, auth page)
+    {
+      name: 'chromium-unauthenticated',
+      use: { ...devices['Desktop Chrome'] },
+      testMatch: /01-homepage\.spec\.ts|02-map-and-places\.spec\.ts|05-authentication\.spec\.ts/,
+    },
+    // Authenticated tests (place details, packs)
     {
       name: 'chromium',
       use: {
@@ -32,12 +38,7 @@ export default defineConfig({
         storageState: 'e2e/.auth/user.json',
       },
       dependencies: ['setup'],
-    },
-    // Unauthenticated tests (homepage, public pages)
-    {
-      name: 'chromium-unauthenticated',
-      use: { ...devices['Desktop Chrome'] },
-      testMatch: /01-homepage\.spec\.ts|02-map-and-places\.spec\.ts/,
+      testIgnore: /01-homepage\.spec\.ts|02-map-and-places\.spec\.ts|05-authentication\.spec\.ts/,
     },
   ],
 
