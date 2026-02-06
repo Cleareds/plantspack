@@ -98,7 +98,7 @@ export default function Header() {
 
                     {user && username && (
                         <>
-                            <div className="px-3 py-2">
+                            <div className="sm:hidden px-1 py-2">
                                 <NotificationBell/>
                             </div>
                         </>
