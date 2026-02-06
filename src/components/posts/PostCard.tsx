@@ -207,7 +207,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
       {/* Quote post indicator and content */}
       {isQuotePost && post.quote_content && (
         <div className="mb-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-3 items-start">
             <div className="flex items-center space-x-3">
               <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
@@ -404,7 +404,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
         <div>
           {/* Header for original posts */}
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
                   <img
@@ -421,7 +421,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                 )}
               </Link>
               <div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
