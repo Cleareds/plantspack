@@ -115,7 +115,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/map" className="hover:text-green-600 transition-colors">
+          <Link
+            href={`/map?location=${encodeURIComponent(place.address)}`}
+            className="hover:text-green-600 transition-colors"
+          >
             Map
           </Link>
           <span className="mx-2">/</span>
@@ -310,6 +313,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               latitude={place.latitude}
               longitude={place.longitude}
               name={place.name}
+              address={place.address}
             />
           </div>
 
