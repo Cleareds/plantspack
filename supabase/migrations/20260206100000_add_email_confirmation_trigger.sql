@@ -87,4 +87,3 @@ CREATE TRIGGER on_user_email_confirmed
 
 -- Add comment
 COMMENT ON FUNCTION public.handle_new_user_confirmed IS 'Automatically creates a user profile when email is confirmed';
-COMMENT ON TRIGGER on_user_email_confirmed ON auth.users IS 'Creates user profile on email confirmation';
