@@ -66,6 +66,7 @@ export default function Map() {
     longitude: 0
   })
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
+  const [placeMarkerIcon, setPlaceMarkerIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
   const { user, authReady } = useAuth()
 
@@ -117,14 +118,13 @@ export default function Map() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       import('leaflet').then((L) => {
-        delete (L.Icon.Default.prototype as any)._getIconUrl
-        L.Icon.Default.mergeOptions({
-          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        // Import custom vegan marker configuration
+        import('@/lib/leaflet-config').then((config) => {
+          // Vegan leaf marker for places
+          setPlaceMarkerIcon(config.veganMarkerIcon)
         })
-        
-        // Create custom icon for user location
+
+        // Create custom icon for user location (blue dot)
         setLeafletIcon(new L.Icon({
           iconUrl: 'data:image/svg+xml;base64,' + btoa(`
             <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -845,6 +845,7 @@ export default function Map() {
               <Marker
                 key={place.id}
                 position={[place.latitude, place.longitude]}
+                icon={placeMarkerIcon}
               >
                 <Popup>
                   <div className="p-2 min-w-[200px]">
