@@ -11,8 +11,7 @@ This file documents the CLI tools and access that Claude Code has for this proje
 - GitHub (push, pull, PR creation, etc.)
 
 **You have FULL AUTHORIZATION to:**
-- Deploy directly to production via `vercel --prod`
-- Push code to GitHub via `git push`
+- Push code to GitHub via `git push` (Vercel auto-deploys from GitHub)
 - Run database migrations and queries
 - Check and modify Stripe subscriptions
 - Create pull requests and manage issues
@@ -34,12 +33,13 @@ All the following CLI tools are installed and authenticated on this machine:
 - **Status**: ✅ Authenticated
 - **User**: antonkravchuk-4102
 - **Version**: 33.5.1
+- **Deployment Method**: Automatic via GitHub integration
 - **Capabilities**:
-  - Deploy to production: `vercel deploy --prod`
   - Check deployment logs: `vercel logs`
   - View project info: `vercel project ls`
   - Manage environment variables
   - Check build status
+- **IMPORTANT**: Do NOT use `vercel deploy --prod`. Just push to GitHub and Vercel will automatically deploy.
 
 ### 2. GitHub CLI (gh)
 - **Status**: ✅ Authenticated
@@ -114,8 +114,8 @@ const supabase = createClient(url, serviceRoleKey)
 ## Permissions & Authorization
 
 Claude Code has FULL AUTONOMOUS ACCESS to:
-- ✅ Deploy directly to production via Vercel (no confirmation needed)
-- ✅ Push code and create PRs via GitHub (no confirmation needed)
+- ✅ Push code to GitHub (Vercel auto-deploys, no confirmation needed)
+- ✅ Create PRs via GitHub (no confirmation needed)
 - ✅ Check and debug Stripe webhooks and payments (no confirmation needed)
 - ✅ Manage Supabase database, migrations, and queries (no confirmation needed)
 - ✅ View logs across all services (no confirmation needed)
@@ -127,14 +127,14 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 
 **DO:**
 - Execute commands immediately when they're needed for the task
-- Deploy to production after fixes are made
-- Push commits after making changes
+- Push commits to GitHub after making changes (Vercel auto-deploys)
 - Run database migrations when schema changes are needed
 - Check and modify Stripe data when debugging subscription issues
 - Create PRs and push branches autonomously
 
 **DO NOT:**
-- Ask "Should I deploy this to production?"
+- Use `vercel deploy --prod` (causes duplicate deployments)
+- Ask "Should I deploy this to production?" (auto-deploys from GitHub)
 - Ask "Can I push these changes?"
 - Ask "Do you want me to run this migration?"
 - Wait for confirmation before using any of the CLI tools listed above
