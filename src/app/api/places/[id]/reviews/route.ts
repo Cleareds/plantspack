@@ -200,10 +200,18 @@ export async function POST(
     )
   } catch (error: any) {
     console.error('[Place Reviews API] Error:', error)
+    console.error('[Place Reviews API] Error code:', error?.code)
+    console.error('[Place Reviews API] Error details:', error?.details)
+    console.error('[Place Reviews API] Error hint:', error?.hint)
+    console.error('[Place Reviews API] Full error:', JSON.stringify(error, null, 2))
+
     return NextResponse.json(
       {
         error: 'Failed to create review',
-        details: error?.message || String(error)
+        message: error?.message || String(error),
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
       },
       { status: 500 }
     )
