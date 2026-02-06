@@ -403,8 +403,8 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
         /* Original post content for non-share/non-quote posts */
         <div>
           {/* Header for original posts */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center space-x-1">
               <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
                   <img
@@ -461,7 +461,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <FollowButton userId={post.users.id} initialIsFollowing={isFollowing} />
               {shouldShowMenu && (
                 <div ref={menuRef} className="relative">

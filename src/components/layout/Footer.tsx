@@ -17,8 +17,8 @@ export default function Footer() {
                     <Image
                         src="/plantspack9.png"
                         alt="PlantsPack Logo"
-                        width={64}
-                        height={64}
+                        width={48}
+                        height={48}
                         className="object-contain"
                     />
                     <div className="flex flex-col">
