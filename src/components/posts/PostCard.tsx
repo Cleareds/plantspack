@@ -445,21 +445,16 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
-                  {post.privacy === 'public' ? (
-                    <Globe className="h-3 w-3 text-gray-400" />
-                  ) : (
-                    <Users className="h-3 w-3 text-gray-400" />
-                  )}
                   {(post as any).location_city && (
                     <>
                       <span className="text-gray-400">·</span>
                       <Link
                         href={`/map?location=${encodeURIComponent((post as any).location_city + ((post as any).location_region ? `, ${(post as any).location_region}` : ''))}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center text-xs text-gray-500 hover:text-green-600 transition-colors"
+                        className="flex items-center text-xs text-gray-500 hover:text-green-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-full"
                       >
                         <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
-                        {(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}
+                          <span className={"text-ellipsis"}>{(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}</span>
                       </Link>
                     </>
                   )}

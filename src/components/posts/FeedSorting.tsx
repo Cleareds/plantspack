@@ -80,7 +80,7 @@ export default function FeedSorting({
       {/* Sort Selector Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        className="flex items-center space-x-1 sm:space-x-2 px-1 sm:px-4 py-1 sm:py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:ring-2 focus:ring-green-500 focus:border-transparent"
       >
         <CurrentIcon className="h-4 w-4 text-gray-600" />
         <span className="text-sm font-medium text-gray-700">
