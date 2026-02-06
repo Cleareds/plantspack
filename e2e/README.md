@@ -8,13 +8,31 @@ Tests are already configured. Playwright was installed as a dev dependency.
 
 ### Test User Credentials
 
-A dedicated test user is configured for authenticated tests:
-- **Email**: e2e.test@plantspack.com
-- **Password**: TestPassword123!
+Three dedicated test users are configured with different subscription tiers:
+
+1. **Free Tier User**
+   - Email: e2e.free@plantspack.com
+   - Password: TestPassword123!
+   - Subscription: None (free tier)
+
+2. **Supporter Tier User**
+   - Email: e2e.supporter@plantspack.com
+   - Password: TestPassword123!
+   - Subscription: Medium/Supporter tier (active)
+
+3. **Premium Tier User**
+   - Email: e2e.premium@plantspack.com
+   - Password: TestPassword123!
+   - Subscription: Premium tier (active)
 
 These credentials are stored in `.env.test` and are safe for public repositories as they're only for testing purposes.
 
-**Important**: Before running tests for the first time, ensure the test user exists in your Supabase database. If you're running against production, the user should already exist. For local testing, you may need to sign up this user manually at `/auth`.
+**Creating Test Users**: Run the script to create all test users:
+```bash
+npx tsx scripts/create-test-user.ts
+```
+
+The script will create all three users with their respective subscription tiers. If users already exist, it will skip creation.
 
 ## Running Tests
 
