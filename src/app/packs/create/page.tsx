@@ -29,7 +29,7 @@ export default function CreatePackPage() {
 
   const categories: { value: PackCategory; label: string; icon: string; description: string }[] = [
     { value: 'recipes', label: 'Recipes', icon: '🍽️', description: 'Collections of vegan recipes' },
-    { value: 'places', label: 'Places', icon: '📍', description: 'Vegan restaurants, cafes, shops' },
+    { value: 'traveling', label: 'Traveling', icon: '✈️', description: 'Travel guides, vegan restaurants, places' },
     { value: 'products', label: 'Products', icon: '🛍️', description: 'Product reviews and recommendations' },
     { value: 'resources', label: 'Resources', icon: '📚', description: 'Educational content and guides' },
     { value: 'lifestyle', label: 'Lifestyle', icon: '🌱', description: 'Lifestyle tips and inspiration' },

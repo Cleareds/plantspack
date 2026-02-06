@@ -511,14 +511,14 @@ export default function Feed({onPostCreated}: FeedProps) {
     return (
         <div className="w-full">
             {/* Feed Controls - Horizontal Layout with Tabs on Left, Sorting on Right */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-4 py-2.5">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-2 sm:px-4 py-2 sm:py-2.5">
                 <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
                     {/* Tabs on the Left - Only for logged in users */}
                     {user && (
                         <div className="flex gap-2">
                             <button
                                 onClick={() => handleTabChange('public')}
-                                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                                className={`px-2 sm:px-4 py-1 sm:py-2 text-sm font-medium rounded-md transition-colors ${
                                     activeTab === 'public'
                                         ? 'bg-green-600 text-white'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

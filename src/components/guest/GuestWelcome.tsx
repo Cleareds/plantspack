@@ -9,7 +9,7 @@ export default function GuestWelcome() {
         Welcome to PlantsPack! 🌱
       </h2>
       <p className="text-gray-600 mb-6">
-        Connect with fellow plant-based enthusiasts, share your green journey, and discover amazing vegan places around the world.
+        Connect with fellow plant-based enthusiasts, share your green journey, add, review and discover amazing vegan and pet-friendly places and events around the world.
       </p>
       
       <div className="space-y-3">

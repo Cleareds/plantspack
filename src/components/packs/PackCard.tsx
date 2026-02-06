@@ -13,7 +13,7 @@ export default function PackCard({ pack }: PackCardProps) {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'recipes': return '🍽️'
-      case 'places': return '📍'
+      case 'traveling': return '✈️'
       case 'products': return '🛍️'
       case 'resources': return '📚'
       case 'lifestyle': return '🌱'

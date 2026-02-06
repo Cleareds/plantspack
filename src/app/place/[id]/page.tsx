@@ -153,7 +153,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   </div>
                 )}
               </div>
-              <div className="ml-4 flex items-start gap-2">
+              <div className="ml-4 flex items-center gap-2">
                 <FavoriteButton
                   entityType="place"
                   entityId={place.id}

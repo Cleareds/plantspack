@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { Heart, MessageCircle, Share, MoreHorizontal, Globe, Users, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin } from 'lucide-react'
+import { MessageCircle, Share, MoreHorizontal, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
@@ -242,7 +242,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                     onClick={(e) => e.stopPropagation()}
                     className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
                   >
-                    {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                    {formatDistanceToNow(new Date(post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                   </Link>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -370,7 +370,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   onClick={(e) => e.stopPropagation()}
                   className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer"
                 >
-                  {formatDistanceToNow(new Date(post.parent_post.created_at), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(post.parent_post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                 </Link>
               </div>
               <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
@@ -438,7 +438,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                     onClick={(e) => e.stopPropagation()}
                     className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
                   >
-                    {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                    {formatDistanceToNow(new Date(post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                   </Link>
                 </div>
                 <div className="flex items-center space-x-2">

@@ -20,7 +20,7 @@ export default function PacksPage() {
   const categories: { value: PackCategory | ''; label: string; icon: string }[] = [
     { value: '', label: 'All', icon: '📦' },
     { value: 'recipes', label: 'Recipes', icon: '🍽️' },
-    { value: 'places', label: 'Places', icon: '📍' },
+    { value: 'traveling', label: 'Traveling', icon: '✈️' },
     { value: 'products', label: 'Products', icon: '🛍️' },
     { value: 'resources', label: 'Resources', icon: '📚' },
     { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' },
