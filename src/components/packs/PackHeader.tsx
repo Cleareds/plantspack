@@ -175,7 +175,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
           <div className="flex flex-col gap-2 md:min-w-[200px]">
             {pack.user_role === 'admin' && (
               <Link
-                href={`/packs/${pack.id}/edit`}
+                href={`/packs/${pack.slug}/edit`}
                 className="flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-medium transition-colors"
               >
                 <Settings className="h-4 w-4" />

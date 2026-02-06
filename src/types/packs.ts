@@ -10,6 +10,7 @@ export interface Pack {
   id: string
   creator_id: string
   title: string
+  slug: string
   description: string | null
   banner_url: string | null
   website_url: string | null

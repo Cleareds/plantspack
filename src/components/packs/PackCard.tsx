@@ -31,7 +31,7 @@ export default function PackCard({ pack }: PackCardProps) {
     : (pack.category ? [pack.category] : [])
 
   return (
-    <Link href={`/packs/${pack.id}`}>
+    <Link href={`/packs/${pack.slug}`}>
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow overflow-hidden group">
         {/* Banner Image */}
         <div className="relative w-full h-40 bg-gradient-to-br from-green-100 to-green-200">

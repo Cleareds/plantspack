@@ -16,13 +16,17 @@ export async function GET(
     const { data: { session } } = await supabase.auth.getSession()
     const userId = session?.user?.id
 
+    // Check if id is a UUID or a slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
     // Get pack with creator info
-    const { data: pack, error } = await supabase
+    let query = supabase
       .from('packs')
       .select(`
         id,
         creator_id,
         title,
+        slug,
         description,
         banner_url,
         website_url,
@@ -45,8 +49,15 @@ export async function GET(
           subscription_tier
         )
       `)
-      .eq('id', id)
-      .single()
+
+    // Query by UUID or slug
+    if (isUUID) {
+      query = query.eq('id', id)
+    } else {
+      query = query.eq('slug', id)
+    }
+
+    const { data: pack, error } = await query.single()
 
     if (error || !pack) {
       return NextResponse.json(

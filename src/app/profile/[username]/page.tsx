@@ -523,7 +523,7 @@ export default function ProfilePage() {
               </div>
               <div className="divide-y divide-gray-200">
                 {userPacks.slice(0, 5).map((pack: any) => (
-                  <Link key={pack.id} href={`/packs/${pack.id}`} className="block p-4 hover:bg-gray-50 transition-colors">
+                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -574,7 +574,7 @@ export default function ProfilePage() {
               </div>
               <div className="divide-y divide-gray-200">
                 {joinedPacks.slice(0, 5).map((pack: any) => (
-                  <Link key={pack.id} href={`/packs/${pack.id}`} className="block p-4 hover:bg-gray-50 transition-colors">
+                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
