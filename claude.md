@@ -139,6 +139,20 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 - Ask "Do you want me to run this migration?"
 - Wait for confirmation before using any of the CLI tools listed above
 
+## Build & Deployment Optimization
+
+**IMPORTANT - Token & Time Optimization:**
+- ❌ **DO NOT wait for Vercel builds to complete** - Just push to GitHub and move on
+- ❌ **DO NOT run local builds** (`npm run build`, `next build`) - They consume tokens unnecessarily
+- ✅ **DO push code and continue** - Vercel will build automatically in the background
+- ✅ **DO verify deployment later** if needed using `vercel logs` or the Vercel dashboard
+
+**Reasoning:**
+- Vercel builds happen automatically on GitHub push
+- Waiting for builds blocks progress and wastes time
+- Local builds consume Claude's token budget without benefit
+- Production builds are handled by Vercel's infrastructure
+
 ## Notes
 
 - All CLI tools are authenticated and ready to use
