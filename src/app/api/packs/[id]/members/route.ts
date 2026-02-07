@@ -12,6 +12,29 @@ export async function GET(
     const { id } = await params
     const supabase = await createClient()
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     const { data: members, error } = await supabase
       .from('pack_members')
       .select(`
@@ -27,7 +50,7 @@ export async function GET(
           subscription_tier
         )
       `)
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .order('joined_at', { ascending: false })
 
     if (error) throw error
@@ -58,11 +81,34 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     // Check if already a member (including admin/moderator)
     const { data: existing } = await supabase
       .from('pack_members')
       .select('id, role')
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .eq('user_id', session.user.id)
       .maybeSingle()
 
@@ -83,7 +129,7 @@ export async function POST(
     const { data: member, error } = await supabase
       .from('pack_members')
       .insert({
-        pack_id: id,
+        pack_id: packId,
         user_id: session.user.id,
         role: 'member'
       })
@@ -131,11 +177,34 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     // Delete membership
     const { error } = await supabase
       .from('pack_members')
       .delete()
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .eq('user_id', session.user.id)
 
     if (error) throw error

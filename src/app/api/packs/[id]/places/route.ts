@@ -14,6 +14,29 @@ export async function GET(
 
     const supabase = await createClient()
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     const { data: packPlaces, error, count } = await supabase
       .from('pack_places')
       .select(`
@@ -34,7 +57,7 @@ export async function GET(
           favorite_places (id, user_id)
         )
       `, { count: 'exact' })
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .order('is_pinned', { ascending: false })
       .order('position', { ascending: true })
       .range(offset, offset + limit - 1)
@@ -97,11 +120,34 @@ export async function POST(
       )
     }
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     // Check if user is admin or moderator
     const { data: membership } = await supabase
       .from('pack_members')
       .select('role')
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .eq('user_id', session.user.id)
       .maybeSingle()
 
@@ -140,7 +186,7 @@ export async function POST(
     const { data: maxPos } = await supabase
       .from('pack_places')
       .select('position')
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .order('position', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -151,7 +197,7 @@ export async function POST(
     const { data: packPlace, error } = await supabase
       .from('pack_places')
       .insert({
-        pack_id: id,
+        pack_id: packId,
         place_id,
         added_by_user_id: session.user.id,
         position,

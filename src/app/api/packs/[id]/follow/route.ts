@@ -24,22 +24,35 @@ export async function POST(
 
     const userId = session.user.id
 
-    // Check if pack exists
-    const { data: pack, error: packError } = await serviceSupabase
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // Check if pack exists (and resolve slug if needed)
+    let query = serviceSupabase
       .from('packs')
       .select('id')
-      .eq('id', id)
-      .single()
+
+    if (isUUID) {
+      query = query.eq('id', id)
+    } else {
+      query = query.eq('slug', id)
+    }
+
+    const { data: pack, error: packError } = await query.single()
 
     if (packError || !pack) {
       return NextResponse.json({ error: 'Pack not found' }, { status: 404 })
     }
 
+    packId = pack.id
+
     // Check if already following
     const { data: existing } = await serviceSupabase
       .from('pack_follows')
       .select('id')
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .eq('user_id', userId)
       .single()
 
@@ -51,7 +64,7 @@ export async function POST(
     const { error: followError } = await serviceSupabase
       .from('pack_follows')
       .insert({
-        pack_id: id,
+        pack_id: packId,
         user_id: userId
       })
 
@@ -84,11 +97,32 @@ export async function DELETE(
 
     const userId = session.user.id
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      let query = serviceSupabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+
+      const { data: pack, error: packError } = await query.single()
+
+      if (packError || !pack) {
+        return NextResponse.json({ error: 'Pack not found' }, { status: 404 })
+      }
+
+      packId = pack.id
+    }
+
     // Unfollow the pack
     const { error: unfollowError } = await serviceSupabase
       .from('pack_follows')
       .delete()
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .eq('user_id', userId)
 
     if (unfollowError) {

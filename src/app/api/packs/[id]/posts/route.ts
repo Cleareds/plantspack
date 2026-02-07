@@ -15,6 +15,29 @@ export async function GET(
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     // Get pack posts with full post data
     const { data: packPosts, error, count } = await supabase
       .from('pack_posts')
@@ -43,7 +66,7 @@ export async function GET(
           comments (id)
         )
       `, { count: 'exact' })
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .order('is_pinned', { ascending: false })
       .order('position', { ascending: true })
       .range(offset, offset + limit - 1)
@@ -80,11 +103,34 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Check if id is UUID or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let packId = id
+
+    // If it's a slug, resolve to UUID
+    if (!isUUID) {
+      const { data: pack, error: packError } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+
+      if (packError || !pack) {
+        return NextResponse.json(
+          { error: 'Pack not found' },
+          { status: 404 }
+        )
+      }
+
+      packId = pack.id
+    }
+
     // Check if user is admin or moderator
     const { data: membership } = await supabase
       .from('pack_members')
       .select('role')
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .eq('user_id', session.user.id)
       .maybeSingle()
 
@@ -130,7 +176,7 @@ export async function POST(
     const { data: maxPos } = await supabase
       .from('pack_posts')
       .select('position')
-      .eq('pack_id', id)
+      .eq('pack_id', packId)
       .order('position', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -141,7 +187,7 @@ export async function POST(
     const { data: packPost, error } = await supabase
       .from('pack_posts')
       .insert({
-        pack_id: id,
+        pack_id: packId,
         post_id,
         added_by_user_id: session.user.id,
         position,
