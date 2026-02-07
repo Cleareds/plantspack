@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
         id,
         creator_id,
         title,
+        slug,
         description,
         banner_url,
         category,
