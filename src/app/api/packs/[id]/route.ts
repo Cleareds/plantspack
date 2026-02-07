@@ -66,27 +66,30 @@ export async function GET(
       )
     }
 
+    // Use the pack's actual UUID for all queries (not the slug)
+    const packId = pack.id
+
     // Get stats
     const [memberCount, postCount, placesCount, membership, isFollowing] = await Promise.all([
       // Member count
       supabase
         .from('pack_members')
         .select('*', { count: 'exact', head: true })
-        .eq('pack_id', id)
+        .eq('pack_id', packId)
         .then(({ count }) => count || 0),
 
       // Post count
       supabase
         .from('pack_posts')
         .select('*', { count: 'exact', head: true })
-        .eq('pack_id', id)
+        .eq('pack_id', packId)
         .then(({ count }) => count || 0),
 
       // Places count
       supabase
         .from('pack_places')
         .select('*', { count: 'exact', head: true })
-        .eq('pack_id', id)
+        .eq('pack_id', packId)
         .then(({ count }) => count || 0),
 
       // User membership
@@ -94,7 +97,7 @@ export async function GET(
         ? supabase
             .from('pack_members')
             .select('role')
-            .eq('pack_id', id)
+            .eq('pack_id', packId)
             .eq('user_id', userId)
             .maybeSingle()
         : Promise.resolve({ data: null }),
@@ -104,7 +107,7 @@ export async function GET(
         ? supabase
             .from('pack_follows')
             .select('id')
-            .eq('pack_id', id)
+            .eq('pack_id', packId)
             .eq('user_id', userId)
             .maybeSingle()
             .then(({ data }) => !!data)
