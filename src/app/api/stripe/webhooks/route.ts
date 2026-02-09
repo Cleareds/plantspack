@@ -453,14 +453,31 @@ async function logWebhookEvent(event: Stripe.Event) {
         .single()
 
       if (subscription) {
-        await supabase
+        // Check if this event was already processed (idempotency)
+        const { data: existingEvent } = await supabase
           .from('subscription_events')
-          .insert({
-            subscription_id: subscription.id,
-            event_type: event.type,
-            event_data: event.data,
-            stripe_event_id: event.id
-          })
+          .select('id')
+          .eq('stripe_event_id', event.id)
+          .maybeSingle()
+
+        // Only insert if event hasn't been processed before
+        if (!existingEvent) {
+          const { error: insertError } = await supabase
+            .from('subscription_events')
+            .insert({
+              subscription_id: subscription.id,
+              event_type: event.type,
+              event_data: event.data,
+              stripe_event_id: event.id
+            })
+
+          // If insert fails due to unique constraint (race condition), that's ok
+          if (insertError && insertError.code !== '23505') {
+            throw insertError
+          }
+        } else {
+          console.log(`Webhook event ${event.id} already processed, skipping`)
+        }
       }
     }
   } catch (error) {

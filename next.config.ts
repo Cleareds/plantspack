@@ -44,20 +44,42 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Apply no-cache headers to all pages to prevent caching issues
-        source: '/(.*)',
+        // Cache static assets (images, fonts, etc.) for 1 year
+        source: '/_next/static/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
+            value: 'public, max-age=31536000, immutable',
           },
+        ],
+      },
+      {
+        // Cache public images for 1 day
+        source: '/images/:path*',
+        headers: [
           {
-            key: 'Pragma',
-            value: 'no-cache',
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
           },
+        ],
+      },
+      {
+        // No cache for API routes
+        source: '/api/:path*',
+        headers: [
           {
-            key: 'Expires',
-            value: '0',
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate',
+          },
+        ],
+      },
+      {
+        // Short cache for public pages (10 seconds with stale-while-revalidate)
+        source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=10, stale-while-revalidate=59',
           },
         ],
       },

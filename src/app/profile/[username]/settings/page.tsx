@@ -413,7 +413,6 @@ export default function ProfileSettingsPage() {
                     <option>UTC+00:00 London</option>
                     <option>UTC+01:00 Paris, Berlin</option>
                     <option>UTC+02:00 Kyiv, Athens, Istanbul</option>
-                    <option>UTC+03:00 Moscow</option>
                   </select>
                 </div>
               </div>
