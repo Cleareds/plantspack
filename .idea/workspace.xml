@@ -13,6 +13,11 @@
   <component name="ComposerSettings">
     <execution />
   </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/antonkravchuk/sidep/Cleareds/plantspack" value="34tY8ZJ6duIOv5sp1kGQNP1czMC" />
+    </persistenceIdMap>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -94,6 +99,7 @@
       <workItem from="1768231163136" duration="529000" />
       <workItem from="1768831374725" duration="632000" />
       <workItem from="1770130952585" duration="16120000" />
+      <workItem from="1770729980484" duration="323000" />
     </task>
     <servers />
   </component>

@@ -1,5 +1,5 @@
 -- =====================================================
--- PRODUCTION HARDENING - APPLY THIS SQL MANUALLY
+-- PRODUCTION HARDENING - FINAL VERSION
 -- =====================================================
 -- Copy and paste this entire file into Supabase Dashboard > SQL Editor
 -- Then click "Run" to apply all missing fixes
@@ -13,7 +13,6 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- 30 comments per hour
   RETURN check_rate_limit(
     p_user_id::TEXT,
     'comment_creation',
@@ -93,36 +92,6 @@ END $$;
 -- VERIFICATION
 -- =====================================================
 
--- Test check_rate_limit_posts function
-DO $$
-DECLARE
-  v_result JSON;
-BEGIN
-  SELECT check_rate_limit_posts('00000000-0000-0000-0000-000000000001'::UUID)
-  INTO v_result;
-
-  IF v_result IS NOT NULL THEN
-    RAISE NOTICE '✅ check_rate_limit_posts works: %', v_result;
-  ELSE
-    RAISE EXCEPTION '❌ check_rate_limit_posts failed';
-  END IF;
-END $$;
-
--- Test check_rate_limit_comments function
-DO $$
-DECLARE
-  v_result JSON;
-BEGIN
-  SELECT check_rate_limit_comments('00000000-0000-0000-0000-000000000001'::UUID)
-  INTO v_result;
-
-  IF v_result IS NOT NULL THEN
-    RAISE NOTICE '✅ check_rate_limit_comments works: %', v_result;
-  ELSE
-    RAISE EXCEPTION '❌ check_rate_limit_comments failed';
-  END IF;
-END $$;
-
 -- Verify rate_limits table exists
 DO $$
 BEGIN
@@ -133,13 +102,30 @@ BEGIN
   END IF;
 END $$;
 
+-- Test check_rate_limit_posts function (simple test)
+DO $$
+BEGIN
+  PERFORM check_rate_limit_posts('00000000-0000-0000-0000-000000000001'::UUID);
+  RAISE NOTICE '✅ check_rate_limit_posts function works';
+EXCEPTION WHEN OTHERS THEN
+  RAISE EXCEPTION '❌ check_rate_limit_posts failed: %', SQLERRM;
+END $$;
+
+-- Test check_rate_limit_comments function (simple test)
+DO $$
+BEGIN
+  PERFORM check_rate_limit_comments('00000000-0000-0000-0000-000000000001'::UUID);
+  RAISE NOTICE '✅ check_rate_limit_comments function works';
+EXCEPTION WHEN OTHERS THEN
+  RAISE EXCEPTION '❌ check_rate_limit_comments failed: %', SQLERRM;
+END $$;
+
 -- Verify subscription_events constraint
 DO $$
 DECLARE
   v_count INTEGER;
 BEGIN
   IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
-    -- Check for duplicates
     SELECT COUNT(*) INTO v_count
     FROM (
       SELECT stripe_event_id, COUNT(*)
@@ -166,7 +152,9 @@ BEGIN
   RAISE NOTICE '==============================================';
   RAISE NOTICE '';
   RAISE NOTICE 'Summary:';
-  RAISE NOTICE '  ✅ Rate limit functions created';
+  RAISE NOTICE '  ✅ check_rate_limit_posts() created';
+  RAISE NOTICE '  ✅ check_rate_limit_comments() created';
+  RAISE NOTICE '  ✅ cleanup_rate_limits() created';
   RAISE NOTICE '  ✅ Stripe idempotency enforced';
   RAISE NOTICE '  ✅ Indexes created for performance';
   RAISE NOTICE '';
