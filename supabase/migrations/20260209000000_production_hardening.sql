@@ -150,41 +150,44 @@ CREATE POLICY "Service role can manage rate limits"
 -- 2. STRIPE WEBHOOK IDEMPOTENCY
 -- =====================================================
 
--- Add unique constraint on stripe_event_id if stripe_events table exists
+-- Add unique constraint on subscription_events.stripe_event_id
 DO $$
 BEGIN
-  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'stripe_events') THEN
+  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
     -- Try to add unique constraint if it doesn't exist
     IF NOT EXISTS (
       SELECT 1 FROM pg_constraint
-      WHERE conname = 'stripe_events_stripe_event_id_key'
+      WHERE conname = 'subscription_events_stripe_event_id_key'
     ) THEN
       -- First, remove any duplicate entries (keep the oldest one)
-      DELETE FROM stripe_events a
-      USING stripe_events b
+      DELETE FROM subscription_events a
+      USING subscription_events b
       WHERE a.stripe_event_id = b.stripe_event_id
         AND a.created_at > b.created_at;
 
       -- Now add the unique constraint
-      ALTER TABLE stripe_events
-        ADD CONSTRAINT stripe_events_stripe_event_id_key
+      ALTER TABLE subscription_events
+        ADD CONSTRAINT subscription_events_stripe_event_id_key
         UNIQUE (stripe_event_id);
 
-      RAISE NOTICE 'Added unique constraint on stripe_event_id';
+      RAISE NOTICE 'Added unique constraint on subscription_events.stripe_event_id';
     END IF;
+  ELSE
+    RAISE NOTICE 'Table subscription_events does not exist, skipping unique constraint';
   END IF;
 END $$;
 
 -- Create index on stripe_event_id for fast lookups
 DO $$
 BEGIN
-  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'stripe_events') THEN
+  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
     IF NOT EXISTS (
       SELECT 1 FROM pg_indexes
-      WHERE indexname = 'idx_stripe_events_event_id'
+      WHERE indexname = 'idx_subscription_events_stripe_event_id'
     ) THEN
-      CREATE INDEX idx_stripe_events_event_id ON stripe_events(stripe_event_id);
-      RAISE NOTICE 'Created index on stripe_event_id';
+      CREATE INDEX idx_subscription_events_stripe_event_id
+        ON subscription_events(stripe_event_id);
+      RAISE NOTICE 'Created index on subscription_events.stripe_event_id';
     END IF;
   END IF;
 END $$;

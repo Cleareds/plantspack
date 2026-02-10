@@ -74,8 +74,39 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // No cache for admin pages (user-specific)
+        source: '/admin/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        // No cache for profile pages (user-specific)
+        source: '/profile/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        // No cache for auth pages
+        source: '/auth/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+      {
         // Short cache for public pages (10 seconds with stale-while-revalidate)
-        source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        // Excludes: api, admin, profile, auth, static assets
+        source: '/((?!api|admin|profile|auth|_next/static|_next/image|favicon.ico).*)',
         headers: [
           {
             key: 'Cache-Control',
