@@ -1,13 +1,10 @@
--- Production Hardening Migration
--- 1. Rate limiting table and RPC
--- 2. Stripe webhook idempotency
+-- Fix rate_limits table and apply all production hardening
+-- This fixes the IMMUTABLE function error and applies everything correctly
 
--- =====================================================
--- 1. RATE LIMITING INFRASTRUCTURE
--- =====================================================
+-- 1. Drop and recreate rate_limits table with correct structure
+DROP TABLE IF EXISTS rate_limits CASCADE;
 
--- Create rate_limits table for durable rate limiting
-CREATE TABLE IF NOT EXISTS rate_limits (
+CREATE TABLE rate_limits (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   identifier TEXT NOT NULL,
   action TEXT NOT NULL,
@@ -19,17 +16,20 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   UNIQUE(identifier, action, window_start)
 );
 
--- Index for fast lookups
-CREATE INDEX IF NOT EXISTS idx_rate_limits_lookup
-  ON rate_limits(identifier, action, window_end)
-  WHERE window_end > NOW();
+-- Indexes WITHOUT predicates (no NOW() function)
+CREATE INDEX idx_rate_limits_lookup
+  ON rate_limits(identifier, action, window_end);
 
--- Index for cleanup
-CREATE INDEX IF NOT EXISTS idx_rate_limits_cleanup
-  ON rate_limits(window_end)
-  WHERE window_end < NOW();
+CREATE INDEX idx_rate_limits_window_end
+  ON rate_limits(window_end);
 
--- Function to check rate limit
+-- 2. Drop existing functions first
+DROP FUNCTION IF EXISTS check_rate_limit_posts(UUID);
+DROP FUNCTION IF EXISTS check_rate_limit_comments(UUID);
+DROP FUNCTION IF EXISTS cleanup_rate_limits();
+DROP FUNCTION IF EXISTS check_rate_limit(TEXT, TEXT, INTEGER, INTEGER);
+
+-- Create base rate limit function
 CREATE OR REPLACE FUNCTION check_rate_limit(
   p_identifier TEXT,
   p_action TEXT,
@@ -46,11 +46,9 @@ DECLARE
   v_current_count INTEGER;
   v_limit_id UUID;
 BEGIN
-  -- Calculate window boundaries
   v_window_start := date_trunc('minute', NOW());
   v_window_end := v_window_start + (p_window_seconds || ' seconds')::INTERVAL;
 
-  -- Try to get or create rate limit entry
   INSERT INTO rate_limits (identifier, action, count, window_start, window_end)
   VALUES (p_identifier, p_action, 1, v_window_start, v_window_end)
   ON CONFLICT (identifier, action, window_start)
@@ -59,7 +57,6 @@ BEGIN
     updated_at = NOW()
   RETURNING id, count INTO v_limit_id, v_current_count;
 
-  -- Check if limit exceeded
   IF v_current_count > p_max_requests THEN
     RETURN json_build_object(
       'allowed', false,
@@ -80,16 +77,14 @@ BEGIN
 END;
 $$;
 
--- Specific rate limit function for posts (called by CreatePost.tsx)
-CREATE OR REPLACE FUNCTION check_rate_limit_posts(
-  p_user_id UUID
-) RETURNS JSON
+-- 3. Create check_rate_limit_posts function
+CREATE OR REPLACE FUNCTION check_rate_limit_posts(p_user_id UUID)
+RETURNS JSON
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- 10 posts per hour
   RETURN check_rate_limit(
     p_user_id::TEXT,
     'post_creation',
@@ -99,16 +94,14 @@ BEGIN
 END;
 $$;
 
--- Specific rate limit function for comments
-CREATE OR REPLACE FUNCTION check_rate_limit_comments(
-  p_user_id UUID
-) RETURNS JSON
+-- 4. Create check_rate_limit_comments function
+CREATE OR REPLACE FUNCTION check_rate_limit_comments(p_user_id UUID)
+RETURNS JSON
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- 30 comments per hour
   RETURN check_rate_limit(
     p_user_id::TEXT,
     'comment_creation',
@@ -118,7 +111,7 @@ BEGIN
 END;
 $$;
 
--- Cleanup function for old rate limit entries
+-- 5. Create cleanup function
 CREATE OR REPLACE FUNCTION cleanup_rate_limits()
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -130,15 +123,15 @@ DECLARE
 BEGIN
   DELETE FROM rate_limits
   WHERE window_end < NOW() - INTERVAL '1 hour';
-
   GET DIAGNOSTICS v_deleted = ROW_COUNT;
   RETURN v_deleted;
 END;
 $$;
 
--- RLS policies for rate_limits (admin only)
+-- 6. RLS policies
 ALTER TABLE rate_limits ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Service role can manage rate limits" ON rate_limits;
 CREATE POLICY "Service role can manage rate limits"
   ON rate_limits
   FOR ALL
@@ -146,77 +139,37 @@ CREATE POLICY "Service role can manage rate limits"
   USING (true)
   WITH CHECK (true);
 
--- =====================================================
--- 2. STRIPE WEBHOOK IDEMPOTENCY
--- =====================================================
-
--- Add unique constraint on subscription_events.stripe_event_id
+-- 7. Stripe webhook idempotency
 DO $$
 BEGIN
   IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
-    -- Try to add unique constraint if it doesn't exist
+    DELETE FROM subscription_events
+    WHERE id IN (
+      SELECT id
+      FROM (
+        SELECT id,
+               ROW_NUMBER() OVER (PARTITION BY stripe_event_id ORDER BY id) AS rn
+        FROM subscription_events
+        WHERE stripe_event_id IS NOT NULL
+      ) t
+      WHERE t.rn > 1
+    );
+
     IF NOT EXISTS (
       SELECT 1 FROM pg_constraint
       WHERE conname = 'subscription_events_stripe_event_id_key'
     ) THEN
-      -- First, remove any duplicate entries (keep the one with smallest id = oldest)
-      DELETE FROM subscription_events
-      WHERE id IN (
-        SELECT id
-        FROM (
-          SELECT id,
-                 ROW_NUMBER() OVER (PARTITION BY stripe_event_id ORDER BY id) AS rn
-          FROM subscription_events
-          WHERE stripe_event_id IS NOT NULL
-        ) t
-        WHERE t.rn > 1
-      );
-
-      -- Now add the unique constraint
       ALTER TABLE subscription_events
         ADD CONSTRAINT subscription_events_stripe_event_id_key
         UNIQUE (stripe_event_id);
-
-      RAISE NOTICE 'Added unique constraint on subscription_events.stripe_event_id';
     END IF;
-  ELSE
-    RAISE NOTICE 'Table subscription_events does not exist, skipping unique constraint';
-  END IF;
-END $$;
 
--- Create index on stripe_event_id for fast lookups
-DO $$
-BEGIN
-  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
     IF NOT EXISTS (
       SELECT 1 FROM pg_indexes
       WHERE indexname = 'idx_subscription_events_stripe_event_id'
     ) THEN
       CREATE INDEX idx_subscription_events_stripe_event_id
         ON subscription_events(stripe_event_id);
-      RAISE NOTICE 'Created index on subscription_events.stripe_event_id';
     END IF;
   END IF;
-END $$;
-
--- =====================================================
--- VERIFICATION
--- =====================================================
-
--- Verify rate limit functions exist
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_proc WHERE proname = 'check_rate_limit_posts'
-  ) THEN
-    RAISE EXCEPTION 'Rate limit function check_rate_limit_posts not created!';
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_proc WHERE proname = 'check_rate_limit_comments'
-  ) THEN
-    RAISE EXCEPTION 'Rate limit function check_rate_limit_comments not created!';
-  END IF;
-
-  RAISE NOTICE '✅ Production hardening migration completed successfully';
 END $$;

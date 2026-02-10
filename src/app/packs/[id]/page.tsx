@@ -225,7 +225,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
                   <PostCard
                     key={packPost.id}
                     post={packPost.posts as any}
-                    onUpdate={() => fetchPosts()}
+                    onUpdate={() => {}}
                   />
                 ))}
               </div>
