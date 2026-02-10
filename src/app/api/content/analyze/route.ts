@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
-import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { rateLimit, checkRateLimit, getClientIp } from '@/lib/rate-limit-db'
 
 const SYSTEM_PROMPT = `You are a content moderation system for PlantsPack, a vegan social media platform focused on positive community building.
 
@@ -125,26 +125,6 @@ CRITICAL REMINDERS:
 
 ALWAYS respond with valid JSON only, no other text.`
 
-// Rate limiting: max 10 requests per minute per user
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now()
-  const limit = rateLimitMap.get(userId)
-
-  if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(userId, { count: 1, resetTime: now + 60000 }) // 1 minute
-    return true
-  }
-
-  if (limit.count >= 10) {
-    return false
-  }
-
-  limit.count++
-  return true
-}
-
 async function analyzeWithGPT(content: string) {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error('OPENAI_API_KEY not configured')
@@ -204,10 +184,11 @@ export async function POST(request: NextRequest) {
 
     // IP-based rate limiting (First line of defense)
     const clientIp = getClientIp(request)
-    const ipRateLimit = rateLimit({
+    const ipRateLimit = await rateLimit({
       identifier: `content-analysis-ip:${clientIp}`,
-      limit: 30, // Max 30 requests per minute per IP
-      windowMs: 60 * 1000
+      action: 'content_analysis_ip',
+      limit: 30, // Max 30 requests per minute
+      windowSeconds: 60
     })
 
     if (!ipRateLimit.success) {
@@ -230,9 +211,19 @@ export async function POST(request: NextRequest) {
     }
 
     // User-based rate limiting (Second line of defense)
-    if (!checkRateLimit(session.user.id)) {
+    const userRateLimit = await checkRateLimit(
+      session.user.id,
+      'content_analysis_user',
+      10, // Max 10 requests per minute
+      60
+    )
+
+    if (!userRateLimit.success) {
       return NextResponse.json(
-        { error: 'Rate limit exceeded. Please wait a moment before analyzing again.' },
+        {
+          error: 'Rate limit exceeded. Please wait a moment before analyzing again.',
+          resetIn: Math.ceil(userRateLimit.resetIn / 1000)
+        },
         { status: 429 }
       )
     }
