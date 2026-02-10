@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MapPin, Plus, Heart, Trash2 } from 'lucide-react'
+import { MapPin, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import StarRating from '@/components/places/StarRating'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
+import FavoriteButton from '@/components/social/FavoriteButton'
 import AddPlaceModal from './AddPlaceModal'
 
 type PackPlace = {
@@ -120,7 +121,6 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {places.map((packPlace) => {
             const place = packPlace.places
-            const isFavorited = place.favorite_places?.some(fav => fav.user_id === userId)
 
             return (
               <div
@@ -201,16 +201,13 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                         {place.users.first_name || place.users.username}
                       </Link>
                     </div>
-                    <button
-                      className={`
-                        inline-flex items-center gap-1 text-sm
-                        ${isFavorited ? 'text-red-600' : 'text-gray-400'}
-                        hover:text-red-600 transition-colors
-                      `}
-                    >
-                      <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current' : ''}`} />
-                      <span>{place.favorite_places?.length || 0}</span>
-                    </button>
+                    <FavoriteButton
+                      entityType="place"
+                      entityId={place.id}
+                      initialFavorites={place.favorite_places || []}
+                      size="sm"
+                      showCount={true}
+                    />
                   </div>
                 </div>
               </div>
