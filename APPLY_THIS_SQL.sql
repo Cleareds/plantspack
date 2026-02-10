@@ -44,11 +44,21 @@ $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
-    -- Remove duplicates first (keep oldest)
-    DELETE FROM subscription_events a
-    USING subscription_events b
-    WHERE a.stripe_event_id = b.stripe_event_id
-      AND a.created_at > b.created_at;
+
+    -- Remove duplicates using id (keep the one with smallest id = oldest)
+    DELETE FROM subscription_events
+    WHERE id IN (
+      SELECT id
+      FROM (
+        SELECT id,
+               ROW_NUMBER() OVER (PARTITION BY stripe_event_id ORDER BY id) AS rn
+        FROM subscription_events
+        WHERE stripe_event_id IS NOT NULL
+      ) t
+      WHERE t.rn > 1
+    );
+
+    RAISE NOTICE '✅ Removed duplicate stripe_event_id entries';
 
     -- Add unique constraint if it doesn't exist
     IF NOT EXISTS (
@@ -120,6 +130,30 @@ BEGIN
     RAISE NOTICE '✅ rate_limits table exists';
   ELSE
     RAISE EXCEPTION '❌ rate_limits table missing - run full migration first';
+  END IF;
+END $$;
+
+-- Verify subscription_events constraint
+DO $$
+DECLARE
+  v_count INTEGER;
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE tablename = 'subscription_events') THEN
+    -- Check for duplicates
+    SELECT COUNT(*) INTO v_count
+    FROM (
+      SELECT stripe_event_id, COUNT(*)
+      FROM subscription_events
+      WHERE stripe_event_id IS NOT NULL
+      GROUP BY stripe_event_id
+      HAVING COUNT(*) > 1
+    ) duplicates;
+
+    IF v_count > 0 THEN
+      RAISE WARNING '⚠️ Found % duplicate stripe_event_ids', v_count;
+    ELSE
+      RAISE NOTICE '✅ No duplicate stripe_event_ids found';
+    END IF;
   END IF;
 END $$;
 

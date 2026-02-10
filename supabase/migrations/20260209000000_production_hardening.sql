@@ -159,11 +159,18 @@ BEGIN
       SELECT 1 FROM pg_constraint
       WHERE conname = 'subscription_events_stripe_event_id_key'
     ) THEN
-      -- First, remove any duplicate entries (keep the oldest one)
-      DELETE FROM subscription_events a
-      USING subscription_events b
-      WHERE a.stripe_event_id = b.stripe_event_id
-        AND a.created_at > b.created_at;
+      -- First, remove any duplicate entries (keep the one with smallest id = oldest)
+      DELETE FROM subscription_events
+      WHERE id IN (
+        SELECT id
+        FROM (
+          SELECT id,
+                 ROW_NUMBER() OVER (PARTITION BY stripe_event_id ORDER BY id) AS rn
+          FROM subscription_events
+          WHERE stripe_event_id IS NOT NULL
+        ) t
+        WHERE t.rn > 1
+      );
 
       -- Now add the unique constraint
       ALTER TABLE subscription_events
