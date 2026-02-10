@@ -62,11 +62,6 @@ export function useSubscription() {
     return canPerformAction(subscription, 'use_location')
   }
 
-  const canSeeAnalytics = () => {
-    if (!subscription) return false
-    return canPerformAction(subscription, 'see_analytics')
-  }
-
   const getMaxPostLength = () => {
     if (!subscription) return 250
     return SUBSCRIPTION_TIERS[subscription.tier].maxPostLength
@@ -107,13 +102,12 @@ export function useSubscription() {
     loading,
     error,
     refresh,
-    
+
     // Permission checks
     canCreateLongPost,
     canUseMultipleImages,
     canUseLocation,
-    canSeeAnalytics,
-    
+
     // Limits
     getMaxPostLength,
     getMaxImages,

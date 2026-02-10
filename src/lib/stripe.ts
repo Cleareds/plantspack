@@ -62,7 +62,6 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
       '7 images per post',
       '1 video per post (64MB max)',
       'Location sharing',
-      'Post analytics',
       'Community support'
     ],
     maxPostLength: 1000,
@@ -86,7 +85,6 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
       'Unlimited images per post',
       '3 videos per post (256MB max each)',
       'Location sharing',
-      'Advanced post analytics',
       'Early access to new features',
       'Priority support'
     ],
@@ -277,14 +275,14 @@ export async function cancelSubscription(subscriptionId: string) {
  */
 export function canPerformAction(
   subscription: UserSubscription,
-  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'see_analytics' | 'upload_video'
+  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'upload_video'
 ): boolean {
   if (subscription.status !== 'active') {
     return action === 'create_long_post' ? false : subscription.tier !== 'free'
   }
 
   const tier = SUBSCRIPTION_TIERS[subscription.tier]
-  
+
   switch (action) {
     case 'create_long_post':
       return tier.maxPostLength > 500 || tier.maxPostLength === -1
@@ -293,8 +291,6 @@ export function canPerformAction(
     case 'upload_video':
       return tier.maxVideos > 0
     case 'use_location':
-      return subscription.tier !== 'free'
-    case 'see_analytics':
       return subscription.tier !== 'free'
     default:
       return true

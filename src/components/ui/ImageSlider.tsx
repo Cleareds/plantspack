@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ImageSliderProps {
@@ -67,12 +68,14 @@ export default function ImageSlider({
               {!isLoaded[index] && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
-              <img
+              <Image
                 src={image}
                 alt={`Image ${index + 1}`}
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                quality={75}
                 onLoad={() => handleImageLoad(index)}
-                className={`w-full h-full object-contain transition-opacity duration-200 ${
+                className={`object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 }`}
               />
@@ -100,12 +103,14 @@ export default function ImageSlider({
               {!isLoaded[index] && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
-              <img
+              <Image
                 src={image}
                 alt={`Image ${index + 1}`}
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                quality={75}
                 onLoad={() => handleImageLoad(index)}
-                className={`w-full h-full object-contain transition-opacity duration-200 ${
+                className={`object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 }`}
               />

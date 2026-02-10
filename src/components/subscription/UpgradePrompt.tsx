@@ -173,14 +173,9 @@ export const UPGRADE_PROMPTS = {
     description: "Share your location to help others discover local vegan spots and connect with nearby community members.",
     suggestedTier: 'medium' as const
   },
-  analytics: {
-    feature: "Post Analytics",
-    description: "See detailed insights about your post performance and audience engagement.",
-    suggestedTier: 'medium' as const
-  },
   premiumFeatures: {
     feature: "Premium Features",
-    description: "Get access to all premium features including advanced analytics, priority support, and early access to new features.",
+    description: "Get access to all premium features including priority support and early access to new features.",
     suggestedTier: 'premium' as const
   }
 }

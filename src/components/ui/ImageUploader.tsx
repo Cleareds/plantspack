@@ -28,7 +28,7 @@ export default function ImageUploader({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
 
-  const compressImage = useCallback((file: File, maxWidth: number = 1200, quality: number = 0.85): Promise<File> => {
+  const compressImage = useCallback((file: File, maxWidth: number = 1200, quality: number = 0.7): Promise<File> => {
     return new Promise((resolve) => {
       // Convert all images to WebP format (supports transparency, better compression)
       const outputType = 'image/webp'

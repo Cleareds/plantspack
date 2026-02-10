@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Star, Send, Edit2, Trash2 } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
 import ReportButton from '../moderation/ReportButton'
-import CommentReactions from '../reactions/CommentReactions'
+import ReviewReactions from '../reactions/ReviewReactions'
 import StarRating from './StarRating'
 
 type Review = {
@@ -266,9 +266,12 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
         </div>
       ) : (
         <div className="border border-gray-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {editingReviewId ? 'Edit Your Review' : userReview ? 'Update Your Review' : 'Write a Review'}
           </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            You can only leave one review per place. Submitting a new review will replace your previous one.
+          </p>
           <form onSubmit={handleSubmitReview} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -377,13 +380,21 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
-                          <span className="font-medium text-gray-900">
+                          <Link
+                            href={`/profile/${review.users?.username || 'unknown'}`}
+                            className="font-medium text-gray-900 hover:text-green-600 transition-colors"
+                          >
                             {review.users?.first_name
                               ? `${review.users.first_name} ${review.users.last_name || ''}`.trim()
                               : review.users?.username || 'Unknown User'
                             }
-                          </span>
-                          <span className="text-gray-400">@{review.users?.username || 'unknown'}</span>
+                          </Link>
+                          <Link
+                            href={`/profile/${review.users?.username || 'unknown'}`}
+                            className="text-gray-400 hover:text-green-600 transition-colors"
+                          >
+                            @{review.users?.username || 'unknown'}
+                          </Link>
                           <span className="text-gray-400">·</span>
                           <span className="text-gray-400 text-sm">
                             {formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}
@@ -434,9 +445,8 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
 
                       <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{review.content}</p>
 
-                      <CommentReactions
-                        commentId={review.id}
-                        onReactionChange={() => fetchReviews(0, false)}
+                      <ReviewReactions
+                        reviewId={review.id}
                       />
                     </div>
                   </div>

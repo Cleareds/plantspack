@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
@@ -277,13 +278,21 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start space-x-2 mb-1">
-                        <span className="font-medium text-gray-900">
+                        <Link
+                          href={`/profile/${comment.users?.username || 'unknown'}`}
+                          className="font-medium text-gray-900 hover:text-green-600 transition-colors"
+                        >
                           {comment.users?.first_name
                             ? `${comment.users.first_name} ${comment.users.last_name || ''}`.trim()
                             : comment.users?.username || 'Unknown User'
                           }
-                        </span>
-                        <span className="text-gray-400">@{comment.users?.username || 'unknown'}</span>
+                        </Link>
+                        <Link
+                          href={`/profile/${comment.users?.username || 'unknown'}`}
+                          className="text-gray-400 hover:text-green-600 transition-colors"
+                        >
+                          @{comment.users?.username || 'unknown'}
+                        </Link>
                       </div>
                           <div className="flex items-start space-x-2 mb-1">
                         <span className="text-gray-400 text-sm">
@@ -302,7 +311,6 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                       <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
                       <CommentReactions
                         commentId={comment.id}
-                        onReactionChange={() => fetchComments(0, false)}
                       />
                     </div>
                   </div>
@@ -466,7 +474,6 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                       <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
                       <CommentReactions
                         commentId={comment.id}
-                        onReactionChange={() => fetchComments(0, false)}
                       />
                     </div>
                   </div>
