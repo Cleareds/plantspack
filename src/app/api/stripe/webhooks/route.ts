@@ -13,6 +13,18 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
+// GET handler for health check / information
+export async function GET() {
+  return NextResponse.json({
+    endpoint: '/api/stripe/webhooks',
+    method: 'POST only',
+    purpose: 'Stripe webhook receiver',
+    status: webhookSecret ? 'configured' : 'not configured',
+    message: 'This endpoint only accepts POST requests from Stripe. Configure in Stripe Dashboard > Developers > Webhooks',
+    documentation: 'https://stripe.com/docs/webhooks'
+  })
+}
+
 export async function POST(request: NextRequest) {
   console.log('🔔 ===== STRIPE WEBHOOK RECEIVED =====')
 
