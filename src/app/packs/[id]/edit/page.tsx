@@ -27,8 +27,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
     twitter_url: '',
     instagram_url: '',
     tiktok_url: '',
-    categories: [] as PackCategory[],
-    is_published: false
+    categories: [] as PackCategory[]
   })
 
   const categories: { value: PackCategory; label: string; icon: string }[] = [
@@ -66,8 +65,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
             twitter_url: data.pack.twitter_url || '',
             instagram_url: data.pack.instagram_url || '',
             tiktok_url: data.pack.tiktok_url || '',
-            categories: data.pack.categories || (data.pack.category ? [data.pack.category] : []),
-            is_published: data.pack.is_published
+            categories: data.pack.categories || (data.pack.category ? [data.pack.category] : [])
           })
         } else {
           router.push('/packs')
@@ -298,20 +296,6 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
-          </div>
-
-          {/* Publish Option */}
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="is_published"
-              checked={formData.is_published}
-              onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
-              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-            />
-            <label htmlFor="is_published" className="text-sm text-gray-700">
-              Published
-            </label>
           </div>
 
           {/* Actions */}

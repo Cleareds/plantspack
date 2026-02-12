@@ -267,7 +267,7 @@ export async function POST(request: NextRequest) {
         tiktok_url: tiktok_url || null,
         category: resolvedCategories[0] || null,
         categories: resolvedCategories,
-        is_published: is_published || false
+        is_published: is_published ?? true
       })
       .select()
       .single()

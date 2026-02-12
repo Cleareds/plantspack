@@ -23,8 +23,7 @@ export default function CreatePackPage() {
     twitter_url: '',
     instagram_url: '',
     tiktok_url: '',
-    categories: [] as PackCategory[],
-    is_published: true
+    categories: [] as PackCategory[]
   })
 
   const categories: { value: PackCategory; label: string; icon: string; description: string }[] = [
