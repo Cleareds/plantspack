@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 
@@ -10,6 +11,18 @@ interface SignUpModalProps {
 }
 
 export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUpModalProps) {
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   const actionMessages = {

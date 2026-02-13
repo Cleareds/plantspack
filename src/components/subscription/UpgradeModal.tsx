@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Crown, CheckCircle, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { redirectToCheckout, SUBSCRIPTION_TIERS } from '@/lib/stripe'
@@ -23,6 +23,18 @@ export default function UpgradeModal({
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const [selectedTier, setSelectedTier] = useState<'medium' | 'premium'>(suggestedTier)
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
 
   const handleUpgrade = async () => {
     if (!user) return

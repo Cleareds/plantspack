@@ -61,6 +61,18 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
     return () => clearTimeout(timeoutId)
   }, [searchQuery])
 
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [onClose])
+
   const handleAddPlace = async (placeId: string) => {
     try {
       setAdding(placeId)

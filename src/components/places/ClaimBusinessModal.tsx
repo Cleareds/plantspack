@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Send, Loader2, Building2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import type { ClaimFormData } from '@/types/place-claims'
@@ -29,6 +29,18 @@ export default function ClaimBusinessModal({
     email: user?.email || '',
     proof_description: ''
   })
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 

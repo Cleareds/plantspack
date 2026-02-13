@@ -28,6 +28,18 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
     }
   }, [isOpen, user])
 
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
+
   const fetchPacks = async () => {
     try {
       setLoading(true)
