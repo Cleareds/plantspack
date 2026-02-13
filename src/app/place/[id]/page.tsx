@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User } from 'lucide-react'
+import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle } from 'lucide-react'
 import StarRating from '@/components/places/StarRating'
 import RatingDistribution from '@/components/places/RatingDistribution'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
@@ -9,7 +9,9 @@ import PlaceReviews from '@/components/places/PlaceReviews'
 import PlaceMap from '@/components/places/PlaceMap'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import AddToPackButton from '@/components/places/AddToPackButton'
+import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import { formatDistanceToNow } from 'date-fns'
+import type { PlaceOwnerPublic } from '@/types/place-claims'
 
 type PlaceData = {
   id: string
@@ -45,21 +47,32 @@ type PlaceData = {
     '1': number
     total: number
   }
+  owner: PlaceOwnerPublic | null
 }
 
 async function getPlace(id: string): Promise<PlaceData | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const response = await fetch(`${baseUrl}/api/places/${id}`, {
-      next: { revalidate: 60 }
-    })
+    const [placeResponse, ownerResponse] = await Promise.all([
+      fetch(`${baseUrl}/api/places/${id}`, {
+        next: { revalidate: 60 }
+      }),
+      fetch(`${baseUrl}/api/places/${id}/owner`, {
+        next: { revalidate: 60 }
+      })
+    ])
 
-    if (!response.ok) {
+    if (!placeResponse.ok) {
       return null
     }
 
-    const data = await response.json()
-    return data.place
+    const placeData = await placeResponse.json()
+    const ownerData = ownerResponse.ok ? await ownerResponse.json() : { owner: null }
+
+    return {
+      ...placeData.place,
+      owner: ownerData.owner
+    }
   } catch (error) {
     console.error('Error fetching place:', error)
     return null
@@ -163,6 +176,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   initialFavorites={place.favorite_places}
                 />
                 <AddToPackButton placeId={place.id} placeName={place.name} />
+                <ClaimBusinessButton
+                  placeId={place.id}
+                  placeName={place.name}
+                  isOwner={!!place.owner}
+                />
               </div>
             </div>
           </div>
@@ -303,6 +321,26 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   </Link>
                 </div>
               </div>
+
+              {place.owner && (
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-sm font-medium text-gray-900">Verified Owner</div>
+                    <Link
+                      href={`/profile/${place.owner.username}`}
+                      className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
+                    >
+                      {place.owner.first_name && place.owner.last_name
+                        ? `${place.owner.first_name} ${place.owner.last_name}`
+                        : place.owner.username}
+                    </Link>
+                    <span className="text-xs text-gray-500">
+                      Verified {formatDistanceToNow(new Date(place.owner.verified_at), { addSuffix: true })}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

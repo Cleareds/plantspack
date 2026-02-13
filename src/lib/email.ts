@@ -225,3 +225,226 @@ export async function sendSubscriptionEmail(
 
   return sendEmail({ to, subject, html })
 }
+
+// Business claim notification email (to admins)
+export async function sendClaimRequestEmail(claimData: {
+  place_name: string
+  place_id: string
+  place_address: string
+  user_name: string
+  first_name: string
+  last_name: string
+  email: string
+  proof_description: string
+  claim_id: string
+}) {
+  const subject = `New Business Claim Request - ${claimData.place_name}`
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #16a34a; margin: 0;">New Business Claim Request</h1>
+      </div>
+
+      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h2 style="color: #16a34a; margin-top: 0;">Place Details</h2>
+        <p><strong>Name:</strong> ${claimData.place_name}</p>
+        <p><strong>Address:</strong> ${claimData.place_address}</p>
+        <p><strong>Place ID:</strong> ${claimData.place_id}</p>
+        <p style="margin-bottom: 0;">
+          <a href="https://www.plantspack.com/place/${claimData.place_id}"
+             style="color: #16a34a; text-decoration: underline;">
+            View Place Page
+          </a>
+        </p>
+      </div>
+
+      <div style="background: #fefce8; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h2 style="color: #854d0e; margin-top: 0;">Claimant Details</h2>
+        <p><strong>Name:</strong> ${claimData.first_name} ${claimData.last_name}</p>
+        <p><strong>Email:</strong> ${claimData.email}</p>
+        <p><strong>Username:</strong> ${claimData.user_name}</p>
+        <p style="margin-bottom: 0;">
+          <a href="https://www.plantspack.com/profile/${claimData.user_name}"
+             style="color: #854d0e; text-decoration: underline;">
+            View Profile
+          </a>
+        </p>
+      </div>
+
+      <div style="background: #eff6ff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h2 style="color: #1e40af; margin-top: 0;">Proof of Ownership</h2>
+        <p style="white-space: pre-wrap; background: white; padding: 15px; border-radius: 4px; border-left: 4px solid #1e40af;">${claimData.proof_description}</p>
+      </div>
+
+      <div style="background: #f3f4f6; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h3 style="margin-top: 0;">Manual Approval Required</h3>
+        <p>To approve this claim, execute the following SQL in Supabase:</p>
+        <pre style="background: #1f2937; color: #f9fafb; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px;">-- Approve claim and create owner
+BEGIN;
+
+UPDATE place_claim_requests
+SET
+  status = 'approved',
+  reviewed_by = 'YOUR_ADMIN_USER_ID',
+  reviewed_at = NOW()
+WHERE id = '${claimData.claim_id}';
+
+INSERT INTO place_owners (place_id, user_id, claim_request_id, verified_by)
+SELECT
+  place_id,
+  user_id,
+  id,
+  'YOUR_ADMIN_USER_ID'
+FROM place_claim_requests
+WHERE id = '${claimData.claim_id}';
+
+COMMIT;</pre>
+
+        <p style="margin-top: 15px;">To reject this claim:</p>
+        <pre style="background: #7f1d1d; color: #f9fafb; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px;">UPDATE place_claim_requests
+SET
+  status = 'rejected',
+  reviewed_by = 'YOUR_ADMIN_USER_ID',
+  reviewed_at = NOW(),
+  rejection_reason = 'Reason here...'
+WHERE id = '${claimData.claim_id}';</pre>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+      <p style="font-size: 12px; color: #6b7280; text-align: center;">
+        Claim ID: ${claimData.claim_id}<br>
+        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
+      </p>
+    </body>
+    </html>
+  `
+
+  return sendEmail({ to: SUPPORT_EMAIL, subject, html })
+}
+
+// Claim approved email (to user)
+export async function sendClaimApprovedEmail(
+  to: string,
+  userName: string,
+  placeName: string,
+  placeUrl: string
+) {
+  const subject = `Your claim for ${placeName} has been approved!`
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #16a34a; margin: 0;">Congratulations!</h1>
+      </div>
+
+      <p>Hi <strong>${userName}</strong>,</p>
+
+      <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 8px; padding: 30px; margin: 20px 0; text-align: center;">
+        <h2 style="color: #16a34a; margin: 0 0 15px 0;">Your Business Claim Has Been Approved</h2>
+        <p style="font-size: 18px; margin: 0; color: #15803d;">
+          You are now the verified owner of <strong>${placeName}</strong>!
+        </p>
+      </div>
+
+      <p>Your business ownership has been verified and your profile now displays an owner badge linking to your place.</p>
+
+      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h3 style="color: #16a34a; margin-top: 0;">What's Next?</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Your verified owner status is now visible on the place page</li>
+          <li>An owner badge appears on your profile</li>
+          <li>Users can see you're the verified owner</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${placeUrl}" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+          View Your Place
+        </a>
+      </div>
+
+      <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
+
+      <p style="margin-top: 30px;"><strong>The Plantspack Team</strong></p>
+
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+      <p style="font-size: 12px; color: #6b7280; text-align: center;">
+        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
+      </p>
+    </body>
+    </html>
+  `
+
+  return sendEmail({ to, subject, html })
+}
+
+// Claim rejected email (to user)
+export async function sendClaimRejectedEmail(
+  to: string,
+  userName: string,
+  placeName: string,
+  rejectionReason: string
+) {
+  const subject = `Update on your claim for ${placeName}`
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #dc2626; margin: 0;">Claim Update</h1>
+      </div>
+
+      <p>Hi <strong>${userName}</strong>,</p>
+
+      <p>Thank you for your interest in claiming ownership of <strong>${placeName}</strong>.</p>
+
+      <div style="background: #fef2f2; border-left: 4px solid #dc2626; border-radius: 4px; padding: 20px; margin: 20px 0;">
+        <p style="margin: 0;">Unfortunately, we were unable to verify your ownership claim at this time.</p>
+      </div>
+
+      <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h3 style="margin-top: 0;">Reason:</h3>
+        <p style="white-space: pre-wrap; margin: 0;">${rejectionReason}</p>
+      </div>
+
+      <div style="background: #eff6ff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h3 style="color: #1e40af; margin-top: 0;">What You Can Do</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Review the rejection reason above</li>
+          <li>Gather additional proof of ownership if needed</li>
+          <li>Submit a new claim request with updated information</li>
+        </ul>
+      </div>
+
+      <p>If you believe this was an error or have additional information to support your claim, please contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
+
+      <p style="margin-top: 30px;"><strong>The Plantspack Team</strong></p>
+
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+      <p style="font-size: 12px; color: #6b7280; text-align: center;">
+        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
+      </p>
+    </body>
+    </html>
+  `
+
+  return sendEmail({ to, subject, html })
+}

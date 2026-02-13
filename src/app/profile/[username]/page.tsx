@@ -11,6 +11,8 @@ import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
 import { getUserSubscription, SUBSCRIPTION_TIERS } from '@/lib/stripe'
 import PostCard from '@/components/posts/PostCard'
+import OwnerBadge from '@/components/places/OwnerBadge'
+import type { UserOwnedPlace } from '@/types/place-claims'
 
 export default function ProfilePage() {
   const params = useParams()
@@ -23,6 +25,7 @@ export default function ProfilePage() {
   const [favoritePlaces, setFavoritePlaces] = useState<any[]>([])
   const [userPacks, setUserPacks] = useState<any[]>([])
   const [joinedPacks, setJoinedPacks] = useState<any[]>([])
+  const [ownedPlaces, setOwnedPlaces] = useState<UserOwnedPlace[]>([])
   const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -101,6 +104,12 @@ export default function ProfilePage() {
         .limit(20)
 
       setAddedPlaces(addedPlacesData || [])
+
+      // Fetch user's owned places (verified business owner)
+      const { data: ownedPlacesData } = await supabase
+        .rpc('get_user_owned_places', { p_user_id: profileData.id })
+
+      setOwnedPlaces(ownedPlacesData || [])
 
       // Fetch user's favorite places
       const { data: favoritePlacesData } = await supabase
@@ -283,6 +292,20 @@ export default function ProfilePage() {
 
             {profile.bio && (
               <p className="text-gray-700 mb-4">{profile.bio}</p>
+            )}
+
+            {/* Owner Badges */}
+            {ownedPlaces.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {ownedPlaces.map((ownedPlace) => (
+                  <OwnerBadge
+                    key={ownedPlace.place_id}
+                    placeName={ownedPlace.place_name}
+                    placeId={ownedPlace.place_id}
+                    size="sm"
+                  />
+                ))}
+              </div>
             )}
 
             <div className="flex items-center space-x-4 text-sm text-gray-500">
