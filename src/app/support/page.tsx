@@ -263,7 +263,7 @@ function PricingContent() {
           </div>
         )}
 
-          <p className="text-l text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-l text-gray-600 max-w-3xl mx-auto mb-[80px] mt-[-80px]">
               All early-benefits will be applied manually in 1-3 business day after registration/purchase.
           </p>
 

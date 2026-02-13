@@ -73,6 +73,7 @@ async function setupAdmin() {
         last_name: 'Kravchuk',
         bio: 'PlantsPack founder and admin. Originally from Ukraine, based in Belgium. Follow for platform updates and announcements.',
         subscription_tier: 'premium',
+        role: 'admin',
       }, { onConflict: 'id' })
 
     if (profileError) {

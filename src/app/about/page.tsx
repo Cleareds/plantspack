@@ -68,7 +68,7 @@ export default function AboutPage() {
             </li>
             <li className="flex gap-3">
               <span className="text-green-600 font-bold">•</span>
-              <span>Allow our community to self-organise in packs or other forms to have a comfortable space knowledge base to store, organise and share favourite and most suitable content.</span>
+              <span>Allow our community to self-organise in packs or other forms to have a comfortable space / knowledge base to store, organise and share favourite and most suitable content.</span>
             </li>
             <li className="flex gap-3">
               <span className="text-green-600 font-bold">•</span>
@@ -90,7 +90,7 @@ export default function AboutPage() {
             </li>
             <li className="flex gap-3">
               <span className="text-green-600 font-bold">•</span>
-              <span><strong>No preference or premium content prioritisation</strong> - All paid features are allowing more features but not prioritising the content produced by paid users.</span>
+              <span><strong>No preference or premium content prioritisation</strong> - Paid features allows more at the platform but not prioritising the content produced by paid users.</span>
             </li>
             <li className="flex gap-3">
               <span className="text-green-600 font-bold">•</span>
@@ -148,7 +148,7 @@ export default function AboutPage() {
               Follow <Link href="/user/admin" className="text-green-600 hover:text-green-700 font-semibold">@admin</Link> for news and updates of the roadmap and platform.
             </p>
             <p>
-              Contact us or send an email to{' '}
+                <Link href="/contact" className="text-green-600 hover:text-green-700 font-semibold">Contact us</Link> or send an email to{' '}
               <a href="mailto:hello@cleareds.com" className="text-green-600 hover:text-green-700 font-semibold">
                 hello@cleareds.com
               </a>{' '}
