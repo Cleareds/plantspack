@@ -129,8 +129,11 @@ export default function RoadmapPage() {
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Roadmap</h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 mb-3">
             Help shape the future of PlantsPack by voting for features you'd like to see next.
+          </p>
+          <p className="text-base text-gray-500">
+            <strong>Voting is available for Support and Premium members.</strong> All users can view current results and submit suggestions.
           </p>
         </div>
 
@@ -141,7 +144,7 @@ export default function RoadmapPage() {
               <Link href="/auth" className="font-semibold underline hover:text-blue-700">
                 Sign in
               </Link>{' '}
-              to view the roadmap and vote for features (Support or Premium subscription required).
+              and upgrade to Support or Premium to vote for features and help shape PlantsPack's future.
             </p>
           </div>
         ) : !canVote ? (
@@ -168,61 +171,65 @@ export default function RoadmapPage() {
         ) : null}
 
         {/* Voting Section */}
-        {user && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Vote className="h-6 w-6 text-green-600" />
-              <h2 className="text-2xl font-bold text-gray-900">Vote for Features</h2>
-            </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <Vote className="h-6 w-6 text-green-600" />
+            <h2 className="text-2xl font-bold text-gray-900">
+              {canVote ? 'Vote for Features' : 'Feature Voting Results'}
+            </h2>
+          </div>
 
-            {loading ? (
-              <p className="text-gray-600">Loading votes...</p>
-            ) : (
-              <>
-                <div className="space-y-3 mb-6">
-                  {ROADMAP_FEATURES.map(feature => {
-                    const voteCount = votes[feature.id] || 0
-                    const percentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0
-                    const isSelected = selectedFeatures.includes(feature.id)
+          {loading ? (
+            <p className="text-gray-600">Loading votes...</p>
+          ) : (
+            <>
+              <div className="space-y-3 mb-6">
+                {ROADMAP_FEATURES.map(feature => {
+                  const voteCount = votes[feature.id] || 0
+                  const percentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0
+                  const isSelected = selectedFeatures.includes(feature.id)
 
-                    return (
-                      <div key={feature.id} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-start gap-3">
+                  return (
+                    <div key={feature.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        {/* Only show checkbox for Support/Premium users */}
+                        {canVote && (
                           <input
                             type="checkbox"
                             id={feature.id}
                             checked={isSelected}
                             onChange={() => toggleFeature(feature.id)}
-                            disabled={!canVote || hasVoted}
+                            disabled={hasVoted}
                             className="mt-1 h-5 w-5 text-green-600 rounded focus:ring-green-500 disabled:opacity-50"
                           />
-                          <div className="flex-1">
-                            <label
-                              htmlFor={feature.id}
-                              className={`font-semibold text-gray-900 ${canVote && !hasVoted ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-                            >
-                              {feature.label}
-                            </label>
-                            <p className="text-sm text-gray-600 mt-1">{feature.description}</p>
+                        )}
+                        <div className="flex-1">
+                          <label
+                            htmlFor={feature.id}
+                            className={`font-semibold text-gray-900 ${canVote && !hasVoted ? 'cursor-pointer' : ''}`}
+                          >
+                            {feature.label}
+                          </label>
+                          <p className="text-sm text-gray-600 mt-1">{feature.description}</p>
 
-                            {/* Vote Progress */}
-                            <div className="mt-3">
-                              <div className="flex items-center justify-between text-sm mb-1">
-                                <span className="text-gray-600">{voteCount} votes</span>
-                                <span className="text-gray-600">{percentage.toFixed(1)}%</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div
-                                  className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                                  style={{ width: `${percentage}%` }}
-                                />
-                              </div>
+                          {/* Vote Progress - visible to everyone */}
+                          <div className="mt-3">
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <span className="text-gray-600">{voteCount} votes</span>
+                              <span className="text-gray-600">{percentage.toFixed(1)}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${percentage}%` }}
+                              />
                             </div>
                           </div>
                         </div>
                       </div>
-                    )
-                  })}
+                    </div>
+                  )
+                })}
                 </div>
 
                 {canVote && !hasVoted && (
@@ -235,7 +242,7 @@ export default function RoadmapPage() {
                   </button>
                 )}
 
-                {hasVoted && (
+                {canVote && hasVoted && (
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <p className="text-green-800">You've already voted! Thank you for your input.</p>
@@ -243,8 +250,7 @@ export default function RoadmapPage() {
                 )}
               </>
             )}
-          </div>
-        )}
+        </div>
 
         {/* Suggestions Form */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
