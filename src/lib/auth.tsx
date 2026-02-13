@@ -325,7 +325,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    return await supabase.auth.signOut()
+    await supabase.auth.signOut()
+    window.location.href = '/'
   }
 
   const updateProfile = async (updates: Partial<UserProfile>) => {
