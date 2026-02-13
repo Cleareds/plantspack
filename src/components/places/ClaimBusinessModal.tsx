@@ -152,6 +152,7 @@ export default function ClaimBusinessModal({
               <p className="text-sm text-blue-800">
                 <strong>Important:</strong> You'll need to provide proof of ownership.
                 After submission, our team will review your claim and contact you via email.
+                  This is FREE, but we will check the validity of each claim to prevent abuse. Please provide as much detail as possible in the proof description to increase your chances of approval.
               </p>
             </div>
 
