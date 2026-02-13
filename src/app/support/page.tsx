@@ -213,7 +213,7 @@ function PricingContent() {
                     <Star className="h-4 w-4 text-green-600" />
                   </div>
                   <p className="text-green-700 text-sm mb-1">
-                    <strong>First 100 registered users get Supporter tier FREE for 1 year!</strong>
+                    <strong>First 100 registered users get Supporter tier FREE and a Founder badge!</strong>
                   </p>
                   <p className="text-green-600 text-xs">
                     Only <span className="font-bold">{promotionalInfo.earlyBirdUsersLeft}</span> spots left!
@@ -233,11 +233,11 @@ function PricingContent() {
                     <Crown className="h-4 w-4 text-purple-600" />
                   </div>
                   <p className="text-purple-700 text-sm mb-1">
-                    <strong>First 100 Supporter subscribers get upgraded to Premium FREE for 1 year!</strong>
+                    <strong>First 100 Supporter subscribers get upgraded to Premium FREE and a Founder badge!</strong>
                   </p>
                   <p className="text-purple-600 text-xs">
                     Only <span className="font-bold">{promotionalInfo.earlyPurchasersLeft}</span> upgrade spots left!
-                    Subscribe to Supporter ($3/month) and get Premium ($10/month) automatically.
+                    Subscribe to Supporter ($3/month) and get Premium ($7/month) automatically.
                   </p>
                 </div>
               </div>
@@ -252,7 +252,7 @@ function PricingContent() {
                     <h3 className="text-xl font-bold text-yellow-800">🎊 You&apos;re a Special Member!</h3>
                   </div>
                   <p className="text-yellow-700 text-lg">
-                    {userPromoStatus.promotionalType === 'early_bird' 
+                    {userPromoStatus.promotionalType === 'early_bird'
                       ? `You&apos;re user #${userPromoStatus.registrationNumber}! Enjoying FREE Supporter benefits until ${new Date(userPromoStatus.promotionalGrantedAt).getFullYear() + 1}.`
                       : 'You received a free Premium upgrade for being an early supporter! Thank you for believing in our community.'
                     }
@@ -262,6 +262,10 @@ function PricingContent() {
             )}
           </div>
         )}
+
+          <p className="text-l text-gray-600 max-w-3xl mx-auto mb-8">
+              All early-benefits will be applied manually in 1-3 business day after registration/purchase.
+          </p>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
@@ -536,7 +540,7 @@ function PricingContent() {
                     Support Us! ☕
                   </h3>
                   <p className="text-xs text-gray-600 mb-3">
-                    Buy us a coffee and help keep PlantsPack growing! 🌱
+                    Buy us a coffee and help keep Plantspack growing! 🌱
                   </p>
                   <div className="flex justify-left">
                     <Image
