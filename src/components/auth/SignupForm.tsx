@@ -70,28 +70,15 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
       setLoading(true)
       setError('')
       setSuccess('')
 
-      // Validation
+      // Client-side validation
       if (!email || !username || !password) {
         setError('Please fill in all required fields')
-        setLoading(false)
-        return
-      }
-
-      // Check username availability
-      if (usernameStatus === 'taken') {
-        setError('Username is already taken. Please choose another.')
-        setLoading(false)
-        return
-      }
-
-      if (usernameStatus === 'invalid') {
-        setError('Username format is invalid. Use 3-20 characters (letters, numbers, _ or -)')
         setLoading(false)
         return
       }
@@ -108,43 +95,61 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         return
       }
 
-      if (typeof signUp !== 'function') {
-        setError('Authentication service not available. Please refresh the page.')
+      // Check username availability (client-side check)
+      if (usernameStatus === 'taken') {
+        setError('Username is already taken. Please choose another.')
         setLoading(false)
         return
       }
 
-      const result = await signUp(email, password, {
-        username,
-        firstName,
-        lastName,
+      if (usernameStatus === 'invalid') {
+        setError('Username format is invalid. Use 3-20 characters (letters, numbers, _ or -)')
+        setLoading(false)
+        return
+      }
+
+      // Call server-side signup API with validation
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          username,
+          firstName,
+          lastName,
+        }),
       })
 
-      if (result.error) {
-        // Provide user-friendly error messages
-        const errorMsg = result.error.message || ''
-        if (errorMsg.toLowerCase().includes('already registered') || errorMsg.toLowerCase().includes('already exists')) {
-          setError('An account with this email already exists. Please sign in instead.')
-        } else if (errorMsg.toLowerCase().includes('password')) {
-          setError('Password is too weak. Please use at least 6 characters.')
-        } else {
-          setError(result.error.message || 'Registration failed. Please try again.')
-        }
-      } else if (result.data?.user) {
-        // Check if email confirmation is required
-        if (result.data?.session) {
-          // Email confirmation disabled - user can log in immediately
-          setSuccess('Account created successfully! Redirecting...')
-          setTimeout(() => {
-            // Auth context will automatically redirect
-          }, 1500)
-        } else {
-          // Email confirmation enabled - user needs to verify email
-          setSuccess('Account created! Please check your email to verify your address before signing in.')
-          // Don't auto-toggle to login, let user read the message
-        }
+      const data = await response.json()
+
+      if (!response.ok) {
+        // Server-side validation errors or signup failures
+        setError(data.error || 'Registration failed. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      // Success!
+      if (data.emailConfirmationRequired) {
+        // Email confirmation is enabled
+        setSuccess('Account created! Please check your email to verify your address before signing in.')
+        setEmail('')
+        setPassword('')
+        setConfirmPassword('')
+        setUsername('')
+        setFirstName('')
+        setLastName('')
       } else {
-        setError('Registration failed. Please try again.')
+        // Email confirmation is disabled - user is immediately logged in
+        setSuccess('Account created successfully! Redirecting...')
+
+        // Reload to trigger auth state change and redirect
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 1500)
       }
     } catch (err) {
       console.error('Signup error:', err)
