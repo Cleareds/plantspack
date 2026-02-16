@@ -24,6 +24,7 @@ interface Report {
   reporter_id: string
   reported_type: string
   reported_id: string
+  reported_user_id: string | null
   reason: string
   description: string | null
   status: string
@@ -33,6 +34,20 @@ interface Report {
   admin_notes: string | null
   created_at: string
   users: {
+    username: string
+  }
+  reported_post?: {
+    content: string
+  }
+  reported_comment?: {
+    content: string
+    post_id: string
+  }
+  reported_place_review?: {
+    content: string
+    place_id: string
+  }
+  reported_user?: {
     username: string
   }
 }
@@ -109,7 +124,14 @@ export default function ReportsManagement() {
     try {
       let query = supabase
         .from('reports')
-        .select('*, users!reports_reporter_id_fkey(username)', { count: 'exact' })
+        .select(`
+          *,
+          users!reports_reporter_id_fkey(username),
+          reported_user:users!reports_reported_user_id_fkey(username),
+          reported_post:posts(content),
+          reported_comment:comments(content, post_id),
+          reported_place_review:place_reviews(content, place_id)
+        `, { count: 'exact' })
 
       if (searchQuery) {
         query = query.or(`description.ilike.%${searchQuery}%,reason.ilike.%${searchQuery}%`)
@@ -215,6 +237,7 @@ export default function ReportsManagement() {
       case 'user':
         return <User className="h-4 w-4" />
       case 'place':
+      case 'place_review':
         return <MapPin className="h-4 w-4" />
       default:
         return <Flag className="h-4 w-4" />
@@ -280,7 +303,7 @@ export default function ReportsManagement() {
               <option value="post">Posts</option>
               <option value="comment">Comments</option>
               <option value="user">Users</option>
-              <option value="place">Places</option>
+              <option value="place_review">Place Reviews</option>
             </select>
           </div>
 
@@ -380,6 +403,24 @@ export default function ReportsManagement() {
                 </div>
               )}
 
+              {report.reported_type === 'comment' && report.reported_comment && (
+                <div className="bg-gray-50 rounded-md p-4 mb-4 border-l-4 border-blue-500">
+                  <p className="text-sm font-medium text-gray-700 mb-1">Reported Comment:</p>
+                  <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                    {report.reported_comment.content}
+                  </p>
+                </div>
+              )}
+
+              {report.reported_type === 'place_review' && report.reported_place_review && (
+                <div className="bg-gray-50 rounded-md p-4 mb-4 border-l-4 border-green-500">
+                  <p className="text-sm font-medium text-gray-700 mb-1">Reported Review:</p>
+                  <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                    {report.reported_place_review.content}
+                  </p>
+                </div>
+              )}
+
               {report.resolution && (
                 <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-4">
                   <p className="text-xs font-medium text-green-900 mb-1">Resolution:</p>
@@ -453,13 +494,17 @@ export default function ReportsManagement() {
                 <div className="flex items-center space-x-2 pt-3 border-t">
                   <button
                     onClick={() => {
-                      const urls: Record<string, string> = {
-                        post: `/post/${report.reported_id}`,
-                        comment: `/post/${report.reported_id}`,
-                        user: `/user/${report.reported_id}`,
-                        place: `/places`
+                      let url = '/'
+                      if (report.reported_type === 'post') {
+                        url = `/post/${report.reported_id}`
+                      } else if (report.reported_type === 'comment' && report.reported_comment) {
+                        url = `/post/${report.reported_comment.post_id}`
+                      } else if (report.reported_type === 'place_review' && report.reported_place_review) {
+                        url = `/place/${report.reported_place_review.place_id}`
+                      } else if (report.reported_type === 'user' && report.reported_user) {
+                        url = `/profile/${report.reported_user.username}`
                       }
-                      window.open(urls[report.reported_type] || '/', '_blank')
+                      window.open(url, '_blank')
                     }}
                     className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50"
                   >

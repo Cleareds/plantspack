@@ -107,6 +107,17 @@ export async function POST(request: NextRequest) {
           entityUrl = `https://www.plantspack.com/post/${entityId}`
         } else if (entityType === 'user' && actorResult.data.username) {
           entityUrl = `https://www.plantspack.com/profile/${actorResult.data.username}`
+        } else if (entityType === 'place_review' && entityId) {
+          // Fetch place_review to get place_id
+          const { data: review } = await adminClient
+            .from('place_reviews')
+            .select('place_id')
+            .eq('id', entityId)
+            .single()
+
+          if (review?.place_id) {
+            entityUrl = `https://www.plantspack.com/place/${review.place_id}`
+          }
         }
 
         // Send email in background (don't await)

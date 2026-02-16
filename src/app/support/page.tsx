@@ -423,7 +423,7 @@ function PricingContent() {
                   <td className="py-4 pr-4 font-medium">Video Uploads</td>
                   <td className="text-center py-4 px-4">❌</td>
                   <td className="text-center py-4 px-4">1 per post (64MB)</td>
-                  <td className="text-center py-4 px-4">3 per post (256MB)</td>
+                  <td className="text-center py-4 px-4">3 per post (100MB)</td>
                 </tr>
                 <tr>
                     <td className="py-4 pr-4 font-medium flex items-center space-x-2">

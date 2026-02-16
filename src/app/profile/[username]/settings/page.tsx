@@ -23,6 +23,7 @@ export default function ProfileSettingsPage() {
   const [exporting, setExporting] = useState(false)
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [savingNotifications, setSavingNotifications] = useState(false)
+  const [resendingEmail, setResendingEmail] = useState(false)
 
   useEffect(() => {
     if (authReady && !user) {
@@ -198,6 +199,27 @@ export default function ProfileSettingsPage() {
     }
   }
 
+  const handleResendConfirmation = async () => {
+    if (!user?.email) return
+
+    setResendingEmail(true)
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: user.email
+      })
+
+      if (error) throw error
+
+      alert('Confirmation email sent! Please check your inbox.')
+    } catch (error) {
+      console.error('Error resending confirmation email:', error)
+      alert('Failed to resend confirmation email. Please try again.')
+    } finally {
+      setResendingEmail(false)
+    }
+  }
+
   const handleExportData = async () => {
     setExporting(true)
     try {
@@ -297,6 +319,22 @@ export default function ProfileSettingsPage() {
               Manage your account settings and preferences.
             </p>
           </div>
+
+          {/* Email Verification Banner */}
+          {user && !user.email_confirmed_at && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+              <p className="text-yellow-800">
+                ⚠️ Please verify your email address. Check your inbox for a confirmation link.
+                <button
+                  onClick={handleResendConfirmation}
+                  disabled={resendingEmail}
+                  className="ml-2 underline hover:text-yellow-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {resendingEmail ? 'Sending...' : 'Resend confirmation email'}
+                </button>
+              </p>
+            </div>
+          )}
 
           <div className="space-y-6">
             {/* Notifications Settings */}
@@ -407,13 +445,17 @@ export default function ProfileSettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Time Zone
                   </label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                  <select
+                    disabled
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed opacity-60"
+                  >
                     <option>UTC-08:00 Pacific Time (US & Canada)</option>
                     <option>UTC-05:00 Eastern Time (US & Canada)</option>
                     <option>UTC+00:00 London</option>
                     <option>UTC+01:00 Paris, Berlin</option>
                     <option>UTC+02:00 Kyiv, Athens, Istanbul</option>
                   </select>
+                  <p className="text-xs text-gray-500 mt-1">Timezone selection coming soon</p>
                 </div>
               </div>
             </div>
