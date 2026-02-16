@@ -33,8 +33,7 @@ export const usePlaces = (options: UsePlacesOptions = {}) => {
           *,
           reviews:place_reviews(rating),
           favorites:favorite_places(user_id)
-        `)
-        .eq('approved', true);
+        `);
 
       // Filter by category
       if (options.category && options.category !== 'all') {

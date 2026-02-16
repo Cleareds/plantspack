@@ -279,7 +279,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start space-x-2 mb-1">
                         <Link
-                          href={`/profile/${comment.users?.username || 'unknown'}`}
+                          href={`/user/${comment.users?.username || 'unknown'}`}
                           className="font-medium text-gray-900 hover:text-green-600 transition-colors"
                         >
                           {comment.users?.first_name
@@ -288,7 +288,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           }
                         </Link>
                         <Link
-                          href={`/profile/${comment.users?.username || 'unknown'}`}
+                          href={`/user/${comment.users?.username || 'unknown'}`}
                           className="text-gray-400 hover:text-green-600 transition-colors"
                         >
                           @{comment.users?.username || 'unknown'}

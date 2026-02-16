@@ -195,7 +195,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                     <div className="text-xs text-gray-500">
                       Added by{' '}
                       <Link
-                        href={`/profile/${place.users.username}`}
+                        href={`/user/${place.users.username}`}
                         className="text-green-600 hover:text-green-700"
                       >
                         {place.users.first_name || place.users.username}

@@ -25,11 +25,11 @@ export const usePacks = (options: UsePacksOptions = {}) => {
         .from('packs')
         .select(`
           *,
-          creator:users!packs_created_by_fkey(id, username, avatar_url, subscription_tier),
+          creator:users!packs_creator_id_fkey(id, username, avatar_url, subscription_tier),
           members:pack_members(count),
           posts:pack_posts(count)
         `)
-        .eq('is_private', false)
+        .eq('is_published', true)
         .order('created_at', { ascending: false });
 
       // Filter by category
@@ -37,9 +37,9 @@ export const usePacks = (options: UsePacksOptions = {}) => {
         query = query.eq('category', options.category);
       }
 
-      // Search by name or description
+      // Search by title or description
       if (options.searchTerm) {
-        query = query.or(`name.ilike.%${options.searchTerm}%,description.ilike.%${options.searchTerm}%`);
+        query = query.or(`title.ilike.%${options.searchTerm}%,description.ilike.%${options.searchTerm}%`);
       }
 
       const { data, error: queryError } = await query.limit(50);

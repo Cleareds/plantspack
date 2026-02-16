@@ -13,6 +13,7 @@ interface PostState {
   page: number;
   sortBy: SortOption;
   feedType: FeedType;
+  searchTerm: string;
   newPostsCount: number;
 
   // Actions
@@ -20,6 +21,7 @@ interface PostState {
   loadMore: () => Promise<void>;
   setSortBy: (sort: SortOption) => void;
   setFeedType: (type: FeedType) => void;
+  setSearchTerm: (term: string) => void;
   createPost: (data: {
     content: string;
     privacy: PostPrivacy;
@@ -44,11 +46,12 @@ export const usePostStore = create<PostState>((set, get) => ({
   page: 0,
   sortBy: 'relevancy',
   feedType: 'public',
+  searchTerm: '',
   newPostsCount: 0,
 
   fetchPosts: async (refresh = false) => {
     try {
-      const { loading, feedType, sortBy } = get();
+      const { loading, feedType, sortBy, searchTerm } = get();
       if (loading) return;
 
       set({ loading: true });
@@ -64,6 +67,11 @@ export const usePostStore = create<PostState>((set, get) => ({
           comments:comments(count)
         `)
         .is('deleted_at', null);
+
+      // Filter by search term
+      if (searchTerm && searchTerm.length >= 3) {
+        query = query.ilike('content', `%${searchTerm}%`);
+      }
 
       // Filter by feed type
       if (feedType === 'public') {
@@ -154,6 +162,11 @@ export const usePostStore = create<PostState>((set, get) => ({
     const { hasMore, loading } = get();
     if (!hasMore || loading) return;
     await get().fetchPosts(false);
+  },
+
+  setSearchTerm: (term) => {
+    set({ searchTerm: term, page: 0, posts: [] });
+    get().fetchPosts(true);
   },
 
   setSortBy: (sort) => {

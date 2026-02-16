@@ -6,6 +6,7 @@ import {
   RefreshControl,
   TouchableOpacity,
   Text,
+  TextInput,
 } from 'react-native';
 import { useAuthStore } from '@/src/store/authStore';
 import { usePostStore } from '@/src/store/postStore';
@@ -22,6 +23,7 @@ export default function FeedScreen() {
     loading,
     hasMore,
     newPostsCount,
+    searchTerm,
     fetchPosts,
     loadMore,
     loadNewPosts,
@@ -30,8 +32,10 @@ export default function FeedScreen() {
     setFeedType,
     sortBy,
     setSortBy,
+    setSearchTerm,
   } = usePostStore();
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
 
   useEffect(() => {
     fetchPosts(true);
@@ -58,8 +62,43 @@ export default function FeedScreen() {
     }
   }, [hasMore, loading]);
 
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(localSearchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [localSearchTerm]);
+
   const renderHeader = () => (
     <View style={styles.header}>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Ionicons
+          name="search"
+          size={20}
+          color={colors.gray[400]}
+          style={styles.searchIcon}
+        />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search posts..."
+          placeholderTextColor={colors.gray[400]}
+          value={localSearchTerm}
+          onChangeText={setLocalSearchTerm}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        {localSearchTerm.length > 0 && (
+          <TouchableOpacity
+            onPress={() => setLocalSearchTerm('')}
+            style={styles.clearButton}
+          >
+            <Ionicons name="close-circle" size={20} color={colors.gray[400]} />
+          </TouchableOpacity>
+        )}
+      </View>
+
       {/* Feed Type Selector */}
       <View style={styles.feedTypeSelector}>
         <TouchableOpacity
@@ -188,6 +227,27 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[3],
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.background.secondary,
+    borderRadius: 8,
+    marginHorizontal: spacing[4],
+    marginBottom: spacing[3],
+    paddingHorizontal: spacing[3],
+  },
+  searchIcon: {
+    marginRight: spacing[2],
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: spacing[2],
+    fontSize: 14,
+    color: colors.text.primary,
+  },
+  clearButton: {
+    padding: spacing[1],
   },
   feedTypeSelector: {
     flexDirection: 'row',

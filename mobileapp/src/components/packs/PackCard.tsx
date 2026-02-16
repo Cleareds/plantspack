@@ -26,7 +26,7 @@ export const PackCard: React.FC<PackCardProps> = ({ pack }) => {
     router.push(`/pack/${pack.id}`);
   };
 
-  const categoryColor = CATEGORY_COLORS[pack.category] || colors.gray[500];
+  const categoryColor = pack.category ? CATEGORY_COLORS[pack.category] : colors.gray[500];
 
   return (
     <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.8}>
@@ -46,20 +46,22 @@ export const PackCard: React.FC<PackCardProps> = ({ pack }) => {
       {/* Content */}
       <View style={styles.content}>
         {/* Category Badge */}
-        <View style={[styles.categoryBadge, { backgroundColor: `${categoryColor}20` }]}>
-          <Text style={[styles.categoryText, { color: categoryColor }]}>
-            {pack.category}
-          </Text>
-        </View>
+        {pack.category && (
+          <View style={[styles.categoryBadge, { backgroundColor: `${categoryColor}20` }]}>
+            <Text style={[styles.categoryText, { color: categoryColor }]}>
+              {pack.category}
+            </Text>
+          </View>
+        )}
 
         {/* Title */}
         <Text style={styles.title} numberOfLines={2}>
-          {pack.name}
+          {pack.title}
         </Text>
 
         {/* Description */}
         <Text style={styles.description} numberOfLines={2}>
-          {pack.description}
+          {pack.description || 'No description'}
         </Text>
 
         {/* Stats */}

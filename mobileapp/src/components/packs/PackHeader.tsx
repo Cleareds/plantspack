@@ -59,7 +59,7 @@ export const PackHeader: React.FC<PackHeaderProps> = ({
       {/* Content */}
       <View style={styles.content}>
         {/* Pack Name */}
-        <Text style={styles.name}>{pack.name}</Text>
+        <Text style={styles.name}>{pack.title}</Text>
 
         {/* Creator Info */}
         <View style={styles.creatorRow}>
@@ -81,7 +81,7 @@ export const PackHeader: React.FC<PackHeaderProps> = ({
         </View>
 
         {/* Description */}
-        <Text style={styles.description}>{pack.description}</Text>
+        <Text style={styles.description}>{pack.description || 'No description'}</Text>
 
         {/* Stats */}
         <View style={styles.statsRow}>

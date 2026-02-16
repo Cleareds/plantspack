@@ -21,12 +21,10 @@ const CATEGORY_COLORS: Record<PlaceCategory, string> = {
   other: colors.gray[500],
 };
 
-export const MapView: React.FC<MapViewProps> = ({
-  places,
-  onMarkerPress,
-  initialRegion,
-}) => {
-  const mapRef = useRef<MapViewComponent>(null);
+export const MapView = React.forwardRef<MapViewComponent, MapViewProps>(
+  ({ places, onMarkerPress, initialRegion }, ref) => {
+  const internalMapRef = useRef<MapViewComponent>(null);
+  const mapRef = (ref as React.RefObject<MapViewComponent>) || internalMapRef;
   const [region, setRegion] = useState<Region>(
     initialRegion || {
       latitude: 40.7128,
@@ -57,7 +55,7 @@ export const MapView: React.FC<MapViewProps> = ({
       };
 
       setRegion(newRegion);
-      mapRef.current?.animateToRegion(newRegion, 1000);
+      (typeof mapRef === 'object' && mapRef?.current)?.animateToRegion(newRegion, 1000);
     } catch (error) {
       console.error('Error getting location:', error);
       Alert.alert('Error', 'Failed to get your location');
@@ -99,7 +97,9 @@ export const MapView: React.FC<MapViewProps> = ({
       </TouchableOpacity>
     </View>
   );
-};
+});
+
+MapView.displayName = 'MapView';
 
 const styles = StyleSheet.create({
   container: {

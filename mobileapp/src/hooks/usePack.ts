@@ -26,7 +26,7 @@ export const usePack = (packId: string) => {
         .from('packs')
         .select(`
           *,
-          creator:users!packs_created_by_fkey(id, username, avatar_url, first_name, subscription_tier),
+          creator:users!packs_creator_id_fkey(id, username, avatar_url, first_name, subscription_tier),
           members:pack_members(count),
           posts:pack_posts(count)
         `)

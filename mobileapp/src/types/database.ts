@@ -9,9 +9,10 @@ export type Json =
 
 export type SubscriptionTier = 'free' | 'medium' | 'premium'
 export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'unpaid'
-export type PostPrivacy = 'public' | 'friends'
+export type PostPrivacy = 'public' | 'friends' | 'followers'
 export type PostType = 'original' | 'share' | 'quote'
-export type PlaceCategory = 'restaurant' | 'event' | 'museum' | 'other'
+export type PlaceCategory = 'restaurant' | 'cafe' | 'store' | 'event' | 'museum' | 'other'
+export type PackCategory = 'recipes' | 'traveling' | 'products' | 'resources' | 'lifestyle' | 'other'
 
 export interface Database {
   public: {
@@ -357,4 +358,32 @@ export interface UserProfile extends Database['public']['Tables']['users']['Row'
   posts_count?: number
   is_following?: boolean
   is_followed_by?: boolean
+}
+
+// Type aliases for convenience
+export type Profile = Database['public']['Tables']['users']['Row']
+export type Post = Database['public']['Tables']['posts']['Row']
+export type Place = Database['public']['Tables']['places']['Row']
+export type Comment = Database['public']['Tables']['comments']['Row']
+
+// Pack type matching database schema
+export interface Pack {
+  id: string
+  creator_id: string
+  title: string
+  description: string | null
+  banner_url: string | null
+  website_url: string | null
+  facebook_url: string | null
+  twitter_url: string | null
+  instagram_url: string | null
+  tiktok_url: string | null
+  category: PackCategory | null
+  is_published: boolean
+  view_count: number
+  created_at: string
+  updated_at: string
+  creator?: Profile
+  members_count?: number
+  posts_count?: number
 }

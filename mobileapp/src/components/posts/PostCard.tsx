@@ -31,6 +31,15 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
 
   const isOwnPost = user?.id === post.user_id;
 
+  // Debug logging
+  console.log('PostCard render:', {
+    id: post.id,
+    hasContent: !!post.content,
+    contentLength: post.content?.length,
+    content: post.content?.substring(0, 50),
+    user: post.user?.username
+  });
+
   const handleLike = async () => {
     if (!user) {
       router.push('/auth');
