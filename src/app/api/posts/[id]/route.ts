@@ -92,37 +92,28 @@ export async function DELETE(
       )
     }
 
-    // Get the post to verify ownership
-    const { data: post, error: fetchError } = await supabase
-      .from('posts')
-      .select('user_id')
-      .eq('id', id)
-      .single()
+    // Use the delete_post RPC function to bypass RLS WITH CHECK issues
+    const { data, error } = await supabase
+      .rpc('delete_post', { post_id: id })
 
-    if (fetchError || !post) {
-      return NextResponse.json(
-        { error: 'Post not found' },
-        { status: 404 }
-      )
+    if (error) {
+      console.error('Error calling delete_post RPC:', error)
+      throw error
     }
 
-    // Verify the user owns the post
-    if (post.user_id !== session.user.id) {
+    // Check the RPC response
+    const result = data as { success: boolean; error?: string; message?: string }
+
+    if (!result.success) {
+      const statusCode = result.error === 'Not authenticated' ? 401
+        : result.error === 'Not authorized' ? 403
+        : result.error === 'Post not found' ? 404
+        : 400
+
       return NextResponse.json(
-        { error: 'Forbidden: You can only delete your own posts' },
-        { status: 403 }
+        { error: result.error || 'Failed to delete post' },
+        { status: statusCode }
       )
-    }
-
-    // Soft delete the post by setting deleted_at
-    const { error: deleteError } = await supabase
-      .from('posts')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', id)
-
-    if (deleteError) {
-      console.error('Error deleting post:', deleteError)
-      throw deleteError
     }
 
     return NextResponse.json({ success: true })
