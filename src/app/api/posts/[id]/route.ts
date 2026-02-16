@@ -74,3 +74,63 @@ export async function GET(
     )
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params
+    const supabase = await createClient()
+
+    // Check authentication
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Get the post to verify ownership
+    const { data: post, error: fetchError } = await supabase
+      .from('posts')
+      .select('user_id')
+      .eq('id', id)
+      .single()
+
+    if (fetchError || !post) {
+      return NextResponse.json(
+        { error: 'Post not found' },
+        { status: 404 }
+      )
+    }
+
+    // Verify the user owns the post
+    if (post.user_id !== session.user.id) {
+      return NextResponse.json(
+        { error: 'Forbidden: You can only delete your own posts' },
+        { status: 403 }
+      )
+    }
+
+    // Soft delete the post by setting deleted_at
+    const { error: deleteError } = await supabase
+      .from('posts')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id)
+
+    if (deleteError) {
+      console.error('Error deleting post:', deleteError)
+      throw deleteError
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting post:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete post' },
+      { status: 500 }
+    )
+  }
+}
