@@ -153,12 +153,22 @@ export async function PATCH(
 
     const userId = session.user.id
 
+    // Check if id is a UUID or a slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
     // Verify user is pack creator
-    const { data: pack, error: packError } = await supabase
+    let query = supabase
       .from('packs')
-      .select('creator_id')
-      .eq('id', id)
-      .single()
+      .select('id, creator_id')
+
+    // Query by UUID or slug
+    if (isUUID) {
+      query = query.eq('id', id)
+    } else {
+      query = query.eq('slug', id)
+    }
+
+    const { data: pack, error: packError } = await query.single()
 
     if (packError || !pack) {
       return NextResponse.json(
@@ -216,11 +226,11 @@ export async function PATCH(
     }
     if (is_published !== undefined) updates.is_published = is_published
 
-    // Update pack
+    // Update pack using the actual UUID
     const { data: updatedPack, error: updateError } = await supabase
       .from('packs')
       .update(updates)
-      .eq('id', id)
+      .eq('id', pack.id)
       .select()
       .single()
 
@@ -229,7 +239,7 @@ export async function PATCH(
       throw updateError
     }
 
-    console.log('[Pack API] Pack updated:', id)
+    console.log('[Pack API] Pack updated:', pack.id)
 
     return NextResponse.json({ pack: updatedPack })
   } catch (error) {
@@ -260,12 +270,22 @@ export async function DELETE(
 
     const userId = session.user.id
 
+    // Check if id is a UUID or a slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
     // Verify user is pack creator
-    const { data: pack, error: packError } = await supabase
+    let query = supabase
       .from('packs')
-      .select('creator_id')
-      .eq('id', id)
-      .single()
+      .select('id, creator_id')
+
+    // Query by UUID or slug
+    if (isUUID) {
+      query = query.eq('id', id)
+    } else {
+      query = query.eq('slug', id)
+    }
+
+    const { data: pack, error: packError } = await query.single()
 
     if (packError || !pack) {
       return NextResponse.json(
@@ -281,18 +301,18 @@ export async function DELETE(
       )
     }
 
-    // Delete pack (cascade will delete members, posts, follows)
+    // Delete pack using the actual UUID (cascade will delete members, posts, follows)
     const { error: deleteError } = await supabase
       .from('packs')
       .delete()
-      .eq('id', id)
+      .eq('id', pack.id)
 
     if (deleteError) {
       console.error('[Pack API] Error deleting pack:', deleteError)
       throw deleteError
     }
 
-    console.log('[Pack API] Pack deleted:', id)
+    console.log('[Pack API] Pack deleted:', pack.id)
 
     return NextResponse.json({ success: true })
   } catch (error) {
