@@ -42,9 +42,13 @@ interface PostCardProps {
   onUpdate?: () => void
   reactions?: any[]  // Bulk-loaded reactions for performance
   isFollowing?: boolean  // Bulk-loaded follow status for performance
+  packContext?: {
+    packId: string
+    userRole: 'admin' | 'moderator' | 'member' | null
+  }  // Pack context for showing remove button
 }
 
-function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
+function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostCardProps) {
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.post_likes?.length || 0)
   const commentCount = post.comments?.length || 0
@@ -63,7 +67,8 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
 
   const isOwnPost = user?.id === post.user_id
   const isPublicPost = post.privacy === 'public'
-  const shouldShowMenu = user && (isOwnPost || isPublicPost)
+  const canRemoveFromPack = packContext && (packContext.userRole === 'admin' || packContext.userRole === 'moderator')
+  const shouldShowMenu = user && (isOwnPost || isPublicPost || canRemoveFromPack)
 
   useEffect(() => {
     if (user && post.post_likes) {
@@ -183,6 +188,28 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
     onUpdate?.() // Refresh feed
   }
 
+  const handleRemoveFromPack = async () => {
+    if (!packContext) return
+
+    try {
+      const response = await fetch(`/api/packs/${packContext.packId}/posts/${post.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        onUpdate?.() // Refresh pack posts
+      } else {
+        const data = await response.json()
+        alert(data.error || 'Failed to remove post from pack')
+      }
+    } catch (error) {
+      console.error('Error removing post from pack:', error)
+      alert('Failed to remove post from pack')
+    } finally {
+      setShowMenu(false)
+    }
+  }
+
   const isQuotePost = post.post_type === 'quote'
   const isRepost = post.post_type === 'share'
 
@@ -279,7 +306,15 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   {/* Dropdown Menu */}
                   {showMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
-                      {isPublicPost && (
+                      {canRemoveFromPack ? (
+                        <button
+                          onClick={handleRemoveFromPack}
+                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                        >
+                          <Package className="h-4 w-4" />
+                          <span>Remove from Pack</span>
+                        </button>
+                      ) : isPublicPost && (
                         <button
                           onClick={() => {
                             setShowAddToPack(true)
@@ -475,7 +510,15 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                   {/* Dropdown Menu */}
                   {showMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
-                      {isPublicPost && (
+                      {canRemoveFromPack ? (
+                        <button
+                          onClick={handleRemoveFromPack}
+                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                        >
+                          <Package className="h-4 w-4" />
+                          <span>Remove from Pack</span>
+                        </button>
+                      ) : isPublicPost && (
                         <button
                           onClick={() => {
                             setShowAddToPack(true)

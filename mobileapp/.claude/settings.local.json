@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm:*)",
+      "Bash(node:*)",
+      "Bash(npx expo-doctor)",
+      "Bash(/Users/antonkravchuk/sidep/Cleareds/plantspack/mobileapp/README.md:*)",
+      "Bash(xcrun simctl list:*)",
+      "Bash(npx expo install:*)",
+      "Bash(git restore:*)"
+    ]
+  }
+}
