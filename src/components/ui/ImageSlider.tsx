@@ -64,7 +64,11 @@ export default function ImageSlider({
       <div className={`relative overflow-hidden rounded-lg ${className}`}>
         <div className={`grid gap-1 ${getLayoutClass()}`}>
           {images.map((image, index) => (
-            <div key={index} className={`relative bg-gray-50 ${getAspectRatioClass()}`}>
+            <div
+              key={index}
+              className={`relative bg-gray-50 ${getAspectRatioClass()}`}
+              style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
+            >
               {!isLoaded[index] && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
@@ -92,7 +96,8 @@ export default function ImageSlider({
       {/* Main Image Container */}
       <div
         ref={sliderRef}
-        className={`relative ${getAspectRatioClass()} overflow-hidden bg-gray-50`}
+        className={`relative ${getAspectRatioClass()} overflow-hidden bg-gray-50 w-full`}
+        style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
       >
         <div
           className="flex transition-transform duration-300 ease-in-out h-full"
