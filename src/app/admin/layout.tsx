@@ -15,7 +15,8 @@ import {
   Shield,
   Loader2,
   Menu,
-  X
+  X,
+  Building2
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -71,6 +72,7 @@ export default function AdminLayout({
     { name: 'Comments', href: '/admin/comments', icon: MessageSquare },
     { name: 'Places', href: '/admin/places', icon: MapPin },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
+    { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
     { name: 'Contact Forms', href: '/admin/contact', icon: Mail },
   ]
 

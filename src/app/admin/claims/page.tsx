@@ -18,13 +18,13 @@ interface PlaceClaim {
   places: {
     name: string
     address: string
-  }
+  } | null
   users: {
     username: string
     email: string
     first_name: string
     last_name: string
-  }
+  } | null
 }
 
 export default function ClaimsManagement() {
@@ -54,8 +54,8 @@ export default function ClaimsManagement() {
           created_at,
           reviewed_at,
           rejection_reason,
-          places:place_id (name, address),
-          users:user_id (username, email, first_name, last_name)
+          places!place_claim_requests_place_id_fkey (name, address),
+          users!place_claim_requests_user_id_fkey (username, email, first_name, last_name)
         `)
         .order('created_at', { ascending: false })
 
@@ -66,7 +66,15 @@ export default function ClaimsManagement() {
       const { data, error } = await query
 
       if (error) throw error
-      setClaims(data || [])
+
+      // Transform data to match interface (Supabase returns single objects for foreign keys with !inner)
+      const transformedData = (data || []).map((item: any) => ({
+        ...item,
+        places: item.places || null,
+        users: item.users || null
+      }))
+
+      setClaims(transformedData as PlaceClaim[])
     } catch (error) {
       console.error('Error loading claims:', error)
     } finally {

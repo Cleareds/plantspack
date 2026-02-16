@@ -15,7 +15,8 @@
       "Bash(xcrun simctl list:*)",
       "Bash(npx expo install:*)",
       "Bash(git restore:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(npx expo start:*)"
     ]
   }
 }
