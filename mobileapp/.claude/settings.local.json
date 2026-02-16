@@ -14,7 +14,8 @@
       "Bash(/Users/antonkravchuk/sidep/Cleareds/plantspack/mobileapp/README.md:*)",
       "Bash(xcrun simctl list:*)",
       "Bash(npx expo install:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(pkill:*)"
     ]
   }
 }

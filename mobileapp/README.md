@@ -2,73 +2,57 @@
 
 React Native mobile application for PlantsPack - the plant-based social network.
 
-## 🚀 Tech Stack
+## 🚀 Latest Version
 
-- **Framework**: Expo SDK 52 + React Native 0.76
-- **Routing**: Expo Router 4.0 (file-based routing)
-- **State Management**: Zustand
-- **Database**: Supabase (PostgreSQL)
-- **Maps**: React Native Maps (Google Maps)
-- **Authentication**: Supabase Auth (Email, Google, Facebook OAuth)
-- **Language**: TypeScript
+- **Expo SDK**: 54.0.0 ✨
+- **React**: 19.1.0
+- **React Native**: 0.81.5
+- **expo-router**: 6.0.23
 
 ## 📱 Quick Start
 
 ```bash
-# Install dependencies (already done)
-npm install
-
 # Start development server
 npm start
 
-# Scan QR code with Expo Go app
+# Scan QR code with Expo Go app on your phone
 ```
 
 ### Install Expo Go
 - **iOS**: [App Store](https://apps.apple.com/app/expo-go/id982107779)
 - **Android**: [Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
-## ✅ Features Implemented
+**✅ Now fully compatible with Expo Go SDK 54!**
 
-- ✅ **Authentication** (Email, Google, Facebook OAuth)
-- ✅ **Feed/Posts** (Create, like, comment, delete with images)
-- ✅ **Profile** (Stats, posts, followers/following)
-- ✅ **Places** (Interactive map, category filters, favorites, directions)
-- ✅ **Packs** (Browse by category, join/leave, view posts)
-- ✅ **Settings** (Account info, subscription tier, logout)
+## ✅ Features
 
-## 🔧 Environment Variables
+- **Authentication** (Email, Google, Facebook OAuth)
+- **Feed/Posts** (Create, like, comment, delete with images)
+- **Profile** (Stats, posts, followers/following)
+- **Places** (Interactive map, category filters, favorites, directions)
+- **Packs** (Browse by category, join/leave, view posts)
+- **Settings** (Account info, subscription tier, logout)
 
-Already configured in `.env`:
-- Supabase URL and keys
-- Stripe publishable key
-- Google Maps API key
-- API base URL (plantspack.com)
+## 🛠️ Tech Stack
 
-## 📦 Scripts
+- Expo SDK 54 + React Native 0.81
+- Expo Router 6.0 (file-based routing)
+- Zustand (state management)
+- Supabase (database & auth)
+- React Native Maps
+- Stripe payments
+
+## 📦 Commands
 
 ```bash
 npm start        # Start Expo dev server
-npm run ios      # Run on iOS simulator (Mac only)
+npm run ios      # Run on iOS simulator
 npm run android  # Run on Android emulator
-npm run web      # Run in web browser
 ```
 
-## 🐛 Troubleshooting
+## 🔒 Security
 
-### Clear cache and restart
-```bash
-npx expo start -c
-```
-
-### Reinstall dependencies
-```bash
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### SDK version mismatch
-Already upgraded to SDK 52 - compatible with latest Expo Go!
+✅ **0 vulnerabilities** - All security issues resolved in SDK 54
 
 ## 📂 Project Structure
 
@@ -76,32 +60,28 @@ Already upgraded to SDK 52 - compatible with latest Expo Go!
 mobileapp/
 ├── app/                    # File-based routing
 │   ├── (tabs)/            # Tab navigation
-│   ├── auth/              # Auth screens
 │   ├── place/[id].tsx     # Place details
 │   └── pack/[id].tsx      # Pack details
 ├── src/
 │   ├── components/        # Reusable components
 │   ├── hooks/            # Custom hooks
 │   ├── store/            # Zustand stores
-│   ├── lib/              # Supabase client
-│   ├── types/            # TypeScript types
-│   └── constants/        # Theme & config
+│   └── lib/              # Supabase client
 └── assets/               # Images & fonts
 ```
 
-## 🌐 API Integration
+## 🐛 Troubleshooting
 
-Base URL: `https://plantspack.com/api`
-- `/api/posts` - Feed management
-- `/api/places` - Places discovery
-- `/api/packs` - Community packs
-- `/api/users` - User profiles
+Clear cache:
+```bash
+npx expo start -c
+```
 
-## ⚡ Current Version
-
-- **Expo SDK**: 52.0.0
-- **React Native**: 0.76.9
-- **Expo Router**: 4.0.22
+Reinstall:
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
 
 ---
 

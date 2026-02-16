@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Users, FileText, MessageSquare, MapPin, Flag, Mail, TrendingUp, AlertCircle } from 'lucide-react'
+import { Users, FileText, MessageSquare, MapPin, Flag, Mail, TrendingUp, AlertCircle, Building2 } from 'lucide-react'
 
 interface Stats {
   totalUsers: number
@@ -11,6 +11,7 @@ interface Stats {
   totalPlaces: number
   pendingReports: number
   pendingContacts: number
+  pendingClaims: number
   todayUsers: number
   todayPosts: number
 }
@@ -23,6 +24,7 @@ export default function AdminDashboard() {
     totalPlaces: 0,
     pendingReports: 0,
     pendingContacts: 0,
+    pendingClaims: 0,
     todayUsers: 0,
     todayPosts: 0,
   })
@@ -45,6 +47,7 @@ export default function AdminDashboard() {
         { count: totalPlaces },
         { count: pendingReports },
         { count: pendingContacts },
+        { count: pendingClaims },
         { count: todayUsers },
         { count: todayPosts },
       ] = await Promise.all([
@@ -54,6 +57,7 @@ export default function AdminDashboard() {
         supabase.from('places').select('*', { count: 'exact', head: true }),
         supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('place_claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('users').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
         supabase.from('posts').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
       ])
@@ -65,6 +69,7 @@ export default function AdminDashboard() {
         totalPlaces: totalPlaces || 0,
         pendingReports: pendingReports || 0,
         pendingContacts: pendingContacts || 0,
+        pendingClaims: pendingClaims || 0,
         todayUsers: todayUsers || 0,
         todayPosts: todayPosts || 0,
       })
@@ -227,6 +232,18 @@ export default function AdminDashboard() {
           >
             <FileText className="h-6 w-6 mx-auto mb-2 text-green-600" />
             <span className="text-sm font-medium">Manage Posts</span>
+          </a>
+          <a
+            href="/admin/claims"
+            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors text-center"
+          >
+            <Building2 className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+            <span className="text-sm font-medium">Business Claims</span>
+            {stats.pendingClaims > 0 && (
+              <span className="block mt-1 text-xs text-purple-600">
+                {stats.pendingClaims} pending
+              </span>
+            )}
           </a>
         </div>
       </div>
