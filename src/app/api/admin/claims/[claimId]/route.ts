@@ -66,12 +66,12 @@ export async function PATCH(
         user_id,
         proof_text,
         status,
-        places:place_id (
+        places!place_claim_requests_place_id_fkey (
           id,
           name,
           address
         ),
-        users:user_id (
+        users!place_claim_requests_user_id_fkey (
           id,
           username,
           email,
@@ -128,17 +128,23 @@ export async function PATCH(
       }
 
       // Send approval email
-      if (claim.users?.email) {
-        const userName = claim.users.first_name
-          ? `${claim.users.first_name} ${claim.users.last_name || ''}`.trim()
-          : claim.users.username
+      const userEmail = (claim.users as any)?.email
+      const userFirstName = (claim.users as any)?.first_name
+      const userLastName = (claim.users as any)?.last_name
+      const userName = (claim.users as any)?.username
+      const placeName = (claim.places as any)?.name
+
+      if (userEmail) {
+        const displayName = userFirstName
+          ? `${userFirstName} ${userLastName || ''}`.trim()
+          : userName
 
         const placeUrl = `https://plantspack.com/place/${claim.place_id}`
 
         await sendClaimApprovedEmail(
-          claim.users.email,
-          userName,
-          claim.places?.name || 'the business',
+          userEmail,
+          displayName,
+          placeName || 'the business',
           placeUrl
         ).catch(err => {
           console.error('[Admin Claims API] Error sending approval email:', err)
@@ -169,15 +175,21 @@ export async function PATCH(
       }
 
       // Send rejection email
-      if (claim.users?.email) {
-        const userName = claim.users.first_name
-          ? `${claim.users.first_name} ${claim.users.last_name || ''}`.trim()
-          : claim.users.username
+      const userEmail = (claim.users as any)?.email
+      const userFirstName = (claim.users as any)?.first_name
+      const userLastName = (claim.users as any)?.last_name
+      const userName = (claim.users as any)?.username
+      const placeName = (claim.places as any)?.name
+
+      if (userEmail) {
+        const displayName = userFirstName
+          ? `${userFirstName} ${userLastName || ''}`.trim()
+          : userName
 
         await sendClaimRejectedEmail(
-          claim.users.email,
-          userName,
-          claim.places?.name || 'the business',
+          userEmail,
+          displayName,
+          placeName || 'the business',
           rejection_reason
         ).catch(err => {
           console.error('[Admin Claims API] Error sending rejection email:', err)
