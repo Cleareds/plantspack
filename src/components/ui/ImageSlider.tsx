@@ -48,7 +48,7 @@ export default function ImageSlider({
       case 'wide':
         return 'aspect-video'
       default:
-        return 'max-h-96'
+        return 'min-h-64 max-h-96'
     }
   }
 
