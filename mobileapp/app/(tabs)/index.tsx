@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   View,
   FlatList,
@@ -11,6 +11,7 @@ import { useAuthStore } from '@/src/store/authStore';
 import { usePostStore } from '@/src/store/postStore';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { PostCard } from '@/src/components/posts/PostCard';
+import { CreatePostModal } from '@/src/components/posts/CreatePostModal';
 import { colors, spacing } from '@/src/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -30,6 +31,7 @@ export default function FeedScreen() {
     sortBy,
     setSortBy,
   } = usePostStore();
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 
   useEffect(() => {
     fetchPosts(true);
@@ -155,6 +157,23 @@ export default function FeedScreen() {
         }
         contentContainerStyle={posts.length === 0 ? styles.emptyList : undefined}
       />
+
+      {/* Floating Action Button */}
+      {user && (
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => setIsCreateModalVisible(true)}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="add" size={28} color={colors.text.inverse} />
+        </TouchableOpacity>
+      )}
+
+      {/* Create Post Modal */}
+      <CreatePostModal
+        visible={isCreateModalVisible}
+        onClose={() => setIsCreateModalVisible(false)}
+      />
     </View>
   );
 }
@@ -251,5 +270,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text.secondary,
     textAlign: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    right: spacing[4],
+    bottom: spacing[4],
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: colors.primary[500],
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
   },
 });

@@ -1,37 +1,5 @@
-# Expo
+.env
+.claude/
+node_modules/
 .expo/
 dist/
-web-build/
-
-# Node
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Environment
-.env
-.env.local
-
-# OSX
-.DS_Store
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Testing
-coverage/
-
-# Misc
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-
-# Debug
-*.log

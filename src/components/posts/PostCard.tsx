@@ -524,7 +524,28 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
               text={post.content}
               className="text-gray-800 whitespace-pre-wrap"
             />
-            {/* Handle both new images array and legacy image_url */}
+
+            {/* Videos - shown first */}
+            {post.video_urls && post.video_urls.length > 0 && (
+              <div className="mt-3 space-y-3">
+                {post.video_urls.map((videoUrl, index) => (
+                  <div key={index} className="relative">
+                    <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
+                      <video
+                        src={videoUrl}
+                        className="w-full h-full object-cover"
+                        controls
+                        preload="metadata"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Images - shown after videos */}
             {(() => {
               const imagesToShow = post.images && post.images.length > 0
                 ? post.images
@@ -555,26 +576,6 @@ function PostCard({ post, onUpdate, reactions, isFollowing }: PostCardProps) {
                 </div>
               )
             })()}
-
-            {/* Videos */}
-            {post.video_urls && post.video_urls.length > 0 && (
-              <div className="mt-3 space-y-3">
-                {post.video_urls.map((videoUrl, index) => (
-                  <div key={index} className="relative">
-                    <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
-                      <video
-                        src={videoUrl}
-                        className="w-full h-full object-cover"
-                        controls
-                        preload="metadata"
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
 
             {/* Link Preview */}
             {(() => {

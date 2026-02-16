@@ -160,3 +160,24 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 - The user will explicitly say if they want to review before deployment
 - Logs can be checked across all services for debugging
 - This configuration file (claude.md) persists across all sessions in this directory
+
+## Token Usage Guidelines
+
+**Be concise and efficient:**
+- Keep responses brief and to the point
+- Don't repeat code unnecessarily - reference by file path and line numbers
+- Summarize large outputs instead of showing everything
+- Use Grep with `head_limit` when searching (e.g., `head_limit: 20`)
+- Only read files when necessary for the task
+- When exploring, use Task tool with Explore agent instead of multiple reads
+
+**Parallel operations:**
+- Only use parallel tool calls when operations are truly independent
+- Prefer sequential operations when one depends on another
+- Don't speculatively read files "just in case"
+
+**Communication:**
+- Use bullet points and short paragraphs
+- Reference code by file:line instead of showing full blocks
+- Assume user can check files themselves when needed
+- Skip excessive confirmations and explanations
