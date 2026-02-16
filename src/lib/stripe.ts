@@ -83,7 +83,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     features: [
       'Unlimited character posts',
       'Unlimited images per post',
-      '3 videos per post (256MB max each)',
+      '3 videos per post (100MB max each)',
       'Location sharing',
       'Early access to new features',
       'Priority support'
@@ -91,7 +91,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     maxPostLength: -1, // -1 means unlimited
     maxImages: -1, // -1 means unlimited
     maxVideos: 3,
-    maxVideoSize: 256 * 1024 * 1024, // 256MB in bytes
+    maxVideoSize: 100 * 1024 * 1024, // 100MB in bytes
     badge: {
       text: 'Premium',
       color: '#7C3AED',
