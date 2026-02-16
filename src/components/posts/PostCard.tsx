@@ -61,9 +61,10 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
   const [showSignUpModal, setShowSignUpModal] = useState(false)
   const [showAddToPack, setShowAddToPack] = useState(false)
   const [signUpAction, setSignUpAction] = useState<'like' | 'comment' | 'share'>('like')
+  const [isDeleted, setIsDeleted] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const { user } = useAuth()
-  const { deletePost, loading: deleting } = usePostActions()
+  const { deletePost, loading: deleting, error: deleteError } = usePostActions()
 
   const isOwnPost = user?.id === post.user_id
   const isPublicPost = post.privacy === 'public'
@@ -179,7 +180,11 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
     const success = await deletePost(post.id)
     if (success) {
       setShowDeleteConfirm(false)
+      setIsDeleted(true)
+      alert('Post deleted successfully')
       onUpdate?.() // Refresh feed
+    } else {
+      alert(deleteError || 'Failed to delete post. Please try again.')
     }
   }
 
@@ -212,6 +217,11 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
 
   const isQuotePost = post.post_type === 'quote'
   const isRepost = post.post_type === 'share'
+
+  // Don't render if post is deleted
+  if (isDeleted) {
+    return null
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
