@@ -60,14 +60,14 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     features: [
       '1000 character posts',
       '7 images per post',
-      '1 video per post (64MB max)',
+      '1 video per post (50MB max)',
       'Location sharing',
       'Community support'
     ],
     maxPostLength: 1000,
     maxImages: 7,
     maxVideos: 1,
-    maxVideoSize: 64 * 1024 * 1024, // 64MB in bytes
+    maxVideoSize: 50 * 1024 * 1024, // 50MB (Supabase Free tier limit)
     badge: {
       text: 'Supporter',
       color: '#059669',
@@ -83,7 +83,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     features: [
       'Unlimited character posts',
       'Unlimited images per post',
-      '3 videos per post (100MB max each)',
+      '3 videos per post (50MB max each)',
       'Location sharing',
       'Early access to new features',
       'Priority support'
@@ -91,7 +91,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     maxPostLength: -1, // -1 means unlimited
     maxImages: -1, // -1 means unlimited
     maxVideos: 3,
-    maxVideoSize: 100 * 1024 * 1024, // 100MB in bytes
+    maxVideoSize: 50 * 1024 * 1024, // 50MB (Supabase Free tier limit)
     badge: {
       text: 'Premium',
       color: '#7C3AED',
