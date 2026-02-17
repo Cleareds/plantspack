@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { useParams } from 'next/navigation'
+import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 import Link from 'next/link'
 import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
@@ -18,6 +19,7 @@ export default function ProfilePage() {
   const params = useParams()
   const username = params.username as string
   const { user, profile: currentUserProfile, loading: authLoading } = useAuth()
+  useScrollRestoration({ key: `profile_scroll_${username}`, delay: 200 })
 
   const [profile, setProfile] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])

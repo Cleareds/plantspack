@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import { PackWithStats, PackCategory } from '@/types/packs'
 import PackCard from '@/components/packs/PackCard'
 import Link from 'next/link'
 import { Plus, Search, Crown } from 'lucide-react'
+import { usePageState } from '@/hooks/usePageState'
+import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 
 export default function PacksPage() {
   const { user, profile } = useAuth()
@@ -13,9 +15,19 @@ export default function PacksPage() {
   const [myPacks, setMyPacks] = useState<PackWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [myPacksLoading, setMyPacksLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState<PackCategory | ''>('')
   const [hasMore, setHasMore] = useState(false)
+
+  const [packsState, setPacksState] = usePageState({
+    key: 'packs_state',
+    defaultValue: { search: '', category: '' as PackCategory | '' },
+    userId: user?.id,
+  })
+  const search = packsState.search
+  const category = packsState.category
+  const setSearch = useCallback((s: string) => setPacksState(prev => ({ ...prev, search: s })), [setPacksState])
+  const setCategory = useCallback((c: PackCategory | '') => setPacksState(prev => ({ ...prev, category: c })), [setPacksState])
+
+  useScrollRestoration({ key: 'packs_scroll' })
 
   const categories: { value: PackCategory | ''; label: string; icon: string }[] = [
     { value: '', label: 'All', icon: '📦' },

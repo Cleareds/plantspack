@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search, PawPrint, Menu, ChevronLeft, CheckCircle } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { geocodingService } from '@/lib/geocoding'
+import { usePageState } from '@/hooks/usePageState'
 
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -45,7 +46,20 @@ export default function Map() {
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const { user, authReady } = useAuth()
+  const [mapState, setMapState] = usePageState({
+    key: 'map_state',
+    defaultValue: { selectedCategory: 'all', searchRadius: 50, customCenter: null as [number, number] | null },
+    userId: user?.id,
+    ttl: 60 * 60 * 1000,
+  })
+  const selectedCategory = mapState.selectedCategory
+  const searchRadius = mapState.searchRadius
+  const customCenter = mapState.customCenter
+  const setSelectedCategory = useCallback((c: string) => setMapState(prev => ({ ...prev, selectedCategory: c })), [setMapState])
+  const setSearchRadius = useCallback((r: number) => setMapState(prev => ({ ...prev, searchRadius: r })), [setMapState])
+  const setCustomCenter = useCallback((c: [number, number] | null) => setMapState(prev => ({ ...prev, customCenter: c })), [setMapState])
+
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
   const [mapCenter, setMapCenter] = useState<[number, number] | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -54,8 +68,6 @@ export default function Map() {
   const [addressSearchQuery, setAddressSearchQuery] = useState('')
   const [addressSearchResults, setAddressSearchResults] = useState<any[]>([])
   const [showAddressSearchResults, setShowAddressSearchResults] = useState(false)
-  const [searchRadius, setSearchRadius] = useState(50) // Default 50km radius
-  const [customCenter, setCustomCenter] = useState<[number, number] | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false) // Closed by default for mobile
   const [successMessage, setSuccessMessage] = useState('')
   const [newPlace, setNewPlace] = useState({
@@ -71,7 +83,6 @@ export default function Map() {
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
   const [placeMarkerIcon, setPlaceMarkerIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
-  const { user, authReady } = useAuth()
 
   const categories = [
     { value: 'all', label: 'All Places', icon: MapPin },

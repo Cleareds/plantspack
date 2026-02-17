@@ -9,6 +9,8 @@ import {Loader2, ArrowUp} from 'lucide-react'
 import FeedSorting, {type SortOption} from './FeedSorting'
 import {getFeedPosts} from '@/lib/feed-algorithm'
 import {useRealtimePosts} from '@/hooks/useRealtimePosts'
+import {usePageState} from '@/hooks/usePageState'
+import {useScrollRestoration} from '@/hooks/useScrollRestoration'
 
 type Post = Tables<'posts'> & {
     users: Tables<'users'>
@@ -33,15 +35,24 @@ export default function Feed({onPostCreated}: FeedProps) {
     const [loadingMore, setLoadingMore] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [hasMore, setHasMore] = useState(true)
-    const [activeTab, setActiveTab] = useState<'public' | 'friends'>('public')
-    const [sortOption, setSortOption] = useState<SortOption>('relevancy')
+    const {user, authReady} = useAuth()
+    const [feedState, setFeedState] = usePageState({
+        key: 'feed_state',
+        defaultValue: { activeTab: 'public' as 'public' | 'friends', sortOption: 'relevancy' as SortOption },
+        userId: user?.id,
+        enabled: authReady,
+    })
+    const activeTab = feedState.activeTab
+    const sortOption = feedState.sortOption
+    const setActiveTab = useCallback((tab: 'public' | 'friends') => setFeedState(prev => ({ ...prev, activeTab: tab })), [setFeedState])
+    const setSortOption = useCallback((sort: SortOption) => setFeedState(prev => ({ ...prev, sortOption: sort })), [setFeedState])
     const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
     const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
-    const {user, authReady} = useAuth()
     const observerRef = useRef<IntersectionObserver | null>(null)
     const loadMoreRef = useRef<HTMLDivElement>(null)
     const offsetRef = useRef(0)
     const {newPosts: realtimeNewPosts, clearNew, hasNewPosts, newPostCount} = useRealtimePosts()
+    useScrollRestoration({ key: 'feed_scroll', delay: 400 })
 
     // Fetch blocked users
     useEffect(() => {
