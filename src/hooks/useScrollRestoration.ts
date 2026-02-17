@@ -24,8 +24,8 @@ export function useScrollRestoration({
     if (savedY === null || savedY <= 0) return
 
     let attempts = 0
-    const MAX_ATTEMPTS = 3
-    const RETRY_INTERVAL = 200
+    const MAX_ATTEMPTS = 8
+    const RETRY_INTERVAL = 400
 
     const tryRestore = () => {
       attempts++

@@ -11,6 +11,7 @@ import {getFeedPosts} from '@/lib/feed-algorithm'
 import {useRealtimePosts} from '@/hooks/useRealtimePosts'
 import {usePageState} from '@/hooks/usePageState'
 import {useScrollRestoration} from '@/hooks/useScrollRestoration'
+import {savePageState, loadPageState} from '@/lib/page-state-storage'
 
 type Post = Tables<'posts'> & {
     users: Tables<'users'>
@@ -40,7 +41,7 @@ export default function Feed({onPostCreated}: FeedProps) {
         key: 'feed_state',
         defaultValue: { activeTab: 'public' as 'public' | 'friends', sortOption: 'relevancy' as SortOption },
         userId: user?.id,
-        enabled: authReady,
+        enabled: !!user,
     })
     const activeTab = feedState.activeTab
     const sortOption = feedState.sortOption
@@ -215,13 +216,21 @@ export default function Feed({onPostCreated}: FeedProps) {
 
     const fetchPosts = useCallback(async (loadMore: boolean = false) => {
         try {
+            const postsCacheKey = `feed_posts_${user?.id || 'anon'}_${activeTab}_${sortOption}`
+
             if (loadMore) {
                 setLoadingMore(true)
             } else {
-                setLoading(true)
+                const cached = loadPageState<Post[]>(postsCacheKey, user?.id)
+                if (cached && cached.length > 0) {
+                    // Show cached posts immediately, refresh silently in background
+                    setPosts(cached)
+                    setLoading(false)
+                } else {
+                    setLoading(true)
+                }
                 setError(null)
                 offsetRef.current = 0
-                setPosts([])
                 setHasMore(true)
             }
 
@@ -248,6 +257,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                     })
                 } else {
                     setPosts(postsWithMetadata as any)
+                    savePageState(postsCacheKey, postsWithMetadata, 5 * 60 * 1000, user?.id)
                 }
 
                 setHasMore(newPosts.length === POSTS_PER_PAGE)
@@ -361,6 +371,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                     offsetRef.current = currentOffset + POSTS_PER_PAGE
                 } else {
                     setPosts(postsWithMetadata)
+                    savePageState(postsCacheKey, postsWithMetadata, 5 * 60 * 1000, user?.id)
                     offsetRef.current = POSTS_PER_PAGE
                 }
 
@@ -388,6 +399,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                 })
             } else {
                 setPosts(postsWithMetadata as any)
+                savePageState(postsCacheKey, postsWithMetadata, 5 * 60 * 1000, undefined)
             }
 
             setHasMore(newPosts.length === POSTS_PER_PAGE)

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
 import { useParams } from 'next/navigation'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
+import { savePageState, loadPageState } from '@/lib/page-state-storage'
 import Link from 'next/link'
 import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
@@ -19,7 +20,7 @@ export default function ProfilePage() {
   const params = useParams()
   const username = params.username as string
   const { user, profile: currentUserProfile, loading: authLoading } = useAuth()
-  useScrollRestoration({ key: `profile_scroll_${username}`, delay: 200 })
+  useScrollRestoration({ key: `profile_scroll_${username}`, delay: 100 })
 
   const [profile, setProfile] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
@@ -40,8 +41,37 @@ export default function ProfilePage() {
     }
   }, [authLoading, user])
 
+  // Save profile data to cache after every successful load
+  const prevLoadingRef = useRef(true)
+  useEffect(() => {
+    const wasLoading = prevLoadingRef.current
+    prevLoadingRef.current = loading
+    if (wasLoading && !loading && profile) {
+      savePageState(`profile_data_${username}`, {
+        profile, posts, addedPlaces, favoritePlaces, userPacks, joinedPacks, ownedPlaces
+      }, 5 * 60 * 1000)
+    }
+  })
+
   const loadProfileData = useCallback(async () => {
-    setLoading(true)
+    type ProfileCache = {
+      profile: any; posts: any[]; addedPlaces: any[]; favoritePlaces: any[]
+      userPacks: any[]; joinedPacks: any[]; ownedPlaces: UserOwnedPlace[]
+    }
+    const cacheKey = `profile_data_${username}`
+    const cached = loadPageState<ProfileCache>(cacheKey)
+    if (cached) {
+      setProfile(cached.profile)
+      setPosts(cached.posts)
+      setAddedPlaces(cached.addedPlaces)
+      setFavoritePlaces(cached.favoritePlaces)
+      setUserPacks(cached.userPacks)
+      setJoinedPacks(cached.joinedPacks)
+      setOwnedPlaces(cached.ownedPlaces)
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
 
     // Fetch profile
     const { data: profileData, error } = await supabase
