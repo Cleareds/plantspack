@@ -15,7 +15,7 @@ export function extractHashtags(text: string): string[] {
 
   // Match hashtags: # followed by letters, numbers, underscores
   // Must be at least 2 characters, max 50
-  const hashtagRegex = /#([a-zA-Z0-9_]{2,50})\b/g
+  const hashtagRegex = /#([a-zA-Z0-9_-]{2,50})\b/g
   const matches = text.matchAll(hashtagRegex)
 
   const hashtags = Array.from(matches, match => match[1].toLowerCase())
@@ -34,7 +34,7 @@ export function extractMentions(text: string): string[] {
 
   // Match mentions: @ followed by letters, numbers, underscores
   // Must be at least 2 characters, max 30
-  const mentionRegex = /@([a-zA-Z0-9_]{2,30})\b/g
+  const mentionRegex = /@([a-zA-Z0-9_.]{2,30})\b/g
   const matches = text.matchAll(mentionRegex)
 
   const mentions = Array.from(matches, match => match[1].toLowerCase())
@@ -232,7 +232,7 @@ export function parseTextWithHashtagsAndMentions(text: string): TextSegment[] {
   const segments: TextSegment[] = []
 
   // Combined regex for hashtags, mentions, and URLs
-  const combinedRegex = /(#[a-zA-Z0-9_]{2,50}\b)|(@[a-zA-Z0-9_]{2,30}\b)|(https?:\/\/[^\s]+)/g
+  const combinedRegex = /(#[a-zA-Z0-9_-]{2,50}\b)|(@[a-zA-Z0-9_.]{2,30}\b)|(https?:\/\/[^\s]+)/g
 
   let lastIndex = 0
   let match

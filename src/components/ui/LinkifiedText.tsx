@@ -15,7 +15,7 @@ export default function LinkifiedText({ text, className = '' }: LinkifiedTextPro
     const segments: React.ReactNode[] = []
 
     // Combined regex for hashtags, mentions, and URLs
-    const combinedRegex = /(#[a-zA-Z0-9_]{2,50}\b)|(@[a-zA-Z0-9_]{2,30}\b)|(https?:\/\/[^\s]+)/g
+    const combinedRegex = /(#[a-zA-Z0-9_-]{2,50}\b)|(@[a-zA-Z0-9_.]{2,30}\b)|(https?:\/\/[^\s]+)/g
 
     let lastIndex = 0
     let match
