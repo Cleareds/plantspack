@@ -21,7 +21,8 @@ interface Post {
   id: string
   user_id: string
   content: string
-  location_name: string | null
+  location_city: string | null
+  location_region: string | null
   privacy: string
   created_at: string
   deleted_at: string | null
@@ -52,7 +53,7 @@ export default function PostsManagement() {
     try {
       let query = supabase
         .from('posts')
-        .select('id, user_id, content, location_name, privacy, created_at, deleted_at, users(username, avatar_url)', { count: 'exact' })
+        .select('id, user_id, content, location_city, location_region, privacy, created_at, deleted_at, users(username, avatar_url)', { count: 'exact' })
 
       if (showDeleted) {
         query = query.not('deleted_at', 'is', null)
@@ -61,7 +62,7 @@ export default function PostsManagement() {
       }
 
       if (searchQuery) {
-        query = query.or(`content.ilike.%${searchQuery}%,location_name.ilike.%${searchQuery}%`)
+        query = query.or(`content.ilike.%${searchQuery}%,location_city.ilike.%${searchQuery}%`)
       }
 
       if (filterPrivacy !== 'all') {
@@ -226,9 +227,10 @@ export default function PostsManagement() {
                       <p className="text-sm text-gray-700 truncate">
                         {post.content || <span className="text-gray-400 italic">No text</span>}
                       </p>
-                      {post.location_name && (
+                      {post.location_city && (
                         <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
-                          <MapPin className="h-3 w-3" />{post.location_name}
+                          <MapPin className="h-3 w-3" />
+                          {post.location_city}{post.location_region ? `, ${post.location_region}` : ''}
                         </p>
                       )}
                     </td>
