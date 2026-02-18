@@ -205,6 +205,19 @@ export async function sendSubscriptionEmail(
         ${tier === 'premium' ? '<li>Priority support</li>' : ''}
       </ul>
 
+      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h3 style="color: #16a34a; margin-top: 0;">Join the Community</h3>
+        <p style="margin: 0 0 16px 0; color: #374151;">Connect with fellow plant-based community members:</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="https://web.telegram.org/a/#-5158658423" style="background: #0088cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+            Join Telegram Channel
+          </a>
+          <a href="https://discord.gg/dnCsMbXn" style="background: #5865f2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+            Join Discord Server
+          </a>
+        </div>
+      </div>
+
       <div style="text-align: center; margin: 30px 0;">
         <a href="https://www.plantspack.com" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
           Start Using Your Benefits
