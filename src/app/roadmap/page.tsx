@@ -77,6 +77,14 @@ const ROADMAP_FEATURES: RoadmapFeature[] = [
     quarter: 'Q2–Q3 2026',
     column: 'next',
   },
+  {
+    id: 'feed-relevancy',
+    label: 'Feed Relevancy Algorithm',
+    description: 'Smarter feed ranking based on your interests, interactions, and the communities you follow',
+    status: 'planned',
+    quarter: 'Q3 2026',
+    column: 'next',
+  },
 
   // Later — Q4 2026+
   {
@@ -107,6 +115,14 @@ const ROADMAP_FEATURES: RoadmapFeature[] = [
     id: 'profile-badges',
     label: 'Profile Badges & Achievements',
     description: 'Milestone rewards for activity and contributions',
+    status: 'exploring',
+    quarter: 'Q4 2026+',
+    column: 'later',
+  },
+  {
+    id: 'multilanguage',
+    label: 'Multilanguage Support',
+    description: 'Full UI and content translation for key languages, making PlantsPack accessible to a global community',
     status: 'exploring',
     quarter: 'Q4 2026+',
     column: 'later',
