@@ -63,10 +63,18 @@ const ROADMAP_FEATURES: RoadmapFeature[] = [
   },
   {
     id: 'search',
-    label: 'Search',
-    description: 'Search across users, posts, packs, and hashtags',
+    label: 'Smarter Search',
+    description: 'Better relevance, filters by category, location, and date — plus improved hashtag and user discovery',
     status: 'planned',
     quarter: 'Q3 2026',
+    column: 'next',
+  },
+  {
+    id: 'places-improvements',
+    label: 'Places Improvements',
+    description: 'Richer place profiles, user reviews, photos, opening hours, and better vegan-friendly tagging',
+    status: 'planned',
+    quarter: 'Q2–Q3 2026',
     column: 'next',
   },
 
