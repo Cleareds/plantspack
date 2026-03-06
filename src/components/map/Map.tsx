@@ -479,17 +479,20 @@ export default function Map() {
       setAddressSearchResults([])
       setShowAddressSearchResults(false)
 
-      // Show success message
-      setSuccessMessage(`"${addedName}" has been added successfully!`)
-      setTimeout(() => setSuccessMessage(''), 5000)
-
       // Refresh the places list
       await fetchPlaces()
 
-      // Pan map to the new place (moveend will update mapCenter, putting new place in filteredPlaces)
+      // Update map center directly so filteredPlaces includes the new place immediately
+      setMapCenter(addedCoords)
+
+      // Pan map to the new place
       if (mapRef.current) {
         mapRef.current.setView(addedCoords, 16)
       }
+
+      // Show success message after state updates
+      setSuccessMessage(`"${addedName}" has been added successfully!`)
+      setTimeout(() => setSuccessMessage(''), 5000)
     } catch (error) {
       console.error('Error adding place:', error)
       alert('Failed to add place. Please try again.')
@@ -612,7 +615,7 @@ export default function Map() {
     <div className="flex flex-col h-screen max-h-screen">
       {/* Success Message */}
       {successMessage && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-fade-in">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999]">
           <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
             <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
             <p className="text-sm font-medium text-green-800">{successMessage}</p>
