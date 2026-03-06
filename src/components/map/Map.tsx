@@ -446,13 +446,14 @@ export default function Map() {
     }
 
     try {
-      const { data, error } = await supabase
+      const { data: insertedPlace, error } = await supabase
         .from('places')
         .insert({
           ...newPlace,
           created_by: user.id
         })
-        .select()
+        .select(`*, users(id, username, first_name, last_name), favorite_places(id, user_id)`)
+        .single()
 
       if (error) {
         console.error('Supabase error:', error)
@@ -479,10 +480,10 @@ export default function Map() {
       setAddressSearchResults([])
       setShowAddressSearchResults(false)
 
-      // Refresh the places list
-      await fetchPlaces()
+      // Immediately add the new place to local state — no refetch needed
+      setPlaces(prev => [insertedPlace as Place, ...prev])
 
-      // Update map center directly so filteredPlaces includes the new place immediately
+      // Move search center so the new place is within radius
       setMapCenter(addedCoords)
 
       // Pan map to the new place
@@ -490,7 +491,7 @@ export default function Map() {
         mapRef.current.setView(addedCoords, 16)
       }
 
-      // Show success message after state updates
+      // Show success message
       setSuccessMessage(`"${addedName}" has been added successfully!`)
       setTimeout(() => setSuccessMessage(''), 5000)
     } catch (error) {
