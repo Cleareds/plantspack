@@ -483,13 +483,10 @@ export default function Map() {
       setSuccessMessage(`"${addedName}" has been added successfully!`)
       setTimeout(() => setSuccessMessage(''), 5000)
 
-      // Move search center to new place so it's always within radius
-      setCustomCenter(addedCoords)
-
       // Refresh the places list
       await fetchPlaces()
 
-      // Pan map to the new place
+      // Pan map to the new place (moveend will update mapCenter, putting new place in filteredPlaces)
       if (mapRef.current) {
         mapRef.current.setView(addedCoords, 16)
       }
