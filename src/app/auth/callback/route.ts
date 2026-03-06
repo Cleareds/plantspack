@@ -1,10 +1,13 @@
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { NextRequest, NextResponse } from 'next/server'
+import { EmailOtpType } from '@supabase/supabase-js'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const token_hash = searchParams.get('token_hash')
+  const type = searchParams.get('type') as EmailOtpType | null
   const error_description = searchParams.get('error_description')
   const error_code = searchParams.get('error')
   const next = searchParams.get('next') ?? '/'
@@ -13,6 +16,81 @@ export async function GET(request: NextRequest) {
   if (error_code) {
     console.error('OAuth error:', error_code, error_description)
     return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent(error_description || 'Authentication failed')}`)
+  }
+
+  if (token_hash && type) {
+    const supabase = await createClient()
+    const { data, error } = await supabase.auth.verifyOtp({ token_hash, type })
+
+    if (error) {
+      console.error('Error verifying OTP token_hash:', error)
+      return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent(error.message || 'Authentication failed')}`)
+    }
+
+    if (data.user) {
+      const { data: existingProfile, error: profileError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', data.user.id)
+        .maybeSingle()
+
+      if (!existingProfile && !profileError) {
+        try {
+          const userMetadata = data.user.user_metadata || {}
+          const email = data.user.email || ''
+          const username = userMetadata.preferred_username ||
+                        userMetadata.user_name ||
+                        userMetadata.username ||
+                        email.split('@')[0]
+
+          const adminClient = createAdminClient()
+
+          let finalUsername = username
+          let counter = 1
+          let usernameExists = true
+
+          while (usernameExists) {
+            const { data: existingUser } = await adminClient
+              .from('users')
+              .select('username')
+              .eq('username', finalUsername)
+              .maybeSingle()
+
+            if (!existingUser) {
+              usernameExists = false
+            } else {
+              finalUsername = `${username}${counter}`
+              counter++
+            }
+          }
+
+          const fullName = userMetadata.full_name || userMetadata.name || ''
+          const nameParts = fullName.split(' ')
+
+          const { error: createError } = await adminClient
+            .from('users')
+            .insert({
+              id: data.user.id,
+              email: email,
+              username: finalUsername,
+              first_name: userMetadata.given_name || userMetadata.first_name || nameParts[0] || '',
+              last_name: userMetadata.family_name || userMetadata.last_name || nameParts.slice(1).join(' ') || '',
+              avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
+              bio: '',
+            })
+
+          if (createError) {
+            console.error('Error creating user profile:', createError)
+          } else {
+            console.log('User profile created successfully:', finalUsername)
+          }
+        } catch (profileCreationError) {
+          console.error('Error in profile creation:', profileCreationError)
+        }
+      }
+
+      return NextResponse.redirect(`${origin}${next}`)
+    }
   }
 
   if (code) {
