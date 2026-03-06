@@ -24,7 +24,7 @@ export default function TermsOfService() {
               animal-friendly lifestyle. Our mission is to create a drama-light, supportive community where users can:
             </p>
             <ul className="list-disc pl-6 text-gray-700 mb-4 space-y-2">
-              <li>Share their plant-based journey and experiences</li>
+              <li>Share their journey and experiences</li>
               <li>Discover and share vegan-friendly places and resources</li>
               <li>Connect with like-minded individuals</li>
               <li>Build a positive, supportive community</li>
@@ -47,7 +47,7 @@ export default function TermsOfService() {
             </p>
             <ul className="list-disc pl-6 text-gray-700 mb-4 space-y-2">
               <li>Be respectful and kind to all community members</li>
-              <li>Focus on plant-based and vegan-related content</li>
+              <li>Focus on vegan and ethical content</li>
               <li>Avoid engaging in harassment, hate speech, or bullying</li>
               <li>Not post spam, misinformation, or misleading content</li>
               <li>Respect intellectual property rights</li>

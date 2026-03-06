@@ -31,7 +31,7 @@ export default function Footer() {
                 </Link>
             </div>
             <p className="text-sm text-gray-600 mb-4">
-              The world&apos;s most supportive plant-based social network.
+              The world&apos;s most supportive vegan social network.
               Connect, share, and grow together! 🌱
             </p>
             <div className="flex items-center space-x-1 text-sm text-gray-600">

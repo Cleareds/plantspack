@@ -187,7 +187,7 @@ function PricingContent() {
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Choose a plan that fits your needs and helps us grow the world&apos;s most supportive 
-            plant-based social network. Every contribution makes a difference! 🌿
+            vegan social network. Every contribution makes a difference! 🌿
           </p>
           
           {subscription && (

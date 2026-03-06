@@ -15,8 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PlantsPack - Social Network for Plant-Based Living",
-  description: "Connect with fellow plant-based enthusiasts, discover vegan places, and share your green journey",
+  title: "PlantsPack - Social Network for Vegans and People Exploring Plant-Based Living",
+  description: "Connect with people who share your values, discover vegan places, and live your ethical journey.",
   manifest: '/manifest.json',
   viewport: {
     width: 'device-width',
