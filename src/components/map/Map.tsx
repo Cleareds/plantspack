@@ -483,7 +483,8 @@ export default function Map() {
       // Immediately add the new place to local state — no refetch needed
       setPlaces(prev => [insertedPlace as Place, ...prev])
 
-      // Move search center so the new place is within radius
+      // Clear persisted customCenter so mapCenter (set below) becomes the effective search center
+      setCustomCenter(null)
       setMapCenter(addedCoords)
 
       // Pan map to the new place
