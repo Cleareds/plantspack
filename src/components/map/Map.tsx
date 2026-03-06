@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Plus, MapPin, Heart, X, Search, PawPrint, Menu, ChevronLeft, CheckCircle } from 'lucide-react'
@@ -40,7 +40,6 @@ const MapClickHandler = dynamic(() =>
 )
 
 export default function Map() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const initialLocation = searchParams.get('location')
   const [places, setPlaces] = useState<Place[]>([])
@@ -484,6 +483,9 @@ export default function Map() {
       setSuccessMessage(`"${addedName}" has been added successfully!`)
       setTimeout(() => setSuccessMessage(''), 5000)
 
+      // Move search center to new place so it's always within radius
+      setCustomCenter(addedCoords)
+
       // Refresh the places list
       await fetchPlaces()
 
@@ -491,9 +493,6 @@ export default function Map() {
       if (mapRef.current) {
         mapRef.current.setView(addedCoords, 16)
       }
-
-      // Refresh the page to clear any cache
-      router.refresh()
     } catch (error) {
       console.error('Error adding place:', error)
       alert('Failed to add place. Please try again.')
