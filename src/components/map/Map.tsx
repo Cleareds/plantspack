@@ -460,6 +460,10 @@ export default function Map() {
         throw error
       }
 
+      // Capture before reset
+      const addedName = newPlace.name
+      const addedCoords: [number, number] = [newPlace.latitude, newPlace.longitude]
+
       // Close form and reset
       setShowAddForm(false)
       setNewPlace({
@@ -477,11 +481,16 @@ export default function Map() {
       setShowAddressSearchResults(false)
 
       // Show success message
-      setSuccessMessage(`✅ "${newPlace.name}" has been added successfully!`)
+      setSuccessMessage(`"${addedName}" has been added successfully!`)
       setTimeout(() => setSuccessMessage(''), 5000)
 
       // Refresh the places list
       await fetchPlaces()
+
+      // Pan map to the new place
+      if (mapRef.current) {
+        mapRef.current.setView(addedCoords, 16)
+      }
 
       // Refresh the page to clear any cache
       router.refresh()
@@ -896,11 +905,11 @@ export default function Map() {
                           }}
                           className={`p-1 rounded ${
                             place.favorite_places.some(fav => fav.user_id === user.id)
-                              ? 'text-red-600'
-                              : 'text-gray-400 hover:text-red-600'
+                              ? 'text-red-500'
+                              : 'text-gray-300 hover:text-red-500'
                           }`}
                         >
-                          <Heart className="h-3 w-3" />
+                          <Heart className={`h-3 w-3 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
                         </button>
                       )}
                     </div>
@@ -1052,11 +1061,11 @@ export default function Map() {
                             onClick={() => toggleFavorite(place.id)}
                             className={`p-1 rounded ${
                               place.favorite_places.some(fav => fav.user_id === user.id)
-                                ? 'text-red-600'
-                                : 'text-gray-400 hover:text-red-600'
+                                ? 'text-red-500'
+                                : 'text-gray-300 hover:text-red-500'
                             }`}
                           >
-                            <Heart className="h-4 w-4" />
+                            <Heart className={`h-4 w-4 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
                           </button>
                         )}
                         {user && user.id === place.created_by && (

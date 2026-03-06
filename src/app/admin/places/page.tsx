@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import {
   Search,
@@ -13,7 +14,8 @@ import {
   MapPin,
   Star,
   Plus,
-  X
+  X,
+  CheckCircle
 } from 'lucide-react'
 
 interface Place {
@@ -51,6 +53,7 @@ export default function PlacesManagement() {
     category: 'restaurant'
   })
   const [creating, setCreating] = useState(false)
+  const [successPlace, setSuccessPlace] = useState<{ name: string; lat: number; lng: number } | null>(null)
 
   const loadPlaces = useCallback(async () => {
     setLoading(true)
@@ -141,6 +144,8 @@ export default function PlacesManagement() {
         throw new Error(data.error || 'Failed to create place')
       }
 
+      const placeName = createForm.name
+
       // Reset form and close modal
       setCreateForm({
         name: '',
@@ -153,7 +158,8 @@ export default function PlacesManagement() {
       setShowCreateModal(false)
 
       loadPlaces()
-      alert('Place created successfully!')
+      setSuccessPlace({ name: placeName, lat, lng })
+      setTimeout(() => setSuccessPlace(null), 6000)
     } catch (error) {
       console.error('Error creating place:', error)
       alert(error instanceof Error ? error.message : 'Failed to create place')
@@ -166,6 +172,27 @@ export default function PlacesManagement() {
 
   return (
     <div className="space-y-6">
+      {/* Success toast */}
+      {successPlace && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999]">
+          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+            <p className="text-sm font-medium text-green-800">
+              &ldquo;{successPlace.name}&rdquo; added successfully!{' '}
+              <Link
+                href={`/map`}
+                className="underline text-green-700 hover:text-green-900"
+              >
+                View on map
+              </Link>
+            </p>
+            <button onClick={() => setSuccessPlace(null)} className="text-green-500 hover:text-green-700">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Places Management</h1>
