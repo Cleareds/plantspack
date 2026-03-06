@@ -427,6 +427,14 @@ function PricingContent() {
                 </tr>
                 <tr>
                     <td className="py-4 pr-4 font-medium flex items-center space-x-2">
+                        <span>Vote for new features</span>
+                    </td>
+                    <td className="text-center py-4 px-4">❌</td>
+                    <td className="text-center py-4 px-4">✅</td>
+                    <td className="text-center py-4 px-4">✅</td>
+                </tr>
+                <tr>
+                    <td className="py-4 pr-4 font-medium flex items-center space-x-2">
                         <span>Community chat rooms</span>
                     </td>
                     <td className="text-center py-4 px-4">❌</td>

@@ -120,7 +120,20 @@ export const usePostStore = create<PostState>((set, get) => ({
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching posts:', error);
+        throw error;
+      }
+
+      console.log('Fetched posts data:', data?.length, 'posts');
+      if (data && data.length > 0) {
+        console.log('First post sample:', {
+          id: data[0].id,
+          content: data[0].content?.substring(0, 50),
+          user: data[0].user,
+          hasUser: !!data[0].user,
+        });
+      }
 
       // Transform data to match PostWithUser type
       const posts: PostWithUser[] = (data || []).map((post: any) => ({
@@ -165,7 +178,8 @@ export const usePostStore = create<PostState>((set, get) => ({
   },
 
   setSearchTerm: (term) => {
-    set({ searchTerm: term, page: 0, posts: [] });
+    set({ searchTerm: term, page: 0 });
+    // Don't clear posts immediately to avoid flickering
     get().fetchPosts(true);
   },
 

@@ -17,7 +17,8 @@
       "Bash(git restore:*)",
       "Bash(pkill:*)",
       "Bash(npx expo start:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(psql:*)"
     ]
   }
 }

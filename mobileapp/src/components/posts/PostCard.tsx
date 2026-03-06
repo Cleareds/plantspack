@@ -124,20 +124,20 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
     router.push(`/profile/${post.user.username}`);
   };
 
+  console.log('PostCard rendering, post ID:', post.id);
+
   return (
     <View style={styles.container}>
       {/* Header */}
-      <TouchableOpacity
-        style={styles.header}
-        onPress={handleUserPress}
-        activeOpacity={0.7}
-      >
-        <Avatar
-          source={post.user.avatar_url ? { uri: post.user.avatar_url } : undefined}
-          size={44}
-        />
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleUserPress} activeOpacity={0.7}>
+          <Avatar
+            source={post.user.avatar_url ? { uri: post.user.avatar_url } : undefined}
+            size={44}
+          />
+        </TouchableOpacity>
 
-        <View style={styles.userInfo}>
+        <TouchableOpacity style={styles.userInfo} onPress={handleUserPress} activeOpacity={0.7}>
           <View style={styles.nameRow}>
             <Text style={styles.userName}>
               {post.user.first_name || post.user.username}
@@ -148,7 +148,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
           <Text style={styles.timestamp}>
             {formatRelativeTime(post.created_at)}
           </Text>
-        </View>
+        </TouchableOpacity>
 
         {isOwnPost && (
           <TouchableOpacity
@@ -159,36 +159,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onDelete }) => {
             <Ionicons name="trash-outline" size={20} color={colors.danger} />
           </TouchableOpacity>
         )}
-      </TouchableOpacity>
+      </View>
+
+      <Text style={{ color: 'red', fontSize: 30, fontWeight: 'bold', backgroundColor: 'yellow', padding: 10 }}>
+        RED TEXT ON YELLOW - POST {post.id.slice(0, 8)}
+      </Text>
 
       {/* Content */}
-      <TouchableOpacity onPress={handleComment} activeOpacity={0.95}>
-        <Text style={styles.content}>{post.content}</Text>
-
-        {/* Images */}
-        {(post.images || post.image_urls) && (
-          <View style={styles.imagesContainer}>
-            {(post.images || post.image_urls || []).slice(0, 4).map((imageUrl, index) => (
-              <Image
-                key={index}
-                source={{ uri: imageUrl }}
-                style={[
-                  styles.image,
-                  (post.images || post.image_urls || []).length === 1 && styles.singleImage,
-                ]}
-                resizeMode="cover"
-              />
-            ))}
-            {(post.images || post.image_urls || []).length > 4 && (
-              <View style={styles.moreImagesOverlay}>
-                <Text style={styles.moreImagesText}>
-                  +{(post.images || post.image_urls || []).length - 4}
-                </Text>
-              </View>
-            )}
-          </View>
-        )}
-      </TouchableOpacity>
+      <View style={styles.contentContainer}>
+        <Text style={styles.content}>{post.content || 'NO CONTENT'}</Text>
+      </View>
 
       {/* Actions */}
       <View style={styles.actions}>
@@ -231,6 +211,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[4],
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
+    minHeight: 100,
   },
   header: {
     flexDirection: 'row',
@@ -264,11 +245,17 @@ const styles = StyleSheet.create({
   deleteButton: {
     padding: spacing[2],
   },
+  contentContainer: {
+    width: '100%',
+    backgroundColor: '#FFF9C4', // Temporary yellow background to make it visible
+    padding: spacing[2],
+    marginBottom: spacing[2],
+  },
   content: {
     fontSize: typography.sizes.base,
     lineHeight: typography.sizes.base * 1.5,
-    color: colors.text.primary,
-    marginBottom: spacing[3],
+    color: '#000000', // Force black text
+    fontWeight: typography.weights.medium,
   },
   imagesContainer: {
     flexDirection: 'row',

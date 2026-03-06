@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import {
   View,
   FlatList,
@@ -12,6 +12,7 @@ import { useAuthStore } from '@/src/store/authStore';
 import { usePostStore } from '@/src/store/postStore';
 import { LoadingSpinner } from '@/src/components/ui/LoadingSpinner';
 import { PostCard } from '@/src/components/posts/PostCard';
+import { PostCardSimple } from '@/src/components/posts/PostCardSimple';
 import { CreatePostModal } from '@/src/components/posts/CreatePostModal';
 import { colors, spacing } from '@/src/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,10 +37,26 @@ export default function FeedScreen() {
   } = usePostStore();
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [localSearchTerm, setLocalSearchTerm] = useState('');
+  const searchInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
+    console.log('Feed screen mounted, fetching posts...');
     fetchPosts(true);
   }, []);
+
+  useEffect(() => {
+    console.log('Posts updated:', {
+      count: posts.length,
+      loading,
+      hasMore,
+      firstPost: posts[0] ? {
+        id: posts[0].id,
+        content: posts[0].content?.substring(0, 30),
+        hasUser: !!posts[0].user,
+        username: posts[0].user?.username,
+      } : null
+    });
+  }, [posts, loading]);
 
   useEffect(() => {
     if (!user) return;
@@ -62,43 +79,20 @@ export default function FeedScreen() {
     }
   }, [hasMore, loading]);
 
-  // Debounce search input
+  // Debounce search input WITHOUT triggering re-renders
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSearchTerm(localSearchTerm);
-    }, 300);
+      if (localSearchTerm.length >= 3 || localSearchTerm.length === 0) {
+        if (localSearchTerm !== searchTerm) {
+          setSearchTerm(localSearchTerm);
+        }
+      }
+    }, 800); // Longer delay to reduce re-renders
     return () => clearTimeout(timer);
   }, [localSearchTerm]);
 
-  const renderHeader = () => (
+  const renderHeader = useCallback(() => (
     <View style={styles.header}>
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={20}
-          color={colors.gray[400]}
-          style={styles.searchIcon}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search posts..."
-          placeholderTextColor={colors.gray[400]}
-          value={localSearchTerm}
-          onChangeText={setLocalSearchTerm}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        {localSearchTerm.length > 0 && (
-          <TouchableOpacity
-            onPress={() => setLocalSearchTerm('')}
-            style={styles.clearButton}
-          >
-            <Ionicons name="close-circle" size={20} color={colors.gray[400]} />
-          </TouchableOpacity>
-        )}
-      </View>
-
       {/* Feed Type Selector */}
       <View style={styles.feedTypeSelector}>
         <TouchableOpacity
@@ -149,7 +143,7 @@ export default function FeedScreen() {
         </TouchableOpacity>
       )}
     </View>
-  );
+  ), [localSearchTerm, feedType, sortBy, newPostsCount, loadNewPosts, setSortBy, setFeedType]);
 
   const renderFooter = () => {
     if (!hasMore) return null;
@@ -172,15 +166,49 @@ export default function FeedScreen() {
     );
   };
 
-  if (loading && posts.length === 0) {
+  // Only show full-screen loader on initial load, not during search
+  if (loading && posts.length === 0 && !searchTerm) {
     return <LoadingSpinner fullScreen />;
   }
 
   return (
     <View style={styles.container}>
+      {/* Search Bar - Outside FlatList to prevent keyboard closing */}
+      <View style={styles.searchContainer}>
+        <Ionicons
+          name="search"
+          size={20}
+          color={colors.gray[400]}
+          style={styles.searchIcon}
+        />
+        <TextInput
+          ref={searchInputRef}
+          style={styles.searchInput}
+          placeholder="Search posts..."
+          placeholderTextColor={colors.gray[400]}
+          value={localSearchTerm}
+          onChangeText={setLocalSearchTerm}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="search"
+          blurOnSubmit={false}
+        />
+        {localSearchTerm.length > 0 && (
+          <TouchableOpacity
+            onPress={() => setLocalSearchTerm('')}
+            style={styles.clearButton}
+          >
+            <Ionicons name="close-circle" size={20} color={colors.gray[400]} />
+          </TouchableOpacity>
+        )}
+      </View>
+
       <FlatList
         data={posts}
-        renderItem={({ item }) => <PostCard post={item} />}
+        renderItem={({ item }) => {
+          console.log('Rendering PostCard for post:', item.id, 'content:', item.content?.substring(0, 20));
+          return <PostCardSimple post={item} />;
+        }}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}
@@ -189,12 +217,13 @@ export default function FeedScreen() {
         onEndReachedThreshold={0.5}
         refreshControl={
           <RefreshControl
-            refreshing={loading && posts.length > 0}
+            refreshing={loading && posts.length > 0 && !searchTerm}
             onRefresh={handleRefresh}
             tintColor={colors.primary[500]}
           />
         }
-        contentContainerStyle={posts.length === 0 ? styles.emptyList : undefined}
+        contentContainerStyle={posts.length === 0 ? styles.emptyList : { flexGrow: 1 }}
+        style={{ flex: 1 }}
       />
 
       {/* Floating Action Button */}
@@ -222,20 +251,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background.secondary,
   },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.background.primary,
+    paddingHorizontal: spacing[4],
+    paddingVertical: spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border.light,
+  },
   header: {
     backgroundColor: colors.background.primary,
     paddingVertical: spacing[3],
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.background.secondary,
-    borderRadius: 8,
-    marginHorizontal: spacing[4],
-    marginBottom: spacing[3],
-    paddingHorizontal: spacing[3],
   },
   searchIcon: {
     marginRight: spacing[2],
@@ -243,11 +272,15 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     paddingVertical: spacing[2],
+    paddingHorizontal: spacing[3],
     fontSize: 14,
     color: colors.text.primary,
+    backgroundColor: colors.background.secondary,
+    borderRadius: 8,
   },
   clearButton: {
-    padding: spacing[1],
+    padding: spacing[2],
+    marginLeft: spacing[2],
   },
   feedTypeSelector: {
     flexDirection: 'row',
