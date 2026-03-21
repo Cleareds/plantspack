@@ -292,8 +292,8 @@ export default function ProfileSettingsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface-variant">Loading...</p>
         </div>
       </div>
     )
@@ -314,8 +314,8 @@ export default function ProfileSettingsPage() {
         {/* Main Content */}
         <div className="lg:col-span-3">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl font-bold text-on-surface">Settings</h1>
+            <p className="text-on-surface-variant mt-1">
               Manage your account settings and preferences.
             </p>
           </div>
@@ -338,17 +338,17 @@ export default function ProfileSettingsPage() {
 
           <div className="space-y-6">
             {/* Notifications Settings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Bell className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
+                <Bell className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Notifications</h2>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900">Enable Notifications</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-medium text-on-surface">Enable Notifications</p>
+                    <p className="text-sm text-outline">
                       Get notified about likes, comments, follows, and mentions
                     </p>
                   </div>
@@ -360,14 +360,14 @@ export default function ProfileSettingsPage() {
                       onChange={(e) => handleToggleNotifications(e.target.checked)}
                       disabled={savingNotifications}
                     />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    <div className="w-11 h-6 bg-surface-container peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
 
-                <div className="pt-3 border-t border-gray-200">
+                <div className="pt-3 border-t border-outline-variant/15">
                   <a
                     href={`/profile/${username}/notifications`}
-                    className="inline-flex items-center gap-2 text-sm text-green-600 hover:text-green-700 font-medium"
+                    className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary font-medium"
                   >
                     <Settings className="h-4 w-4" />
                     Advanced notification settings
@@ -377,42 +377,42 @@ export default function ProfileSettingsPage() {
             </div>
 
             {/* Privacy Settings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Lock className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Privacy</h2>
+                <Lock className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Privacy</h2>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Private Profile</p>
-                    <p className="text-sm text-gray-500">Only followers can see your posts</p>
+                    <p className="font-medium text-on-surface">Private Profile</p>
+                    <p className="text-sm text-outline">Only followers can see your posts</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    <div className="w-11 h-6 bg-surface-container peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Show Activity Status</p>
-                    <p className="text-sm text-gray-500">Let others see when you&apos;re online</p>
+                    <p className="font-medium text-on-surface">Show Activity Status</p>
+                    <p className="text-sm text-outline">Let others see when you&apos;re online</p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                    <div className="w-11 h-6 bg-surface-container peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                   </label>
                 </div>
               </div>
             </div>
 
             {/* Language Settings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Globe className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Language & Region</h2>
+                <Globe className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Language & Region</h2>
               </div>
 
               <div className="space-y-4">
@@ -425,11 +425,11 @@ export default function ProfileSettingsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-2">
                     Language
                   </label>
                   <select
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                     disabled
                   >
                     <option>English</option>
@@ -438,16 +438,16 @@ export default function ProfileSettingsPage() {
                     <option disabled>French (Coming Soon)</option>
                     <option disabled>German (Coming Soon)</option>
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">Language selection will be enabled once translations are complete</p>
+                  <p className="text-xs text-outline mt-1">Language selection will be enabled once translations are complete</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-2">
                     Time Zone
                   </label>
                   <select
                     disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed opacity-60"
+                    className="w-full px-4 py-2 ghost-border rounded-md bg-surface-container-low cursor-not-allowed opacity-60"
                   >
                     <option>UTC-08:00 Pacific Time (US & Canada)</option>
                     <option>UTC-05:00 Eastern Time (US & Canada)</option>
@@ -455,32 +455,32 @@ export default function ProfileSettingsPage() {
                     <option>UTC+01:00 Paris, Berlin</option>
                     <option>UTC+02:00 Kyiv, Athens, Istanbul</option>
                   </select>
-                  <p className="text-xs text-gray-500 mt-1">Timezone selection coming soon</p>
+                  <p className="text-xs text-outline mt-1">Timezone selection coming soon</p>
                 </div>
               </div>
             </div>
 
             {/* Blocked & Muted Users */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Ban className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Blocked & Muted Users</h2>
+                <Ban className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Blocked & Muted Users</h2>
               </div>
 
               <div className="space-y-6">
                 {/* Blocked Users */}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">Blocked Users ({blockedUsers.length})</h3>
+                  <h3 className="text-sm font-medium text-on-surface mb-3">Blocked Users ({blockedUsers.length})</h3>
                   {loadingBlocked ? (
-                    <div className="text-sm text-gray-500">Loading...</div>
+                    <div className="text-sm text-outline">Loading...</div>
                   ) : blockedUsers.length === 0 ? (
-                    <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
+                    <div className="text-sm text-outline bg-surface-container-low rounded-lg p-4">
                       You haven&apos;t blocked anyone yet.
                     </div>
                   ) : (
                     <div className="space-y-2">
                       {blockedUsers.map((block) => (
-                        <div key={block.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div key={block.id} className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
                           <div className="flex items-center space-x-3">
                             {block.blocked_user?.avatar_url ? (
                               <img
@@ -489,22 +489,22 @@ export default function ProfileSettingsPage() {
                                 className="h-10 w-10 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <User className="h-5 w-5 text-gray-500" />
+                              <div className="h-10 w-10 rounded-full bg-surface-container flex items-center justify-center">
+                                <User className="h-5 w-5 text-outline" />
                               </div>
                             )}
                             <div>
-                              <p className="font-medium text-gray-900">
+                              <p className="font-medium text-on-surface">
                                 {block.blocked_user?.first_name && block.blocked_user?.last_name
                                   ? `${block.blocked_user.first_name} ${block.blocked_user.last_name}`
                                   : block.blocked_user?.username}
                               </p>
-                              <p className="text-sm text-gray-500">@{block.blocked_user?.username}</p>
+                              <p className="text-sm text-outline">@{block.blocked_user?.username}</p>
                             </div>
                           </div>
                           <button
                             onClick={() => handleUnblock(block.blocked_id)}
-                            className="px-3 py-1 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                            className="px-3 py-1 text-sm font-medium text-error hover:text-error hover:bg-error/5 rounded-md transition-colors"
                           >
                             Unblock
                           </button>
@@ -516,17 +516,17 @@ export default function ProfileSettingsPage() {
 
                 {/* Muted Users */}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-3">Muted Users ({mutedUsers.length})</h3>
+                  <h3 className="text-sm font-medium text-on-surface mb-3">Muted Users ({mutedUsers.length})</h3>
                   {loadingMuted ? (
-                    <div className="text-sm text-gray-500">Loading...</div>
+                    <div className="text-sm text-outline">Loading...</div>
                   ) : mutedUsers.length === 0 ? (
-                    <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
+                    <div className="text-sm text-outline bg-surface-container-low rounded-lg p-4">
                       You haven&apos;t muted anyone yet.
                     </div>
                   ) : (
                     <div className="space-y-2">
                       {mutedUsers.map((mute) => (
-                        <div key={mute.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div key={mute.id} className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
                           <div className="flex items-center space-x-3">
                             {mute.muted_user?.avatar_url ? (
                               <img
@@ -535,22 +535,22 @@ export default function ProfileSettingsPage() {
                                 className="h-10 w-10 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <User className="h-5 w-5 text-gray-500" />
+                              <div className="h-10 w-10 rounded-full bg-surface-container flex items-center justify-center">
+                                <User className="h-5 w-5 text-outline" />
                               </div>
                             )}
                             <div>
-                              <p className="font-medium text-gray-900">
+                              <p className="font-medium text-on-surface">
                                 {mute.muted_user?.first_name && mute.muted_user?.last_name
                                   ? `${mute.muted_user.first_name} ${mute.muted_user.last_name}`
                                   : mute.muted_user?.username}
                               </p>
-                              <p className="text-sm text-gray-500">@{mute.muted_user?.username}</p>
+                              <p className="text-sm text-outline">@{mute.muted_user?.username}</p>
                             </div>
                           </div>
                           <button
                             onClick={() => handleUnmute(mute.muted_id)}
-                            className="px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                            className="px-3 py-1 text-sm font-medium text-on-surface-variant hover:text-on-surface-variant hover:bg-surface-container rounded-md transition-colors"
                           >
                             Unmute
                           </button>
@@ -563,10 +563,10 @@ export default function ProfileSettingsPage() {
             </div>
 
             {/* GDPR & Privacy Controls */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Shield className="h-5 w-5 text-green-600" />
-                <h2 className="text-lg font-semibold text-gray-900">Privacy & Data</h2>
+                <Shield className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Privacy & Data</h2>
               </div>
 
               <div className="space-y-4">
@@ -577,14 +577,14 @@ export default function ProfileSettingsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-2">Export Your Data</h3>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <h3 className="text-sm font-medium text-on-surface mb-2">Export Your Data</h3>
+                  <p className="text-sm text-on-surface-variant mb-3">
                     Download all your data including posts, comments, likes, and profile information in JSON format.
                   </p>
                   <button
                     onClick={handleExportData}
                     disabled={exporting}
-                    className="inline-flex items-center px-4 py-2 border border-green-300 rounded-md text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center px-4 py-2 border border-primary/15 rounded-md text-sm font-medium text-primary bg-surface-container-low hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Download className="h-4 w-4 mr-2" />
                     {exporting ? 'Exporting...' : 'Export My Data'}
@@ -594,32 +594,32 @@ export default function ProfileSettingsPage() {
             </div>
 
             {/* Danger Zone */}
-            <div className="bg-white rounded-lg shadow-sm border border-red-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-error/15 p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <Trash2 className="h-5 w-5 text-red-600" />
-                <h2 className="text-lg font-semibold text-red-900">Danger Zone</h2>
+                <Trash2 className="h-5 w-5 text-error" />
+                <h2 className="text-lg font-semibold text-error">Danger Zone</h2>
               </div>
 
               <div className="space-y-4">
                 {!showDeleteConfirm ? (
                   <div>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p className="text-sm text-on-surface-variant mb-3">
                       Once you delete your account, there is no going back. All your data will be permanently deleted.
                     </p>
                     <button
                       onClick={() => setShowDeleteConfirm(true)}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors"
+                      className="px-4 py-2 bg-error hover:opacity-90 text-white rounded-md font-medium transition-colors"
                     >
                       Delete Account
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleDeleteAccount} className="space-y-4">
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                      <p className="text-sm text-red-800 font-semibold mb-2">
+                    <div className="bg-error/5 border border-error/15 rounded-lg p-4">
+                      <p className="text-sm text-error font-semibold mb-2">
                         ⚠️ Warning: This action is permanent and cannot be undone!
                       </p>
-                      <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
+                      <ul className="text-sm text-error/80 space-y-1 list-disc list-inside">
                         <li>All your posts will be soft-deleted</li>
                         <li>Your comments, likes, and interactions will be removed</li>
                         <li>Your profile will be anonymized</li>
@@ -628,7 +628,7 @@ export default function ProfileSettingsPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-on-surface-variant mb-2">
                         Enter your password to confirm deletion:
                       </label>
                       <input
@@ -637,7 +637,7 @@ export default function ProfileSettingsPage() {
                         onChange={(e) => setDeletePassword(e.target.value)}
                         placeholder="Your password"
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                        className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-error/40 focus:outline-none"
                       />
                     </div>
 
@@ -645,7 +645,7 @@ export default function ProfileSettingsPage() {
                       <button
                         type="submit"
                         disabled={deleting}
-                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-error hover:opacity-90 text-white rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
                       </button>
@@ -655,7 +655,7 @@ export default function ProfileSettingsPage() {
                           setShowDeleteConfirm(false)
                           setDeletePassword('')
                         }}
-                        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                        className="px-4 py-2 ghost-border rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
                       >
                         Cancel
                       </button>

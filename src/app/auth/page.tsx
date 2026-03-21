@@ -46,8 +46,8 @@ function AuthContent() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Redirecting...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface-variant">Redirecting...</p>
         </div>
       </div>
     )
@@ -55,16 +55,16 @@ function AuthContent() {
 
   // Show forms immediately, don't wait for auth to initialize
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
       <div className="w-full max-w-md">
         {globalError && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-800">{globalError}</p>
+          <div className="mb-4 p-4 bg-error/5 border border-error/15 rounded-lg">
+            <p className="text-sm text-error">{globalError}</p>
           </div>
         )}
         {globalSuccess && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800">{globalSuccess}</p>
+          <div className="mb-4 p-4 bg-surface-container-low border border-primary/15 rounded-lg">
+            <p className="text-sm text-primary">{globalSuccess}</p>
           </div>
         )}
         {isLogin ? (
@@ -81,7 +81,7 @@ export default function AuthPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     }>
       <AuthContent />

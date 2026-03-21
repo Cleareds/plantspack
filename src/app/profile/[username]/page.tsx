@@ -248,8 +248,8 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface-variant">Loading profile...</p>
         </div>
       </div>
     )
@@ -259,7 +259,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Profile not found</p>
+          <p className="text-on-surface-variant">Profile not found</p>
         </div>
       </div>
     )
@@ -280,9 +280,9 @@ export default function ProfilePage() {
         {/* Main Content */}
         <div className={isOwnProfile ? "lg:col-span-3" : "lg:col-span-4"}>
           {/* Profile Header */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-6">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-3 mb-6">
         <div className="flex items-start space-x-6 mb-4">
-          <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center overflow-hidden flex-shrink-0 avatar-container">
+          <div className="h-20 w-20 rounded-full bg-surface-container-low flex items-center justify-center overflow-hidden flex-shrink-0 avatar-container">
             {profile.avatar_url ? (
               <img
                 src={profile.avatar_url}
@@ -290,13 +290,13 @@ export default function ProfilePage() {
                 className="h-20 w-20 object-cover rounded-full"
               />
             ) : (
-              <User className="h-12 w-12 text-green-600" />
+              <User className="h-12 w-12 text-primary" />
             )}
           </div>
 
           <div className="flex-1">
             <div className="flex items-center space-x-3 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-on-surface">
                 {profile.first_name && profile.last_name
                   ? `${profile.first_name} ${profile.last_name}`
                   : profile.username}
@@ -320,10 +320,10 @@ export default function ProfilePage() {
                 </div>
               )}
             </div>
-            <p className="text-gray-600 mb-2">@{profile.username}</p>
+            <p className="text-on-surface-variant mb-2">@{profile.username}</p>
 
             {profile.bio && (
-              <p className="text-gray-700 mb-4">{profile.bio}</p>
+              <p className="text-on-surface-variant mb-4">{profile.bio}</p>
             )}
 
             {/* Owner Badges */}
@@ -340,7 +340,7 @@ export default function ProfilePage() {
               </div>
             )}
 
-            <div className="flex items-center space-x-4 text-sm text-gray-500">
+            <div className="flex items-center space-x-4 text-sm text-outline">
               <div className="flex items-center space-x-1">
                 <Calendar className="h-4 w-4" />
                 <span>Joined {formatDate(profile.created_at)}</span>
@@ -350,7 +350,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Compact Stats */}
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="pt-4 border-t border-outline-variant/15 flex justify-end">
           <UserStatsCompact userId={profile.id} />
         </div>
       </div>
@@ -360,13 +360,13 @@ export default function ProfilePage() {
         {/* Posts */}
         <div className="lg:col-span-2">
           <div className="mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-on-surface">
               Posts ({posts?.length || 0})
             </h2>
           </div>
 
           {!posts || posts.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center text-gray-500">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
               <p>No public posts yet.</p>
             </div>
           ) : (
@@ -388,22 +388,22 @@ export default function ProfilePage() {
           <ProfileFollowers userId={profile.id} />
           
           {/* My Added Places */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-200">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+            <div className="p-4 border-b border-outline-variant/15">
               <div className="flex items-center space-x-2">
-                <MapPin className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-gray-900">
+                <MapPin className="h-5 w-5 text-primary" />
+                <h3 className="font-semibold text-on-surface">
                   My Added Places ({addedPlaces?.length || 0})
                 </h3>
               </div>
             </div>
             
             {!addedPlaces || addedPlaces.length === 0 ? (
-              <div className="p-4 text-center text-gray-500 text-sm">
+              <div className="p-4 text-center text-outline text-sm">
                 <p>No places added yet.</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-outline-variant/15">
                 {addedPlaces.slice(0, 5).map((place) => (
                   <div key={place.id} className="p-4">
                     <div className="flex items-start justify-between">
@@ -411,7 +411,7 @@ export default function ProfilePage() {
                         <div className="flex items-center space-x-2 mb-1">
                           <Link
                             href={`/place/${place.id}`}
-                            className="font-medium text-gray-900 text-sm truncate hover:text-green-600 transition-colors"
+                            className="font-medium text-on-surface text-sm truncate hover:text-primary transition-colors"
                           >
                             {place.name}
                           </Link>
@@ -420,7 +420,7 @@ export default function ProfilePage() {
                           )}
                         </div>
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
+                          <span className="bg-surface-container-low text-on-surface px-2 py-0.5 rounded text-xs capitalize">
                             {place.category}
                           </span>
                           {place.is_pet_friendly && (
@@ -430,9 +430,9 @@ export default function ProfilePage() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-gray-600 mb-2">{place.address}</p>
+                        <p className="text-xs text-on-surface-variant mb-2">{place.address}</p>
                         {place.description && (
-                          <p className="text-xs text-gray-500 line-clamp-2">{place.description}</p>
+                          <p className="text-xs text-outline line-clamp-2">{place.description}</p>
                         )}
                       </div>
                       <a
@@ -446,7 +446,7 @@ export default function ProfilePage() {
                       </a>
                     </div>
                     {place.website && (
-                      <div className="mt-2 pt-2 border-t border-gray-100">
+                      <div className="mt-2 pt-2 border-t border-outline-variant/15">
                         <a
                           href={place.website}
                           target="_blank"
@@ -462,7 +462,7 @@ export default function ProfilePage() {
                 ))}
                 {addedPlaces.length > 5 && (
                   <div className="p-4 text-center">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-outline">
                       +{addedPlaces.length - 5} more places
                     </span>
                   </div>
@@ -472,22 +472,22 @@ export default function ProfilePage() {
           </div>
 
           {/* My Favorite Places */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-4 border-b border-gray-200">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+            <div className="p-4 border-b border-outline-variant/15">
               <div className="flex items-center space-x-2">
                 <Heart className="h-5 w-5 text-red-600" />
-                <h3 className="font-semibold text-gray-900">
+                <h3 className="font-semibold text-on-surface">
                   My Favorite Places ({favoritePlaces?.length || 0})
                 </h3>
               </div>
             </div>
             
             {!favoritePlaces || favoritePlaces.length === 0 ? (
-              <div className="p-4 text-center text-gray-500 text-sm">
+              <div className="p-4 text-center text-outline text-sm">
                 <p>No favorite places yet.</p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-outline-variant/15">
                 {favoritePlaces.slice(0, 5).map((favorite) => {
                   const place = favorite.places
                   if (!place) return null
@@ -499,7 +499,7 @@ export default function ProfilePage() {
                           <div className="flex items-center space-x-2 mb-1">
                             <Link
                               href={`/place/${place.id}`}
-                              className="font-medium text-gray-900 text-sm truncate hover:text-green-600 transition-colors"
+                              className="font-medium text-on-surface text-sm truncate hover:text-primary transition-colors"
                             >
                               {place.name}
                             </Link>
@@ -508,7 +508,7 @@ export default function ProfilePage() {
                             )}
                           </div>
                           <div className="flex items-center space-x-2 mb-2">
-                            <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
+                            <span className="bg-surface-container-low text-on-surface px-2 py-0.5 rounded text-xs capitalize">
                               {place.category}
                             </span>
                             {place.is_pet_friendly && (
@@ -518,9 +518,9 @@ export default function ProfilePage() {
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-gray-600 mb-2">{place.address}</p>
+                          <p className="text-xs text-on-surface-variant mb-2">{place.address}</p>
                           {place.description && (
-                            <p className="text-xs text-gray-500 line-clamp-2">{place.description}</p>
+                            <p className="text-xs text-outline line-clamp-2">{place.description}</p>
                           )}
                         </div>
                         <a
@@ -534,7 +534,7 @@ export default function ProfilePage() {
                         </a>
                       </div>
                       {place.website && (
-                        <div className="mt-2 pt-2 border-t border-gray-100">
+                        <div className="mt-2 pt-2 border-t border-outline-variant/15">
                           <a
                             href={place.website}
                             target="_blank"
@@ -551,7 +551,7 @@ export default function ProfilePage() {
                 })}
                 {favoritePlaces.length > 5 && (
                   <div className="p-4 text-center">
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-outline">
                       +{favoritePlaces.length - 5} more favorites
                     </span>
                   </div>
@@ -562,27 +562,27 @@ export default function ProfilePage() {
 
           {/* My Packs */}
           {userPacks.length > 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 border-b border-gray-200">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+              <div className="p-4 border-b border-outline-variant/15">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Package className="h-5 w-5 text-green-600" />
-                    <h3 className="font-semibold text-gray-900">
+                    <Package className="h-5 w-5 text-primary" />
+                    <h3 className="font-semibold text-on-surface">
                       Packs ({userPacks.length})
                     </h3>
                   </div>
-                  <Link href="/packs" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                  <Link href="/packs" className="text-sm text-primary hover:text-primary font-medium">
                     View all
                   </Link>
                 </div>
               </div>
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-outline-variant/15">
                 {userPacks.slice(0, 5).map((pack: any) => (
-                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-gray-50 transition-colors">
+                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-surface-container-low transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-gray-900 text-sm truncate">{pack.title}</h4>
+                          <h4 className="font-medium text-on-surface text-sm truncate">{pack.title}</h4>
                           {!pack.is_published && (
                             <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs">
                               Draft
@@ -590,9 +590,9 @@ export default function ProfilePage() {
                           )}
                         </div>
                         {pack.description && (
-                          <p className="text-xs text-gray-500 line-clamp-2">{pack.description}</p>
+                          <p className="text-xs text-outline line-clamp-2">{pack.description}</p>
                         )}
-                        <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                        <div className="flex items-center gap-3 mt-1 text-xs text-outline">
                           <span>{pack.member_count || 0} members</span>
                           <span>{pack.post_count || 0} posts</span>
                         </div>
@@ -602,7 +602,7 @@ export default function ProfilePage() {
                 ))}
                 {userPacks.length > 5 && (
                   <div className="p-4 text-center">
-                    <Link href="/packs" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                    <Link href="/packs" className="text-sm text-primary hover:text-primary font-medium">
                       +{userPacks.length - 5} more packs
                     </Link>
                   </div>
@@ -613,27 +613,27 @@ export default function ProfilePage() {
 
           {/* Joined Packs */}
           {joinedPacks.length > 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 border-b border-gray-200">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+              <div className="p-4 border-b border-outline-variant/15">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <Package className="h-5 w-5 text-blue-600" />
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-on-surface">
                       Joined Packs ({joinedPacks.length})
                     </h3>
                   </div>
-                  <Link href="/packs" className="text-sm text-green-600 hover:text-green-700 font-medium">
+                  <Link href="/packs" className="text-sm text-primary hover:text-primary font-medium">
                     View all
                   </Link>
                 </div>
               </div>
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-outline-variant/15">
                 {joinedPacks.slice(0, 5).map((pack: any) => (
-                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-gray-50 transition-colors">
+                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-surface-container-low transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-gray-900 text-sm truncate">{pack.title}</h4>
+                          <h4 className="font-medium text-on-surface text-sm truncate">{pack.title}</h4>
                           {pack.member_role && (
                             <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs capitalize">
                               {pack.member_role}
@@ -641,9 +641,9 @@ export default function ProfilePage() {
                           )}
                         </div>
                         {pack.description && (
-                          <p className="text-xs text-gray-500 line-clamp-2">{pack.description}</p>
+                          <p className="text-xs text-outline line-clamp-2">{pack.description}</p>
                         )}
-                        <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                        <div className="flex items-center gap-3 mt-1 text-xs text-outline">
                           <span>{pack.member_count || 0} members</span>
                           <span>{pack.post_count || 0} posts</span>
                         </div>

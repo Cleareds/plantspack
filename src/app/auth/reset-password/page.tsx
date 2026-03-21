@@ -40,23 +40,23 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-surface-container-low rounded-full mb-4">
+              <CheckCircle className="h-8 w-8 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-2xl font-bold text-on-surface mb-2">Check Your Email</h2>
+            <p className="text-on-surface-variant mb-6">
               We&apos;ve sent a password reset link to <strong>{email}</strong>.
               Please check your inbox and follow the instructions to reset your password.
             </p>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-outline mb-6">
               Didn&apos;t receive the email? Check your spam folder or try again in a few minutes.
             </p>
             <Link
               href="/auth"
-              className="inline-flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium"
+              className="inline-flex items-center space-x-2 text-primary hover:text-primary font-medium"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Login</span>
@@ -68,30 +68,30 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Reset Password</h2>
-            <p className="text-gray-600">
+            <h2 className="text-3xl font-bold text-on-surface mb-2">Reset Password</h2>
+            <p className="text-on-surface-variant">
               Enter your email address and we&apos;ll send you a link to reset your password.
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-800">{error}</p>
+            <div className="mb-4 p-3 bg-error/5 border border-error/15 rounded-lg">
+              <p className="text-sm text-error">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-on-surface-variant mb-1">
                 Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-outline" />
                 </div>
                 <input
                   id="email"
@@ -99,7 +99,7 @@ export default function ResetPasswordPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="block w-full pl-10 pr-3 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                   placeholder="your@email.com"
                 />
               </div>
@@ -108,7 +108,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+              className="w-full silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary font-medium py-2 px-4 rounded-md transition-colors"
             >
               {loading ? 'Sending...' : 'Send Reset Link'}
             </button>
@@ -117,7 +117,7 @@ export default function ResetPasswordPage() {
           <div className="mt-6 text-center">
             <Link
               href="/auth"
-              className="inline-flex items-center space-x-2 text-sm text-green-600 hover:text-green-700 font-medium"
+              className="inline-flex items-center space-x-2 text-sm text-primary hover:text-primary font-medium"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Login</span>

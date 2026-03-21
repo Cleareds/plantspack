@@ -73,9 +73,9 @@ export default function SubscriptionDashboard() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
         <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </div>
     )
@@ -83,7 +83,7 @@ export default function SubscriptionDashboard() {
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
         <div className="flex items-center space-x-3 text-red-600">
           <AlertTriangle className="h-5 w-5" />
           <span>{error}</span>
@@ -102,18 +102,18 @@ export default function SubscriptionDashboard() {
   return (
     <div className="space-y-6">
       {/* Current Subscription Status */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <Crown className="h-6 w-6 text-green-600" />
-            <h2 className="text-xl font-semibold text-gray-900">Current Subscription</h2>
+            <Crown className="h-6 w-6 text-primary" />
+            <h2 className="text-xl font-semibold text-on-surface">Current Subscription</h2>
           </div>
           
           {subscription.tier !== 'free' && (
             <button
               onClick={handleManageSubscription}
               disabled={actionLoading}
-              className="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md font-medium transition-colors disabled:opacity-50"
+              className="flex items-center space-x-2 px-4 py-2 bg-surface-container-low hover:bg-surface-container text-on-surface-variant rounded-md font-medium transition-colors disabled:opacity-50"
             >
               <Settings className="h-4 w-4" />
               <span>Manage</span>
@@ -134,9 +134,9 @@ export default function SubscriptionDashboard() {
               >
                 {currentTier.badge.text}
               </div>
-              <span className="text-2xl font-bold text-gray-900">
+              <span className="text-2xl font-bold text-on-surface">
                 ${currentTier.price}
-                {currentTier.price > 0 && <span className="text-sm font-normal text-gray-500">/month</span>}
+                {currentTier.price > 0 && <span className="text-sm font-normal text-outline">/month</span>}
               </span>
             </div>
             
@@ -144,7 +144,7 @@ export default function SubscriptionDashboard() {
               {currentTier.features.map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="text-sm text-gray-600">{feature}</span>
+                  <span className="text-sm text-on-surface-variant">{feature}</span>
                 </div>
               ))}
             </div>
@@ -154,13 +154,13 @@ export default function SubscriptionDashboard() {
           <div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">Status</label>
                 <div className="flex items-center space-x-2">
                   {isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
                   {isPastDue && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
                   {isCanceled && <AlertTriangle className="h-4 w-4 text-red-500" />}
                   <span className={`text-sm font-medium ${
-                    isActive ? 'text-green-600' : 
+                    isActive ? 'text-primary' : 
                     isPastDue ? 'text-yellow-600' : 
                     'text-red-600'
                   }`}>
@@ -173,12 +173,12 @@ export default function SubscriptionDashboard() {
 
               {subscription.currentPeriodEnd && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     {isCanceled || subscription.cancelAtPeriodEnd ? 'Expires' : 'Next Billing'}
                   </label>
                   <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">
+                    <Calendar className="h-4 w-4 text-outline" />
+                    <span className="text-sm text-on-surface-variant">
                       {formatDistanceToNow(subscription.currentPeriodEnd, { addSuffix: true })}
                     </span>
                   </div>
@@ -202,16 +202,16 @@ export default function SubscriptionDashboard() {
 
       {/* Upgrade Options */}
       {subscription.tier === 'free' && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Upgrade Your Plan</h3>
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
+          <h3 className="text-lg font-semibold text-on-surface mb-4">Upgrade Your Plan</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.entries(SUBSCRIPTION_TIERS)
               .filter(([key]) => key !== 'free')
               .map(([key, tier]) => (
-                <div key={key} className="border border-gray-200 rounded-lg p-4">
+                <div key={key} className="ghost-border rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium text-gray-900">{tier.name}</h4>
+                    <h4 className="font-medium text-on-surface">{tier.name}</h4>
                     <div 
                       className="px-2 py-1 rounded text-xs font-medium"
                       style={{ 
@@ -223,20 +223,20 @@ export default function SubscriptionDashboard() {
                     </div>
                   </div>
                   
-                  <div className="text-2xl font-bold text-gray-900 mb-3">
+                  <div className="text-2xl font-bold text-on-surface mb-3">
                     ${tier.price}
-                    <span className="text-sm font-normal text-gray-500">/month</span>
+                    <span className="text-sm font-normal text-outline">/month</span>
                   </div>
                   
                   <div className="space-y-1 mb-4">
                     {tier.features.slice(0, 3).map((feature, index) => (
                       <div key={index} className="flex items-center space-x-2">
                         <CheckCircle className="h-3 w-3 text-green-500" />
-                        <span className="text-xs text-gray-600">{feature}</span>
+                        <span className="text-xs text-on-surface-variant">{feature}</span>
                       </div>
                     ))}
                     {tier.features.length > 3 && (
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-outline">
                         +{tier.features.length - 3} more features
                       </div>
                     )}
@@ -245,7 +245,7 @@ export default function SubscriptionDashboard() {
                   <button
                     onClick={() => handleUpgrade(key as 'medium' | 'premium')}
                     disabled={actionLoading}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
+                    className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
                   >
                     {actionLoading ? 'Processing...' : `Upgrade to ${tier.name}`}
                   </button>
@@ -256,12 +256,12 @@ export default function SubscriptionDashboard() {
       )}
 
       {subscription.tier === 'medium' && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Upgrade to Premium</h3>
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
+          <h3 className="text-lg font-semibold text-on-surface mb-4">Upgrade to Premium</h3>
           
-          <div className="border border-gray-200 rounded-lg p-4">
+          <div className="ghost-border rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-gray-900">{SUBSCRIPTION_TIERS.premium.name}</h4>
+              <h4 className="font-medium text-on-surface">{SUBSCRIPTION_TIERS.premium.name}</h4>
               <div 
                 className="px-2 py-1 rounded text-xs font-medium"
                 style={{ 
@@ -273,16 +273,16 @@ export default function SubscriptionDashboard() {
               </div>
             </div>
             
-            <div className="text-2xl font-bold text-gray-900 mb-3">
+            <div className="text-2xl font-bold text-on-surface mb-3">
               ${SUBSCRIPTION_TIERS.premium.price}
-              <span className="text-sm font-normal text-gray-500">/month</span>
+              <span className="text-sm font-normal text-outline">/month</span>
             </div>
             
             <div className="space-y-1 mb-4">
               {SUBSCRIPTION_TIERS.premium.features.slice(0, 4).map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <CheckCircle className="h-3 w-3 text-green-500" />
-                  <span className="text-xs text-gray-600">{feature}</span>
+                  <span className="text-xs text-on-surface-variant">{feature}</span>
                 </div>
               ))}
             </div>

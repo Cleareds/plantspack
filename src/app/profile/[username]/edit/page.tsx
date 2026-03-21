@@ -121,8 +121,8 @@ export default function ProfileEditPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-on-surface-variant">Loading your profile...</p>
         </div>
       </div>
     )
@@ -142,14 +142,14 @@ export default function ProfileEditPage() {
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Profile</h1>
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
+            <h1 className="text-2xl font-bold text-on-surface mb-6">Edit Profile</h1>
 
             {message && (
               <div className={`mb-4 p-3 rounded ${
                 message.includes('Error')
-                  ? 'bg-red-100 border border-red-400 text-red-700'
-                  : 'bg-green-100 border border-green-400 text-green-700'
+                  ? 'bg-error/5 border border-error/15 text-error'
+                  : 'bg-surface-container-low border border-primary/15 text-primary'
               }`}>
                 {message}
               </div>
@@ -158,7 +158,7 @@ export default function ProfileEditPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Avatar Upload Section */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-on-surface-variant mb-3">
                   Profile Picture
                 </label>
                 <div className="flex items-center space-x-4">
@@ -166,9 +166,9 @@ export default function ProfileEditPage() {
                     currentAvatar={avatarUrl}
                     onAvatarUpdate={handleAvatarUpdate}
                   />
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-on-surface-variant">
                     <p>Click to upload a new profile picture</p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-outline mt-1">
                       Maximum 2MB. Image will be cropped to 500x500 pixels.
                     </p>
                   </div>
@@ -176,34 +176,34 @@ export default function ProfileEditPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-outline" />
                   <input
                     type="email"
                     value={user.email || ''}
                     disabled
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
+                    className="w-full pl-10 pr-4 py-2 ghost-border rounded-md bg-surface-container-low text-outline"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-outline mt-1">
                   Email cannot be changed. Contact support if needed.
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Username
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-outline" />
                   <input
                     type="text"
                     value={usernameField}
                     onChange={(e) => handleInputChange(setUsernameField, e.target.value.toLowerCase().replace(/\s/g, ''))}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                     required
                   />
                 </div>
@@ -211,38 +211,38 @@ export default function ProfileEditPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     First Name
                   </label>
                   <input
                     type="text"
                     value={firstName}
                     onChange={(e) => handleInputChange(setFirstName, e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     Last Name
                   </label>
                   <input
                     type="text"
                     value={lastName}
                     onChange={(e) => handleInputChange(setLastName, e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Bio
                 </label>
                 <textarea
                   value={bio}
                   onChange={(e) => handleInputChange(setBio, e.target.value)}
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none resize-none"
                   placeholder="Tell others about yourself and your vegan journey..."
                 />
               </div>
@@ -250,7 +250,7 @@ export default function ProfileEditPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center space-x-2 w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                className="flex items-center space-x-2 w-full silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary font-medium py-2 px-4 rounded-md transition-colors"
               >
                 <Save className="h-4 w-4" />
                 <span>{saving ? 'Saving...' : 'Save Changes'}</span>

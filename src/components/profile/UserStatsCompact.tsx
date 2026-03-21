@@ -80,19 +80,19 @@ export default function UserStatsCompact({ userId, className = '' }: UserStatsCo
 
       {/* Followers/Following */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center space-x-1 px-1 py-1 rounded-md bg-green-50">
-          <Users className="h-4 w-4 text-green-600" />
-          <span className="text-sm font-semibold text-green-600">
+        <div className="flex items-center space-x-1 px-1 py-1 rounded-md bg-surface-container-low">
+          <Users className="h-4 w-4 text-primary" />
+          <span className="text-sm font-semibold text-primary">
             {stats.followers_count.toLocaleString()}
           </span>
-          <span className="text-xs text-gray-500">followers</span>
+          <span className="text-xs text-outline">followers</span>
         </div>
-        <div className="flex items-center space-x-1 px-1 py-1 rounded-md bg-green-50">
-          <UserPlus className="h-4 w-4 text-green-600" />
-          <span className="text-sm font-semibold text-green-600">
+        <div className="flex items-center space-x-1 px-1 py-1 rounded-md bg-surface-container-low">
+          <UserPlus className="h-4 w-4 text-primary" />
+          <span className="text-sm font-semibold text-primary">
             {stats.following_count.toLocaleString()}
           </span>
-          <span className="text-xs text-gray-500">following</span>
+          <span className="text-xs text-outline">following</span>
         </div>
       </div>
     </div>

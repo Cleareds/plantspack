@@ -37,7 +37,7 @@ export default function SubscriptionStatus({ className = '', showDetails = false
 
   if (loading || !subscription) {
     return (
-      <div className={`animate-pulse bg-gray-200 rounded h-6 w-20 ${className}`} />
+      <div className={`animate-pulse bg-surface-container rounded h-6 w-20 ${className}`} />
     )
   }
 
@@ -71,11 +71,11 @@ export default function SubscriptionStatus({ className = '', showDetails = false
   }
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}>
+    <div className={`bg-surface-container-lowest rounded-lg ghost-border p-4 ${className}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <StatusIcon />
-          <span className="font-medium text-gray-900">
+          <span className="font-medium text-on-surface">
             {tier.name} Plan
           </span>
         </div>
@@ -90,11 +90,11 @@ export default function SubscriptionStatus({ className = '', showDetails = false
         </div>
       </div>
 
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-on-surface-variant">
         <div className="flex items-center justify-between">
           <span>Status:</span>
           <span className={`font-medium ${
-            isActive ? 'text-green-600' : 
+            isActive ? 'text-primary' : 
             isPastDue ? 'text-yellow-600' : 
             'text-red-600'
           }`}>
@@ -108,7 +108,7 @@ export default function SubscriptionStatus({ className = '', showDetails = false
           <span>Price:</span>
           <span className="font-medium">
             ${tier.price}
-            {tier.price > 0 && <span className="text-gray-500">/month</span>}
+            {tier.price > 0 && <span className="text-outline">/month</span>}
           </span>
         </div>
 

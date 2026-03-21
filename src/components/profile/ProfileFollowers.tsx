@@ -106,12 +106,12 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-surface-container rounded w-1/2"></div>
           <div className="space-y-2">
-            <div className="h-12 bg-gray-200 rounded"></div>
-            <div className="h-12 bg-gray-200 rounded"></div>
+            <div className="h-12 bg-surface-container rounded"></div>
+            <div className="h-12 bg-surface-container rounded"></div>
           </div>
         </div>
       </div>
@@ -120,8 +120,8 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <p className="text-red-600 text-sm">{error}</p>
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
+        <p className="text-error text-sm">{error}</p>
       </div>
     )
   }
@@ -130,21 +130,21 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
   const activeCount = activeTab === 'following' ? following.length : followers.length
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="p-4 border-b border-gray-200">
+    <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+      <div className="p-4 border-b border-outline-variant/15">
         <div className="flex items-center space-x-2 mb-3">
           <Users className="h-5 w-5 text-blue-600" />
-          <h3 className="font-semibold text-gray-900">Social</h3>
+          <h3 className="font-semibold text-on-surface">Social</h3>
         </div>
         
         {/* Tabs */}
-        <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+        <div className="flex space-x-1 bg-surface-container-low rounded-lg p-1">
           <button
             onClick={() => setActiveTab('following')}
             className={`flex-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
               activeTab === 'following'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-surface-container-lowest text-on-surface editorial-shadow'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             Following ({following.length})
@@ -153,8 +153,8 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
             onClick={() => setActiveTab('followers')}
             className={`flex-1 px-3 py-1 text-sm font-medium rounded-md transition-colors ${
               activeTab === 'followers'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-surface-container-lowest text-on-surface editorial-shadow'
+                : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
             Followers ({followers.length})
@@ -163,41 +163,41 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
       </div>
 
       {activeCount === 0 ? (
-        <div className="p-4 text-center text-gray-500 text-sm">
+        <div className="p-4 text-center text-outline text-sm">
           {activeTab === 'following' ? 'Not following anyone yet.' : 'No followers yet.'}
         </div>
       ) : (
-        <div className="divide-y divide-gray-200 max-h-80 overflow-y-auto">
+        <div className="divide-y divide-outline-variant/15 max-h-80 overflow-y-auto">
           {activeList.map((person) => (
             <div key={person.id} className="p-4 flex items-center justify-between">
-              <Link href={`/user/${person.username}`} className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-gray-50 -m-2 p-2 rounded-md transition-colors">
+              <Link href={`/user/${person.username}`} className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-surface-container-low -m-2 p-2 rounded-md transition-colors">
                 <div className="flex-shrink-0 avatar-container">
                   {person.avatar_url ? (
                     <img
                       src={person.avatar_url}
                       alt={`${person.first_name} ${person.last_name}`}
-                      className="w-10 h-10 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
+                      className="w-10 h-10 rounded-full object-cover hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
-                      <Users className="w-5 h-5 text-gray-400" />
+                    <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all">
+                      <Users className="w-5 h-5 text-outline" />
                     </div>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-900 truncate hover:text-green-600 transition-colors">
+                  <p className="text-sm font-medium text-on-surface truncate hover:text-primary transition-colors">
                     {person.first_name && person.last_name
                       ? `${person.first_name} ${person.last_name}`
                       : person.username}
                   </p>
-                  <p className="text-sm text-gray-500 truncate hover:text-green-600 transition-colors">@{person.username}</p>
+                  <p className="text-sm text-outline truncate hover:text-primary transition-colors">@{person.username}</p>
                 </div>
               </Link>
               
               {isOwnProfile && activeTab === 'following' && (
                 <button
                   onClick={() => handleUnfollow(person)}
-                  className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                  className="p-1 text-outline hover:text-error transition-colors"
                   title="Unfollow"
                 >
                   <UserMinus className="w-4 h-4" />

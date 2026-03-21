@@ -49,12 +49,12 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
 
   if (loading) {
     return (
-      <div className={`bg-white rounded-lg shadow-sm border border-gray-200 p-6 ${className}`}>
+      <div className={`bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6 ${className}`}>
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-surface-container rounded w-1/2"></div>
           <div className="grid grid-cols-2 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
+              <div key={i} className="h-12 bg-surface-container rounded"></div>
             ))}
           </div>
         </div>
@@ -117,23 +117,23 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
       icon: FileText,
       label: 'Posts',
       count: stats.posts_count,
-      color: 'text-gray-600',
+      color: 'text-on-surface-variant',
       bgColor: 'bg-gray-50'
     },
     {
       icon: MessageSquare,
       label: 'Comments',
       count: stats.comments_count,
-      color: 'text-gray-600',
+      color: 'text-on-surface-variant',
       bgColor: 'bg-gray-50'
     }
   ]
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
+    <div className={`bg-surface-container-lowest rounded-lg editorial-shadow ghost-border ${className}`}>
       {/* Reactions Received */}
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Reactions Received</h3>
+      <div className="p-6 border-b border-outline-variant/15">
+        <h3 className="text-sm font-semibold text-on-surface mb-4">Reactions Received</h3>
         <div className="grid grid-cols-2 gap-3">
           {reactionStats.map((stat) => {
             const Icon = stat.icon
@@ -149,7 +149,7 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
                   <p className={`text-lg font-bold ${stat.color}`}>
                     {stat.count.toLocaleString()}
                   </p>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
+                  <p className="text-xs text-on-surface-variant">{stat.label}</p>
                 </div>
               </div>
             )
@@ -158,8 +158,8 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
       </div>
 
       {/* Community Stats */}
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Community</h3>
+      <div className="p-6 border-b border-outline-variant/15">
+        <h3 className="text-sm font-semibold text-on-surface mb-4">Community</h3>
         <div className="grid grid-cols-2 gap-3">
           {communityStats.map((stat) => {
             const Icon = stat.icon
@@ -175,7 +175,7 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
                   <p className={`text-lg font-bold ${stat.color}`}>
                     {stat.count.toLocaleString()}
                   </p>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
+                  <p className="text-xs text-on-surface-variant">{stat.label}</p>
                 </div>
               </div>
             )
@@ -185,7 +185,7 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
 
       {/* Content Stats */}
       <div className="p-6">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">Content</h3>
+        <h3 className="text-sm font-semibold text-on-surface mb-4">Content</h3>
         <div className="grid grid-cols-2 gap-3">
           {contentStats.map((stat) => {
             const Icon = stat.icon
@@ -201,7 +201,7 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
                   <p className={`text-lg font-bold ${stat.color}`}>
                     {stat.count.toLocaleString()}
                   </p>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
+                  <p className="text-xs text-on-surface-variant">{stat.label}</p>
                 </div>
               </div>
             )
