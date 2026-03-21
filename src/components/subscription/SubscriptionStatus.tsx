@@ -49,8 +49,8 @@ export default function SubscriptionStatus({ className = '', showDetails = false
   const StatusIcon = () => {
     if (isPastDue) return <AlertTriangle className="h-4 w-4 text-yellow-500" />
     if (isCanceled) return <AlertTriangle className="h-4 w-4 text-red-500" />
-    if (subscription.tier === 'free') return <Crown className="h-4 w-4 text-gray-400" />
-    return <CheckCircle className="h-4 w-4 text-green-500" />
+    if (subscription.tier === 'free') return <Crown className="h-4 w-4 text-outline" />
+    return <CheckCircle className="h-4 w-4 text-primary" />
   }
 
   if (!showDetails) {

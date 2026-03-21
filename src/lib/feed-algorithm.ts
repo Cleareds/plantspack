@@ -45,13 +45,14 @@ export interface FeedOptions {
   offset?: number
   userId?: string
   includeAnalytics?: boolean
+  category?: string
 }
 
 /**
  * Fetches posts with intelligent sorting and ranking
  */
 export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
-  const { sortBy, limit = 10, offset = 0, userId } = options
+  const { sortBy, limit = 10, offset = 0, userId, category } = options
 
   try {
     let query = supabase
@@ -94,6 +95,11 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
       .eq('privacy', 'public') // Only public posts for main feed
       .eq('users.is_banned', false) // Exclude banned users
       .is('deleted_at', null) // Exclude soft-deleted posts
+
+    // Apply category filter
+    if (category && category !== 'all') {
+      query = query.eq('category', category)
+    }
 
     // Apply sorting based on selected option
     switch (sortBy) {

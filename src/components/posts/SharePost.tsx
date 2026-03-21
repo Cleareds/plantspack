@@ -140,14 +140,14 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
     <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{backgroundColor: 'rgba(0,0,0,0.3)'}}>
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+        <div className="flex items-center justify-between p-4 border-b border-surface-container-high">
+          <h2 className="text-lg font-semibold text-on-surface flex items-center space-x-2">
             <Share className="h-5 w-5" />
             <span>Share Post</span>
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-outline hover:text-on-surface-variant text-xl"
           >
             <X className="h-5 w-5" />
           </button>
@@ -156,51 +156,51 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
         <div className="p-4 space-y-4">
           {/* Social Media Sharing */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Share to social media</h3>
+            <h3 className="text-sm font-medium text-on-surface-variant mb-3">Share to social media</h3>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               <button
                 onClick={handleCopyLink}
-                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex flex-col items-center justify-center p-3 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors"
               >
-                <LinkIcon className="h-5 w-5 text-gray-600 mb-1" />
-                <span className="text-xs text-gray-600">{copied ? 'Copied!' : 'Copy Link'}</span>
+                <LinkIcon className="h-5 w-5 text-on-surface-variant mb-1" />
+                <span className="text-xs text-on-surface-variant">{copied ? 'Copied!' : 'Copy Link'}</span>
               </button>
               <button
                 onClick={handleShareToFacebook}
-                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 transition-colors"
+                className="flex flex-col items-center justify-center p-3 border border-outline-variant rounded-lg hover:bg-blue-50 transition-colors"
               >
                 <Facebook className="h-5 w-5 text-blue-600 mb-1" />
-                <span className="text-xs text-gray-600">Facebook</span>
+                <span className="text-xs text-on-surface-variant">Facebook</span>
               </button>
               <button
                 onClick={handleShareToTwitter}
-                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-sky-50 transition-colors"
+                className="flex flex-col items-center justify-center p-3 border border-outline-variant rounded-lg hover:bg-sky-50 transition-colors"
               >
                 <Twitter className="h-5 w-5 text-sky-500 mb-1" />
-                <span className="text-xs text-gray-600">X (Twitter)</span>
+                <span className="text-xs text-on-surface-variant">X (Twitter)</span>
               </button>
               <button
                 onClick={handleShareToWhatsApp}
-                className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-green-50 transition-colors"
+                className="flex flex-col items-center justify-center p-3 border border-outline-variant rounded-lg hover:bg-primary-container/20 transition-colors"
               >
-                <MessageCircle className="h-5 w-5 text-green-600 mb-1" />
-                <span className="text-xs text-gray-600">WhatsApp</span>
+                <MessageCircle className="h-5 w-5 text-primary mb-1" />
+                <span className="text-xs text-on-surface-variant">WhatsApp</span>
               </button>
               {typeof navigator !== 'undefined' && typeof navigator.share !== 'undefined' && (
                 <button
                   onClick={handleNativeShare}
-                  className="flex flex-col items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-purple-50 transition-colors"
+                  className="flex flex-col items-center justify-center p-3 border border-outline-variant rounded-lg hover:bg-purple-50 transition-colors"
                 >
                   <Share className="h-5 w-5 text-purple-600 mb-1" />
-                  <span className="text-xs text-gray-600">More</span>
+                  <span className="text-xs text-on-surface-variant">More</span>
                 </button>
               )}
             </div>
           </div>
 
           {/* Share within PlantsPack */}
-          <div className="border-t border-gray-200 pt-4">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Share within PlantsPack</h3>
+          <div className="border-t border-surface-container-high pt-4">
+            <h3 className="text-sm font-medium text-on-surface-variant mb-3">Share within PlantsPack</h3>
 
             {/* Share Type Selection */}
             <div className="flex space-x-2 mb-4">
@@ -208,8 +208,8 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
                 onClick={() => setShareType('share')}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md font-medium transition-colors ${
                   shareType === 'share'
-                    ? 'bg-green-100 text-green-700 border border-green-300'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary-container/30 text-primary border border-primary-container'
+                    : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
                 }`}
               >
                 <Repeat2 className="h-4 w-4" />
@@ -219,8 +219,8 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
                 onClick={() => setShareType('quote')}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md font-medium transition-colors ${
                   shareType === 'quote'
-                    ? 'bg-green-100 text-green-700 border border-green-300'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-primary-container/30 text-primary border border-primary-container'
+                    : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
                 }`}
               >
                 <MessageSquareQuote className="h-4 w-4" />
@@ -239,19 +239,19 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
           {/* Quote Content Input (only for quote posts) */}
           {shareType === 'quote' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-on-surface-variant mb-2">
                 Add your thoughts
               </label>
               <textarea
                 value={quoteContent}
                 onChange={(e) => setQuoteContent(e.target.value)}
                 placeholder="What do you think about this post?"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                 rows={3}
                 maxLength={500}
               />
               <div className="flex justify-between items-center mt-1">
-                <span className={`text-xs ${quoteContent.length > 450 ? 'text-red-500' : 'text-gray-400'}`}>
+                <span className={`text-xs ${quoteContent.length > 450 ? 'text-red-500' : 'text-outline'}`}>
                   {quoteContent.length}/500
                 </span>
               </div>
@@ -260,13 +260,13 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
 
           {/* Privacy Setting */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-on-surface-variant mb-2">
               Who can see this?
             </label>
             <select
               value={privacy}
               onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="public">Everyone</option>
               <option value="friends">Friends only</option>
@@ -274,7 +274,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
           </div>
 
           {/* Original Post Preview */}
-          <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <div className="border border-surface-container-high rounded-lg p-4 bg-surface-container-low">
             <div className="flex space-x-3">
               <div className="flex-shrink-0">
                 {post.users.avatar_url ? (
@@ -284,8 +284,8 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                    <span className="text-sm font-medium text-green-600">
+                  <div className="h-10 w-10 rounded-full bg-primary-container/30 flex items-center justify-center">
+                    <span className="text-sm font-medium text-primary">
                       {post.users.first_name?.[0] || post.users.username[0].toUpperCase()}
                     </span>
                   </div>
@@ -293,19 +293,19 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-1">
-                  <span className="font-medium text-gray-900">
+                  <span className="font-medium text-on-surface">
                     {post.users.first_name 
                       ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
                       : post.users.username
                     }
                   </span>
-                  <span className="text-gray-400">@{post.users.username}</span>
-                  <span className="text-gray-400">·</span>
-                  <span className="text-gray-400 text-sm">
+                  <span className="text-outline">@{post.users.username}</span>
+                  <span className="text-outline">·</span>
+                  <span className="text-outline text-sm">
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                   </span>
                 </div>
-                <p className="text-gray-700">{post.content}</p>
+                <p className="text-on-surface-variant">{post.content}</p>
                 {/* Handle both new images array and legacy image_url */}
                 {((post.images && post.images.length > 0) || post.image_url) && (
                   <div className="mt-3">
@@ -324,14 +324,14 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
             <div className="flex space-x-3 pt-4">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                className="flex-1 px-4 py-2 border border-outline-variant rounded-md text-on-surface-variant hover:bg-surface-container-low font-medium transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleShare}
                 disabled={submitting}
-                className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-md font-medium transition-colors"
+                className="flex-1 px-4 py-2 bg-primary hover:bg-primary disabled:bg-outline-variant text-white rounded-md font-medium transition-colors"
               >
                 {submitting ? 'Sharing...' : shareType === 'share' ? 'Share Post' : 'Post Quote'}
               </button>
@@ -341,7 +341,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
 
         {/* Success Notification */}
         {showSuccess && (
-          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-[60] flex items-center space-x-2 animate-slide-down">
+          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-[60] flex items-center space-x-2 animate-slide-down">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>

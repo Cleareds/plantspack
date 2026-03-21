@@ -12,9 +12,9 @@ export default function CommunityGuidelines() {
           <p className="text-sm text-on-surface-variant mb-8">Last updated: {new Date().toLocaleDateString()}</p>
 
           <div className="prose prose-green max-w-none">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
-              <h2 className="text-xl font-semibold text-green-900 mb-2">Our Drama-Light Philosophy</h2>
-              <p className="text-green-800">
+            <div className="bg-primary-container/20 border border-primary-container rounded-lg p-6 mb-8">
+              <h2 className="text-xl font-semibold text-on-surface mb-2">Our Drama-Light Philosophy</h2>
+              <p className="text-primary">
                 PlantsPack is dedicated to creating a supportive, positive community where vegans and plant-based
                 enthusiasts can share their journey without unnecessary conflict or negativity. We believe in
                 constructive conversation, mutual respect, and focusing on what brings us together: compassion

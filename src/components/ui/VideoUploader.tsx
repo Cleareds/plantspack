@@ -119,17 +119,17 @@ export default function VideoUploader({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="flex items-center space-x-2 px-4 py-2 border border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-4 py-2 border border-dashed border-outline-variant rounded-lg hover:border-primary hover:bg-primary-container/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-                <span className="text-sm text-gray-700">Uploading...</span>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                <span className="text-sm text-on-surface-variant">Uploading...</span>
               </>
             ) : (
               <>
-                <Upload className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-gray-700">Upload Video</span>
+                <Upload className="h-4 w-4 text-outline" />
+                <span className="text-sm text-on-surface-variant">Upload Video</span>
               </>
             )}
           </button>
@@ -145,7 +145,7 @@ export default function VideoUploader({
       )}
 
       {/* Upload Limits Info */}
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-xs text-outline text-center">
         {videoUrls.length}/{actualMaxVideos} videos • Max {actualMaxSizeMB}MB each
       </div>
 
@@ -164,7 +164,7 @@ export default function VideoUploader({
         <div className="grid grid-cols-3 gap-2">
           {videoUrls.map((url, index) => (
             <div key={index} className="relative group">
-              <div className="relative bg-gray-100 rounded-lg overflow-hidden h-24">
+              <div className="relative bg-surface-container rounded-lg overflow-hidden h-24">
                 <video
                   src={url}
                   className="w-full h-24 object-cover rounded-lg"

@@ -130,8 +130,8 @@ export default function CommentsManagement() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Comments Management</h1>
-        <p className="text-gray-600 mt-1">Manage all user comments</p>
+        <h1 className="text-3xl font-bold text-on-surface">Comments Management</h1>
+        <p className="text-on-surface-variant mt-1">Manage all user comments</p>
       </div>
 
       {/* Filters */}
@@ -139,11 +139,11 @@ export default function CommentsManagement() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Search
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
                 placeholder="Search by comment content..."
@@ -152,14 +152,14 @@ export default function CommentsManagement() {
                   setSearchQuery(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           {/* Deleted Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Status
             </label>
             <select
@@ -168,7 +168,7 @@ export default function CommentsManagement() {
                 setShowDeleted(e.target.value === 'deleted')
                 setCurrentPage(1)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="active">Active Comments</option>
               <option value="deleted">Deleted Comments</option>
@@ -178,10 +178,10 @@ export default function CommentsManagement() {
 
         {/* Stats */}
         <div className="flex items-center justify-between pt-4 border-t">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Showing {comments.length} of {totalComments} comments
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Page {currentPage} of {totalPages}
           </p>
         </div>
@@ -190,12 +190,12 @@ export default function CommentsManagement() {
       {/* Comments List */}
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : comments.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
-          <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">No comments found</p>
+          <AlertCircle className="h-12 w-12 text-outline mb-2" />
+          <p className="text-on-surface-variant">No comments found</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -213,8 +213,8 @@ export default function CommentsManagement() {
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                      <MessageSquare className="h-5 w-5 text-gray-500" />
+                    <div className="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center">
+                      <MessageSquare className="h-5 w-5 text-outline" />
                     </div>
                   )}
                 </div>
@@ -224,10 +224,10 @@ export default function CommentsManagement() {
                   {/* User Info */}
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-on-surface">
                         {comment.users?.username || 'Unknown User'}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-outline">
                         {new Date(comment.created_at).toLocaleString()}
                       </p>
                     </div>
@@ -239,14 +239,14 @@ export default function CommentsManagement() {
                   </div>
 
                   {/* Comment Text */}
-                  <p className="text-sm text-gray-700 mb-3">
+                  <p className="text-sm text-on-surface-variant mb-3">
                     {comment.content}
                   </p>
 
                   {/* Post Context */}
-                  <div className="bg-gray-50 rounded-md p-3 mb-3">
-                    <p className="text-xs text-gray-500 mb-1">Comment on post:</p>
-                    <p className="text-sm text-gray-700 line-clamp-2">
+                  <div className="bg-surface-container-low rounded-md p-3 mb-3">
+                    <p className="text-xs text-outline mb-1">Comment on post:</p>
+                    <p className="text-sm text-on-surface-variant line-clamp-2">
                       {comment.posts?.content || 'Post not found'}
                     </p>
                   </div>
@@ -264,7 +264,7 @@ export default function CommentsManagement() {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => window.open(`/post/${comment.post_id}`, '_blank')}
-                      className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50"
+                      className="inline-flex items-center px-3 py-1.5 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
                     >
                       <Eye className="h-3 w-3 mr-1" />
                       View Post
@@ -273,7 +273,7 @@ export default function CommentsManagement() {
                       <>
                         <button
                           onClick={() => handleDeleteComment(comment.id, true)}
-                          className="inline-flex items-center px-3 py-1.5 border border-green-300 rounded-md text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100"
+                          className="inline-flex items-center px-3 py-1.5 border border-primary-container rounded-md text-xs font-medium text-primary bg-primary-container/20 hover:bg-primary-container/20"
                         >
                           Restore
                         </button>
@@ -308,7 +308,7 @@ export default function CommentsManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
@@ -333,8 +333,8 @@ export default function CommentsManagement() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`px-4 py-2 rounded-md text-sm font-medium ${
                     currentPage === pageNum
-                      ? 'bg-green-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-on-surface-variant border border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
                   {pageNum}
@@ -346,7 +346,7 @@ export default function CommentsManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />

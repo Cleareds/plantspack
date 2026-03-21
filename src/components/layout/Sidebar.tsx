@@ -8,7 +8,7 @@ import { useAuth } from '@/lib/auth'
 const navItems = [
   { href: '/', label: 'Home', icon: 'home' },
   { href: '/map', label: 'Discover', icon: 'explore' },
-  { href: '/packs', label: 'Packs', icon: 'groups' },
+  { href: '/packs', label: 'Communities', icon: 'groups' },
   { href: '/support', label: 'Support Us', icon: 'volunteer_activism' },
 ]
 
@@ -65,14 +65,14 @@ export default function Sidebar() {
         {!user ? (
           <Link
             href="/auth"
-            className="w-full block text-center bg-primary text-on-primary py-4 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
+            className="w-full block text-center bg-primary text-on-primary-btn py-4 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
           >
             Sign In
           </Link>
         ) : (
           <Link
             href="/auth"
-            className="w-full block text-center bg-primary text-on-primary py-4 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-primary/10 hover:opacity-90 transition-all active:scale-95"
+            className="w-full block text-center bg-primary text-on-primary-btn py-4 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-primary/10 hover:opacity-90 transition-all active:scale-95"
           >
             Create Post
           </Link>

@@ -56,7 +56,7 @@ export default function AdminLayout({
   if (!authReady || (authReady && user && profile === null)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -77,7 +77,7 @@ export default function AdminLayout({
   ]
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-surface-container">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -88,18 +88,18 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-gray-900 text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-on-surface text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-800">
+        <div className="flex items-center justify-between p-6 border-b border-on-surface">
           <div className="flex items-center space-x-2">
-            <Shield className="h-6 w-6 text-green-500" />
+            <Shield className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">Admin Panel</span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-gray-400 hover:text-white"
+            className="lg:hidden text-outline hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
@@ -113,7 +113,7 @@ export default function AdminLayout({
                 key={item.name}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-outline-variant hover:bg-on-surface hover:text-white transition-colors"
               >
                 <Icon className="h-5 w-5" />
                 <span>{item.name}</span>
@@ -122,10 +122,10 @@ export default function AdminLayout({
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-on-surface">
           <Link
             href="/"
-            className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+            className="flex items-center space-x-2 text-outline hover:text-white transition-colors"
           >
             <span>← Back to Site</span>
           </Link>
@@ -139,13 +139,13 @@ export default function AdminLayout({
           <div className="flex items-center justify-between px-6 py-4">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-gray-600 hover:text-gray-900"
+              className="lg:hidden text-on-surface-variant hover:text-on-surface"
             >
               <Menu className="h-6 w-6" />
             </button>
 
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-on-surface-variant">
                 Logged in as: <span className="font-medium">{user?.email}</span>
               </span>
             </div>

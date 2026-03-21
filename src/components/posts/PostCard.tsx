@@ -22,6 +22,19 @@ import SensitiveContentWarning from '../moderation/SensitiveContentWarning'
 import ReactionButtons from '../reactions/ReactionButtons'
 import AddToPackModal from '../packs/AddToPackModal'
 
+import type { PostCategory } from '@/lib/database.types'
+
+const CATEGORY_CONFIG: Record<string, { icon: string; label: string; color: string }> = {
+  recipe: { icon: 'restaurant_menu', label: 'Recipe', color: 'bg-primary/10 text-primary' },
+  place: { icon: 'location_on', label: 'Place', color: 'bg-secondary/10 text-secondary' },
+  event: { icon: 'event', label: 'Event', color: 'bg-tertiary/10 text-tertiary' },
+  lifestyle: { icon: 'self_improvement', label: 'Lifestyle', color: 'bg-primary/10 text-primary' },
+  activism: { icon: 'campaign', label: 'Activism', color: 'bg-tertiary/10 text-tertiary' },
+  question: { icon: 'help', label: 'Question', color: 'bg-secondary/10 text-secondary' },
+  product: { icon: 'shopping_bag', label: 'Product', color: 'bg-secondary/10 text-secondary' },
+  general: { icon: 'article', label: 'General', color: 'bg-outline/10 text-outline' },
+}
+
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {
     subscription_tier?: 'free' | 'medium' | 'premium'
@@ -35,6 +48,11 @@ type Post = Tables<'posts'> & {
   }) | null
   is_sensitive?: boolean
   content_warnings?: string[] | null
+  category?: PostCategory
+  secondary_tags?: string[] | null
+  recipe_data?: any
+  event_data?: any
+  product_data?: any
 }
 
 interface PostCardProps {
@@ -571,6 +589,26 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
             </div>
           </div>
 
+          {/* Category Badge & Secondary Tags */}
+          {post.category && post.category !== 'general' && (
+            <div className="flex flex-wrap items-center gap-1.5 mb-3">
+              {(() => {
+                const config = CATEGORY_CONFIG[post.category] || CATEGORY_CONFIG.general
+                return (
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>{config.icon}</span>
+                    {config.label}
+                  </span>
+                )
+              })()}
+              {post.secondary_tags?.map((tag, i) => (
+                <span key={i} className="px-2 py-0.5 rounded-full text-xs bg-surface-container text-on-surface-variant">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           {/* Content */}
           <div className="mb-4">
             <LinkifiedText
@@ -642,6 +680,68 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                 </div>
               ) : null
             })()}
+
+            {/* Recipe Card */}
+            {post.category === 'recipe' && post.recipe_data && (
+              <div className="mt-3 p-3 bg-primary-container/10 rounded-xl">
+                <div className="flex items-center gap-3 text-xs text-on-surface-variant">
+                  {post.recipe_data.prep_time_min && <span>Prep: {post.recipe_data.prep_time_min}min</span>}
+                  {post.recipe_data.cook_time_min && <span>Cook: {post.recipe_data.cook_time_min}min</span>}
+                  {post.recipe_data.servings && <span>Serves: {post.recipe_data.servings}</span>}
+                  {post.recipe_data.difficulty && <span className="capitalize">{post.recipe_data.difficulty}</span>}
+                </div>
+                {post.recipe_data.ingredients?.length > 0 && (
+                  <details className="mt-2">
+                    <summary className="text-xs font-medium text-primary cursor-pointer">
+                      {post.recipe_data.ingredients.length} ingredients
+                    </summary>
+                    <ul className="mt-1 text-xs text-on-surface-variant space-y-0.5 list-disc list-inside">
+                      {post.recipe_data.ingredients.map((ing: string, i: number) => (
+                        <li key={i}>{ing}</li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </div>
+            )}
+
+            {/* Event Card */}
+            {post.category === 'event' && post.event_data && (
+              <div className="mt-3 p-3 bg-tertiary-container/10 rounded-xl">
+                <div className="flex flex-col gap-1 text-xs text-on-surface-variant">
+                  {post.event_data.start_time && (
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
+                      {new Date(post.event_data.start_time).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {post.event_data.end_time && ` - ${new Date(post.event_data.end_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`}
+                    </span>
+                  )}
+                  {post.event_data.location && (
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>location_on</span>
+                      {post.event_data.location}
+                    </span>
+                  )}
+                  {post.event_data.ticket_url && (
+                    <a href={post.event_data.ticket_url} target="_blank" rel="noopener noreferrer" className="text-tertiary hover:underline flex items-center gap-1">
+                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>confirmation_number</span>
+                      Get tickets
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Product Card */}
+            {post.category === 'product' && post.product_data && (
+              <div className="mt-3 p-3 bg-secondary-container/10 rounded-xl">
+                <div className="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                  {post.product_data.brand && <span className="font-medium">{post.product_data.brand}</span>}
+                  {post.product_data.price_range && <span>{post.product_data.price_range}</span>}
+                  {post.product_data.where_to_buy && <span>Buy at: {post.product_data.where_to_buy}</span>}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

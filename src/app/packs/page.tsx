@@ -99,11 +99,11 @@ export default function PacksPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-on-surface mb-2">
-              Packs
+            <h1 className="text-3xl font-headline font-bold text-on-surface mb-2 tracking-tight">
+              Communities
             </h1>
             <p className="text-on-surface-variant">
-              Discover curated collections of vegan content
+              Discover and join curated vegan communities
             </p>
           </div>
 
@@ -148,7 +148,7 @@ export default function PacksPage() {
         {user && !myPacksLoading && myPacks.length > 0 && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-on-surface">My Packs</h2>
+              <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">My Communities</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myPacks.map((pack) => (

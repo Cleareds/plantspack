@@ -103,11 +103,11 @@ export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, clas
           <img
             src={currentAvatar}
             alt="Avatar"
-            className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+            className="w-24 h-24 rounded-full object-cover border-2 border-surface-container-high"
           />
         ) : (
-          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-200">
-            <Upload className="w-8 h-8 text-gray-400" />
+          <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center border-2 border-surface-container-high">
+            <Upload className="w-8 h-8 text-outline" />
           </div>
         )}
         

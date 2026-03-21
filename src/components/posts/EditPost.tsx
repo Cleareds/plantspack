@@ -37,17 +37,17 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
       <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="bg-white rounded-lg w-full max-w-md p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Cannot Edit</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <h2 className="text-lg font-semibold text-on-surface">Cannot Edit</h2>
+            <button onClick={onClose} className="text-outline hover:text-on-surface-variant">
               <X className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-gray-600 mb-4">
+          <p className="text-on-surface-variant mb-4">
             Shared posts cannot be edited. You can only delete them or view the original post.
           </p>
           <button
             onClick={onClose}
-            className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium"
+            className="w-full px-4 py-2 bg-primary hover:bg-primary text-white rounded-md font-medium"
           >
             Got it
           </button>
@@ -107,13 +107,13 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
     <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="flex items-center justify-between p-4 border-b border-surface-container-high">
+          <h2 className="text-lg font-semibold text-on-surface">
             {isQuotePost ? 'Edit Your Quote' : 'Edit Post'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-outline hover:text-on-surface-variant"
           >
             <X className="h-5 w-5" />
           </button>
@@ -139,19 +139,19 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
 
           {/* Content */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-on-surface-variant mb-2">
               {isQuotePost ? 'Your commentary' : 'Post content'}
             </label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
               rows={6}
               maxLength={500}
               placeholder={isQuotePost ? "What do you think about this post?" : "What's on your mind?"}
             />
             <div className="flex justify-between items-center mt-1">
-              <span className={`text-xs ${content.length > 450 ? 'text-red-500' : 'text-gray-400'}`}>
+              <span className={`text-xs ${content.length > 450 ? 'text-red-500' : 'text-outline'}`}>
                 {content.length}/500
               </span>
             </div>
@@ -159,13 +159,13 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
 
           {/* Privacy */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-on-surface-variant mb-2">
               Who can see this?
             </label>
             <select
               value={privacy}
               onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="public">Everyone</option>
               <option value="friends">Friends only</option>
@@ -177,14 +177,14 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+              className="flex-1 px-4 py-2 border border-outline-variant rounded-md text-on-surface-variant hover:bg-surface-container-low font-medium transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || !content.trim()}
-              className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-md font-medium transition-colors"
+              className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-primary hover:bg-primary disabled:bg-outline-variant text-white rounded-md font-medium transition-colors"
             >
               <Save className="h-4 w-4" />
               <span>{loading ? 'Saving...' : 'Save Changes'}</span>

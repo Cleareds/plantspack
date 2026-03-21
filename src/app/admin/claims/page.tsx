@@ -155,7 +155,7 @@ export default function ClaimsManagement() {
         )
       case 'approved':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-container/30 text-primary">
             <CheckCircle className="h-3 w-3 mr-1" />
             Approved
           </span>
@@ -175,19 +175,19 @@ export default function ClaimsManagement() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Business Claims Management</h1>
-        <p className="text-gray-600 mt-1">Review and approve business ownership claims</p>
+        <h1 className="text-3xl font-bold text-on-surface">Business Claims Management</h1>
+        <p className="text-on-surface-variant mt-1">Review and approve business ownership claims</p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className="bg-white rounded-lg shadow-sm border border-surface-container-high p-4">
+        <label className="block text-sm font-medium text-on-surface-variant mb-2">
           Filter by Status
         </label>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full md:w-64 px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         >
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
@@ -199,26 +199,26 @@ export default function ClaimsManagement() {
       {/* Claims List */}
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : claims.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-          <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No {filterStatus !== 'all' ? filterStatus : ''} claims found</p>
+        <div className="bg-white rounded-lg shadow-sm border border-surface-container-high p-12 text-center">
+          <Clock className="h-12 w-12 text-outline mx-auto mb-4" />
+          <p className="text-on-surface-variant">No {filterStatus !== 'all' ? filterStatus : ''} claims found</p>
         </div>
       ) : (
         <div className="space-y-4">
           {claims.map((claim) => (
-            <div key={claim.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div key={claim.id} className="bg-white rounded-lg shadow-sm border border-surface-container-high p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-on-surface">
                       {claim.places?.name}
                     </h3>
                     {getStatusBadge(claim.status)}
                   </div>
-                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <div className="flex items-center space-x-4 text-sm text-on-surface-variant">
                     <span className="flex items-center">
                       <MapPin className="h-4 w-4 mr-1" />
                       {claim.places?.address}
@@ -230,12 +230,12 @@ export default function ClaimsManagement() {
               </div>
 
               {/* Claimant Info */}
-              <div className="bg-gray-50 rounded-md p-4 mb-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
+              <div className="bg-surface-container-low rounded-md p-4 mb-4">
+                <h4 className="text-sm font-medium text-on-surface mb-2 flex items-center">
                   <User className="h-4 w-4 mr-2" />
                   Claimant Information
                 </h4>
-                <div className="space-y-1 text-sm text-gray-700">
+                <div className="space-y-1 text-sm text-on-surface-variant">
                   <p><strong>Name:</strong> {claim.users?.first_name} {claim.users?.last_name}</p>
                   <p><strong>Username:</strong> @{claim.users?.username}</p>
                   <p className="flex items-center">
@@ -247,11 +247,11 @@ export default function ClaimsManagement() {
 
               {/* Proof */}
               <div className="bg-blue-50 rounded-md p-4 mb-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
+                <h4 className="text-sm font-medium text-on-surface mb-2 flex items-center">
                   <FileText className="h-4 w-4 mr-2" />
                   Proof of Ownership
                 </h4>
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">{claim.proof_text}</p>
+                <p className="text-sm text-on-surface-variant whitespace-pre-wrap">{claim.proof_text}</p>
               </div>
 
               {/* Rejection Reason */}
@@ -268,7 +268,7 @@ export default function ClaimsManagement() {
                   <button
                     onClick={() => handleApprove(claim.id)}
                     disabled={processingClaim === claim.id}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                   >
                     {processingClaim === claim.id ? (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -289,7 +289,7 @@ export default function ClaimsManagement() {
                     href={`/place/${claim.place_id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center"
+                    className="px-4 py-2 border border-outline-variant rounded-md text-on-surface-variant hover:bg-surface-container-low flex items-center"
                   >
                     <MapPin className="h-4 w-4 mr-2" />
                     View Place
@@ -298,7 +298,7 @@ export default function ClaimsManagement() {
                     href={`/profile/${claim.users?.username}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 flex items-center"
+                    className="px-4 py-2 border border-outline-variant rounded-md text-on-surface-variant hover:bg-surface-container-low flex items-center"
                   >
                     <User className="h-4 w-4 mr-2" />
                     View Profile
@@ -314,8 +314,8 @@ export default function ClaimsManagement() {
       {showRejectModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Reject Claim</h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <h2 className="text-xl font-bold text-on-surface mb-4">Reject Claim</h2>
+            <p className="text-sm text-on-surface-variant mb-4">
               Please provide a reason for rejecting this claim. The user will receive an email with this reason and instructions to contact support.
             </p>
             <textarea
@@ -323,7 +323,7 @@ export default function ClaimsManagement() {
               onChange={(e) => setRejectionReason(e.target.value)}
               rows={4}
               placeholder="e.g., Insufficient proof of ownership provided. Please submit business registration documents or other official proof."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent mb-4"
+              className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent mb-4"
             />
             <div className="flex items-center space-x-3">
               <button
@@ -339,7 +339,7 @@ export default function ClaimsManagement() {
                   setRejectionReason('')
                 }}
                 disabled={processingClaim === showRejectModal}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-outline-variant rounded-md text-on-surface-variant hover:bg-surface-container-low"
               >
                 Cancel
               </button>

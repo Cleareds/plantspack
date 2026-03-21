@@ -10,50 +10,38 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Botanical Editorial - Surfaces
-        surface: '#f8f9ff',
+        // Verdant Ethos - Surfaces
+        surface: '#f7f7f2',
         'surface-container-lowest': '#ffffff',
-        'surface-container-low': '#eef4ff',
-        'surface-container': '#e5eeff',
-        'surface-container-high': '#dfe9fa',
-        'surface-container-highest': '#d9e3f4',
+        'surface-container-low': '#f1f1ec',
+        'surface-container': '#e8e9e3',
+        'surface-container-high': '#e2e3dd',
+        'surface-container-highest': '#dcddd7',
+        'surface-variant': '#dcddd7',
         // Primary
-        primary: '#006b2c',
-        'primary-container': '#00873a',
+        primary: '#0a6a1d',
+        'primary-container': '#9df898',
         // Secondary
-        secondary: '#9d4300',
-        'secondary-container': '#fd761a',
+        secondary: '#72554b',
+        'secondary-container': '#f6cfc2',
         // Tertiary
-        tertiary: '#486347',
-        'tertiary-container': '#607c5e',
+        tertiary: '#a83206',
+        'tertiary-container': '#ff9473',
         // Text
-        'on-surface': '#121c28',
-        'on-surface-variant': '#3e4a3d',
-        'on-primary': '#ffffff',
+        'on-surface': '#2d2f2c',
+        'on-surface-variant': '#5a5c58',
+        'on-primary': '#d1ffc8',
+        'on-primary-btn': '#ffffff',
         'on-secondary': '#ffffff',
         // Outline
-        outline: '#6e7b6c',
-        'outline-variant': '#bdcaba',
+        outline: '#767773',
+        'outline-variant': '#adada9',
         // Error
-        error: '#ba1a1a',
+        error: '#b02500',
         'on-error': '#ffffff',
         // Inverse
-        'inverse-surface': '#27313e',
-        'inverse-on-surface': '#eaf1ff',
-        // Keep old green palette temporarily
-        green: {
-          50: '#f0f7f4',
-          100: '#dcede4',
-          200: '#bcdccc',
-          300: '#90c4ab',
-          400: '#5fa786',
-          500: '#3d8c6a',
-          600: '#2d6a4f',
-          700: '#255541',
-          800: '#204537',
-          900: '#1c392e',
-          950: '#0e2019',
-        },
+        'inverse-surface': '#2d2f2c',
+        'inverse-on-surface': '#f1f1ec',
       },
       fontFamily: {
         'headline': ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
@@ -65,9 +53,9 @@ module.exports = {
         '5xl': '2.5rem',
       },
       boxShadow: {
-        'ambient': '0 10px 30px rgba(18, 28, 40, 0.06)',
-        'ambient-lg': '0 20px 40px rgba(18, 28, 40, 0.08)',
-        'editorial': '0 32px 64px -16px rgba(0, 107, 44, 0.12)',
+        'ambient': '0 10px 30px rgba(45, 47, 44, 0.06)',
+        'ambient-lg': '0 20px 40px rgba(45, 47, 44, 0.08)',
+        'editorial': '0 32px 64px -16px rgba(10, 106, 29, 0.12)',
       },
       letterSpacing: {
         'editorial': '-0.02em',

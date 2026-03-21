@@ -73,7 +73,7 @@ export default function UpgradePrompt({
           </div>
 
           {/* Tier highlight */}
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-primary/15 rounded-lg p-4 mb-6">
+          <div className="bg-gradient-to-r from-primary-container/20 to-blue-50 border border-primary/15 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <div
@@ -98,7 +98,7 @@ export default function UpgradePrompt({
             <div className="space-y-1">
               {tier.features.slice(0, 4).map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                  <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                   <span className="text-sm text-on-surface-variant">{feature}</span>
                 </div>
               ))}

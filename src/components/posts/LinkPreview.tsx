@@ -115,12 +115,12 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
 
   if (loading) {
     return (
-      <div className={`border border-gray-200 rounded-lg p-3 bg-gray-50 animate-pulse ${className}`}>
+      <div className={`border border-surface-container-high rounded-lg p-3 bg-surface-container-low animate-pulse ${className}`}>
         <div className="flex space-x-3">
-          <div className="w-16 h-16 bg-gray-200 rounded"></div>
+          <div className="w-16 h-16 bg-surface-container-high rounded"></div>
           <div className="flex-1 space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-surface-container-high rounded w-3/4"></div>
+            <div className="h-3 bg-surface-container-high rounded w-1/2"></div>
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
   // Special rendering for video URLs
   if (previewData.type === 'youtube' || previewData.type === 'vimeo') {
     return (
-      <div className={`border border-gray-200 rounded-lg overflow-hidden bg-white ${className}`}>
+      <div className={`border border-surface-container-high rounded-lg overflow-hidden bg-white ${className}`}>
         {onRemove && (
           <div className="flex justify-end p-2">
             <button
@@ -146,14 +146,14 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
                 e.stopPropagation()
                 onRemove()
               }}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-outline hover:text-on-surface-variant transition-colors"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
         )}
         
-        <div className="aspect-video bg-gray-100 relative">
+        <div className="aspect-video bg-surface-container relative">
           <iframe
             src={previewData.embedUrl}
             className="w-full h-full"
@@ -172,7 +172,7 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
                 previewData.type === 'youtube' ? 'text-red-600' : 'text-blue-600'
               }`} />
             </div>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-on-surface">
               {previewData.siteName}
             </span>
           </div>
@@ -180,7 +180,7 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
             href={previewData.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-gray-600 hover:text-green-600 transition-colors truncate block"
+            className="text-xs text-on-surface-variant hover:text-primary transition-colors truncate block"
           >
             {previewData.url}
           </a>
@@ -191,7 +191,7 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
 
   // Regular link preview
   return (
-    <div className={`border border-gray-200 rounded-lg overflow-hidden bg-white hover:bg-gray-50 transition-colors cursor-pointer ${className}`}>
+    <div className={`border border-surface-container-high rounded-lg overflow-hidden bg-white hover:bg-surface-container-low transition-colors cursor-pointer ${className}`}>
       {onRemove && (
         <div className="flex justify-end p-2">
           <button
@@ -199,7 +199,7 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
               e.stopPropagation()
               onRemove()
             }}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-outline hover:text-on-surface-variant transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -216,19 +216,19 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
           
           <div className="flex-1 min-w-0">
             {previewData.title && (
-              <h3 className="text-sm font-medium text-gray-900 line-clamp-1 mb-1">
+              <h3 className="text-sm font-medium text-on-surface line-clamp-1 mb-1">
                 {previewData.title}
               </h3>
             )}
             
-            <div className="flex items-center space-x-1 text-xs text-gray-500 mb-1">
+            <div className="flex items-center space-x-1 text-xs text-outline mb-1">
               <span className="truncate">
                 {previewData.siteName || new URL(previewData.url).hostname}
               </span>
             </div>
             
             {previewData.description && previewData.description !== previewData.url && (
-              <p className="text-xs text-gray-600 line-clamp-1">
+              <p className="text-xs text-on-surface-variant line-clamp-1">
                 {previewData.description}
               </p>
             )}

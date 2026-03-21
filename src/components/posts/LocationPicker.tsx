@@ -136,33 +136,33 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div ref={modalRef} className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-surface-container-high">
           <div className="flex items-center space-x-2">
             <MapPin className="h-5 w-5 text-blue-600" />
-            <h3 className="font-semibold text-gray-900">Add Location</h3>
+            <h3 className="font-semibold text-on-surface">Add Location</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-surface-container rounded-full transition-colors"
           >
-            <X className="h-5 w-5 text-gray-500" />
+            <X className="h-5 w-5 text-outline" />
           </button>
         </div>
 
         {/* Search Input */}
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-4 border-b border-surface-container">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-outline" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search for a location..."
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full pl-10 pr-4 py-2.5 border border-outline-variant rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
             />
             {searching && (
-              <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 animate-spin" />
+              <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-outline animate-spin" />
             )}
           </div>
 
@@ -180,7 +180,7 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
           <button
             onClick={handleUseCurrentLocation}
             disabled={gettingCurrent}
-            className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100"
+            className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-surface-container-low transition-colors text-left border-b border-surface-container"
           >
             {gettingCurrent ? (
               <Loader2 className="h-5 w-5 text-blue-600 animate-spin flex-shrink-0" />
@@ -190,7 +190,7 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
             <div>
               <p className="text-sm font-medium text-blue-600">Use my current location</p>
               {currentLocation && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-outline">
                   {currentLocation.city && currentLocation.region
                     ? `${currentLocation.city}, ${currentLocation.region}`
                     : currentLocation.city || currentLocation.region || 'Location detected'}
@@ -205,21 +205,21 @@ export default function LocationPicker({ onSelect, onClose, currentLocation }: L
               <button
                 key={result.place_id}
                 onClick={() => handleResultSelect(result)}
-                className="w-full flex items-start space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0"
+                className="w-full flex items-start space-x-3 px-4 py-3 hover:bg-surface-container-low transition-colors text-left border-b border-surface-container last:border-b-0"
               >
-                <MapPin className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <MapPin className="h-4 w-4 text-outline mt-0.5 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-sm text-gray-900 truncate">{formatName(result.display_name)}</p>
-                  <p className="text-xs text-gray-500 capitalize">{result.type?.replace(/_/g, ' ')}</p>
+                  <p className="text-sm text-on-surface truncate">{formatName(result.display_name)}</p>
+                  <p className="text-xs text-outline capitalize">{result.type?.replace(/_/g, ' ')}</p>
                 </div>
               </button>
             ))
           ) : query.length >= 3 && !searching ? (
-            <div className="p-6 text-center text-sm text-gray-500">
+            <div className="p-6 text-center text-sm text-outline">
               No locations found
             </div>
           ) : query.length > 0 && query.length < 3 ? (
-            <div className="p-6 text-center text-sm text-gray-500">
+            <div className="p-6 text-center text-sm text-outline">
               Type at least 3 characters to search
             </div>
           ) : null}

@@ -30,8 +30,8 @@ export default function PostPageContent({ post }: PostPageContentProps) {
       <PostCard post={post} />
 
       {/* Comments Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-white rounded-lg shadow-sm border border-surface-container-high p-6">
+        <h3 className="text-lg font-semibold text-on-surface mb-4">
           Comments ({post.comments?.length || 0})
         </h3>
         <Comments

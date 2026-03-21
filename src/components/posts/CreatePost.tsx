@@ -3,9 +3,8 @@
 import {useState, useEffect, useCallback, useRef} from 'react'
 import {useAuth} from '@/lib/auth'
 import {supabase} from '@/lib/supabase'
-import {Image as ImageIcon, Globe, Users, Send, X, MapPin, Tag, Video} from 'lucide-react'
+import {Image as ImageIcon, Globe, Users, Send, X, MapPin, Video} from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
-import ImageSlider from '../ui/ImageSlider'
 import VideoUploader from '../ui/VideoUploader'
 import LinkPreview, {extractUrls} from './LinkPreview'
 import MentionAutocomplete from './MentionAutocomplete'
@@ -13,7 +12,6 @@ import LocationPicker from './LocationPicker'
 import Link from 'next/link'
 import {
     analyzePostContent,
-    getCurrentLocation,
     detectLanguage,
     type LocationData,
     type PostMetadata
@@ -23,9 +21,8 @@ import {
     extractHashtags,
     extractMentions,
     resolveUsernames,
-    getOrCreateHashtags,
-    linkHashtagsToPost
 } from '@/lib/hashtags'
+import type { PostCategory, RecipeData, EventData, ProductData } from '@/lib/database.types'
 
 interface CreatePostProps {
     onPostCreated: () => void
@@ -53,6 +50,12 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
     const [content, setContent] = useState(() => loadDraft()?.content || '')
     const [privacy, setPrivacy] = useState<'public' | 'friends'>(() => loadDraft()?.privacy || 'public')
+    const [category, setCategory] = useState<PostCategory>(() => loadDraft()?.category || 'general')
+    const [secondaryTags, setSecondaryTags] = useState<string[]>(() => loadDraft()?.secondaryTags || [])
+    const [tagInput, setTagInput] = useState('')
+    const [recipeData, setRecipeData] = useState<Partial<RecipeData>>(() => loadDraft()?.recipeData || {})
+    const [eventData, setEventData] = useState<Partial<EventData>>(() => loadDraft()?.eventData || {})
+    const [productData, setProductData] = useState<Partial<ProductData>>(() => loadDraft()?.productData || {})
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -105,6 +108,11 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             const draft = {
                 content,
                 privacy,
+                category,
+                secondaryTags,
+                recipeData,
+                eventData,
+                productData,
                 showImageUploader,
                 imageUrls,
                 showVideoUploader,
@@ -385,10 +393,23 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 user_id: user.id,
                 content: content.trim(),
                 privacy,
+                category,
+                secondary_tags: secondaryTags.length > 0 ? secondaryTags : undefined,
                 tags: finalMetadata.tags,
                 content_type: finalMetadata.contentType,
                 mood: finalMetadata.mood,
                 language: detectedLang
+            }
+
+            // Add category-specific data
+            if (category === 'recipe' && recipeData.ingredients?.length) {
+                postData.recipe_data = recipeData
+            }
+            if (category === 'event' && eventData.start_time) {
+                postData.event_data = eventData
+            }
+            if (category === 'product' && productData.brand) {
+                postData.product_data = productData
             }
 
             // Add location data if user chose to share
@@ -488,6 +509,12 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             setContent('')
             setCharCount(0)
             setPrivacy('public')
+            setCategory('general')
+            setSecondaryTags([])
+            setTagInput('')
+            setRecipeData({})
+            setEventData({})
+            setProductData({})
             setImageUrls([])
             setVideoUrls([])
             setShowImageUploader(false)
@@ -622,6 +649,116 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 />
                             )}
                         </div>
+
+                        {/* Category Selector */}
+                        <div className="mt-3">
+                          <div className="flex flex-wrap gap-1.5">
+                            {[
+                              { slug: 'general', icon: 'article', label: 'General' },
+                              { slug: 'recipe', icon: 'restaurant_menu', label: 'Recipe' },
+                              { slug: 'place', icon: 'location_on', label: 'Place' },
+                              { slug: 'event', icon: 'event', label: 'Event' },
+                              { slug: 'lifestyle', icon: 'self_improvement', label: 'Lifestyle' },
+                              { slug: 'activism', icon: 'campaign', label: 'Activism' },
+                              { slug: 'question', icon: 'help', label: 'Question' },
+                              { slug: 'product', icon: 'shopping_bag', label: 'Product' },
+                            ].map((cat) => (
+                              <button
+                                key={cat.slug}
+                                type="button"
+                                onClick={() => setCategory(cat.slug as PostCategory)}
+                                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                                  category === cat.slug
+                                    ? 'bg-primary text-on-primary-btn'
+                                    : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                                }`}
+                              >
+                                <span className="material-symbols-outlined text-sm" style={{ fontSize: '14px' }}>{cat.icon}</span>
+                                {cat.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Secondary Tags */}
+                        <div className="mt-2">
+                          <div className="flex flex-wrap gap-1.5 items-center">
+                            {secondaryTags.map((tag, i) => (
+                              <span key={i} className="flex items-center gap-1 bg-secondary-container text-on-surface text-xs px-2 py-0.5 rounded-full">
+                                {tag}
+                                <button type="button" onClick={() => setSecondaryTags(prev => prev.filter((_, idx) => idx !== i))} className="hover:text-error">
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </span>
+                            ))}
+                            {secondaryTags.length < 3 && (
+                              <input
+                                type="text"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' && tagInput.trim()) {
+                                    e.preventDefault()
+                                    if (secondaryTags.length < 3) {
+                                      setSecondaryTags(prev => [...prev, tagInput.trim()])
+                                      setTagInput('')
+                                    }
+                                  }
+                                }}
+                                placeholder={secondaryTags.length === 0 ? "Add tags (e.g. Rome, Budget)..." : "Add tag..."}
+                                className="text-xs bg-transparent border-none outline-none text-on-surface-variant placeholder:text-outline min-w-[100px] flex-1 py-0.5"
+                              />
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Category-Specific Fields */}
+                        {category === 'recipe' && (
+                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Recipe Details</p>
+                            <textarea
+                              value={recipeData.ingredients?.join('\n') || ''}
+                              onChange={(e) => setRecipeData(prev => ({ ...prev, ingredients: e.target.value.split('\n').filter(Boolean) }))}
+                              placeholder="Ingredients (one per line)"
+                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                              rows={3}
+                            />
+                            <div className="flex gap-2">
+                              <input type="number" placeholder="Prep (min)" value={recipeData.prep_time_min || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, prep_time_min: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                              <input type="number" placeholder="Cook (min)" value={recipeData.cook_time_min || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, cook_time_min: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                              <input type="number" placeholder="Servings" value={recipeData.servings || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, servings: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            </div>
+                            <select value={recipeData.difficulty || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, difficulty: e.target.value as RecipeData['difficulty'] }))} className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
+                              <option value="">Difficulty...</option>
+                              <option value="easy">Easy</option>
+                              <option value="medium">Medium</option>
+                              <option value="hard">Hard</option>
+                            </select>
+                          </div>
+                        )}
+
+                        {category === 'event' && (
+                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Event Details</p>
+                            <div className="flex gap-2">
+                              <input type="datetime-local" value={eventData.start_time || ''} onChange={(e) => setEventData(prev => ({ ...prev, start_time: e.target.value }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                              <input type="datetime-local" value={eventData.end_time || ''} onChange={(e) => setEventData(prev => ({ ...prev, end_time: e.target.value }))} placeholder="End time" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            </div>
+                            <input type="text" value={eventData.location || ''} onChange={(e) => setEventData(prev => ({ ...prev, location: e.target.value }))} placeholder="Event location" className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            <input type="url" value={eventData.ticket_url || ''} onChange={(e) => setEventData(prev => ({ ...prev, ticket_url: e.target.value }))} placeholder="Ticket URL (optional)" className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                          </div>
+                        )}
+
+                        {category === 'product' && (
+                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Product Details</p>
+                            <input type="text" value={productData.brand || ''} onChange={(e) => setProductData(prev => ({ ...prev, brand: e.target.value }))} placeholder="Brand name" className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            <div className="flex gap-2">
+                              <input type="text" value={productData.price_range || ''} onChange={(e) => setProductData(prev => ({ ...prev, price_range: e.target.value }))} placeholder="Price range (e.g. $5-10)" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                              <input type="text" value={productData.where_to_buy || ''} onChange={(e) => setProductData(prev => ({ ...prev, where_to_buy: e.target.value }))} placeholder="Where to buy" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            </div>
+                          </div>
+                        )}
 
                         {/* Image Preview */}
                         {imageUrls.length > 0 && (

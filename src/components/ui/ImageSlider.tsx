@@ -66,11 +66,11 @@ export default function ImageSlider({
           {images.map((image, index) => (
             <div
               key={index}
-              className={`relative bg-gray-50 ${getAspectRatioClass()}`}
+              className={`relative bg-surface-container-low ${getAspectRatioClass()}`}
               style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
             >
               {!isLoaded[index] && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+                <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
               )}
               <Image
                 src={image}
@@ -96,7 +96,7 @@ export default function ImageSlider({
       {/* Main Image Container */}
       <div
         ref={sliderRef}
-        className={`relative ${getAspectRatioClass()} overflow-hidden bg-gray-50 w-full`}
+        className={`relative ${getAspectRatioClass()} overflow-hidden bg-surface-container-low w-full`}
         style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
       >
         <div
@@ -104,9 +104,9 @@ export default function ImageSlider({
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {images.map((image, index) => (
-            <div key={index} className="w-full h-full flex-shrink-0 relative bg-gray-50">
+            <div key={index} className="w-full h-full flex-shrink-0 relative bg-surface-container-low">
               {!isLoaded[index] && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+                <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
               )}
               <Image
                 src={image}
@@ -160,8 +160,8 @@ export default function ImageSlider({
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentIndex
-                  ? 'bg-green-600 w-4'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                  ? 'bg-primary w-4'
+                  : 'bg-surface-container-highest hover:bg-outline-variant'
               }`}
               aria-label={`Go to image ${index + 1}`}
             />

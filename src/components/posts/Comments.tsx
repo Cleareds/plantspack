@@ -237,17 +237,17 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="flex space-x-3">
-                    <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+                    <div className="h-8 w-8 bg-surface-container-highest rounded-full"></div>
                     <div className="flex-1">
-                      <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
-                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                      <div className="h-4 bg-surface-container-highest rounded w-1/4 mb-2"></div>
+                      <div className="h-4 bg-surface-container-highest rounded w-3/4"></div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : comments.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-outline">
               No comments yet. Be the first to comment!
             </div>
           ) : (
@@ -260,7 +260,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                 const key = comment.id || `comment-${index}-${comment.created_at}`
                 
                 return (
-                  <div key={key} className="flex space-x-3 p-4 border border-gray-100 rounded-lg">
+                  <div key={key} className="flex space-x-3 p-4 border border-surface-container rounded-lg">
                     <div className="flex-shrink-0">
                       {comment.users?.avatar_url ? (
                         <img
@@ -269,8 +269,8 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                          <span className="text-sm font-medium text-green-600">
+                        <div className="h-8 w-8 rounded-full bg-primary-container/30 flex items-center justify-center">
+                          <span className="text-sm font-medium text-primary">
                             {comment.users?.first_name?.[0] || comment.users?.username?.[0]?.toUpperCase() || '?'}
                           </span>
                         </div>
@@ -280,7 +280,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                       <div className="flex items-start space-x-2 mb-1">
                         <Link
                           href={`/user/${comment.users?.username || 'unknown'}`}
-                          className="font-medium text-gray-900 hover:text-green-600 transition-colors"
+                          className="font-medium text-on-surface hover:text-primary transition-colors"
                         >
                           {comment.users?.first_name
                             ? `${comment.users.first_name} ${comment.users.last_name || ''}`.trim()
@@ -289,13 +289,13 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                         </Link>
                         <Link
                           href={`/user/${comment.users?.username || 'unknown'}`}
-                          className="text-gray-400 hover:text-green-600 transition-colors"
+                          className="text-outline hover:text-primary transition-colors"
                         >
                           @{comment.users?.username || 'unknown'}
                         </Link>
                       </div>
                           <div className="flex items-start space-x-2 mb-1">
-                        <span className="text-gray-400 text-sm">
+                        <span className="text-outline text-sm">
                           {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                         </span>
                         {comment.users?.id && (
@@ -308,7 +308,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           />
                         )}
                       </div>
-                      <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
+                      <p className="text-on-surface-variant text-sm mb-2">{comment.content}</p>
                       <CommentReactions
                         commentId={comment.id}
                       />
@@ -324,7 +324,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
               <button
                 onClick={loadMoreComments}
                 disabled={loadingMore}
-                className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm font-medium text-primary hover:text-primary hover:bg-primary-container/20 rounded-md transition-colors disabled:opacity-50"
               >
                 {loadingMore ? 'Loading...' : 'Load more comments'}
               </button>
@@ -334,7 +334,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
 
         {/* Comment Input */}
         {user && (
-          <div className="border-t border-gray-200 pt-4">
+          <div className="border-t border-surface-container-high pt-4">
             <form onSubmit={handleSubmitComment} className="flex space-x-3">
               <div className="flex-shrink-0">
                 {profile?.avatar_url ? (
@@ -344,8 +344,8 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     className="h-8 w-8 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                    <span className="text-sm font-medium text-green-600">
+                  <div className="h-8 w-8 rounded-full bg-primary-container/30 flex items-center justify-center">
+                    <span className="text-sm font-medium text-primary">
                       {profile?.first_name?.[0] || profile?.username?.[0]?.toUpperCase() || 'U'}
                     </span>
                   </div>
@@ -356,18 +356,18 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Write a comment..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                   rows={2}
                   maxLength={280}
                 />
                 <div className="flex items-center justify-between mt-2">
-                  <span className={`text-xs ${newComment.length > 250 ? 'text-red-500' : 'text-gray-400'}`}>
+                  <span className={`text-xs ${newComment.length > 250 ? 'text-red-500' : 'text-outline'}`}>
                     {newComment.length}/280
                   </span>
                   <button
                     type="submit"
                     disabled={!newComment.trim() || submitting}
-                    className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="flex items-center space-x-1 bg-primary hover:bg-primary disabled:bg-outline-variant text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     <Send className="h-4 w-4" />
                     <span>{submitting ? 'Posting...' : 'Comment'}</span>
@@ -386,14 +386,14 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
     <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{backgroundColor: 'rgba(0,0,0,0.3)'}}>
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+        <div className="flex items-center justify-between p-4 border-b border-surface-container-high">
+          <h2 className="text-lg font-semibold text-on-surface flex items-center space-x-2">
             <MessageCircle className="h-5 w-5" />
             <span>Comments ({comments.length})</span>
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
+            className="text-outline hover:text-on-surface-variant text-xl"
           >
             ×
           </button>
@@ -406,17 +406,17 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="flex space-x-3">
-                    <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+                    <div className="h-8 w-8 bg-surface-container-highest rounded-full"></div>
                     <div className="flex-1">
-                      <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
-                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                      <div className="h-4 bg-surface-container-highest rounded w-1/4 mb-2"></div>
+                      <div className="h-4 bg-surface-container-highest rounded w-3/4"></div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : comments.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-outline">
               No comments yet. Be the first to comment!
             </div>
           ) : (
@@ -440,8 +440,8 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                          <span className="text-sm font-medium text-green-600">
+                        <div className="h-8 w-8 rounded-full bg-primary-container/30 flex items-center justify-center">
+                          <span className="text-sm font-medium text-primary">
                             {comment.users?.first_name?.[0] || comment.users?.username?.[0]?.toUpperCase() || '?'}
                           </span>
                         </div>
@@ -449,16 +449,16 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-on-surface">
                           {comment.users?.first_name
                             ? `${comment.users.first_name} ${comment.users.last_name || ''}`.trim()
                             : comment.users?.username || 'Unknown User'
                           }
                         </span>
-                        <span className="text-gray-400">@{comment.users?.username || 'unknown'}</span>
+                        <span className="text-outline">@{comment.users?.username || 'unknown'}</span>
                       </div>
                       <div className="flex items-center space-x-2 mb-1">
-                        <span className="text-gray-400 text-sm">
+                        <span className="text-outline text-sm">
                           {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                         </span>
                         {comment.users?.id && (
@@ -471,7 +471,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                           />
                         )}
                       </div>
-                      <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
+                      <p className="text-on-surface-variant text-sm mb-2">{comment.content}</p>
                       <CommentReactions
                         commentId={comment.id}
                       />
@@ -487,7 +487,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
               <button
                 onClick={loadMoreComments}
                 disabled={loadingMore}
-                className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm font-medium text-primary hover:text-primary hover:bg-primary-container/20 rounded-md transition-colors disabled:opacity-50"
               >
                 {loadingMore ? 'Loading...' : 'Load more comments'}
               </button>
@@ -497,7 +497,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
 
         {/* Comment Input */}
         {user && (
-          <div className="border-t border-gray-200 p-4">
+          <div className="border-t border-surface-container-high p-4">
             <form onSubmit={handleSubmitComment} className="flex space-x-3">
               <div className="flex-shrink-0">
                 {profile?.avatar_url ? (
@@ -507,8 +507,8 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                     className="h-8 w-8 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                    <span className="text-sm font-medium text-green-600">
+                  <div className="h-8 w-8 rounded-full bg-primary-container/30 flex items-center justify-center">
+                    <span className="text-sm font-medium text-primary">
                       {profile?.first_name?.[0] || profile?.username?.[0]?.toUpperCase() || 'U'}
                     </span>
                   </div>
@@ -519,18 +519,18 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Write a comment..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                   rows={2}
                   maxLength={280}
                 />
                 <div className="flex items-center justify-between mt-2">
-                  <span className={`text-xs ${newComment.length > 250 ? 'text-red-500' : 'text-gray-400'}`}>
+                  <span className={`text-xs ${newComment.length > 250 ? 'text-red-500' : 'text-outline'}`}>
                     {newComment.length}/280
                   </span>
                   <button
                     type="submit"
                     disabled={!newComment.trim() || submitting}
-                    className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="flex items-center space-x-1 bg-primary hover:bg-primary disabled:bg-outline-variant text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     <Send className="h-4 w-4" />
                     <span>{submitting ? 'Posting...' : 'Comment'}</span>

@@ -110,10 +110,10 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-on-surface mb-6">Send us a message</h2>
               
               {status === 'success' && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="mb-6 p-4 bg-primary-container/20 border border-primary-container rounded-lg">
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="h-5 w-5 text-primary" />
-                    <p className="text-green-800 font-medium">
+                    <p className="text-primary font-medium">
                       Thank you! Your message has been sent successfully. We&apos;ll get back to you soon! 🌱
                     </p>
                   </div>
@@ -237,10 +237,10 @@ export default function ContactPage() {
             </div>
 
 
-            <div className="bg-green-50 rounded-2xl border border-green-200 p-6">
-              <h3 className="text-xl font-bold text-green-900 mb-4">💡 Quick Tips</h3>
-              
-              <ul className="space-y-2 text-sm text-green-800">
+            <div className="bg-primary-container/20 rounded-2xl border border-primary-container p-6">
+              <h3 className="text-xl font-bold text-on-surface mb-4">💡 Quick Tips</h3>
+
+              <ul className="space-y-2 text-sm text-primary">
                 <li>• Check our <Link href="/help" className="underline hover:no-underline">Help Center</Link> for common questions</li>
                 <li>• Include screenshots for technical issues</li>
                 <li>• Be specific about what you&apos;re trying to achieve</li>

@@ -298,15 +298,15 @@ export default function ImageUploader({
           onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
             dragActive
-              ? 'border-green-500 bg-green-50'
-              : 'border-gray-300 hover:border-green-400 hover:bg-gray-50'
+              ? 'border-primary bg-primary-container/20'
+              : 'border-outline-variant hover:border-primary hover:bg-surface-container-low'
           }`}
         >
-          <ImageIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-sm text-gray-600 mb-1">
+          <ImageIcon className="h-8 w-8 text-outline mx-auto mb-2" />
+          <p className="text-sm text-on-surface-variant mb-1">
             Drop images here or click to select
           </p>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-outline">
             {images.length}/{maxImages === -1 ? 'Unlimited' : maxImages} images • JPEG, PNG, WebP up to 10MB
           </p>
           <input
@@ -347,7 +347,7 @@ export default function ImageUploader({
       )}
 
       {uploading && (
-        <div className="flex items-center space-x-2 text-sm text-gray-500">
+        <div className="flex items-center space-x-2 text-sm text-outline">
           <Upload className="h-4 w-4 animate-pulse" />
           <span>Uploading images...</span>
         </div>

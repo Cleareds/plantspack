@@ -45,13 +45,13 @@ export default function SensitiveContentWarning({
       </div>
 
       {/* Warning overlay */}
-      <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-60 rounded-lg">
+      <div className="absolute inset-0 flex items-center justify-center bg-on-surface bg-opacity-60 rounded-lg">
         <div className="text-center p-6 max-w-md">
           <AlertTriangle className="h-12 w-12 text-yellow-400 mx-auto mb-3" />
           <h3 className="text-lg font-semibold text-white mb-2">
             Sensitive Content Warning
           </h3>
-          <p className="text-sm text-gray-200 mb-4">
+          <p className="text-sm text-surface-container-high mb-4">
             This content may contain:{' '}
             <span className="font-medium">
               {warnings.join(', ')}
@@ -59,7 +59,7 @@ export default function SensitiveContentWarning({
           </p>
           <button
             onClick={() => setIsRevealed(true)}
-            className="inline-flex items-center px-4 py-2 bg-white text-gray-900 rounded-md font-medium hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-white text-on-surface rounded-md font-medium hover:bg-surface-container transition-colors"
           >
             <Eye className="h-4 w-4 mr-2" />
             Show Content

@@ -100,15 +100,15 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
       icon: Users,
       label: 'Followers',
       count: stats.followers_count,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      color: 'text-primary',
+      bgColor: 'bg-primary-container/20'
     },
     {
       icon: UserPlus,
       label: 'Following',
       count: stats.following_count,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      color: 'text-primary',
+      bgColor: 'bg-primary-container/20'
     }
   ]
 
@@ -118,14 +118,14 @@ export default function UserStats({ userId, className = '' }: UserStatsProps) {
       label: 'Posts',
       count: stats.posts_count,
       color: 'text-on-surface-variant',
-      bgColor: 'bg-gray-50'
+      bgColor: 'bg-surface-container-low'
     },
     {
       icon: MessageSquare,
       label: 'Comments',
       count: stats.comments_count,
       color: 'text-on-surface-variant',
-      bgColor: 'bg-gray-50'
+      bgColor: 'bg-surface-container-low'
     }
   ]
 

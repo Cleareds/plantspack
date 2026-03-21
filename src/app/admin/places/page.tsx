@@ -175,18 +175,18 @@ export default function PlacesManagement() {
       {/* Success toast */}
       {successPlace && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999]">
-          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-            <p className="text-sm font-medium text-green-800">
+          <div className="bg-primary-container/20 border border-primary-container rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+            <p className="text-sm font-medium text-primary">
               &ldquo;{successPlace.name}&rdquo; added successfully!{' '}
               <Link
                 href={`/map`}
-                className="underline text-green-700 hover:text-green-900"
+                className="underline text-primary hover:text-on-surface"
               >
                 View on map
               </Link>
             </p>
-            <button onClick={() => setSuccessPlace(null)} className="text-green-500 hover:text-green-700">
+            <button onClick={() => setSuccessPlace(null)} className="text-primary hover:text-primary">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -195,12 +195,12 @@ export default function PlacesManagement() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Places Management</h1>
-          <p className="text-gray-600 mt-1">Manage all vegan places</p>
+          <h1 className="text-3xl font-bold text-on-surface">Places Management</h1>
+          <p className="text-on-surface-variant mt-1">Manage all vegan places</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           <Plus className="h-5 w-5 mr-2" />
           Create Place
@@ -210,11 +210,11 @@ export default function PlacesManagement() {
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Search
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
                 placeholder="Search by name, address, or description..."
@@ -223,13 +223,13 @@ export default function PlacesManagement() {
                   setSearchQuery(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Category
             </label>
             <select
@@ -238,7 +238,7 @@ export default function PlacesManagement() {
                 setFilterCategory(e.target.value)
                 setCurrentPage(1)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All Categories</option>
               <option value="restaurant">Restaurant</option>
@@ -251,10 +251,10 @@ export default function PlacesManagement() {
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Showing {places.length} of {totalPlaces} places
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Page {currentPage} of {totalPages}
           </p>
         </div>
@@ -262,12 +262,12 @@ export default function PlacesManagement() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : places.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
-          <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">No places found</p>
+          <AlertCircle className="h-12 w-12 text-outline mb-2" />
+          <p className="text-on-surface-variant">No places found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -275,8 +275,8 @@ export default function PlacesManagement() {
             <div key={place.id} className="bg-white rounded-lg shadow p-6 space-y-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900">{place.name}</h3>
-                  <p className="text-sm text-gray-500 capitalize">{place.category}</p>
+                  <h3 className="text-lg font-semibold text-on-surface">{place.name}</h3>
+                  <p className="text-sm text-outline capitalize">{place.category}</p>
                 </div>
                 {place.rating && (
                   <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded">
@@ -289,20 +289,20 @@ export default function PlacesManagement() {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-start text-sm text-gray-600">
+                <div className="flex items-start text-sm text-on-surface-variant">
                   <MapPin className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
                   <span>{place.address}</span>
                 </div>
 
                 {place.description && (
-                  <p className="text-sm text-gray-700 line-clamp-2">
+                  <p className="text-sm text-on-surface-variant line-clamp-2">
                     {place.description}
                   </p>
                 )}
               </div>
 
               <div className="pt-3 border-t space-y-2">
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between text-xs text-outline">
                   <span>Added by {place.users?.username || 'Unknown'}</span>
                   <span>{new Date(place.created_at).toLocaleDateString()}</span>
                 </div>
@@ -310,7 +310,7 @@ export default function PlacesManagement() {
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => window.open(`/places?lat=${place.latitude}&lng=${place.longitude}`, '_blank')}
-                    className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
                   >
                     <Eye className="h-3 w-3 mr-1" />
                     View on Map
@@ -334,7 +334,7 @@ export default function PlacesManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
@@ -359,8 +359,8 @@ export default function PlacesManagement() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`px-4 py-2 rounded-md text-sm font-medium ${
                     currentPage === pageNum
-                      ? 'bg-green-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-on-surface-variant border border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
                   {pageNum}
@@ -372,7 +372,7 @@ export default function PlacesManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />
@@ -382,13 +382,13 @@ export default function PlacesManagement() {
 
       {/* Create Place Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-outline bg-opacity-75 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Create New Place</h2>
+            <div className="px-6 py-4 border-b border-surface-container-high flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-on-surface">Create New Place</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-500"
+                className="text-outline hover:text-outline"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -396,7 +396,7 @@ export default function PlacesManagement() {
 
             <form onSubmit={handleCreatePlace} className="px-6 py-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Place Name *
                 </label>
                 <input
@@ -404,26 +404,26 @@ export default function PlacesManagement() {
                   required
                   value={createForm.name}
                   onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Enter place name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Description
                 </label>
                 <textarea
                   value={createForm.description}
                   onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Enter place description (optional)"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Address *
                 </label>
                 <input
@@ -431,14 +431,14 @@ export default function PlacesManagement() {
                   required
                   value={createForm.address}
                   onChange={(e) => setCreateForm({ ...createForm, address: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Enter full address"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     Latitude *
                   </label>
                   <input
@@ -446,12 +446,12 @@ export default function PlacesManagement() {
                     required
                     value={createForm.latitude}
                     onChange={(e) => setCreateForm({ ...createForm, latitude: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="e.g., 40.7128"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     Longitude *
                   </label>
                   <input
@@ -459,21 +459,21 @@ export default function PlacesManagement() {
                     required
                     value={createForm.longitude}
                     onChange={(e) => setCreateForm({ ...createForm, longitude: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="e.g., -74.0060"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Category *
                 </label>
                 <select
                   required
                   value={createForm.category}
                   onChange={(e) => setCreateForm({ ...createForm, category: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   <option value="restaurant">Restaurant</option>
                   <option value="cafe">Cafe</option>
@@ -487,14 +487,14 @@ export default function PlacesManagement() {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  className="px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {creating ? (
                     <>

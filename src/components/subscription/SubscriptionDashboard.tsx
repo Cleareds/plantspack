@@ -143,7 +143,7 @@ export default function SubscriptionDashboard() {
             <div className="space-y-2">
               {currentTier.features.map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-primary" />
                   <span className="text-sm text-on-surface-variant">{feature}</span>
                 </div>
               ))}
@@ -156,7 +156,7 @@ export default function SubscriptionDashboard() {
               <div>
                 <label className="block text-sm font-medium text-on-surface-variant mb-1">Status</label>
                 <div className="flex items-center space-x-2">
-                  {isActive && <CheckCircle className="h-4 w-4 text-green-500" />}
+                  {isActive && <CheckCircle className="h-4 w-4 text-primary" />}
                   {isPastDue && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
                   {isCanceled && <AlertTriangle className="h-4 w-4 text-red-500" />}
                   <span className={`text-sm font-medium ${
@@ -231,7 +231,7 @@ export default function SubscriptionDashboard() {
                   <div className="space-y-1 mb-4">
                     {tier.features.slice(0, 3).map((feature, index) => (
                       <div key={index} className="flex items-center space-x-2">
-                        <CheckCircle className="h-3 w-3 text-green-500" />
+                        <CheckCircle className="h-3 w-3 text-primary" />
                         <span className="text-xs text-on-surface-variant">{feature}</span>
                       </div>
                     ))}
@@ -281,7 +281,7 @@ export default function SubscriptionDashboard() {
             <div className="space-y-1 mb-4">
               {SUBSCRIPTION_TIERS.premium.features.slice(0, 4).map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <CheckCircle className="h-3 w-3 text-green-500" />
+                  <CheckCircle className="h-3 w-3 text-primary" />
                   <span className="text-xs text-on-surface-variant">{feature}</span>
                 </div>
               ))}

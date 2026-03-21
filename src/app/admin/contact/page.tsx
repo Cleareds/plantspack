@@ -149,14 +149,14 @@ export default function ContactAdminPage() {
         )
       case 'resolved':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-container/30 text-primary">
             <CheckCircle className="h-3 w-3 mr-1" />
             Resolved
           </span>
         )
       case 'closed':
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container text-on-surface">
             <XCircle className="h-3 w-3 mr-1" />
             Closed
           </span>
@@ -169,18 +169,18 @@ export default function ContactAdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Contact Forms</h1>
-        <p className="text-gray-600 mt-1">Manage contact form submissions</p>
+        <h1 className="text-3xl font-bold text-on-surface">Contact Forms</h1>
+        <p className="text-on-surface-variant mt-1">Manage contact form submissions</p>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Search
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
                 placeholder="Search by name, email, or subject..."
@@ -189,13 +189,13 @@ export default function ContactAdminPage() {
                   setSearchQuery(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Status
             </label>
             <select
@@ -204,7 +204,7 @@ export default function ContactAdminPage() {
                 setFilterStatus(e.target.value)
                 setCurrentPage(1)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All Statuses</option>
               <option value="new">New</option>
@@ -216,10 +216,10 @@ export default function ContactAdminPage() {
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Showing {contacts.length} of {totalContacts} submissions
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Page {currentPage} of {totalPages}
           </p>
         </div>
@@ -227,18 +227,18 @@ export default function ContactAdminPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : contacts.length === 0 && !searchQuery && filterStatus === 'all' ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
-          <Mail className="h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">No contact submissions yet</p>
-          <p className="text-sm text-gray-500 mt-2">Contact form submissions will appear here</p>
+          <Mail className="h-12 w-12 text-outline mb-2" />
+          <p className="text-on-surface-variant">No contact submissions yet</p>
+          <p className="text-sm text-outline mt-2">Contact form submissions will appear here</p>
         </div>
       ) : contacts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
-          <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">No contact submissions found matching your filters</p>
+          <AlertCircle className="h-12 w-12 text-outline mb-2" />
+          <p className="text-on-surface-variant">No contact submissions found matching your filters</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -247,28 +247,28 @@ export default function ContactAdminPage() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-on-surface">
                       {contact.subject}
                     </h3>
                     {getStatusBadge(contact.status)}
                   </div>
-                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <div className="flex items-center space-x-4 text-sm text-on-surface-variant">
                     <span className="font-medium">{contact.name}</span>
                     <span>{contact.email}</span>
                     {contact.users && (
-                      <span className="text-gray-500">
+                      <span className="text-outline">
                         (User: {contact.users.username})
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-outline mt-1">
                     Submitted {new Date(contact.created_at).toLocaleString()}
                   </p>
                 </div>
               </div>
 
-              <div className="bg-gray-50 rounded-md p-4 mb-4">
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">
+              <div className="bg-surface-container-low rounded-md p-4 mb-4">
+                <p className="text-sm text-on-surface-variant whitespace-pre-wrap">
                   {contact.message}
                 </p>
               </div>
@@ -285,21 +285,21 @@ export default function ContactAdminPage() {
               {selectedContact?.id === contact.id ? (
                 <div className="space-y-3 pt-3 border-t">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-on-surface-variant mb-1">
                       Admin Notes
                     </label>
                     <textarea
                       value={adminNotes}
                       onChange={(e) => setAdminNotes(e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="Add notes about this submission..."
                     />
                   </div>
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={handleSaveNotes}
-                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium"
+                      className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary text-sm font-medium"
                     >
                       Save Notes
                     </button>
@@ -308,7 +308,7 @@ export default function ContactAdminPage() {
                         setSelectedContact(null)
                         setAdminNotes('')
                       }}
-                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm font-medium"
+                      className="px-4 py-2 bg-surface-container text-on-surface-variant rounded-md hover:bg-surface-container-high text-sm font-medium"
                     >
                       Cancel
                     </button>
@@ -327,7 +327,7 @@ export default function ContactAdminPage() {
                   <button
                     onClick={() => handleUpdateStatus(contact.id, 'resolved')}
                     disabled={contact.status === 'resolved'}
-                    className="inline-flex items-center px-3 py-1.5 border border-green-300 rounded-md text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 disabled:opacity-50"
+                    className="inline-flex items-center px-3 py-1.5 border border-primary-container rounded-md text-xs font-medium text-primary bg-primary-container/20 hover:bg-primary-container/30 disabled:opacity-50"
                   >
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Resolve
@@ -335,7 +335,7 @@ export default function ContactAdminPage() {
                   <button
                     onClick={() => handleUpdateStatus(contact.id, 'closed')}
                     disabled={contact.status === 'closed'}
-                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 disabled:opacity-50"
+                    className="inline-flex items-center px-3 py-1.5 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-surface-container-low hover:bg-surface-container disabled:opacity-50"
                   >
                     <XCircle className="h-3 w-3 mr-1" />
                     Close
@@ -361,7 +361,7 @@ export default function ContactAdminPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
@@ -386,8 +386,8 @@ export default function ContactAdminPage() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`px-4 py-2 rounded-md text-sm font-medium ${
                     currentPage === pageNum
-                      ? 'bg-green-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-on-surface-variant border border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
                   {pageNum}
@@ -399,7 +399,7 @@ export default function ContactAdminPage() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />

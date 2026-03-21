@@ -28,9 +28,10 @@ const POSTS_PER_PAGE = 10
 
 interface FeedProps {
     onPostCreated?: () => void
+    category?: string
 }
 
-export default function Feed({onPostCreated}: FeedProps) {
+export default function Feed({onPostCreated, category}: FeedProps) {
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
     const [loadingMore, setLoadingMore] = useState(false)
@@ -243,7 +244,8 @@ export default function Feed({onPostCreated}: FeedProps) {
                     limit: POSTS_PER_PAGE,
                     offset: currentOffset,
                     userId: user?.id,
-                    includeAnalytics: true
+                    includeAnalytics: true,
+                    category: category || 'all'
                 })
 
                 // Bulk load reactions and follows for performance (prevents N+1 queries)
@@ -385,7 +387,8 @@ export default function Feed({onPostCreated}: FeedProps) {
                 limit: POSTS_PER_PAGE,
                 offset: currentOffset,
                 userId: undefined,
-                includeAnalytics: true
+                includeAnalytics: true,
+                category: category || 'all'
             })
 
             // Bulk load reactions and follows for performance (prevents N+1 queries)
@@ -415,7 +418,7 @@ export default function Feed({onPostCreated}: FeedProps) {
             setLoading(false)
             setLoadingMore(false)
         }
-    }, [user, activeTab, sortOption]) // Recreate when user, tab, or sort changes
+    }, [user, activeTab, sortOption, category]) // Recreate when user, tab, sort, or category changes
 
     const isLoadingMoreRef = useRef(false)
 

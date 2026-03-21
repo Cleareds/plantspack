@@ -40,7 +40,7 @@ export default function LinkifiedText({ text, className = '' }: LinkifiedTextPro
             key={`hashtag-${segmentIndex++}`}
             href={`/hashtag/${tag.toLowerCase()}`}
             onClick={(e) => e.stopPropagation()}
-            className="text-green-600 hover:text-green-700 hover:underline font-medium"
+            className="text-primary hover:text-primary hover:underline font-medium"
           >
             {match[1]}
           </Link>

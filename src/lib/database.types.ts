@@ -6,9 +6,73 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+export type PostCategory = 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+
+export interface CategoryInfo {
+  slug: PostCategory
+  display_name: string
+  description: string
+  icon_name: string
+  display_order: number
+  is_active: boolean
+  color: string
+}
+
+export interface RecipeData {
+  ingredients: string[]
+  prep_time_min: number
+  cook_time_min: number
+  servings: number
+  difficulty: 'easy' | 'medium' | 'hard'
+}
+
+export interface EventData {
+  start_time: string
+  end_time?: string
+  location: string
+  ticket_url?: string
+  is_recurring: boolean
+}
+
+export interface ProductData {
+  brand: string
+  price_range: string
+  where_to_buy: string
+  rating: number
+}
+
 export interface Database {
   public: {
     Tables: {
+      categories: {
+        Row: {
+          slug: string
+          display_name: string
+          description: string | null
+          icon_name: string
+          display_order: number
+          is_active: boolean
+          color: string | null
+        }
+        Insert: {
+          slug: string
+          display_name: string
+          description?: string | null
+          icon_name: string
+          display_order?: number
+          is_active?: boolean
+          color?: string | null
+        }
+        Update: {
+          slug?: string
+          display_name?: string
+          description?: string | null
+          icon_name?: string
+          display_order?: number
+          is_active?: boolean
+          color?: string | null
+        }
+      }
       users: {
         Row: {
           id: string
@@ -53,8 +117,13 @@ export interface Database {
           user_id: string
           content: string
           privacy: 'public' | 'friends'
+          category: 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+          secondary_tags: string[] | null
+          recipe_data: Json | null
+          event_data: Json | null
+          product_data: Json | null
           images?: string[] | null
-          image_url?: string | null // Backward compatibility
+          image_url?: string | null
           image_urls?: string[] | null
           video_urls?: string[] | null
           parent_post_id?: string | null
@@ -68,8 +137,13 @@ export interface Database {
           user_id: string
           content: string
           privacy?: 'public' | 'friends'
+          category?: 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+          secondary_tags?: string[] | null
+          recipe_data?: Json | null
+          event_data?: Json | null
+          product_data?: Json | null
           images?: string[] | null
-          image_url?: string | null // Backward compatibility
+          image_url?: string | null
           image_urls?: string[] | null
           video_urls?: string[] | null
           parent_post_id?: string | null
@@ -83,8 +157,13 @@ export interface Database {
           user_id?: string
           content?: string
           privacy?: 'public' | 'friends'
+          category?: 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+          secondary_tags?: string[] | null
+          recipe_data?: Json | null
+          event_data?: Json | null
+          product_data?: Json | null
           images?: string[] | null
-          image_url?: string | null // Backward compatibility
+          image_url?: string | null
           image_urls?: string[] | null
           video_urls?: string[] | null
           parent_post_id?: string | null
@@ -172,6 +251,14 @@ export interface Database {
           website: string | null
           phone: string | null
           is_pet_friendly: boolean
+          source: string
+          source_id: string | null
+          images: string[]
+          price_range: string | null
+          cuisine_types: string[]
+          vegan_level: 'fully_vegan' | 'vegan_friendly' | 'vegan_options' | null
+          average_rating: number
+          review_count: number
           created_by: string
           created_at: string
           updated_at: string
@@ -187,6 +274,14 @@ export interface Database {
           website?: string | null
           phone?: string | null
           is_pet_friendly?: boolean
+          source?: string
+          source_id?: string | null
+          images?: string[]
+          price_range?: string | null
+          cuisine_types?: string[]
+          vegan_level?: 'fully_vegan' | 'vegan_friendly' | 'vegan_options' | null
+          average_rating?: number
+          review_count?: number
           created_by: string
           created_at?: string
           updated_at?: string
@@ -202,6 +297,14 @@ export interface Database {
           website?: string | null
           phone?: string | null
           is_pet_friendly?: boolean
+          source?: string
+          source_id?: string | null
+          images?: string[]
+          price_range?: string | null
+          cuisine_types?: string[]
+          vegan_level?: 'fully_vegan' | 'vegan_friendly' | 'vegan_options' | null
+          average_rating?: number
+          review_count?: number
           created_by?: string
           created_at?: string
           updated_at?: string

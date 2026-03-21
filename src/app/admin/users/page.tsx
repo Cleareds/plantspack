@@ -223,12 +223,12 @@ export default function UsersManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-1">Manage all registered users</p>
+          <h1 className="text-3xl font-bold text-on-surface">User Management</h1>
+          <p className="text-on-surface-variant mt-1">Manage all registered users</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors"
+          className="inline-flex items-center space-x-2 px-4 py-2 bg-primary hover:bg-primary text-white rounded-md font-medium transition-colors"
         >
           <Plus className="h-5 w-5" />
           <span>Create User</span>
@@ -240,11 +240,11 @@ export default function UsersManagement() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Search
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
                 placeholder="Search by username or email..."
@@ -253,14 +253,14 @@ export default function UsersManagement() {
                   setSearchQuery(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           {/* Role Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Role
             </label>
             <select
@@ -269,7 +269,7 @@ export default function UsersManagement() {
                 setFilterRole(e.target.value as any)
                 setCurrentPage(1)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All Roles</option>
               <option value="user">User</option>
@@ -279,7 +279,7 @@ export default function UsersManagement() {
 
           {/* Banned Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">
               Status
             </label>
             <select
@@ -288,7 +288,7 @@ export default function UsersManagement() {
                 setFilterBanned(e.target.value as any)
                 setCurrentPage(1)
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All Users</option>
               <option value="active">Active</option>
@@ -299,10 +299,10 @@ export default function UsersManagement() {
 
         {/* Stats */}
         <div className="flex items-center justify-between pt-4 border-t">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Showing {users.length} of {totalUsers} users
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-on-surface-variant">
             Page {currentPage} of {totalPages}
           </p>
         </div>
@@ -312,44 +312,44 @@ export default function UsersManagement() {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : users.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
-            <p className="text-gray-600">No users found</p>
+            <AlertCircle className="h-12 w-12 text-outline mb-2" />
+            <p className="text-on-surface-variant">No users found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-surface-container-low border-b">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">
                     Reports
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">
                     Joined
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-outline uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-surface-container-high">
                 {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
+                  <tr key={user.id} className="hover:bg-surface-container-low">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0">
@@ -360,30 +360,30 @@ export default function UsersManagement() {
                               alt={user.username}
                             />
                           ) : (
-                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                              <UserIcon className="h-5 w-5 text-gray-500" />
+                            <div className="h-10 w-10 rounded-full bg-surface-container-high flex items-center justify-center">
+                              <UserIcon className="h-5 w-5 text-outline" />
                             </div>
                           )}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-on-surface">
                             {user.username}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-outline">
                             {user.first_name} {user.last_name}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{user.email}</div>
+                      <div className="text-sm text-on-surface">{user.email}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           user.role === 'admin'
                             ? 'bg-purple-100 text-purple-800'
-                            : 'bg-gray-100 text-gray-800'
+                            : 'bg-surface-container text-on-surface'
                         }`}
                       >
                         {user.role === 'admin' ? (
@@ -401,7 +401,7 @@ export default function UsersManagement() {
                           Banned
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-container/30 text-primary">
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Active
                         </span>
@@ -414,10 +414,10 @@ export default function UsersManagement() {
                           {reportCounts[user.id]} {reportCounts[user.id] === 1 ? 'report' : 'reports'}
                         </span>
                       ) : (
-                        <span className="text-sm text-gray-400">No reports</span>
+                        <span className="text-sm text-outline">No reports</span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-outline">
                       {new Date(user.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
@@ -425,7 +425,7 @@ export default function UsersManagement() {
                         onClick={() => handleBanUser(user.id, user.is_banned || false)}
                         className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium ${
                           user.is_banned
-                            ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                            ? 'bg-primary-container/30 text-primary hover:bg-primary-container/20'
                             : 'bg-red-100 text-red-700 hover:bg-red-200'
                         }`}
                         title={user.is_banned ? 'Unban user' : 'Ban user'}
@@ -452,7 +452,7 @@ export default function UsersManagement() {
                       </button>
                       <button
                         onClick={() => handleDeleteUser(user.id, user.username)}
-                        className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
                         title="Delete user"
                       >
                         <Trash2 className="h-3 w-3 mr-1" />
@@ -473,7 +473,7 @@ export default function UsersManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
@@ -498,8 +498,8 @@ export default function UsersManagement() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`px-4 py-2 rounded-md text-sm font-medium ${
                     currentPage === pageNum
-                      ? 'bg-green-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-on-surface-variant border border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
                   {pageNum}
@@ -511,7 +511,7 @@ export default function UsersManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />
@@ -524,10 +524,10 @@ export default function UsersManagement() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Create New User</h2>
+              <h2 className="text-xl font-bold text-on-surface">Create New User</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-outline hover:text-on-surface-variant"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -535,7 +535,7 @@ export default function UsersManagement() {
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Email *
                 </label>
                 <input
@@ -543,12 +543,12 @@ export default function UsersManagement() {
                   required
                   value={createForm.email}
                   onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Password *
                 </label>
                 <input
@@ -557,13 +557,13 @@ export default function UsersManagement() {
                   minLength={8}
                   value={createForm.password}
                   onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
-                <p className="text-xs text-gray-500 mt-1">Min 8 characters</p>
+                <p className="text-xs text-outline mt-1">Min 8 characters</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Username *
                 </label>
                 <input
@@ -571,44 +571,44 @@ export default function UsersManagement() {
                   required
                   value={createForm.username}
                   onChange={(e) => setCreateForm({ ...createForm, username: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     First Name
                   </label>
                   <input
                     type="text"
                     value={createForm.first_name}
                     onChange={(e) => setCreateForm({ ...createForm, first_name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">
                     Last Name
                   </label>
                   <input
                     type="text"
                     value={createForm.last_name}
                     onChange={(e) => setCreateForm({ ...createForm, last_name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Role
                 </label>
                 <select
                   value={createForm.role}
                   onChange={(e) => setCreateForm({ ...createForm, role: e.target.value as 'user' | 'admin' })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   <option value="user">User</option>
                   <option value="admin">Admin</option>
@@ -619,14 +619,14 @@ export default function UsersManagement() {
                 <button
                   type="submit"
                   disabled={creating}
-                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 >
                   {creating ? 'Creating...' : 'Create User'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium"
+                  className="px-4 py-2 bg-surface-container text-on-surface-variant rounded-md hover:bg-surface-container-high font-medium"
                 >
                   Cancel
                 </button>

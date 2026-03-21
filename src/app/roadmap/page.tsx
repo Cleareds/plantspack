@@ -138,9 +138,9 @@ const STATUS_CONFIG: Record<StatusKey, { label: string; bg: string; text: string
   },
   'ongoing': {
     label: 'Ongoing',
-    bg: 'bg-green-50',
-    text: 'text-green-700',
-    dot: 'bg-green-500',
+    bg: 'bg-primary-container/20',
+    text: 'text-primary',
+    dot: 'bg-primary',
   },
   'planned': {
     label: 'Planned',
@@ -161,7 +161,7 @@ const COLUMNS: { key: ColumnKey; title: string; subtitle: string; headerBg: stri
     key: 'now',
     title: 'Now',
     subtitle: 'Shipped & In Progress',
-    headerBg: 'bg-green-600',
+    headerBg: 'bg-primary',
     headerText: 'text-white',
   },
   {
@@ -175,7 +175,7 @@ const COLUMNS: { key: ColumnKey; title: string; subtitle: string; headerBg: stri
     key: 'later',
     title: 'Later',
     subtitle: 'Q4 2026 and beyond',
-    headerBg: 'bg-gray-500',
+    headerBg: 'bg-outline',
     headerText: 'text-white',
   },
 ]
@@ -367,9 +367,9 @@ export default function RoadmapPage() {
                           key={feature.id}
                           className={`bg-surface-container-lowest rounded-lg border p-4 transition-all ${
                             canVote && !hasVoted
-                              ? 'border-outline-variant/15 hover:border-green-300 cursor-pointer'
+                              ? 'border-outline-variant/15 hover:border-primary-container cursor-pointer'
                               : 'border-outline-variant/15'
-                          } ${isSelected ? 'border-green-400 ring-1 ring-green-400' : ''}`}
+                          } ${isSelected ? 'border-primary ring-1 ring-primary' : ''}`}
                           onClick={() => canVote && !hasVoted && toggleFeature(feature.id)}
                         >
                           {/* Card top row */}
@@ -389,7 +389,7 @@ export default function RoadmapPage() {
                                 <div className="group relative flex-shrink-0 mt-0.5">
                                   <Lock className="h-4 w-4 text-outline" />
                                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10">
-                                    <div className="bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                                    <div className="bg-on-surface text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                                       Support or Premium required
                                     </div>
                                   </div>
@@ -418,7 +418,7 @@ export default function RoadmapPage() {
                             </div>
                             <div className="w-full bg-surface-container-low rounded-full h-1.5">
                               <div
-                                className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
+                                className="bg-primary h-1.5 rounded-full transition-all duration-300"
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
@@ -446,9 +446,9 @@ export default function RoadmapPage() {
                 {submitting ? 'Submitting...' : `Submit Vote${selectedFeatures.length > 0 ? ` (${selectedFeatures.length} selected)` : ''}`}
               </button>
             ) : (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
+              <div className="bg-primary-container/20 border border-primary-container rounded-lg p-4 flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                <p className="text-green-800">You've already voted! Thank you for your input.</p>
+                <p className="text-primary">You've already voted! Thank you for your input.</p>
               </div>
             )}
           </div>
@@ -462,9 +462,9 @@ export default function RoadmapPage() {
           </div>
 
           {suggestionSuccess && (
-            <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
+            <div className="mb-6 bg-primary-container/20 border border-primary-container rounded-lg p-4 flex items-center gap-3">
               <CheckCircle className="h-5 w-5 text-primary" />
-              <p className="text-green-800">Thank you! Your suggestion has been sent to our team.</p>
+              <p className="text-primary">Thank you! Your suggestion has been sent to our team.</p>
             </div>
           )}
 

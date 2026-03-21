@@ -93,8 +93,8 @@ export default function AdminDashboard() {
       name: 'Total Posts',
       value: stats.totalPosts,
       icon: FileText,
-      color: 'text-green-600',
-      bg: 'bg-green-100',
+      color: 'text-primary',
+      bg: 'bg-primary-container/30',
       change: `+${stats.todayPosts} today`,
     },
     {
@@ -132,10 +132,10 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+        <div className="h-8 bg-surface-container-high rounded w-1/4"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded-lg"></div>
+            <div key={i} className="h-32 bg-surface-container-high rounded-lg"></div>
           ))}
         </div>
       </div>
@@ -145,10 +145,10 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-on-surface">Admin Dashboard</h1>
         <button
           onClick={loadStats}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors"
         >
           Refresh Stats
         </button>
@@ -165,12 +165,12 @@ export default function AdminDashboard() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                  <p className="mt-2 text-3xl font-bold text-gray-900">
+                  <p className="text-sm font-medium text-on-surface-variant">{stat.name}</p>
+                  <p className="mt-2 text-3xl font-bold text-on-surface">
                     {stat.value.toLocaleString()}
                   </p>
                   {stat.change && (
-                    <p className="mt-1 text-sm text-gray-500 flex items-center space-x-1">
+                    <p className="mt-1 text-sm text-outline flex items-center space-x-1">
                       <TrendingUp className="h-4 w-4" />
                       <span>{stat.change}</span>
                     </p>
@@ -193,11 +193,11 @@ export default function AdminDashboard() {
 
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-bold text-on-surface mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             href="/admin/reports"
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors text-center"
+            className="p-4 border-2 border-surface-container-high rounded-lg hover:border-primary transition-colors text-center"
           >
             <Flag className="h-6 w-6 mx-auto mb-2 text-red-600" />
             <span className="text-sm font-medium">Review Reports</span>
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
           </a>
           <a
             href="/admin/contact"
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors text-center"
+            className="p-4 border-2 border-surface-container-high rounded-lg hover:border-primary transition-colors text-center"
           >
             <Mail className="h-6 w-6 mx-auto mb-2 text-yellow-600" />
             <span className="text-sm font-medium">Contact Forms</span>
@@ -221,21 +221,21 @@ export default function AdminDashboard() {
           </a>
           <a
             href="/admin/users"
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors text-center"
+            className="p-4 border-2 border-surface-container-high rounded-lg hover:border-primary transition-colors text-center"
           >
             <Users className="h-6 w-6 mx-auto mb-2 text-blue-600" />
             <span className="text-sm font-medium">Manage Users</span>
           </a>
           <a
             href="/admin/posts"
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors text-center"
+            className="p-4 border-2 border-surface-container-high rounded-lg hover:border-primary transition-colors text-center"
           >
-            <FileText className="h-6 w-6 mx-auto mb-2 text-green-600" />
+            <FileText className="h-6 w-6 mx-auto mb-2 text-primary" />
             <span className="text-sm font-medium">Manage Posts</span>
           </a>
           <a
             href="/admin/claims"
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 transition-colors text-center"
+            className="p-4 border-2 border-surface-container-high rounded-lg hover:border-primary transition-colors text-center"
           >
             <Building2 className="h-6 w-6 mx-auto mb-2 text-purple-600" />
             <span className="text-sm font-medium">Business Claims</span>
@@ -250,24 +250,24 @@ export default function AdminDashboard() {
 
       {/* System Health */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">System Health</h2>
+        <h2 className="text-xl font-bold text-on-surface mb-4">System Health</h2>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Database Connection</span>
-            <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+            <span className="text-sm text-on-surface-variant">Database Connection</span>
+            <span className="px-3 py-1 bg-primary-container/30 text-primary rounded-full text-xs font-medium">
               Healthy
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Moderation Queue</span>
+            <span className="text-sm text-on-surface-variant">Moderation Queue</span>
             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-              stats.pendingReports > 10 ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+              stats.pendingReports > 10 ? 'bg-red-100 text-red-800' : 'bg-primary-container/30 text-primary'
             }`}>
               {stats.pendingReports > 10 ? 'Needs Attention' : 'Under Control'}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">User Growth (Today)</span>
+            <span className="text-sm text-on-surface-variant">User Growth (Today)</span>
             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
               +{stats.todayUsers} users
             </span>

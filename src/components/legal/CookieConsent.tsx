@@ -65,18 +65,18 @@ export default function CookieConsent() {
   return (
     <>
       {/* Cookie Consent Banner */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white border-t-2 border-green-500 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white border-t-2 border-primary shadow-lg">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
-                <Cookie className="h-5 w-5 text-green-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Cookie Preferences</h3>
+                <Cookie className="h-5 w-5 text-primary" />
+                <h3 className="text-lg font-semibold text-on-surface">Cookie Preferences</h3>
               </div>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-on-surface-variant">
                 We use cookies to enhance your experience, analyze site traffic, and for marketing purposes.
                 You can customize your preferences or accept all cookies.{' '}
-                <Link href="/legal/privacy" className="text-green-600 hover:text-green-700 underline">
+                <Link href="/legal/privacy" className="text-primary hover:text-primary underline">
                   Learn more
                 </Link>
               </p>
@@ -85,20 +85,20 @@ export default function CookieConsent() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setShowSettings(true)}
-                className="inline-flex items-center space-x-1 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center space-x-1 px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors"
               >
                 <Settings className="h-4 w-4" />
                 <span>Customize</span>
               </button>
               <button
                 onClick={handleRejectAll}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors"
               >
                 Reject All
               </button>
               <button
                 onClick={handleAcceptAll}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition-colors"
+                className="px-4 py-2 bg-primary hover:bg-primary text-white rounded-md text-sm font-medium transition-colors"
               >
                 Accept All
               </button>
@@ -111,17 +111,17 @@ export default function CookieConsent() {
       {showSettings && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6">
+            <div className="sticky top-0 bg-white border-b border-surface-container-high p-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">Cookie Settings</h2>
+                <h2 className="text-2xl font-bold text-on-surface">Cookie Settings</h2>
                 <button
                   onClick={() => setShowSettings(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-outline hover:text-on-surface-variant"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-on-surface-variant mt-2">
                 Manage your cookie preferences. You can enable or disable different types of cookies below.
               </p>
             </div>
@@ -135,12 +135,12 @@ export default function CookieConsent() {
                       type="checkbox"
                       checked={true}
                       disabled
-                      className="h-4 w-4 text-green-600 rounded border-gray-300"
+                      className="h-4 w-4 text-primary rounded border-outline-variant"
                     />
-                    <h3 className="font-semibold text-gray-900">Necessary Cookies</h3>
-                    <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">Required</span>
+                    <h3 className="font-semibold text-on-surface">Necessary Cookies</h3>
+                    <span className="text-xs bg-surface-container-high text-on-surface-variant px-2 py-1 rounded">Required</span>
                   </div>
-                  <p className="text-sm text-gray-600 ml-6">
+                  <p className="text-sm text-on-surface-variant ml-6">
                     These cookies are essential for the website to function properly. They enable core features
                     like authentication, security, and accessibility. These cannot be disabled.
                   </p>
@@ -155,11 +155,11 @@ export default function CookieConsent() {
                       type="checkbox"
                       checked={preferences.analytics}
                       onChange={(e) => setPreferences({ ...preferences, analytics: e.target.checked })}
-                      className="h-4 w-4 text-green-600 rounded border-gray-300"
+                      className="h-4 w-4 text-primary rounded border-outline-variant"
                     />
-                    <h3 className="font-semibold text-gray-900">Analytics Cookies</h3>
+                    <h3 className="font-semibold text-on-surface">Analytics Cookies</h3>
                   </div>
-                  <p className="text-sm text-gray-600 ml-6">
+                  <p className="text-sm text-on-surface-variant ml-6">
                     These cookies help us understand how visitors interact with our website by collecting and
                     reporting information anonymously. This helps us improve the website and user experience.
                   </p>
@@ -174,37 +174,37 @@ export default function CookieConsent() {
                       type="checkbox"
                       checked={preferences.preferences}
                       onChange={(e) => setPreferences({ ...preferences, preferences: e.target.checked })}
-                      className="h-4 w-4 text-green-600 rounded border-gray-300"
+                      className="h-4 w-4 text-primary rounded border-outline-variant"
                     />
-                    <h3 className="font-semibold text-gray-900">Preference Cookies</h3>
+                    <h3 className="font-semibold text-on-surface">Preference Cookies</h3>
                   </div>
-                  <p className="text-sm text-gray-600 ml-6">
+                  <p className="text-sm text-on-surface-variant ml-6">
                     These cookies remember your preferences and choices (such as language, region, or theme)
                     to provide a more personalized experience.
                   </p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-600 mb-4">
+              <div className="pt-4 border-t border-surface-container-high">
+                <p className="text-sm text-on-surface-variant mb-4">
                   For more information about how we use cookies and protect your privacy, please read our{' '}
-                  <Link href="/legal/privacy" className="text-green-600 hover:text-green-700 underline">
+                  <Link href="/legal/privacy" className="text-primary hover:text-primary underline">
                     Privacy Policy
                   </Link>.
                 </p>
               </div>
             </div>
 
-            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 flex items-center justify-end space-x-3">
+            <div className="sticky bottom-0 bg-surface-container-low border-t border-surface-container-high p-6 flex items-center justify-end space-x-3">
               <button
                 onClick={() => setShowSettings(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveSettings}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition-colors"
+                className="px-4 py-2 bg-primary hover:bg-primary text-white rounded-md text-sm font-medium transition-colors"
               >
                 Save Preferences
               </button>

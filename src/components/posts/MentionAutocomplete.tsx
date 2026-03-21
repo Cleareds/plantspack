@@ -92,13 +92,13 @@ export default function MentionAutocomplete({
     return (
       <div
         ref={containerRef}
-        className="absolute z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-3 min-w-[200px]"
+        className="absolute z-50 bg-white border border-outline-variant rounded-lg shadow-lg p-3 min-w-[200px]"
         style={{
           top: `${cursorPosition.top + 24}px`,
           left: `${cursorPosition.left}px`,
         }}
       >
-        <p className="text-sm text-gray-500">Searching...</p>
+        <p className="text-sm text-outline">Searching...</p>
       </div>
     )
   }
@@ -107,13 +107,13 @@ export default function MentionAutocomplete({
     return (
       <div
         ref={containerRef}
-        className="absolute z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-3 min-w-[200px]"
+        className="absolute z-50 bg-white border border-outline-variant rounded-lg shadow-lg p-3 min-w-[200px]"
         style={{
           top: `${cursorPosition.top + 24}px`,
           left: `${cursorPosition.left}px`,
         }}
       >
-        <p className="text-sm text-gray-500">No users found</p>
+        <p className="text-sm text-outline">No users found</p>
       </div>
     )
   }
@@ -121,7 +121,7 @@ export default function MentionAutocomplete({
   return (
     <div
       ref={containerRef}
-      className="absolute z-50 bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden min-w-[250px] max-h-[200px] overflow-y-auto"
+      className="absolute z-50 bg-white border border-outline-variant rounded-lg shadow-lg overflow-hidden min-w-[250px] max-h-[200px] overflow-y-auto"
       style={{
         top: `${cursorPosition.top + 24}px`,
         left: `${cursorPosition.left}px`,
@@ -133,8 +133,8 @@ export default function MentionAutocomplete({
           onClick={() => onSelect(user.username)}
           className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-colors ${
             index === selectedIndex
-              ? 'bg-green-50'
-              : 'hover:bg-gray-50'
+              ? 'bg-primary-container/20'
+              : 'hover:bg-surface-container-low'
           }`}
         >
           {user.avatar_url ? (
@@ -144,17 +144,17 @@ export default function MentionAutocomplete({
               className="h-8 w-8 rounded-full object-cover"
             />
           ) : (
-            <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-              <User className="h-4 w-4 text-green-600" />
+            <div className="h-8 w-8 rounded-full bg-primary-container/30 flex items-center justify-center">
+              <User className="h-4 w-4 text-primary" />
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
+            <p className="text-sm font-medium text-on-surface truncate">
               {user.first_name && user.last_name
                 ? `${user.first_name} ${user.last_name}`
                 : user.username}
             </p>
-            <p className="text-xs text-gray-500 truncate">@{user.username}</p>
+            <p className="text-xs text-outline truncate">@{user.username}</p>
           </div>
         </button>
       ))}

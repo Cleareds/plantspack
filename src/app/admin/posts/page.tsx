@@ -122,9 +122,9 @@ export default function PostsManagement() {
 
   const privacyBadge = (privacy: string) => {
     const map: Record<string, { icon: React.ReactNode; cls: string; label: string }> = {
-      public: { icon: <Globe className="h-3 w-3" />, cls: 'bg-green-100 text-green-800', label: 'Public' },
+      public: { icon: <Globe className="h-3 w-3" />, cls: 'bg-primary-container/30 text-primary', label: 'Public' },
       friends: { icon: <Users className="h-3 w-3" />, cls: 'bg-blue-100 text-blue-800', label: 'Friends' },
-      private: { icon: <Lock className="h-3 w-3" />, cls: 'bg-gray-100 text-gray-800', label: 'Private' },
+      private: { icon: <Lock className="h-3 w-3" />, cls: 'bg-surface-container text-on-surface', label: 'Private' },
     }
     const p = map[privacy] || map.private
     return (
@@ -137,33 +137,33 @@ export default function PostsManagement() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Posts Management</h1>
-        <p className="text-gray-600 mt-1">Manage all user posts</p>
+        <h1 className="text-3xl font-bold text-on-surface">Posts Management</h1>
+        <p className="text-on-surface-variant mt-1">Manage all user posts</p>
       </div>
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Search</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
                 placeholder="Search by content or location..."
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1) }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Privacy</label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Privacy</label>
             <select
               value={filterPrivacy}
               onChange={(e) => { setFilterPrivacy(e.target.value as any); setCurrentPage(1) }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All</option>
               <option value="public">Public</option>
@@ -173,11 +173,11 @@ export default function PostsManagement() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Status</label>
             <select
               value={showDeleted ? 'deleted' : 'active'}
               onChange={(e) => { setShowDeleted(e.target.value === 'deleted'); setCurrentPage(1) }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="active">Active</option>
               <option value="deleted">Soft-deleted</option>
@@ -185,7 +185,7 @@ export default function PostsManagement() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t text-sm text-gray-600">
+        <div className="flex items-center justify-between pt-4 border-t text-sm text-on-surface-variant">
           <span>Showing {posts.length} of {totalPosts} posts</span>
           <span>Page {currentPage} of {Math.max(1, totalPages)}</span>
         </div>
@@ -194,47 +194,47 @@ export default function PostsManagement() {
       {/* Table */}
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
-          <AlertCircle className="h-12 w-12 text-gray-400 mb-2" />
-          <p className="text-gray-600">No posts found</p>
+          <AlertCircle className="h-12 w-12 text-outline mb-2" />
+          <p className="text-on-surface-variant">No posts found</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-surface-container-high">
+            <thead className="bg-surface-container-low">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Content</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Date</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Privacy</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">User</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">Content</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider hidden md:table-cell">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider hidden sm:table-cell">Privacy</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-outline uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-surface-container-high">
               {posts.map((post) => {
                 const isActing = actionLoading === post.id
                 return (
-                  <tr key={post.id} className={post.deleted_at ? 'bg-red-50' : 'hover:bg-gray-50'}>
+                  <tr key={post.id} className={post.deleted_at ? 'bg-red-50' : 'hover:bg-surface-container-low'}>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-on-surface">
                         @{post.users?.username || 'unknown'}
                       </span>
                     </td>
                     <td className="px-4 py-3 max-w-xs">
-                      <p className="text-sm text-gray-700 truncate">
-                        {post.content || <span className="text-gray-400 italic">No text</span>}
+                      <p className="text-sm text-on-surface-variant truncate">
+                        {post.content || <span className="text-outline italic">No text</span>}
                       </p>
                       {post.location_city && (
-                        <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                        <p className="text-xs text-outline flex items-center gap-1 mt-0.5">
                           <MapPin className="h-3 w-3" />
                           {post.location_city}{post.location_region ? `, ${post.location_region}` : ''}
                         </p>
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500 hidden md:table-cell">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-outline hidden md:table-cell">
                       {new Date(post.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap hidden sm:table-cell">
@@ -244,7 +244,7 @@ export default function PostsManagement() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => window.open(`/post/${post.id}`, '_blank')}
-                          className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+                          className="p-1.5 text-outline hover:text-on-surface-variant hover:bg-surface-container rounded"
                           title="View post"
                         >
                           <Eye className="h-4 w-4" />
@@ -255,7 +255,7 @@ export default function PostsManagement() {
                             <button
                               onClick={() => handleRestore(post.id)}
                               disabled={isActing}
-                              className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded disabled:opacity-50"
+                              className="p-1.5 text-primary hover:text-primary hover:bg-primary-container/20 rounded disabled:opacity-50"
                               title="Restore post"
                             >
                               {isActing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4" />}
@@ -295,7 +295,7 @@ export default function PostsManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
@@ -315,8 +315,8 @@ export default function PostsManagement() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`px-4 py-2 rounded-md text-sm font-medium ${
                     currentPage === pageNum
-                      ? 'bg-green-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-on-surface-variant border border-outline-variant hover:bg-surface-container-low'
                   }`}
                 >
                   {pageNum}
@@ -328,7 +328,7 @@ export default function PostsManagement() {
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant bg-white hover:bg-surface-container-low disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next
             <ChevronRight className="h-4 w-4 ml-1" />
