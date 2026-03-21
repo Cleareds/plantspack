@@ -217,7 +217,7 @@ export default function Feed({onPostCreated, category}: FeedProps) {
 
     const fetchPosts = useCallback(async (loadMore: boolean = false) => {
         try {
-            const postsCacheKey = `feed_posts_${user?.id || 'anon'}_${activeTab}_${sortOption}`
+            const postsCacheKey = `feed_posts_${user?.id || 'anon'}_${activeTab}_${sortOption}_${category || 'all'}`
 
             if (loadMore) {
                 setLoadingMore(true)
@@ -323,6 +323,11 @@ export default function Feed({onPostCreated, category}: FeedProps) {
                     .eq('users.is_banned', false)
                     .is('deleted_at', null)
                     .in('user_id', followingIds)
+
+                // Apply category filter
+                if (category && category !== 'all') {
+                    query = query.eq('category', category)
+                }
 
                 // Apply sorting
                 switch (sortOption) {

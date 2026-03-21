@@ -75,6 +75,81 @@ export async function GET(
   }
 }
 
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await context.params
+    const supabase = await createClient()
+
+    // Check authentication
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Verify ownership
+    const { data: existingPost, error: fetchError } = await supabase
+      .from('posts')
+      .select('id, user_id')
+      .eq('id', id)
+      .single()
+
+    if (fetchError || !existingPost) {
+      return NextResponse.json(
+        { error: 'Post not found' },
+        { status: 404 }
+      )
+    }
+
+    if (existingPost.user_id !== session.user.id) {
+      return NextResponse.json(
+        { error: 'Not authorized' },
+        { status: 403 }
+      )
+    }
+
+    const body = await request.json()
+
+    // Build update object with only allowed fields
+    const updateData: Record<string, any> = {}
+    const allowedFields = [
+      'content', 'privacy', 'category', 'secondary_tags',
+      'recipe_data', 'event_data', 'product_data',
+      'image_urls', 'video_urls', 'quote_content'
+    ]
+
+    for (const field of allowedFields) {
+      if (body[field] !== undefined) {
+        updateData[field] = body[field]
+      }
+    }
+
+    updateData.updated_at = new Date().toISOString()
+
+    const { data: updatedPost, error: updateError } = await supabase
+      .from('posts')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (updateError) throw updateError
+
+    return NextResponse.json({ post: updatedPost })
+  } catch (error) {
+    console.error('Error updating post:', error)
+    return NextResponse.json(
+      { error: 'Failed to update post' },
+      { status: 500 }
+    )
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
