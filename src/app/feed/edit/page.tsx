@@ -35,7 +35,7 @@ export default function EditFeedPage() {
         .select('feed_categories')
         .eq('user_id', user.id)
         .single()
-      if (data?.feed_categories?.length) {
+      if (data?.feed_categories) {
         setSelected(data.feed_categories)
       }
     }
@@ -51,7 +51,7 @@ export default function EditFeedPage() {
   }
 
   const handleSave = async () => {
-    if (!user || selected.length === 0) return
+    if (!user) return
     setSaving(true)
     try {
       await supabase
@@ -91,7 +91,7 @@ export default function EditFeedPage() {
             Back to Feed
           </Link>
           <h1 className="font-headline text-3xl font-bold text-on-surface tracking-tight">Edit Your Feed</h1>
-          <p className="text-on-surface-variant mt-2">Choose the categories you want to see in your feed. Select at least one.</p>
+          <p className="text-on-surface-variant mt-2">Choose which categories to highlight at the top of your feed. You can select none to see just the general feed.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -130,11 +130,11 @@ export default function EditFeedPage() {
 
         <div className="mt-8 flex items-center justify-between">
           <p className="text-sm text-on-surface-variant">
-            {selected.length} categor{selected.length === 1 ? 'y' : 'ies'} selected
+            {selected.length === 0 ? 'No categories highlighted' : `${selected.length} categor${selected.length === 1 ? 'y' : 'ies'} selected`}
           </p>
           <button
             onClick={handleSave}
-            disabled={saving || selected.length === 0}
+            disabled={saving}
             className="silk-gradient text-on-primary-btn px-6 py-3 rounded-xl font-medium hover:opacity-90 disabled:opacity-50 transition-all"
           >
             {saving ? 'Saving...' : 'Save Preferences'}

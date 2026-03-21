@@ -78,14 +78,35 @@ function HomeContent() {
               {/* Personalized Category Blocks — only for logged-in users with preferences */}
               {user && userCategories.length > 0 && activeCategory === 'all' && (
                 <div className="mb-6">
-                  {userCategories.map(cat => (
+                  {userCategories.length === 1 ? (
+                    /* Single category: full width */
                     <CategoryFeedSection
-                      key={`${cat}-${refreshKey}`}
-                      category={cat as PostCategory}
+                      key={`${userCategories[0]}-${refreshKey}`}
+                      category={userCategories[0] as PostCategory}
                       userId={user.id}
                       onViewAll={handleViewAllCategory}
                     />
-                  ))}
+                  ) : (
+                    /* Multiple categories: 2-column grid */
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {userCategories.map((cat, i) => {
+                        const isOdd = userCategories.length % 2 !== 0
+                        const isLast = i === userCategories.length - 1
+                        return (
+                          <div
+                            key={`${cat}-${refreshKey}`}
+                            className={isOdd && isLast ? 'sm:col-span-2' : ''}
+                          >
+                            <CategoryFeedSection
+                              category={cat as PostCategory}
+                              userId={user.id}
+                              onViewAll={handleViewAllCategory}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
 
                   {/* Divider before general feed */}
                   <div className="flex items-center gap-3 mb-6 mt-2">
