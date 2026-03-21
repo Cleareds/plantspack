@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-gray-50 flex flex-col min-h-screen`}>
+      <body className={`${inter.className} antialiased bg-surface flex flex-col min-h-screen`}>
         <GoogleAnalytics />
         <Suspense fallback={null}>
           <PageViewTracker />

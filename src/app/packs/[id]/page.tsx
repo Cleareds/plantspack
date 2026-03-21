@@ -110,10 +110,10 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-2"></div>
-          <p className="text-gray-600">Loading pack...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
+          <p className="text-on-surface-variant">Loading pack...</p>
         </div>
       </div>
     )
@@ -121,11 +121,11 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
 
   if (!pack) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">📦</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Pack not found</h2>
-          <p className="text-gray-600">This pack may have been deleted or made private.</p>
+          <h2 className="text-2xl font-bold text-on-surface mb-2">Pack not found</h2>
+          <p className="text-on-surface-variant">This pack may have been deleted or made private.</p>
         </div>
       </div>
     )
@@ -139,13 +139,13 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface-container-low">
       {/* Success Message */}
       {successMessage && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-fade-in">
-          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-            <p className="text-sm font-medium text-green-800">{successMessage}</p>
+          <div className="bg-primary/10 border border-primary/20 rounded-lg shadow-ambient px-6 py-3 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+            <p className="text-sm font-medium text-primary">{successMessage}</p>
           </div>
         </div>
       )}
@@ -153,9 +153,9 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
       {/* Error Message */}
       {errorMessage && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] animate-fade-in">
-          <div className="bg-red-50 border border-red-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
-            <p className="text-sm font-medium text-red-800">{errorMessage}</p>
+          <div className="bg-error/10 border border-error/20 rounded-lg shadow-ambient px-6 py-3 flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-error flex-shrink-0" />
+            <p className="text-sm font-medium text-error">{errorMessage}</p>
           </div>
         </div>
       )}
@@ -168,15 +168,15 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 mb-6">
+        <div className="border-b border-outline-variant/15 mb-6">
           <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => handleTabChange('posts')}
               className={`
                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                 ${activeTab === 'posts'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
                 }
               `}
             >
@@ -187,8 +187,8 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
               className={`
                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                 ${activeTab === 'places'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
                 }
               `}
             >
@@ -199,8 +199,8 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
               className={`
                 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                 ${activeTab === 'members'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
                 }
               `}
             >
@@ -214,8 +214,8 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
           <div className="mb-6">
             {postsLoading && (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                <p className="mt-2 text-gray-600">Loading posts...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <p className="mt-2 text-on-surface-variant">Loading posts...</p>
               </div>
             )}
 
@@ -236,12 +236,12 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
             )}
 
             {!postsLoading && posts.length === 0 && (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+              <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
                 <div className="text-6xl mb-4">📭</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-lg font-medium text-on-surface mb-2">
                   No posts yet
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-on-surface-variant">
                   {pack.user_role === 'admin' || pack.user_role === 'moderator'
                     ? 'Start adding posts to this pack from the post menu'
                     : 'This pack is waiting for posts to be added'}
@@ -260,12 +260,12 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         )}
 
         {activeTab === 'members' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
             <div className="text-6xl mb-4">👥</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-on-surface mb-2">
               Members Tab
             </h3>
-            <p className="text-gray-600">
+            <p className="text-on-surface-variant">
               Members list coming soon
             </p>
           </div>

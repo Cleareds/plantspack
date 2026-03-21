@@ -150,17 +150,17 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/40 backdrop-blur-sm">
+      <div className="bg-surface-container-lowest editorial-shadow rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-outline-variant/15">
           <div className="flex items-center gap-2">
-            <Package className="h-5 w-5 text-gray-700" />
-            <h2 className="text-lg font-semibold text-gray-900">Add to Pack</h2>
+            <Package className="h-5 w-5 text-on-surface-variant" />
+            <h2 className="text-lg font-semibold text-on-surface">Add to Pack</h2>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-outline hover:text-on-surface-variant transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -170,16 +170,16 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
         <div className="flex-1 overflow-y-auto p-4">
           {loading && (
             <div className="text-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-green-600 mx-auto mb-2" />
-              <p className="text-gray-600">Loading your packs...</p>
+              <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-2" />
+              <p className="text-on-surface-variant">Loading your packs...</p>
             </div>
           )}
 
           {!loading && packs.length === 0 && (
             <div className="text-center py-8">
-              <Package className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600 mb-2">You don&apos;t manage any packs yet</p>
-              <p className="text-sm text-gray-500">
+              <Package className="h-12 w-12 text-outline mx-auto mb-3" />
+              <p className="text-on-surface-variant mb-2">You don&apos;t manage any packs yet</p>
+              <p className="text-sm text-outline">
                 Create a pack to start curating content
               </p>
             </div>
@@ -198,26 +198,26 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
                     disabled={isInPack}
                     className={`w-full p-3 border-2 rounded-lg text-left transition-colors ${
                       isInPack
-                        ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60'
+                        ? 'border-outline-variant/15 bg-surface-container-low cursor-not-allowed opacity-60'
                         : isSelected
-                        ? 'border-green-600 bg-green-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-primary bg-surface-container-low'
+                        : 'border-outline-variant/15 hover:border-outline-variant/30'
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div className="flex-shrink-0 mt-0.5">
                         {isInPack ? (
-                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <CheckCircle className="h-5 w-5 text-primary" />
                         ) : (
                           <div
                             className={`h-5 w-5 rounded border-2 flex items-center justify-center ${
                               isSelected
-                                ? 'border-green-600 bg-green-600'
-                                : 'border-gray-300'
+                                ? 'border-primary bg-primary'
+                                : 'border-outline-variant/15'
                             }`}
                           >
                             {isSelected && (
-                              <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="h-3 w-3 text-on-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                               </svg>
                             )}
@@ -227,24 +227,24 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium text-gray-900 truncate">
+                          <h3 className="font-medium text-on-surface truncate">
                             {pack.title}
                           </h3>
                           {pack.user_role === 'admin' && (
-                            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                            <span className="text-xs bg-surface-container-low text-primary px-2 py-0.5 rounded">
                               Admin
                             </span>
                           )}
                         </div>
 
                         {pack.description && (
-                          <p className="text-sm text-gray-600 line-clamp-2">
+                          <p className="text-sm text-on-surface-variant line-clamp-2">
                             {pack.description}
                           </p>
                         )}
 
                         {isInPack && (
-                          <p className="text-xs text-green-600 mt-1">
+                          <p className="text-xs text-primary mt-1">
                             Already in this pack
                           </p>
                         )}
@@ -258,33 +258,33 @@ export default function AddToPackModal({ postId, isOpen, onClose, onSuccess }: A
 
           {/* Messages */}
           {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start gap-2">
-              <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="mt-4 p-3 bg-error/10 border border-error/20 rounded-md flex items-start gap-2">
+              <AlertCircle className="h-5 w-5 text-error flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-error">{error}</p>
             </div>
           )}
 
           {success && (
-            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md flex items-start gap-2">
-              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-green-700">{success}</p>
+            <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-md flex items-start gap-2">
+              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-primary">{success}</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
         {!loading && packs.length > 0 && (
-          <div className="p-4 border-t border-gray-200 flex gap-3">
+          <div className="p-4 border-t border-outline-variant/15 flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-1 px-4 py-2 ghost-border rounded-md text-on-surface-variant hover:bg-surface-container-low transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={submitting || selectedPacks.size === 0}
-              className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               <span>

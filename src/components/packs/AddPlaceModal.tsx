@@ -101,29 +101,29 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-surface-container-lowest editorial-shadow rounded-lg max-w-2xl w-full max-h-[80vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Add Place to Pack</h2>
+        <div className="flex items-center justify-between p-6 border-b border-outline-variant/15">
+          <h2 className="text-xl font-semibold text-on-surface">Add Place to Pack</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-outline hover:text-on-surface-variant transition-colors"
           >
             <X className="h-6 w-6" />
           </button>
         </div>
 
         {/* Search */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-outline-variant/15">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-outline" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search places by name or address..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               autoFocus
             />
           </div>
@@ -131,7 +131,7 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
           {/* Options */}
           <div className="mt-4 space-y-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">
                 Section Name (optional)
               </label>
               <input
@@ -139,7 +139,7 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
                 value={sectionName}
                 onChange={(e) => setSectionName(e.target.value)}
                 placeholder="e.g., Best Restaurants, Must Visit"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
             <div className="flex items-center">
@@ -148,9 +148,9 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
                 id="isPinned"
                 checked={isPinned}
                 onChange={(e) => setIsPinned(e.target.checked)}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
               />
-              <label htmlFor="isPinned" className="ml-2 text-sm text-gray-700">
+              <label htmlFor="isPinned" className="ml-2 text-sm text-on-surface-variant">
                 Pin to top of list
               </label>
             </div>
@@ -161,21 +161,21 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
         <div className="flex-1 overflow-y-auto p-6">
           {loading && (
             <div className="text-center py-8">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-              <p className="mt-2 text-gray-600">Searching...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <p className="mt-2 text-on-surface-variant">Searching...</p>
             </div>
           )}
 
           {!loading && searchQuery.length < 2 && (
-            <div className="text-center py-8 text-gray-500">
-              <Search className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+            <div className="text-center py-8 text-outline">
+              <Search className="h-12 w-12 text-outline mx-auto mb-3" />
               <p>Start typing to search for places</p>
             </div>
           )}
 
           {!loading && searchQuery.length >= 2 && places.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+            <div className="text-center py-8 text-outline">
+              <MapPin className="h-12 w-12 text-outline mx-auto mb-3" />
               <p>No places found</p>
               <p className="text-sm mt-1">Try a different search term</p>
             </div>
@@ -186,29 +186,29 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
               {places.map((place) => (
                 <div
                   key={place.id}
-                  className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:border-green-300 transition-colors"
+                  className="flex items-start gap-4 p-4 ghost-border rounded-lg hover:border-primary/30 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-gray-900 mb-1">{place.name}</h3>
+                    <h3 className="font-medium text-on-surface mb-1">{place.name}</h3>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-on-surface-variant">
                         {place.category}
                       </span>
                     </div>
                     {place.average_rating && place.average_rating > 0 && (
                       <div className="flex items-center gap-2 mb-2">
                         <StarRating rating={place.average_rating} size="sm" />
-                        <span className="text-xs text-gray-600">
+                        <span className="text-xs text-on-surface-variant">
                           ({place.review_count || 0})
                         </span>
                       </div>
                     )}
-                    <div className="flex items-start gap-1 text-sm text-gray-500">
+                    <div className="flex items-start gap-1 text-sm text-outline">
                       <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
                       <span className="line-clamp-1">{place.address}</span>
                     </div>
                     {place.description && (
-                      <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                      <p className="text-sm text-on-surface-variant mt-2 line-clamp-2">
                         {place.description}
                       </p>
                     )}
@@ -216,7 +216,7 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
                   <button
                     onClick={() => handleAddPlace(place.id)}
                     disabled={adding === place.id}
-                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                   >
                     {adding === place.id ? (
                       <>

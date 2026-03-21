@@ -20,6 +20,13 @@
       <entry key="_/Users/antonkravchuk/sidep/Cleareds/plantspack" value="34tY8ZJ6duIOv5sp1kGQNP1czMC" />
     </persistenceIdMap>
   </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="edit-panel" value="GPT-4.1" />
+      <entry key="chat-panel" value="GPT-4.1" />
+      <entry key="agent-panel" value="GPT-4.1" />
+    </selectedModels>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -101,7 +108,9 @@
       <workItem from="1768231163136" duration="529000" />
       <workItem from="1768831374725" duration="632000" />
       <workItem from="1770130952585" duration="16120000" />
-      <workItem from="1770729980484" duration="13500000" />
+      <workItem from="1770729980484" duration="19918000" />
+      <workItem from="1772806135206" duration="3692000" />
+      <workItem from="1773659874257" duration="600000" />
     </task>
     <servers />
   </component>

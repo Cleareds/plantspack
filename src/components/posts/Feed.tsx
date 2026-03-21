@@ -499,13 +499,13 @@ export default function Feed({onPostCreated}: FeedProps) {
             <div className="max-w-2xl mx-auto px-4">
                 <div className="space-y-4">
                     {[...Array(3)].map((_, i) => (
-                        <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 animate-pulse">
+                        <div key={i} className="bg-surface-container-lowest rounded-lg editorial-shadow p-4 animate-pulse">
                             <div className="flex space-x-3">
-                                <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
+                                <div className="h-10 w-10 bg-surface-container-high rounded-full"></div>
                                 <div className="flex-1">
-                                    <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                                    <div className="h-4 bg-surface-container-high rounded w-1/3 mb-2"></div>
+                                    <div className="h-4 bg-surface-container-high rounded w-full mb-2"></div>
+                                    <div className="h-4 bg-surface-container-high rounded w-2/3"></div>
                                 </div>
                             </div>
                         </div>
@@ -518,11 +518,11 @@ export default function Feed({onPostCreated}: FeedProps) {
     if (error && posts.length === 0) {
         return (
             <div className="max-w-2xl mx-auto px-4">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-                    <p className="text-red-800">{error}</p>
+                <div className="bg-error/10 ghost-border rounded-lg p-4 text-center">
+                    <p className="text-error">{error}</p>
                     <button
                         onClick={() => fetchPosts(false)}
-                        className="mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                        className="mt-2 bg-error hover:opacity-90 text-white px-4 py-2 rounded-md font-medium transition-colors"
                     >
                         Retry
                     </button>
@@ -534,7 +534,7 @@ export default function Feed({onPostCreated}: FeedProps) {
     return (
         <div className="w-full">
             {/* Feed Controls - Horizontal Layout with Tabs on Left, Sorting on Right */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 px-2 sm:px-4 py-2 sm:py-2.5">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow mb-4 px-2 sm:px-4 py-2 sm:py-2.5">
                 <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
                     {/* Tabs on the Left - Only for logged in users */}
                     {user && (
@@ -543,8 +543,8 @@ export default function Feed({onPostCreated}: FeedProps) {
                                 onClick={() => handleTabChange('public')}
                                 className={`px-2 sm:px-4 py-1 sm:py-2 text-sm font-medium rounded-md transition-colors ${
                                     activeTab === 'public'
-                                        ? 'bg-green-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        ? 'bg-primary text-on-primary'
+                                        : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                                 }`}
                             >
                                 Public
@@ -553,8 +553,8 @@ export default function Feed({onPostCreated}: FeedProps) {
                                 onClick={() => handleTabChange('friends')}
                                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                                     activeTab === 'friends'
-                                        ? 'bg-green-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        ? 'bg-primary text-on-primary'
+                                        : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                                 }`}
                             >
                                 Friends
@@ -564,14 +564,14 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                     {/* Guest label for non-authenticated users */}
                     {!user && (
-                        <div className="text-sm font-medium text-gray-700">
+                        <div className="text-sm font-medium text-on-surface-variant">
                             Public Feed
                         </div>
                     )}
 
                     {/* Sorting on the Right - Always show */}
                     <div className="flex items-center gap-2 ml-auto">
-                        <span className="text-sm text-gray-600 hidden sm:inline">Sort by:</span>
+                        <span className="text-sm text-on-surface-variant hidden sm:inline">Sort by:</span>
                         <FeedSorting
                             currentSort={sortOption}
                             onSortChange={setSortOption}
@@ -586,7 +586,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                 <div className="mb-4 sticky top-16 z-30 animate-slide-down">
                     <button
                         onClick={handleLoadNewPosts}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg shadow-md font-medium transition-all flex items-center justify-center space-x-2"
+                        className="w-full silk-gradient hover:opacity-90 text-white px-4 py-3 rounded-lg shadow-md font-medium transition-all flex items-center justify-center space-x-2"
                     >
                         <ArrowUp className="h-5 w-5" />
                         <span>
@@ -597,11 +597,11 @@ export default function Feed({onPostCreated}: FeedProps) {
             )}
 
             {posts.length === 0 && !loading ? (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                    <p className="text-gray-500 mb-4">No posts yet.</p>
+                <div className="bg-surface-container-lowest rounded-lg editorial-shadow p-8 text-center">
+                    <p className="text-outline mb-4">No posts yet.</p>
                     {!user && (
-                        <p className="text-sm text-gray-400">
-                            <a href="/auth" className="text-green-600 hover:underline">
+                        <p className="text-sm text-outline">
+                            <a href="/auth" className="text-primary hover:underline">
                                 Sign in
                             </a>{' '}
                             to join the conversation.
@@ -632,14 +632,14 @@ export default function Feed({onPostCreated}: FeedProps) {
                         {hasMore && (
                             <>
                                 {loadingMore ? (
-                                    <div className="flex items-center space-x-2 text-gray-500">
+                                    <div className="flex items-center space-x-2 text-outline">
                                         <Loader2 className="h-5 w-5 animate-spin"/>
                                         <span>Loading more posts...</span>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={loadMorePosts}
-                                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors"
+                                        className="px-4 py-2 silk-gradient hover:opacity-90 text-white rounded-md font-medium transition-colors"
                                     >
                                         Load More Posts
                                     </button>
@@ -650,10 +650,10 @@ export default function Feed({onPostCreated}: FeedProps) {
                         {/* End of feed message */}
                         {!hasMore && posts.length > 0 && (
                             <div className="text-center">
-                                <div className="border-t border-gray-200 pt-6">
-                                    <p className="text-gray-500 text-sm mb-2">🌱 You&apos;ve reached the end of the
+                                <div className="border-t border-outline-variant/15 pt-6">
+                                    <p className="text-outline text-sm mb-2">🌱 You&apos;ve reached the end of the
                                         feed!</p>
-                                    <p className="text-gray-400 text-xs">
+                                    <p className="text-outline text-xs">
                                         {posts.length} post{posts.length !== 1 ? 's' : ''} loaded
                                     </p>
                                 </div>
@@ -663,11 +663,11 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                     {/* Error loading more posts */}
                     {error && posts.length > 0 && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center mt-4">
-                            <p className="text-red-800 text-sm">{error}</p>
+                        <div className="bg-error/10 ghost-border rounded-lg p-4 text-center mt-4">
+                            <p className="text-error text-sm">{error}</p>
                             <button
                                 onClick={loadMorePosts}
-                                className="mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                className="mt-2 bg-error hover:opacity-90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
                             >
                                 Try Again
                             </button>

@@ -27,21 +27,21 @@ export default function BetaBanner() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white relative z-40">
+    <div className="bg-secondary-container text-on-secondary relative z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center space-x-3 flex-1">
             <AlertTriangle className="h-5 w-5 flex-shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium">
-                🚀 PlantsPack is in beta! You may encounter bugs or issues.
+                PlantsPack is in beta! You may encounter bugs or issues.
               </p>
               <p className="text-xs opacity-90 mt-1 hidden sm:block">
                 Help us improve by reporting any problems you find.
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-3">
             <Link
               href="/contact"
@@ -51,7 +51,7 @@ export default function BetaBanner() {
               <span className="hidden sm:inline">Report Issues</span>
               <span className="sm:hidden">Report</span>
             </Link>
-            
+
             <button
               onClick={handleDismiss}
               className="p-1 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"

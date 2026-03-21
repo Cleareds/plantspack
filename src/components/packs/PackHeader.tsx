@@ -41,9 +41,9 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
     : (pack.category ? [pack.category] : [])
 
   return (
-    <div className="bg-white border-b border-gray-200">
+    <div className="bg-surface-container-lowest border-b border-outline-variant/15">
       {/* Banner */}
-      <div className="relative w-full h-48 md:h-64 bg-gradient-to-br from-green-100 to-green-200">
+      <div className="relative w-full h-48 md:h-64 bg-gradient-to-br from-surface-container-low to-surface-container">
         {pack.banner_url ? (
           <Image
             src={pack.banner_url}
@@ -66,7 +66,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
             {packCategories.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3">
                 {packCategories.map((cat) => (
-                  <div key={cat} className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                  <div key={cat} className="inline-flex items-center gap-1 bg-surface-container-low text-primary px-3 py-1 rounded-full text-sm font-medium">
                     <span>{getCategoryIcon(cat)}</span>
                     <span>{cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
                   </div>
@@ -75,23 +75,23 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
             )}
 
             {/* Title */}
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-on-surface mb-2">
               {pack.title}
             </h1>
 
             {/* Description */}
             {pack.description && (
-              <p className="text-gray-600 mb-4 max-w-3xl">
+              <p className="text-on-surface-variant mb-4 max-w-3xl">
                 {pack.description}
               </p>
             )}
 
             {/* Creator */}
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+            <div className="flex items-center gap-2 text-sm text-on-surface-variant mb-4">
               <span>Created by</span>
               <Link
                 href={`/user/${pack.users.username}`}
-                className="font-medium text-green-600 hover:text-green-700 flex items-center gap-1"
+                className="font-medium text-primary hover:text-primary flex items-center gap-1"
               >
                 @{pack.users.username}
                 {pack.users.subscription_tier === 'premium' && (
@@ -101,15 +101,15 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-6 text-sm text-gray-600">
+            <div className="flex items-center gap-6 text-sm text-on-surface-variant">
               <div className="flex items-center gap-1">
                 <Users className="h-5 w-5" />
-                <span className="font-medium text-gray-900">{pack.member_count}</span>
+                <span className="font-medium text-on-surface">{pack.member_count}</span>
                 <span>members</span>
               </div>
               <div className="flex items-center gap-1">
                 <FileText className="h-5 w-5" />
-                <span className="font-medium text-gray-900">{pack.post_count}</span>
+                <span className="font-medium text-on-surface">{pack.post_count}</span>
                 <span>posts</span>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                     href={pack.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-green-600"
+                    className="text-on-surface-variant hover:text-primary"
                   >
                     <Globe className="h-5 w-5" />
                   </a>
@@ -132,7 +132,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                     href={pack.facebook_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-blue-600"
+                    className="text-on-surface-variant hover:text-blue-600"
                   >
                     <Facebook className="h-5 w-5" />
                   </a>
@@ -142,7 +142,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                     href={pack.twitter_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-blue-400"
+                    className="text-on-surface-variant hover:text-blue-400"
                   >
                     <Twitter className="h-5 w-5" />
                   </a>
@@ -152,7 +152,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                     href={pack.instagram_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-pink-600"
+                    className="text-on-surface-variant hover:text-pink-600"
                   >
                     <Instagram className="h-5 w-5" />
                   </a>
@@ -162,7 +162,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                     href={pack.tiktok_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-black"
+                    className="text-on-surface-variant hover:text-black"
                   >
                     <Music2 className="h-5 w-5" />
                   </a>
@@ -176,7 +176,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
             {pack.user_role === 'admin' && (
               <Link
                 href={`/packs/${pack.slug}/edit`}
-                className="flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-medium transition-colors"
+                className="flex items-center justify-center gap-2 bg-surface-container-low hover:bg-surface-container text-on-surface-variant px-4 py-2 rounded-md font-medium transition-colors"
               >
                 <Settings className="h-4 w-4" />
                 <span>Edit Pack</span>
@@ -187,7 +187,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
               <button
                 onClick={handleJoin}
                 disabled={isJoining}
-                className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-50"
               >
                 <Check className="h-4 w-4" />
                 <span>{isJoining ? 'Joining...' : 'Join Pack'}</span>
@@ -197,7 +197,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
             {pack.is_member && pack.user_role === 'member' && (
               <button
                 onClick={onLeave}
-                className="flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-medium transition-colors"
+                className="flex items-center justify-center gap-2 bg-surface-container-low hover:bg-surface-container text-on-surface-variant px-4 py-2 rounded-md font-medium transition-colors"
               >
                 <span>Leave Pack</span>
               </button>

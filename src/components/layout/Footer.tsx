@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { Heart, Mail, HelpCircle, Leaf } from 'lucide-react'
+import { Heart, Mail, HelpCircle } from 'lucide-react'
 import Image from "next/image";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
+    <footer className="bg-surface-container-low mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
@@ -22,33 +22,33 @@ export default function Footer() {
                         className="object-contain"
                     />
                     <div className="flex flex-col">
-                        <span className="text-xl font-bold text-gray-900 leading-[1.1]">PLANTS PACK</span>
-                        <span className="text-sm font-light text-gray-600 leading-[1.1]">vegan syndicate</span>
+                        <span className="text-xl font-bold text-on-surface tracking-editorial leading-[1.1]">PLANTS PACK</span>
+                        <span className="text-sm font-light text-on-surface-variant leading-[1.1]">vegan syndicate</span>
                     </div>
-                    <span className="text-xs font-semibold text-white bg-orange-500 px-2 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-on-secondary bg-secondary-container px-2 py-1 rounded-full">
               BETA
             </span>
                 </Link>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-on-surface-variant mb-4">
               The world&apos;s most supportive vegan social network.
-              Connect, share, and grow together! 🌱
+              Connect, share, and grow together!
             </p>
-            <div className="flex items-center space-x-1 text-sm text-gray-600">
+            <div className="flex items-center space-x-1 text-sm text-on-surface-variant">
               <span>Made with</span>
-              <Heart className="h-4 w-4 text-red-500 fill-current" />
+              <Heart className="h-4 w-4 text-error fill-current" />
               <span>for vegans</span>
             </div>
           </div>
 
           {/* Company Column */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+            <h3 className="font-semibold text-on-surface mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/about"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   About PlantsPack
                 </Link>
@@ -56,7 +56,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/roadmap"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Roadmap
                 </Link>
@@ -66,7 +66,7 @@ export default function Footer() {
                   href="https://cleareds.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   About Cleareds
                 </a>
@@ -74,7 +74,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Contact Us
                 </Link>
@@ -82,10 +82,10 @@ export default function Footer() {
               <li>
                 <Link
                   href="/support"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors flex items-center space-x-1"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1"
                 >
                   <span>Support Us</span>
-                  <Heart className="h-3 w-3 text-green-600" />
+                  <Heart className="h-3 w-3 text-primary" />
                 </Link>
               </li>
             </ul>
@@ -93,12 +93,12 @@ export default function Footer() {
 
           {/* Resources Column */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+            <h3 className="font-semibold text-on-surface mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/support"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Pricing
                 </Link>
@@ -106,7 +106,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors flex items-center space-x-1"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1"
                 >
                   <HelpCircle className="h-3 w-3" />
                   <span>Help Center</span>
@@ -115,7 +115,7 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:hello@cleareds.com"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors flex items-center space-x-1"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1"
                 >
                   <Mail className="h-3 w-3" />
                   <span>Email Support</span>
@@ -126,12 +126,12 @@ export default function Footer() {
 
           {/* Legal Column */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
+            <h3 className="font-semibold text-on-surface mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/legal/privacy"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -139,7 +139,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/legal/terms"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Terms of Service
                 </Link>
@@ -147,7 +147,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/legal/cookies"
-                  className="text-sm text-gray-600 hover:text-green-600 transition-colors"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Cookie Policy
                 </Link>
@@ -157,16 +157,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-6 border-t border-gray-200">
+        <div className="pt-6 border-t border-outline-variant/15">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
-            <div className="text-sm text-gray-600 text-center md:text-left">
-              © {currentYear}{' '}
+            <div className="text-sm text-on-surface-variant text-center md:text-left">
+              &copy; {currentYear}{' '}
               <a
                 href="https://cleareds.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                className="text-primary hover:text-primary-container font-medium transition-colors"
               >
                 Cleareds
               </a>
@@ -179,7 +179,7 @@ export default function Footer() {
                 href="https://x.com/plantspackX"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-green-600 transition-colors"
+                className="text-on-surface-variant hover:text-primary transition-colors"
                 aria-label="X (Twitter)"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -190,7 +190,7 @@ export default function Footer() {
                 href="https://www.instagram.com/plants.pack/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-green-600 transition-colors"
+                className="text-on-surface-variant hover:text-primary transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -201,7 +201,7 @@ export default function Footer() {
                 href="https://www.facebook.com/profile.php?id=61583784658664"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-green-600 transition-colors"
+                className="text-on-surface-variant hover:text-primary transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">

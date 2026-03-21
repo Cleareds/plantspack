@@ -145,10 +145,10 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-2"></div>
-          <p className="text-gray-600">Loading pack...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
+          <p className="text-on-surface-variant">Loading pack...</p>
         </div>
       </div>
     )
@@ -156,12 +156,12 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
 
   if (!pack || pack.user_role !== 'admin') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">You don&apos;t have permission to edit this pack</p>
+          <p className="text-on-surface-variant mb-4">You don&apos;t have permission to edit this pack</p>
           <Link
             href={`/packs/${id}`}
-            className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium"
+            className="inline-block silk-gradient hover:opacity-90 text-on-primary px-6 py-2 rounded-md font-medium"
           >
             Back to Pack
           </Link>
@@ -171,32 +171,32 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-surface-container-low py-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <Link
             href={`/packs/${id}`}
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            className="inline-flex items-center gap-2 text-on-surface-variant hover:text-on-surface mb-4"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Pack</span>
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Edit Pack</h1>
+          <h1 className="text-3xl font-bold text-on-surface">Edit Pack</h1>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6 space-y-6">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-md">
               {error}
             </div>
           )}
 
           {/* Title */}
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title <span className="text-red-500">*</span>
+            <label htmlFor="title" className="block text-sm font-medium text-on-surface-variant mb-2">
+              Title <span className="text-error">*</span>
             </label>
             <input
               type="text"
@@ -205,13 +205,13 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
               maxLength={100}
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="description" className="block text-sm font-medium text-on-surface-variant mb-2">
               Description
             </label>
             <textarea
@@ -220,14 +220,14 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
               maxLength={500}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
           {/* Categories (multi-select) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
-            <p className="text-sm text-gray-500 mb-3">Select one or more categories</p>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Categories</label>
+            <p className="text-sm text-outline mb-3">Select one or more categories</p>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <button
@@ -236,8 +236,8 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
                   onClick={() => toggleCategory(cat.value)}
                   className={`flex items-center gap-1 px-4 py-2 rounded-md font-medium transition-colors ${
                     formData.categories.includes(cat.value)
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary text-on-primary'
+                      : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                   }`}
                 >
                   <span>{cat.icon}</span>
@@ -249,7 +249,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
 
           {/* Banner */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Banner Image</label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-2">Banner Image</label>
             <SimpleAvatarUpload
               currentAvatar={formData.banner_url}
               onAvatarUpdate={(url) => setFormData({ ...formData, banner_url: url })}
@@ -258,42 +258,42 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
 
           {/* Social Links */}
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Social Links</h3>
+            <h3 className="text-sm font-medium text-on-surface-variant mb-3">Social Links</h3>
             <div className="space-y-3">
               <input
                 type="url"
                 placeholder="Website URL"
                 value={formData.website_url}
                 onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <input
                 type="url"
                 placeholder="Facebook URL"
                 value={formData.facebook_url}
                 onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <input
                 type="url"
                 placeholder="Twitter/X URL"
                 value={formData.twitter_url}
                 onChange={(e) => setFormData({ ...formData, twitter_url: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <input
                 type="url"
                 placeholder="Instagram URL"
                 value={formData.instagram_url}
                 onChange={(e) => setFormData({ ...formData, instagram_url: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <input
                 type="url"
                 placeholder="TikTok URL"
                 value={formData.tiktok_url}
                 onChange={(e) => setFormData({ ...formData, tiktok_url: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
@@ -304,7 +304,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
               type="button"
               onClick={handleDelete}
               disabled={deleting}
-              className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+              className="flex items-center gap-2 text-error hover:opacity-90 font-medium disabled:opacity-50"
             >
               <Trash2 className="h-4 w-4" />
               <span>{deleting ? 'Deleting...' : 'Delete Pack'}</span>
@@ -313,14 +313,14 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
             <div className="flex gap-3">
               <Link
                 href={`/packs/${id}`}
-                className="px-6 py-2 border border-gray-300 rounded-md font-medium text-gray-700 hover:bg-gray-50"
+                className="px-6 py-2 ghost-border rounded-md font-medium text-on-surface-variant hover:bg-surface-container-low"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium disabled:opacity-50"
+                className="flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary px-6 py-2 rounded-md font-medium disabled:opacity-50"
               >
                 {saving && <Loader2 className="h-5 w-5 animate-spin" />}
                 <span>{saving ? 'Saving...' : 'Save Changes'}</span>

@@ -516,24 +516,24 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
     if (!user) {
         return (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow p-6">
                 <div className="text-center">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <h3 className="text-lg font-medium text-on-surface mb-2">
                         Join the conversation!
                     </h3>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-on-surface-variant mb-4">
                         Sign up or log in to start sharing your vegan journey with the community.
                     </p>
                     <div className="flex justify-center space-x-3">
                         <Link
                             href="/auth"
-                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                            className="silk-gradient hover:opacity-90 text-white px-4 py-2 rounded-md font-medium transition-colors"
                         >
                             Sign Up - Free Forever
                         </Link>
                         <Link
                             href="/auth"
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-md font-medium transition-colors"
+                            className="bg-surface-container-low hover:bg-surface-container text-on-surface px-4 py-2 rounded-md font-medium transition-colors"
                         >
                             Log In
                         </Link>
@@ -544,12 +544,12 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow p-4">
             <form onSubmit={handleSubmit}>
                 {/* Success Message */}
                 {success && (
-                    <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-sm text-green-800 font-medium">✅ Post created successfully! Check your
+                    <div className="mb-4 p-3 bg-surface-container-low ghost-border rounded-lg">
+                        <p className="text-sm text-primary font-medium">✅ Post created successfully! Check your
                             feed.</p>
                     </div>
                 )}
@@ -566,7 +566,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                         <Link href={`/user/${profile.username}`} className="flex-shrink-0">
                             {profile.avatar_url ? (
                                 <div
-                                    className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all cursor-pointer">
+                                    className="h-10 w-10 rounded-full overflow-hidden bg-surface-container-low hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all cursor-pointer">
                                     <img
                                         src={profile.avatar_url}
                                         alt={`${profile.first_name || profile.username}'s avatar`}
@@ -575,8 +575,8 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 </div>
                             ) : (
                                 <div
-                                    className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all cursor-pointer">
-                  <span className="text-green-600 font-medium text-sm">
+                                    className="h-10 w-10 rounded-full bg-surface-container-low flex items-center justify-center hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all cursor-pointer">
+                  <span className="text-primary font-medium text-sm">
                     {profile.first_name?.[0] || profile.username?.[0] || 'U'}
                   </span>
                                 </div>
@@ -585,7 +585,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                     ) : (
                         <div className="flex-shrink-0">
                             {profile?.avatar_url ? (
-                                <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-100">
+                                <div className="h-10 w-10 rounded-full overflow-hidden bg-surface-container-low">
                                     <img
                                         src={profile.avatar_url}
                                         alt="Your avatar"
@@ -593,8 +593,8 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     />
                                 </div>
                             ) : (
-                                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-green-600 font-medium text-sm">
+                                <div className="h-10 w-10 rounded-full bg-surface-container-low flex items-center justify-center">
+                  <span className="text-primary font-medium text-sm">
                     {profile?.first_name?.[0] || 'U'}
                   </span>
                                 </div>
@@ -608,7 +608,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                   value={content}
                   onChange={handleContentChange}
                   placeholder="Share your vegan journey..."
-                  className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full p-3 bg-surface-container-low border-0 rounded-lg resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
                   rows={3}
               />
 
@@ -713,11 +713,11 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
                                 {/* Positive Feedback */}
                                 {gptAnalysis && !gptAnalysis.shouldBlock && !gptAnalysis.isAntiVegan && !isGptAnalyzing && (
-                                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <div className="p-3 bg-surface-container-low ghost-border rounded-lg">
                                         <div className="flex items-start space-x-2">
-                                            <span className="text-green-600 text-lg">✅</span>
+                                            <span className="text-primary text-lg">✅</span>
                                             <div className="flex-1">
-                                                <p className="text-sm font-semibold text-green-800">
+                                                <p className="text-sm font-semibold text-primary">
                                                     {gptAnalysis.sentiment === 'positive' && 'Great content!'}
                                                     {gptAnalysis.sentiment === 'transformation' && 'Inspiring journey!'}
                                                     {gptAnalysis.sentiment === 'question' && 'Great question!'}
@@ -728,7 +728,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                                     <div className="flex flex-wrap gap-1 mt-2">
                                                         {gptAnalysis.tags.slice(0, 5).map((tag, index) => (
                                                             <span key={index}
-                                                                  className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                                                  className="text-xs bg-surface-container-low text-primary px-2 py-1 rounded-full">
                                 #{tag}
                               </span>
                                                         ))}
@@ -761,10 +761,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 <button
                                     type="button"
                                     onClick={() => setShowImageUploader(!showImageUploader)}
-                                    className={`flex items-center space-x-1 hover:text-green-600 transition-colors ${
+                                    className={`flex items-center space-x-1 hover:text-primary transition-colors ${
                                         showImageUploader || imageUrls.length > 0
-                                            ? 'text-green-600'
-                                            : 'text-gray-500'
+                                            ? 'text-primary'
+                                            : 'text-outline'
                                     }`}
                                 >
                                     <ImageIcon className="h-5 w-5"/>
@@ -778,7 +778,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                         className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
                                             showVideoUploader || videoUrls.length > 0
                                                 ? 'text-purple-600'
-                                                : 'text-gray-500'
+                                                : 'text-outline'
                                         }`}
                                     >
                                         <Video className="h-5 w-5"/>
@@ -794,7 +794,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                         className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
                                             shareLocation
                                                 ? 'text-blue-600'
-                                                : 'text-gray-500'
+                                                : 'text-outline'
                                         }`}
                                     >
                                         <MapPin className="h-5 w-5"/>
@@ -812,10 +812,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                         value="public"
                                         checked={privacy === 'public'}
                                         onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-                                        className="text-green-600 focus:ring-green-500"
+                                        className="text-primary focus:ring-primary"
                                     />
-                                    <Globe className="h-4 w-4 text-gray-500"/>
-                                    <span className="text-sm text-gray-700">Public</span>
+                                    <Globe className="h-4 w-4 text-outline"/>
+                                    <span className="text-sm text-on-surface-variant">Public</span>
                                 </label>
                                 <label className="flex items-center space-x-1 cursor-pointer">
                                     <input
@@ -823,10 +823,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                         value="friends"
                                         checked={privacy === 'friends'}
                                         onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-                                        className="text-green-600 focus:ring-green-500"
+                                        className="text-primary focus:ring-primary"
                                     />
-                                    <Users className="h-4 w-4 text-gray-500"/>
-                                    <span className="text-sm text-gray-700">Friends</span>
+                                    <Users className="h-4 w-4 text-outline"/>
+                                    <span className="text-sm text-on-surface-variant">Friends</span>
                                 </label>
                             </div>
                         </div>
@@ -844,7 +844,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                         // Disable if content has text but hasn't been analyzed yet (or analysis pending)
                                         (content.trim().length >= 10 && !gptAnalysis)
                                     }
-                                    className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md font-medium transition-colors"
+                                    className="flex items-center space-x-1 silk-gradient hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md font-medium transition-colors"
                                 >
                                     <Send className="h-4 w-4"/>
                                     <span>
@@ -857,13 +857,13 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 </button>
                                 <div className="flex items-center space-x-2">
                     <span
-                        className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
+                        className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-outline'}`}>
                       {charCount}{maxChars === -1 ? '' : `/${maxChars}`}
                     </span>
                                     {subscription?.tier === 'free' && charCount > 400 && (
                                         <Link
                                             href="/support"
-                                            className="text-xs text-green-600 hover:text-green-700 underline"
+                                            className="text-xs text-primary hover:text-primary-container underline"
                                         >
                                             Upgrade for unlimited chars
                                         </Link>
@@ -873,11 +873,11 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
                             {/* Promotional note for free tier users */}
                             {(!subscription || subscription.tier === 'free') && (
-                                <p className="text-xs text-gray-600">
+                                <p className="text-xs text-on-surface-variant">
                                     Get more posting freedom by{' '}
                                     <Link
                                         href="/support"
-                                        className="text-green-600 hover:text-green-700 underline font-medium"
+                                        className="text-primary hover:text-primary-container underline font-medium"
                                     >
                                         supporting us
                                     </Link>

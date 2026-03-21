@@ -32,9 +32,9 @@ export default function PackCard({ pack }: PackCardProps) {
 
   return (
     <Link href={`/packs/${pack.slug}`}>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow overflow-hidden group">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border hover:shadow-md transition-shadow overflow-hidden group">
         {/* Banner Image */}
-        <div className="relative w-full h-40 bg-gradient-to-br from-green-100 to-green-200">
+        <div className="relative w-full h-40 bg-gradient-to-br from-surface-container-low to-surface-container">
           {pack.banner_url ? (
             <Image
               src={pack.banner_url}
@@ -51,7 +51,7 @@ export default function PackCard({ pack }: PackCardProps) {
           {packCategories.length > 0 && (
             <div className="absolute top-2 left-2 flex flex-wrap gap-1">
               {packCategories.map((cat) => (
-                <div key={cat} className="bg-white px-2 py-1 rounded-full text-xs font-medium text-gray-700">
+                <div key={cat} className="bg-surface-container-lowest px-2 py-1 rounded-full text-xs font-medium text-on-surface-variant">
                   {getCategoryIcon(cat)} {getCategoryLabel(cat)}
                 </div>
               ))}
@@ -68,22 +68,22 @@ export default function PackCard({ pack }: PackCardProps) {
         {/* Content */}
         <div className="p-4">
           {/* Title */}
-          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">
+          <h3 className="font-semibold text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {pack.title}
           </h3>
 
           {/* Description */}
           {pack.description && (
-            <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+            <p className="text-sm text-on-surface-variant line-clamp-2 mb-3">
               {pack.description}
             </p>
           )}
 
           {/* Creator */}
-          <div className="flex items-center gap-2 mb-3 text-sm text-gray-600">
+          <div className="flex items-center gap-2 mb-3 text-sm text-on-surface-variant">
             <div className="flex items-center gap-1">
               <span>by</span>
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-on-surface">
                 @{pack.users.username}
               </span>
               {pack.users.subscription_tier === 'premium' && (
@@ -93,7 +93,7 @@ export default function PackCard({ pack }: PackCardProps) {
           </div>
 
           {/* Stats */}
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex items-center gap-4 text-sm text-on-surface-variant">
             <div className="flex items-center gap-1">
               <Users className="h-4 w-4" />
               <span>{pack.member_count}</span>

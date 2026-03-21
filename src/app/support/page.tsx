@@ -314,9 +314,9 @@ function PricingContent() {
                     tier.id === 'free' ? 'bg-surface-container' :
                     tier.id === 'medium' ? 'bg-surface-container-low' : 'bg-surface-container-low'
                   }`}>
-                    {tier.id === 'free' && <Leaf className={`h-6 w-6 ${tier.id === 'premium' && !isCurrent ? 'text-white' : 'text-on-surface-variant'}`} />}
-                    {tier.id === 'medium' && <Star className={`h-6 w-6 ${tier.id === 'premium' && !isCurrent ? 'text-white' : 'text-primary'}`} />}
-                    {tier.id === 'premium' && <Crown className={`h-6 w-6 ${!isCurrent ? 'text-white' : 'text-purple-600'}`} />}
+                    {tier.id === 'free' && <Leaf className="h-6 w-6 text-on-surface-variant" />}
+                    {tier.id === 'medium' && <Star className="h-6 w-6 text-primary" />}
+                    {tier.id === 'premium' && <Crown className={`h-6 w-6 ${!isCurrent ? 'text-white' : 'text-primary'}`} />}
                   </div>
 
                   <h3 className={`text-2xl font-bold mb-2 ${tier.id === 'premium' && !isCurrent ? 'text-white' : 'text-on-surface'}`}>{tier.name}</h3>

@@ -94,15 +94,15 @@ export default function PacksPage() {
   const canCreatePacks = subscriptionTier && subscriptionTier !== 'free'
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-on-surface mb-2">
               Packs
             </h1>
-            <p className="text-gray-600">
+            <p className="text-on-surface-variant">
               Discover curated collections of vegan content
             </p>
           </div>
@@ -112,7 +112,7 @@ export default function PacksPage() {
               {canCreatePacks ? (
                 <Link
                   href="/packs/create"
-                  className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                  className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-md font-medium transition-colors"
                 >
                   <Plus className="h-5 w-5" />
                   <span>Create Pack</span>
@@ -121,7 +121,7 @@ export default function PacksPage() {
                 <div className="flex flex-col items-end gap-2">
                   <button
                     disabled
-                    className="inline-flex items-center gap-2 bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded-md font-medium opacity-60"
+                    className="inline-flex items-center gap-2 bg-outline cursor-not-allowed text-on-primary px-4 py-2 rounded-md font-medium opacity-60"
                   >
                     <Plus className="h-5 w-5" />
                     <span>Create Pack</span>
@@ -148,7 +148,7 @@ export default function PacksPage() {
         {user && !myPacksLoading && myPacks.length > 0 && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">My Packs</h2>
+              <h2 className="text-xl font-semibold text-on-surface">My Packs</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myPacks.map((pack) => (
@@ -159,17 +159,17 @@ export default function PacksPage() {
         )}
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
                 placeholder="Search packs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
 
@@ -181,8 +181,8 @@ export default function PacksPage() {
                   onClick={() => setCategory(cat.value)}
                   className={`flex items-center gap-1 px-3 py-2 rounded-md font-medium whitespace-nowrap transition-colors ${
                     category === cat.value
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary text-on-primary'
+                      : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                   }`}
                 >
                   <span>{cat.icon}</span>
@@ -196,8 +196,8 @@ export default function PacksPage() {
         {/* Loading */}
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-            <p className="mt-2 text-gray-600">Loading packs...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="mt-2 text-on-surface-variant">Loading packs...</p>
           </div>
         )}
 
@@ -214,10 +214,10 @@ export default function PacksPage() {
         {!loading && packs.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📦</div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-on-surface mb-2">
               No packs found
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-on-surface-variant mb-4">
               {search || category
                 ? 'Try adjusting your search or filters'
                 : 'Be the first to create a pack!'}
@@ -227,7 +227,7 @@ export default function PacksPage() {
                 {canCreatePacks ? (
                   <Link
                     href="/packs/create"
-                    className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                    className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-md font-medium transition-colors"
                   >
                     <Plus className="h-5 w-5" />
                     <span>Create Pack</span>
@@ -236,7 +236,7 @@ export default function PacksPage() {
                   <div className="flex flex-col items-center gap-3">
                     <button
                       disabled
-                      className="inline-flex items-center gap-2 bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded-md font-medium opacity-60"
+                      className="inline-flex items-center gap-2 bg-outline cursor-not-allowed text-on-primary px-4 py-2 rounded-md font-medium opacity-60"
                     >
                       <Plus className="h-5 w-5" />
                       <span>Create Pack</span>

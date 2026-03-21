@@ -95,8 +95,8 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-        <p className="mt-2 text-gray-600">Loading places...</p>
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <p className="mt-2 text-on-surface-variant">Loading places...</p>
       </div>
     )
   }
@@ -108,7 +108,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
         <div className="flex justify-end">
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md font-medium transition-colors"
           >
             <Plus className="h-4 w-4" />
             Add Place
@@ -125,7 +125,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
             return (
               <div
                 key={packPlace.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+                className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border overflow-hidden hover:shadow-md transition-shadow"
               >
                 <div className="p-4">
                   {/* Header */}
@@ -133,16 +133,16 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                     <div className="flex-1 min-w-0">
                       <Link
                         href={`/place/${place.id}`}
-                        className="text-lg font-semibold text-gray-900 hover:text-green-600 transition-colors line-clamp-1"
+                        className="text-lg font-semibold text-on-surface hover:text-primary transition-colors line-clamp-1"
                       >
                         {place.name}
                       </Link>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-on-surface-variant">
                           {place.category}
                         </span>
                         {packPlace.is_pinned && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-primary">
                             📌 Pinned
                           </span>
                         )}
@@ -152,7 +152,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                       <button
                         onClick={() => handleRemovePlace(packPlace.id, place.name)}
                         disabled={deletingId === packPlace.id}
-                        className="text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                        className="text-outline hover:text-error transition-colors disabled:opacity-50"
                         title="Remove from pack"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -164,7 +164,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                   {place.average_rating > 0 && (
                     <div className="flex items-center gap-2 mb-2">
                       <StarRating rating={place.average_rating} size="sm" />
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-on-surface-variant">
                         ({place.review_count})
                       </span>
                     </div>
@@ -179,24 +179,24 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
 
                   {/* Description */}
                   {place.description && (
-                    <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                    <p className="text-sm text-on-surface-variant line-clamp-2 mb-3">
                       {place.description}
                     </p>
                   )}
 
                   {/* Address */}
-                  <div className="flex items-start gap-2 text-sm text-gray-500 mb-3">
+                  <div className="flex items-start gap-2 text-sm text-outline mb-3">
                     <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
                     <span className="line-clamp-1">{place.address}</span>
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <div className="text-xs text-gray-500">
+                  <div className="flex items-center justify-between pt-3 border-t border-outline-variant/15">
+                    <div className="text-xs text-outline">
                       Added by{' '}
                       <Link
                         href={`/user/${place.users.username}`}
-                        className="text-green-600 hover:text-green-700"
+                        className="text-primary hover:text-primary"
                       >
                         {place.users.first_name || place.users.username}
                       </Link>
@@ -215,12 +215,12 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
           })}
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-          <MapPin className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
+          <MapPin className="h-16 w-16 text-outline mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-on-surface mb-2">
             No places yet
           </h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-on-surface-variant mb-4">
             {canManagePlaces
               ? 'Start building your collection of vegan places'
               : 'This pack is waiting for places to be added'}
@@ -228,7 +228,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
           {canManagePlaces && (
             <button
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md font-medium transition-colors"
             >
               <Plus className="h-4 w-4" />
               Add First Place

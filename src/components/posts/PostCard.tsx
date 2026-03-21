@@ -224,13 +224,13 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
+    <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-4">
       {/* Repost indicator */}
       {isRepost && (
-        <div className="flex items-center space-x-2 text-gray-500 text-sm mb-3">
+        <div className="flex items-center space-x-2 text-outline text-sm mb-3">
           <Repeat2 className="h-4 w-4" />
           <span>
-            <Link href={`/user/${post.users.username}`} className="hover:text-green-600 transition-colors">
+            <Link href={`/user/${post.users.username}`} className="hover:text-primary transition-colors">
               {post.users.first_name 
                 ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
                 : post.users.username
@@ -251,11 +251,11 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   <img
                     src={post.users.avatar_url}
                     alt={`${post.users.username}'s avatar`}
-                    className="h-10 w-10 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
+                    className="h-10 w-10 rounded-full object-cover hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
-                    <span className="text-green-600 font-medium text-sm">
+                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all">
+                    <span className="text-on-primary font-medium text-sm">
                       {post.users.first_name?.[0] || post.users.username[0].toUpperCase()}
                     </span>
                   </div>
@@ -264,7 +264,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
               <div>
                 <div className="flex items-center space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
-                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors cursor-pointer">
+                    <h3 className="font-headline font-bold text-on-surface hover:text-primary transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
                         ? `${post.users.first_name} ${post.users.last_name}`
                         : post.users.username}
@@ -273,26 +273,26 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   {post.users.subscription_tier && post.users.subscription_tier !== 'free' && (
                     <TierBadge tier={post.users.subscription_tier} size="sm" />
                   )}
-                  <span className="text-gray-500">•</span>
-                  <Link 
+                  <span className="text-outline">•</span>
+                  <Link
                     href={`/post/${post.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
+                    className="text-[10px] text-outline uppercase tracking-wider hover:text-primary transition-colors cursor-pointer"
                   >
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                   </Link>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
-                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.users.username}</span>
+                    <span className="font-label text-xs font-bold text-outline hover:text-primary transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
                   {(post as any).location_city && (
                     <>
-                      <span className="text-gray-400">·</span>
+                      <span className="text-outline">·</span>
                       <Link
                         href={`/map?location=${encodeURIComponent((post as any).location_city + ((post as any).location_region ? `, ${(post as any).location_region}` : ''))}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center text-xs text-gray-500 hover:text-green-600 transition-colors"
+                        className="flex items-center text-xs text-outline hover:text-primary transition-colors"
                       >
                         <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
                         {(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}
@@ -308,14 +308,14 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                 <div ref={menuRef} className="relative">
                   <button
                     onClick={() => setShowMenu(!showMenu)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-outline hover:text-on-surface-variant"
                   >
                     <MoreHorizontal className="h-5 w-5" />
                   </button>
 
                   {/* Dropdown Menu */}
                   {showMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+                    <div className="absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-xl shadow-editorial py-1 z-10">
                       {canRemoveFromPack ? (
                         <button
                           onClick={handleRemoveFromPack}
@@ -330,7 +330,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                             setShowAddToPack(true)
                             setShowMenu(false)
                           }}
-                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                          className="w-full px-4 py-2 text-left text-sm text-on-surface-variant hover:bg-surface-container-low flex items-center space-x-2"
                         >
                           <Package className="h-4 w-4" />
                           <span>Add to Pack</span>
@@ -343,7 +343,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                               setShowEdit(true)
                               setShowMenu(false)
                             }}
-                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                            className="w-full px-4 py-2 text-left text-sm text-on-surface-variant hover:bg-surface-container-low flex items-center space-x-2"
                           >
                             <Edit className="h-4 w-4" />
                             <span>Edit post</span>
@@ -371,7 +371,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
           <div className="mb-3">
             <LinkifiedText 
               text={post.quote_content} 
-              className="text-gray-800 whitespace-pre-wrap" 
+              className="text-on-surface whitespace-pre-wrap" 
             />
           </div>
         </div>
@@ -379,7 +379,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
 
       {/* Display parent post for shares and quotes */}
       {(isRepost || isQuotePost) && post.parent_post ? (
-        <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+        <div className="rounded-xl p-3 bg-surface-container-low">
           {/* Parent post header */}
           <div className="flex items-center space-x-3 mb-3">
             <Link href={`/user/${post.parent_post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
@@ -387,11 +387,11 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                 <img
                   src={post.parent_post.users.avatar_url}
                   alt={`${post.parent_post.users.username}'s avatar`}
-                  className="h-8 w-8 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
+                  className="h-8 w-8 rounded-full object-cover hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all"
                 />
               ) : (
-                <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
-                  <span className="text-green-600 font-medium text-xs">
+                <div className="h-8 w-8 rounded-xl bg-primary flex items-center justify-center hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all">
+                  <span className="text-on-primary font-medium text-xs">
                     {post.parent_post.users.first_name?.[0] || post.parent_post.users.username[0].toUpperCase()}
                   </span>
                 </div>
@@ -400,7 +400,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
             <div>
               <div className="flex items-center space-x-2">
                 <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
-                  <h4 className="font-medium text-gray-900 text-sm hover:text-green-600 transition-colors cursor-pointer">
+                  <h4 className="font-headline font-bold text-on-surface text-sm hover:text-primary transition-colors cursor-pointer">
                     {post.parent_post.users.first_name && post.parent_post.users.last_name
                       ? `${post.parent_post.users.first_name} ${post.parent_post.users.last_name}`
                       : post.parent_post.users.username}
@@ -409,17 +409,17 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                 {post.parent_post.users.subscription_tier && post.parent_post.users.subscription_tier !== 'free' && (
                   <TierBadge tier={post.parent_post.users.subscription_tier} size="sm" />
                 )}
-                <span className="text-gray-500">•</span>
+                <span className="text-outline">•</span>
                 <Link
                   href={`/post/${post.parent_post.id}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer"
+                  className="text-[10px] text-outline uppercase tracking-wider hover:text-primary transition-colors cursor-pointer"
                 >
                   {formatDistanceToNow(new Date(post.parent_post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                 </Link>
               </div>
               <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
-                <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.parent_post.users.username}</span>
+                <span className="font-label text-xs font-bold text-outline hover:text-primary transition-colors cursor-pointer">@{post.parent_post.users.username}</span>
               </Link>
             </div>
           </div>
@@ -428,16 +428,16 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
           <div className="mb-2">
             <LinkifiedText
               text={post.parent_post.content}
-              className="text-gray-700 text-sm whitespace-pre-wrap"
+              className="text-on-surface-variant text-sm whitespace-pre-wrap"
             />
           </div>
 
           {/* Link to original post */}
-          <div className="mt-2 pt-2 border-t border-gray-200">
+          <div className="mt-2 pt-2">
             <Link
               href={`/post/${post.parent_post.id}`}
               onClick={(e) => e.stopPropagation()}
-              className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center space-x-1 transition-colors"
+              className="text-primary hover:text-primary-container text-sm font-medium flex items-center space-x-1 transition-colors"
             >
               <ExternalLink className="h-3.5 w-3.5" />
               <span>View original post</span>
@@ -455,11 +455,11 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   <img
                     src={post.users.avatar_url}
                     alt={`${post.users.username}'s avatar`}
-                    className="h-10 w-10 rounded-full object-cover hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all"
+                    className="h-10 w-10 rounded-full object-cover hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center hover:ring-2 hover:ring-green-500 hover:ring-offset-1 transition-all">
-                    <span className="text-green-600 font-medium text-sm">
+                  <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all">
+                    <span className="text-on-primary font-medium text-sm">
                       {post.users.first_name?.[0] || post.users.username[0].toUpperCase()}
                     </span>
                   </div>
@@ -468,7 +468,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
               <div>
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
-                    <h3 className="font-medium text-gray-900 hover:text-green-600 transition-colors cursor-pointer">
+                    <h3 className="font-headline font-bold text-on-surface hover:text-primary transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
                         ? `${post.users.first_name} ${post.users.last_name}`
                         : post.users.username}
@@ -477,26 +477,26 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   {post.users.subscription_tier && post.users.subscription_tier !== 'free' && (
                     <TierBadge tier={post.users.subscription_tier} size="sm" />
                   )}
-                  <span className="text-gray-500">•</span>
+                  <span className="text-outline">•</span>
                   <Link
                     href={`/post/${post.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-gray-500 text-sm hover:text-green-600 transition-colors cursor-pointer"
+                    className="text-[10px] text-outline uppercase tracking-wider hover:text-primary transition-colors cursor-pointer"
                   >
                     {formatDistanceToNow(new Date(post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                   </Link>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
-                    <span className="text-gray-500 text-xs hover:text-green-600 transition-colors cursor-pointer">@{post.users.username}</span>
+                    <span className="font-label text-xs font-bold text-outline hover:text-primary transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
                   {(post as any).location_city && (
                     <>
-                      <span className="text-gray-400">·</span>
+                      <span className="text-outline">·</span>
                       <Link
                         href={`/map?location=${encodeURIComponent((post as any).location_city + ((post as any).location_region ? `, ${(post as any).location_region}` : ''))}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center text-xs text-gray-500 hover:text-green-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-full"
+                        className="flex items-center text-xs text-outline hover:text-primary transition-colors whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-full"
                       >
                         <MapPin className="h-3 w-3 mr-0.5 flex-shrink-0" />
                           <span className={"text-ellipsis"}>{(post as any).location_city}{(post as any).location_region ? `, ${(post as any).location_region}` : ''}</span>
@@ -512,14 +512,14 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                 <div ref={menuRef} className="relative">
                   <button
                     onClick={() => setShowMenu(!showMenu)}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-outline hover:text-on-surface-variant"
                   >
                     <MoreHorizontal className="h-5 w-5" />
                   </button>
 
                   {/* Dropdown Menu */}
                   {showMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10">
+                    <div className="absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-xl shadow-editorial py-1 z-10">
                       {canRemoveFromPack ? (
                         <button
                           onClick={handleRemoveFromPack}
@@ -534,7 +534,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                             setShowAddToPack(true)
                             setShowMenu(false)
                           }}
-                          className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                          className="w-full px-4 py-2 text-left text-sm text-on-surface-variant hover:bg-surface-container-low flex items-center space-x-2"
                         >
                           <Package className="h-4 w-4" />
                           <span>Add to Pack</span>
@@ -547,7 +547,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                               setShowEdit(true)
                               setShowMenu(false)
                             }}
-                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                            className="w-full px-4 py-2 text-left text-sm text-on-surface-variant hover:bg-surface-container-low flex items-center space-x-2"
                           >
                             <Edit className="h-4 w-4" />
                             <span>Edit post</span>
@@ -575,7 +575,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
           <div className="mb-4">
             <LinkifiedText
               text={post.content}
-              className="text-gray-800 whitespace-pre-wrap"
+              className="text-on-surface whitespace-pre-wrap"
             />
 
             {/* Videos - shown first */}
@@ -583,7 +583,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
               <div className="mt-3 space-y-3">
                 {post.video_urls.map((videoUrl, index) => (
                   <div key={index} className="relative">
-                    <div className="relative bg-gray-100 rounded-lg overflow-hidden aspect-video">
+                    <div className="relative bg-surface-container-low rounded-lg overflow-hidden aspect-video">
                       <video
                         src={videoUrl}
                         className="w-full h-full object-cover"
@@ -647,8 +647,8 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-        <div className="flex items-center space-x-2">
+      <div className="flex items-center justify-between pt-3">
+        <div className="flex items-center space-x-4">
           <ReactionButtons
             postId={post.id}
             onReactionChange={onUpdate}
@@ -661,7 +661,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
 
           <button
             onClick={handleComment}
-            className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+            className="flex items-center space-x-1 px-2 py-1 rounded-md text-on-surface-variant hover:text-primary transition-colors"
           >
             <MessageCircle className="h-5 w-5" />
             <span className="text-sm">{commentCount}</span>
@@ -669,7 +669,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
 
           <button
             onClick={handleShare}
-            className="flex items-center space-x-1 px-2 py-1 rounded-md text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
+            className="flex items-center space-x-1 px-2 py-1 rounded-md text-on-surface-variant hover:text-primary transition-colors"
           >
             <Share className="h-5 w-5" />
             <span className="text-sm hidden sm:inline">Share</span>
@@ -722,22 +722,22 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
       {/* Delete Confirmation */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-2">Delete Post?</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-surface-container-lowest rounded-[2.5rem] p-6 shadow-editorial max-w-md w-full">
+            <h3 className="text-lg font-headline font-bold mb-2">Delete Post?</h3>
+            <p className="text-on-surface-variant mb-4">
               This action cannot be undone. Your post will be permanently removed.
             </p>
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="flex-1 px-4 py-2 rounded-xl text-on-surface-variant bg-surface-container-low hover:bg-surface-container-high transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md disabled:bg-gray-400"
+                className="flex-1 px-4 py-2 bg-error hover:opacity-90 text-white rounded-xl disabled:opacity-50"
               >
                 {deleting ? 'Deleting...' : 'Delete'}
               </button>

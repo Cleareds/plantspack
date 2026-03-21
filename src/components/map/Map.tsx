@@ -605,7 +605,7 @@ export default function Map() {
   if (!userLocation || !mapCenter) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     )
   }
@@ -618,30 +618,30 @@ export default function Map() {
       {/* Success Message */}
       {successMessage && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999]">
-          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg px-6 py-3 flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-            <p className="text-sm font-medium text-green-800">{successMessage}</p>
+          <div className="bg-surface-container-low ghost-border rounded-lg editorial-shadow px-6 py-3 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+            <p className="text-sm font-medium text-primary">{successMessage}</p>
           </div>
         </div>
       )}
 
       {/* Controls */}
-      <div className="bg-white border-b border-gray-200 p-3 md:p-4 flex-shrink-0">
+      <div className="bg-surface-container-lowest border-b border-outline-variant/15 p-3 md:p-4 flex-shrink-0">
         <div className="max-w-full mx-auto">
           {/* Mobile: Single row with menu button and title */}
           <div className="flex items-center justify-between gap-2 mb-3 lg:hidden">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+              className="p-2 hover:bg-surface-container rounded-md transition-colors"
               aria-label="Toggle sidebar"
             >
-              <Menu className="h-5 w-5 text-gray-700" />
+              <Menu className="h-5 w-5 text-on-surface-variant" />
             </button>
-            <h1 className="text-lg font-semibold text-gray-900 flex-1">Vegan Places</h1>
+            <h1 className="text-lg font-semibold text-on-surface flex-1">Vegan Places</h1>
             {user ? (
               <button
                 onClick={() => setShowAddForm(true)}
-                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-3 py-2 rounded-full text-sm font-medium transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline">Add</span>
@@ -649,7 +649,7 @@ export default function Map() {
             ) : (
               <Link
                 href="/auth"
-                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-3 py-2 rounded-full text-sm font-medium transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline">Sign Up</span>
@@ -660,11 +660,11 @@ export default function Map() {
           {/* Desktop: All controls in one row */}
           <div className="hidden lg:flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <h1 className="text-xl font-semibold text-gray-900">Vegan Places</h1>
+              <h1 className="text-xl font-semibold text-on-surface">Vegan Places</h1>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="ghost-border rounded-md px-3 py-1 text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
               >
                 {categories.map((category) => (
                   <option key={category.value} value={category.value}>
@@ -675,11 +675,11 @@ export default function Map() {
 
               {/* Radius Selector */}
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Radius:</span>
+                <span className="text-sm text-on-surface-variant">Radius:</span>
                 <select
                   value={searchRadius}
                   onChange={(e) => setSearchRadius(Number(e.target.value))}
-                  className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="ghost-border rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
                 >
                   <option value={5}>5km</option>
                   <option value={10}>10km</option>
@@ -694,7 +694,7 @@ export default function Map() {
               {customCenter && (
                 <button
                   onClick={() => setCustomCenter(null)}
-                  className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded border"
+                  className="text-xs px-2 py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant rounded ghost-border"
                 >
                   Reset Center
                 </button>
@@ -704,29 +704,29 @@ export default function Map() {
             {/* Search Bar */}
             <div className="flex-1 max-w-md relative search-container">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for places..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none text-sm"
               />
             </div>
             
             {/* Search Results Dropdown */}
             {showSearchResults && searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-50 max-h-60 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 bg-surface-container-lowest ghost-border rounded-md editorial-shadow mt-1 z-50 max-h-60 overflow-y-auto">
                 {searchResults.map((result, index) => (
                   <button
                     key={index}
                     onClick={() => handleSearchSelect(result)}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                    className="w-full text-left px-4 py-2 hover:bg-surface-container border-b border-outline-variant/15 last:border-b-0"
                   >
-                    <div className="text-sm font-medium text-gray-900 truncate">
+                    <div className="text-sm font-medium text-on-surface truncate">
                       {result.display_name}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-outline mt-1">
                       {result.type && <span className="capitalize">{result.type}</span>}
                       {result.address && (
                         <span className="ml-2">
@@ -745,7 +745,7 @@ export default function Map() {
             {user ? (
               <button
                 onClick={() => setShowAddForm(true)}
-                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 <span>Add Place</span>
@@ -753,7 +753,7 @@ export default function Map() {
             ) : (
               <Link
                 href="/auth"
-                className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 <span>Sign Up</span>
@@ -767,7 +767,7 @@ export default function Map() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="flex-1 ghost-border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
               >
                 {categories.map((category) => (
                   <option key={category.value} value={category.value}>
@@ -779,7 +779,7 @@ export default function Map() {
               <select
                 value={searchRadius}
                 onChange={(e) => setSearchRadius(Number(e.target.value))}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="ghost-border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
               >
                 <option value={5}>5km</option>
                 <option value={10}>10km</option>
@@ -792,28 +792,28 @@ export default function Map() {
 
             {/* Mobile Search Bar */}
             <div className="relative search-container">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for places..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none text-sm"
               />
 
               {/* Search Results Dropdown */}
               {showSearchResults && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-50 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 bg-surface-container-lowest ghost-border rounded-md editorial-shadow mt-1 z-50 max-h-60 overflow-y-auto">
                   {searchResults.map((result, index) => (
                     <button
                       key={index}
                       onClick={() => handleSearchSelect(result)}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                      className="w-full text-left px-4 py-2 hover:bg-surface-container border-b border-outline-variant/15 last:border-b-0"
                     >
-                      <div className="text-sm font-medium text-gray-900 truncate">
+                      <div className="text-sm font-medium text-on-surface truncate">
                         {result.display_name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-outline mt-1">
                         {result.type && <span className="capitalize">{result.type}</span>}
                         {result.address && (
                           <span className="ml-2">
@@ -839,8 +839,8 @@ export default function Map() {
           className={`
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             fixed lg:static inset-y-0 left-0 z-30
-            w-80 bg-white border-r border-gray-200
-            flex-shrink-0 overflow-y-auto
+            w-80 bg-surface-container-lowest border-r border-outline-variant/15
+            flex-shrink-0 overflow-y-auto glass-float editorial-shadow
             transition-transform duration-300 ease-in-out
             lg:transition-none
           `}
@@ -849,13 +849,13 @@ export default function Map() {
           {/* Mobile close button */}
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-md transition-colors z-10"
+            className="lg:hidden absolute top-4 right-4 p-2 hover:bg-surface-container rounded-md transition-colors z-10"
             aria-label="Close sidebar"
           >
-            <ChevronLeft className="h-5 w-5 text-gray-700" />
+            <ChevronLeft className="h-5 w-5 text-on-surface-variant" />
           </button>
           <div className="p-4">
-            <h2 className="text-lg font-medium text-gray-900 mb-2">
+            <h2 className="text-lg font-medium text-on-surface mb-2">
               Places within {searchRadius}km
             </h2>
             {customCenter && (
@@ -864,19 +864,19 @@ export default function Map() {
               </p>
             )}
             {!hasNearbyPlaces && (
-              <p className="text-xs text-gray-500 mb-4">
+              <p className="text-xs text-outline mb-4">
                 Found {filteredPlaces.length} total places
               </p>
             )}
             
             {!hasNearbyPlaces ? (
               <div className="text-center py-8">
-                <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500 text-sm">
+                <MapPin className="h-12 w-12 text-outline mx-auto mb-3" />
+                <p className="text-outline text-sm">
                   No places found within {searchRadius}km radius.
                 </p>
                 {user && (
-                  <p className="text-gray-400 text-xs mt-2">
+                  <p className="text-outline text-xs mt-2">
                     Click on the map to change search center or increase radius!
                   </p>
                 )}
@@ -884,7 +884,7 @@ export default function Map() {
             ) : (
               <div className="space-y-3">
                 {sidebarPlaces.map((place) => (
-                  <div key={place.id} className="border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer"
+                  <div key={place.id} className="ghost-border rounded-lg p-3 hover:editorial-shadow transition-shadow cursor-pointer"
                        onClick={() => {
                          if (mapRef.current) {
                            mapRef.current.setView([place.latitude, place.longitude], 15)
@@ -893,7 +893,7 @@ export default function Map() {
                     <div className="flex items-start justify-between mb-2">
                       <Link
                         href={`/place/${place.id}`}
-                        className="font-semibold text-gray-900 text-sm hover:text-green-600 transition-colors"
+                        className="font-semibold text-on-surface text-sm hover:text-primary transition-colors"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {place.name}
@@ -907,7 +907,7 @@ export default function Map() {
                           className={`p-1 rounded ${
                             place.favorite_places.some(fav => fav.user_id === user.id)
                               ? 'text-red-500'
-                              : 'text-gray-300 hover:text-red-500'
+                              : 'text-outline hover:text-red-500'
                           }`}
                         >
                           <Heart className={`h-3 w-3 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
@@ -917,7 +917,7 @@ export default function Map() {
                     
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
-                        <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-xs capitalize">
+                        <span className="bg-surface-container-low text-on-surface px-2 py-0.5 rounded text-xs capitalize">
                           {place.category}
                         </span>
                         {place.is_pet_friendly && (
@@ -927,12 +927,12 @@ export default function Map() {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-600">{place.address}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-on-surface-variant">{place.address}</p>
+                      <p className="text-xs text-outline">
                         {place.distance.toFixed(1)}km away
                       </p>
                       {place.description && (
-                        <p className="text-xs text-gray-700 line-clamp-2">{place.description}</p>
+                        <p className="text-xs text-on-surface-variant line-clamp-2">{place.description}</p>
                       )}
                     </div>
                   </div>
@@ -957,12 +957,12 @@ export default function Map() {
           {!sidebarOpen && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden absolute top-4 left-4 z-30 bg-white hover:bg-gray-50 p-3 rounded-lg shadow-lg border border-gray-200 transition-colors"
+              className="lg:hidden absolute top-4 left-4 z-30 bg-surface-container-lowest hover:bg-surface-container-low p-3 rounded-lg editorial-shadow ghost-border transition-colors"
               aria-label="Show places list"
             >
               <div className="flex items-center gap-2">
-                <Menu className="h-5 w-5 text-gray-700" />
-                <span className="text-sm font-medium text-gray-700">
+                <Menu className="h-5 w-5 text-on-surface-variant" />
+                <span className="text-sm font-medium text-on-surface-variant">
                   {sidebarPlaces.length} places
                 </span>
               </div>
@@ -970,8 +970,8 @@ export default function Map() {
           )}
 
           {/* Map Instructions */}
-          <div className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg border border-gray-200 max-w-xs hidden md:block">
-            <p className="text-xs text-gray-700">
+          <div className="absolute top-4 right-4 z-30 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg p-3 editorial-shadow ghost-border max-w-xs hidden md:block">
+            <p className="text-xs text-on-surface-variant">
               <strong>💡 Tip:</strong> Click anywhere on the map to set a new search center and find places within your selected radius.
             </p>
           </div>
@@ -1013,11 +1013,11 @@ export default function Map() {
               >
                 <Popup>
                   <div className="p-2">
-                    <h3 className="font-semibold text-green-600">Search Center</h3>
-                    <p className="text-sm text-gray-600">Places within {searchRadius}km of this point</p>
+                    <h3 className="font-semibold text-primary">Search Center</h3>
+                    <p className="text-sm text-on-surface-variant">Places within {searchRadius}km of this point</p>
                     <button
                       onClick={() => setCustomCenter(null)}
-                      className="mt-2 text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
+                      className="mt-2 text-xs bg-surface-container-low hover:bg-surface-container px-2 py-1 rounded"
                     >
                       Reset to your location
                     </button>
@@ -1035,7 +1035,7 @@ export default function Map() {
                 <Popup>
                   <div className="p-2">
                     <h3 className="font-semibold text-blue-600">Your Location</h3>
-                    <p className="text-sm text-gray-600">This is your current position</p>
+                    <p className="text-sm text-on-surface-variant">This is your current position</p>
                   </div>
                 </Popup>
               </Marker>
@@ -1052,7 +1052,7 @@ export default function Map() {
                     <div className="flex items-start justify-between mb-2">
                       <Link
                         href={`/place/${place.id}`}
-                        className="font-semibold text-gray-900 hover:text-green-600 transition-colors"
+                        className="font-semibold text-on-surface hover:text-primary transition-colors"
                       >
                         {place.name}
                       </Link>
@@ -1063,7 +1063,7 @@ export default function Map() {
                             className={`p-1 rounded ${
                               place.favorite_places.some(fav => fav.user_id === user.id)
                                 ? 'text-red-500'
-                                : 'text-gray-300 hover:text-red-500'
+                                : 'text-outline hover:text-red-500'
                             }`}
                           >
                             <Heart className={`h-4 w-4 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
@@ -1072,7 +1072,7 @@ export default function Map() {
                         {user && user.id === place.created_by && (
                           <button
                             onClick={() => handleDeletePlace(place.id)}
-                            className="p-1 rounded text-gray-400 hover:text-red-600"
+                            className="p-1 rounded text-outline hover:text-error"
                             title="Delete place"
                           >
                             <X className="h-4 w-4" />
@@ -1081,7 +1081,7 @@ export default function Map() {
                       </div>
                     </div>
                     
-                    <div className="space-y-1 text-sm text-gray-600">
+                    <div className="space-y-1 text-sm text-on-surface-variant">
                       <div className="flex items-center space-x-1">
                         <span className="capitalize">{place.category}</span>
                         {place.is_pet_friendly && (
@@ -1098,14 +1098,14 @@ export default function Map() {
                           href={place.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-green-600 hover:underline"
+                          className="text-primary hover:underline"
                         >
                           Visit Website
                         </a>
                       )}
                     </div>
                     
-                    <div className="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-500">
+                    <div className="mt-2 pt-2 border-t border-outline-variant/15 text-xs text-outline">
                       Added by @{place.users.username}
                     </div>
                   </div>
@@ -1115,8 +1115,8 @@ export default function Map() {
           </MapContainer>
 
           {loading && (
-            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-20">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+            <div className="absolute inset-0 bg-surface-container-lowest bg-opacity-75 flex items-center justify-center z-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           )}
         </div>
@@ -1125,12 +1125,12 @@ export default function Map() {
       {/* Add Place Form Modal */}
       {showAddForm && (
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{backgroundColor: 'rgba(0,0,0,0.3)'}}>
-          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-surface-container-lowest rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto editorial-shadow">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Add New Place</h2>
+              <h2 className="text-lg font-semibold text-on-surface">Add New Place</h2>
               <button
                 onClick={handleFormClose}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-outline hover:text-on-surface-variant"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -1138,26 +1138,26 @@ export default function Map() {
 
             <form onSubmit={handleAddPlace} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Place Name *
                 </label>
                 <input
                   type="text"
                   value={newPlace.name}
                   onChange={(e) => setNewPlace(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Category
                 </label>
                 <select
                   value={newPlace.category}
                   onChange={(e) => setNewPlace(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                 >
                   {categories.filter(c => c.value !== 'all').map((category) => (
                     <option key={category.value} value={category.value}>
@@ -1168,36 +1168,36 @@ export default function Map() {
               </div>
 
               <div className="address-search-container">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Address *
                 </label>
                 <div className="relative">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
                     <input
                       type="text"
                       value={addressSearchQuery}
                       onChange={(e) => setAddressSearchQuery(e.target.value)}
                       placeholder="Search for address..."
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                       required
                     />
                   </div>
                   
                   {/* Address Search Results Dropdown */}
                   {showAddressSearchResults && addressSearchResults.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-50 max-h-40 overflow-y-auto">
+                    <div className="absolute top-full left-0 right-0 bg-surface-container-lowest ghost-border rounded-md editorial-shadow mt-1 z-50 max-h-40 overflow-y-auto">
                       {addressSearchResults.map((result, index) => (
                         <button
                           key={index}
                           type="button"
                           onClick={() => handleAddressSelect(result)}
-                          className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                          className="w-full text-left px-3 py-2 hover:bg-surface-container border-b border-outline-variant/15 last:border-b-0"
                         >
-                          <div className="text-sm font-medium text-gray-900 truncate">
+                          <div className="text-sm font-medium text-on-surface truncate">
                             {result.display_name}
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-outline mt-1">
                             {result.type && <span className="capitalize">{result.type}</span>}
                             {result.address && (
                               <span className="ml-2">
@@ -1213,33 +1213,33 @@ export default function Map() {
                   )}
                 </div>
                 {newPlace.address && (
-                  <div className="mt-1 text-xs text-gray-500">
+                  <div className="mt-1 text-xs text-outline">
                     Selected: {newPlace.address}
                   </div>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Description
                 </label>
                 <textarea
                   value={newPlace.description}
                   onChange={(e) => setNewPlace(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">
                   Website
                 </label>
                 <input
                   type="url"
                   value={newPlace.website}
                   onChange={(e) => setNewPlace(prev => ({ ...prev, website: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                 />
               </div>
 
@@ -1249,9 +1249,9 @@ export default function Map() {
                   id="pet-friendly"
                   checked={newPlace.is_pet_friendly}
                   onChange={(e) => setNewPlace(prev => ({ ...prev, is_pet_friendly: e.target.checked }))}
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
                 />
-                <label htmlFor="pet-friendly" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="pet-friendly" className="ml-2 block text-sm text-on-surface-variant">
                   Pet Friendly
                 </label>
               </div>
@@ -1260,13 +1260,13 @@ export default function Map() {
                 <button
                   type="button"
                   onClick={handleFormClose}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 ghost-border rounded-full text-on-surface-variant hover:bg-surface-container-low"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
+                  className="flex-1 px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-full"
                 >
                   Add Place
                 </button>

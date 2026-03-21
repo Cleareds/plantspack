@@ -10,26 +10,32 @@ interface TierBadgeProps {
   className?: string
 }
 
-export default function TierBadge({ 
-  tier, 
-  size = 'sm', 
-  showIcon = true, 
-  className = '' 
+const tierStyles: Record<string, string> = {
+  free: 'bg-tertiary-container text-white',
+  medium: 'bg-secondary-container text-on-secondary',
+  premium: 'silk-gradient text-on-primary',
+}
+
+export default function TierBadge({
+  tier,
+  size = 'sm',
+  showIcon = true,
+  className = ''
 }: TierBadgeProps) {
   const badge = getTierBadge(tier)
-  
+
   const sizes = {
     sm: 'px-2 py-1 text-xs',
     md: 'px-3 py-1 text-sm',
     lg: 'px-4 py-2 text-base'
   }
-  
+
   const iconSizes = {
     sm: 'h-3 w-3',
     md: 'h-4 w-4',
     lg: 'h-5 w-5'
   }
-  
+
   const getIcon = () => {
     switch (tier) {
       case 'free':
@@ -42,18 +48,15 @@ export default function TierBadge({
         return null
     }
   }
-  
+
   return (
     <span
       className={`
         inline-flex items-center space-x-1 rounded-full font-medium
         ${sizes[size]}
+        ${tierStyles[tier] || ''}
         ${className}
       `}
-      style={{
-        backgroundColor: badge.bgColor,
-        color: badge.color
-      }}
     >
       {showIcon && getIcon()}
       <span className={"hidden sm:inline"}>{badge.text}</span>
