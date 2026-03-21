@@ -281,7 +281,7 @@ export default function ReactionButtons({
             className={`flex items-center space-x-1 px-2 py-1 rounded-md transition-colors ${
               isActive
                 ? `${config.color} ${config.bgColor}`
-                : `text-gray-500 hover:${config.color} ${config.hoverBg}`
+                : `text-outline hover:${config.color} ${config.hoverBg}`
             } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             title={config.label}
           >

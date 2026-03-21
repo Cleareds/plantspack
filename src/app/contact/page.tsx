@@ -70,14 +70,14 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+    <div className="min-h-screen bg-surface">
       {/* Header */}
-      <div className="bg-white border-b border-green-100">
+      <div className="bg-surface-container-lowest border-b border-outline-variant/15">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center space-x-4">
             <Link 
               href="/support"
-              className="flex items-center space-x-2 text-green-600 hover:text-green-700 transition-colors"
+              className="flex items-center space-x-2 text-primary hover:text-primary-container transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Support</span>
@@ -90,14 +90,14 @@ export default function ContactPage() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="p-3 bg-green-100 rounded-full">
-              <MessageSquare className="h-8 w-8 text-green-600" />
+            <div className="p-3 bg-surface-container-low rounded-full">
+              <MessageSquare className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-on-surface mb-4">
             Get in Touch
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-on-surface-variant max-w-2xl mx-auto">
             Have questions about Vegan Social? We&apos;d love to hear from you. 
             Send us a message and we&apos;ll respond as soon as possible.
           </p>
@@ -106,13 +106,13 @@ export default function ContactPage() {
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h2>
+            <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8">
+              <h2 className="text-2xl font-bold text-on-surface mb-6">Send us a message</h2>
               
               {status === 'success' && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <div className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <CheckCircle className="h-5 w-5 text-primary" />
                     <p className="text-green-800 font-medium">
                       Thank you! Your message has been sent successfully. We&apos;ll get back to you soon! 🌱
                     </p>
@@ -132,7 +132,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-on-surface-variant mb-2">
                       Name *
                     </label>
                     <input
@@ -142,12 +142,12 @@ export default function ContactPage() {
                       required
                       value={form.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-outline-variant/15 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="Your full name"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-on-surface-variant mb-2">
                       Email *
                     </label>
                     <input
@@ -157,14 +157,14 @@ export default function ContactPage() {
                       required
                       value={form.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-outline-variant/15 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       placeholder="your@email.com"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="subject" className="block text-sm font-medium text-on-surface-variant mb-2">
                     Subject *
                   </label>
                   <select
@@ -173,7 +173,7 @@ export default function ContactPage() {
                     required
                     value={form.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-outline-variant/15 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
                     <option value="">Select a topic</option>
                     <option value="General Question">General Question</option>
@@ -187,7 +187,7 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-on-surface-variant mb-2">
                     Message *
                   </label>
                   <textarea
@@ -197,7 +197,7 @@ export default function ContactPage() {
                     rows={6}
                     value={form.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 border border-outline-variant/15 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                     placeholder="Tell us how we can help you..."
                   />
                 </div>
@@ -205,7 +205,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center space-x-2 px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-lg font-medium transition-colors"
+                  className="w-full flex items-center justify-center space-x-2 px-6 py-3 silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary rounded-lg font-medium transition-colors"
                 >
                   {loading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -222,15 +222,15 @@ export default function ContactPage() {
 
           {/* Contact Info */}
           <div className="space-y-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Other ways to reach us</h3>
+            <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-6">
+              <h3 className="text-xl font-bold text-on-surface mb-4">Other ways to reach us</h3>
               
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <Mail className="h-5 w-5 text-green-600 mt-1" />
+                  <Mail className="h-5 w-5 text-primary mt-1" />
                   <div>
-                    <p className="font-medium text-gray-900">Email</p>
-                    <p className="text-gray-600 text-sm">hello@cleareds.com</p>
+                    <p className="font-medium text-on-surface">Email</p>
+                    <p className="text-on-surface-variant text-sm">hello@cleareds.com</p>
                   </div>
                 </div>
               </div>

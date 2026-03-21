@@ -122,7 +122,7 @@ export default function NotificationBell() {
       case 'mention':
         return <AtSign className="h-4 w-4 text-purple-500" />
       default:
-        return <Bell className="h-4 w-4 text-gray-500" />
+        return <Bell className="h-4 w-4 text-outline" />
     }
   }
 
@@ -152,7 +152,7 @@ export default function NotificationBell() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+        className="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-full transition-colors"
       >
         <Bell className="h-6 w-6" />
         {unreadCount > 0 && (
@@ -163,13 +163,13 @@ export default function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-[-50px] sm:right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+        <div className="absolute right-[-50px] sm:right-0 mt-2 w-96 bg-surface-container-lowest rounded-lg shadow-ambient border border-outline-variant/15 z-50">
+          <div className="p-4 border-b border-outline-variant/15 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-on-surface">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-sm text-green-600 hover:text-green-700 font-medium"
+                className="text-sm text-primary hover:text-primary-container font-medium"
               >
                 Mark all as read
               </button>
@@ -179,11 +179,11 @@ export default function NotificationBell() {
           <div className="max-h-96 overflow-y-auto">
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-green-600" />
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : notifications.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
-                <Bell className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+              <div className="p-8 text-center text-outline">
+                <Bell className="h-12 w-12 mx-auto mb-2 text-outline" />
                 <p>No notifications yet</p>
               </div>
             ) : (
@@ -198,8 +198,8 @@ export default function NotificationBell() {
                       }
                       setIsOpen(false)
                     }}
-                    className={`block px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 ${
-                      !notification.read ? 'bg-green-50' : ''
+                    className={`block px-4 py-3 hover:bg-surface-container-low border-b border-outline-variant/15 last:border-b-0 ${
+                      !notification.read ? 'bg-surface-container-low' : ''
                     }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -210,12 +210,12 @@ export default function NotificationBell() {
                           className="h-10 w-10 rounded-full object-cover flex-shrink-0"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0">
                           {getNotificationIcon(notification.type)}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-on-surface">
                           <span className="font-semibold">
                             {notification.actor?.first_name && notification.actor?.last_name
                               ? `${notification.actor.first_name} ${notification.actor.last_name}`
@@ -228,12 +228,12 @@ export default function NotificationBell() {
                              notification.type === 'mention' ? 'mentioned you' :
                              notification.type === 'reply' ? 'replied to your comment' : '')}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-outline mt-1">
                           {formatTimeAgo(notification.created_at)}
                         </p>
                       </div>
                       {!notification.read && (
-                        <div className="h-2 w-2 bg-green-600 rounded-full flex-shrink-0 mt-2"></div>
+                        <div className="h-2 w-2 bg-primary rounded-full flex-shrink-0 mt-2"></div>
                       )}
                     </div>
                   </Link>
@@ -242,11 +242,11 @@ export default function NotificationBell() {
             )}
           </div>
 
-          <div className="p-3 border-t border-gray-200">
+          <div className="p-3 border-t border-outline-variant/15">
             <Link
               href={profile?.username ? `/profile/${profile.username}/notifications` : '#'}
               onClick={() => setIsOpen(false)}
-              className="block text-center text-sm text-green-600 hover:text-green-700 font-medium"
+              className="block text-center text-sm text-primary hover:text-primary-container font-medium"
             >
               Notifications settings
             </Link>

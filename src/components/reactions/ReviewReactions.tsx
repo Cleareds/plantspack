@@ -226,7 +226,7 @@ export default function ReviewReactions({
             className={`flex items-center space-x-0.5 px-1.5 py-0.5 rounded text-xs transition-colors ${
               isActive
                 ? `${config.color} ${config.bgColor}`
-                : `text-gray-400 hover:${config.color} ${config.hoverBg}`
+                : `text-outline hover:${config.color} ${config.hoverBg}`
             } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             title={config.label}
           >

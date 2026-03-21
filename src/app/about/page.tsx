@@ -9,20 +9,20 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">About PlantsPack</h1>
-          <p className="text-xl text-gray-600">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
+          <h1 className="text-4xl font-bold text-on-surface mb-4">About PlantsPack</h1>
+          <p className="text-xl text-on-surface-variant">
             A safe space for vegans to share, encourage and enjoy vegan lifestyle everywhere at all times.
           </p>
         </div>
 
         {/* Our Story */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Our Story</h2>
-          <div className="prose prose-lg max-w-none text-gray-700 space-y-4">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
+          <h2 className="text-2xl font-bold text-on-surface mb-4">Our Story</h2>
+          <div className="prose prose-lg max-w-none text-on-surface-variant space-y-4">
             <p>
               At the moment, there are just 2 people and a dog behind all PlantsPack features.
               We're Oleksandra and Anton, originally from Ukraine, based in Belgium for the last 6 years.
@@ -45,77 +45,77 @@ export default function AboutPage() {
         </div>
 
         {/* Mission */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <Heart className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
+            <Heart className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold text-on-surface">Our Mission</h2>
           </div>
-          <p className="text-lg text-gray-700">
+          <p className="text-lg text-on-surface-variant">
             Safe informative space for vegans to share, encourage and enjoy vegan lifestyle everywhere at all times.
           </p>
         </div>
 
         {/* Goals */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <Target className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Our Goals</h2>
+            <Target className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold text-on-surface">Our Goals</h2>
           </div>
-          <ul className="space-y-3 text-gray-700">
+          <ul className="space-y-3 text-on-surface-variant">
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span>Build a stable community-driven application to share stories, insights and places suitable for vegans.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span>Allow our community to self-organise in packs or other forms to have a comfortable space / knowledge base to store, organise and share favourite and most suitable content.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span>Support vegan and animal-friendly initiatives with resources accumulated by the application.</span>
             </li>
           </ul>
         </div>
 
         {/* Community Bases */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <Users className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Community Bases We Aim For</h2>
+            <Users className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold text-on-surface">Community Bases We Aim For</h2>
           </div>
-          <ul className="space-y-3 text-gray-700">
+          <ul className="space-y-3 text-on-surface-variant">
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span><strong>No hate.</strong></span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span><strong>No preference or premium content prioritisation</strong> - Paid features allows more at the platform but not prioritising the content produced by paid users.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
-              <span>The community decides what features to build and incorporate, but Oleksandra and Anton leave the right for a final decision. <strong>Only Support or Premium users can vote for roadmap features.</strong> Check the <Link href="/roadmap" className="text-green-600 hover:text-green-700 underline">roadmap page</Link> to vote for next features.</span>
+              <span className="text-primary font-bold">•</span>
+              <span>The community decides what features to build and incorporate, but Oleksandra and Anton leave the right for a final decision. <strong>Only Support or Premium users can vote for roadmap features.</strong> Check the <Link href="/roadmap" className="text-primary hover:text-primary-container underline">roadmap page</Link> to vote for next features.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span><strong>At least 50% of revenue will go to initiatives or places we support.</strong></span>
             </li>
           </ul>
         </div>
 
         {/* What We Support */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <DollarSign className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">We Directly Support</h2>
+            <DollarSign className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold text-on-surface">We Directly Support</h2>
           </div>
-          <ul className="space-y-3 text-gray-700">
+          <ul className="space-y-3 text-on-surface-variant">
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span>Animal shelters in Ukraine.</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-primary font-bold">•</span>
               <span>Vegan initiatives across the world that we (Oleksandra and Anton) consider relevant.</span>
             </li>
           </ul>
@@ -141,29 +141,29 @@ export default function AboutPage() {
         </div>
 
         {/* Follow & Contact */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Stay Connected</h2>
-          <div className="space-y-4 text-gray-700">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-8">
+          <h2 className="text-2xl font-bold text-on-surface mb-4">Stay Connected</h2>
+          <div className="space-y-4 text-on-surface-variant">
             <p>
-              Follow <Link href="/user/admin" className="text-green-600 hover:text-green-700 font-semibold">@admin</Link> for news and updates of the roadmap and platform.
+              Follow <Link href="/user/admin" className="text-primary hover:text-primary-container font-semibold">@admin</Link> for news and updates of the roadmap and platform.
             </p>
             <p>
-                <Link href="/contact" className="text-green-600 hover:text-green-700 font-semibold">Contact us</Link> or send an email to{' '}
-              <a href="mailto:hello@cleareds.com" className="text-green-600 hover:text-green-700 font-semibold">
+                <Link href="/contact" className="text-primary hover:text-primary-container font-semibold">Contact us</Link> or send an email to{' '}
+              <a href="mailto:hello@cleareds.com" className="text-primary hover:text-primary-container font-semibold">
                 hello@cleareds.com
               </a>{' '}
               for more details.
             </p>
 
             {/* Social Media Links */}
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-outline-variant/15">
               <p className="font-semibold mb-3">Follow us on social media:</p>
               <div className="flex flex-wrap gap-4">
                 <a
                   href="https://x.com/plantspackX"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors"
+                  className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -174,7 +174,7 @@ export default function AboutPage() {
                   href="https://www.instagram.com/plants.pack/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors"
+                  className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
@@ -185,7 +185,7 @@ export default function AboutPage() {
                   href="https://www.facebook.com/profile.php?id=61583784658664"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-gray-700 hover:text-green-600 transition-colors"
+                  className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -198,7 +198,7 @@ export default function AboutPage() {
         </div>
 
         {/* Legal */}
-        <div className="bg-gray-100 rounded-lg p-6 text-sm text-gray-600">
+        <div className="bg-surface-container-low rounded-lg p-6 text-sm text-on-surface-variant">
           <p>
             Cleareds is an official 1-man Belgian company entity from Anton Kravchuk (admin).
           </p>

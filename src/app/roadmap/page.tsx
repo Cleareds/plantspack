@@ -150,9 +150,9 @@ const STATUS_CONFIG: Record<StatusKey, { label: string; bg: string; text: string
   },
   'exploring': {
     label: 'Exploring',
-    bg: 'bg-gray-50',
-    text: 'text-gray-600',
-    dot: 'bg-gray-400',
+    bg: 'bg-surface-container-low',
+    text: 'text-on-surface-variant',
+    dot: 'bg-outline',
   },
 }
 
@@ -288,18 +288,18 @@ export default function RoadmapPage() {
   const totalVotes = Object.values(votes).reduce((sum, count) => sum + count, 0)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Roadmap</h1>
-          <p className="text-xl text-gray-600 mb-3">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-6">
+          <h1 className="text-4xl font-bold text-on-surface mb-4">Roadmap</h1>
+          <p className="text-xl text-on-surface-variant mb-3">
             Help shape the future of PlantsPack by voting for features you'd like to see next.
           </p>
-          <p className="text-base text-gray-500 mb-2">
+          <p className="text-base text-outline mb-2">
             <strong>Voting is available for Support and Premium members.</strong> All users can view current results and submit suggestions.
           </p>
-          <p className="text-sm text-gray-400 italic">
+          <p className="text-sm text-outline italic">
             Estimated dates are indicative and may shift based on community votes and priorities.
           </p>
         </div>
@@ -339,8 +339,8 @@ export default function RoadmapPage() {
 
         {/* 3-Column Timeline */}
         {loading ? (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-6">
-            <p className="text-gray-600">Loading votes...</p>
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-6">
+            <p className="text-on-surface-variant">Loading votes...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -355,7 +355,7 @@ export default function RoadmapPage() {
                   </div>
 
                   {/* Feature cards */}
-                  <div className="flex flex-col gap-3 p-3 bg-gray-100 rounded-b-lg flex-1">
+                  <div className="flex flex-col gap-3 p-3 bg-surface-container-low rounded-b-lg flex-1">
                     {features.map(feature => {
                       const voteCount = votes[feature.id] || 0
                       const percentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0
@@ -365,10 +365,10 @@ export default function RoadmapPage() {
                       return (
                         <div
                           key={feature.id}
-                          className={`bg-white rounded-lg border p-4 transition-all ${
+                          className={`bg-surface-container-lowest rounded-lg border p-4 transition-all ${
                             canVote && !hasVoted
-                              ? 'border-gray-200 hover:border-green-300 cursor-pointer'
-                              : 'border-gray-200'
+                              ? 'border-outline-variant/15 hover:border-green-300 cursor-pointer'
+                              : 'border-outline-variant/15'
                           } ${isSelected ? 'border-green-400 ring-1 ring-green-400' : ''}`}
                           onClick={() => canVote && !hasVoted && toggleFeature(feature.id)}
                         >
@@ -383,11 +383,11 @@ export default function RoadmapPage() {
                                   onChange={() => toggleFeature(feature.id)}
                                   disabled={hasVoted}
                                   onClick={e => e.stopPropagation()}
-                                  className="mt-0.5 h-4 w-4 text-green-600 rounded focus:ring-green-500 disabled:opacity-50 flex-shrink-0"
+                                  className="mt-0.5 h-4 w-4 text-primary rounded focus:ring-primary disabled:opacity-50 flex-shrink-0"
                                 />
                               ) : (
                                 <div className="group relative flex-shrink-0 mt-0.5">
-                                  <Lock className="h-4 w-4 text-gray-300" />
+                                  <Lock className="h-4 w-4 text-outline" />
                                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10">
                                     <div className="bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                                       Support or Premium required
@@ -395,11 +395,11 @@ export default function RoadmapPage() {
                                   </div>
                                 </div>
                               )}
-                              <span className="font-semibold text-gray-900 text-sm leading-tight">{feature.label}</span>
+                              <span className="font-semibold text-on-surface text-sm leading-tight">{feature.label}</span>
                             </div>
                           </div>
 
-                          <p className="text-xs text-gray-500 mb-3 ml-6">{feature.description}</p>
+                          <p className="text-xs text-outline mb-3 ml-6">{feature.description}</p>
 
                           {/* Status badge + quarter */}
                           <div className="flex items-center gap-2 mb-3 ml-6 flex-wrap">
@@ -407,16 +407,16 @@ export default function RoadmapPage() {
                               <span className={`h-1.5 w-1.5 rounded-full ${statusConf.dot}`} />
                               {statusConf.label}
                             </span>
-                            <span className="text-xs text-gray-400">{feature.quarter}</span>
+                            <span className="text-xs text-outline">{feature.quarter}</span>
                           </div>
 
                           {/* Vote bar */}
                           <div className="ml-6">
                             <div className="flex items-center justify-between text-xs mb-1">
-                              <span className="text-gray-500">{voteCount} vote{voteCount !== 1 ? 's' : ''}</span>
-                              <span className="text-gray-400">{percentage.toFixed(1)}%</span>
+                              <span className="text-outline">{voteCount} vote{voteCount !== 1 ? 's' : ''}</span>
+                              <span className="text-outline">{percentage.toFixed(1)}%</span>
                             </div>
-                            <div className="w-full bg-gray-100 rounded-full h-1.5">
+                            <div className="w-full bg-surface-container-low rounded-full h-1.5">
                               <div
                                 className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
                                 style={{ width: `${percentage}%` }}
@@ -440,14 +440,14 @@ export default function RoadmapPage() {
               <button
                 onClick={handleVote}
                 disabled={submitting || selectedFeatures.length === 0}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Vote className="h-4 w-4" />
                 {submitting ? 'Submitting...' : `Submit Vote${selectedFeatures.length > 0 ? ` (${selectedFeatures.length} selected)` : ''}`}
               </button>
             ) : (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
                 <p className="text-green-800">You've already voted! Thank you for your input.</p>
               </div>
             )}
@@ -455,15 +455,15 @@ export default function RoadmapPage() {
         )}
 
         {/* Suggestions Form */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8">
           <div className="flex items-center gap-3 mb-6">
-            <Send className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold text-gray-900">Suggest Other Improvements</h2>
+            <Send className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold text-on-surface">Suggest Other Improvements</h2>
           </div>
 
           {suggestionSuccess && (
             <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-green-600" />
+              <CheckCircle className="h-5 w-5 text-primary" />
               <p className="text-green-800">Thank you! Your suggestion has been sent to our team.</p>
             </div>
           )}
@@ -476,7 +476,7 @@ export default function RoadmapPage() {
 
           <form onSubmit={handleSuggestion} className="space-y-4">
             <div>
-              <label htmlFor="suggestion" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="suggestion" className="block text-sm font-medium text-on-surface-variant mb-2">
                 Your Suggestion
               </label>
               <textarea
@@ -484,7 +484,7 @@ export default function RoadmapPage() {
                 value={suggestion}
                 onChange={(e) => setSuggestion(e.target.value)}
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Share your ideas for improving PlantsPack..."
                 required
               />
@@ -493,16 +493,16 @@ export default function RoadmapPage() {
             <button
               type="submit"
               disabled={submittingSuggestion || !suggestion.trim()}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <Send className="h-4 w-4" />
               {submittingSuggestion ? 'Sending...' : 'Send Suggestion'}
             </button>
           </form>
 
-          <p className="mt-4 text-sm text-gray-600">
+          <p className="mt-4 text-sm text-on-surface-variant">
             Your suggestion will be sent to{' '}
-            <a href="mailto:hello@cleareds.com" className="text-green-600 hover:text-green-700 font-semibold">
+            <a href="mailto:hello@cleareds.com" className="text-primary hover:text-primary-container font-semibold">
               hello@cleareds.com
             </a>
           </p>

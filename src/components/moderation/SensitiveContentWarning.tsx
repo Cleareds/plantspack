@@ -28,7 +28,7 @@ export default function SensitiveContentWarning({
         {children}
         <button
           onClick={() => setIsRevealed(false)}
-          className="mt-2 inline-flex items-center px-3 py-1 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
+          className="mt-2 inline-flex items-center px-3 py-1 text-sm text-on-surface-variant hover:text-on-surface ghost-border rounded-md hover:bg-surface-container-low"
         >
           <EyeOff className="h-4 w-4 mr-1" />
           Hide sensitive content

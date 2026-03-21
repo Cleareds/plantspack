@@ -52,11 +52,11 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
       
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
+        <div className="bg-surface-container-lowest rounded-lg editorial-shadow max-w-md w-full p-6 relative">
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute top-4 right-4 text-outline hover:text-on-surface-variant transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -64,10 +64,10 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
           {/* Content */}
           <div className="text-center">
             <div className="text-4xl mb-4">🌱</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xl font-bold text-on-surface mb-2">
               {title}
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-on-surface-variant mb-6">
               {description}
             </p>
 
@@ -75,7 +75,7 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
             <div className="space-y-3">
               <Link
                 href="/auth?mode=signup"
-                className="block w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="block w-full silk-gradient hover:opacity-90 text-on-primary px-6 py-3 rounded-lg font-medium transition-colors"
                 onClick={onClose}
               >
                 Join PlantsPack - Free Forever
@@ -83,7 +83,7 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
               
               <Link
                 href="/auth?mode=signin"
-                className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                className="block w-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant px-6 py-3 rounded-lg font-medium transition-colors"
                 onClick={onClose}
               >
                 Already have an account? Sign in
@@ -91,19 +91,19 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
             </div>
 
             {/* Features highlight */}
-            <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="mt-6 pt-6 border-t border-outline-variant/15">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-xl mb-1">❤️</div>
-                  <p className="text-xs text-gray-600">Like & save posts</p>
+                  <p className="text-xs text-on-surface-variant">Like & save posts</p>
                 </div>
                 <div>
                   <div className="text-xl mb-1">💬</div>
-                  <p className="text-xs text-gray-600">Join discussions</p>
+                  <p className="text-xs text-on-surface-variant">Join discussions</p>
                 </div>
                 <div>
                   <div className="text-xl mb-1">👥</div>
-                  <p className="text-xs text-gray-600">Follow friends</p>
+                  <p className="text-xs text-on-surface-variant">Follow friends</p>
                 </div>
               </div>
             </div>

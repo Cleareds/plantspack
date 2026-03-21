@@ -106,7 +106,7 @@ export default function BlockButton({ userId, showText = true, className = '' }:
         disabled={submitting}
         className={`inline-flex items-center justify-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
           isBlocked
-            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+            ? 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container ghost-border'
             : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
         } disabled:opacity-50 ${className}`}
         title={isBlocked ? 'Unblock this user' : 'Block this user'}
@@ -124,16 +124,16 @@ export default function BlockButton({ userId, showText = true, className = '' }:
       {/* Confirmation Modal */}
       {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
-            <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4">
-              <Shield className="h-6 w-6 text-red-600" />
+          <div className="bg-surface-container-lowest rounded-lg max-w-md w-full p-6 editorial-shadow">
+            <div className="flex items-center justify-center w-12 h-12 bg-error/10 rounded-full mx-auto mb-4">
+              <Shield className="h-6 w-6 text-error" />
             </div>
 
-            <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+            <h3 className="text-lg font-semibold text-on-surface text-center mb-2">
               Block this user?
             </h3>
 
-            <p className="text-sm text-gray-600 text-center mb-6">
+            <p className="text-sm text-on-surface-variant text-center mb-6">
               They won&apos;t be able to see your posts or interact with you. You won&apos;t see their content either.
             </p>
 
@@ -141,14 +141,14 @@ export default function BlockButton({ userId, showText = true, className = '' }:
               <button
                 onClick={handleBlock}
                 disabled={submitting}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="flex-1 px-4 py-2 bg-error text-on-primary rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 {submitting ? 'Blocking...' : 'Block User'}
               </button>
               <button
                 onClick={() => setShowConfirm(false)}
                 disabled={submitting}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium"
+                className="flex-1 px-4 py-2 bg-surface-container-low text-on-surface-variant rounded-md hover:bg-surface-container font-medium"
               >
                 Cancel
               </button>

@@ -234,7 +234,7 @@ export default function UserProfilePage() {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </div>
     )
@@ -253,7 +253,7 @@ export default function UserProfilePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       {/* Profile Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
@@ -266,8 +266,8 @@ export default function UserProfilePage() {
                   className="h-20 w-20 rounded-full object-cover"
                 />
               ) : (
-                <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-green-600 font-medium text-2xl">
+                <div className="h-20 w-20 rounded-full bg-surface-container-low flex items-center justify-center">
+                  <span className="text-primary font-medium text-2xl">
                     {profileUser.first_name?.[0] || profileUser.username[0].toUpperCase()}
                   </span>
                 </div>
@@ -275,7 +275,7 @@ export default function UserProfilePage() {
             </div>
             <div>
               <div className="flex items-center space-x-3 mb-1">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-on-surface">
                   {profileUser.first_name && profileUser.last_name
                     ? `${profileUser.first_name} ${profileUser.last_name}`
                     : profileUser.username}
@@ -290,9 +290,9 @@ export default function UserProfilePage() {
                   </div>
                 )}
               </div>
-              <p className="text-gray-500">@{profileUser.username}</p>
+              <p className="text-outline">@{profileUser.username}</p>
               {profileUser.bio && (
-                <p className="text-gray-700 mt-2">{profileUser.bio}</p>
+                <p className="text-on-surface-variant mt-2">{profileUser.bio}</p>
               )}
             </div>
           </div>
@@ -311,7 +311,7 @@ export default function UserProfilePage() {
         </div>
 
         {/* Compact Stats */}
-        <div className="pt-4 border-t border-gray-100 flex justify-end">
+        <div className="pt-4 border-t border-outline-variant/15 flex justify-end">
           <UserStatsCompact userId={profileUser.id} />
         </div>
       </div>
@@ -319,13 +319,13 @@ export default function UserProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content - Posts */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Posts</h2>
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4 mb-4">
+            <h2 className="text-lg font-semibold text-on-surface mb-4">Posts</h2>
           </div>
           
           {posts.length === 0 && !loadingPosts ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-              <p className="text-gray-500">No posts yet.</p>
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center">
+              <p className="text-outline">No posts yet.</p>
             </div>
           ) : (
             <>
@@ -340,14 +340,14 @@ export default function UserProfilePage() {
                 {hasMorePosts && (
                   <>
                     {loadingPosts ? (
-                      <div className="flex items-center space-x-2 text-gray-500">
+                      <div className="flex items-center space-x-2 text-outline">
                         <Loader2 className="h-5 w-5 animate-spin" />
                         <span>Loading more posts...</span>
                       </div>
                     ) : (
                       <button
                         onClick={loadMorePosts}
-                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition-colors"
+                        className="px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md font-medium transition-colors"
                       >
                         Load More Posts
                       </button>
@@ -357,7 +357,7 @@ export default function UserProfilePage() {
                 
                 {!hasMorePosts && posts.length > 0 && (
                   <div className="text-center">
-                    <p className="text-gray-500 text-sm">End of posts</p>
+                    <p className="text-outline text-sm">End of posts</p>
                   </div>
                 )}
               </div>
@@ -368,26 +368,26 @@ export default function UserProfilePage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Favorite Places */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <MapPin className="h-5 w-5 mr-2 text-green-600" />
+              <h3 className="text-lg font-semibold text-on-surface flex items-center">
+                <MapPin className="h-5 w-5 mr-2 text-primary" />
                 Favorite Places
               </h3>
               {places.length > 3 && (
-                <Link href={`/user/${username}/places`} className="text-green-600 hover:text-green-700 text-sm">
+                <Link href={`/user/${username}/places`} className="text-primary hover:text-primary-container text-sm">
                   View all
                 </Link>
               )}
             </div>
             {places.length === 0 ? (
-              <p className="text-gray-500 text-sm">No favorite places yet.</p>
+              <p className="text-outline text-sm">No favorite places yet.</p>
             ) : (
               <div className="space-y-2">
                 {places.slice(0, 6).map((place) => (
                   <div key={place.id} className="text-sm">
-                    <p className="font-medium text-gray-900">{place.name}</p>
-                    <p className="text-gray-500 text-xs">{place.category}</p>
+                    <p className="font-medium text-on-surface">{place.name}</p>
+                    <p className="text-outline text-xs">{place.category}</p>
                   </div>
                 ))}
               </div>
@@ -395,25 +395,25 @@ export default function UserProfilePage() {
           </div>
 
           {/* Following */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <UserPlus className="h-5 w-5 mr-2 text-green-600" />
+              <h3 className="text-lg font-semibold text-on-surface flex items-center">
+                <UserPlus className="h-5 w-5 mr-2 text-primary" />
                 Following
               </h3>
               {following.length >= 3 && (
-                <Link href={`/user/${username}/following`} className="text-green-600 hover:text-green-700 text-sm">
+                <Link href={`/user/${username}/following`} className="text-primary hover:text-primary-container text-sm">
                   View all
                 </Link>
               )}
             </div>
             {following.length === 0 ? (
-              <p className="text-gray-500 text-sm">Not following anyone yet.</p>
+              <p className="text-outline text-sm">Not following anyone yet.</p>
             ) : (
               <div className="space-y-3">
                 {following.map((follow) => follow.following_user && (
                   <Link key={follow.id} href={`/user/${follow.following_user.username}`}>
-                    <div className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded-md transition-colors">
+                    <div className="flex items-center space-x-2 hover:bg-surface-container-low p-2 rounded-md transition-colors">
                       {follow.following_user.avatar_url ? (
                         <Image
                           src={follow.following_user.avatar_url}
@@ -423,19 +423,19 @@ export default function UserProfilePage() {
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                          <span className="text-green-600 font-medium text-xs">
+                        <div className="h-8 w-8 rounded-full bg-surface-container-low flex items-center justify-center">
+                          <span className="text-primary font-medium text-xs">
                             {follow.following_user.first_name?.[0] || follow.following_user.username[0].toUpperCase()}
                           </span>
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-on-surface truncate">
                           {follow.following_user.first_name && follow.following_user.last_name
                             ? `${follow.following_user.first_name} ${follow.following_user.last_name}`
                             : follow.following_user.username}
                         </p>
-                        <p className="text-xs text-gray-500">@{follow.following_user.username}</p>
+                        <p className="text-xs text-outline">@{follow.following_user.username}</p>
                       </div>
                     </div>
                   </Link>
@@ -445,25 +445,25 @@ export default function UserProfilePage() {
           </div>
 
           {/* Followers */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <Users className="h-5 w-5 mr-2 text-green-600" />
+              <h3 className="text-lg font-semibold text-on-surface flex items-center">
+                <Users className="h-5 w-5 mr-2 text-primary" />
                 Followers
               </h3>
               {followers.length >= 3 && (
-                <Link href={`/user/${username}/followers`} className="text-green-600 hover:text-green-700 text-sm">
+                <Link href={`/user/${username}/followers`} className="text-primary hover:text-primary-container text-sm">
                   View all
                 </Link>
               )}
             </div>
             {followers.length === 0 ? (
-              <p className="text-gray-500 text-sm">No followers yet.</p>
+              <p className="text-outline text-sm">No followers yet.</p>
             ) : (
               <div className="space-y-3">
                 {followers.map((follow) => follow.follower_user && (
                   <Link key={follow.id} href={`/user/${follow.follower_user.username}`}>
-                    <div className="flex items-center space-x-2 hover:bg-gray-50 p-2 rounded-md transition-colors">
+                    <div className="flex items-center space-x-2 hover:bg-surface-container-low p-2 rounded-md transition-colors">
                       {follow.follower_user.avatar_url ? (
                         <Image
                           src={follow.follower_user.avatar_url}
@@ -473,19 +473,19 @@ export default function UserProfilePage() {
                           className="h-8 w-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                          <span className="text-green-600 font-medium text-xs">
+                        <div className="h-8 w-8 rounded-full bg-surface-container-low flex items-center justify-center">
+                          <span className="text-primary font-medium text-xs">
                             {follow.follower_user.first_name?.[0] || follow.follower_user.username[0].toUpperCase()}
                           </span>
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-on-surface truncate">
                           {follow.follower_user.first_name && follow.follower_user.last_name
                             ? `${follow.follower_user.first_name} ${follow.follower_user.last_name}`
                             : follow.follower_user.username}
                         </p>
-                        <p className="text-xs text-gray-500">@{follow.follower_user.username}</p>
+                        <p className="text-xs text-outline">@{follow.follower_user.username}</p>
                       </div>
                     </div>
                   </Link>

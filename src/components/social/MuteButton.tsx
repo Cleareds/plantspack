@@ -96,7 +96,7 @@ export default function MuteButton({ userId, showText = true, className = '' }: 
       disabled={submitting}
       className={`inline-flex items-center justify-center space-x-1 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
         isMuted
-          ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+          ? 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container ghost-border'
           : 'bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200'
       } disabled:opacity-50 ${className}`}
       title={isMuted ? 'Unmute this user' : 'Mute this user'}

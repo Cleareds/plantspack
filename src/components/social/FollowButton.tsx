@@ -119,8 +119,8 @@ function FollowButton({ userId, className = '', showText = true, initialIsFollow
       disabled={loading}
       className={`flex items-center space-x-1 px-3 py-1.5 rounded-md font-medium transition-colors ${
         isFollowing
-          ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-          : 'bg-green-600 hover:bg-green-700 text-white'
+          ? 'bg-surface-container-low hover:bg-surface-container text-on-surface-variant'
+          : 'silk-gradient hover:opacity-90 text-on-primary'
       } ${loading ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
     >
       {isFollowing ? (

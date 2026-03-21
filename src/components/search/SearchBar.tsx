@@ -58,7 +58,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
     
     return parts.map((part, index) => 
       regex.test(part) ? (
-        <mark key={index} className="bg-yellow-200 text-gray-900">{part}</mark>
+        <mark key={index} className="bg-yellow-200/50 text-on-surface">{part}</mark>
       ) : part
     )
   }
@@ -70,19 +70,19 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
     <div ref={searchRef} className={`relative ${className}`}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
         <input
           ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search posts and users..."
-          className="w-full pl-10 pr-10 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-gray-500 text-sm"
+          className="w-full pl-10 pr-10 py-2 bg-surface-container-low border-0 ghost-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-outline text-sm"
         />
         {query && (
           <button
             onClick={clearSearch}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors"
             aria-label="Clear search"
             data-testid="clear-search-button"
           >
@@ -93,51 +93,51 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
       {/* Dropdown Results */}
       {isOpen && (
-        <div className="sm:min-w-[720px] absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-hidden" data-testid="search-dropdown">
+        <div className="sm:min-w-[720px] absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest glass-float shadow-ambient rounded-lg z-50 max-h-96 overflow-hidden" data-testid="search-dropdown">
           {loading && (
             <div className="p-4 text-center">
-              <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-green-600" />
-              <p className="text-sm text-gray-500">Searching...</p>
+              <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-primary" />
+              <p className="text-sm text-outline">Searching...</p>
             </div>
           )}
 
           {error && (
-            <div className="p-4 text-center text-red-600 text-sm">
+            <div className="p-4 text-center text-error text-sm">
               <p>Error: {error}</p>
             </div>
           )}
 
           {showNoResults && (
-            <div className="p-4 text-center text-gray-500 text-sm">
+            <div className="p-4 text-center text-outline text-sm">
               <p>No results found for &quot;{query}&quot;</p>
             </div>
           )}
 
           {!loading && !error && hasResults && (
-            <div className="grid grid-cols-2 divide-x divide-gray-200">
+            <div className="grid grid-cols-2 divide-x divide-outline-variant/15">
               {/* Posts Column */}
               <div className="max-h-96 overflow-y-auto">
-                <div className="sticky top-0 bg-gray-50 px-3 py-2 border-b border-gray-200">
+                <div className="sticky top-0 bg-surface-container-low px-3 py-2 border-b border-outline-variant/15">
                   <div className="flex items-center space-x-2">
-                    <MessageSquare className="h-4 w-4 text-gray-600" />
-                    <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                    <MessageSquare className="h-4 w-4 text-on-surface-variant" />
+                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
                       Posts ({posts.length})
                     </span>
                   </div>
                 </div>
                 
                 {posts.length === 0 ? (
-                  <div className="p-3 text-center text-gray-500 text-sm">
+                  <div className="p-3 text-center text-outline text-sm">
                     No posts found
                   </div>
                 ) : (
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-outline-variant/15">
                     {posts.map((post) => (
                       <Link
                         key={post.id}
                         href={`/post/${post.id}`}
                         onClick={handleResultClick}
-                        className="block p-3 hover:bg-gray-50 transition-colors"
+                        className="block p-3 hover:bg-surface-container-low transition-colors"
                       >
                         <div className="flex items-start space-x-2">
                           <div className="flex-shrink-0">
@@ -148,8 +148,8 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                                 className="h-6 w-6 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center">
-                                <span className="text-green-600 text-xs font-medium">
+                              <div className="h-6 w-6 rounded-full bg-surface-container-low flex items-center justify-center">
+                                <span className="text-primary text-xs font-medium">
                                   {post.users.first_name?.[0] || post.users.username[0].toUpperCase()}
                                 </span>
                               </div>
@@ -157,17 +157,17 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-1 mb-1">
-                              <span className="text-xs font-medium text-gray-900 truncate">
+                              <span className="text-xs font-medium text-on-surface truncate">
                                 {post.users.first_name && post.users.last_name
                                   ? `${post.users.first_name} ${post.users.last_name}`
                                   : post.users.username}
                               </span>
-                              <span className="text-xs text-gray-500">•</span>
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-outline">•</span>
+                              <span className="text-xs text-outline">
                                 {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                               </span>
                             </div>
-                            <p className="text-xs text-gray-600 line-clamp-2">
+                            <p className="text-xs text-on-surface-variant line-clamp-2">
                               {highlightMatch(truncateText(post.content, 100), query)}
                             </p>
                           </div>
@@ -180,27 +180,27 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
               {/* Users Column */}
               <div className="max-h-96 overflow-y-auto">
-                <div className="sticky top-0 bg-gray-50 px-3 py-2 border-b border-gray-200">
+                <div className="sticky top-0 bg-surface-container-low px-3 py-2 border-b border-outline-variant/15">
                   <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4 text-gray-600" />
-                    <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                    <User className="h-4 w-4 text-on-surface-variant" />
+                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
                       Users ({users.length})
                     </span>
                   </div>
                 </div>
                 
                 {users.length === 0 ? (
-                  <div className="p-3 text-center text-gray-500 text-sm">
+                  <div className="p-3 text-center text-outline text-sm">
                     No users found
                   </div>
                 ) : (
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-outline-variant/15">
                     {users.map((user) => (
                       <Link
                         key={user.id}
                         href={`/user/${user.username}`}
                         onClick={handleResultClick}
-                        className="block p-3 hover:bg-gray-50 transition-colors"
+                        className="block p-3 hover:bg-surface-container-low transition-colors"
                       >
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
@@ -211,15 +211,15 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                                 className="h-8 w-8 rounded-full object-cover"
                               />
                             ) : (
-                              <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                                <span className="text-green-600 text-sm font-medium">
+                              <div className="h-8 w-8 rounded-full bg-surface-container-low flex items-center justify-center">
+                                <span className="text-primary text-sm font-medium">
                                   {user.first_name?.[0] || user.username[0].toUpperCase()}
                                 </span>
                               </div>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-900 truncate">
+                            <div className="text-sm font-medium text-on-surface truncate">
                               {highlightMatch(
                                 user.first_name && user.last_name
                                   ? `${user.first_name} ${user.last_name}`
@@ -227,11 +227,11 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                                 query
                               )}
                             </div>
-                            <div className="text-xs text-gray-500 truncate">
+                            <div className="text-xs text-outline truncate">
                               @{highlightMatch(user.username, query)}
                             </div>
                             {user.bio && (
-                              <div className="text-xs text-gray-600 truncate mt-1">
+                              <div className="text-xs text-on-surface-variant truncate mt-1">
                                 {highlightMatch(truncateText(user.bio, 50), query)}
                               </div>
                             )}

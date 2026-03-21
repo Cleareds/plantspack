@@ -111,7 +111,7 @@ export default function FavoriteButton({
         inline-flex items-center gap-2 transition-colors
         ${isFavorited
           ? 'text-red-500 hover:text-red-600'
-          : 'text-gray-300 hover:text-red-500'
+          : 'text-outline hover:text-red-500'
         }
         disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
