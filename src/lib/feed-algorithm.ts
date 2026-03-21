@@ -105,7 +105,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
     switch (sortBy) {
       case 'relevancy':
         if (userId) {
-          return await getRelevancyRankedPosts(userId, limit, offset)
+          return await getRelevancyRankedPosts(userId, limit, offset, category)
         } else {
           query = query.order('engagement_score', { ascending: false })
         }
@@ -116,10 +116,10 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
         break
 
       case 'liked_week':
-        return await getPopularPosts(limit, offset)
+        return await getPopularPosts(limit, offset, category)
 
       case 'liked_all_time':
-        return await getMostLikedAllTime(limit, offset)
+        return await getMostLikedAllTime(limit, offset, category)
 
       default:
         query = query.order('created_at', { ascending: false })
@@ -139,7 +139,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
 /**
  * Gets posts ranked by AI relevancy algorithm
  */
-async function getRelevancyRankedPosts(userId: string, limit: number, offset: number): Promise<FeedPost[]> {
+async function getRelevancyRankedPosts(userId: string, limit: number, offset: number, category?: string): Promise<FeedPost[]> {
   try {
     // For first page, fetch extra posts for better ranking
     // For subsequent pages, use direct offset-based pagination
@@ -148,7 +148,7 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
     const fetchOffset = isFirstPage ? 0 : offset
 
     // Get base posts with extended data for ranking
-    const { data: posts, error } = await supabase
+    let query = supabase
       .from('posts')
       .select(`
         *,
@@ -186,10 +186,15 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
         )
       `)
       .eq('privacy', 'public')
-      .eq('users.is_banned', false) // Exclude banned users
-      .is('deleted_at', null) // Exclude soft-deleted posts
-      .order('engagement_score', { ascending: false }) // Pre-sort by engagement
-      .range(fetchOffset, fetchOffset + fetchLimit - 1)
+      .eq('users.is_banned', false)
+      .is('deleted_at', null)
+      .order('engagement_score', { ascending: false })
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category)
+    }
+
+    const { data: posts, error } = await query.range(fetchOffset, fetchOffset + fetchLimit - 1)
 
     if (error) throw error
     if (!posts || posts.length === 0) return []
@@ -466,12 +471,12 @@ function getTotalReactions(post: any): number {
 /**
  * Gets most liked posts from the past week, sorted by actual like count
  */
-async function getPopularPosts(limit: number, offset: number): Promise<FeedPost[]> {
+async function getPopularPosts(limit: number, offset: number, category?: string): Promise<FeedPost[]> {
   const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   const fetchSize = Math.max(50, (offset + limit) * 3)
 
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('posts')
       .select(POPULAR_SELECT)
       .eq('privacy', 'public')
@@ -479,7 +484,12 @@ async function getPopularPosts(limit: number, offset: number): Promise<FeedPost[
       .is('deleted_at', null)
       .gte('created_at', startDate.toISOString())
       .order('engagement_score', { ascending: false })
-      .range(0, fetchSize - 1)
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category)
+    }
+
+    const { data, error } = await query.range(0, fetchSize - 1)
 
     if (error) throw error
     if (!data) return []
@@ -499,18 +509,23 @@ async function getPopularPosts(limit: number, offset: number): Promise<FeedPost[
 /**
  * Gets most liked posts of all time, sorted by actual like count (no time decay)
  */
-async function getMostLikedAllTime(limit: number, offset: number): Promise<FeedPost[]> {
+async function getMostLikedAllTime(limit: number, offset: number, category?: string): Promise<FeedPost[]> {
   const fetchSize = Math.max(50, (offset + limit) * 3)
 
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('posts')
       .select(POPULAR_SELECT)
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
       .order('engagement_score', { ascending: false })
-      .range(0, fetchSize - 1)
+
+    if (category && category !== 'all') {
+      query = query.eq('category', category)
+    }
+
+    const { data, error } = await query.range(0, fetchSize - 1)
 
     if (error) throw error
     if (!data) return []

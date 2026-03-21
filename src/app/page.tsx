@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Feed from "@/components/posts/Feed"
 import CreatePostModal from "@/components/posts/CreatePostModal"
 import CategoryTabs from "@/components/posts/CategoryTabs"
+import CategoryFeedSection from "@/components/posts/CategoryFeedSection"
 import GuestWelcome from "@/components/guest/GuestWelcome"
 import { useAuth } from "@/lib/auth"
 import { supabase } from "@/lib/supabase"
@@ -16,6 +17,7 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState<PostCategory | 'all'>('all')
   const [userCategories, setUserCategories] = useState<string[]>([])
   const { user, profile } = useAuth()
+  const generalFeedRef = useRef<HTMLDivElement>(null)
 
   // Load user's feed preferences
   useEffect(() => {
@@ -38,6 +40,13 @@ export default function Home() {
     setIsCreatePostOpen(false)
   }
 
+  const handleViewAllCategory = (category: PostCategory) => {
+    setActiveCategory(category)
+    setRefreshKey(prev => prev + 1)
+    // Scroll to general feed section
+    generalFeedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-8">
@@ -47,8 +56,29 @@ export default function Home() {
             <div className={user ? "max-w-2xl" : ""}>
               {!user && <GuestWelcome />}
 
+              {/* Personalized Category Blocks — only for logged-in users with preferences */}
+              {user && userCategories.length > 0 && activeCategory === 'all' && (
+                <div className="mb-6">
+                  {userCategories.map(cat => (
+                    <CategoryFeedSection
+                      key={`${cat}-${refreshKey}`}
+                      category={cat as PostCategory}
+                      userId={user.id}
+                      onViewAll={handleViewAllCategory}
+                    />
+                  ))}
+
+                  {/* Divider before general feed */}
+                  <div className="flex items-center gap-3 mb-6 mt-2">
+                    <div className="flex-1 border-t border-outline-variant/20" />
+                    <span className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">All Posts</span>
+                    <div className="flex-1 border-t border-outline-variant/20" />
+                  </div>
+                </div>
+              )}
+
               {/* Category Tabs */}
-              <div className="mb-4">
+              <div ref={generalFeedRef} className="mb-4">
                 <CategoryTabs
                   activeCategory={activeCategory}
                   onCategoryChange={(cat) => {
