@@ -29,11 +29,11 @@ export default function OwnerBadge({
   return (
     <Link
       href={`/place/${placeId}`}
-      className={`inline-flex items-center gap-1.5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 hover:border-green-300 text-green-700 hover:text-green-800 rounded-full font-medium transition-all hover:shadow-sm ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center gap-1.5 bg-surface-container-low ghost-border hover:border-primary text-primary hover:text-primary rounded-full font-medium transition-all hover:editorial-shadow ${sizeClasses[size]} ${className}`}
     >
       <Building2 className={iconSize[size]} />
       <span>{placeName} owner</span>
-      <CheckCircle className={`${iconSize[size]} text-green-600`} />
+      <CheckCircle className={`${iconSize[size]} text-primary`} />
     </Link>
   )
 }

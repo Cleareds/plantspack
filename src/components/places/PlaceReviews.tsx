@@ -253,28 +253,28 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
     <div className="space-y-6">
       {/* Review Form */}
       {!user ? (
-        <div className="border border-gray-200 rounded-lg p-6 bg-gray-50 text-center">
-          <p className="text-gray-700 mb-4">
+        <div className="ghost-border rounded-lg p-6 bg-surface-container-low text-center">
+          <p className="text-on-surface-variant mb-4">
             Sign in to leave a review and share your experience with the community
           </p>
           <Link
             href="/auth"
-            className="inline-flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-2 silk-gradient text-on-primary rounded-md hover:opacity-90 font-medium transition-colors"
           >
             Sign In to Review
           </Link>
         </div>
       ) : (
-        <div className="border border-gray-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+        <div className="ghost-border rounded-lg p-4">
+          <h3 className="text-lg font-semibold text-on-surface mb-2">
             {editingReviewId ? 'Edit Your Review' : userReview ? 'Update Your Review' : 'Write a Review'}
           </h3>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-on-surface-variant mb-4">
             You can only leave one review per place. Submitting a new review will replace your previous one.
           </p>
           <form onSubmit={handleSubmitReview} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-on-surface-variant mb-2">
                 Rating
               </label>
               <StarRating
@@ -285,19 +285,19 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-on-surface-variant mb-2">
                 Review
               </label>
               <textarea
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 placeholder="Share your experience..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                 rows={4}
                 maxLength={500}
               />
               <div className="flex items-center justify-between mt-2">
-                <span className={`text-xs ${newContent.length > 450 ? 'text-red-500' : 'text-gray-400'}`}>
+                <span className={`text-xs ${newContent.length > 450 ? 'text-error' : 'text-outline'}`}>
                   {newContent.length}/500
                 </span>
                 <div className="flex gap-2">
@@ -305,7 +305,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                     <button
                       type="button"
                       onClick={handleCancelEdit}
-                      className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                      className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface-variant hover:bg-surface-container-low rounded-md transition-colors"
                     >
                       Cancel
                     </button>
@@ -313,7 +313,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                   <button
                     type="submit"
                     disabled={!newContent.trim() || newRating === 0 || submitting}
-                    className="flex items-center space-x-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                    className="flex items-center space-x-1 silk-gradient hover:opacity-90 disabled:bg-outline text-on-primary px-4 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     <Send className="h-4 w-4" />
                     <span>{submitting ? 'Submitting...' : editingReviewId ? 'Update' : 'Submit'}</span>
@@ -327,27 +327,27 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
 
       {/* Reviews List */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold text-on-surface">
           Reviews ({reviews.length})
         </h3>
 
         {loading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="animate-pulse border border-gray-100 rounded-lg p-4">
+              <div key={i} className="animate-pulse ghost-border rounded-lg p-4">
                 <div className="flex space-x-3">
-                  <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
+                  <div className="h-10 w-10 bg-surface-container-low rounded-full"></div>
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                    <div className="h-4 bg-gray-300 rounded w-full"></div>
+                    <div className="h-4 bg-surface-container-low rounded w-1/4 mb-2"></div>
+                    <div className="h-4 bg-surface-container-low rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-surface-container-low rounded w-full"></div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-8 text-gray-500 border border-gray-100 rounded-lg">
+          <div className="text-center py-8 text-outline ghost-border rounded-lg">
             No reviews yet. Be the first to review!
           </div>
         ) : (
@@ -360,7 +360,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
               const key = review.id || `review-${index}-${review.created_at}`
 
               return (
-                <div key={key} className="border border-gray-100 rounded-lg p-4">
+                <div key={key} className="ghost-border rounded-lg p-4">
                   <div className="flex space-x-3">
                     <div className="flex-shrink-0">
                       {review.users?.avatar_url ? (
@@ -370,8 +370,8 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                           className="h-10 w-10 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                          <span className="text-sm font-medium text-green-600">
+                        <div className="h-10 w-10 rounded-full bg-surface-container-low flex items-center justify-center">
+                          <span className="text-sm font-medium text-primary">
                             {review.users?.first_name?.[0] || review.users?.username?.[0]?.toUpperCase() || '?'}
                           </span>
                         </div>
@@ -382,7 +382,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                         <div className="flex items-center space-x-2">
                           <Link
                             href={`/user/${review.users?.username || 'unknown'}`}
-                            className="font-medium text-gray-900 hover:text-green-600 transition-colors"
+                            className="font-medium text-on-surface hover:text-primary transition-colors"
                           >
                             {review.users?.first_name
                               ? `${review.users.first_name} ${review.users.last_name || ''}`.trim()
@@ -391,18 +391,18 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                           </Link>
                           <Link
                             href={`/user/${review.users?.username || 'unknown'}`}
-                            className="text-gray-400 hover:text-green-600 transition-colors"
+                            className="text-outline hover:text-primary transition-colors"
                           >
                             @{review.users?.username || 'unknown'}
                           </Link>
-                          <span className="text-gray-400">·</span>
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-outline">·</span>
+                          <span className="text-outline text-sm">
                             {formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}
                           </span>
                           {review.edited_at && (
                             <>
-                              <span className="text-gray-400">·</span>
-                              <span className="text-gray-400 text-sm italic">
+                              <span className="text-outline">·</span>
+                              <span className="text-outline text-sm italic">
                                 Edited {review.edit_count > 1 ? `${review.edit_count} times` : ''}
                               </span>
                             </>
@@ -416,14 +416,14 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                             <>
                               <button
                                 onClick={() => handleEditReview(review)}
-                                className="text-gray-400 hover:text-green-600 transition-colors"
+                                className="text-outline hover:text-primary transition-colors"
                                 title="Edit review"
                               >
                                 <Edit2 className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteReview(review.id)}
-                                className="text-gray-400 hover:text-red-600 transition-colors"
+                                className="text-outline hover:text-error transition-colors"
                                 title="Delete review"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -443,7 +443,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                         <StarRating rating={review.rating} size="sm" />
                       </div>
 
-                      <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{review.content}</p>
+                      <p className="text-on-surface-variant text-sm mb-3 whitespace-pre-wrap">{review.content}</p>
 
                       <ReviewReactions
                         reviewId={review.id}
@@ -461,7 +461,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
             <button
               onClick={loadMoreReviews}
               disabled={loadingMore}
-              className="px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-primary hover:text-primary hover:bg-surface-container-low rounded-md transition-colors disabled:opacity-50"
             >
               {loadingMore ? 'Loading...' : 'Load more reviews'}
             </button>

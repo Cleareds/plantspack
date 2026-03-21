@@ -11,42 +11,42 @@ const tagConfig: Record<string, { label: string; icon: any; color: string }> = {
   vegan: {
     label: 'Vegan',
     icon: Leaf,
-    color: 'bg-green-100 text-green-700 border-green-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   vegetarian: {
     label: 'Vegetarian',
     icon: Salad,
-    color: 'bg-emerald-100 text-emerald-700 border-emerald-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   'gluten-free': {
     label: 'Gluten-Free',
     icon: Sparkles,
-    color: 'bg-amber-100 text-amber-700 border-amber-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   organic: {
     label: 'Organic',
     icon: Heart,
-    color: 'bg-lime-100 text-lime-700 border-lime-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   'pet-friendly': {
     label: 'Pet Friendly',
     icon: Heart,
-    color: 'bg-blue-100 text-blue-700 border-blue-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   'allergen-friendly': {
     label: 'Allergen Friendly',
     icon: Sparkles,
-    color: 'bg-purple-100 text-purple-700 border-purple-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   sustainable: {
     label: 'Sustainable',
     icon: Leaf,
-    color: 'bg-teal-100 text-teal-700 border-teal-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   },
   'locally-sourced': {
     label: 'Locally Sourced',
     icon: Heart,
-    color: 'bg-orange-100 text-orange-700 border-orange-200'
+    color: 'bg-tertiary-container text-white border-tertiary-container'
   }
 }
 
@@ -71,7 +71,7 @@ export default function PlaceTagBadges({ tags, size = 'md' }: PlaceTagBadgesProp
         const config = tagConfig[tag] || {
           label: tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
           icon: Sparkles,
-          color: 'bg-gray-100 text-gray-700 border-gray-200'
+          color: 'bg-tertiary-container text-white border-tertiary-container'
         }
         const Icon = config.icon
 

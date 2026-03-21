@@ -31,7 +31,7 @@ export default function PlaceMap({ latitude, longitude, name, address }: PlaceMa
   return (
     <Link
       href={`/map?location=${encodeURIComponent(address)}`}
-      className="block h-64 rounded-lg overflow-hidden border border-gray-200 relative z-0 group cursor-pointer"
+      className="block h-64 rounded-lg overflow-hidden ghost-border relative z-0 group cursor-pointer"
     >
       <MapContainer
         center={[latitude, longitude]}
@@ -50,9 +50,9 @@ export default function PlaceMap({ latitude, longitude, name, address }: PlaceMa
 
       {/* Hover overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center pointer-events-none z-10">
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-green-600" />
-          <span className="text-sm font-medium text-gray-900">View on full map</span>
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-lowest px-4 py-2 rounded-lg shadow-ambient flex items-center gap-2">
+          <MapPin className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium text-on-surface">View on full map</span>
         </div>
       </div>
     </Link>

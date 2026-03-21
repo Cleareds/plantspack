@@ -108,7 +108,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 silk-gradient text-on-primary rounded-md hover:opacity-90 font-medium transition-colors"
       >
         <Plus className="h-4 w-4" />
         Add to Pack
@@ -116,13 +116,13 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] flex flex-col">
+          <div className="bg-surface-container-lowest rounded-lg max-w-md w-full max-h-[80vh] flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">Add to Pack</h2>
+            <div className="flex items-center justify-between p-6 border-b border-outline-variant/15">
+              <h2 className="text-xl font-semibold text-on-surface">Add to Pack</h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-outline hover:text-on-surface-variant transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -132,11 +132,11 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
             <div className="flex-1 overflow-y-auto p-6">
               {loading ? (
                 <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                  <p className="mt-2 text-gray-600">Loading your packs...</p>
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <p className="mt-2 text-on-surface-variant">Loading your packs...</p>
                 </div>
               ) : packs.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-outline">
                   <p className="mb-4">You don't have any packs where you can add places.</p>
                   <p className="text-sm">Only pack admins and moderators can add places.</p>
                 </div>
@@ -147,23 +147,23 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                       key={pack.id}
                       onClick={() => handleAddToPack(pack.id)}
                       disabled={adding === pack.id}
-                      className="w-full text-left p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full text-left p-4 ghost-border rounded-lg hover:border-primary hover:bg-surface-container-low transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-gray-900 mb-1">{pack.title}</h3>
+                          <h3 className="font-medium text-on-surface mb-1">{pack.title}</h3>
                           {pack.description && (
-                            <p className="text-sm text-gray-600 line-clamp-2">
+                            <p className="text-sm text-on-surface-variant line-clamp-2">
                               {pack.description}
                             </p>
                           )}
                         </div>
                         {adding === pack.id ? (
                           <div className="flex-shrink-0 ml-3">
-                            <div className="h-5 w-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                           </div>
                         ) : (
-                          <Check className="flex-shrink-0 ml-3 h-5 w-5 text-green-600" />
+                          <Check className="flex-shrink-0 ml-3 h-5 w-5 text-primary" />
                         )}
                       </div>
                     </button>

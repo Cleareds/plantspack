@@ -120,21 +120,21 @@ export default function ClaimBusinessModal({
 
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="glass-float bg-surface-container-lowest rounded-lg shadow-ambient max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-outline-variant/15">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <Building2 className="h-5 w-5 text-green-600" />
+              <div className="w-10 h-10 bg-surface-container-low rounded-full flex items-center justify-center">
+                <Building2 className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Claim Business</h2>
-                <p className="text-sm text-gray-600">{placeName}</p>
+                <h2 className="text-xl font-bold text-on-surface">Claim Business</h2>
+                <p className="text-sm text-on-surface-variant">{placeName}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-outline hover:text-on-surface-variant transition-colors"
             >
               <X className="h-6 w-6" />
             </button>
@@ -143,13 +143,13 @@ export default function ClaimBusinessModal({
           {/* Content */}
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+              <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-md text-sm">
                 {error}
               </div>
             )}
 
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-              <p className="text-sm text-blue-800">
+            <div className="bg-secondary-container/20 border border-outline-variant/15 rounded-md p-4">
+              <p className="text-sm text-secondary">
                 <strong>Important:</strong> You'll need to provide proof of ownership.
                 After submission, our team will review your claim and contact you via email.
                   This is FREE, but we will check the validity of each claim to prevent abuse. Please provide as much detail as possible in the proof description to increase your chances of approval.
@@ -158,8 +158,8 @@ export default function ClaimBusinessModal({
 
             {/* First Name */}
             <div>
-              <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">
-                First Name <span className="text-red-500">*</span>
+              <label htmlFor="first_name" className="block text-sm font-medium text-on-surface-variant mb-2">
+                First Name <span className="text-error">*</span>
               </label>
               <input
                 type="text"
@@ -168,15 +168,15 @@ export default function ClaimBusinessModal({
                 maxLength={100}
                 value={formData.first_name}
                 onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Your first name"
               />
             </div>
 
             {/* Last Name */}
             <div>
-              <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name <span className="text-red-500">*</span>
+              <label htmlFor="last_name" className="block text-sm font-medium text-on-surface-variant mb-2">
+                Last Name <span className="text-error">*</span>
               </label>
               <input
                 type="text"
@@ -185,15 +185,15 @@ export default function ClaimBusinessModal({
                 maxLength={100}
                 value={formData.last_name}
                 onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Your last name"
               />
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email <span className="text-red-500">*</span>
+              <label htmlFor="email" className="block text-sm font-medium text-on-surface-variant mb-2">
+                Email <span className="text-error">*</span>
               </label>
               <input
                 type="email"
@@ -202,18 +202,18 @@ export default function ClaimBusinessModal({
                 maxLength={254}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="your@email.com"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-outline mt-1">
                 We'll use this email to contact you about your claim
               </p>
             </div>
 
             {/* Proof of Ownership */}
             <div>
-              <label htmlFor="proof_description" className="block text-sm font-medium text-gray-700 mb-2">
-                Proof of Ownership <span className="text-red-500">*</span>
+              <label htmlFor="proof_description" className="block text-sm font-medium text-on-surface-variant mb-2">
+                Proof of Ownership <span className="text-error">*</span>
               </label>
               <textarea
                 id="proof_description"
@@ -223,33 +223,33 @@ export default function ClaimBusinessModal({
                 maxLength={1000}
                 value={formData.proof_description}
                 onChange={(e) => setFormData({ ...formData, proof_description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                 placeholder="Please describe your relationship to this business and provide details that prove your ownership. For example: business registration number, tax ID, official documents, social media accounts, website ownership, etc."
               />
               <div className="flex items-center justify-between mt-2">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-outline">
                   Minimum 10 characters, maximum 1000
                 </p>
-                <span className={`text-xs ${formData.proof_description.length > 950 ? 'text-red-500' : 'text-gray-400'}`}>
+                <span className={`text-xs ${formData.proof_description.length > 950 ? 'text-error' : 'text-outline'}`}>
                   {formData.proof_description.length}/1000
                 </span>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-4 border-t border-gray-200">
+            <div className="flex gap-3 pt-4 border-t border-outline-variant/15">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={submitting}
-                className="flex-1 px-6 py-3 border border-gray-300 rounded-md font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                className="flex-1 px-6 py-3 ghost-border rounded-md font-medium text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition-colors disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 silk-gradient hover:opacity-90 text-on-primary px-6 py-3 rounded-md font-medium transition-colors disabled:opacity-50"
               >
                 {submitting ? (
                   <>

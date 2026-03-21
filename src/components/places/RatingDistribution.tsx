@@ -25,7 +25,7 @@ export default function RatingDistribution({ distribution }: RatingDistributionP
 
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium text-gray-700 mb-3">
+      <div className="text-sm font-medium text-on-surface-variant mb-3">
         Rating Distribution ({total} {total === 1 ? 'review' : 'reviews'})
       </div>
 
@@ -36,18 +36,18 @@ export default function RatingDistribution({ distribution }: RatingDistributionP
         return (
           <div key={rating} className="flex items-center gap-2">
             <div className="flex items-center gap-1 w-12">
-              <span className="text-sm font-medium text-gray-700">{rating}</span>
-              <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+              <span className="text-sm font-medium text-on-surface-variant">{rating}</span>
+              <Star className="h-3 w-3 text-secondary-container fill-secondary-container" />
             </div>
 
-            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-surface-container-low rounded-full overflow-hidden">
               <div
-                className="h-full bg-yellow-400 rounded-full transition-all duration-300"
+                className="h-full bg-secondary-container rounded-full transition-all duration-300"
                 style={{ width: `${percentage}%` }}
               />
             </div>
 
-            <div className="text-sm text-gray-600 w-12 text-right">
+            <div className="text-sm text-on-surface-variant w-12 text-right">
               {count} ({percentage}%)
             </div>
           </div>

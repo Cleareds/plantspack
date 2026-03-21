@@ -66,7 +66,7 @@ export default function ClaimBusinessButton({
     return (
       <button
         disabled
-        className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-400 bg-gray-50 cursor-not-allowed"
+        className="inline-flex items-center gap-2 px-4 py-2 ghost-border rounded-md text-sm font-medium text-outline bg-surface-container-low cursor-not-allowed"
       >
         <Loader2 className="h-4 w-4 animate-spin" />
         <span>Loading...</span>
@@ -77,7 +77,7 @@ export default function ClaimBusinessButton({
   // Success message
   if (showSuccess) {
     return (
-      <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-md text-sm font-medium text-green-700">
+      <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low border border-outline-variant/15 rounded-md text-sm font-medium text-primary">
         <CheckCircle className="h-4 w-4" />
         <span>Claim submitted successfully!</span>
       </div>
@@ -87,11 +87,11 @@ export default function ClaimBusinessButton({
   // Pending claim
   if (claimStatus?.has_claim && claimStatus.claim?.status === 'pending') {
     return (
-      <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-md text-sm">
-        <Clock className="h-4 w-4 text-yellow-600" />
+      <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container/20 border border-outline-variant/15 rounded-md text-sm">
+        <Clock className="h-4 w-4 text-secondary" />
         <div className="flex flex-col">
-          <span className="font-medium text-yellow-800">Claim Pending</span>
-          <span className="text-xs text-yellow-700">
+          <span className="font-medium text-secondary">Claim Pending</span>
+          <span className="text-xs text-secondary">
             Submitted {new Date(claimStatus.claim.created_at).toLocaleDateString()}
           </span>
         </div>
@@ -102,9 +102,9 @@ export default function ClaimBusinessButton({
   // Approved claim (shouldn't normally see this as they'd be isOwner)
   if (claimStatus?.has_claim && claimStatus.claim?.status === 'approved') {
     return (
-      <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-md text-sm">
-        <CheckCircle className="h-4 w-4 text-green-600" />
-        <span className="font-medium text-green-800">Verified Owner</span>
+      <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low border border-outline-variant/15 rounded-md text-sm">
+        <CheckCircle className="h-4 w-4 text-primary" />
+        <span className="font-medium text-primary">Verified Owner</span>
       </div>
     )
   }
@@ -115,18 +115,18 @@ export default function ClaimBusinessButton({
       <div className="space-y-2">
         <button
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 border border-orange-300 bg-orange-50 hover:bg-orange-100 text-orange-800 rounded-md text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 border border-secondary/30 bg-secondary-container/20 hover:bg-secondary-container/30 text-secondary rounded-md text-sm font-medium transition-colors"
         >
           <Building2 className="h-4 w-4" />
           <span>Claim Again</span>
         </button>
         {claimStatus.claim.rejection_reason && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-3">
+          <div className="bg-error/10 border border-error/20 rounded-md p-3">
             <div className="flex items-start gap-2">
-              <XCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
+              <XCircle className="h-4 w-4 text-error flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs font-medium text-red-800 mb-1">Previous claim rejected:</p>
-                <p className="text-xs text-red-700">{claimStatus.claim.rejection_reason}</p>
+                <p className="text-xs font-medium text-error mb-1">Previous claim rejected:</p>
+                <p className="text-xs text-error">{claimStatus.claim.rejection_reason}</p>
               </div>
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function ClaimBusinessButton({
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className="inline-flex items-center gap-2 px-4 py-2 border border-green-600 text-green-600 hover:bg-green-50 rounded-md text-sm font-medium transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 border border-primary text-primary hover:bg-surface-container-low rounded-md text-sm font-medium transition-colors"
       >
         <Building2 className="h-4 w-4" />
         <span>Claim this business</span>

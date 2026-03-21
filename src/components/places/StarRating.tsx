@@ -69,17 +69,17 @@ export default function StarRating({
             >
               {isHalfFilled ? (
                 <div className="relative">
-                  <Star className={`${sizeClasses[size]} text-gray-300`} />
+                  <Star className={`${sizeClasses[size]} text-secondary-container`} />
                   <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
-                    <Star className={`${sizeClasses[size]} text-yellow-400 fill-yellow-400`} />
+                    <Star className={`${sizeClasses[size]} text-secondary-container fill-secondary-container`} />
                   </div>
                 </div>
               ) : (
                 <Star
                   className={`
                     ${sizeClasses[size]}
-                    ${isFilled ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}
-                    ${editable && hoverRating >= value ? 'text-yellow-400 fill-yellow-400' : ''}
+                    ${isFilled ? 'text-secondary-container fill-secondary-container' : 'text-secondary-container'}
+                    ${editable && hoverRating >= value ? 'text-secondary-container fill-secondary-container' : ''}
                   `}
                 />
               )}
@@ -88,7 +88,7 @@ export default function StarRating({
         })}
       </div>
       {showValue && (
-        <span className="text-sm font-medium text-gray-700 ml-1">
+        <span className="text-sm font-medium text-on-surface-variant ml-1">
           {displayRating.toFixed(1)}
         </span>
       )}
