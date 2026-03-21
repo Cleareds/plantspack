@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { supabase, Tables } from '@/lib/supabase'
 
 type Place = Tables<'places'> & {
@@ -17,7 +17,6 @@ interface UseNearbyPlacesOptions {
   limit?: number
 }
 
-// Calculate distance between two points in kilometers (Haversine)
 export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371
   const dLat = (lat2 - lat1) * Math.PI / 180
@@ -34,34 +33,31 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
   const [places, setPlaces] = useState<PlaceWithDistance[]>([])
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(true)
-  const [offset, setOffset] = useState(0)
+  const [page, setPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const fetchIdRef = useRef(0) // prevent stale responses
 
-  const fetchPlaces = useCallback(async (loadMore = false) => {
-    if (lat == null || lng == null) return
+  const fetchPage = useCallback(async (pageNum: number, currentLat: number, currentLng: number, cat: string) => {
+    const fetchId = ++fetchIdRef.current
+    setLoading(true)
 
     try {
-      if (!loadMore) {
-        setLoading(true)
-        setOffset(0)
-      }
+      const offset = (pageNum - 1) * limit
 
-      const currentOffset = loadMore ? offset : 0
-
-      // Use PostGIS RPC for server-side proximity sorting + pagination
       const { data: rpcData, error: rpcError } = await supabase
         .rpc('nearby_places', {
-          lat,
-          lng,
+          lat: currentLat,
+          lng: currentLng,
           lim: limit,
-          off_set: currentOffset,
-          cat: category,
+          off_set: offset,
+          cat,
         })
 
       if (rpcError) throw rpcError
+      if (fetchId !== fetchIdRef.current) return // stale
 
       const rawPlaces = rpcData || []
 
-      // Fetch related data (users + favorites) for these places
       let enrichedPlaces: PlaceWithDistance[] = []
       if (rawPlaces.length > 0) {
         const placeIds = rawPlaces.map((p: any) => p.id)
@@ -75,7 +71,8 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
           `)
           .in('id', placeIds)
 
-        // Preserve RPC order (sorted by distance) and add distance
+        if (fetchId !== fetchIdRef.current) return // stale
+
         const fullMap = new Map((fullPlaces || []).map(p => [p.id, p]))
         enrichedPlaces = rawPlaces
           .map((rpcPlace: any) => {
@@ -83,44 +80,63 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
             if (!full) return null
             return {
               ...full,
-              distance: calculateDistance(lat, lng, full.latitude, full.longitude),
+              distance: calculateDistance(currentLat, currentLng, full.latitude, full.longitude),
             }
           })
           .filter(Boolean) as PlaceWithDistance[]
       }
 
-      if (loadMore) {
-        setPlaces(prev => [...prev, ...enrichedPlaces])
-      } else {
-        setPlaces(enrichedPlaces)
-      }
-
+      setPlaces(enrichedPlaces)
       setHasMore(rawPlaces.length === limit)
-      setOffset(currentOffset + rawPlaces.length)
+      setPage(pageNum)
     } catch (error) {
       console.error('Error fetching nearby places:', error)
-      if (!loadMore) setPlaces([])
+      if (fetchId === fetchIdRef.current) {
+        setPlaces([])
+        setHasMore(false)
+      }
     } finally {
-      setLoading(false)
+      if (fetchId === fetchIdRef.current) {
+        setLoading(false)
+      }
     }
-  }, [lat, lng, category, limit, offset])
+  }, [limit])
 
-  // Initial fetch + refetch when center or category changes
+  // Fetch count for pagination display
+  const fetchCount = useCallback(async (cat: string) => {
+    try {
+      let query = supabase.from('places').select('id', { count: 'exact', head: true })
+      if (cat !== 'all') {
+        query = query.eq('category', cat)
+      }
+      const { count } = await query
+      setTotalCount(count || 0)
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  // Fetch page 1 when location or category changes
   useEffect(() => {
     if (lat != null && lng != null) {
-      fetchPlaces(false)
+      fetchPage(1, lat, lng, category)
+      fetchCount(category)
     }
-  }, [lat, lng, category]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [lat, lng, category, fetchPage, fetchCount])
 
-  const loadMore = useCallback(() => {
-    fetchPlaces(true)
-  }, [fetchPlaces])
+  const goToPage = useCallback((pageNum: number) => {
+    if (lat != null && lng != null) {
+      fetchPage(pageNum, lat, lng, category)
+    }
+  }, [lat, lng, category, fetchPage])
 
   const refetch = useCallback(() => {
-    fetchPlaces(false)
-  }, [fetchPlaces])
+    if (lat != null && lng != null) {
+      fetchPage(page, lat, lng, category)
+      fetchCount(category)
+    }
+  }, [lat, lng, category, page, fetchPage, fetchCount])
 
-  // Add a single place to local state without refetching
   const addPlaceLocally = useCallback((place: Place) => {
     if (lat == null || lng == null) return
     const placeWithDist: PlaceWithDistance = {
@@ -130,18 +146,25 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     setPlaces(prev => {
       const updated = [placeWithDist, ...prev]
       updated.sort((a, b) => a.distance - b.distance)
-      return updated
+      return updated.slice(0, limit)
     })
-  }, [lat, lng])
+    setTotalCount(prev => prev + 1)
+  }, [lat, lng, limit])
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / limit))
 
   return {
     places,
-    allFiltered: places, // For backward compat with MapView markers
+    allFiltered: places,
     loading,
     hasMore,
-    loadMore,
+    page,
+    totalPages,
+    totalCount,
+    goToPage,
     refetch,
-    fetchPlaces: () => fetchPlaces(false),
+    fetchPlaces: refetch,
     addPlaceLocally,
+    loadMore: () => goToPage(page + 1), // backward compat
   }
 }

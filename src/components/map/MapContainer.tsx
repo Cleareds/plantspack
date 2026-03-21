@@ -5,7 +5,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase, Tables } from '@/lib/supabase'
-import { Plus, Search, Menu, CheckCircle, X } from 'lucide-react'
+import { Plus, Search, Menu, CheckCircle, X, Image as ImageIcon } from 'lucide-react'
+import ImageUploader from '../ui/ImageUploader'
 import { geocodingService } from '@/lib/geocoding'
 import { usePageState } from '@/hooks/usePageState'
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces'
@@ -48,10 +49,11 @@ export default function MapContainerComponent() {
     places: sidebarPlaces,
     allFiltered: filteredPlaces,
     loading,
-    hasMore,
-    loadMore,
+    page,
+    totalPages,
+    totalCount,
+    goToPage,
     refetch,
-    fetchPlaces,
     addPlaceLocally,
   } = useNearbyPlaces({
     lat: searchCenter?.[0] ?? null,
@@ -59,6 +61,10 @@ export default function MapContainerComponent() {
     category: selectedCategory,
     limit: 20,
   })
+
+  // Place form images
+  const [placeImages, setPlaceImages] = useState<string[]>([])
+  const [showPlaceImageUploader, setShowPlaceImageUploader] = useState(false)
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('')
@@ -283,7 +289,7 @@ export default function MapContainerComponent() {
     try {
       const { data: insertedPlace, error } = await supabase
         .from('places')
-        .insert({ ...newPlace, created_by: user.id })
+        .insert({ ...newPlace, images: placeImages, created_by: user.id })
         .select(`*, users(id, username, first_name, last_name), favorite_places(id, user_id)`)
         .single()
       if (error) throw error
@@ -293,6 +299,8 @@ export default function MapContainerComponent() {
 
       setShowAddForm(false)
       setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
+      setPlaceImages([])
+      setShowPlaceImageUploader(false)
       setAddressSearchQuery('')
       setAddressSearchResults([])
       setShowAddressSearchResults(false)
@@ -320,6 +328,8 @@ export default function MapContainerComponent() {
     setAddressSearchResults([])
     setShowAddressSearchResults(false)
     setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
+    setPlaceImages([])
+    setShowPlaceImageUploader(false)
   }, [])
 
   // Pan to place on map
@@ -333,8 +343,7 @@ export default function MapContainerComponent() {
   useEffect(() => {
     if (!authReady) return
     getCurrentLocation()
-    fetchPlaces()
-  }, [authReady, getCurrentLocation, fetchPlaces])
+  }, [authReady, getCurrentLocation])
 
   // Set sidebar open on desktop
   useEffect(() => {
@@ -388,12 +397,7 @@ export default function MapContainerComponent() {
     }
   }, [handleMapMove])
 
-  // Refetch when category changes
-  useEffect(() => {
-    if (authReady) {
-      fetchPlaces()
-    }
-  }, [selectedCategory, authReady, fetchPlaces])
+  // Category changes are handled by useNearbyPlaces hook automatically
 
   // Loading state
   if (!userLocation || !mapCenter) {
@@ -561,15 +565,17 @@ export default function MapContainerComponent() {
         {/* Discovery Panel - RIGHT side */}
         <MapDiscoveryPanel
           places={sidebarPlaces}
-          totalFiltered={filteredPlaces.length}
+          totalCount={totalCount}
           customCenter={customCenter}
           user={user}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onToggleFavorite={toggleFavorite}
           onPanToPlace={handlePanToPlace}
-          hasMore={hasMore}
-          onLoadMore={loadMore}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          loading={loading}
         />
       </div>
 
@@ -691,6 +697,32 @@ export default function MapContainerComponent() {
                 <label htmlFor="pet-friendly" className="ml-2 block text-sm text-on-surface-variant">
                   Pet Friendly
                 </label>
+              </div>
+
+              {/* Images */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowPlaceImageUploader(!showPlaceImageUploader)}
+                  className={`flex items-center gap-1.5 text-sm transition-colors ${
+                    placeImages.length > 0 || showPlaceImageUploader ? 'text-primary' : 'text-outline hover:text-on-surface-variant'
+                  }`}
+                >
+                  <ImageIcon className="h-4 w-4" />
+                  {placeImages.length > 0 ? `${placeImages.length} photo${placeImages.length > 1 ? 's' : ''}` : 'Add photos'}
+                </button>
+                {showPlaceImageUploader && (
+                  <div className="mt-2">
+                    <ImageUploader onImagesChange={setPlaceImages} maxImages={5} />
+                  </div>
+                )}
+                {placeImages.length > 0 && !showPlaceImageUploader && (
+                  <div className="flex gap-1.5 mt-2">
+                    {placeImages.map((url, i) => (
+                      <img key={i} src={url} alt="" className="h-12 w-12 rounded-md object-cover" />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex space-x-3 pt-4">

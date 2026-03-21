@@ -23,7 +23,7 @@ import {
     resolveUsernames,
 } from '@/lib/hashtags'
 import AddressSearch from '../ui/AddressSearch'
-import type { PostCategory, RecipeData, EventData, ProductData } from '@/lib/database.types'
+import type {PostCategory, RecipeData, EventData, ProductData} from '@/lib/database.types'
 
 interface PlaceData {
     name: string
@@ -498,6 +498,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                         description: placeData.description.trim() || null,
                         website: placeData.website.trim() || null,
                         is_pet_friendly: placeData.is_pet_friendly,
+                        images: imageUrls.length > 0 ? imageUrls : [],
                         created_by: user.id,
                     })
                 } catch (placeError) {
@@ -565,7 +566,16 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             setRecipeData({})
             setEventData({})
             setProductData({})
-            setPlaceData({ name: '', category: 'eat', address: '', latitude: 0, longitude: 0, description: '', website: '', is_pet_friendly: false })
+            setPlaceData({
+                name: '',
+                category: 'eat',
+                address: '',
+                latitude: 0,
+                longitude: 0,
+                description: '',
+                website: '',
+                is_pet_friendly: false
+            })
             setImageUrls([])
             setVideoUrls([])
             setShowImageUploader(false)
@@ -640,45 +650,6 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 )}
 
                 <div className="flex space-x-3">
-                    {profile?.username ? (
-                        <Link href={`/user/${profile.username}`} className="flex-shrink-0">
-                            {profile.avatar_url ? (
-                                <div
-                                    className="h-10 w-10 rounded-full overflow-hidden bg-surface-container-low hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all cursor-pointer">
-                                    <img
-                                        src={profile.avatar_url}
-                                        alt={`${profile.first_name || profile.username}'s avatar`}
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div>
-                            ) : (
-                                <div
-                                    className="h-10 w-10 rounded-full bg-surface-container-low flex items-center justify-center hover:ring-2 hover:ring-primary hover:ring-offset-1 transition-all cursor-pointer">
-                  <span className="text-primary font-medium text-sm">
-                    {profile.first_name?.[0] || profile.username?.[0] || 'U'}
-                  </span>
-                                </div>
-                            )}
-                        </Link>
-                    ) : (
-                        <div className="flex-shrink-0">
-                            {profile?.avatar_url ? (
-                                <div className="h-10 w-10 rounded-full overflow-hidden bg-surface-container-low">
-                                    <img
-                                        src={profile.avatar_url}
-                                        alt="Your avatar"
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div>
-                            ) : (
-                                <div className="h-10 w-10 rounded-full bg-surface-container-low flex items-center justify-center">
-                  <span className="text-primary font-medium text-sm">
-                    {profile?.first_name?.[0] || 'U'}
-                  </span>
-                                </div>
-                            )}
-                        </div>
-                    )}
                     <div className="flex-1">
                         <div className="relative pr-[16px]">
               <textarea
@@ -703,174 +674,234 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
                         {/* Category Selector */}
                         <div className="mt-3">
-                          <div className="flex flex-wrap gap-1.5">
-                            {[
-                              { slug: 'general', icon: 'article', label: 'General' },
-                              { slug: 'recipe', icon: 'restaurant_menu', label: 'Recipe' },
-                              { slug: 'place', icon: 'location_on', label: 'Place' },
-                              { slug: 'event', icon: 'event', label: 'Event' },
-                              { slug: 'lifestyle', icon: 'self_improvement', label: 'Lifestyle' },
-                              { slug: 'activism', icon: 'campaign', label: 'Activism' },
-                              { slug: 'question', icon: 'help', label: 'Question' },
-                              { slug: 'product', icon: 'shopping_bag', label: 'Product' },
-                              { slug: 'hotel', icon: 'hotel', label: 'Hotel' },
-                              { slug: 'organisation', icon: 'corporate_fare', label: 'Organisation' },
-                            ].map((cat) => (
-                              <button
-                                key={cat.slug}
-                                type="button"
-                                onClick={() => setCategory(cat.slug as PostCategory)}
-                                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                                  category === cat.slug
-                                    ? 'bg-primary text-on-primary-btn'
-                                    : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-                                }`}
-                              >
-                                <span className="material-symbols-outlined text-sm" style={{ fontSize: '14px' }}>{cat.icon}</span>
-                                {cat.label}
-                              </button>
-                            ))}
-                          </div>
+                            <div className="flex flex-wrap gap-1.5">
+                                {[
+                                    {slug: 'general', icon: 'article', label: 'General'},
+                                    {slug: 'recipe', icon: 'restaurant_menu', label: 'Recipe'},
+                                    {slug: 'place', icon: 'location_on', label: 'Place'},
+                                    {slug: 'event', icon: 'event', label: 'Event'},
+                                    {slug: 'lifestyle', icon: 'self_improvement', label: 'Lifestyle'},
+                                    {slug: 'activism', icon: 'campaign', label: 'Activism'},
+                                    {slug: 'question', icon: 'help', label: 'Question'},
+                                    {slug: 'product', icon: 'shopping_bag', label: 'Product'},
+                                    {slug: 'hotel', icon: 'hotel', label: 'Hotel'},
+                                    {slug: 'organisation', icon: 'corporate_fare', label: 'Organisation'},
+                                ].map((cat) => (
+                                    <button
+                                        key={cat.slug}
+                                        type="button"
+                                        onClick={() => setCategory(cat.slug as PostCategory)}
+                                        className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                                            category === cat.slug
+                                                ? 'bg-primary text-on-primary-btn'
+                                                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                                        }`}
+                                    >
+                                        <span className="material-symbols-outlined text-sm"
+                                              style={{fontSize: '14px'}}>{cat.icon}</span>
+                                        {cat.label}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
                         {/* Secondary Tags */}
                         <div className="mt-2">
-                          <div className="flex flex-wrap gap-1.5 items-center">
-                            {secondaryTags.map((tag, i) => (
-                              <span key={i} className="flex items-center gap-1 bg-secondary-container text-on-surface text-xs px-2 py-0.5 rounded-full">
+                            <div className="flex flex-wrap gap-1.5 items-center">
+                                {secondaryTags.map((tag, i) => (
+                                    <span key={i}
+                                          className="flex items-center gap-1 bg-secondary-container text-on-surface text-xs px-2 py-0.5 rounded-full">
                                 {tag}
-                                <button type="button" onClick={() => setSecondaryTags(prev => prev.filter((_, idx) => idx !== i))} className="hover:text-error">
-                                  <X className="h-3 w-3" />
+                                        <button type="button"
+                                                onClick={() => setSecondaryTags(prev => prev.filter((_, idx) => idx !== i))}
+                                                className="hover:text-error">
+                                  <X className="h-3 w-3"/>
                                 </button>
                               </span>
-                            ))}
-                            {secondaryTags.length < 3 && (
-                              <input
-                                type="text"
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter' && tagInput.trim()) {
-                                    e.preventDefault()
-                                    if (secondaryTags.length < 3) {
-                                      setSecondaryTags(prev => [...prev, tagInput.trim()])
-                                      setTagInput('')
-                                    }
-                                  }
-                                }}
-                                placeholder={secondaryTags.length === 0 ? "Add tags (e.g. Rome, Budget)..." : "Add tag..."}
-                                className="text-xs bg-transparent border-none outline-none text-on-surface-variant placeholder:text-outline min-w-[100px] flex-1 py-0.5"
-                              />
-                            )}
-                          </div>
+                                ))}
+                                {secondaryTags.length < 3 && (
+                                    <input
+                                        type="text"
+                                        value={tagInput}
+                                        onChange={(e) => setTagInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && tagInput.trim()) {
+                                                e.preventDefault()
+                                                if (secondaryTags.length < 3) {
+                                                    setSecondaryTags(prev => [...prev, tagInput.trim()])
+                                                    setTagInput('')
+                                                }
+                                            }
+                                        }}
+                                        placeholder={secondaryTags.length === 0 ? "Add tags (e.g. Rome, Budget)..." : "Add tag..."}
+                                        className="text-xs bg-transparent border-none outline-none text-on-surface-variant placeholder:text-outline min-w-[100px] flex-1 py-0.5"
+                                    />
+                                )}
+                            </div>
                         </div>
 
                         {/* Category-Specific Fields */}
                         {category === 'recipe' && (
-                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Recipe Details</p>
-                            <textarea
-                              value={recipeData.ingredients?.join('\n') || ''}
-                              onChange={(e) => setRecipeData(prev => ({ ...prev, ingredients: e.target.value.split('\n').filter(Boolean) }))}
-                              placeholder="Ingredients (one per line)"
-                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                              rows={3}
-                            />
-                            <div className="flex gap-2">
-                              <input type="number" placeholder="Prep (min)" value={recipeData.prep_time_min || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, prep_time_min: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                              <input type="number" placeholder="Cook (min)" value={recipeData.cook_time_min || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, cook_time_min: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                              <input type="number" placeholder="Servings" value={recipeData.servings || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, servings: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Recipe
+                                    Details</p>
+                                <textarea
+                                    value={recipeData.ingredients?.join('\n') || ''}
+                                    onChange={(e) => setRecipeData(prev => ({
+                                        ...prev,
+                                        ingredients: e.target.value.split('\n').filter(Boolean)
+                                    }))}
+                                    placeholder="Ingredients (one per line)"
+                                    className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                                    rows={3}
+                                />
+                                <div className="flex gap-2">
+                                    <input type="number" placeholder="Prep (min)" value={recipeData.prep_time_min || ''}
+                                           onChange={(e) => setRecipeData(prev => ({
+                                               ...prev,
+                                               prep_time_min: Number(e.target.value)
+                                           }))}
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                    <input type="number" placeholder="Cook (min)" value={recipeData.cook_time_min || ''}
+                                           onChange={(e) => setRecipeData(prev => ({
+                                               ...prev,
+                                               cook_time_min: Number(e.target.value)
+                                           }))}
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                    <input type="number" placeholder="Servings" value={recipeData.servings || ''}
+                                           onChange={(e) => setRecipeData(prev => ({
+                                               ...prev,
+                                               servings: Number(e.target.value)
+                                           }))}
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                </div>
+                                <select value={recipeData.difficulty || ''} onChange={(e) => setRecipeData(prev => ({
+                                    ...prev,
+                                    difficulty: e.target.value as RecipeData['difficulty']
+                                }))}
+                                        className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
+                                    <option value="">Difficulty...</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
                             </div>
-                            <select value={recipeData.difficulty || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, difficulty: e.target.value as RecipeData['difficulty'] }))} className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
-                              <option value="">Difficulty...</option>
-                              <option value="easy">Easy</option>
-                              <option value="medium">Medium</option>
-                              <option value="hard">Hard</option>
-                            </select>
-                          </div>
                         )}
 
                         {category === 'event' && (
-                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Event Details</p>
-                            <div className="flex gap-2">
-                              <input type="datetime-local" value={eventData.start_time || ''} onChange={(e) => setEventData(prev => ({ ...prev, start_time: e.target.value }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                              <input type="datetime-local" value={eventData.end_time || ''} onChange={(e) => setEventData(prev => ({ ...prev, end_time: e.target.value }))} placeholder="End time" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Event
+                                    Details</p>
+                                <div className="flex gap-2">
+                                    <input type="datetime-local" value={eventData.start_time || ''}
+                                           onChange={(e) => setEventData(prev => ({
+                                               ...prev,
+                                               start_time: e.target.value
+                                           }))}
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                    <input type="datetime-local" value={eventData.end_time || ''}
+                                           onChange={(e) => setEventData(prev => ({...prev, end_time: e.target.value}))}
+                                           placeholder="End time"
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                </div>
+                                <input type="text" value={eventData.location || ''}
+                                       onChange={(e) => setEventData(prev => ({...prev, location: e.target.value}))}
+                                       placeholder="Event location"
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                <input type="url" value={eventData.ticket_url || ''}
+                                       onChange={(e) => setEventData(prev => ({...prev, ticket_url: e.target.value}))}
+                                       placeholder="Ticket URL (optional)"
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
                             </div>
-                            <input type="text" value={eventData.location || ''} onChange={(e) => setEventData(prev => ({ ...prev, location: e.target.value }))} placeholder="Event location" className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                            <input type="url" value={eventData.ticket_url || ''} onChange={(e) => setEventData(prev => ({ ...prev, ticket_url: e.target.value }))} placeholder="Ticket URL (optional)" className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                          </div>
                         )}
 
                         {category === 'product' && (
-                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Product Details</p>
-                            <input type="text" value={productData.brand || ''} onChange={(e) => setProductData(prev => ({ ...prev, brand: e.target.value }))} placeholder="Brand name" className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                            <div className="flex gap-2">
-                              <input type="text" value={productData.price_range || ''} onChange={(e) => setProductData(prev => ({ ...prev, price_range: e.target.value }))} placeholder="Price range (e.g. $5-10)" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
-                              <input type="text" value={productData.where_to_buy || ''} onChange={(e) => setProductData(prev => ({ ...prev, where_to_buy: e.target.value }))} placeholder="Where to buy" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                            <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Product
+                                    Details</p>
+                                <input type="text" value={productData.brand || ''}
+                                       onChange={(e) => setProductData(prev => ({...prev, brand: e.target.value}))}
+                                       placeholder="Brand name"
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                <div className="flex gap-2">
+                                    <input type="text" value={productData.price_range || ''}
+                                           onChange={(e) => setProductData(prev => ({
+                                               ...prev,
+                                               price_range: e.target.value
+                                           }))} placeholder="Price range (e.g. $5-10)"
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                    <input type="text" value={productData.where_to_buy || ''}
+                                           onChange={(e) => setProductData(prev => ({
+                                               ...prev,
+                                               where_to_buy: e.target.value
+                                           }))} placeholder="Where to buy"
+                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                </div>
                             </div>
-                          </div>
                         )}
 
                         {category === 'place' && (
-                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Place Details</p>
-                            <input
-                              type="text"
-                              value={placeData.name}
-                              onChange={(e) => setPlaceData(prev => ({ ...prev, name: e.target.value }))}
-                              placeholder="Place name *"
-                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                            />
-                            <select
-                              value={placeData.category}
-                              onChange={(e) => setPlaceData(prev => ({ ...prev, category: e.target.value }))}
-                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                            >
-                              <option value="eat">Eat</option>
-                              <option value="hotel">Hotel</option>
-                              <option value="event">Event</option>
-                              <option value="museum">Museum</option>
-                              <option value="organisation">Organisation</option>
-                              <option value="other">Other</option>
-                            </select>
-                            <AddressSearch
-                              value=""
-                              selectedAddress={placeData.address}
-                              onSelect={(result) => setPlaceData(prev => ({
-                                ...prev,
-                                address: result.address,
-                                latitude: result.latitude,
-                                longitude: result.longitude,
-                              }))}
-                              placeholder="Search address *"
-                              required
-                            />
-                            <textarea
-                              value={placeData.description}
-                              onChange={(e) => setPlaceData(prev => ({ ...prev, description: e.target.value }))}
-                              placeholder="Description (optional)"
-                              rows={2}
-                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                            />
-                            <input
-                              type="url"
-                              value={placeData.website}
-                              onChange={(e) => setPlaceData(prev => ({ ...prev, website: e.target.value }))}
-                              placeholder="Website (optional)"
-                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                            />
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={placeData.is_pet_friendly}
-                                onChange={(e) => setPlaceData(prev => ({ ...prev, is_pet_friendly: e.target.checked }))}
-                                className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
-                              />
-                              <span className="text-sm text-on-surface-variant">Pet Friendly</span>
-                            </label>
-                          </div>
+                            <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Place
+                                    Details</p>
+                                <input
+                                    type="text"
+                                    value={placeData.name}
+                                    onChange={(e) => setPlaceData(prev => ({...prev, name: e.target.value}))}
+                                    placeholder="Place name *"
+                                    className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                                />
+                                <select
+                                    value={placeData.category}
+                                    onChange={(e) => setPlaceData(prev => ({...prev, category: e.target.value}))}
+                                    className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                                >
+                                    <option value="eat">Eat</option>
+                                    <option value="hotel">Hotel</option>
+                                    <option value="event">Event</option>
+                                    <option value="museum">Museum</option>
+                                    <option value="organisation">Organisation</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <AddressSearch
+                                    value=""
+                                    selectedAddress={placeData.address}
+                                    onSelect={(result) => setPlaceData(prev => ({
+                                        ...prev,
+                                        address: result.address,
+                                        latitude: result.latitude,
+                                        longitude: result.longitude,
+                                    }))}
+                                    placeholder="Search address *"
+                                    required
+                                />
+                                <textarea
+                                    value={placeData.description}
+                                    onChange={(e) => setPlaceData(prev => ({...prev, description: e.target.value}))}
+                                    placeholder="Description (optional)"
+                                    rows={2}
+                                    className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                                />
+                                <input
+                                    type="url"
+                                    value={placeData.website}
+                                    onChange={(e) => setPlaceData(prev => ({...prev, website: e.target.value}))}
+                                    placeholder="Website (optional)"
+                                    className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                                />
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={placeData.is_pet_friendly}
+                                        onChange={(e) => setPlaceData(prev => ({
+                                            ...prev,
+                                            is_pet_friendly: e.target.checked
+                                        }))}
+                                        className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
+                                    />
+                                    <span className="text-sm text-on-surface-variant">Pet Friendly</span>
+                                </label>
+                            </div>
                         )}
 
                         {/* Image Preview */}
