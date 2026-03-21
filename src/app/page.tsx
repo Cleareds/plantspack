@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Feed from "@/components/posts/Feed"
 import CreatePostModal from "@/components/posts/CreatePostModal"
 import CategoryTabs from "@/components/posts/CategoryTabs"
@@ -12,12 +13,22 @@ import type { PostCategory } from '@/lib/database.types'
 import Link from 'next/link'
 
 export default function Home() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
   const [activeCategory, setActiveCategory] = useState<PostCategory | 'all'>('all')
   const [userCategories, setUserCategories] = useState<string[]>([])
   const { user, profile } = useAuth()
   const generalFeedRef = useRef<HTMLDivElement>(null)
+
+  // Open create post modal from URL param (e.g. sidebar link)
+  useEffect(() => {
+    if (searchParams?.get('create') === 'true' && user) {
+      setIsCreatePostOpen(true)
+      router.replace('/', { scroll: false })
+    }
+  }, [searchParams, user, router])
 
   // Load user's feed preferences
   useEffect(() => {
@@ -142,7 +153,7 @@ export default function Home() {
           {user && (
             <button
               onClick={() => setIsCreatePostOpen(true)}
-              className="xl:hidden fixed bottom-24 right-6 lg:bottom-6 bg-primary text-on-primary-btn p-4 rounded-full shadow-editorial transition-all hover:opacity-90 active:scale-95 z-40"
+              className="xl:hidden fixed bottom-24 right-6 lg:bottom-6 silk-gradient text-on-primary-btn p-4 rounded-full shadow-editorial transition-all hover:opacity-90 active:scale-95 z-40"
             >
               <span className="material-symbols-outlined text-2xl">edit_square</span>
             </button>
