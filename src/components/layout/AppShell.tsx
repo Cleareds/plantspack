@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import Sidebar from './Sidebar'
 import TopBar from './TopBar'
@@ -9,6 +10,11 @@ import BetaBanner from './BetaBanner'
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const [bannerVisible, setBannerVisible] = useState(false)
+
+  const handleBannerVisibility = useCallback((visible: boolean) => {
+    setBannerVisible(visible)
+  }, [])
 
   // Pages that should not show the app shell (admin pages)
   const isAdminPage = pathname?.startsWith('/admin')
@@ -27,16 +33,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         rel="stylesheet"
       />
 
-      <BetaBanner />
+      <BetaBanner onVisibilityChange={handleBannerVisibility} />
 
       {/* Desktop sidebar - always visible on lg+ */}
       <Sidebar />
 
       {/* Top bar */}
-      <TopBar />
+      <TopBar bannerOffset={bannerVisible} />
 
       {/* Main content area */}
-      <main className={`min-h-screen pt-16 ${isMapPage ? 'lg:ml-64' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
+      <main className={`min-h-screen ${bannerVisible ? 'pt-24' : 'pt-16'} ${isMapPage ? 'lg:ml-64' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
         {children}
       </main>
 

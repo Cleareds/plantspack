@@ -15,6 +15,8 @@ const ALL_CATEGORIES: { slug: PostCategory; icon: string; label: string; descrip
   { slug: 'activism', icon: 'campaign', label: 'Activism', description: 'Advocacy, awareness, and animal rights', color: '#a83206' },
   { slug: 'question', icon: 'help', label: 'Questions', description: 'Ask the community for help and advice', color: '#72554b' },
   { slug: 'product', icon: 'shopping_bag', label: 'Products', description: 'Vegan product reviews and recommendations', color: '#72554b' },
+  { slug: 'hotel', icon: 'hotel', label: 'Hotels', description: 'Vegan-friendly accommodations', color: '#5c6bc0' },
+  { slug: 'organisation', icon: 'corporate_fare', label: 'Organisations', description: 'Vegan brands, companies, and organisations', color: '#26a69a' },
   { slug: 'general', icon: 'article', label: 'General', description: 'Everything else in the plant-based world', color: '#767773' },
 ]
 

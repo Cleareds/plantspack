@@ -662,6 +662,8 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                               { slug: 'activism', icon: 'campaign', label: 'Activism' },
                               { slug: 'question', icon: 'help', label: 'Question' },
                               { slug: 'product', icon: 'shopping_bag', label: 'Product' },
+                              { slug: 'hotel', icon: 'hotel', label: 'Hotel' },
+                              { slug: 'organisation', icon: 'corporate_fare', label: 'Organisation' },
                             ].map((cat) => (
                               <button
                                 key={cat.slug}

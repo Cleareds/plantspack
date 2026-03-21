@@ -32,6 +32,8 @@ const CATEGORY_CONFIG: Record<string, { icon: string; label: string; color: stri
   activism: { icon: 'campaign', label: 'Activism', color: 'bg-tertiary/10 text-tertiary' },
   question: { icon: 'help', label: 'Question', color: 'bg-secondary/10 text-secondary' },
   product: { icon: 'shopping_bag', label: 'Product', color: 'bg-secondary/10 text-secondary' },
+  hotel: { icon: 'hotel', label: 'Hotel', color: 'bg-primary/10 text-primary' },
+  organisation: { icon: 'corporate_fare', label: 'Organisation', color: 'bg-tertiary/10 text-tertiary' },
   general: { icon: 'article', label: 'General', color: 'bg-outline/10 text-outline' },
 }
 

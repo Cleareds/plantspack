@@ -77,7 +77,7 @@ export default function MapContainerComponent() {
   const [showAddressSearchResults, setShowAddressSearchResults] = useState(false)
   const [newPlace, setNewPlace] = useState({
     name: '',
-    category: 'restaurant',
+    category: 'eat',
     address: '',
     description: '',
     website: '',
@@ -295,7 +295,7 @@ export default function MapContainerComponent() {
       const addedCoords: [number, number] = [newPlace.latitude, newPlace.longitude]
 
       setShowAddForm(false)
-      setNewPlace({ name: '', category: 'restaurant', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
+      setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
       setAddressSearchQuery('')
       setAddressSearchResults([])
       setShowAddressSearchResults(false)
@@ -322,7 +322,7 @@ export default function MapContainerComponent() {
     setAddressSearchQuery('')
     setAddressSearchResults([])
     setShowAddressSearchResults(false)
-    setNewPlace({ name: '', category: 'restaurant', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
+    setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
   }, [])
 
   // Pan to place on map
@@ -409,9 +409,11 @@ export default function MapContainerComponent() {
 
   const categories = [
     { value: 'all', label: 'All Places' },
-    { value: 'restaurant', label: 'Restaurants' },
+    { value: 'eat', label: 'Eat' },
+    { value: 'hotel', label: 'Hotels' },
     { value: 'event', label: 'Events' },
     { value: 'museum', label: 'Museums' },
+    { value: 'organisation', label: 'Organisations' },
     { value: 'other', label: 'Other' },
   ]
 

@@ -118,7 +118,7 @@ export default function NotificationBell() {
       case 'reply':
         return <MessageCircle className="h-4 w-4 text-blue-500" />
       case 'follow':
-        return <UserPlus className="h-4 w-4 text-green-500" />
+        return <UserPlus className="h-4 w-4 text-primary" />
       case 'mention':
         return <AtSign className="h-4 w-4 text-purple-500" />
       default:

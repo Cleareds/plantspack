@@ -1,14 +1,13 @@
 'use client'
 
-import { MapPin } from 'lucide-react'
-
 const categories = [
-  { value: 'all', label: 'All' },
-  { value: 'restaurant', label: 'Restaurants' },
-  { value: 'cafe', label: 'Cafes' },
-  { value: 'event', label: 'Events' },
-  { value: 'museum', label: 'Museums' },
-  { value: 'other', label: 'Other' },
+  { value: 'all', label: 'All', icon: 'apps' },
+  { value: 'eat', label: 'Eat', icon: 'restaurant' },
+  { value: 'hotel', label: 'Hotels', icon: 'hotel' },
+  { value: 'event', label: 'Events', icon: 'event' },
+  { value: 'museum', label: 'Museums', icon: 'museum' },
+  { value: 'organisation', label: 'Organisations', icon: 'corporate_fare' },
+  { value: 'other', label: 'Other', icon: 'more_horiz' },
 ]
 
 interface MapCategoryPillsProps {
@@ -34,7 +33,7 @@ export default function MapCategoryPills({ selected, onSelect }: MapCategoryPill
               }
             `}
           >
-            <MapPin className="h-3.5 w-3.5" />
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{cat.icon}</span>
             {cat.label}
           </button>
         )

@@ -6,12 +6,16 @@ import { useAuth } from '@/lib/auth'
 import SearchBar from '@/components/search/SearchBar'
 import NotificationBell from '@/components/notifications/NotificationBell'
 
-export default function TopBar() {
+interface TopBarProps {
+  bannerOffset?: boolean
+}
+
+export default function TopBar({ bannerOffset }: TopBarProps) {
   const { user, profile } = useAuth()
   const username = profile?.username || user?.user_metadata?.username
 
   return (
-    <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-surface/80 backdrop-blur-lg flex justify-between items-center px-4 md:px-8 h-16">
+    <header className={`fixed ${bannerOffset ? 'top-8' : 'top-0'} right-0 left-0 lg:left-64 z-50 bg-surface/80 backdrop-blur-lg flex justify-between items-center px-4 md:px-8 h-16`}>
       {/* Mobile logo (shown only on mobile where sidebar is hidden) */}
       <Link href="/" className="flex items-center gap-2 lg:hidden">
         <Image
@@ -26,11 +30,9 @@ export default function TopBar() {
       </Link>
 
       {/* Search Bar - center */}
-      {user && (
-        <div className="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-1.5 gap-2 flex-1 max-w-lg mx-auto">
-          <SearchBar />
-        </div>
-      )}
+      <div className="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-1.5 gap-2 flex-1 max-w-lg mx-auto">
+        <SearchBar />
+      </div>
 
       {/* Right side */}
       <div className="flex items-center gap-4">

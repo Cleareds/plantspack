@@ -11,6 +11,8 @@ const CATEGORIES: { slug: PostCategory | 'all'; icon: string; label: string }[] 
   { slug: 'activism', icon: 'campaign', label: 'Activism' },
   { slug: 'question', icon: 'help', label: 'Questions' },
   { slug: 'product', icon: 'shopping_bag', label: 'Products' },
+  { slug: 'hotel', icon: 'hotel', label: 'Hotels' },
+  { slug: 'organisation', icon: 'corporate_fare', label: 'Organisations' },
   { slug: 'general', icon: 'article', label: 'General' },
 ]
 

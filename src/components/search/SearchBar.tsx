@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Search, X, User, MessageSquare, Loader2 } from 'lucide-react'
+import { Search, X, User, MessageSquare, MapPin, Loader2 } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { formatDistanceToNow } from 'date-fns'
 
 interface SearchBarProps {
@@ -15,8 +16,9 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  
-  const { posts, users, loading, error } = useSearch(query)
+  const router = useRouter()
+
+  const { posts, users, places, categories, loading, error } = useSearch(query)
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -51,19 +53,19 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
     return text.substring(0, maxLength) + '...'
   }
 
-  const highlightMatch = (text: string, query: string) => {
-    if (!query) return text
-    const regex = new RegExp(`(${query})`, 'gi')
+  const highlightMatch = (text: string, searchQuery: string) => {
+    if (!searchQuery) return text
+    const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
     const parts = text.split(regex)
-    
-    return parts.map((part, index) => 
+
+    return parts.map((part, index) =>
       regex.test(part) ? (
         <mark key={index} className="bg-yellow-200/50 text-on-surface">{part}</mark>
       ) : part
     )
   }
 
-  const hasResults = posts.length > 0 || users.length > 0
+  const hasResults = posts.length > 0 || users.length > 0 || places.length > 0 || categories.length > 0
   const showNoResults = query.length >= 3 && !loading && !hasResults && !error
 
   return (
@@ -76,7 +78,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search posts and users..."
+          placeholder="Search posts, places, users..."
           className="w-full pl-10 pr-10 py-2 bg-surface-container-low border-0 ghost-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-outline text-sm"
         />
         {query && (
@@ -93,7 +95,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
       {/* Dropdown Results */}
       {isOpen && (
-        <div className="sm:min-w-[720px] absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest glass-float shadow-ambient rounded-lg z-50 max-h-96 overflow-hidden" data-testid="search-dropdown">
+        <div className="sm:min-w-[480px] absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest glass-float shadow-ambient rounded-lg z-50 max-h-[28rem] overflow-y-auto" data-testid="search-dropdown">
           {loading && (
             <div className="p-4 text-center">
               <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-primary" />
@@ -114,24 +116,97 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
           )}
 
           {!loading && !error && hasResults && (
-            <div className="grid grid-cols-2 divide-x divide-outline-variant/15">
-              {/* Posts Column */}
-              <div className="max-h-96 overflow-y-auto">
-                <div className="sticky top-0 bg-surface-container-low px-3 py-2 border-b border-outline-variant/15">
-                  <div className="flex items-center space-x-2">
-                    <MessageSquare className="h-4 w-4 text-on-surface-variant" />
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
-                      Posts ({posts.length})
-                    </span>
+            <div className="divide-y divide-outline-variant/15">
+              {/* Categories Section */}
+              {categories.length > 0 && (
+                <div>
+                  <div className="sticky top-0 bg-surface-container-low px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '16px' }}>category</span>
+                      <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
+                        Categories ({categories.length})
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.slug}
+                        onClick={() => {
+                          handleResultClick()
+                          router.push(`/?category=${cat.slug}`)
+                        }}
+                        className="w-full flex items-center gap-3 p-3 hover:bg-surface-container-low transition-colors text-left"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <span className="material-symbols-outlined text-primary" style={{ fontSize: '18px' }}>{cat.icon_name}</span>
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-on-surface">
+                            {highlightMatch(cat.display_name, query)}
+                          </div>
+                          <div className="text-xs text-outline">Category</div>
+                        </div>
+                      </button>
+                    ))}
                   </div>
                 </div>
-                
-                {posts.length === 0 ? (
-                  <div className="p-3 text-center text-outline text-sm">
-                    No posts found
+              )}
+
+              {/* Places Section */}
+              {places.length > 0 && (
+                <div>
+                  <div className="sticky top-0 bg-surface-container-low px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-on-surface-variant" />
+                      <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
+                        Places ({places.length})
+                      </span>
+                    </div>
                   </div>
-                ) : (
-                  <div className="divide-y divide-outline-variant/15">
+                  <div>
+                    {places.map((place) => (
+                      <Link
+                        key={place.id}
+                        href={`/place/${place.id}`}
+                        onClick={handleResultClick}
+                        className="flex items-center gap-3 p-3 hover:bg-surface-container-low transition-colors"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+                          <MapPin className="h-4 w-4 text-secondary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-on-surface truncate">
+                            {highlightMatch(place.name, query)}
+                          </div>
+                          <div className="text-xs text-outline truncate">
+                            {place.address}
+                          </div>
+                        </div>
+                        {place.average_rating > 0 && (
+                          <div className="text-xs text-on-surface-variant flex items-center gap-0.5">
+                            <span className="material-symbols-outlined" style={{ fontSize: '14px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                            {place.average_rating.toFixed(1)}
+                          </div>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Posts Section */}
+              {posts.length > 0 && (
+                <div>
+                  <div className="sticky top-0 bg-surface-container-low px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4 text-on-surface-variant" />
+                      <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
+                        Posts ({posts.length})
+                      </span>
+                    </div>
+                  </div>
+                  <div>
                     {posts.map((post) => (
                       <Link
                         key={post.id}
@@ -139,7 +214,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                         onClick={handleResultClick}
                         className="block p-3 hover:bg-surface-container-low transition-colors"
                       >
-                        <div className="flex items-start space-x-2">
+                        <div className="flex items-start gap-2">
                           <div className="flex-shrink-0">
                             {post.users.avatar_url ? (
                               <img
@@ -156,13 +231,13 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-1 mb-1">
+                            <div className="flex items-center gap-1 mb-1">
                               <span className="text-xs font-medium text-on-surface truncate">
                                 {post.users.first_name && post.users.last_name
                                   ? `${post.users.first_name} ${post.users.last_name}`
                                   : post.users.username}
                               </span>
-                              <span className="text-xs text-outline">•</span>
+                              <span className="text-xs text-outline">·</span>
                               <span className="text-xs text-outline">
                                 {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                               </span>
@@ -175,73 +250,61 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                       </Link>
                     ))}
                   </div>
-                )}
-              </div>
-
-              {/* Users Column */}
-              <div className="max-h-96 overflow-y-auto">
-                <div className="sticky top-0 bg-surface-container-low px-3 py-2 border-b border-outline-variant/15">
-                  <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4 text-on-surface-variant" />
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
-                      Users ({users.length})
-                    </span>
-                  </div>
                 </div>
-                
-                {users.length === 0 ? (
-                  <div className="p-3 text-center text-outline text-sm">
-                    No users found
+              )}
+
+              {/* Users Section */}
+              {users.length > 0 && (
+                <div>
+                  <div className="sticky top-0 bg-surface-container-low px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-on-surface-variant" />
+                      <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
+                        Users ({users.length})
+                      </span>
+                    </div>
                   </div>
-                ) : (
-                  <div className="divide-y divide-outline-variant/15">
+                  <div>
                     {users.map((user) => (
                       <Link
                         key={user.id}
                         href={`/user/${user.username}`}
                         onClick={handleResultClick}
-                        className="block p-3 hover:bg-surface-container-low transition-colors"
+                        className="flex items-center gap-3 p-3 hover:bg-surface-container-low transition-colors"
                       >
-                        <div className="flex items-center space-x-3">
-                          <div className="flex-shrink-0">
-                            {user.avatar_url ? (
-                              <img
-                                src={user.avatar_url}
-                                alt={user.username}
-                                className="h-8 w-8 rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="h-8 w-8 rounded-full bg-surface-container-low flex items-center justify-center">
-                                <span className="text-primary text-sm font-medium">
-                                  {user.first_name?.[0] || user.username[0].toUpperCase()}
-                                </span>
-                              </div>
+                        <div className="flex-shrink-0">
+                          {user.avatar_url ? (
+                            <img
+                              src={user.avatar_url}
+                              alt={user.username}
+                              className="h-8 w-8 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-8 w-8 rounded-full bg-surface-container-low flex items-center justify-center">
+                              <span className="text-primary text-sm font-medium">
+                                {user.first_name?.[0] || user.username[0].toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-on-surface truncate">
+                            {highlightMatch(
+                              user.first_name && user.last_name
+                                ? `${user.first_name} ${user.last_name}`
+                                : user.username,
+                              query
                             )}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-on-surface truncate">
-                              {highlightMatch(
-                                user.first_name && user.last_name
-                                  ? `${user.first_name} ${user.last_name}`
-                                  : user.username,
-                                query
-                              )}
-                            </div>
-                            <div className="text-xs text-outline truncate">
-                              @{highlightMatch(user.username, query)}
-                            </div>
-                            {user.bio && (
-                              <div className="text-xs text-on-surface-variant truncate mt-1">
-                                {highlightMatch(truncateText(user.bio, 50), query)}
-                              </div>
-                            )}
+                          <div className="text-xs text-outline truncate">
+                            @{highlightMatch(user.username, query)}
                           </div>
                         </div>
                       </Link>
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </div>

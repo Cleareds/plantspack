@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type PostCategory = 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+export type PostCategory = 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general' | 'hotel' | 'organisation'
 
 export interface CategoryInfo {
   slug: PostCategory
@@ -117,7 +117,7 @@ export interface Database {
           user_id: string
           content: string
           privacy: 'public' | 'friends'
-          category: 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+          category: PostCategory
           secondary_tags: string[] | null
           recipe_data: Json | null
           event_data: Json | null
@@ -137,7 +137,7 @@ export interface Database {
           user_id: string
           content: string
           privacy?: 'public' | 'friends'
-          category?: 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+          category?: PostCategory
           secondary_tags?: string[] | null
           recipe_data?: Json | null
           event_data?: Json | null
@@ -157,7 +157,7 @@ export interface Database {
           user_id?: string
           content?: string
           privacy?: 'public' | 'friends'
-          category?: 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general'
+          category?: PostCategory
           secondary_tags?: string[] | null
           recipe_data?: Json | null
           event_data?: Json | null
@@ -244,7 +244,7 @@ export interface Database {
           id: string
           name: string
           description: string | null
-          category: 'restaurant' | 'event' | 'museum' | 'other'
+          category: 'eat' | 'hotel' | 'event' | 'museum' | 'organisation' | 'other'
           latitude: number
           longitude: number
           address: string
@@ -267,7 +267,7 @@ export interface Database {
           id?: string
           name: string
           description?: string | null
-          category: 'restaurant' | 'event' | 'museum' | 'other'
+          category: 'eat' | 'hotel' | 'event' | 'museum' | 'organisation' | 'other'
           latitude: number
           longitude: number
           address: string
@@ -290,7 +290,7 @@ export interface Database {
           id?: string
           name?: string
           description?: string | null
-          category?: 'restaurant' | 'event' | 'museum' | 'other'
+          category?: 'eat' | 'hotel' | 'event' | 'museum' | 'organisation' | 'other'
           latitude?: number
           longitude?: number
           address?: string
