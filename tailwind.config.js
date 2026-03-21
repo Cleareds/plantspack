@@ -23,7 +23,7 @@ module.exports = {
         'primary-container': '#9df898',
         // Secondary
         secondary: '#72554b',
-        'secondary-container': '#f6cfc2',
+        'secondary-container': '#ff9473',
         // Tertiary
         tertiary: '#a83206',
         'tertiary-container': '#ff9473',

@@ -7,7 +7,6 @@ import MapPlaceCard from './MapPlaceCard'
 interface MapDiscoveryPanelProps {
   places: PlaceWithDistance[]
   totalFiltered: number
-  searchRadius: number
   customCenter: [number, number] | null
   user: { id: string } | null
   isOpen: boolean
@@ -21,7 +20,6 @@ interface MapDiscoveryPanelProps {
 export default function MapDiscoveryPanel({
   places,
   totalFiltered,
-  searchRadius,
   customCenter,
   user,
   isOpen,
@@ -70,7 +68,7 @@ export default function MapDiscoveryPanel({
 
         <div className="p-4 pt-14 lg:pt-4">
           <h2 className="text-lg font-medium text-on-surface mb-1">
-            Places within {searchRadius}km
+            Nearby Places
           </h2>
           {customCenter && (
             <p className="text-xs text-primary mb-3 font-medium">
@@ -87,11 +85,11 @@ export default function MapDiscoveryPanel({
             <div className="text-center py-12">
               <MapPin className="h-12 w-12 text-outline mx-auto mb-3" />
               <p className="text-outline text-sm">
-                No places found within {searchRadius}km radius.
+                No places found nearby.
               </p>
               {user && (
                 <p className="text-outline text-xs mt-2">
-                  Click on the map to change search center or increase radius!
+                  Click on the map to change search center!
                 </p>
               )}
             </div>

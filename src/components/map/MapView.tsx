@@ -11,7 +11,7 @@ const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mo
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
-const Circle = dynamic(() => import('react-leaflet').then(mod => mod.Circle), { ssr: false })
+// Circle removed — no longer showing radius
 
 const MapClickHandler = dynamic(() =>
   import('react-leaflet').then(mod => {
@@ -33,8 +33,6 @@ interface MapViewProps {
   places: PlaceWithDistance[]
   userLocation: [number, number] | null
   mapCenter: [number, number]
-  searchRadius: number
-  searchCenter: [number, number] | null
   customCenter: [number, number] | null
   onMapClick: (latlng: [number, number]) => void
   onResetCenter: () => void
@@ -51,8 +49,6 @@ export default function MapView({
   places,
   userLocation,
   mapCenter,
-  searchRadius,
-  searchCenter,
   customCenter,
   onMapClick,
   onResetCenter,
@@ -80,28 +76,13 @@ export default function MapView({
 
         <MapClickHandler onMapClick={onMapClick} />
 
-        {/* Search radius circle */}
-        {searchCenter && (
-          <Circle
-            center={searchCenter}
-            radius={searchRadius * 1000}
-            pathOptions={{
-              color: '#10b981',
-              fillColor: '#10b981',
-              fillOpacity: 0.1,
-              weight: 2,
-              dashArray: '5, 5'
-            }}
-          />
-        )}
-
         {/* Custom search center marker */}
         {customCenter && leafletIcon && (
           <Marker position={customCenter} icon={leafletIcon}>
             <Popup>
               <div className="p-2">
                 <h3 className="font-semibold text-primary">Search Center</h3>
-                <p className="text-sm text-on-surface-variant">Places within {searchRadius}km of this point</p>
+                <p className="text-sm text-on-surface-variant">Showing nearby places from this point</p>
                 <button
                   onClick={onResetCenter}
                   className="mt-2 text-xs bg-surface-container-low hover:bg-surface-container px-2 py-1 rounded"

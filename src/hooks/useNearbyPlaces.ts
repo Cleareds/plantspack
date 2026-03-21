@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { supabase, Tables } from '@/lib/supabase'
 
 type Place = Tables<'places'> & {
@@ -13,7 +13,6 @@ export type PlaceWithDistance = Place & { distance: number }
 interface UseNearbyPlacesOptions {
   lat: number | null
   lng: number | null
-  radius_km: number
   category: string
   limit?: number
 }
@@ -31,95 +30,118 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
   return R * c
 }
 
-export function useNearbyPlaces({ lat, lng, radius_km, category, limit = 20 }: UseNearbyPlacesOptions) {
-  const [allPlaces, setAllPlaces] = useState<Place[]>([])
+export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPlacesOptions) {
+  const [places, setPlaces] = useState<PlaceWithDistance[]>([])
   const [loading, setLoading] = useState(true)
-  const [visibleCount, setVisibleCount] = useState(limit)
+  const [hasMore, setHasMore] = useState(true)
+  const [offset, setOffset] = useState(0)
 
-  const fetchPlaces = useCallback(async () => {
+  const fetchPlaces = useCallback(async (loadMore = false) => {
+    if (lat == null || lng == null) return
+
     try {
-      setLoading(true)
-
-      let query = supabase
-        .from('places')
-        .select(`
-          *,
-          users (
-            id,
-            username,
-            first_name,
-            last_name
-          ),
-          favorite_places (
-            id,
-            user_id
-          )
-        `)
-        .order('created_at', { ascending: false })
-
-      if (category !== 'all') {
-        query = query.eq('category', category)
+      if (!loadMore) {
+        setLoading(true)
+        setOffset(0)
       }
 
-      const { data: placesData, error } = await query
+      const currentOffset = loadMore ? offset : 0
 
-      if (error) throw error
-      setAllPlaces(placesData || [])
+      // Use PostGIS RPC for server-side proximity sorting + pagination
+      const { data: rpcData, error: rpcError } = await supabase
+        .rpc('nearby_places', {
+          lat,
+          lng,
+          lim: limit,
+          off_set: currentOffset,
+          cat: category,
+        })
+
+      if (rpcError) throw rpcError
+
+      const rawPlaces = rpcData || []
+
+      // Fetch related data (users + favorites) for these places
+      let enrichedPlaces: PlaceWithDistance[] = []
+      if (rawPlaces.length > 0) {
+        const placeIds = rawPlaces.map((p: any) => p.id)
+
+        const { data: fullPlaces } = await supabase
+          .from('places')
+          .select(`
+            *,
+            users (id, username, first_name, last_name),
+            favorite_places (id, user_id)
+          `)
+          .in('id', placeIds)
+
+        // Preserve RPC order (sorted by distance) and add distance
+        const fullMap = new Map((fullPlaces || []).map(p => [p.id, p]))
+        enrichedPlaces = rawPlaces
+          .map((rpcPlace: any) => {
+            const full = fullMap.get(rpcPlace.id)
+            if (!full) return null
+            return {
+              ...full,
+              distance: calculateDistance(lat, lng, full.latitude, full.longitude),
+            }
+          })
+          .filter(Boolean) as PlaceWithDistance[]
+      }
+
+      if (loadMore) {
+        setPlaces(prev => [...prev, ...enrichedPlaces])
+      } else {
+        setPlaces(enrichedPlaces)
+      }
+
+      setHasMore(rawPlaces.length === limit)
+      setOffset(currentOffset + rawPlaces.length)
     } catch (error) {
-      console.error('Error fetching places:', error)
+      console.error('Error fetching nearby places:', error)
+      if (!loadMore) setPlaces([])
     } finally {
       setLoading(false)
     }
-  }, [category])
+  }, [lat, lng, category, limit, offset])
 
-  // Compute places sorted by distance from center, filtered by radius
-  const placesWithDistance: PlaceWithDistance[] = useMemo(() => {
-    if (lat == null || lng == null) return []
-
-    const mapped = allPlaces.map(place => ({
-      ...place,
-      distance: calculateDistance(lat, lng, place.latitude, place.longitude)
-    }))
-
-    return mapped
-      .filter(p => p.distance <= radius_km)
-      .sort((a, b) => a.distance - b.distance)
-  }, [allPlaces, lat, lng, radius_km])
-
-  // Paginated slice
-  const places = useMemo(() => {
-    return placesWithDistance.slice(0, visibleCount)
-  }, [placesWithDistance, visibleCount])
-
-  const hasMore = visibleCount < placesWithDistance.length
+  // Initial fetch + refetch when center or category changes
+  useEffect(() => {
+    if (lat != null && lng != null) {
+      fetchPlaces(false)
+    }
+  }, [lat, lng, category]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadMore = useCallback(() => {
-    setVisibleCount(prev => prev + limit)
-  }, [limit])
+    fetchPlaces(true)
+  }, [fetchPlaces])
 
   const refetch = useCallback(() => {
-    setVisibleCount(limit)
-    fetchPlaces()
-  }, [fetchPlaces, limit])
+    fetchPlaces(false)
+  }, [fetchPlaces])
 
   // Add a single place to local state without refetching
   const addPlaceLocally = useCallback((place: Place) => {
-    setAllPlaces(prev => [place, ...prev])
-  }, [])
-
-  // Reset visible count when radius/category changes
-  useEffect(() => {
-    setVisibleCount(limit)
-  }, [radius_km, category, limit])
+    if (lat == null || lng == null) return
+    const placeWithDist: PlaceWithDistance = {
+      ...place,
+      distance: calculateDistance(lat, lng, place.latitude, place.longitude),
+    }
+    setPlaces(prev => {
+      const updated = [placeWithDist, ...prev]
+      updated.sort((a, b) => a.distance - b.distance)
+      return updated
+    })
+  }, [lat, lng])
 
   return {
     places,
-    allFiltered: placesWithDistance,
+    allFiltered: places, // For backward compat with MapView markers
     loading,
     hasMore,
     loadMore,
     refetch,
-    fetchPlaces,
+    fetchPlaces: () => fetchPlaces(false),
     addPlaceLocally,
   }
 }

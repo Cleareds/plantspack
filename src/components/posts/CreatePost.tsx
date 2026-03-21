@@ -22,7 +22,19 @@ import {
     extractMentions,
     resolveUsernames,
 } from '@/lib/hashtags'
+import AddressSearch from '../ui/AddressSearch'
 import type { PostCategory, RecipeData, EventData, ProductData } from '@/lib/database.types'
+
+interface PlaceData {
+    name: string
+    category: string
+    address: string
+    latitude: number
+    longitude: number
+    description: string
+    website: string
+    is_pet_friendly: boolean
+}
 
 interface CreatePostProps {
     onPostCreated: () => void
@@ -56,6 +68,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     const [recipeData, setRecipeData] = useState<Partial<RecipeData>>(() => loadDraft()?.recipeData || {})
     const [eventData, setEventData] = useState<Partial<EventData>>(() => loadDraft()?.eventData || {})
     const [productData, setProductData] = useState<Partial<ProductData>>(() => loadDraft()?.productData || {})
+    const [placeData, setPlaceData] = useState<PlaceData>(() => loadDraft()?.placeData || {
+        name: '', category: 'eat', address: '', latitude: 0, longitude: 0,
+        description: '', website: '', is_pet_friendly: false,
+    })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -412,6 +428,20 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 postData.product_data = productData
             }
 
+            // Validate place data when category is place
+            if (category === 'place') {
+                if (!placeData.name.trim()) {
+                    setError('Please enter a place name')
+                    setLoading(false)
+                    return
+                }
+                if (!placeData.latitude || !placeData.longitude) {
+                    setError('Please select an address for the place')
+                    setLoading(false)
+                    return
+                }
+            }
+
             // Add location data if user chose to share
             if (shareLocation && locationData) {
                 if (locationData.city) postData.location_city = locationData.city
@@ -454,6 +484,26 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
             if (!createdPost) {
                 throw new Error('Post created but ID not returned')
+            }
+
+            // Create place in places table when category is place
+            if (category === 'place' && placeData.latitude && placeData.longitude) {
+                try {
+                    await supabase.from('places').insert({
+                        name: placeData.name.trim(),
+                        category: placeData.category,
+                        address: placeData.address,
+                        latitude: placeData.latitude,
+                        longitude: placeData.longitude,
+                        description: placeData.description.trim() || null,
+                        website: placeData.website.trim() || null,
+                        is_pet_friendly: placeData.is_pet_friendly,
+                        created_by: user.id,
+                    })
+                } catch (placeError) {
+                    console.error('Error creating place:', placeError)
+                    // Don't fail the post creation if place insert fails
+                }
             }
 
             // Process hashtags via API endpoint (uses service role)
@@ -515,6 +565,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             setRecipeData({})
             setEventData({})
             setProductData({})
+            setPlaceData({ name: '', category: 'eat', address: '', latitude: 0, longitude: 0, description: '', website: '', is_pet_friendly: false })
             setImageUrls([])
             setVideoUrls([])
             setShowImageUploader(false)
@@ -759,6 +810,66 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                               <input type="text" value={productData.price_range || ''} onChange={(e) => setProductData(prev => ({ ...prev, price_range: e.target.value }))} placeholder="Price range (e.g. $5-10)" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
                               <input type="text" value={productData.where_to_buy || ''} onChange={(e) => setProductData(prev => ({ ...prev, where_to_buy: e.target.value }))} placeholder="Where to buy" className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
                             </div>
+                          </div>
+                        )}
+
+                        {category === 'place' && (
+                          <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                            <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Place Details</p>
+                            <input
+                              type="text"
+                              value={placeData.name}
+                              onChange={(e) => setPlaceData(prev => ({ ...prev, name: e.target.value }))}
+                              placeholder="Place name *"
+                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                            />
+                            <select
+                              value={placeData.category}
+                              onChange={(e) => setPlaceData(prev => ({ ...prev, category: e.target.value }))}
+                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                            >
+                              <option value="eat">Eat</option>
+                              <option value="hotel">Hotel</option>
+                              <option value="event">Event</option>
+                              <option value="museum">Museum</option>
+                              <option value="organisation">Organisation</option>
+                              <option value="other">Other</option>
+                            </select>
+                            <AddressSearch
+                              value=""
+                              selectedAddress={placeData.address}
+                              onSelect={(result) => setPlaceData(prev => ({
+                                ...prev,
+                                address: result.address,
+                                latitude: result.latitude,
+                                longitude: result.longitude,
+                              }))}
+                              placeholder="Search address *"
+                              required
+                            />
+                            <textarea
+                              value={placeData.description}
+                              onChange={(e) => setPlaceData(prev => ({ ...prev, description: e.target.value }))}
+                              placeholder="Description (optional)"
+                              rows={2}
+                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                            />
+                            <input
+                              type="url"
+                              value={placeData.website}
+                              onChange={(e) => setPlaceData(prev => ({ ...prev, website: e.target.value }))}
+                              placeholder="Website (optional)"
+                              className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                            />
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={placeData.is_pet_friendly}
+                                onChange={(e) => setPlaceData(prev => ({ ...prev, is_pet_friendly: e.target.checked }))}
+                                className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
+                              />
+                              <span className="text-sm text-on-surface-variant">Pet Friendly</span>
+                            </label>
                           </div>
                         )}
 

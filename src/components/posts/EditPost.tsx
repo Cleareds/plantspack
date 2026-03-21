@@ -399,6 +399,13 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                   </div>
                 )}
 
+                {category === 'place' && (
+                  <div className="mt-3 p-3 bg-surface-container-low rounded-lg">
+                    <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider mb-2">Place Details</p>
+                    <p className="text-xs text-on-surface-variant">Place details can be edited from the map page.</p>
+                  </div>
+                )}
+
                 {/* Existing Images Preview */}
                 {imageUrls.length > 0 && (
                   <div className="mt-3">

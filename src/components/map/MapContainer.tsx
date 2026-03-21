@@ -27,15 +27,13 @@ export default function MapContainerComponent() {
   // Persisted map state
   const [mapState, setMapState] = usePageState({
     key: 'map_state',
-    defaultValue: { selectedCategory: 'all', searchRadius: 50, customCenter: null as [number, number] | null },
+    defaultValue: { selectedCategory: 'all', customCenter: null as [number, number] | null },
     userId: user?.id,
     ttl: 60 * 60 * 1000,
   })
   const selectedCategory = mapState.selectedCategory
-  const searchRadius = mapState.searchRadius
   const customCenter = mapState.customCenter
   const setSelectedCategory = useCallback((c: string) => setMapState(prev => ({ ...prev, selectedCategory: c })), [setMapState])
-  const setSearchRadius = useCallback((r: number) => setMapState(prev => ({ ...prev, searchRadius: r })), [setMapState])
   const setCustomCenter = useCallback((c: [number, number] | null) => setMapState(prev => ({ ...prev, customCenter: c })), [setMapState])
 
   // Location state
@@ -58,7 +56,6 @@ export default function MapContainerComponent() {
   } = useNearbyPlaces({
     lat: searchCenter?.[0] ?? null,
     lng: searchCenter?.[1] ?? null,
-    radius_km: searchRadius,
     category: selectedCategory,
     limit: 20,
   })
@@ -467,23 +464,6 @@ export default function MapContainerComponent() {
               <h1 className="text-xl font-semibold text-on-surface">Vegan Places</h1>
               <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} />
 
-              {/* Radius Selector */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-on-surface-variant">Radius:</span>
-                <select
-                  value={searchRadius}
-                  onChange={(e) => setSearchRadius(Number(e.target.value))}
-                  className="ghost-border rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                >
-                  <option value={5}>5km</option>
-                  <option value={10}>10km</option>
-                  <option value={25}>25km</option>
-                  <option value={50}>50km</option>
-                  <option value={100}>100km</option>
-                  <option value={200}>200km</option>
-                </select>
-              </div>
-
               {/* Reset Center Button */}
               {customCenter && (
                 <button
@@ -526,21 +506,6 @@ export default function MapContainerComponent() {
           <div className="lg:hidden space-y-3">
             <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} />
 
-            <div className="flex items-center gap-2">
-              <select
-                value={searchRadius}
-                onChange={(e) => setSearchRadius(Number(e.target.value))}
-                className="ghost-border rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
-              >
-                <option value={5}>5km</option>
-                <option value={10}>10km</option>
-                <option value={25}>25km</option>
-                <option value={50}>50km</option>
-                <option value={100}>100km</option>
-                <option value={200}>200km</option>
-              </select>
-            </div>
-
             {/* Mobile Search Bar */}
             <MapSearchBar
               value={searchQuery}
@@ -558,8 +523,6 @@ export default function MapContainerComponent() {
           places={filteredPlaces}
           userLocation={userLocation}
           mapCenter={mapCenter}
-          searchRadius={searchRadius}
-          searchCenter={searchCenter}
           customCenter={customCenter}
           onMapClick={handleMapClick}
           onResetCenter={() => setCustomCenter(null)}
@@ -591,7 +554,7 @@ export default function MapContainerComponent() {
         {/* Map Instructions */}
         <div className="absolute top-4 left-4 z-30 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg p-3 editorial-shadow ghost-border max-w-xs hidden md:block">
           <p className="text-xs text-on-surface-variant">
-            <strong>Tip:</strong> Click anywhere on the map to set a new search center and find places within your selected radius.
+            <strong>Tip:</strong> Click anywhere on the map to set a new search center.
           </p>
         </div>
 
@@ -599,7 +562,6 @@ export default function MapContainerComponent() {
         <MapDiscoveryPanel
           places={sidebarPlaces}
           totalFiltered={filteredPlaces.length}
-          searchRadius={searchRadius}
           customCenter={customCenter}
           user={user}
           isOpen={sidebarOpen}
