@@ -29,9 +29,10 @@ const POSTS_PER_PAGE = 10
 interface FeedProps {
     onPostCreated?: () => void
     category?: string
+    excludeCategories?: string[]
 }
 
-export default function Feed({onPostCreated, category}: FeedProps) {
+export default function Feed({onPostCreated, category, excludeCategories}: FeedProps) {
     const [posts, setPosts] = useState<Post[]>([])
     const [loading, setLoading] = useState(true)
     const [loadingMore, setLoadingMore] = useState(false)
@@ -239,7 +240,8 @@ export default function Feed({onPostCreated, category}: FeedProps) {
                     offset: currentOffset,
                     userId: user?.id,
                     includeAnalytics: true,
-                    category: category || 'all'
+                    category: category || 'all',
+                    excludeCategories,
                 })
 
                 // Bulk load reactions and follows for performance (prevents N+1 queries)
@@ -323,6 +325,10 @@ export default function Feed({onPostCreated, category}: FeedProps) {
                 // Apply category filter
                 if (category && category !== 'all') {
                     query = query.eq('category', category)
+                } else if (excludeCategories && excludeCategories.length > 0) {
+                    for (const ec of excludeCategories) {
+                        query = query.neq('category', ec)
+                    }
                 }
 
                 // Apply sorting
@@ -388,7 +394,8 @@ export default function Feed({onPostCreated, category}: FeedProps) {
                 offset: currentOffset,
                 userId: undefined,
                 includeAnalytics: true,
-                category: category || 'all'
+                category: category || 'all',
+                excludeCategories,
             })
 
             // Bulk load reactions and follows for performance (prevents N+1 queries)

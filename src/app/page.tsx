@@ -125,7 +125,6 @@ function HomeContent() {
                     setActiveCategory(cat)
                     setRefreshKey(prev => prev + 1)
                   }}
-                  userCategories={userCategories.length > 0 ? userCategories : undefined}
                 />
               </div>
 

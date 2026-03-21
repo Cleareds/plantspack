@@ -46,13 +46,14 @@ export interface FeedOptions {
   userId?: string
   includeAnalytics?: boolean
   category?: string
+  excludeCategories?: string[]
 }
 
 /**
  * Fetches posts with intelligent sorting and ranking
  */
 export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
-  const { sortBy, limit = 10, offset = 0, userId, category } = options
+  const { sortBy, limit = 10, offset = 0, userId, category, excludeCategories } = options
 
   try {
     let query = supabase
@@ -102,13 +103,17 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
     // Apply category filter
     if (category && category !== 'all') {
       query = query.eq('category', category)
+    } else if (excludeCategories && excludeCategories.length > 0) {
+      for (const ec of excludeCategories) {
+        query = query.neq('category', ec)
+      }
     }
 
     // Apply sorting based on selected option
     switch (sortBy) {
       case 'relevancy':
         if (userId) {
-          return await getRelevancyRankedPosts(userId, limit, offset, category)
+          return await getRelevancyRankedPosts(userId, limit, offset, category, excludeCategories)
         } else {
           query = query.order('engagement_score', { ascending: false })
         }
@@ -119,10 +124,10 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
         break
 
       case 'liked_week':
-        return await getPopularPosts(limit, offset, category)
+        return await getPopularPosts(limit, offset, category, excludeCategories)
 
       case 'liked_all_time':
-        return await getMostLikedAllTime(limit, offset, category)
+        return await getMostLikedAllTime(limit, offset, category, excludeCategories)
 
       default:
         query = query.order('created_at', { ascending: false })
@@ -142,7 +147,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
 /**
  * Gets posts ranked by AI relevancy algorithm
  */
-async function getRelevancyRankedPosts(userId: string, limit: number, offset: number, category?: string): Promise<FeedPost[]> {
+async function getRelevancyRankedPosts(userId: string, limit: number, offset: number, category?: string, excludeCategories?: string[]): Promise<FeedPost[]> {
   try {
     // For first page, fetch extra posts for better ranking
     // For subsequent pages, use direct offset-based pagination
@@ -198,6 +203,10 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
 
     if (category && category !== 'all') {
       query = query.eq('category', category)
+    } else if (excludeCategories && excludeCategories.length > 0) {
+      for (const ec of excludeCategories) {
+        query = query.neq('category', ec)
+      }
     }
 
     const { data: posts, error } = await query.range(fetchOffset, fetchOffset + fetchLimit - 1)
@@ -480,7 +489,7 @@ function getTotalReactions(post: any): number {
 /**
  * Gets most liked posts from the past week, sorted by actual like count
  */
-async function getPopularPosts(limit: number, offset: number, category?: string): Promise<FeedPost[]> {
+async function getPopularPosts(limit: number, offset: number, category?: string, excludeCategories?: string[]): Promise<FeedPost[]> {
   const startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   const fetchSize = Math.max(50, (offset + limit) * 3)
 
@@ -496,6 +505,10 @@ async function getPopularPosts(limit: number, offset: number, category?: string)
 
     if (category && category !== 'all') {
       query = query.eq('category', category)
+    } else if (excludeCategories && excludeCategories.length > 0) {
+      for (const ec of excludeCategories) {
+        query = query.neq('category', ec)
+      }
     }
 
     const { data, error } = await query.range(0, fetchSize - 1)
@@ -518,7 +531,7 @@ async function getPopularPosts(limit: number, offset: number, category?: string)
 /**
  * Gets most liked posts of all time, sorted by actual like count (no time decay)
  */
-async function getMostLikedAllTime(limit: number, offset: number, category?: string): Promise<FeedPost[]> {
+async function getMostLikedAllTime(limit: number, offset: number, category?: string, excludeCategories?: string[]): Promise<FeedPost[]> {
   const fetchSize = Math.max(50, (offset + limit) * 3)
 
   try {
@@ -532,6 +545,10 @@ async function getMostLikedAllTime(limit: number, offset: number, category?: str
 
     if (category && category !== 'all') {
       query = query.eq('category', category)
+    } else if (excludeCategories && excludeCategories.length > 0) {
+      for (const ec of excludeCategories) {
+        query = query.neq('category', ec)
+      }
     }
 
     const { data, error } = await query.range(0, fetchSize - 1)
