@@ -90,6 +90,9 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
             avatar_url,
             subscription_tier
           )
+        ),
+        place:place_id (
+          id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
       .eq('privacy', 'public') // Only public posts for main feed
@@ -183,6 +186,9 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
             avatar_url,
             subscription_tier
           )
+        ),
+        place:place_id (
+          id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
       .eq('privacy', 'public')
@@ -461,6 +467,9 @@ const POPULAR_SELECT = `
       avatar_url,
       subscription_tier
     )
+  ),
+  place:place_id (
+    id, name, address, category, images, average_rating, is_pet_friendly, website
   )
 `
 

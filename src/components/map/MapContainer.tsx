@@ -305,6 +305,20 @@ export default function MapContainerComponent() {
       setAddressSearchResults([])
       setShowAddressSearchResults(false)
 
+      // Auto-create a linked post for the new place
+      try {
+        await supabase.from('posts').insert({
+          user_id: user.id,
+          content: newPlace.description || `Check out ${newPlace.name}`,
+          category: 'place',
+          place_id: insertedPlace.id,
+          images: placeImages.length > 0 ? placeImages : [],
+          privacy: 'public',
+        })
+      } catch (postError) {
+        console.error('Error auto-creating post for place:', postError)
+      }
+
       addPlaceLocally(insertedPlace as Place)
       setCustomCenter(null)
       setMapCenter(addedCoords)

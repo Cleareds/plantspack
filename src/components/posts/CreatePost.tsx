@@ -442,6 +442,36 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 }
             }
 
+            // Insert place FIRST when category is place, so we can link it to the post
+            if (category === 'place' && placeData.latitude && placeData.longitude) {
+                try {
+                    const { data: insertedPlace, error: placeError } = await supabase
+                        .from('places')
+                        .insert({
+                            name: placeData.name.trim(),
+                            category: placeData.category,
+                            address: placeData.address,
+                            latitude: placeData.latitude,
+                            longitude: placeData.longitude,
+                            description: placeData.description.trim() || null,
+                            website: placeData.website.trim() || null,
+                            is_pet_friendly: placeData.is_pet_friendly,
+                            images: imageUrls.length > 0 ? imageUrls : [],
+                            created_by: user.id,
+                        })
+                        .select('id')
+                        .single()
+
+                    if (placeError) {
+                        console.error('Error creating place:', placeError)
+                    } else if (insertedPlace) {
+                        postData.place_id = insertedPlace.id
+                    }
+                } catch (placeError) {
+                    console.error('Error creating place:', placeError)
+                }
+            }
+
             // Add location data if user chose to share
             if (shareLocation && locationData) {
                 if (locationData.city) postData.location_city = locationData.city
@@ -484,27 +514,6 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
             if (!createdPost) {
                 throw new Error('Post created but ID not returned')
-            }
-
-            // Create place in places table when category is place
-            if (category === 'place' && placeData.latitude && placeData.longitude) {
-                try {
-                    await supabase.from('places').insert({
-                        name: placeData.name.trim(),
-                        category: placeData.category,
-                        address: placeData.address,
-                        latitude: placeData.latitude,
-                        longitude: placeData.longitude,
-                        description: placeData.description.trim() || null,
-                        website: placeData.website.trim() || null,
-                        is_pet_friendly: placeData.is_pet_friendly,
-                        images: imageUrls.length > 0 ? imageUrls : [],
-                        created_by: user.id,
-                    })
-                } catch (placeError) {
-                    console.error('Error creating place:', placeError)
-                    // Don't fail the post creation if place insert fails
-                }
             }
 
             // Process hashtags via API endpoint (uses service role)

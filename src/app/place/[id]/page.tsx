@@ -8,6 +8,7 @@ import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import PlaceReviews from '@/components/places/PlaceReviews'
 import PlaceMap from '@/components/places/PlaceMap'
 import FavoriteButton from '@/components/social/FavoriteButton'
+import ImageSlider from '@/components/ui/ImageSlider'
 import AddToPackButton from '@/components/places/AddToPackButton'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import { formatDistanceToNow } from 'date-fns'
@@ -24,6 +25,7 @@ type PlaceData = {
   is_pet_friendly: boolean
   latitude: number
   longitude: number
+  images: string[]
   tags: string[]
   opening_hours: Record<string, string> | null
   event_time: { start: string; end: string } | null
@@ -184,6 +186,13 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               </div>
             </div>
           </div>
+
+          {/* Image Gallery */}
+          {place.images?.length > 0 && (
+            <div className="p-6 border-b border-outline-variant/15">
+              <ImageSlider images={place.images} />
+            </div>
+          )}
 
           {/* Details */}
           <div className="p-6 space-y-4 border-b border-outline-variant/15">

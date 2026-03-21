@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { MessageCircle, Share, MoreHorizontal, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin } from 'lucide-react'
+import { MessageCircle, Share, MoreHorizontal, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin, Star, Clock, ChefHat, Users, Ticket, Calendar } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
@@ -55,6 +55,16 @@ type Post = Tables<'posts'> & {
   recipe_data?: any
   event_data?: any
   product_data?: any
+  place?: {
+    id: string
+    name: string
+    address: string
+    category: string
+    images: string[]
+    average_rating: number
+    is_pet_friendly: boolean
+    website: string | null
+  } | null
 }
 
 interface PostCardProps {
@@ -685,51 +695,101 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
 
             {/* Recipe Card */}
             {post.category === 'recipe' && post.recipe_data && (
-              <div className="mt-3 p-3 bg-primary-container/10 rounded-xl">
-                <div className="flex items-center gap-3 text-xs text-on-surface-variant">
-                  {post.recipe_data.prep_time_min && <span>Prep: {post.recipe_data.prep_time_min}min</span>}
-                  {post.recipe_data.cook_time_min && <span>Cook: {post.recipe_data.cook_time_min}min</span>}
-                  {post.recipe_data.servings && <span>Serves: {post.recipe_data.servings}</span>}
-                  {post.recipe_data.difficulty && <span className="capitalize">{post.recipe_data.difficulty}</span>}
+              <div className="mt-3 bg-primary-container/10 rounded-xl overflow-hidden">
+                <div className="p-3">
+                  <div className="flex items-center gap-4 text-xs text-on-surface-variant">
+                    {post.recipe_data.prep_time_min && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3.5 w-3.5" />
+                        Prep {post.recipe_data.prep_time_min}m
+                      </span>
+                    )}
+                    {post.recipe_data.cook_time_min && (
+                      <span className="flex items-center gap-1">
+                        <ChefHat className="h-3.5 w-3.5" />
+                        Cook {post.recipe_data.cook_time_min}m
+                      </span>
+                    )}
+                    {post.recipe_data.servings && (
+                      <span className="flex items-center gap-1">
+                        <Users className="h-3.5 w-3.5" />
+                        {post.recipe_data.servings}
+                      </span>
+                    )}
+                    {post.recipe_data.difficulty && (
+                      <span className="capitalize px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">
+                        {post.recipe_data.difficulty}
+                      </span>
+                    )}
+                  </div>
+                  {post.recipe_data.ingredients?.length > 0 && (
+                    <details className="mt-2">
+                      <summary className="text-xs font-medium text-primary cursor-pointer">
+                        {post.recipe_data.ingredients.length} ingredients
+                      </summary>
+                      <ul className="mt-1 text-xs text-on-surface-variant space-y-0.5 list-disc list-inside">
+                        {post.recipe_data.ingredients.map((ing: string, i: number) => (
+                          <li key={i}>{ing}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                  <Link
+                    href={`/recipe/${post.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                  >
+                    View full recipe <ExternalLink className="h-3 w-3" />
+                  </Link>
                 </div>
-                {post.recipe_data.ingredients?.length > 0 && (
-                  <details className="mt-2">
-                    <summary className="text-xs font-medium text-primary cursor-pointer">
-                      {post.recipe_data.ingredients.length} ingredients
-                    </summary>
-                    <ul className="mt-1 text-xs text-on-surface-variant space-y-0.5 list-disc list-inside">
-                      {post.recipe_data.ingredients.map((ing: string, i: number) => (
-                        <li key={i}>{ing}</li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
               </div>
             )}
 
             {/* Event Card */}
             {post.category === 'event' && post.event_data && (
-              <div className="mt-3 p-3 bg-tertiary-container/10 rounded-xl">
-                <div className="flex flex-col gap-1 text-xs text-on-surface-variant">
-                  {post.event_data.start_time && (
-                    <span className="flex items-center gap-1">
-                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
-                      {new Date(post.event_data.start_time).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      {post.event_data.end_time && ` - ${new Date(post.event_data.end_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`}
-                    </span>
-                  )}
-                  {post.event_data.location && (
-                    <span className="flex items-center gap-1">
-                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>location_on</span>
-                      {post.event_data.location}
-                    </span>
-                  )}
-                  {post.event_data.ticket_url && (
-                    <a href={post.event_data.ticket_url} target="_blank" rel="noopener noreferrer" className="text-tertiary hover:underline flex items-center gap-1">
-                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>confirmation_number</span>
-                      Get tickets
-                    </a>
-                  )}
+              <div className="mt-3 bg-tertiary-container/10 rounded-xl overflow-hidden">
+                <div className="p-3">
+                  <div className="flex flex-col gap-2">
+                    {post.event_data.start_time && (
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-tertiary" />
+                        <span className="text-sm font-medium text-on-surface">
+                          {new Date(post.event_data.start_time).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+                        </span>
+                        <span className="text-xs text-on-surface-variant">
+                          {new Date(post.event_data.start_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                          {post.event_data.end_time && ` – ${new Date(post.event_data.end_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`}
+                        </span>
+                      </div>
+                    )}
+                    {post.event_data.location && (
+                      <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                        <MapPin className="h-3.5 w-3.5" />
+                        {post.event_data.location}
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 mt-1">
+                      {post.event_data.ticket_url && (
+                        <a
+                          href={post.event_data.ticket_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-tertiary text-on-primary rounded-full text-xs font-medium hover:opacity-90 transition-opacity"
+                        >
+                          <Ticket className="h-3 w-3" />
+                          Get Tickets
+                        </a>
+                      )}
+                      <Link
+                        href={`/event/${post.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-xs font-medium text-tertiary hover:text-tertiary/80 transition-colors"
+                      >
+                        View event details <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -743,6 +803,56 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   {post.product_data.where_to_buy && <span>Buy at: {post.product_data.where_to_buy}</span>}
                 </div>
               </div>
+            )}
+
+            {/* Place Card */}
+            {post.place && (
+              <Link
+                href={`/place/${post.place.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="mt-3 block bg-secondary/5 rounded-xl overflow-hidden hover:bg-secondary/10 transition-colors"
+              >
+                <div className="flex">
+                  {post.place.images?.length > 0 && (
+                    <img
+                      src={post.place.images[0]}
+                      alt={post.place.name}
+                      className="w-24 h-24 object-cover flex-shrink-0"
+                    />
+                  )}
+                  <div className="p-3 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-semibold text-sm text-on-surface truncate">{post.place.name}</h4>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] bg-secondary-container text-on-surface capitalize flex-shrink-0">
+                        {post.place.category}
+                      </span>
+                    </div>
+                    <p className="text-xs text-on-surface-variant truncate mb-1">{post.place.address}</p>
+                    <div className="flex items-center gap-2">
+                      {post.place.average_rating > 0 && (
+                        <div className="flex items-center gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-3 w-3 ${
+                                i < Math.round(post.place!.average_rating)
+                                  ? 'text-yellow-500 fill-yellow-500'
+                                  : 'text-outline'
+                              }`}
+                            />
+                          ))}
+                          <span className="text-[10px] text-on-surface-variant ml-0.5">
+                            {post.place.average_rating.toFixed(1)}
+                          </span>
+                        </div>
+                      )}
+                      {post.place.is_pet_friendly && (
+                        <span className="text-[10px] text-orange-700 bg-orange-100 px-1 py-0.5 rounded">Pet Friendly</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Link>
             )}
           </div>
         </div>

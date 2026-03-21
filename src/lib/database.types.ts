@@ -126,6 +126,7 @@ export interface Database {
           image_url?: string | null
           image_urls?: string[] | null
           video_urls?: string[] | null
+          place_id?: string | null
           parent_post_id?: string | null
           post_type?: 'original' | 'share' | 'quote'
           quote_content?: string | null
@@ -146,6 +147,7 @@ export interface Database {
           image_url?: string | null
           image_urls?: string[] | null
           video_urls?: string[] | null
+          place_id?: string | null
           parent_post_id?: string | null
           post_type?: 'original' | 'share' | 'quote'
           quote_content?: string | null
@@ -166,6 +168,7 @@ export interface Database {
           image_url?: string | null
           image_urls?: string[] | null
           video_urls?: string[] | null
+          place_id?: string | null
           parent_post_id?: string | null
           post_type?: 'original' | 'share' | 'quote'
           quote_content?: string | null

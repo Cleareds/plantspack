@@ -19,6 +19,13 @@ export default function MapPlaceCard({ place, user, onToggleFavorite, onPanToPla
       className="bg-surface-container-lowest rounded-xl p-4 hover:scale-[1.02] transition-all duration-200 cursor-pointer ghost-border editorial-shadow"
       onClick={() => onPanToPlace(place.latitude, place.longitude)}
     >
+      {(place as any).images?.length > 0 && (
+        <img
+          src={(place as any).images[0]}
+          alt={place.name}
+          className="w-full h-24 object-cover rounded-lg mb-2"
+        />
+      )}
       <div className="flex items-start justify-between mb-2">
         <Link
           href={`/place/${place.id}`}

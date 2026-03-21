@@ -43,6 +43,9 @@ export async function GET(
             avatar_url,
             subscription_tier
           )
+        ),
+        place:place_id (
+          id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
       .eq('id', id)

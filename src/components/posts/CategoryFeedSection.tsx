@@ -52,6 +52,9 @@ export default function CategoryFeedSection({ category, userId, onViewAll }: Cat
           parent_post:parent_post_id (
             id, user_id, content, images, image_url, created_at,
             users ( id, username, first_name, last_name, avatar_url, subscription_tier )
+          ),
+          place:place_id (
+            id, name, address, category, images, average_rating, is_pet_friendly, website
           )
         `)
         .eq('privacy', 'public')

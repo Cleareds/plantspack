@@ -71,6 +71,9 @@ export function useSearch(query: string, minLength: number = 3) {
             first_name,
             last_name,
             avatar_url
+          ),
+          place:place_id (
+            id, name, address, category, images, average_rating, is_pet_friendly, website
           )
         `)
         .eq('privacy', 'public')
