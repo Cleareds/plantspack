@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Manrope } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import ClientProviders from "@/components/providers/ClientProviders";
-import ConditionalHeader from "@/components/layout/ConditionalHeader";
-import Footer from "@/components/layout/Footer";
+import AppShell from "@/components/layout/AppShell";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: 'swap',
+  variable: '--font-jakarta',
+  weight: ['400', '500', '600', '700', '800'],
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: 'swap',
+  variable: '--font-manrope',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -37,17 +45,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-surface flex flex-col min-h-screen`}>
+      <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
         <GoogleAnalytics />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>
         <ClientProviders>
-          <ConditionalHeader />
-          <main className="flex-1">
+          <AppShell>
             {children}
-          </main>
-          <Footer />
+          </AppShell>
         </ClientProviders>
       </body>
     </html>

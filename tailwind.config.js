@@ -40,7 +40,7 @@ module.exports = {
         // Inverse
         'inverse-surface': '#27313e',
         'inverse-on-surface': '#eaf1ff',
-        // Keep old green palette temporarily for incremental migration
+        // Keep old green palette temporarily
         green: {
           50: '#f0f7f4',
           100: '#dcede4',
@@ -55,9 +55,19 @@ module.exports = {
           950: '#0e2019',
         },
       },
+      fontFamily: {
+        'headline': ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
+        'body': ['var(--font-manrope)', 'Manrope', 'sans-serif'],
+        'label': ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '2.5rem',
+      },
       boxShadow: {
         'ambient': '0 10px 30px rgba(18, 28, 40, 0.06)',
         'ambient-lg': '0 20px 40px rgba(18, 28, 40, 0.08)',
+        'editorial': '0 32px 64px -16px rgba(0, 107, 44, 0.12)',
       },
       letterSpacing: {
         'editorial': '-0.02em',

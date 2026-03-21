@@ -10,7 +10,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 
 type Props = InputProps | TextareaProps
 
-const baseStyles = 'w-full bg-surface-container-low border-0 rounded-lg px-3 py-2.5 text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/40 ghost-border transition-all'
+const baseStyles = 'w-full h-14 bg-surface-container-low border border-outline-variant/10 rounded-2xl px-6 text-on-surface placeholder:text-outline/60 focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300'
 
 const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
   ({ variant, className = '', ...props }, ref) => {
@@ -18,7 +18,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
       return (
         <textarea
           ref={ref as React.Ref<HTMLTextAreaElement>}
-          className={`${baseStyles} resize-none ${className}`}
+          className={`${baseStyles} h-auto resize-none py-4 ${className}`}
           {...(props as TextareaProps)}
         />
       )

@@ -499,7 +499,7 @@ export default function Feed({onPostCreated}: FeedProps) {
             <div className="max-w-2xl mx-auto px-4">
                 <div className="space-y-4">
                     {[...Array(3)].map((_, i) => (
-                        <div key={i} className="bg-surface-container-lowest rounded-lg editorial-shadow p-4 animate-pulse">
+                        <div key={i} className="bg-surface-container-lowest rounded-2xl editorial-shadow p-4 animate-pulse">
                             <div className="flex space-x-3">
                                 <div className="h-10 w-10 bg-surface-container-high rounded-full"></div>
                                 <div className="flex-1">
@@ -518,11 +518,11 @@ export default function Feed({onPostCreated}: FeedProps) {
     if (error && posts.length === 0) {
         return (
             <div className="max-w-2xl mx-auto px-4">
-                <div className="bg-error/10 ghost-border rounded-lg p-4 text-center">
+                <div className="bg-error/10 rounded-2xl p-4 text-center">
                     <p className="text-error">{error}</p>
                     <button
                         onClick={() => fetchPosts(false)}
-                        className="mt-2 bg-error hover:opacity-90 text-white px-4 py-2 rounded-md font-medium transition-colors"
+                        className="mt-2 bg-error hover:opacity-90 text-white px-4 py-2 rounded-full font-medium transition-colors"
                     >
                         Retry
                     </button>
@@ -534,14 +534,14 @@ export default function Feed({onPostCreated}: FeedProps) {
     return (
         <div className="w-full">
             {/* Feed Controls - Horizontal Layout with Tabs on Left, Sorting on Right */}
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow mb-4 px-2 sm:px-4 py-2 sm:py-2.5">
+            <div className="bg-surface-container-lowest rounded-2xl editorial-shadow mb-4 px-2 sm:px-4 py-2 sm:py-2.5">
                 <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
                     {/* Tabs on the Left - Only for logged in users */}
                     {user && (
                         <div className="flex gap-2">
                             <button
                                 onClick={() => handleTabChange('public')}
-                                className={`px-2 sm:px-4 py-1 sm:py-2 text-sm font-medium rounded-md transition-colors ${
+                                className={`px-2 sm:px-4 py-1 sm:py-2 text-sm font-medium rounded-xl transition-colors ${
                                     activeTab === 'public'
                                         ? 'bg-primary text-on-primary'
                                         : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
@@ -551,7 +551,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                             </button>
                             <button
                                 onClick={() => handleTabChange('friends')}
-                                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                                className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${
                                     activeTab === 'friends'
                                         ? 'bg-primary text-on-primary'
                                         : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
@@ -586,7 +586,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                 <div className="mb-4 sticky top-16 z-30 animate-slide-down">
                     <button
                         onClick={handleLoadNewPosts}
-                        className="w-full silk-gradient hover:opacity-90 text-white px-4 py-3 rounded-lg shadow-md font-medium transition-all flex items-center justify-center space-x-2"
+                        className="w-full silk-gradient hover:opacity-90 text-white px-4 py-3 rounded-xl shadow-md font-medium transition-all flex items-center justify-center space-x-2"
                     >
                         <ArrowUp className="h-5 w-5" />
                         <span>
@@ -597,7 +597,7 @@ export default function Feed({onPostCreated}: FeedProps) {
             )}
 
             {posts.length === 0 && !loading ? (
-                <div className="bg-surface-container-lowest rounded-lg editorial-shadow p-8 text-center">
+                <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-8 text-center">
                     <p className="text-outline mb-4">No posts yet.</p>
                     {!user && (
                         <p className="text-sm text-outline">
@@ -610,7 +610,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                 </div>
             ) : (
                 <>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         {posts
                             .filter(post => !blockedUserIds.includes(post.user_id) && !mutedUserIds.includes(post.user_id))
                             .map((post) => (
@@ -639,7 +639,7 @@ export default function Feed({onPostCreated}: FeedProps) {
                                 ) : (
                                     <button
                                         onClick={loadMorePosts}
-                                        className="px-4 py-2 silk-gradient hover:opacity-90 text-white rounded-md font-medium transition-colors"
+                                        className="px-4 py-2 silk-gradient hover:opacity-90 text-white rounded-full font-medium transition-colors"
                                     >
                                         Load More Posts
                                     </button>
@@ -650,10 +650,9 @@ export default function Feed({onPostCreated}: FeedProps) {
                         {/* End of feed message */}
                         {!hasMore && posts.length > 0 && (
                             <div className="text-center">
-                                <div className="border-t border-outline-variant/15 pt-6">
-                                    <p className="text-outline text-sm mb-2">🌱 You&apos;ve reached the end of the
-                                        feed!</p>
-                                    <p className="text-outline text-xs">
+                                <div className="border-t border-outline-variant/10 pt-6">
+                                    <p className="text-outline/60 text-sm mb-1">You&apos;ve reached the end of the feed</p>
+                                    <p className="text-outline/40 text-xs">
                                         {posts.length} post{posts.length !== 1 ? 's' : ''} loaded
                                     </p>
                                 </div>
@@ -663,11 +662,11 @@ export default function Feed({onPostCreated}: FeedProps) {
 
                     {/* Error loading more posts */}
                     {error && posts.length > 0 && (
-                        <div className="bg-error/10 ghost-border rounded-lg p-4 text-center mt-4">
+                        <div className="bg-error/10 rounded-2xl p-4 text-center mt-4">
                             <p className="text-error text-sm">{error}</p>
                             <button
                                 onClick={loadMorePosts}
-                                className="mt-2 bg-error hover:opacity-90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                                className="mt-2 bg-error hover:opacity-90 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors"
                             >
                                 Try Again
                             </button>
