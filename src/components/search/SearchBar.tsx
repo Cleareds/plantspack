@@ -69,9 +69,9 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
   const showNoResults = query.length >= 3 && !loading && !hasResults && !error
 
   return (
-    <div ref={searchRef} className={`${className}`}>
+    <div ref={searchRef} className={`relative w-full ${className}`}>
       {/* Search Input */}
-      <div>
+      <div className="w-full">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
         <input
           ref={inputRef}
