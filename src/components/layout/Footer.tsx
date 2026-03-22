@@ -15,7 +15,7 @@ export default function Footer() {
             <div className="flex items-center space-x-2 mb-4">
                 <Link href="/" className="flex items-center space-x-3">
                     <Image
-                        src="/plantspack9.png"
+                        src="/plantspack-logo-real.svg"
                         alt="PlantsPack Logo"
                         width={48}
                         height={48}

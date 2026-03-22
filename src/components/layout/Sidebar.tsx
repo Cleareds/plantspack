@@ -22,7 +22,7 @@ export default function Sidebar() {
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 mb-6">
         <Image
-          src="/plantspack9.png"
+          src="/plantspack-logo-real.svg"
           alt="PlantsPack Logo"
           width={40}
           height={40}

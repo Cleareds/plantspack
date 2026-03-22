@@ -18,7 +18,7 @@ export default function TopBar({ bannerOffset }: TopBarProps) {
       {/* Mobile logo (shown only on mobile where sidebar is hidden) */}
       <Link href="/" className="flex items-center gap-2 lg:hidden">
         <Image
-          src="/plantspack9.png"
+          src="/plantspack-logo-real.svg"
           alt="PlantsPack Logo"
           width={36}
           height={36}
