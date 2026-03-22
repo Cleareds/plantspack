@@ -19,17 +19,12 @@ const CATEGORIES: { slug: PostCategory | 'all'; icon: string; label: string }[] 
 interface CategoryTabsProps {
   activeCategory: PostCategory | 'all'
   onCategoryChange: (category: PostCategory | 'all') => void
-  userCategories?: string[]
 }
 
-export default function CategoryTabs({ activeCategory, onCategoryChange, userCategories }: CategoryTabsProps) {
-  const visibleCategories = userCategories
-    ? CATEGORIES.filter(c => c.slug === 'all' || userCategories.includes(c.slug))
-    : CATEGORIES
-
+export default function CategoryTabs({ activeCategory, onCategoryChange }: CategoryTabsProps) {
   return (
     <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
-      {visibleCategories.map((cat) => (
+      {CATEGORIES.map((cat) => (
         <button
           key={cat.slug}
           onClick={() => onCategoryChange(cat.slug)}
