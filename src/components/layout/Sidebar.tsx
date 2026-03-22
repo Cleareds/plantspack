@@ -20,12 +20,12 @@ export default function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col p-6 gap-4 h-screen w-64 bg-surface fixed left-0 top-0 z-40 font-body">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-3 mb-6">
+      <Link href="/" className="flex items-end gap-1 mb-6">
         <Image
           src="/plantspack-logo-real.svg"
           alt="PlantsPack Logo"
-          width={40}
-          height={40}
+          width={64}
+          height={42}
           className="object-contain"
         />
         <div className="flex flex-col">
