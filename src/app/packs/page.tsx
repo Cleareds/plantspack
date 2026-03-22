@@ -30,13 +30,13 @@ export default function PacksPage() {
   useScrollRestoration({ key: 'packs_scroll' })
 
   const categories: { value: PackCategory | ''; label: string; icon: string }[] = [
-    { value: '', label: 'All', icon: '📦' },
-    { value: 'recipes', label: 'Recipes', icon: '🍽️' },
-    { value: 'traveling', label: 'Traveling', icon: '✈️' },
-    { value: 'products', label: 'Products', icon: '🛍️' },
-    { value: 'resources', label: 'Resources', icon: '📚' },
-    { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' },
-    { value: 'other', label: 'Other', icon: '📦' }
+    { value: '', label: 'All', icon: 'apps' },
+    { value: 'recipes', label: 'Recipes', icon: 'restaurant_menu' },
+    { value: 'traveling', label: 'Traveling', icon: 'flight' },
+    { value: 'products', label: 'Products', icon: 'shopping_bag' },
+    { value: 'resources', label: 'Resources', icon: 'menu_book' },
+    { value: 'lifestyle', label: 'Lifestyle', icon: 'self_improvement' },
+    { value: 'other', label: 'Other', icon: 'more_horiz' }
   ]
 
   const fetchPacks = async () => {
@@ -100,7 +100,7 @@ export default function PacksPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
             <h1 className="text-3xl font-headline font-bold text-on-surface mb-2 tracking-tight">
-              Communities
+              Packs
             </h1>
             <p className="text-on-surface-variant">
               Discover and join curated vegan communities
@@ -148,7 +148,7 @@ export default function PacksPage() {
         {user && !myPacksLoading && myPacks.length > 0 && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">My Communities</h2>
+              <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">My Packs</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myPacks.map((pack) => (
@@ -179,13 +179,13 @@ export default function PacksPage() {
                 <button
                   key={cat.value}
                   onClick={() => setCategory(cat.value)}
-                  className={`flex items-center gap-1 px-3 py-2 rounded-md font-medium whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                     category === cat.value
-                      ? 'bg-primary text-on-primary'
+                      ? 'bg-primary text-on-primary-btn'
                       : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
                   }`}
                 >
-                  <span>{cat.icon}</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{cat.icon}</span>
                   <span>{cat.label}</span>
                 </button>
               ))}
