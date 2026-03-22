@@ -14,6 +14,7 @@ export interface SubscriptionTier {
   id: 'free' | 'medium' | 'premium'
   name: string
   price: number
+  yearlyPrice?: number
   currency: string
   interval: 'month'
   features: string[]
@@ -21,6 +22,9 @@ export interface SubscriptionTier {
   maxImages: number
   maxVideos: number
   maxVideoSize: number
+  maxVideoLength: number // seconds
+  maxPacks: number
+  verifiedBadge: boolean
   badge: {
     text: string
     color: string
@@ -36,15 +40,19 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     currency: 'USD',
     interval: 'month',
     features: [
-      '500 character posts',
-      '3 images per post',
+      '1,000 character posts',
+      '5 images per post',
+      '1 video per post (30s)',
+      'Location sharing',
       'Basic feed access',
-      'Community support'
     ],
-    maxPostLength: 500,
-    maxImages: 3,
-    maxVideos: 0,
-    maxVideoSize: 0,
+    maxPostLength: 1000,
+    maxImages: 5,
+    maxVideos: 1,
+    maxVideoSize: 50 * 1024 * 1024,
+    maxVideoLength: 30,
+    maxPacks: 0,
+    verifiedBadge: false,
     badge: {
       text: 'Free',
       color: '#6B7280',
@@ -54,20 +62,25 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
   medium: {
     id: 'medium',
     name: 'Supporter',
-    price: 3,
+    price: 2,
+    yearlyPrice: 20,
     currency: 'USD',
     interval: 'month',
     features: [
-      '1000 character posts',
-      '7 images per post',
-      '1 video per post (50MB max)',
+      '3,000 character posts',
+      '10 images per post',
+      '3 videos per post (2min)',
       'Location sharing',
-      'Community support'
+      '1 Pack creation',
+      'Verified badge',
     ],
-    maxPostLength: 1000,
-    maxImages: 7,
-    maxVideos: 1,
-    maxVideoSize: 50 * 1024 * 1024, // 50MB (Supabase Free tier limit)
+    maxPostLength: 3000,
+    maxImages: 10,
+    maxVideos: 3,
+    maxVideoSize: 50 * 1024 * 1024,
+    maxVideoLength: 120,
+    maxPacks: 1,
+    verifiedBadge: true,
     badge: {
       text: 'Supporter',
       color: '#059669',
@@ -77,21 +90,27 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
   premium: {
     id: 'premium',
     name: 'Premium',
-    price: 7,
+    price: 5,
+    yearlyPrice: 40,
     currency: 'USD',
     interval: 'month',
     features: [
       'Unlimited character posts',
       'Unlimited images per post',
-      '3 videos per post (50MB max each)',
+      '10 videos per post (5min)',
       'Location sharing',
+      '5 Pack creations',
+      'Verified badge',
       'Early access to new features',
-      'Priority support'
+      'Priority support',
     ],
-    maxPostLength: -1, // -1 means unlimited
-    maxImages: -1, // -1 means unlimited
-    maxVideos: 3,
-    maxVideoSize: 50 * 1024 * 1024, // 50MB (Supabase Free tier limit)
+    maxPostLength: -1,
+    maxImages: -1,
+    maxVideos: 10,
+    maxVideoSize: 50 * 1024 * 1024,
+    maxVideoLength: 300,
+    maxPacks: 5,
+    verifiedBadge: true,
     badge: {
       text: 'Premium',
       color: '#7C3AED',
@@ -149,7 +168,8 @@ export async function createCheckoutSession(
   tierId: 'medium' | 'premium',
   userId: string,
   successUrl: string,
-  cancelUrl: string
+  cancelUrl: string,
+  interval: 'month' | 'year' = 'month'
 ) {
   try {
     const response = await fetch('/api/stripe/create-checkout-session', {
@@ -161,7 +181,8 @@ export async function createCheckoutSession(
         tierId,
         userId,
         successUrl,
-        cancelUrl
+        cancelUrl,
+        interval
       }),
     })
 
@@ -188,7 +209,8 @@ export async function createCheckoutSession(
  */
 export async function redirectToCheckout(
   tierId: 'medium' | 'premium',
-  userId: string
+  userId: string,
+  interval: 'month' | 'year' = 'month'
 ) {
   try {
     const stripe = await stripePromise
@@ -200,7 +222,8 @@ export async function redirectToCheckout(
       tierId,
       userId,
       `${window.location.origin}/support?success=true&tier=${tierId}`,
-      `${window.location.origin}/support?canceled=true`
+      `${window.location.origin}/support?canceled=true`,
+      interval
     )
 
     // If user has active subscription, redirect to portal instead
@@ -275,7 +298,7 @@ export async function cancelSubscription(subscriptionId: string) {
  */
 export function canPerformAction(
   subscription: UserSubscription,
-  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'upload_video'
+  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'upload_video' | 'create_pack'
 ): boolean {
   if (subscription.status !== 'active') {
     return action === 'create_long_post' ? false : subscription.tier !== 'free'
@@ -285,13 +308,15 @@ export function canPerformAction(
 
   switch (action) {
     case 'create_long_post':
-      return tier.maxPostLength > 500 || tier.maxPostLength === -1
+      return tier.maxPostLength > 1000 || tier.maxPostLength === -1
     case 'multiple_images':
-      return tier.maxImages > 3 || tier.maxImages === -1
+      return tier.maxImages > 5 || tier.maxImages === -1
     case 'upload_video':
       return tier.maxVideos > 0
     case 'use_location':
-      return subscription.tier !== 'free'
+      return true // all tiers get location sharing
+    case 'create_pack':
+      return tier.maxPacks > 0
     default:
       return true
   }

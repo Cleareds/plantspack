@@ -80,7 +80,7 @@ function PricingContent() {
 
     setLoading(true)
     try {
-      await redirectToCheckout(tierId, user.id)
+      await redirectToCheckout(tierId, user.id, billingInterval)
     } catch (error) {
       console.error('Error starting checkout:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to start checkout. Please try again.'
@@ -119,10 +119,12 @@ function PricingContent() {
     return targetOrder > currentOrder
   }
 
+  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month')
+
   const tierDisplayNames: Record<string, string> = {
     free: 'Explorer',
     medium: 'Supporter',
-    premium: 'Professional',
+    premium: 'Premium',
   }
 
   const tierDescriptions: Record<string, string> = {
@@ -174,7 +176,7 @@ function PricingContent() {
                   Subscription activated successfully!
                 </p>
                 <p className="text-on-surface-variant text-sm mt-1">
-                  You now have access to all {tierFromUrl === 'medium' ? 'Supporter' : tierFromUrl === 'premium' ? 'Professional' : subscription?.tier === 'medium' ? 'Supporter' : 'Professional'} features. Start creating amazing content!
+                  You now have access to all {tierFromUrl === 'medium' ? 'Supporter' : tierFromUrl === 'premium' ? 'Premium' : subscription?.tier === 'medium' ? 'Supporter' : 'Premium'} features. Start creating amazing content!
                 </p>
               </div>
             </div>
@@ -282,7 +284,7 @@ function PricingContent() {
                   </p>
                   <p className="text-on-surface-variant text-xs">
                     Only <span className="font-bold text-tertiary">{promotionalInfo.earlyPurchasersLeft}</span> upgrade spots left!
-                    Subscribe to Supporter ($3/month) and get Professional ($7/month) automatically.
+                    Subscribe to Supporter ($2/month) and get Premium ($5/month) automatically.
                   </p>
                 </div>
               </div>
@@ -313,6 +315,33 @@ function PricingContent() {
             All early-benefits will be applied manually in 1-3 business days after registration/purchase.
           </p>
         )}
+
+        {/* Billing Interval Toggle */}
+        <div className="flex justify-center mb-12">
+          <div className="inline-flex items-center gap-1 bg-surface-container-low rounded-full p-1">
+            <button
+              onClick={() => setBillingInterval('month')}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+                billingInterval === 'month'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingInterval('year')}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+                billingInterval === 'year'
+                  ? 'bg-primary text-on-primary'
+                  : 'text-on-surface-variant hover:bg-surface-container'
+              }`}
+            >
+              Yearly
+              <span className="ml-1 text-[10px] font-bold uppercase">Save 17%</span>
+            </button>
+          </div>
+        </div>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-24 items-start">
@@ -365,6 +394,8 @@ function PricingContent() {
             const tier = SUBSCRIPTION_TIERS['medium']
             const isCurrent = isCurrentTier('medium')
             const canUpgrade = canUpgradeTo('medium')
+            const displayPrice = billingInterval === 'year' ? tier.yearlyPrice : tier.price
+            const displayInterval = billingInterval === 'year' ? '/year' : '/month'
             return (
               <div
                 className="group relative rounded-[2.5rem] border-2 border-primary ring-8 ring-primary/5 bg-surface-container-lowest p-8 lg:p-10 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
@@ -381,10 +412,13 @@ function PricingContent() {
                   <div className="font-label font-extrabold text-xs uppercase tracking-[0.2em] text-primary mb-4">
                     Supporter
                   </div>
-                  <div className="flex items-baseline gap-1 mb-3">
-                    <span className="text-5xl font-extrabold tracking-tighter text-on-surface">${tier.price}</span>
-                    <span className="text-on-surface-variant font-medium">/month</span>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-5xl font-extrabold tracking-tighter text-on-surface">${displayPrice}</span>
+                    <span className="text-on-surface-variant font-medium">{displayInterval}</span>
                   </div>
+                  {billingInterval === 'year' && (
+                    <p className="text-xs text-primary font-medium mb-2">Save ${tier.price * 12 - (tier.yearlyPrice || 0)}/yr</p>
+                  )}
                   <p className="text-on-surface-variant text-sm leading-relaxed">
                     {tierDescriptions['medium']}
                   </p>
@@ -439,23 +473,28 @@ function PricingContent() {
             )
           })()}
 
-          {/* Premium / Professional Tier */}
+          {/* Premium Tier */}
           {(() => {
             const tier = SUBSCRIPTION_TIERS['premium']
             const isCurrent = isCurrentTier('premium')
             const canUpgrade = canUpgradeTo('premium')
+            const displayPrice = billingInterval === 'year' ? tier.yearlyPrice : tier.price
+            const displayInterval = billingInterval === 'year' ? '/year' : '/month'
             return (
               <div
                 className="group relative rounded-[2.5rem] border border-outline-variant/10 bg-surface-container-lowest p-8 lg:p-10 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <div className="mb-8">
                   <div className="font-label font-extrabold text-xs uppercase tracking-[0.2em] text-tertiary mb-4">
-                    Professional
+                    Premium
                   </div>
-                  <div className="flex items-baseline gap-1 mb-3">
-                    <span className="text-5xl font-extrabold tracking-tighter text-on-surface">${tier.price}</span>
-                    <span className="text-on-surface-variant font-medium">/month</span>
+                  <div className="flex items-baseline gap-1 mb-1">
+                    <span className="text-5xl font-extrabold tracking-tighter text-on-surface">${displayPrice}</span>
+                    <span className="text-on-surface-variant font-medium">{displayInterval}</span>
                   </div>
+                  {billingInterval === 'year' && (
+                    <p className="text-xs text-tertiary font-medium mb-2">Save ${tier.price * 12 - (tier.yearlyPrice || 0)}/yr</p>
+                  )}
                   <p className="text-on-surface-variant text-sm leading-relaxed">
                     {tierDescriptions['premium']}
                   </p>
@@ -483,7 +522,7 @@ function PricingContent() {
                     {loading ? (
                       <Loader2 className="h-5 w-5 animate-spin mx-auto" />
                     ) : (
-                      'Get Professional'
+                      'Get Premium'
                     )}
                   </button>
                 ) : (
@@ -538,7 +577,7 @@ function PricingContent() {
                       <span className="font-label text-xs font-extrabold uppercase tracking-[0.2em] text-primary">Supporter</span>
                     </th>
                     <th className="text-center py-5 px-6 rounded-r-2xl">
-                      <span className="font-label text-xs font-extrabold uppercase tracking-[0.2em] text-tertiary">Professional</span>
+                      <span className="font-label text-xs font-extrabold uppercase tracking-[0.2em] text-tertiary">Premium</span>
                     </th>
                   </tr>
                 </thead>
@@ -550,8 +589,8 @@ function PricingContent() {
                         <span className="font-medium text-on-surface text-sm">Post Length</span>
                       </div>
                     </td>
-                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">500 characters</td>
                     <td className="text-center py-5 px-6 text-sm text-on-surface-variant">1,000 characters</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">3,000 characters</td>
                     <td className="text-center py-5 px-6 text-sm font-semibold text-on-surface">Unlimited</td>
                   </tr>
                   <tr>
@@ -561,8 +600,8 @@ function PricingContent() {
                         <span className="font-medium text-on-surface text-sm">Images per Post</span>
                       </div>
                     </td>
-                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">3</td>
-                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">7</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">5</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">10</td>
                     <td className="text-center py-5 px-6 text-sm font-semibold text-on-surface">Unlimited</td>
                   </tr>
                   <tr>
@@ -572,11 +611,9 @@ function PricingContent() {
                         <span className="font-medium text-on-surface text-sm">Video Uploads</span>
                       </div>
                     </td>
-                    <td className="text-center py-5 px-6">
-                      <span className="text-on-surface-variant/40">&mdash;</span>
-                    </td>
-                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">1 per post (64MB)</td>
-                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">3 per post (100MB)</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">1 per post (30s)</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">3 per post (2min)</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">10 per post (5min)</td>
                   </tr>
                   <tr>
                     <td className="py-5 px-6">
@@ -625,6 +662,42 @@ function PricingContent() {
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-on-surface-variant/60" />
                         <span className="font-medium text-on-surface text-sm">Location Sharing</span>
+                      </div>
+                    </td>
+                    <td className="text-center py-5 px-6">
+                      <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-on-surface-variant/10">
+                        <Check className="h-3.5 w-3.5 text-on-surface-variant" />
+                      </div>
+                    </td>
+                    <td className="text-center py-5 px-6">
+                      <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+                        <Check className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                    </td>
+                    <td className="text-center py-5 px-6">
+                      <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-tertiary/10">
+                        <Check className="h-3.5 w-3.5 text-tertiary" />
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-5 px-6">
+                      <div className="flex items-center gap-2">
+                        <Star className="h-4 w-4 text-on-surface-variant/60" />
+                        <span className="font-medium text-on-surface text-sm">Pack Creation</span>
+                      </div>
+                    </td>
+                    <td className="text-center py-5 px-6">
+                      <span className="text-on-surface-variant/40">&mdash;</span>
+                    </td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">1 pack</td>
+                    <td className="text-center py-5 px-6 text-sm text-on-surface-variant">5 packs</td>
+                  </tr>
+                  <tr>
+                    <td className="py-5 px-6">
+                      <div className="flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-on-surface-variant/60" />
+                        <span className="font-medium text-on-surface text-sm">Verified Badge</span>
                       </div>
                     </td>
                     <td className="text-center py-5 px-6">

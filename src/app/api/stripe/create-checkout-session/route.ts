@@ -12,8 +12,14 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
 }) : null
 
 const PRICE_IDS = {
-  medium: process.env.STRIPE_MEDIUM_PRICE_ID!,
-  premium: process.env.STRIPE_PREMIUM_PRICE_ID!,
+  medium: {
+    month: process.env.STRIPE_MEDIUM_PRICE_ID!,
+    year: process.env.STRIPE_MEDIUM_YEARLY_PRICE_ID || process.env.STRIPE_MEDIUM_PRICE_ID!,
+  },
+  premium: {
+    month: process.env.STRIPE_PREMIUM_PRICE_ID!,
+    year: process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID || process.env.STRIPE_PREMIUM_PRICE_ID!,
+  },
 }
 
 export async function POST(request: NextRequest) {
@@ -45,7 +51,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log('Request body:', body)
     
-    const { tierId, userId, successUrl, cancelUrl } = body
+    const { tierId, userId, successUrl, cancelUrl, interval = 'month' } = body
 
     if (!tierId || !userId) {
       console.error('Missing required parameters:', { tierId, userId })
@@ -55,7 +61,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!PRICE_IDS[tierId as keyof typeof PRICE_IDS]) {
+    const tierPrices = PRICE_IDS[tierId as keyof typeof PRICE_IDS]
+    if (!tierPrices) {
       console.error('Invalid tier ID:', tierId, 'Available:', Object.keys(PRICE_IDS))
       return NextResponse.json(
         { error: 'Invalid subscription tier' },
@@ -63,7 +70,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('Using price ID:', PRICE_IDS[tierId as keyof typeof PRICE_IDS])
+    const billingInterval = interval === 'year' ? 'year' : 'month'
+    const priceId = tierPrices[billingInterval]
+    console.log('Using price ID:', priceId, 'interval:', billingInterval)
 
     // Get user details
     console.log('Fetching user details for ID:', userId)
@@ -167,7 +176,7 @@ export async function POST(request: NextRequest) {
     // Create checkout session
     console.log('Creating checkout session with params:', {
       customerId,
-      priceId: PRICE_IDS[tierId as keyof typeof PRICE_IDS],
+      priceId: priceId,
       tierId,
       successUrl,
       cancelUrl
@@ -179,7 +188,7 @@ export async function POST(request: NextRequest) {
         payment_method_types: ['card'],
         line_items: [
           {
-            price: PRICE_IDS[tierId as keyof typeof PRICE_IDS],
+            price: priceId,
             quantity: 1,
           },
         ],

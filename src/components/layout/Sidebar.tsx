@@ -8,6 +8,8 @@ import { useAuth } from '@/lib/auth'
 const navItems = [
   { href: '/', label: 'Home', icon: 'home' },
   { href: '/map', label: 'Discover', icon: 'explore' },
+  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
+  { href: '/events', label: 'Events', icon: 'event' },
   { href: '/packs', label: 'Packs', icon: 'groups' },
   { href: '/support', label: 'Support Us', icon: 'volunteer_activism' },
 ]

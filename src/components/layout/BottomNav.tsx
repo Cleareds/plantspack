@@ -7,8 +7,8 @@ import { useAuth } from '@/lib/auth'
 const navItems = [
   { href: '/', label: 'Home', icon: 'home' },
   { href: '/map', label: 'Discover', icon: 'explore' },
+  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
   { href: '/packs', label: 'Packs', icon: 'groups' },
-  { href: '/support', label: 'Support', icon: 'volunteer_activism' },
 ]
 
 export default function BottomNav() {
