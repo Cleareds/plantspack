@@ -40,18 +40,19 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     currency: 'USD',
     interval: 'month',
     features: [
-      '1,000 character posts',
-      '5 images per post',
-      '1 video per post (30s)',
+      'Unlimited posts',
+      'Unlimited images',
+      'Up to 10 videos per post',
       'Location sharing',
-      'Basic feed access',
+      'Pack creation',
+      'Full feed access',
     ],
-    maxPostLength: 1000,
-    maxImages: 5,
-    maxVideos: 1,
+    maxPostLength: -1,
+    maxImages: -1,
+    maxVideos: 10,
     maxVideoSize: 50 * 1024 * 1024,
-    maxVideoLength: 30,
-    maxPacks: 0,
+    maxVideoLength: 300,
+    maxPacks: 20,
     verifiedBadge: false,
     badge: {
       text: 'Free',
@@ -62,24 +63,21 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
   medium: {
     id: 'medium',
     name: 'Supporter',
-    price: 2,
-    yearlyPrice: 20,
+    price: 3,
+    yearlyPrice: 30,
     currency: 'USD',
     interval: 'month',
     features: [
-      '3,000 character posts',
-      '10 images per post',
-      '3 videos per post (2min)',
-      'Location sharing',
-      '1 Pack creation',
-      'Verified badge',
+      'Supporter badge on profile',
+      'Supporting the vegan community',
+      'Our eternal gratitude',
     ],
-    maxPostLength: 3000,
-    maxImages: 10,
-    maxVideos: 3,
+    maxPostLength: -1,
+    maxImages: -1,
+    maxVideos: 10,
     maxVideoSize: 50 * 1024 * 1024,
-    maxVideoLength: 120,
-    maxPacks: 1,
+    maxVideoLength: 300,
+    maxPacks: 20,
     verifiedBadge: true,
     badge: {
       text: 'Supporter',
@@ -95,21 +93,17 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     currency: 'USD',
     interval: 'month',
     features: [
-      'Unlimited character posts',
-      'Unlimited images per post',
-      '10 videos per post (5min)',
-      'Location sharing',
-      '5 Pack creations',
-      'Verified badge',
-      'Early access to new features',
+      'Premium supporter badge',
+      'Supporting the vegan community',
       'Priority support',
+      'Our eternal gratitude',
     ],
     maxPostLength: -1,
     maxImages: -1,
     maxVideos: 10,
     maxVideoSize: 50 * 1024 * 1024,
     maxVideoLength: 300,
-    maxPacks: 5,
+    maxPacks: 20,
     verifiedBadge: true,
     badge: {
       text: 'Premium',
@@ -297,29 +291,10 @@ export async function cancelSubscription(subscriptionId: string) {
  * Check if user can perform action based on subscription tier
  */
 export function canPerformAction(
-  subscription: UserSubscription,
-  action: 'create_long_post' | 'multiple_images' | 'use_location' | 'upload_video' | 'create_pack'
+  _subscription: UserSubscription,
+  _action: 'create_long_post' | 'multiple_images' | 'use_location' | 'upload_video' | 'create_pack'
 ): boolean {
-  if (subscription.status !== 'active') {
-    return action === 'create_long_post' ? false : subscription.tier !== 'free'
-  }
-
-  const tier = SUBSCRIPTION_TIERS[subscription.tier]
-
-  switch (action) {
-    case 'create_long_post':
-      return tier.maxPostLength > 1000 || tier.maxPostLength === -1
-    case 'multiple_images':
-      return tier.maxImages > 5 || tier.maxImages === -1
-    case 'upload_video':
-      return tier.maxVideos > 0
-    case 'use_location':
-      return true // all tiers get location sharing
-    case 'create_pack':
-      return tier.maxPacks > 0
-    default:
-      return true
-  }
+  return true
 }
 
 /**

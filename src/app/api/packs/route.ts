@@ -215,8 +215,7 @@ export async function POST(request: NextRequest) {
     if ((existingPacksCount || 0) >= limit) {
       return NextResponse.json(
         {
-          error: `Pack limit reached. ${tier} tier allows ${limit} pack${limit === 1 ? '' : 's'}.`,
-          tier,
+          error: `Pack limit reached. Maximum ${limit} packs allowed.`,
           limit,
           current: existingPacksCount
         },

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { X, Globe, Users, Save, Image as ImageIcon, Video } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
-import { getUserSubscription, SUBSCRIPTION_TIERS, canPerformAction, type UserSubscription } from '@/lib/stripe'
+import { getUserSubscription, type UserSubscription } from '@/lib/stripe'
 import ImageUploader from '../ui/ImageUploader'
 import VideoUploader from '../ui/VideoUploader'
 import MentionAutocomplete from './MentionAutocomplete'
@@ -39,7 +39,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
   const isSharePost = post.post_type === 'share'
   const initialContent = isQuotePost && post.quote_content ? post.quote_content : post.content
 
-  const maxChars = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxPostLength : 500
+  const maxChars = -1
 
   const [content, setContent] = useState(initialContent)
   const [privacy, setPrivacy] = useState<'public' | 'friends'>(post.privacy)
@@ -431,7 +431,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                   <div className="mt-3">
                     <ImageUploader
                       onImagesChange={handleImagesChange}
-                      maxImages={subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxImages : 3}
+                      maxImages={-1}
                     />
                   </div>
                 )}
@@ -470,18 +470,16 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                     <span className="text-sm">Photo</span>
                   </button>
 
-                  {subscription && canPerformAction(subscription, 'upload_video') && (
-                    <button
-                      type="button"
-                      onClick={() => setShowVideoUploader(!showVideoUploader)}
-                      className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
-                        showVideoUploader || videoUrls.length > 0 ? 'text-purple-600' : 'text-outline'
-                      }`}
-                    >
-                      <Video className="h-5 w-5" />
-                      <span className="text-sm">Video</span>
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowVideoUploader(!showVideoUploader)}
+                    className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
+                      showVideoUploader || videoUrls.length > 0 ? 'text-purple-600' : 'text-outline'
+                    }`}
+                  >
+                    <Video className="h-5 w-5" />
+                    <span className="text-sm">Video</span>
+                  </button>
                 </div>
               </>
             )}

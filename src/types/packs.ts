@@ -159,9 +159,9 @@ export interface PackFilters {
 
 // Subscription tier limits
 export const PACK_LIMITS = {
-  free: 0,
-  mid: 1,
-  premium: 5
+  free: 20,
+  mid: 20,
+  premium: 20
 } as const
 
 export type SubscriptionTier = keyof typeof PACK_LIMITS

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
-import { getUserSubscription, canPerformAction, SUBSCRIPTION_TIERS, type UserSubscription } from '@/lib/stripe'
+import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription } from '@/lib/stripe'
 
 export function useSubscription() {
   const { user } = useAuth()
@@ -48,28 +48,23 @@ export function useSubscription() {
 
   // Helper functions
   const canCreateLongPost = () => {
-    if (!subscription) return false
-    return canPerformAction(subscription, 'create_long_post')
+    return true
   }
 
   const canUseMultipleImages = () => {
-    if (!subscription) return false
-    return canPerformAction(subscription, 'multiple_images')
+    return true
   }
 
   const canUseLocation = () => {
-    if (!subscription) return false
-    return canPerformAction(subscription, 'use_location')
+    return true
   }
 
   const getMaxPostLength = () => {
-    if (!subscription) return 250
-    return SUBSCRIPTION_TIERS[subscription.tier].maxPostLength
+    return -1
   }
 
   const getMaxImages = () => {
-    if (!subscription) return 1
-    return SUBSCRIPTION_TIERS[subscription.tier].maxImages
+    return -1
   }
 
   const getCurrentTier = () => {

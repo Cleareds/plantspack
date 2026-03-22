@@ -265,7 +265,6 @@ export default function ProfilePage() {
     )
   }
 
-  const subscriptionTier = subscription ? SUBSCRIPTION_TIERS[subscription.tier] : null
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
@@ -301,16 +300,16 @@ export default function ProfilePage() {
                   ? `${profile.first_name} ${profile.last_name}`
                   : profile.username}
               </h1>
-              {isOwnProfile && subscriptionTier && (
+              {profile.subscription_tier && profile.subscription_tier !== 'free' && (
                 <div
                   className="flex items-center space-x-1 px-1 sm:px-3 py-1 rounded-full text-sm font-medium"
                   style={{
-                    color: subscriptionTier.badge.color,
-                    backgroundColor: subscriptionTier.badge.bgColor
+                    color: SUBSCRIPTION_TIERS[profile.subscription_tier]?.badge.color,
+                    backgroundColor: SUBSCRIPTION_TIERS[profile.subscription_tier]?.badge.bgColor
                   }}
                 >
                   <Crown className="h-4 w-4" />
-                  <span className={"hidden sm:inline"}>{subscriptionTier.badge.text}</span>
+                  <span className={"hidden sm:inline"}>Supporter</span>
                 </div>
               )}
               {profile.is_banned && (

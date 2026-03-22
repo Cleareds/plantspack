@@ -1,7 +1,6 @@
 'use client'
 
-import { Crown, Star, Leaf } from 'lucide-react'
-import { getTierBadge } from '@/lib/stripe'
+import { Heart } from 'lucide-react'
 
 interface TierBadgeProps {
   tier: 'free' | 'medium' | 'premium'
@@ -11,7 +10,6 @@ interface TierBadgeProps {
 }
 
 const tierStyles: Record<string, string> = {
-  free: 'bg-tertiary-container text-white',
   medium: 'bg-secondary-container text-on-secondary',
   premium: 'silk-gradient text-on-primary',
 }
@@ -22,7 +20,8 @@ export default function TierBadge({
   showIcon = true,
   className = ''
 }: TierBadgeProps) {
-  const badge = getTierBadge(tier)
+  // Free users don't get a badge
+  if (tier === 'free') return null
 
   const sizes = {
     sm: 'px-2 py-1 text-xs',
@@ -36,19 +35,6 @@ export default function TierBadge({
     lg: 'h-5 w-5'
   }
 
-  const getIcon = () => {
-    switch (tier) {
-      case 'free':
-        return <Leaf className={iconSizes[size]} />
-      case 'medium':
-        return <Star className={iconSizes[size]} />
-      case 'premium':
-        return <Crown className={iconSizes[size]} />
-      default:
-        return null
-    }
-  }
-
   return (
     <span
       className={`
@@ -58,8 +44,8 @@ export default function TierBadge({
         ${className}
       `}
     >
-      {showIcon && getIcon()}
-      <span className={"hidden sm:inline"}>{badge.text}</span>
+      {showIcon && <Heart className={iconSizes[size]} />}
+      <span className={"hidden sm:inline"}>{tier === 'premium' ? 'Supporter' : 'Supporter'}</span>
     </span>
   )
 }

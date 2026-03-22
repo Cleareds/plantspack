@@ -16,7 +16,7 @@ import {
     type LocationData,
     type PostMetadata
 } from '@/lib/post-analytics'
-import {getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription, canPerformAction} from '@/lib/stripe'
+import {getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription} from '@/lib/stripe'
 import {
     extractHashtags,
     extractMentions,
@@ -47,7 +47,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     const [subscription, setSubscription] = useState<UserSubscription | null>(null)
 
     // Get max characters based on subscription tier
-    const maxChars = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxPostLength : 500
+    const maxChars = -1
 
     // Load draft from localStorage on mount
     const loadDraft = useCallback(() => {
@@ -1061,36 +1061,31 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     <span className="text-sm">Photo</span>
                                 </button>
 
-                                {subscription && canPerformAction(subscription, 'upload_video') && (
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowVideoUploader(!showVideoUploader)}
-                                        className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
-                                            showVideoUploader || videoUrls.length > 0
-                                                ? 'text-purple-600'
-                                                : 'text-outline'
-                                        }`}
-                                    >
-                                        <Video className="h-5 w-5"/>
-                                        <span className="text-sm">Video</span>
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={() => setShowVideoUploader(!showVideoUploader)}
+                                    className={`flex items-center space-x-1 hover:text-purple-600 transition-colors ${
+                                        showVideoUploader || videoUrls.length > 0
+                                            ? 'text-purple-600'
+                                            : 'text-outline'
+                                    }`}
+                                >
+                                    <Video className="h-5 w-5"/>
+                                    <span className="text-sm">Video</span>
+                                </button>
 
-                                {/* Only show Location for paid users */}
-                                {subscription && subscription.tier !== 'free' && (
-                                    <button
-                                        type="button"
-                                        onClick={handleLocationToggle}
-                                        className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
-                                            shareLocation
-                                                ? 'text-blue-600'
-                                                : 'text-outline'
-                                        }`}
-                                    >
-                                        <MapPin className="h-5 w-5"/>
-                                        <span className="text-sm">Location</span>
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={handleLocationToggle}
+                                    className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
+                                        shareLocation
+                                            ? 'text-blue-600'
+                                            : 'text-outline'
+                                    }`}
+                                >
+                                    <MapPin className="h-5 w-5"/>
+                                    <span className="text-sm">Location</span>
+                                </button>
                             </div>
                         </div>
 

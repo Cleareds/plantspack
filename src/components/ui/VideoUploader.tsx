@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { Upload, X, Play, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription } from '@/lib/stripe'
+import { type UserSubscription } from '@/lib/stripe'
 
 interface VideoUploaderProps {
   onVideosChange: (urls: string[]) => void
@@ -23,9 +23,9 @@ export default function VideoUploader({
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Get actual limits from subscription
-  const actualMaxVideos = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxVideos : 0
-  const actualMaxSizeMB = subscription ? SUBSCRIPTION_TIERS[subscription.tier].maxVideoSize / (1024 * 1024) : 0
+  // All users get full video access
+  const actualMaxVideos = 10
+  const actualMaxSizeMB = 50
 
   const uploadVideo = useCallback(async (file: File): Promise<string> => {
     const fileExt = file.name.split('.').pop()
@@ -97,18 +97,7 @@ export default function VideoUploader({
     onVideosChange(newVideoUrls)
   }
 
-  const canUploadMore = videoUrls.length < actualMaxVideos && actualMaxVideos > 0
-
-  if (actualMaxVideos === 0) {
-    return (
-      <div className="text-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <AlertCircle className="h-5 w-5 text-yellow-600 mx-auto mb-2" />
-        <p className="text-sm text-yellow-800">
-          Video uploads require a paid subscription
-        </p>
-      </div>
-    )
-  }
+  const canUploadMore = videoUrls.length < actualMaxVideos
 
   return (
     <div className="space-y-4">

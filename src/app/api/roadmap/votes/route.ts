@@ -94,14 +94,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Check if user has Support or Premium subscription
-    if (user.subscription_tier !== 'medium' && user.subscription_tier !== 'premium') {
-      return NextResponse.json(
-        { error: 'Voting is only available for Support and Premium members' },
-        { status: 403 }
-      )
-    }
-
     // Check if user has already voted
     const { data: existingVotes } = await supabase
       .from('roadmap_votes')
