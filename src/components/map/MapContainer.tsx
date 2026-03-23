@@ -467,13 +467,6 @@ export default function MapContainerComponent() {
         <div className="max-w-full mx-auto">
           {/* Mobile: Single row with menu button and title */}
           <div className="flex items-center justify-between gap-2 mb-3 lg:hidden">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-surface-container rounded-md transition-colors"
-              aria-label="Toggle sidebar"
-            >
-              <Menu className="h-5 w-5 text-on-surface-variant" />
-            </button>
             <h1 className="text-lg font-semibold text-on-surface flex-1">Vegan Places</h1>
             {user ? (
               <button
