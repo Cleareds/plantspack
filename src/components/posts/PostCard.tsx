@@ -351,14 +351,16 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   {/* Dropdown Menu */}
                   {showMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-xl shadow-editorial py-1 z-10">
-                      {canRemoveFromPack ? (
-                        <button
-                          onClick={handleRemoveFromPack}
-                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
-                        >
-                          <Package className="h-4 w-4" />
-                          <span>Remove from Pack</span>
-                        </button>
+                      {packContext ? (
+                        canRemoveFromPack && (
+                          <button
+                            onClick={handleRemoveFromPack}
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                          >
+                            <Package className="h-4 w-4" />
+                            <span>Remove from Pack</span>
+                          </button>
+                        )
                       ) : isPublicPost && (
                         <button
                           onClick={() => {
@@ -555,14 +557,16 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   {/* Dropdown Menu */}
                   {showMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-xl shadow-editorial py-1 z-10">
-                      {canRemoveFromPack ? (
-                        <button
-                          onClick={handleRemoveFromPack}
-                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
-                        >
-                          <Package className="h-4 w-4" />
-                          <span>Remove from Pack</span>
-                        </button>
+                      {packContext ? (
+                        canRemoveFromPack && (
+                          <button
+                            onClick={handleRemoveFromPack}
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                          >
+                            <Package className="h-4 w-4" />
+                            <span>Remove from Pack</span>
+                          </button>
+                        )
                       ) : isPublicPost && (
                         <button
                           onClick={() => {

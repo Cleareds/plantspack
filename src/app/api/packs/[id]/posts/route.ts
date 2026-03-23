@@ -51,9 +51,18 @@ export async function GET(
           user_id,
           content,
           images,
+          image_urls,
           video_urls,
           privacy,
           created_at,
+          category,
+          place_id,
+          recipe_data,
+          event_data,
+          product_data,
+          secondary_tags,
+          title,
+          slug,
           users:user_id (
             id,
             username,
@@ -63,7 +72,10 @@ export async function GET(
             subscription_tier
           ),
           post_likes (id, user_id),
-          comments (id)
+          comments (id),
+          place:place_id (
+            id, name, address, category, images
+          )
         )
       `, { count: 'exact' })
       .eq('pack_id', packId)
