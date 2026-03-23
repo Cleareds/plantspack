@@ -115,6 +115,14 @@ export default function MapView({
           >
             <Popup>
               <div className="p-2 min-w-[200px]">
+                {/* Thumbnail */}
+                {((place as any).main_image_url || (place as any).images?.[0]) && (
+                  <img
+                    src={(place as any).main_image_url || (place as any).images[0]}
+                    alt={place.name}
+                    className="w-full h-20 object-cover rounded-md mb-2"
+                  />
+                )}
                 <div className="flex items-start justify-between mb-2">
                   <Link
                     href={`/place/${place.id}`}

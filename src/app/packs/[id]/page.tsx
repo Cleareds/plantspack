@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useMemo, use } from 'react'
 import { useAuth } from '@/lib/auth'
 import { PackWithStats, PackPostWithPost } from '@/types/packs'
 import PackHeader from '@/components/packs/PackHeader'
@@ -9,7 +9,7 @@ import PackPlacesTab from '@/components/packs/PackPlacesTab'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CheckCircle, AlertCircle } from 'lucide-react'
 
-type TabType = 'posts' | 'places' | 'members'
+type TabType = 'posts' | 'recipes' | 'places' | 'events' | 'members'
 
 export default function PackDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -138,6 +138,11 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
     window.history.pushState({}, '', url.toString())
   }
 
+  // Filter posts by category for dedicated tabs
+  const recipePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'recipe'), [posts])
+  const placePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'place' || (p.posts as any)?.place_id), [posts])
+  const eventPosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'event'), [posts])
+
   return (
     <div className="min-h-screen bg-surface-container-low">
       {/* Success Message */}
@@ -169,43 +174,28 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tab Navigation */}
         <div className="border-b border-outline-variant/15 mb-6">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => handleTabChange('posts')}
-              className={`
-                py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${activeTab === 'posts'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
-                }
-              `}
-            >
-              Posts ({pack.post_count})
-            </button>
-            <button
-              onClick={() => handleTabChange('places')}
-              className={`
-                py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${activeTab === 'places'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
-                }
-              `}
-            >
-              Places ({pack.places_count || 0})
-            </button>
-            <button
-              onClick={() => handleTabChange('members')}
-              className={`
-                py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${activeTab === 'members'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
-                }
-              `}
-            >
-              Members ({pack.member_count})
-            </button>
+          <nav className="-mb-px flex space-x-6 overflow-x-auto">
+            {([
+              { key: 'posts' as TabType, label: 'All Posts', count: pack.post_count },
+              ...(recipePosts.length > 0 ? [{ key: 'recipes' as TabType, label: 'Recipes', count: recipePosts.length }] : []),
+              { key: 'places' as TabType, label: 'Places', count: (pack.places_count || 0) + placePosts.length },
+              ...(eventPosts.length > 0 ? [{ key: 'events' as TabType, label: 'Events', count: eventPosts.length }] : []),
+              { key: 'members' as TabType, label: 'Members', count: pack.member_count },
+            ]).map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => handleTabChange(tab.key)}
+                className={`
+                  py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap
+                  ${activeTab === tab.key
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-outline hover:text-on-surface-variant hover:border-outline-variant/30'
+                  }
+                `}
+              >
+                {tab.label} ({tab.count})
+              </button>
+            ))}
           </nav>
         </div>
 
@@ -251,12 +241,77 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
           </div>
         )}
 
+        {activeTab === 'recipes' && (
+          <div className="mb-6">
+            {recipePosts.length > 0 ? (
+              <div className="space-y-6">
+                {recipePosts.map((packPost) => (
+                  <PostCard
+                    key={packPost.id}
+                    post={packPost.posts as any}
+                    onUpdate={fetchPosts}
+                    packContext={{ packId: id, userRole: pack.user_role }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
+                <div className="text-6xl mb-4">🍳</div>
+                <h3 className="text-lg font-medium text-on-surface mb-2">No recipes yet</h3>
+                <p className="text-on-surface-variant">Add posts with the Recipe category to see them here</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'events' && (
+          <div className="mb-6">
+            {eventPosts.length > 0 ? (
+              <div className="space-y-6">
+                {eventPosts.map((packPost) => (
+                  <PostCard
+                    key={packPost.id}
+                    post={packPost.posts as any}
+                    onUpdate={fetchPosts}
+                    packContext={{ packId: id, userRole: pack.user_role }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
+                <div className="text-6xl mb-4">📅</div>
+                <h3 className="text-lg font-medium text-on-surface mb-2">No events yet</h3>
+                <p className="text-on-surface-variant">Add posts with the Event category to see them here</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === 'places' && (
-          <PackPlacesTab
-            packId={id}
-            userRole={pack.user_role}
-            userId={user?.id || null}
-          />
+          <div className="space-y-6">
+            {/* Place posts from the pack */}
+            {placePosts.length > 0 && (
+              <div>
+                <h3 className="text-sm font-medium text-on-surface-variant mb-3">Place posts</h3>
+                <div className="space-y-6">
+                  {placePosts.map((packPost) => (
+                    <PostCard
+                      key={packPost.id}
+                      post={packPost.posts as any}
+                      onUpdate={fetchPosts}
+                      packContext={{ packId: id, userRole: pack.user_role }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Dedicated pack places */}
+            <PackPlacesTab
+              packId={id}
+              userRole={pack.user_role}
+              userId={user?.id || null}
+            />
+          </div>
         )}
 
         {activeTab === 'members' && (

@@ -11,6 +11,7 @@ import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
 import AddToPackButton from '@/components/places/AddToPackButton'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
+import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
 
@@ -183,6 +184,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   placeName={place.name}
                   isOwner={!!place.owner}
                 />
+                <PlaceEditButton place={{
+                  ...place,
+                  main_image_url: (place as any).main_image_url || null,
+                  owner: place.owner ? { user_id: place.owner.user_id } : null,
+                }} />
               </div>
             </div>
           </div>
