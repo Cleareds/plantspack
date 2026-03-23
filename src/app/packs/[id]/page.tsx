@@ -108,6 +108,11 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
     }
   }
 
+  // Filter posts by category for dedicated tabs (must be before early returns — hooks rule)
+  const recipePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'recipe'), [posts])
+  const placePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'place' || (p.posts as any)?.place_id), [posts])
+  const eventPosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'event'), [posts])
+
   if (loading) {
     return (
       <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
@@ -137,11 +142,6 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
     url.searchParams.set('tab', tab)
     window.history.pushState({}, '', url.toString())
   }
-
-  // Filter posts by category for dedicated tabs
-  const recipePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'recipe'), [posts])
-  const placePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'place' || (p.posts as any)?.place_id), [posts])
-  const eventPosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'event'), [posts])
 
   return (
     <div className="min-h-screen bg-surface-container-low">
