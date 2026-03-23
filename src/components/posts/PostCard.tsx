@@ -744,7 +744,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                     </details>
                   )}
                   <Link
-                    href={`/recipe/${post.id}`}
+                    href={`/recipe/${(post as any).slug || post.id}`}
                     onClick={(e) => e.stopPropagation()}
                     className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
                   >

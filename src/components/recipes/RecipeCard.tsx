@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 type RecipePost = {
   id: string
+  slug?: string | null
   content: string
   images?: string[] | null
   image_url?: string | null
@@ -35,7 +36,7 @@ export default function RecipeCard({ recipe }: { recipe: RecipePost }) {
 
   return (
     <Link
-      href={`/recipe/${recipe.id}`}
+      href={`/recipe/${recipe.slug || recipe.id}`}
       className="group block bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
     >
       {/* Image */}

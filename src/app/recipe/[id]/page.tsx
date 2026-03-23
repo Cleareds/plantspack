@@ -7,6 +7,8 @@ import InlineComments from '@/components/posts/InlineComments'
 
 type RecipePost = {
   id: string
+  title?: string | null
+  slug?: string | null
   content: string
   category: string
   images?: string[] | null
@@ -31,9 +33,24 @@ type RecipePost = {
 async function getRecipePost(id: string): Promise<RecipePost | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const response = await fetch(`${baseUrl}/api/posts/${id}`, {
-      next: { revalidate: 60 },
-    })
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    // Try slug first, then UUID
+    const endpoint = isUUID
+      ? `${baseUrl}/api/posts/${id}`
+      : `${baseUrl}/api/posts/by-slug/${id}`
+
+    const response = await fetch(endpoint, { next: { revalidate: 60 } })
+
+    if (!response.ok && !isUUID) {
+      // Slug lookup failed, try as UUID fallback
+      const fallback = await fetch(`${baseUrl}/api/posts/${id}`, { next: { revalidate: 60 } })
+      if (!fallback.ok) return null
+      const data = await fallback.json()
+      if (data.post?.category !== 'recipe') return null
+      return data.post
+    }
+
     if (!response.ok) return null
     const data = await response.json()
     if (data.post?.category !== 'recipe') return null
@@ -48,7 +65,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const post = await getRecipePost(id)
   if (!post) return { title: 'Recipe Not Found - PlantsPack' }
 
-  const title = post.content.split('\n')[0].substring(0, 80)
+  const title = post.title || post.content.split('\n')[0].substring(0, 80)
   const recipe = post.recipe_data
   const description = recipe
     ? `${(recipe.prep_time_min || 0) + (recipe.cook_time_min || 0)}min · ${recipe.servings || '?'} servings · ${recipe.difficulty || 'unknown'}`
@@ -95,7 +112,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
           <div className="p-6">
             <h1 className="text-2xl font-bold text-on-surface mb-4">
-              {post.content.split('\n')[0]}
+              {post.title || post.content.split('\n')[0]}
             </h1>
 
             {recipe && (
