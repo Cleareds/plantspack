@@ -13,6 +13,7 @@ import type { PostCategory, RecipeData, EventData, ProductData } from '@/lib/dat
 interface EditPostProps {
   post: {
     id: string
+    title?: string | null
     content: string
     privacy: 'public' | 'friends'
     post_type?: 'original' | 'share' | 'quote'
@@ -41,6 +42,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
 
   const maxChars = -1
 
+  const [title, setTitle] = useState(post.title || '')
   const [content, setContent] = useState(initialContent)
   const [privacy, setPrivacy] = useState<'public' | 'friends'>(post.privacy)
   const [category, setCategory] = useState<PostCategory>(post.category || 'general')
@@ -182,6 +184,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
         body.quote_content = content.trim()
       } else {
         body.content = content.trim()
+        body.title = title.trim() || null
         body.category = category
         body.secondary_tags = secondaryTags
         body.image_urls = imageUrls
@@ -261,6 +264,18 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-800">{error}</p>
               </div>
+            )}
+
+            {/* Title */}
+            {!isQuotePost && (
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Title (optional)"
+                maxLength={200}
+                className="w-full px-3 py-2 mb-3 bg-surface-container-low border-0 rounded-lg text-sm font-medium focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border placeholder:text-outline"
+              />
             )}
 
             {/* Content */}

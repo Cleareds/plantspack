@@ -87,6 +87,8 @@ export default function MapContainerComponent() {
     is_pet_friendly: false,
     latitude: 0,
     longitude: 0,
+    city: '' as string | undefined,
+    country: '' as string | undefined,
   })
 
   // Leaflet icons
@@ -207,7 +209,9 @@ export default function MapContainerComponent() {
   const handleAddressSelect = useCallback((result: any) => {
     const lat = parseFloat(result.lat)
     const lon = parseFloat(result.lon)
-    setNewPlace(prev => ({ ...prev, address: result.display_name, latitude: lat, longitude: lon }))
+    const city = result.address?.city || result.address?.town || result.address?.village || undefined
+    const country = result.address?.country || undefined
+    setNewPlace(prev => ({ ...prev, address: result.display_name, latitude: lat, longitude: lon, city, country }))
     setAddressSearchQuery(result.display_name)
     setShowAddressSearchResults(false)
     if (mapRef.current) {
@@ -289,7 +293,7 @@ export default function MapContainerComponent() {
     try {
       const { data: insertedPlace, error } = await supabase
         .from('places')
-        .insert({ ...newPlace, images: placeImages, created_by: user.id })
+        .insert({ ...newPlace, images: placeImages, created_by: user.id, city: newPlace.city || null, country: newPlace.country || null })
         .select(`*, users(id, username, first_name, last_name), favorite_places(id, user_id)`)
         .single()
       if (error) throw error
@@ -298,7 +302,7 @@ export default function MapContainerComponent() {
       const addedCoords: [number, number] = [newPlace.latitude, newPlace.longitude]
 
       setShowAddForm(false)
-      setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
+      setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0, city: undefined, country: undefined })
       setPlaceImages([])
       setShowPlaceImageUploader(false)
       setAddressSearchQuery('')
@@ -341,7 +345,7 @@ export default function MapContainerComponent() {
     setAddressSearchQuery('')
     setAddressSearchResults([])
     setShowAddressSearchResults(false)
-    setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0 })
+    setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0, city: undefined, country: undefined })
     setPlaceImages([])
     setShowPlaceImageUploader(false)
   }, [])

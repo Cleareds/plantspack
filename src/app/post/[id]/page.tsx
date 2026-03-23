@@ -18,16 +18,35 @@ type Post = Tables<'posts'> & {
   }) | null
   is_sensitive?: boolean
   content_warnings?: string[] | null
+  title?: string | null
+  slug?: string | null
 }
 
 async function getPost(id: string): Promise<Post | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const response = await fetch(`${baseUrl}/api/posts/${id}`, {
+
+    // Try fetching by slug first (for SEO-friendly URLs), then by UUID
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    const endpoint = isUUID
+      ? `${baseUrl}/api/posts/${id}`
+      : `${baseUrl}/api/posts/by-slug/${id}`
+
+    const response = await fetch(endpoint, {
       next: { revalidate: 60 }
     })
 
     if (!response.ok) {
+      // If slug lookup fails, try as UUID anyway
+      if (!isUUID) {
+        const fallbackResponse = await fetch(`${baseUrl}/api/posts/${id}`, {
+          next: { revalidate: 60 }
+        })
+        if (fallbackResponse.ok) {
+          const data = await fallbackResponse.json()
+          return data.post
+        }
+      }
       return null
     }
 
@@ -53,17 +72,22 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
     : `@${post.users.username}`
 
+  // Use title if available, otherwise fall back to content preview
+  const pageTitle = post.title || `${username} on PlantsPack`
+
   const contentPreview = post.content.length > 160
     ? post.content.substring(0, 160) + '...'
     : post.content
 
-  const description = `${username}: ${contentPreview}`
+  const description = post.title
+    ? `${contentPreview} — by ${username}`
+    : `${username}: ${contentPreview}`
 
   return {
-    title: `${username} on PlantsPack`,
+    title: pageTitle,
     description,
     openGraph: {
-      title: `${username} on PlantsPack`,
+      title: pageTitle,
       description,
       type: 'article',
       siteName: 'PlantsPack',

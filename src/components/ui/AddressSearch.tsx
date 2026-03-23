@@ -22,7 +22,7 @@ interface AddressResult {
 interface AddressSearchProps {
   value: string
   selectedAddress?: string
-  onSelect: (result: { address: string; latitude: number; longitude: number }) => void
+  onSelect: (result: { address: string; latitude: number; longitude: number; city?: string; country?: string }) => void
   placeholder?: string
   required?: boolean
 }
@@ -68,7 +68,9 @@ export default function AddressSearch({ value, selectedAddress, onSelect, placeh
     const lon = parseFloat(result.lon)
     setQuery(result.display_name)
     setShowResults(false)
-    onSelect({ address: result.display_name, latitude: lat, longitude: lon })
+    const city = result.address?.city || result.address?.town || result.address?.village || undefined
+    const country = result.address?.country || undefined
+    onSelect({ address: result.display_name, latitude: lat, longitude: lon, city, country })
   }
 
   return (

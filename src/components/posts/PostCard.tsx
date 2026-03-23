@@ -24,6 +24,11 @@ import AddToPackModal from '../packs/AddToPackModal'
 
 import type { PostCategory } from '@/lib/database.types'
 
+// Helper to get SEO-friendly post URL (slug if available, fallback to UUID)
+function getPostUrl(post: { id: string; slug?: string | null }) {
+  return `/post/${post.slug || post.id}`
+}
+
 const CATEGORY_CONFIG: Record<string, { icon: string; label: string; color: string }> = {
   recipe: { icon: 'restaurant_menu', label: 'Recipe', color: 'bg-primary/10 text-primary' },
   place: { icon: 'location_on', label: 'Place', color: 'bg-secondary/10 text-secondary' },
@@ -305,7 +310,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   )}
                   <span className="text-outline">•</span>
                   <Link
-                    href={`/post/${post.id}`}
+                    href={getPostUrl(post)}
                     onClick={(e) => e.stopPropagation()}
                     className="text-[10px] text-outline uppercase tracking-wider hover:text-primary transition-colors cursor-pointer"
                   >
@@ -509,7 +514,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
                   )}
                   <span className="text-outline">•</span>
                   <Link
-                    href={`/post/${post.id}`}
+                    href={getPostUrl(post)}
                     onClick={(e) => e.stopPropagation()}
                     className="text-[10px] text-outline uppercase tracking-wider hover:text-primary transition-colors cursor-pointer"
                   >
