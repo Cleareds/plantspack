@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 export async function GET(
   request: NextRequest,
@@ -151,13 +152,14 @@ export async function PUT(
     if (updateError) throw updateError
 
     // Sync images to linked place (if post has a place_id)
+    // Use admin client to bypass RLS on places table
     if (updateData.images && existingPost.place_id) {
-      try {
-        await supabase
-          .from('places')
-          .update({ images: updateData.images })
-          .eq('id', existingPost.place_id)
-      } catch (syncError) {
+      const admin = createAdminClient()
+      const { error: syncError } = await admin
+        .from('places')
+        .update({ images: updateData.images, image_urls: updateData.images })
+        .eq('id', existingPost.place_id)
+      if (syncError) {
         console.error('[Post API] Image sync to place failed:', syncError)
       }
     }

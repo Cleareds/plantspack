@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 // Create Supabase client for public reads
 const supabase = createClient(
@@ -165,13 +166,14 @@ export async function PUT(
     }
 
     // Sync images to linked posts (posts with place_id pointing to this place)
+    // Use admin client to bypass RLS on posts table
     if (updateData.images) {
-      try {
-        await serverSupabase
-          .from('posts')
-          .update({ images: updateData.images, image_urls: updateData.images })
-          .eq('place_id', id)
-      } catch (syncError) {
+      const admin = createAdminClient()
+      const { error: syncError } = await admin
+        .from('posts')
+        .update({ images: updateData.images, image_urls: updateData.images })
+        .eq('place_id', id)
+      if (syncError) {
         console.error('[Place API] Image sync to posts failed:', syncError)
       }
     }
