@@ -23,7 +23,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "PlantsPack - Social Network for Vegans and People Exploring Plant-Based Living",
+  title: "PlantsPack - Community Platform for Vegans and People Exploring Plant-Based Living",
   description: "Connect with people who share your values, discover vegan places, and live your ethical journey.",
   manifest: '/manifest.json',
   viewport: {

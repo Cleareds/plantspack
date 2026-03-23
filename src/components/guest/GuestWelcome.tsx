@@ -9,7 +9,7 @@ export default function GuestWelcome() {
         Welcome to PlantsPack! 🌱
       </h2>
       <p className="text-on-surface-variant mb-6">
-          Social Network for Vegans and People Exploring Plant-Based Living<br />
+          Community Platform for Vegans and People Exploring Plant-Based Living<br />
           Connect with people who share your values, discover vegan places, and live your ethical journey.
       </p>
       

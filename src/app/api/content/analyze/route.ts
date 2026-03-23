@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { rateLimit, checkRateLimit, getClientIp } from '@/lib/rate-limit-db'
 
-const SYSTEM_PROMPT = `You are a content moderation system for PlantsPack, a vegan social media platform focused on positive community building.
+const SYSTEM_PROMPT = `You are a content moderation system for PlantsPack, a vegan community platform focused on positive community building.
 
 ⭐ CRITICAL: VEGAN/PLANT-BASED ALTERNATIVES ARE ALWAYS ALLOWED ⭐
 
