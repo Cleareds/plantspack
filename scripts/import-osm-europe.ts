@@ -143,21 +143,31 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function fetchCountryPlaces(country: typeof COUNTRIES[0]): Promise<ImportPlace[]> {
-  console.log(`\n🔍 Fetching vegan places in ${country.name}...`)
+// Bounding boxes for large countries that need splitting
+const LARGE_COUNTRY_BOXES: Record<string, [number, number, number, number][]> = {
+  DE: [ // Germany split into north/south
+    [47.2, 5.8, 51.5, 15.1], // South
+    [51.5, 5.8, 55.1, 15.1], // North
+  ],
+  FR: [ // France split into north/south
+    [42.3, -5.2, 46.0, 8.3], // South
+    [46.0, -5.2, 51.1, 8.3], // North
+  ],
+  GB: [ // UK split into England/Scotland
+    [49.9, -8.2, 53.5, 2.0], // South England
+    [53.5, -8.2, 61.0, 2.0], // North + Scotland
+  ],
+  IT: [ // Italy split into north/south
+    [36.6, 6.6, 42.5, 18.6], // South
+    [42.5, 6.6, 47.1, 18.6], // North
+  ],
+  ES: [ // Spain split into north/south
+    [36.0, -9.3, 40.0, 4.4], // South
+    [40.0, -9.3, 43.8, 4.4], // North
+  ],
+}
 
-  // Query using ISO 3166-1 country code for reliable area lookup
-  // ISO codes map to area IDs: 3600000000 + relation ID
-  const query = `
-    [out:json][timeout:180];
-    area["ISO3166-1"="${country.iso}"]->.searchArea;
-    (
-      node["diet:vegan"~"yes|only"](area.searchArea);
-      way["diet:vegan"~"yes|only"](area.searchArea);
-    );
-    out body center;
-  `
-
+async function runOverpassQuery(query: string, label: string): Promise<OSMElement[]> {
   try {
     const response = await fetch(OVERPASS_API, {
       method: 'POST',
@@ -168,32 +178,55 @@ async function fetchCountryPlaces(country: typeof COUNTRIES[0]): Promise<ImportP
     if (!response.ok) {
       const text = await response.text()
       if (text.includes('too busy') || text.includes('timeout')) {
-        console.warn(`  ⚠️  Overpass busy/timeout for ${country.name}, retrying in 30s...`)
+        console.warn(`  ⚠️  Overpass busy/timeout for ${label}, retrying in 30s...`)
         await sleep(30000)
-        // Retry once
         const retry = await fetch(OVERPASS_API, {
           method: 'POST',
           body: `data=${encodeURIComponent(query)}`,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         })
         if (!retry.ok) {
-          console.error(`  ❌ Failed for ${country.name} after retry`)
+          console.error(`  ❌ Failed for ${label} after retry`)
           return []
         }
         const retryData = await retry.json()
-        return processElements(retryData.elements || [], country)
+        return retryData.elements || []
       }
-      console.error(`  ❌ HTTP ${response.status} for ${country.name}`)
+      console.error(`  ❌ HTTP ${response.status} for ${label}`)
       return []
     }
 
     const data = await response.json()
-    const elements: OSMElement[] = data.elements || []
-    return processElements(elements, country)
+    return data.elements || []
   } catch (error) {
-    console.error(`  ❌ Error for ${country.name}:`, (error as Error).message)
+    console.error(`  ❌ Error for ${label}:`, (error as Error).message)
     return []
   }
+}
+
+async function fetchCountryPlaces(country: typeof COUNTRIES[0]): Promise<ImportPlace[]> {
+  console.log(`\n🔍 Fetching vegan places in ${country.name}...`)
+
+  const boxes = LARGE_COUNTRY_BOXES[country.iso]
+
+  if (boxes) {
+    // Split into bounding box sub-queries for large countries
+    let allElements: OSMElement[] = []
+    for (let i = 0; i < boxes.length; i++) {
+      const [s, w, n, e] = boxes[i]
+      const query = `[out:json][timeout:180];(node["diet:vegan"~"yes|only"](${s},${w},${n},${e});way["diet:vegan"~"yes|only"](${s},${w},${n},${e}););out body center;`
+      console.log(`  📦 Sub-region ${i + 1}/${boxes.length}...`)
+      const elements = await runOverpassQuery(query, `${country.name} part ${i + 1}`)
+      allElements.push(...elements)
+      if (i < boxes.length - 1) await sleep(DELAY_BETWEEN_QUERIES_MS)
+    }
+    return processElements(allElements, country)
+  }
+
+  // Standard single-query for smaller countries
+  const query = `[out:json][timeout:180];area["ISO3166-1"="${country.iso}"]->.searchArea;(node["diet:vegan"~"yes|only"](area.searchArea);way["diet:vegan"~"yes|only"](area.searchArea););out body center;`
+  const elements = await runOverpassQuery(query, country.name)
+  return processElements(elements, country)
 }
 
 function processElements(elements: OSMElement[], country: typeof COUNTRIES[0]): ImportPlace[] {
