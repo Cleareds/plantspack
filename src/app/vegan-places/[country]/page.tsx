@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `Vegan Places in ${countryName} (${totalPlaces}) | PlantsPack`,
     description: `Find ${totalPlaces} vegan restaurants, stores, and stays in ${countryName}. Browse by city with ratings and reviews.`,
+    alternates: { canonical: `https://plantspack.com/vegan-places/${country}` },
     openGraph: {
       title: `Vegan Places in ${countryName}`,
       description: `Discover ${totalPlaces} vegan-friendly places across ${cities.length} cities in ${countryName}.`,

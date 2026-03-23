@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Star, PawPrint, Globe, ExternalLink } from 'lucide-react'
+import CityMap from '@/components/places/CityMap'
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${title} | PlantsPack`,
     description,
+    alternates: { canonical: `https://plantspack.com/vegan-places/${country}/${city}` },
     openGraph: {
       title,
       description,
@@ -176,69 +178,77 @@ export default async function CityPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* Places List */}
+        {/* Map + List Layout */}
         {places.length > 0 ? (
-          <div className="space-y-4">
-            {places.map((place: Place) => {
-              const thumbnail = place.main_image_url || place.images?.[0]
-              return (
-                <Link
-                  key={place.id}
-                  href={`/place/${place.id}`}
-                  className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
-                >
-                  {/* Thumbnail */}
-                  {thumbnail ? (
-                    <img
-                      src={thumbnail}
-                      alt={place.name}
-                      className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover flex-shrink-0"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-8 w-8 text-outline" />
-                    </div>
-                  )}
-
-                  {/* Details */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <h2 className="font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
-                        {place.name}
-                      </h2>
-                      {place.website && (
-                        <ExternalLink className="h-4 w-4 text-outline flex-shrink-0 mt-0.5" />
-                      )}
-                    </div>
-
-                    <div className="flex items-center flex-wrap gap-2 mt-1.5">
-                      <span className="bg-secondary-container text-on-surface px-2 py-0.5 rounded-md text-xs capitalize font-medium">
-                        {CATEGORY_LABELS[place.category] || place.category}
-                      </span>
-                      {place.is_pet_friendly && (
-                        <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded-md text-xs flex items-center gap-1">
-                          <PawPrint className="h-3 w-3" />
-                          Pet Friendly
-                        </span>
-                      )}
-                      {place.average_rating > 0 && (
-                        <span className="flex items-center gap-1 text-xs text-on-surface-variant">
-                          <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                          {place.average_rating.toFixed(1)}
-                          {place.review_count > 0 && <span>({place.review_count})</span>}
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="text-sm text-on-surface-variant mt-1.5 line-clamp-1">{place.address}</p>
-
-                    {place.description && (
-                      <p className="text-sm text-outline mt-1 line-clamp-1">{place.description}</p>
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Places List */}
+            <div className="flex-1 space-y-4 min-w-0">
+              {places.map((place: Place) => {
+                const thumbnail = place.main_image_url || place.images?.[0]
+                return (
+                  <Link
+                    key={place.id}
+                    href={`/place/${place.id}`}
+                    className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
+                  >
+                    {/* Thumbnail */}
+                    {thumbnail ? (
+                      <img
+                        src={thumbnail}
+                        alt={place.name}
+                        className="w-20 h-20 md:w-28 md:h-20 rounded-lg object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 md:w-28 md:h-20 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">
+                        <MapPin className="h-6 w-6 text-outline" />
+                      </div>
                     )}
-                  </div>
-                </Link>
-              )
-            })}
+
+                    {/* Details */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h2 className="font-semibold text-on-surface text-sm group-hover:text-primary transition-colors line-clamp-1">
+                          {place.name}
+                        </h2>
+                        {place.website && (
+                          <ExternalLink className="h-3.5 w-3.5 text-outline flex-shrink-0 mt-0.5" />
+                        )}
+                      </div>
+
+                      <div className="flex items-center flex-wrap gap-1.5 mt-1">
+                        <span className="bg-secondary-container text-on-surface px-1.5 py-0.5 rounded text-xs capitalize font-medium">
+                          {CATEGORY_LABELS[place.category] || place.category}
+                        </span>
+                        {place.is_pet_friendly && (
+                          <span className="bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded text-xs flex items-center gap-0.5">
+                            <PawPrint className="h-3 w-3" />
+                            Pets
+                          </span>
+                        )}
+                        {place.average_rating > 0 && (
+                          <span className="flex items-center gap-0.5 text-xs text-on-surface-variant">
+                            <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                            {place.average_rating.toFixed(1)}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-xs text-on-surface-variant mt-1 line-clamp-1">{place.address}</p>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Sticky Map */}
+            <div className="lg:w-[400px] flex-shrink-0">
+              <div className="lg:sticky lg:top-24">
+                <CityMap
+                  places={places.map((p: Place) => ({ id: p.id, name: p.name, latitude: p.latitude, longitude: p.longitude, category: p.category }))}
+                  className="h-[300px] lg:h-[calc(100vh-8rem)]"
+                />
+              </div>
+            </div>
           </div>
         ) : (
           <div className="text-center py-16">

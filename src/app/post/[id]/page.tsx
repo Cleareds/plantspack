@@ -62,15 +62,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? `${contentPreview} — by ${username}`
     : `${username}: ${contentPreview}`
 
+  const image = post.images?.[0] || post.image_url
   return {
     title: pageTitle,
     description,
+    alternates: { canonical: `https://plantspack.com/post/${post.slug || id}` },
     openGraph: {
       title: pageTitle,
       description,
       type: 'article',
       siteName: 'PlantsPack',
-      images: post.image_url ? [post.image_url] : undefined
+      ...(image ? { images: [image] } : {}),
     }
   }
 }

@@ -5,6 +5,7 @@ import { MapPin, Globe, ArrowRight } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Vegan Places Directory - Find Vegan Restaurants & Stores | PlantsPack',
   description: 'Discover vegan restaurants, stores, and places worldwide. Community-verified directory with ratings, reviews, and detailed information.',
+  alternates: { canonical: 'https://plantspack.com/vegan-places' },
   openGraph: {
     title: 'Vegan Places Directory | PlantsPack',
     description: 'Find vegan-friendly restaurants, stores, and stays. Community-driven, free forever.',

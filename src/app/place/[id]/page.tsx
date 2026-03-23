@@ -95,14 +95,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const rating = place.average_rating > 0 ? `⭐ ${place.average_rating.toFixed(1)}` : ''
   const description = place.description || `${place.name} - ${place.category} in ${place.address}`
 
+  const image = (place as any).main_image_url || place.images?.[0]
+
   return {
     title: `${place.name} ${rating} - PlantsPack`,
     description,
+    alternates: { canonical: `https://plantspack.com/place/${id}` },
     openGraph: {
       title: place.name,
       description,
       type: 'website',
-      siteName: 'PlantsPack'
+      siteName: 'PlantsPack',
+      ...(image ? { images: [image] } : {}),
     }
   }
 }
@@ -115,6 +119,27 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     notFound()
   }
 
+  // JSON-LD for LocalBusiness
+  const placeSchemaType = place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant'
+  const placeJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': placeSchemaType,
+    name: place.name,
+    description: place.description || undefined,
+    address: place.address,
+    geo: { '@type': 'GeoCoordinates', latitude: place.latitude, longitude: place.longitude },
+    ...(place.website ? { url: place.website } : {}),
+    ...(place.phone ? { telephone: place.phone } : {}),
+    ...(place.images?.[0] ? { image: place.images[0] } : {}),
+    ...(place.average_rating > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: place.average_rating,
+        reviewCount: place.review_count || 1,
+      }
+    } : {}),
+  }
+
   const categoryLabels: Record<string, string> = {
     restaurant: 'Restaurant',
     event: 'Event',
@@ -124,6 +149,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="min-h-screen bg-surface-container-low">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeJsonLd) }} />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-on-surface-variant">

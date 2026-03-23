@@ -56,10 +56,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? `${new Date(event.start_time).toLocaleDateString()} · ${event.location || ''}`
     : post.content.substring(0, 160)
 
+  const image = post.images?.[0] || post.image_url
   return {
     title: `${title} - Event | PlantsPack`,
     description,
-    openGraph: { title, description, type: 'article', siteName: 'PlantsPack' },
+    alternates: { canonical: `https://plantspack.com/event/${id}` },
+    openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
   }
 }
 
@@ -74,8 +76,25 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
     ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
     : post.users.username
 
+  const eventTitle = post.title || post.content.split('\n')[0].substring(0, 80)
+
   return (
     <div className="min-h-screen bg-surface-container-low">
+      {/* Event JSON-LD */}
+      {event?.start_time && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: eventTitle,
+          startDate: event.start_time,
+          ...(event.end_time ? { endDate: event.end_time } : {}),
+          ...(event.location ? { location: { '@type': 'Place', name: event.location } } : {}),
+          ...(event.ticket_url ? { offers: { '@type': 'Offer', url: event.ticket_url } } : {}),
+          description: post.content.substring(0, 300),
+          organizer: { '@type': 'Person', name: displayName },
+          ...(images[0] ? { image: images[0] } : {}),
+        }) }} />
+      )}
       <div className="max-w-3xl mx-auto px-4 py-8">
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>

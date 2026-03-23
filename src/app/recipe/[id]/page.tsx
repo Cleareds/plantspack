@@ -57,10 +57,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? `${(recipe.prep_time_min || 0) + (recipe.cook_time_min || 0)}min · ${recipe.servings || '?'} servings · ${recipe.difficulty || 'unknown'}`
     : post.content.substring(0, 160)
 
+  const image = post.images?.[0] || post.image_url
   return {
     title: `${title} - Recipe | PlantsPack`,
     description,
-    openGraph: { title, description, type: 'article', siteName: 'PlantsPack' },
+    alternates: { canonical: `https://plantspack.com/recipe/${post.slug || id}` },
+    openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
   }
 }
 
@@ -71,6 +73,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   const images = post.images?.length ? post.images : post.image_url ? [post.image_url] : []
   const recipe = post.recipe_data
+  const recipeTitle = post.title || post.content.split('\n')[0].substring(0, 80)
   const displayName = post.users.first_name
     ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
     : post.users.username
@@ -83,6 +86,22 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="min-h-screen bg-surface-container-low">
+      {/* Recipe JSON-LD */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Recipe',
+        name: recipeTitle,
+        ...(images[0] ? { image: images[0] } : {}),
+        author: { '@type': 'Person', name: displayName },
+        datePublished: post.created_at,
+        description: post.content.substring(0, 300),
+        ...(recipe?.prep_time_min ? { prepTime: `PT${recipe.prep_time_min}M` } : {}),
+        ...(recipe?.cook_time_min ? { cookTime: `PT${recipe.cook_time_min}M` } : {}),
+        ...(recipe?.servings ? { recipeYield: `${recipe.servings} servings` } : {}),
+        ...(recipe?.ingredients?.length ? { recipeIngredient: recipe.ingredients } : {}),
+        recipeCategory: 'Vegan',
+        recipeCuisine: 'Vegan',
+      }) }} />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>

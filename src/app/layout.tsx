@@ -24,12 +24,32 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "PlantsPack - Community Platform for Vegans and People Exploring Plant-Based Living",
-  description: "Connect with people who share your values, discover vegan places, and live your ethical journey.",
+  description: "Discover vegan restaurants, share recipes, and connect with people who share your values. Free forever, community-funded.",
+  metadataBase: new URL('https://plantspack.com'),
   manifest: '/manifest.json',
   viewport: {
     width: 'device-width',
     initialScale: 1,
     maximumScale: 5,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'PlantsPack',
+    title: 'PlantsPack - Vegan Community Platform',
+    description: 'Discover vegan restaurants, share recipes, and connect with people who share your values.',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary',
+    site: '@plantspackX',
+  },
+  alternates: {
+    canonical: 'https://plantspack.com',
   },
   appleWebApp: {
     capable: true,
@@ -52,6 +72,24 @@ export default function RootLayout({
         />
       </head>
       <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'PlantsPack',
+              url: 'https://plantspack.com',
+              logo: 'https://plantspack.com/plantspack-logo-real.svg',
+              description: 'Community-funded vegan platform. Find vegan places, share recipes, connect with the community.',
+              sameAs: [
+                'https://x.com/plantspackX',
+                'https://www.instagram.com/plants.pack/',
+                'https://www.facebook.com/profile.php?id=61583784658664',
+              ],
+            }),
+          }}
+        />
         <GoogleAnalytics />
         <Suspense fallback={null}>
           <PageViewTracker />
