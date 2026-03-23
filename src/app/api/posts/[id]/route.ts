@@ -98,7 +98,7 @@ export async function PUT(
     // Verify ownership
     const { data: existingPost, error: fetchError } = await supabase
       .from('posts')
-      .select('id, user_id')
+      .select('id, user_id, place_id')
       .eq('id', id)
       .single()
 
@@ -149,6 +149,18 @@ export async function PUT(
       .single()
 
     if (updateError) throw updateError
+
+    // Sync images to linked place (if post has a place_id)
+    if (updateData.images && existingPost.place_id) {
+      try {
+        await supabase
+          .from('places')
+          .update({ images: updateData.images })
+          .eq('id', existingPost.place_id)
+      } catch (syncError) {
+        console.error('[Post API] Image sync to place failed:', syncError)
+      }
+    }
 
     return NextResponse.json({ post: updatedPost })
   } catch (error) {
