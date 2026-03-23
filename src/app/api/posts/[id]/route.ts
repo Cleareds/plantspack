@@ -123,7 +123,7 @@ export async function PUT(
     const allowedFields = [
       'title', 'content', 'privacy', 'category', 'secondary_tags',
       'recipe_data', 'event_data', 'product_data',
-      'image_urls', 'video_urls', 'quote_content'
+      'images', 'image_urls', 'video_urls', 'quote_content'
     ]
 
     for (const field of allowedFields) {

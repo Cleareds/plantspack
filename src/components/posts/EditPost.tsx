@@ -159,7 +159,8 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
   }
 
   const handleImagesChange = (urls: string[]) => {
-    setImageUrls(urls)
+    // Append newly uploaded images to existing ones
+    setImageUrls(prev => [...prev, ...urls])
   }
 
   const handleVideosChange = (urls: string[]) => {
@@ -187,6 +188,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
         body.title = title.trim() || null
         body.category = category
         body.secondary_tags = secondaryTags
+        body.images = imageUrls
         body.image_urls = imageUrls
         body.video_urls = videoUrls
 
