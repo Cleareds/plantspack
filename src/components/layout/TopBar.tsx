@@ -10,7 +10,7 @@ export default function TopBar() {
   const { user } = useAuth()
 
   return (
-    <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-surface/80 backdrop-blur-lg flex justify-between items-center px-4 md:px-8 h-16">
+    <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-surface/80 backdrop-blur-lg flex justify-between items-center px-4 md:px-8 h-20">
       {/* Mobile logo (shown only on mobile where sidebar is hidden) */}
       <Link href="/" className="flex items-center gap-2 lg:hidden">
         <Image
