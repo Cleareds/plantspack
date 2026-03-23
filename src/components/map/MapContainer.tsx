@@ -130,34 +130,48 @@ export default function MapContainerComponent() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Get current location
-  const getCurrentLocation = useCallback(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location: [number, number] = [position.coords.latitude, position.coords.longitude]
-          setUserLocation(location)
-          if (!initialLocation) {
-            setMapCenter(location)
-          }
-        },
-        (error) => {
-          console.error('Error getting location:', error)
-          const defaultLocation: [number, number] = [50.9307, 5.3378]
-          setUserLocation(defaultLocation)
-          if (!initialLocation) {
-            setMapCenter(defaultLocation)
-          }
-        },
-        { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
-      )
-    } else {
-      const defaultLocation: [number, number] = [50.9307, 5.3378]
+  // Get current location (only if permission already granted, to avoid repeated prompts)
+  const getCurrentLocation = useCallback(async (forcePrompt = false) => {
+    const defaultLocation: [number, number] = [50.9307, 5.3378]
+
+    if (!navigator.geolocation) {
       setUserLocation(defaultLocation)
-      if (!initialLocation) {
-        setMapCenter(defaultLocation)
+      if (!initialLocation) setMapCenter(defaultLocation)
+      return
+    }
+
+    // Check permission state first to avoid re-prompting
+    if (!forcePrompt && navigator.permissions) {
+      try {
+        const permission = await navigator.permissions.query({ name: 'geolocation' })
+        if (permission.state === 'prompt') {
+          // Don't auto-prompt — use default location, user can click locate button
+          setUserLocation(defaultLocation)
+          if (!initialLocation) setMapCenter(defaultLocation)
+          return
+        }
+        if (permission.state === 'denied') {
+          setUserLocation(defaultLocation)
+          if (!initialLocation) setMapCenter(defaultLocation)
+          return
+        }
+      } catch {
+        // Permissions API not supported — fall through to geolocation
       }
     }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const location: [number, number] = [position.coords.latitude, position.coords.longitude]
+        setUserLocation(location)
+        if (!initialLocation) setMapCenter(location)
+      },
+      () => {
+        setUserLocation(defaultLocation)
+        if (!initialLocation) setMapCenter(defaultLocation)
+      },
+      { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
+    )
   }, [initialLocation])
 
   // Map search selection
