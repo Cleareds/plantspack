@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { supabase } from '@/lib/supabase'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 // Force Node.js runtime (required for Stripe SDK)
 export const runtime = 'nodejs'
@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
 
     // Get user details
     console.log('Fetching user details for ID:', userId)
+    const supabase = createAdminClient()
     const { data: user, error: userError } = await supabase
       .from('users')
       .select('email, stripe_customer_id, username')

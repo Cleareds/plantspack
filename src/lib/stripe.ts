@@ -37,7 +37,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     id: 'free',
     name: 'Free',
     price: 0,
-    currency: 'USD',
+    currency: 'EUR',
     interval: 'month',
     features: [
       'Unlimited posts',
@@ -65,7 +65,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     name: 'Supporter',
     price: 3,
     yearlyPrice: 30,
-    currency: 'USD',
+    currency: 'EUR',
     interval: 'month',
     features: [
       'Supporter badge',
@@ -90,7 +90,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     name: 'Premium',
     price: 5,
     yearlyPrice: 40,
-    currency: 'USD',
+    currency: 'EUR',
     interval: 'month',
     features: [
       'Premium supporter badge',
