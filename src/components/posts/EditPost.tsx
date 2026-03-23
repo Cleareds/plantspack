@@ -374,9 +374,9 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                     <textarea
                       value={recipeData.ingredients?.join('\n') || ''}
                       onChange={(e) => setRecipeData(prev => ({ ...prev, ingredients: e.target.value.split('\n').filter(Boolean) }))}
-                      placeholder="Ingredients (one per line)"
-                      className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                      rows={3}
+                      placeholder={"Ingredients (one per line)\ne.g.\n200g tofu\n1 tbsp soy sauce"}
+                      className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border resize-y focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                      rows={6}
                     />
                     <div className="flex gap-2">
                       <input type="number" placeholder="Prep (min)" value={recipeData.prep_time_min || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, prep_time_min: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
