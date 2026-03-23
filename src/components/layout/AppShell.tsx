@@ -36,7 +36,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <TopBar />
 
       {/* Main content area */}
-      <main className={`min-h-screen pt-16 ${isMapPage ? 'lg:ml-64' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
+      <main className={`min-h-screen pt-[80px] ${isMapPage ? 'sm:pt-16 lg:ml-64' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
         {children}
       </main>
 
