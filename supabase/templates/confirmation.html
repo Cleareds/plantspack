@@ -97,7 +97,7 @@
       <p>To complete your registration and start exploring, please confirm your email address by clicking the button below:</p>
 
       <center>
-        <a href="{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup" class="button">Confirm Your Email</a>
+        <a href="{{ .ConfirmationURL }}" class="button">Confirm Your Email</a>
       </center>
 
       <div class="security-note">
@@ -105,7 +105,7 @@
       </div>
 
       <p>If the button doesn't work, copy and paste this link into your browser:</p>
-      <p style="word-break: break-all; color: #16a34a;">{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=signup</p>
+      <p style="word-break: break-all; color: #16a34a;">{{ .ConfirmationURL }}</p>
 
       <p>Once confirmed, you'll be able to:</p>
       <ul style="color: #555;">
