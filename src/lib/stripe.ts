@@ -68,8 +68,8 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     currency: 'USD',
     interval: 'month',
     features: [
-      'Supporter badge on profile',
-      'Supporting the vegan community',
+      'Supporter badge',
+      'Discuss and vote on platform\'s future',
       'Our eternal gratitude',
     ],
     maxPostLength: -1,
@@ -94,7 +94,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     interval: 'month',
     features: [
       'Premium supporter badge',
-      'Supporting the vegan community',
+      'Discuss and vote on platform\'s future',
       'Priority support',
       'Our eternal gratitude',
     ],

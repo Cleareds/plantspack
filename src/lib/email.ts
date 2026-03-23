@@ -213,8 +213,8 @@ export async function sendSubscriptionEmail(
 
         <h3 style="color: #16a34a;">What your support means:</h3>
         <ul>
-          <li>Supporter badge displayed on your profile and posts</li>
-          <li>Helping keep PlantsPack free for the entire community</li>
+          <li>Supporter badge</li>
+          <li>Discuss and vote on platform's future</li>
           ${tier === 'premium' ? '<li>Priority support</li>' : ''}
           <li>Our eternal gratitude</li>
         </ul>

@@ -270,7 +270,7 @@ function SupportContent() {
           <div className="mt-10 pt-8 border-t border-outline-variant/10">
             <p className="text-center text-sm font-medium text-on-surface-variant mb-4">What supporters get:</p>
             <div className="flex flex-wrap justify-center gap-4">
-              {['Supporter badge on profile', 'Supporter badge on posts', 'Our eternal gratitude'].map((perk) => (
+              {['Supporter badge', 'Discuss and vote on platform\'s future', 'Our eternal gratitude'].map((perk) => (
                 <div key={perk} className="flex items-center gap-2">
                   <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
                     <Check className="h-3 w-3 text-primary" />
