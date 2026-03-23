@@ -36,6 +36,12 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   }
 }
 
+// Shared email header with logo
+const EMAIL_HEADER = `
+      <div style="text-align: center; padding: 32px 20px; border-bottom: 1px solid #e5e7eb;">
+        <img src="https://plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
+      </div>`
+
 // Welcome email for new users
 export async function sendWelcomeEmail(to: string, username: string) {
   const subject = 'Welcome to Plantspack!'
@@ -47,41 +53,45 @@ export async function sendWelcomeEmail(to: string, username: string) {
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #16a34a; margin: 0;">Welcome to Plantspack!</h1>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
+
+      <div style="padding: 40px 30px;">
+        <h2 style="color: #16a34a; margin-top: 0;">Welcome to PlantsPack!</h2>
+
+        <p>Hi <strong>${username}</strong>,</p>
+
+        <p>Thanks for joining PlantsPack! We're excited to have you in our vegan community.</p>
+
+        <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h3 style="color: #16a34a; margin-top: 0;">Here's what you can do:</h3>
+          <ul style="margin: 0; padding-left: 20px;">
+            <li>Share photos and recipes</li>
+            <li>Connect with other plant-based people</li>
+            <li>Discover vegan places on the map</li>
+            <li>Join packs (groups) based on your interests</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://plantspack.com" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+            Start Exploring
+          </a>
+        </div>
+
+        <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
+
+        <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
       </div>
 
-      <p>Hi <strong>${username}</strong>,</p>
-
-      <p>Thanks for joining Plantspack! We're excited to have you in our community of plant enthusiasts.</p>
-
-      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #16a34a; margin-top: 0;">Here's what you can do:</h3>
-        <ul style="margin: 0; padding-left: 20px;">
-          <li>Share photos of your plants</li>
-          <li>Connect with other plant lovers</li>
-          <li>Get tips and advice from the community</li>
-          <li>Join packs (groups) based on your interests</li>
-        </ul>
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          You're receiving this because you signed up for PlantsPack.<br>
+          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+        </p>
       </div>
-
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="https://www.plantspack.com" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-          Start Exploring
-        </a>
       </div>
-
-      <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
-
-      <p style="margin-top: 30px;">Happy planting!</p>
-      <p><strong>The Plantspack Team</strong></p>
-
-      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-      <p style="font-size: 12px; color: #6b7280; text-align: center;">
-        You're receiving this email because you signed up for Plantspack.<br>
-        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
-      </p>
     </body>
     </html>
   `
@@ -129,32 +139,35 @@ export async function sendNotificationEmail(
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #16a34a; margin: 0;">Plantspack</h2>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
+
+      <div style="padding: 40px 30px;">
+        <p>Hi <strong>${username}</strong>,</p>
+
+        <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+          <p style="font-size: 18px; margin: 0;">
+            <strong>${actorName}</strong> ${action}
+          </p>
+        </div>
+
+        ${entityUrl ? `
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${entityUrl}" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+            View on PlantsPack
+          </a>
+        </div>
+        ` : ''}
       </div>
 
-      <p>Hi <strong>${username}</strong>,</p>
-
-      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
-        <p style="font-size: 18px; margin: 0;">
-          <strong>${actorName}</strong> ${action}
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          Manage your <a href="https://plantspack.com/settings" style="color: #16a34a;">notification settings</a><br>
+          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
-
-      ${entityUrl ? `
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${entityUrl}" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-          View on Plantspack
-        </a>
       </div>
-      ` : ''}
-
-      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-      <p style="font-size: 12px; color: #6b7280; text-align: center;">
-        You can manage your email preferences in your <a href="https://www.plantspack.com/settings" style="color: #16a34a;">notification settings</a>.<br>
-        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
-      </p>
     </body>
     </html>
   `
@@ -182,56 +195,47 @@ export async function sendSubscriptionEmail(
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #16a34a; margin: 0;">Thank You!</h1>
-      </div>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
 
-      <p>Hi <strong>${username}</strong>,</p>
+      <div style="padding: 40px 30px;">
+        <h2 style="color: #16a34a; margin-top: 0;">Thank You for Your Support!</h2>
 
-      <p>Thank you for upgrading to <strong>Plantspack ${tierNames[tier]}</strong>! Your support helps us build a better community for plant lovers everywhere.</p>
+        <p>Hi <strong>${username}</strong>,</p>
 
-      <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
-        <h2 style="color: #16a34a; margin: 0 0 10px 0;">${tierNames[tier]} Member</h2>
-        <p style="margin: 0; color: #15803d;">Your new benefits are now active!</p>
-      </div>
+        <p>Thank you for becoming a <strong>PlantsPack ${tierNames[tier]}</strong>! Your support helps keep PlantsPack free for everyone and allows us to build a better vegan community.</p>
 
-      <h3 style="color: #16a34a;">Your ${tierNames[tier]} benefits:</h3>
-      <ul>
-        <li>Extended post length (up to 1000 characters)</li>
-        <li>Upload up to ${tier === 'premium' ? '5' : '3'} images per post</li>
-        <li>Add location to your posts</li>
-        <li>Access to analytics</li>
-        ${tier === 'premium' ? '<li>Priority support</li>' : ''}
-      </ul>
+        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+          <h2 style="color: #16a34a; margin: 0 0 10px 0;">${tierNames[tier]}</h2>
+          <p style="margin: 0; color: #15803d;">Your supporter badge is now active on your profile!</p>
+        </div>
 
-      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #16a34a; margin-top: 0;">Join the Community</h3>
-        <p style="margin: 0 0 16px 0; color: #374151;">Connect with fellow vegan community members:</p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="https://web.telegram.org/a/#-5158658423" style="background: #0088cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-            Join Telegram Channel
-          </a>
-          <a href="https://discord.gg/dnCsMbXn" style="background: #5865f2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-            Join Discord Server
+        <h3 style="color: #16a34a;">What your support means:</h3>
+        <ul>
+          <li>Supporter badge displayed on your profile and posts</li>
+          <li>Helping keep PlantsPack free for the entire community</li>
+          ${tier === 'premium' ? '<li>Priority support</li>' : ''}
+          <li>Our eternal gratitude</li>
+        </ul>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="https://plantspack.com" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+            View Your Profile
           </a>
         </div>
+
+        <p>If you have any questions about your subscription, reach out at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
+
+        <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
       </div>
 
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="https://www.plantspack.com" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-          Start Using Your Benefits
-        </a>
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+        </p>
       </div>
-
-      <p>If you have any questions about your subscription, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
-
-      <p style="margin-top: 30px;"><strong>The Plantspack Team</strong></p>
-
-      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-      <p style="font-size: 12px; color: #6b7280; text-align: center;">
-        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
-      </p>
+      </div>
     </body>
     </html>
   `
@@ -260,10 +264,11 @@ export async function sendClaimRequestEmail(claimData: {
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #16a34a; margin: 0;">New Business Claim Request</h1>
-      </div>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
+      <div style="padding: 40px 30px;">
+        <h2 style="color: #16a34a; margin-top: 0;">New Business Claim Request</h2>
 
       <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
         <h2 style="color: #16a34a; margin-top: 0;">Place Details</h2>
@@ -330,11 +335,14 @@ SET
 WHERE id = '${claimData.claim_id}';</pre>
       </div>
 
-      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-      <p style="font-size: 12px; color: #6b7280; text-align: center;">
-        Claim ID: ${claimData.claim_id}<br>
-        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
-      </p>
+      </div>
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          Claim ID: ${claimData.claim_id}<br>
+          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+        </p>
+      </div>
+      </div>
     </body>
     </html>
   `
@@ -358,10 +366,11 @@ export async function sendClaimApprovedEmail(
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #16a34a; margin: 0;">Congratulations!</h1>
-      </div>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
+      <div style="padding: 40px 30px;">
+        <h2 style="color: #16a34a; margin-top: 0;">Congratulations!</h2>
 
       <p>Hi <strong>${userName}</strong>,</p>
 
@@ -391,12 +400,15 @@ export async function sendClaimApprovedEmail(
 
       <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
-      <p style="margin-top: 30px;"><strong>The Plantspack Team</strong></p>
+      <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
+      </div>
 
-      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-      <p style="font-size: 12px; color: #6b7280; text-align: center;">
-        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
-      </p>
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+        </p>
+      </div>
+      </div>
     </body>
     </html>
   `
@@ -420,10 +432,11 @@ export async function sendClaimRejectedEmail(
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #dc2626; margin: 0;">Claim Update</h1>
-      </div>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
+      <div style="padding: 40px 30px;">
+        <h2 style="color: #dc2626; margin-top: 0;">Claim Update</h2>
 
       <p>Hi <strong>${userName}</strong>,</p>
 
@@ -449,12 +462,15 @@ export async function sendClaimRejectedEmail(
 
       <p>If you believe this was an error or have additional information to support your claim, please contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
-      <p style="margin-top: 30px;"><strong>The Plantspack Team</strong></p>
+      <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
+      </div>
 
-      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-      <p style="font-size: 12px; color: #6b7280; text-align: center;">
-        <a href="https://www.plantspack.com" style="color: #16a34a;">www.plantspack.com</a>
-      </p>
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+        </p>
+      </div>
+      </div>
     </body>
     </html>
   `
