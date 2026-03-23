@@ -132,6 +132,13 @@ export async function PUT(
       }
     }
 
+    // Keep images and image_urls in sync (canonical field is `images`)
+    if (updateData.images) {
+      updateData.image_urls = updateData.images
+    } else if (updateData.image_urls) {
+      updateData.images = updateData.image_urls
+    }
+
     updateData.updated_at = new Date().toISOString()
 
     const { data: updatedPost, error: updateError } = await supabase

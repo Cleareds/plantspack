@@ -164,6 +164,18 @@ export async function PUT(
       return NextResponse.json({ error: 'Failed to update place' }, { status: 500 })
     }
 
+    // Sync images to linked posts (posts with place_id pointing to this place)
+    if (updateData.images) {
+      try {
+        await serverSupabase
+          .from('posts')
+          .update({ images: updateData.images, image_urls: updateData.images })
+          .eq('place_id', id)
+      } catch (syncError) {
+        console.error('[Place API] Image sync to posts failed:', syncError)
+      }
+    }
+
     return NextResponse.json({ place: updatedPlace })
   } catch (error) {
     console.error('[Place API] Error:', error)

@@ -51,7 +51,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
   const [recipeData, setRecipeData] = useState<Partial<RecipeData>>(post.recipe_data || {})
   const [eventData, setEventData] = useState<Partial<EventData>>(post.event_data || {})
   const [productData, setProductData] = useState<Partial<ProductData>>(post.product_data || {})
-  const [imageUrls, setImageUrls] = useState<string[]>(post.image_urls || post.images || [])
+  const [imageUrls, setImageUrls] = useState<string[]>(post.images || post.image_urls || [])
   const [videoUrls, setVideoUrls] = useState<string[]>(post.video_urls || [])
   const [showImageUploader, setShowImageUploader] = useState(false)
   const [showVideoUploader, setShowVideoUploader] = useState(false)
@@ -189,7 +189,6 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
         body.category = category
         body.secondary_tags = secondaryTags
         body.images = imageUrls
-        body.image_urls = imageUrls
         body.video_urls = videoUrls
 
         if (category === 'recipe' && recipeData.ingredients?.length) {
