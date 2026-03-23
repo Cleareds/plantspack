@@ -24,6 +24,7 @@ export default function ProfilePage() {
 
   const [profile, setProfile] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
+  const [profileTab, setProfileTab] = useState('all')
   const [addedPlaces, setAddedPlaces] = useState<any[]>([])
   const [favoritePlaces, setFavoritePlaces] = useState<any[]>([])
   const [userPacks, setUserPacks] = useState<any[]>([])
@@ -120,12 +121,14 @@ export default function ProfilePage() {
           )
         `)
         .eq('user_id', profileData.id)
-        .eq('privacy', 'public')
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
         .limit(50)
 
-      setPosts(postsData || [])
+      // On other people's profiles, filter to public only
+      const isOwn = user && profileData.id === user.id
+      const filteredPosts = isOwn ? postsData : postsData?.filter((p: any) => p.privacy === 'public')
+      setPosts(filteredPosts || [])
 
       // Fetch user's added places
       const { data: addedPlacesData } = await supabase
@@ -356,29 +359,69 @@ export default function ProfilePage() {
 
           {/* Profile Content Tabs */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Posts */}
+        {/* Posts with Category Tabs */}
         <div className="lg:col-span-2">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-on-surface">
-              Posts ({posts?.length || 0})
-            </h2>
-          </div>
+          {/* Tab navigation */}
+          {(() => {
+            const recipePosts = posts?.filter((p: any) => p.category === 'recipe') || []
+            const placePosts = posts?.filter((p: any) => p.category === 'place') || []
+            const eventPosts = posts?.filter((p: any) => p.category === 'event') || []
 
-          {!posts || posts.length === 0 ? (
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
-              <p>No public posts yet.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  onUpdate={loadProfileData}
-                />
-              ))}
-            </div>
-          )}
+            const tabs = [
+              { key: 'all', label: 'All Posts', count: posts?.length || 0 },
+              ...(recipePosts.length > 0 ? [{ key: 'recipe', label: 'Recipes', count: recipePosts.length }] : []),
+              ...(placePosts.length > 0 ? [{ key: 'place', label: 'Places', count: placePosts.length }] : []),
+              ...(eventPosts.length > 0 ? [{ key: 'event', label: 'Events', count: eventPosts.length }] : []),
+            ]
+
+            const filteredPosts = profileTab === 'all'
+              ? posts
+              : posts?.filter((p: any) => p.category === profileTab) || []
+
+            return (
+              <>
+                {tabs.length > 1 && (
+                  <div className="flex gap-4 mb-4 border-b border-outline-variant/15 overflow-x-auto">
+                    {tabs.map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() => setProfileTab(tab.key)}
+                        className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                          profileTab === tab.key
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-outline hover:text-on-surface-variant'
+                        }`}
+                      >
+                        {tab.label} ({tab.count})
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {tabs.length <= 1 && (
+                  <div className="mb-4">
+                    <h2 className="text-lg font-semibold text-on-surface">Posts ({posts?.length || 0})</h2>
+                  </div>
+                )}
+
+                {!filteredPosts || filteredPosts.length === 0 ? (
+                  <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
+                    <p>No public posts yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredPosts.map((post: any) => (
+                      <PostCard
+                        key={post.id}
+                        post={post}
+                        onUpdate={loadProfileData}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
+            )
+          })()}
         </div>
 
         {/* Sidebar */}
