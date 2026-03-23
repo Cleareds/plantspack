@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Clock, ChefHat, Users, BarChart3 } from 'lucide-react'
+import { Clock, ChefHat, Users, BarChart3 } from 'lucide-react'
 import ImageSlider from '@/components/ui/ImageSlider'
 import InlineComments from '@/components/posts/InlineComments'
 
@@ -84,10 +84,13 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
   return (
     <div className="min-h-screen bg-surface-container-low">
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <Link href="/" className="inline-flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-6">
-          <ArrowLeft className="h-4 w-4" />
-          Back to feed
-        </Link>
+        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <span className="text-outline">/</span>
+          <Link href="/recipes" className="hover:text-primary transition-colors">Recipes</Link>
+          <span className="text-outline">/</span>
+          <span className="text-on-surface font-medium truncate max-w-[200px]">{post.title || post.content.split('\n')[0].substring(0, 40)}</span>
+        </nav>
 
         <div className="bg-surface-container-lowest rounded-2xl editorial-shadow overflow-hidden">
           {images.length > 0 && (

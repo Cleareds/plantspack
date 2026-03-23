@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
 import PostPageContent from '@/components/posts/PostPageContent'
 import { Tables } from '@/lib/supabase'
 
@@ -87,16 +86,14 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-6">
-          <Link
-            href="/"
-            className="inline-flex items-center space-x-2 text-primary hover:text-primary-container transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span>Back to Feed</span>
-          </Link>
-        </div>
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <span className="text-outline">/</span>
+          <span className="text-on-surface font-medium truncate max-w-[300px]">
+            {post.title || 'Post'}
+          </span>
+        </nav>
 
         {/* Post Content */}
         <PostPageContent post={post} />

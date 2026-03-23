@@ -82,6 +82,32 @@ export async function GET(
       )
     }
 
+    // Privacy check: friends-only posts require mutual follow
+    if (post.privacy === 'friends') {
+      const sessionSupabase = await createClient()
+      const { data: { session } } = await sessionSupabase.auth.getSession()
+
+      if (!session) {
+        return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+      }
+
+      const userId = session.user.id
+      // Owner can always see their own post
+      if (userId !== post.user_id) {
+        // Check if current user follows the post author
+        const { data: followRecord } = await supabase
+          .from('follows')
+          .select('id')
+          .eq('follower_id', userId)
+          .eq('following_id', post.user_id)
+          .maybeSingle()
+
+        if (!followRecord) {
+          return NextResponse.json({ error: 'Post not found' }, { status: 404 })
+        }
+      }
+    }
+
     return NextResponse.json({ post })
   } catch (error) {
     console.error('Error fetching post:', error)
