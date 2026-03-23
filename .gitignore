@@ -84,3 +84,5 @@ next-env.d.ts
 # Scraper data
 scripts/data/
 scripts/osm-europe-vegan-places.json
+scripts/verified-places-import.json
+scripts/high-confidence-places.json
