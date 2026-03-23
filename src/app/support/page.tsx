@@ -193,8 +193,8 @@ function SupportContent() {
             <span className="text-primary">free. Forever.</span>
           </h1>
           <p className="text-on-surface-variant text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto">
-            We believe vegan resources should be accessible to everyone.
-            Every feature is free, no exceptions. If you love what we&apos;re building,
+            We believe the vegan community should grow without paywalls.
+            Every feature is free for everyone. If you love what we&apos;re building,
             consider supporting us.
           </p>
         </div>
@@ -229,7 +229,7 @@ function SupportContent() {
             </h2>
             <p className="text-on-surface-variant text-lg max-w-xl mx-auto">
               Help keep PlantsPack free for everyone. Your support goes directly toward
-              servers, development, and expanding vegan resources worldwide.
+              servers, development, and expanding the vegan community worldwide.
             </p>
           </div>
 
