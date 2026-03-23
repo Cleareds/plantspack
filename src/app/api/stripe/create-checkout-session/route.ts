@@ -100,24 +100,39 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // Auto-create profile
+      // Auto-create profile with unique username
       const email = authData.user.email
       const metadata = authData.user.user_metadata || {}
-      const username = metadata.username || email.split('@')[0]
+      const baseUsername = metadata.username || email.split('@')[0]
+
+      // Find unique username
+      let finalUsername = baseUsername
+      let counter = 1
+      for (let i = 0; i < 50; i++) {
+        const { data: existing } = await supabase
+          .from('users')
+          .select('id')
+          .eq('username', finalUsername)
+          .maybeSingle()
+        if (!existing) break
+        finalUsername = `${baseUsername}${counter}`
+        counter++
+      }
 
       const { error: createErr } = await supabase
         .from('users')
         .insert({
           id: userId,
           email,
-          username,
+          username: finalUsername,
           first_name: metadata.first_name || metadata.given_name || '',
           last_name: metadata.last_name || metadata.family_name || '',
           bio: '',
         })
 
-      if (createErr && createErr.code !== '23505') {
+      if (createErr) {
         console.error('Failed to auto-create profile:', createErr)
+        // If it's a duplicate key on id, the profile exists — just re-fetch
       }
 
       // Re-fetch
@@ -130,6 +145,7 @@ export async function POST(request: NextRequest) {
       user = retryUser
 
       if (!user) {
+        console.error('Profile still not found after auto-create for:', userId)
         return NextResponse.json(
           { error: 'Failed to load user data. Please try logging out and back in.' },
           { status: 500 }
@@ -256,9 +272,10 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (error) {
-    console.error('Unexpected error in checkout session creation:', error)
+    const message = error instanceof Error ? error.message : String(error)
+    console.error('Unexpected error in checkout session creation:', message, error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: message || 'Internal server error' },
       { status: 500 }
     )
   }
