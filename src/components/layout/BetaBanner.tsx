@@ -4,25 +4,19 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { X } from 'lucide-react'
 
-interface BetaBannerProps {
-  onVisibilityChange?: (visible: boolean) => void
-}
-
-export default function BetaBanner({ onVisibilityChange }: BetaBannerProps) {
+export default function BetaBanner() {
   const [isDismissed, setIsDismissed] = useState(true) // default hidden to avoid hydration flash
 
   useEffect(() => {
     const dismissed = localStorage.getItem('beta-banner-dismissed')
     if (!dismissed) {
       setIsDismissed(false)
-      onVisibilityChange?.(true)
     }
-  }, [onVisibilityChange])
+  }, [])
 
   const handleDismiss = () => {
     setIsDismissed(true)
     localStorage.setItem('beta-banner-dismissed', 'true')
-    onVisibilityChange?.(false)
   }
 
   if (isDismissed) return null
