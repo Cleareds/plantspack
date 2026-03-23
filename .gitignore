@@ -83,3 +83,4 @@ next-env.d.ts
 
 # Scraper data
 scripts/data/
+scripts/osm-europe-vegan-places.json
