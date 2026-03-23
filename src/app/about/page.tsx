@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Heart, Leaf, Shield, HandHeart } from 'lucide-react'
+import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'About PlantsPack - Built for the Mission, Not the Markets',
@@ -25,11 +25,50 @@ export default function AboutPage() {
             <br />
             <span className="text-primary">Not the Markets</span>
           </h1>
+          <p className="text-on-surface-variant text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+            PlantsPack is a free, community-funded platform for vegans and anyone exploring plant-based living.
+            No investors. No ads. No paywalls.
+          </p>
+        </div>
+
+        {/* What is PlantsPack */}
+        <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8 md:p-10 mb-12">
+          <h2 className="text-2xl font-bold text-on-surface mb-6">What is PlantsPack?</h2>
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div className="flex gap-3">
+              <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-on-surface text-sm">Vegan Places Map</div>
+                <p className="text-sm text-on-surface-variant">Find and share vegan-friendly restaurants, stores, and stays worldwide.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <BookOpen className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-on-surface text-sm">Recipes &amp; Resources</div>
+                <p className="text-sm text-on-surface-variant">Discover and share plant-based recipes, products, and lifestyle tips.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Users className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-on-surface text-sm">Community &amp; Packs</div>
+                <p className="text-sm text-on-surface-variant">Connect with like-minded people. Organise content into curated packs.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Vote className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-on-surface text-sm">You Decide What We Build</div>
+                <p className="text-sm text-on-surface-variant">Vote on features and shape the platform&apos;s future on the <Link href="/roadmap" className="text-primary hover:underline">roadmap</Link>.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* The Problem */}
-        <div className="prose prose-lg max-w-none mb-12">
-          <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8 md:p-10 space-y-5 text-on-surface-variant text-lg leading-relaxed">
+        <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8 md:p-10 mb-12">
+          <div className="space-y-5 text-on-surface-variant text-lg leading-relaxed">
             <p>
               We built PlantsPack because we were tired of seeing great vegan platforms disappear.
               Most apps today are built on venture capital &mdash; millions of dollars in debt that force them
@@ -39,14 +78,9 @@ export default function AboutPage() {
               We are doing things differently.
             </p>
             <p>
-              We are a team of two &mdash; Oleksandra and Anton, originally from Ukraine, based in Belgium.
-              Oleksandra is 10+ years vegan and Anton joined her on this journey 1.5 years ago.
-              Our monthly costs are less than a dinner out. Because we are lean, we don&apos;t answer to investors &mdash;
-              we answer to you.
-            </p>
-            <p>
-              Our goal isn&apos;t to become a billion-dollar company. It&apos;s to create a <strong>permanent, digital home
-              for the vegan movement</strong>.
+              PlantsPack is independent and community-funded. We don&apos;t answer to investors &mdash;
+              we answer to you. Our goal isn&apos;t to become a billion-dollar company. It&apos;s to create a
+              <strong> permanent, digital home for the vegan movement</strong>.
             </p>
           </div>
         </div>
@@ -59,17 +93,20 @@ export default function AboutPage() {
           </div>
           <div className="space-y-4 text-on-surface-variant text-lg leading-relaxed">
             <p>
+              We&apos;re Oleksandra and Anton, originally from Ukraine, based in Belgium.
+              Oleksandra is 10+ years vegan and Anton joined her on this journey 1.5 years ago.
+            </p>
+            <p>
               There is no safe space for vegans to express their thoughts and share their joys
               without being hit by hate, trolling, or invites to &ldquo;the fight.&rdquo;
             </p>
             <p>
-              When we travel, when we post things online, when we participate in social gatherings &mdash;
-              it&apos;s always at least a little uncomfortable. We find our ways, everybody does.
-              But wouldn&apos;t it be nice to have an online space where you don&apos;t have to worry about all that?
+              We wanted a space to express, share, and enjoy the lifestyle we consider best for us and the planet.
+              To support people on their first steps. To feel safe while doing something meaningful
+              &mdash; without constant debates about the basics of our lifestyle.
             </p>
-            <p>
-              A space to express, share, and enjoy the lifestyle we consider best for us and the planet.
-              To support people on their first steps. To feel safe while doing something meaningful.
+            <p className="font-semibold text-on-surface">
+              That&apos;s how PlantsPack was born.
             </p>
           </div>
         </div>
@@ -97,7 +134,7 @@ export default function AboutPage() {
               <div className="font-semibold text-on-surface mb-1">Goes to the Animals</div>
               <p className="text-sm text-on-surface-variant">
                 Every cent of profit beyond our basic needs is donated to animal shelters
-                in Ukraine and community-voted vegan causes.
+                in Ukraine and community-voted vegan causes. We&apos;ll publish receipts.
               </p>
             </div>
           </div>
@@ -106,7 +143,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* Community Principles */}
+        {/* Our Principles */}
         <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8 md:p-10 mb-12">
           <div className="flex items-center gap-3 mb-5">
             <Shield className="h-6 w-6 text-primary" />
@@ -115,19 +152,19 @@ export default function AboutPage() {
           <ul className="space-y-4 text-on-surface-variant text-lg">
             <li className="flex gap-3">
               <span className="text-primary font-bold mt-1">1.</span>
-              <span><strong>Everything is free.</strong> No paywalls, no premium content gates. Every feature is available to everyone.</span>
+              <span><strong>Everything is free.</strong> No paywalls, no premium content gates. Every feature is available to everyone, forever.</span>
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold mt-1">2.</span>
-              <span><strong>No hate.</strong> PlantsPack is a safe, drama-light space. We moderate actively.</span>
+              <span><strong>No hate.</strong> PlantsPack is a safe, drama-light space. We moderate actively to keep it that way.</span>
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold mt-1">3.</span>
-              <span><strong>Community decides.</strong> Everyone can vote on what we build next. Check the <Link href="/roadmap" className="text-primary hover:underline font-semibold">roadmap</Link>.</span>
+              <span><strong>Community decides.</strong> Every user can <Link href="/roadmap" className="text-primary hover:underline font-semibold">vote on the roadmap</Link> and suggest features. We build what you need, not what investors want.</span>
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold mt-1">4.</span>
-              <span><strong>No investors, no ads.</strong> We are funded by voluntary supporters, not venture capital.</span>
+              <span><strong>No investors, no ads.</strong> Funded by voluntary supporters. We will never sell your data or show you ads.</span>
             </li>
           </ul>
         </div>
@@ -152,9 +189,9 @@ export default function AboutPage() {
           <div className="space-y-3 text-on-surface-variant">
             <p>
               Follow <Link href="/user/admin" className="text-primary hover:underline font-semibold">@admin</Link> for updates.
-              <span className="mx-2">·</span>
+              <span className="mx-2">&middot;</span>
               <Link href="/contact" className="text-primary hover:underline font-semibold">Contact us</Link>
-              <span className="mx-2">·</span>
+              <span className="mx-2">&middot;</span>
               <a href="mailto:hello@cleareds.com" className="text-primary hover:underline font-semibold">hello@cleareds.com</a>
             </p>
             <div className="flex flex-wrap gap-4 pt-3 border-t border-outline-variant/15">
