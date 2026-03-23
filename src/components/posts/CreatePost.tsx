@@ -714,7 +714,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     {slug: 'activism', icon: 'campaign', label: 'Activism'},
                                     {slug: 'question', icon: 'help', label: 'Question'},
                                     {slug: 'product', icon: 'shopping_bag', label: 'Product'},
-                                    {slug: 'hotel', icon: 'hotel', label: 'Hotel'},
+                                    {slug: 'hotel', icon: 'hotel', label: 'Stay'},
                                     {slug: 'organisation', icon: 'corporate_fare', label: 'Organisation'},
                                 ].map((cat) => (
                                     <button
@@ -887,9 +887,9 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"
                                 >
                                     <option value="eat">Eat</option>
-                                    <option value="hotel">Hotel</option>
+                                    <option value="hotel">Stay</option>
+                                    <option value="store">Store</option>
                                     <option value="event">Event</option>
-                                    <option value="museum">Museum</option>
                                     <option value="organisation">Organisation</option>
                                     <option value="other">Other</option>
                                 </select>

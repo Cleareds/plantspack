@@ -443,9 +443,9 @@ export default function MapContainerComponent() {
   const categories = [
     { value: 'all', label: 'All Places' },
     { value: 'eat', label: 'Eat' },
-    { value: 'hotel', label: 'Hotels' },
+    { value: 'hotel', label: 'Stay' },
+    { value: 'store', label: 'Stores' },
     { value: 'event', label: 'Events' },
-    { value: 'museum', label: 'Museums' },
     { value: 'organisation', label: 'Organisations' },
     { value: 'other', label: 'Other' },
   ]

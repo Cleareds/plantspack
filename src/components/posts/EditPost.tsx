@@ -314,7 +314,7 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                       { slug: 'activism', icon: 'campaign', label: 'Activism' },
                       { slug: 'question', icon: 'help', label: 'Question' },
                       { slug: 'product', icon: 'shopping_bag', label: 'Product' },
-                      { slug: 'hotel', icon: 'hotel', label: 'Hotel' },
+                      { slug: 'hotel', icon: 'hotel', label: 'Stay' },
                       { slug: 'organisation', icon: 'corporate_fare', label: 'Organisation' },
                     ].map((cat) => (
                       <button

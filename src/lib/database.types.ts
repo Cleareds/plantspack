@@ -247,7 +247,7 @@ export interface Database {
           id: string
           name: string
           description: string | null
-          category: 'eat' | 'hotel' | 'event' | 'museum' | 'organisation' | 'other'
+          category: 'eat' | 'hotel' | 'event' | 'store' | 'organisation' | 'other'
           latitude: number
           longitude: number
           address: string
@@ -270,7 +270,7 @@ export interface Database {
           id?: string
           name: string
           description?: string | null
-          category: 'eat' | 'hotel' | 'event' | 'museum' | 'organisation' | 'other'
+          category: 'eat' | 'hotel' | 'event' | 'store' | 'organisation' | 'other'
           latitude: number
           longitude: number
           address: string
@@ -293,7 +293,7 @@ export interface Database {
           id?: string
           name?: string
           description?: string | null
-          category?: 'eat' | 'hotel' | 'event' | 'museum' | 'organisation' | 'other'
+          category?: 'eat' | 'hotel' | 'event' | 'store' | 'organisation' | 'other'
           latitude?: number
           longitude?: number
           address?: string

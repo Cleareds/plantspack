@@ -3,9 +3,9 @@
 const categories = [
   { value: 'all', label: 'All', icon: 'apps' },
   { value: 'eat', label: 'Eat', icon: 'restaurant' },
-  { value: 'hotel', label: 'Hotels', icon: 'hotel' },
+  { value: 'hotel', label: 'Stay', icon: 'hotel' },
+  { value: 'store', label: 'Stores', icon: 'storefront' },
   { value: 'event', label: 'Events', icon: 'event' },
-  { value: 'museum', label: 'Museums', icon: 'museum' },
   { value: 'organisation', label: 'Organisations', icon: 'corporate_fare' },
   { value: 'other', label: 'Other', icon: 'more_horiz' },
 ]

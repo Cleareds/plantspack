@@ -19,7 +19,7 @@ const ALL_CATEGORIES: { slug: PostCategory; display_name: string; icon_name: str
   { slug: 'activism', display_name: 'Activism', icon_name: 'campaign' },
   { slug: 'question', display_name: 'Questions', icon_name: 'help' },
   { slug: 'product', display_name: 'Products', icon_name: 'shopping_bag' },
-  { slug: 'hotel', display_name: 'Hotels', icon_name: 'hotel' },
+  { slug: 'hotel', display_name: 'Stay', icon_name: 'hotel' },
   { slug: 'organisation', display_name: 'Organisations', icon_name: 'corporate_fare' },
   { slug: 'general', display_name: 'General', icon_name: 'article' },
 ]
