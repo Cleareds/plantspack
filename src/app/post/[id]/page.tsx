@@ -25,31 +25,11 @@ type Post = Tables<'posts'> & {
 async function getPost(id: string): Promise<Post | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-
-    // Try fetching by slug first (for SEO-friendly URLs), then by UUID
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-    const endpoint = isUUID
-      ? `${baseUrl}/api/posts/${id}`
-      : `${baseUrl}/api/posts/by-slug/${id}`
-
-    const response = await fetch(endpoint, {
+    // The API handles both UUIDs and slugs
+    const response = await fetch(`${baseUrl}/api/posts/${id}`, {
       next: { revalidate: 60 }
     })
-
-    if (!response.ok) {
-      // If slug lookup fails, try as UUID anyway
-      if (!isUUID) {
-        const fallbackResponse = await fetch(`${baseUrl}/api/posts/${id}`, {
-          next: { revalidate: 60 }
-        })
-        if (fallbackResponse.ok) {
-          const data = await fallbackResponse.json()
-          return data.post
-        }
-      }
-      return null
-    }
-
+    if (!response.ok) return null
     const data = await response.json()
     return data.post
   } catch (error) {

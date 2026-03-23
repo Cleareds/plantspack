@@ -8,9 +8,14 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params
-    const supabase = await createClient()
 
-    const { data: post, error } = await supabase
+    // Use admin client for public reads to bypass RLS (needed for server-component fetches)
+    const supabase = createAdminClient()
+
+    // Determine if this is a UUID or a slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+    let query = supabase
       .from('posts')
       .select(`
         *,
@@ -49,10 +54,18 @@ export async function GET(
           id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
-      .eq('id', id)
-      .single()
+
+    // Try UUID first, then slug fallback
+    if (isUUID) {
+      query = query.eq('id', id)
+    } else {
+      query = query.eq('slug', id)
+    }
+
+    const { data: post, error } = await query.single()
 
     if (error) {
+      // If slug lookup failed, don't retry — the by-slug endpoint handles that
       if (error.code === 'PGRST116') {
         return NextResponse.json(
           { error: 'Post not found' },

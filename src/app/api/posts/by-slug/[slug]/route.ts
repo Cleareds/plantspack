@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 export async function GET(
   _request: NextRequest,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await context.params
-    const supabase = await createClient()
+    const supabase = createAdminClient()
 
     const { data: post, error } = await supabase
       .from('posts')
@@ -49,6 +49,7 @@ export async function GET(
         )
       `)
       .eq('slug', slug)
+      .eq('privacy', 'public')
       .single()
 
     if (error) {

@@ -33,24 +33,10 @@ type RecipePost = {
 async function getRecipePost(id: string): Promise<RecipePost | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-
-    // Try slug first, then UUID
-    const endpoint = isUUID
-      ? `${baseUrl}/api/posts/${id}`
-      : `${baseUrl}/api/posts/by-slug/${id}`
-
-    const response = await fetch(endpoint, { next: { revalidate: 60 } })
-
-    if (!response.ok && !isUUID) {
-      // Slug lookup failed, try as UUID fallback
-      const fallback = await fetch(`${baseUrl}/api/posts/${id}`, { next: { revalidate: 60 } })
-      if (!fallback.ok) return null
-      const data = await fallback.json()
-      if (data.post?.category !== 'recipe') return null
-      return data.post
-    }
-
+    // The API handles both UUIDs and slugs
+    const response = await fetch(`${baseUrl}/api/posts/${id}`, {
+      next: { revalidate: 60 },
+    })
     if (!response.ok) return null
     const data = await response.json()
     if (data.post?.category !== 'recipe') return null
