@@ -118,7 +118,7 @@ export default function BlockButton({ userId, showText = true, className = '' }:
         ) : (
           <Shield className="h-4 w-4" />
         )}
-        {showText && <span>{isBlocked ? 'Unblock' : 'Block'}</span>}
+        {showText && <span className={"sm:hidden"}>{isBlocked ? 'Unblock' : 'Block'}</span>}
       </button>
 
       {/* Confirmation Modal */}

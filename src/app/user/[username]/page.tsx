@@ -253,8 +253,8 @@ export default function UserProfilePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       {/* Profile Header */}
-      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6 mb-6">
-        <div className="flex items-start justify-between mb-4">
+      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-3 sm:p-6 mb-6">
+        <div className="flex items-start justify-between mb-4 flex-wrap sm:flex-nowrap">
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0">
               {profileUser.avatar_url ? (
@@ -297,7 +297,7 @@ export default function UserProfilePage() {
             </div>
           </div>
           {currentUser && currentUser.id !== profileUser.id && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 mt-2 sm:mt-0">
               <FollowButton userId={profileUser.id} />
               <MuteButton userId={profileUser.id} />
               <BlockButton userId={profileUser.id} />

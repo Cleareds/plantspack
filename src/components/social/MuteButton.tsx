@@ -108,7 +108,7 @@ export default function MuteButton({ userId, showText = true, className = '' }: 
       ) : (
         <VolumeX className="h-4 w-4" />
       )}
-      {showText && <span>{isMuted ? 'Unmute' : 'Mute'}</span>}
+      {showText && <span className={"sm:hidden"}>{isMuted ? 'Unmute' : 'Mute'}</span>}
     </button>
   )
 }
