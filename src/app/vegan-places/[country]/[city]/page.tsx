@@ -1,0 +1,283 @@
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { MapPin, Star, PawPrint, Globe, ExternalLink } from 'lucide-react'
+
+interface PageProps {
+  params: Promise<{ country: string; city: string }>
+}
+
+function fromSlug(slug: string): string {
+  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+interface Place {
+  id: string
+  name: string
+  category: string
+  address: string
+  description: string | null
+  images: string[]
+  main_image_url: string | null
+  average_rating: number
+  review_count: number
+  is_pet_friendly: boolean
+  website: string | null
+  latitude: number
+  longitude: number
+}
+
+async function getPlaces(country: string, city: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${country}&city=${city}&limit=500`, {
+      next: { revalidate: 3600 },
+    })
+    if (!res.ok) return { places: [], city: fromSlug(city), country: fromSlug(country), total: 0 }
+    return res.json()
+  } catch {
+    return { places: [], city: fromSlug(city), country: fromSlug(country), total: 0 }
+  }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { country, city } = await params
+  const { places, city: cityName, country: countryName } = await getPlaces(country, city)
+
+  const title = `Vegan Restaurants & Places in ${cityName}, ${countryName} (${places.length})`
+  const description = `Discover ${places.length} vegan restaurants, stores, and stays in ${cityName}. Community-verified with ratings and reviews.`
+
+  return {
+    title: `${title} | PlantsPack`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      siteName: 'PlantsPack',
+    },
+  }
+}
+
+const CATEGORY_LABELS: Record<string, string> = {
+  eat: 'Eat',
+  hotel: 'Stay',
+  store: 'Store',
+  event: 'Event',
+  organisation: 'Organisation',
+  other: 'Other',
+}
+
+// JSON-LD structured data for SEO
+function generateJsonLd(places: Place[], cityName: string, countryName: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Vegan Places in ${cityName}, ${countryName}`,
+    numberOfItems: places.length,
+    itemListElement: places.slice(0, 50).map((place, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant',
+        name: place.name,
+        address: place.address,
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: place.latitude,
+          longitude: place.longitude,
+        },
+        ...(place.average_rating > 0 ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: place.average_rating,
+            reviewCount: place.review_count || 1,
+          },
+        } : {}),
+        ...(place.website ? { url: place.website } : {}),
+      },
+    })),
+  }
+}
+
+export default async function CityPage({ params }: PageProps) {
+  const { country, city } = await params
+  const { places, city: cityName, country: countryName } = await getPlaces(country, city)
+
+  const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
+  categories.sort()
+
+  return (
+    <div className="min-h-screen bg-surface">
+      {/* JSON-LD */}
+      {places.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generateJsonLd(places, cityName, countryName)),
+          }}
+        />
+      )}
+
+      <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-8">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <span className="text-outline">/</span>
+          <Link href="/vegan-places" className="hover:text-primary transition-colors">Vegan Places</Link>
+          <span className="text-outline">/</span>
+          <Link href={`/vegan-places/${country}`} className="hover:text-primary transition-colors">{countryName}</Link>
+          <span className="text-outline">/</span>
+          <span className="text-on-surface font-medium">{cityName}</span>
+        </nav>
+
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="font-headline font-extrabold text-3xl md:text-5xl text-on-surface tracking-tight mb-4">
+            Vegan Places in <span className="text-primary">{cityName}</span>
+          </h1>
+          <p className="text-on-surface-variant text-lg mb-4">
+            {places.length > 0
+              ? <>{places.length.toLocaleString()} vegan restaurants, stores, and stays in {cityName}, {countryName}.</>
+              : <>Discover vegan-friendly places in {cityName}.</>
+            }
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href={`/map`}
+              className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90"
+            >
+              <Globe className="h-4 w-4" />
+              View on map
+            </Link>
+            <Link
+              href="/map"
+              className="inline-flex items-center gap-2 text-sm font-medium text-on-surface-variant ghost-border px-4 py-2 rounded-lg transition-colors hover:bg-surface-container-low"
+            >
+              <MapPin className="h-4 w-4" />
+              Add a place in {cityName}
+            </Link>
+          </div>
+        </div>
+
+        {/* Category filter pills */}
+        {categories.length > 1 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            <span className="px-3 py-1.5 bg-primary text-on-primary-btn rounded-full text-sm font-medium">
+              All ({places.length})
+            </span>
+            {categories.map((cat: string) => {
+              const count = places.filter((p: Place) => p.category === cat).length
+              return (
+                <span key={cat} className="px-3 py-1.5 bg-surface-container-low text-on-surface-variant rounded-full text-sm font-medium">
+                  {CATEGORY_LABELS[cat] || cat} ({count})
+                </span>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Places List */}
+        {places.length > 0 ? (
+          <div className="space-y-4">
+            {places.map((place: Place) => {
+              const thumbnail = place.main_image_url || place.images?.[0]
+              return (
+                <Link
+                  key={place.id}
+                  href={`/place/${place.id}`}
+                  className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
+                >
+                  {/* Thumbnail */}
+                  {thumbnail ? (
+                    <img
+                      src={thumbnail}
+                      alt={place.name}
+                      className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-8 w-8 text-outline" />
+                    </div>
+                  )}
+
+                  {/* Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <h2 className="font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
+                        {place.name}
+                      </h2>
+                      {place.website && (
+                        <ExternalLink className="h-4 w-4 text-outline flex-shrink-0 mt-0.5" />
+                      )}
+                    </div>
+
+                    <div className="flex items-center flex-wrap gap-2 mt-1.5">
+                      <span className="bg-secondary-container text-on-surface px-2 py-0.5 rounded-md text-xs capitalize font-medium">
+                        {CATEGORY_LABELS[place.category] || place.category}
+                      </span>
+                      {place.is_pet_friendly && (
+                        <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded-md text-xs flex items-center gap-1">
+                          <PawPrint className="h-3 w-3" />
+                          Pet Friendly
+                        </span>
+                      )}
+                      {place.average_rating > 0 && (
+                        <span className="flex items-center gap-1 text-xs text-on-surface-variant">
+                          <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                          {place.average_rating.toFixed(1)}
+                          {place.review_count > 0 && <span>({place.review_count})</span>}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-sm text-on-surface-variant mt-1.5 line-clamp-1">{place.address}</p>
+
+                    {place.description && (
+                      <p className="text-sm text-outline mt-1 line-clamp-1">{place.description}</p>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">🌱</div>
+            <h2 className="text-xl font-semibold text-on-surface mb-2">No places yet in {cityName}</h2>
+            <p className="text-on-surface-variant mb-6">
+              Know a vegan restaurant or store in {cityName}? Be the first to add it!
+            </p>
+            <Link
+              href="/map"
+              className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-6 py-3 rounded-xl font-medium"
+            >
+              <MapPin className="h-5 w-5" />
+              Add a place
+            </Link>
+          </div>
+        )}
+
+        {/* Related: other cities in the same country */}
+        <div className="mt-16 pt-8 border-t border-outline-variant/15">
+          <h2 className="text-lg font-semibold text-on-surface mb-4">
+            More vegan places in {countryName}
+          </h2>
+          <p className="text-sm text-on-surface-variant">
+            <Link href={`/vegan-places/${country}`} className="text-primary hover:underline font-medium">
+              Browse all cities in {countryName} &rarr;
+            </Link>
+          </p>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-8 text-center">
+          <div className="inline-block bg-surface-container-low rounded-xl px-6 py-4 max-w-lg">
+            <p className="text-sm text-on-surface-variant">
+              Missing a place? <Link href="/map" className="text-primary hover:underline font-semibold">Add it to the map</Link> and help the vegan community in {cityName}.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

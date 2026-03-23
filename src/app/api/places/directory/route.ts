@@ -1,0 +1,122 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createAdminClient } from '@/lib/supabase-admin'
+
+/**
+ * GET /api/places/directory — Directory data for SEO pages
+ * ?level=countries — List countries with place counts
+ * ?level=cities&country=germany — List cities in a country
+ * ?level=places&country=germany&city=berlin — List places in a city
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = createAdminClient()
+    const { searchParams } = new URL(request.url)
+    const level = searchParams.get('level') || 'countries'
+    const country = searchParams.get('country')
+    const city = searchParams.get('city')
+    const category = searchParams.get('category')
+    const sort = searchParams.get('sort') || 'count'
+    const limit = Math.min(parseInt(searchParams.get('limit') || '200'), 500)
+
+    if (level === 'countries') {
+      // Get countries with place counts
+      const { data, error } = await supabase
+        .from('places')
+        .select('country')
+        .not('country', 'is', null)
+        .neq('country', '')
+
+      if (error) throw error
+
+      // Count per country
+      const counts: Record<string, number> = {}
+      for (const row of data || []) {
+        const c = row.country!
+        counts[c] = (counts[c] || 0) + 1
+      }
+
+      const countries = Object.entries(counts)
+        .map(([name, count]) => ({
+          name,
+          slug: toSlug(name),
+          count,
+        }))
+        .sort((a, b) => b.count - a.count)
+
+      return NextResponse.json({ countries, total: data?.length || 0 })
+    }
+
+    if (level === 'cities' && country) {
+      // Get cities in a country with place counts
+      const { data, error } = await supabase
+        .from('places')
+        .select('city')
+        .not('city', 'is', null)
+        .neq('city', '')
+        .ilike('country', fromSlug(country))
+
+      if (error) throw error
+
+      const counts: Record<string, number> = {}
+      for (const row of data || []) {
+        const c = row.city!
+        counts[c] = (counts[c] || 0) + 1
+      }
+
+      const cities = Object.entries(counts)
+        .map(([name, count]) => ({
+          name,
+          slug: toSlug(name),
+          count,
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, limit)
+
+      return NextResponse.json({ cities, country: fromSlug(country) })
+    }
+
+    if (level === 'places' && country && city) {
+      // Get places in a specific city
+      let query = supabase
+        .from('places')
+        .select('id, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, latitude, longitude, city, country')
+        .ilike('country', fromSlug(country))
+        .ilike('city', fromSlug(city))
+
+      if (category) {
+        query = query.eq('category', category)
+      }
+
+      if (sort === 'rating') {
+        query = query.order('average_rating', { ascending: false, nullsFirst: false })
+      } else {
+        query = query.order('name', { ascending: true })
+      }
+
+      const { data, error } = await query.limit(limit)
+      if (error) throw error
+
+      return NextResponse.json({
+        places: data || [],
+        city: fromSlug(city),
+        country: fromSlug(country),
+        total: data?.length || 0,
+      })
+    }
+
+    return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 })
+  } catch (error) {
+    console.error('[Directory API] Error:', error)
+    return NextResponse.json({ error: 'Failed to fetch directory data' }, { status: 500 })
+  }
+}
+
+function toSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+}
+
+function fromSlug(slug: string): string {
+  // Convert slug back to approximate name for ilike matching
+  // "new-york" → "new york" (ilike is case-insensitive)
+  return slug.replace(/-/g, ' ')
+}

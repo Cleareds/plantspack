@@ -15,6 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
     { url: SITE_URL, changeFrequency: 'daily' as const, priority: 1.0 },
     { url: `${SITE_URL}/map`, changeFrequency: 'daily' as const, priority: 0.9 },
+    { url: `${SITE_URL}/vegan-places`, changeFrequency: 'daily' as const, priority: 0.9 },
     { url: `${SITE_URL}/recipes`, changeFrequency: 'daily' as const, priority: 0.9 },
     { url: `${SITE_URL}/events`, changeFrequency: 'daily' as const, priority: 0.9 },
     { url: `${SITE_URL}/packs`, changeFrequency: 'daily' as const, priority: 0.8 },
@@ -71,6 +72,50 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch (e) {
     console.error('[Sitemap] Error fetching places:', e)
+  }
+
+  // Vegan places directory: country and city pages
+  try {
+    const { data: placeLocations } = await supabase
+      .from('places')
+      .select('city, country')
+      .not('city', 'is', null)
+      .not('country', 'is', null)
+      .limit(10000)
+
+    if (placeLocations) {
+      const countries = new Set<string>()
+      const cityCountry = new Set<string>()
+
+      for (const p of placeLocations) {
+        if (p.country) {
+          const cs = p.country.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+          countries.add(cs)
+          if (p.city) {
+            const ct = p.city.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+            cityCountry.add(`${cs}/${ct}`)
+          }
+        }
+      }
+
+      for (const country of countries) {
+        entries.push({
+          url: `${SITE_URL}/vegan-places/${country}`,
+          changeFrequency: 'daily',
+          priority: 0.85,
+        })
+      }
+
+      for (const cc of cityCountry) {
+        entries.push({
+          url: `${SITE_URL}/vegan-places/${cc}`,
+          changeFrequency: 'daily',
+          priority: 0.9,
+        })
+      }
+    }
+  } catch (e) {
+    console.error('[Sitemap] Error fetching place locations:', e)
   }
 
   // Public user profiles
