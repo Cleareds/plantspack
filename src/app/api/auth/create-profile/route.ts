@@ -100,19 +100,59 @@ export async function POST() {
       .single()
 
     if (createError) {
-      // If profile already exists (duplicate key error), fetch and return it
+      // If duplicate key error, handle both id and email conflicts
       if (createError.code === '23505') {
-        const { data: existingProfile } = await adminClient
+        // Try by ID first
+        const { data: byId } = await adminClient
           .from('users')
           .select('*')
           .eq('id', user.id)
-          .single()
+          .maybeSingle()
 
-        if (existingProfile) {
+        if (byId) {
           return NextResponse.json(
-            { message: 'Profile already exists', profile: existingProfile },
+            { message: 'Profile already exists', profile: byId },
             { status: 200 }
           )
+        }
+
+        // Duplicate email — another auth account left an orphaned row
+        // Update the orphaned row to use the current auth ID
+        if (createError.message?.includes('email')) {
+          const { data: byEmail } = await adminClient
+            .from('users')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle()
+
+          if (byEmail && byEmail.id !== user.id) {
+            console.log('Orphaned profile found for email, reassigning:', byEmail.id, '->', user.id)
+            // Delete dependent rows on orphaned ID, then delete the orphaned profile
+            await adminClient.from('notification_preferences').delete().eq('user_id', byEmail.id)
+            await adminClient.from('users').delete().eq('id', byEmail.id)
+
+            // Retry insert
+            const { data: retryProfile, error: retryError } = await adminClient
+              .from('users')
+              .insert({
+                id: user.id,
+                email,
+                username: finalUsername,
+                first_name: finalFirstName,
+                last_name: finalLastName,
+                avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
+                bio: '',
+              })
+              .select()
+              .single()
+
+            if (!retryError && retryProfile) {
+              return NextResponse.json(
+                { message: 'Profile created successfully', profile: retryProfile },
+                { status: 201 }
+              )
+            }
+          }
         }
       }
 
