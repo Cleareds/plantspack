@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth'
 import Link from 'next/link'
-import { Crown, Vote, Send, CheckCircle, Lock } from 'lucide-react'
+import { Vote, Send, CheckCircle, Lock } from 'lucide-react'
 
 type ColumnKey = 'now' | 'next' | 'later'
 type StatusKey = 'in-development' | 'ongoing' | 'planned' | 'exploring'
@@ -194,7 +194,8 @@ export default function RoadmapPage() {
   const [suggestionSuccess, setSuggestionSuccess] = useState(false)
   const [suggestionError, setSuggestionError] = useState('')
 
-  const canVote = (profile as any)?.subscription_tier === 'medium' || (profile as any)?.subscription_tier === 'premium'
+  // All authenticated users can vote (paywalls removed)
+  const canVote = !!user
 
   useEffect(() => {
     fetchVotes()
@@ -294,10 +295,7 @@ export default function RoadmapPage() {
         <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-6">
           <h1 className="text-4xl font-bold text-on-surface mb-4">Roadmap</h1>
           <p className="text-xl text-on-surface-variant mb-3">
-            Help shape the future of PlantsPack by voting for features you'd like to see next.
-          </p>
-          <p className="text-base text-outline mb-2">
-            <strong>Voting is available for Support and Premium members.</strong> All users can view current results and submit suggestions.
+            Help shape the future of PlantsPack. Vote for features, suggest ideas, and decide what we build next.
           </p>
           <p className="text-sm text-outline italic">
             Estimated dates are indicative and may shift based on community votes and priorities.
@@ -305,37 +303,16 @@ export default function RoadmapPage() {
         </div>
 
         {/* Voting Access Info */}
-        {!user ? (
+        {!user && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
             <p className="text-blue-900">
               <Link href="/auth" className="font-semibold underline hover:text-blue-700">
                 Sign in
               </Link>{' '}
-              and upgrade to Support or Premium to vote for features and help shape PlantsPack's future.
+              to vote for features and help shape PlantsPack&apos;s future.
             </p>
           </div>
-        ) : !canVote ? (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
-            <div className="flex items-start gap-3">
-              <Crown className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-yellow-900 font-semibold mb-2">
-                  Voting is available for Support and Premium members
-                </p>
-                <p className="text-yellow-800 mb-3">
-                  Upgrade your subscription to participate in shaping PlantsPack's future.
-                </p>
-                <Link
-                  href="/settings/subscription"
-                  className="inline-flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md transition-colors"
-                >
-                  <Crown className="h-4 w-4" />
-                  Upgrade Now
-                </Link>
-              </div>
-            </div>
-          </div>
-        ) : null}
+        )}
 
         {/* 3-Column Timeline */}
         {loading ? (
@@ -390,7 +367,7 @@ export default function RoadmapPage() {
                                   <Lock className="h-4 w-4 text-outline" />
                                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10">
                                     <div className="bg-on-surface text-white text-xs rounded px-2 py-1 whitespace-nowrap">
-                                      Support or Premium required
+                                      Sign in to vote
                                     </div>
                                   </div>
                                 </div>
