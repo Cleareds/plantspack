@@ -20,14 +20,16 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">2. Description of Service</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is a community platform designed for individuals who embrace a vegan, plant-based, and
-              animal-friendly lifestyle. Our mission is to create a drama-light, supportive community where users can:
+              PlantsPack is a free, community-funded platform for vegans and anyone exploring plant-based living.
+              We are independent — no investors, no ads. Our mission is to create a safe, supportive space where users can:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
-              <li>Share their journey and experiences</li>
-              <li>Discover and share vegan-friendly places and resources</li>
-              <li>Connect with like-minded individuals</li>
-              <li>Build a positive, supportive community</li>
+              <li>Discover and share vegan restaurants, stores, and stays on an interactive map</li>
+              <li>Share recipes, events, and lifestyle content</li>
+              <li>Curate content into packs (themed collections)</li>
+              <li>Connect with like-minded individuals in a drama-light environment</li>
+              <li>Vote on the platform roadmap to shape what gets built next</li>
+              <li>Claim and manage business listings for verified place owners</li>
             </ul>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">3. User Accounts</h2>
@@ -96,17 +98,19 @@ export default function TermsOfService() {
               <li>Take appropriate action to maintain a safe community</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">8. Subscription and Payment</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">8. Free Platform and Voluntary Support</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack offers both free and paid subscription tiers:
+              PlantsPack is free for all users. Every feature — including unlimited posts, images, videos, recipes,
+              places, packs, and location sharing — is available to everyone at no cost.
             </p>
-            <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
-              <li><strong>Free Tier:</strong> Access to core features with limitations on post length and media uploads</li>
-              <li><strong>Paid Tiers:</strong> Enhanced features including unlimited posts, video uploads, and location sharing</li>
-            </ul>
             <p className="text-on-surface-variant mb-4">
-              Paid subscriptions are billed according to your selected plan. You may cancel your subscription at any time.
-              No refunds will be provided for partial billing periods.
+              Users may choose to become voluntary Supporters through a monthly donation. Supporters receive a
+              profile badge and the ability to participate in platform governance through roadmap voting.
+              Supporter donations are non-refundable and may be cancelled at any time through the Stripe customer portal.
+            </p>
+            <p className="text-on-surface-variant mb-4">
+              <strong>The 50/50 Pledge:</strong> 50% of supporter donations fund platform operations (servers, security,
+              development). 50% is donated to animal welfare causes selected by the community and the PlantsPack team.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">9. Privacy</h2>
@@ -159,8 +163,8 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Governing Law</h2>
             <p className="text-on-surface-variant mb-4">
-              These Terms shall be governed by and construed in accordance with applicable laws, without regard
-              to conflict of law principles.
+              These Terms shall be governed by and construed in accordance with the laws of Belgium. PlantsPack
+              is operated by Cleareds, a company registered in Belgium.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Dispute Resolution</h2>

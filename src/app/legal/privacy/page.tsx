@@ -32,9 +32,10 @@ export default function PrivacyPolicy() {
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Account Information:</strong> Username, email address, password (encrypted), name, and profile picture</li>
               <li><strong>Profile Information:</strong> Bio, preferences, and any other information you choose to add</li>
-              <li><strong>Content:</strong> Posts, comments, images, videos, and other content you create or share</li>
-              <li><strong>Location Data:</strong> If you choose to share your location, we collect city and region data (paid tier feature)</li>
-              <li><strong>Payment Information:</strong> For paid subscriptions, processed securely through Stripe (we do not store full payment details)</li>
+              <li><strong>Content:</strong> Posts, comments, images, videos, recipes, events, and other content you create or share</li>
+              <li><strong>Location Data:</strong> If you choose to share your location or add vegan places, we collect city, country, and coordinate data</li>
+              <li><strong>Places Data:</strong> When you add or review vegan places, we collect the place name, address, coordinates, category, images, and reviews</li>
+              <li><strong>Payment Information:</strong> For voluntary supporter donations, processed securely through Stripe (we do not store full payment details)</li>
             </ul>
 
             <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">2.2 Automatically Collected Information</h3>
@@ -150,8 +151,11 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Supabase:</strong> Database and authentication services</li>
-              <li><strong>Stripe:</strong> Payment processing for subscriptions</li>
+              <li><strong>Stripe:</strong> Payment processing for voluntary supporter donations</li>
               <li><strong>Vercel:</strong> Hosting and deployment</li>
+              <li><strong>OpenStreetMap:</strong> Map data and geocoding for vegan places</li>
+              <li><strong>OpenAI:</strong> Content moderation assistance</li>
+              <li><strong>Resend:</strong> Transactional email delivery</li>
             </ul>
             <p className="text-on-surface-variant mb-4">
               These services have their own privacy policies. We encourage you to review them.
@@ -178,9 +182,11 @@ export default function PrivacyPolicy() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Contact Us</h2>
             <p className="text-on-surface-variant mb-4">
-              If you have questions about this Privacy Policy or how we handle your data, please contact us:
+              If you have questions about this Privacy Policy or how we handle your data, please contact us.
+              PlantsPack is operated by Cleareds, a company registered in Belgium.
             </p>
             <ul className="list-none text-on-surface-variant mb-4 space-y-2">
+              <li><strong>Data Controller:</strong> Cleareds (Belgium)</li>
               <li><strong>Email:</strong> hello@cleareds.com</li>
               <li><strong>Contact Form:</strong>{' '}
                 <Link href="/contact" className="text-primary hover:text-primary-container underline">
