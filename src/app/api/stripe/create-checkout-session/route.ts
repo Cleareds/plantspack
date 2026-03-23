@@ -77,26 +77,64 @@ export async function POST(request: NextRequest) {
     // Get user details
     console.log('Fetching user details for ID:', userId)
     const supabase = createAdminClient()
-    const { data: user, error: userError } = await supabase
+    let { data: user, error: userError } = await supabase
       .from('users')
       .select('email, stripe_customer_id, username')
       .eq('id', userId)
-      .single()
+      .maybeSingle()
 
     if (userError) {
       console.error('Database error fetching user:', userError)
-      return NextResponse.json(
-        { error: 'Failed to load user data' },
-        { status: 500 }
-      )
     }
 
+    // If profile doesn't exist, try to get email from auth and create profile
     if (!user) {
-      console.error('User not found:', userId)
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
+      console.log('Profile not found, checking auth user...')
+      const { data: authData } = await supabase.auth.admin.getUserById(userId)
+
+      if (!authData?.user?.email) {
+        console.error('User not found in auth or users table:', userId)
+        return NextResponse.json(
+          { error: 'User not found. Please try logging out and back in.' },
+          { status: 404 }
+        )
+      }
+
+      // Auto-create profile
+      const email = authData.user.email
+      const metadata = authData.user.user_metadata || {}
+      const username = metadata.username || email.split('@')[0]
+
+      const { error: createErr } = await supabase
+        .from('users')
+        .insert({
+          id: userId,
+          email,
+          username,
+          first_name: metadata.first_name || metadata.given_name || '',
+          last_name: metadata.last_name || metadata.family_name || '',
+          bio: '',
+        })
+
+      if (createErr && createErr.code !== '23505') {
+        console.error('Failed to auto-create profile:', createErr)
+      }
+
+      // Re-fetch
+      const { data: retryUser } = await supabase
+        .from('users')
+        .select('email, stripe_customer_id, username')
+        .eq('id', userId)
+        .maybeSingle()
+
+      user = retryUser
+
+      if (!user) {
+        return NextResponse.json(
+          { error: 'Failed to load user data. Please try logging out and back in.' },
+          { status: 500 }
+        )
+      }
     }
 
     console.log('User found:', { email: user.email, hasStripeCustomer: !!user.stripe_customer_id })
