@@ -252,11 +252,14 @@ export async function POST(request: NextRequest) {
       ? categories
       : (category ? [category] : [])
 
+    const slug = title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
     const { data: pack, error: createError } = await supabase
       .from('packs')
       .insert({
         creator_id: userId,
         title: title.trim(),
+        slug,
         description: description?.trim() || null,
         banner_url: banner_url || null,
         website_url: website_url || null,
