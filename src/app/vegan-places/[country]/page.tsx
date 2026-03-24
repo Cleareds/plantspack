@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, ArrowRight } from 'lucide-react'
+import { getCountryDescription } from '@/lib/vegan-scene-descriptions'
 
 interface PageProps {
   params: Promise<{ country: string }>
@@ -45,12 +46,13 @@ export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
   const { cities, country: countryName } = await getCities(country)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
+  const sceneDescription = getCountryDescription(countryName)
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-8">
+        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <span className="text-outline">/</span>
           <Link href="/vegan-places" className="hover:text-primary transition-colors">Vegan Places</Link>
@@ -59,19 +61,22 @@ export default async function CountryPage({ params }: PageProps) {
         </nav>
 
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="font-headline font-extrabold text-3xl md:text-5xl text-on-surface tracking-tight mb-4">
+        <div className="mb-8">
+          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
             Vegan Places in <span className="text-primary">{countryName}</span>
           </h1>
-          <p className="text-on-surface-variant text-lg">
+          <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
               ? <>{totalPlaces.toLocaleString()} vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
+          {sceneDescription && (
+            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl">{sceneDescription}</p>
+          )}
           <div className="flex gap-3 mt-4">
             <Link
-              href={`/map`}
+              href={`/map?location=${encodeURIComponent(countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
             >
               <MapPin className="h-4 w-4" />

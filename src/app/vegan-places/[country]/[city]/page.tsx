@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Star, PawPrint, Globe, ExternalLink } from 'lucide-react'
 import CityMap from '@/components/places/CityMap'
+import { getCityDescription } from '@/lib/vegan-scene-descriptions'
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
@@ -104,6 +105,7 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
   const { places, city: cityName, country: countryName } = await getPlaces(country, city)
+  const sceneDescription = getCityDescription(cityName, countryName)
 
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
   categories.sort()
@@ -120,9 +122,9 @@ export default async function CityPage({ params }: PageProps) {
         />
       )}
 
-      <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-8">
+        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <span className="text-outline">/</span>
           <Link href="/vegan-places" className="hover:text-primary transition-colors">Vegan Places</Link>
@@ -133,26 +135,29 @@ export default async function CityPage({ params }: PageProps) {
         </nav>
 
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="font-headline font-extrabold text-3xl md:text-5xl text-on-surface tracking-tight mb-4">
+        <div className="mb-8">
+          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
             Vegan Places in <span className="text-primary">{cityName}</span>
           </h1>
-          <p className="text-on-surface-variant text-lg mb-4">
+          <p className="text-on-surface-variant text-base mb-3">
             {places.length > 0
               ? <>{places.length.toLocaleString()} vegan restaurants, stores, and stays in {cityName}, {countryName}.</>
               : <>Discover vegan-friendly places in {cityName}.</>
             }
           </p>
+          {sceneDescription && (
+            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl">{sceneDescription}</p>
+          )}
           <div className="flex flex-wrap gap-3">
             <Link
-              href={`/map`}
+              href={`/map?location=${encodeURIComponent(cityName + ', ' + countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90"
             >
               <Globe className="h-4 w-4" />
               View on map
             </Link>
             <Link
-              href="/map"
+              href={`/map?location=${encodeURIComponent(cityName + ', ' + countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium text-on-surface-variant ghost-border px-4 py-2 rounded-lg transition-colors hover:bg-surface-container-low"
             >
               <MapPin className="h-4 w-4" />
@@ -198,7 +203,6 @@ export default async function CityPage({ params }: PageProps) {
                         alt={place.name}
                         className="w-20 h-20 md:w-28 md:h-20 rounded-lg object-cover flex-shrink-0"
                         referrerPolicy="no-referrer"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                       />
                     ) : (
                       <div className="w-20 h-20 md:w-28 md:h-20 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">

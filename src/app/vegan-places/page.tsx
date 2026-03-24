@@ -32,45 +32,34 @@ export default async function VeganPlacesPage() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-5xl mx-auto px-4 py-12 md:py-20">
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Hero */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest">
-              <MapPin className="h-3.5 w-3.5" />
-              <span>Vegan Directory</span>
-            </div>
-          </div>
-          <h1 className="font-headline font-extrabold text-4xl md:text-6xl text-on-surface tracking-tight leading-[1.1] mb-6">
-            Find Vegan Places
-            <br />
-            <span className="text-primary">Anywhere</span>
+        <div className="text-center mb-8">
+          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight leading-[1.1] mb-3">
+            Find Vegan Places in <span className="text-primary">Europe</span>
           </h1>
-          <p className="text-on-surface-variant text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-4">
-            Community-verified vegan restaurants, stores, and stays.
-            {total > 0 && <> Currently <strong className="text-on-surface">{total.toLocaleString()}</strong> places across {countries.length} countries.</>}
+          <p className="text-on-surface-variant text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-3">
+            {total > 0
+              ? <><strong className="text-on-surface">{total.toLocaleString()}</strong> community-verified vegan restaurants, stores, and stays across {countries.length} countries.</>
+              : <>Community-verified vegan restaurants, stores, and stays.</>
+            }
           </p>
-          <p className="text-sm text-outline">
-            We&apos;re starting with Europe and expanding worldwide. <Link href="/roadmap" className="text-primary hover:underline">Follow our progress</Link>
-          </p>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
-          <Link
-            href="/map"
-            className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-6 py-3 rounded-xl font-medium transition-colors"
-          >
-            <Globe className="h-5 w-5" />
-            Explore Map
-          </Link>
-          <Link
-            href="/map"
-            className="inline-flex items-center gap-2 ghost-border hover:bg-surface-container-low text-on-surface px-6 py-3 rounded-xl font-medium transition-colors"
-          >
-            <MapPin className="h-5 w-5" />
-            Add a Place
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3 mt-4">
+            <Link
+              href="/map"
+              className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-colors"
+            >
+              <Globe className="h-4 w-4" />
+              Explore Map
+            </Link>
+            <Link
+              href="/map"
+              className="inline-flex items-center gap-2 ghost-border hover:bg-surface-container-low text-on-surface px-5 py-2.5 rounded-xl text-sm font-medium transition-colors"
+            >
+              <MapPin className="h-4 w-4" />
+              Add a Place
+            </Link>
+          </div>
         </div>
 
         {/* Countries Grid */}
@@ -115,14 +104,11 @@ export default async function VeganPlacesPage() {
         )}
 
         {/* Expansion Note */}
-        <div className="mt-16 text-center">
-          <div className="inline-block bg-surface-container-low rounded-xl px-6 py-4 max-w-lg">
-            <p className="text-sm text-on-surface-variant">
-              <strong className="text-on-surface">Currently focused on Europe.</strong>{' '}
-              We&apos;re expanding to other continents soon. Want your region covered?{' '}
-              <Link href="/contact" className="text-primary hover:underline">Let us know</Link>
-            </p>
-          </div>
+        <div className="mt-10 text-center">
+          <p className="text-sm text-on-surface-variant">
+            Currently focused on Europe. Expanding to other continents soon.{' '}
+            <Link href="/contact" className="text-primary hover:underline">Want your region?</Link>
+          </p>
         </div>
       </div>
     </div>
