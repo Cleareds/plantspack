@@ -20,14 +20,26 @@ export async function GET(request: NextRequest) {
 
     if (level === 'countries') {
       // Get countries with place counts and stats for SEO descriptions
-      // IMPORTANT: override Supabase default 1000 row limit
-      const { data, error } = await supabase
-        .from('places')
-        .select('country, category, vegan_level, is_pet_friendly, cuisine_types, city, name')
-        .not('country', 'is', null)
-        .neq('country', '')
-        .limit(10000)
+      // Supabase caps at 1000 rows per query — paginate to get all
+      const allData: any[] = []
+      let from = 0
+      const batchSize = 1000
+      while (true) {
+        const { data: batch, error: batchError } = await supabase
+          .from('places')
+          .select('country, category, vegan_level, is_pet_friendly, cuisine_types, city, name')
+          .not('country', 'is', null)
+          .neq('country', '')
+          .range(from, from + batchSize - 1)
+        if (batchError) throw batchError
+        if (!batch || batch.length === 0) break
+        allData.push(...batch)
+        if (batch.length < batchSize) break
+        from += batchSize
+      }
 
+      const data = allData
+      const error = null
       if (error) throw error
 
       const countryMap: Record<string, {
@@ -73,15 +85,26 @@ export async function GET(request: NextRequest) {
     }
 
     if (level === 'cities' && country) {
-      // Get cities in a country with place counts
-      const { data, error } = await supabase
-        .from('places')
-        .select('city, country, category, vegan_level, is_pet_friendly, cuisine_types, name')
-        .not('city', 'is', null)
-        .neq('city', '')
-        .ilike('country', fromSlug(country))
-        .limit(5000)
+      // Get cities in a country with place counts — paginate past 1000 row limit
+      const allCityData: any[] = []
+      let cityFrom = 0
+      while (true) {
+        const { data: batch, error: batchError } = await supabase
+          .from('places')
+          .select('city, country, category, vegan_level, is_pet_friendly, cuisine_types, name')
+          .not('city', 'is', null)
+          .neq('city', '')
+          .ilike('country', fromSlug(country))
+          .range(cityFrom, cityFrom + 999)
+        if (batchError) throw batchError
+        if (!batch || batch.length === 0) break
+        allCityData.push(...batch)
+        if (batch.length < 1000) break
+        cityFrom += 1000
+      }
 
+      const data = allCityData
+      const error = null
       if (error) throw error
 
       const cityMap: Record<string, {
