@@ -104,6 +104,7 @@ export default async function CountryPage({ params }: PageProps) {
               <Link
                 key={city.slug}
                 href={`/vegan-places/${country}/${city.slug}`}
+                prefetch={false}
                 className="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
               >
                 <div>

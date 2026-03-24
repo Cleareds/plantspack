@@ -205,6 +205,7 @@ export default async function CityPage({ params }: PageProps) {
                   <Link
                     key={place.id}
                     href={`/place/${place.slug || place.id}`}
+                    prefetch={false}
                     className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
                   >
                     {/* Thumbnail */}

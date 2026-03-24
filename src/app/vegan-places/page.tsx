@@ -61,6 +61,7 @@ export default async function VeganPlacesPage() {
                 <Link
                   key={country.slug}
                   href={`/vegan-places/${country.slug}`}
+                  prefetch={false}
                   className="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
                 >
                   <div>
