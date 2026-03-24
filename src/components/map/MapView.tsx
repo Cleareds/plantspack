@@ -29,17 +29,22 @@ const MapClickHandler = dynamic(() =>
   { ssr: false }
 )
 
-// Fires viewport fetch when map first becomes ready
+// Fires viewport fetch ONCE when map first becomes ready
 const MapReadyHandler = dynamic(() =>
   import('react-leaflet').then(mod => {
     const { useMap } = mod
+    const { useEffect, useRef } = require('react')
     return function MapReadyHandlerComponent({ onReady }: { onReady: () => void }) {
       const map = useMap()
-      // useMap gives us the map instance — fire onReady once
-      if (map) {
-        // Use requestAnimationFrame to ensure map is fully rendered
-        requestAnimationFrame(() => onReady())
-      }
+      const firedRef = useRef(false)
+      useEffect(() => {
+        if (map && !firedRef.current) {
+          firedRef.current = true
+          // Small delay to ensure tiles have loaded
+          const timer = setTimeout(() => onReady(), 300)
+          return () => clearTimeout(timer)
+        }
+      }, [map]) // eslint-disable-line react-hooks/exhaustive-deps
       return null
     }
   }),

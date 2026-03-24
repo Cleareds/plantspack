@@ -240,27 +240,37 @@ export default function MapContainerComponent() {
     setCustomCenter(latlng)
   }, [setCustomCenter])
 
-  // Map move handler — also fetches places in the new viewport
-  const handleMapMove = useCallback(() => {
-    if (mapRef.current) {
-      const center = mapRef.current.getCenter()
-      setMapCenter([center.lat, center.lng])
+  // Debounced viewport fetch — prevents spamming API on rapid pan/zoom
+  const viewportTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const fetchViewportRef = useRef(fetchViewportPlaces)
+  const categoryRef = useRef(selectedCategory)
+  fetchViewportRef.current = fetchViewportPlaces
+  categoryRef.current = selectedCategory
 
-      // Fetch all places visible in the current map viewport
+  const handleMapMove = useCallback(() => {
+    if (!mapRef.current) return
+
+    const center = mapRef.current.getCenter()
+    setMapCenter([center.lat, center.lng])
+
+    // Debounce viewport fetch — wait 400ms after last move
+    if (viewportTimerRef.current) clearTimeout(viewportTimerRef.current)
+    viewportTimerRef.current = setTimeout(() => {
+      if (!mapRef.current) return
       const bounds = mapRef.current.getBounds()
       if (bounds) {
-        fetchViewportPlaces(
+        fetchViewportRef.current(
           {
             minLat: bounds.getSouth(),
             minLng: bounds.getWest(),
             maxLat: bounds.getNorth(),
             maxLng: bounds.getEast(),
           },
-          selectedCategory,
+          categoryRef.current,
         )
       }
-    }
-  }, [fetchViewportPlaces, selectedCategory])
+    }, 400)
+  }, []) // stable — no deps, uses refs
 
   // Toggle favorite
   const toggleFavorite = async (placeId: string) => {
@@ -432,10 +442,9 @@ export default function MapContainerComponent() {
     geocodeInitialLocation()
   }, [initialLocation, authReady])
 
-  // Called when Leaflet map is actually ready and rendered
+  // Called once when Leaflet map is actually ready and rendered
   const handleMapReady = useCallback(() => {
     if (mapRef.current) {
-      // Fetch all places in the initial viewport
       handleMapMove()
     }
   }, [handleMapMove])
