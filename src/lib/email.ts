@@ -181,9 +181,9 @@ export async function sendSubscriptionEmail(
   username: string,
   tier: 'medium' | 'premium'
 ) {
-  const tierNames = {
+  const tierNames: Record<string, string> = {
     medium: 'Supporter',
-    premium: 'Premium'
+    premium: 'Supporter' // Legacy — redirects to supporter
   }
 
   const subject = `Welcome to Plantspack ${tierNames[tier]}!`

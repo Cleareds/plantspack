@@ -11,14 +11,10 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
   apiVersion: '2025-06-30.basil',
 }) : null
 
-const PRICE_IDS = {
+const PRICE_IDS: Record<string, { month: string; year: string }> = {
   medium: {
     month: process.env.STRIPE_MEDIUM_PRICE_ID!,
     year: process.env.STRIPE_MEDIUM_YEARLY_PRICE_ID || process.env.STRIPE_MEDIUM_PRICE_ID!,
-  },
-  premium: {
-    month: process.env.STRIPE_PREMIUM_PRICE_ID!,
-    year: process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID || process.env.STRIPE_PREMIUM_PRICE_ID!,
   },
 }
 
@@ -28,7 +24,7 @@ export async function POST(request: NextRequest) {
   console.log('Environment check:')
   console.log('- STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? 'Set' : 'Missing')
   console.log('- STRIPE_MEDIUM_PRICE_ID:', process.env.STRIPE_MEDIUM_PRICE_ID || 'Missing')
-  console.log('- STRIPE_PREMIUM_PRICE_ID:', process.env.STRIPE_PREMIUM_PRICE_ID || 'Missing')
+  console.log('- STRIPE_PREMIUM_PRICE_ID:', '(removed — single tier)')
 
   if (!stripe) {
     console.error('Stripe not initialized - missing STRIPE_SECRET_KEY')

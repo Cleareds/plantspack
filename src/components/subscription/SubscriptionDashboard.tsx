@@ -40,7 +40,7 @@ export default function SubscriptionDashboard() {
     }
   }
 
-  const handleUpgrade = async (tierId: 'medium' | 'premium') => {
+  const handleUpgrade = async (tierId: 'medium') => {
     if (!user) return
 
     try {
@@ -203,96 +203,42 @@ export default function SubscriptionDashboard() {
       {/* Upgrade Options */}
       {subscription.tier === 'free' && (
         <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
-          <h3 className="text-lg font-semibold text-on-surface mb-4">Upgrade Your Plan</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(SUBSCRIPTION_TIERS)
-              .filter(([key]) => key !== 'free')
-              .map(([key, tier]) => (
-                <div key={key} className="ghost-border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium text-on-surface">{tier.name}</h4>
-                    <div 
-                      className="px-2 py-1 rounded text-xs font-medium"
-                      style={{ 
-                        color: tier.badge.color,
-                        backgroundColor: tier.badge.bgColor 
-                      }}
-                    >
-                      {tier.badge.text}
-                    </div>
-                  </div>
-                  
-                  <div className="text-2xl font-bold text-on-surface mb-3">
-                    ${tier.price}
-                    <span className="text-sm font-normal text-outline">/month</span>
-                  </div>
-                  
-                  <div className="space-y-1 mb-4">
-                    {tier.features.slice(0, 3).map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <CheckCircle className="h-3 w-3 text-primary" />
-                        <span className="text-xs text-on-surface-variant">{feature}</span>
-                      </div>
-                    ))}
-                    {tier.features.length > 3 && (
-                      <div className="text-xs text-outline">
-                        +{tier.features.length - 3} more features
-                      </div>
-                    )}
-                  </div>
-                  
-                  <button
-                    onClick={() => handleUpgrade(key as 'medium' | 'premium')}
-                    disabled={actionLoading}
-                    className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
-                  >
-                    {actionLoading ? 'Processing...' : `Upgrade to ${tier.name}`}
-                  </button>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
+          <h3 className="text-lg font-semibold text-on-surface mb-4">Support PlantsPack</h3>
 
-      {subscription.tier === 'medium' && (
-        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
-          <h3 className="text-lg font-semibold text-on-surface mb-4">Upgrade to Premium</h3>
-          
-          <div className="ghost-border rounded-lg p-4">
+          <div className="ghost-border rounded-lg p-4 max-w-md">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-medium text-on-surface">{SUBSCRIPTION_TIERS.premium.name}</h4>
-              <div 
+              <h4 className="font-medium text-on-surface">{SUBSCRIPTION_TIERS.medium.name}</h4>
+              <div
                 className="px-2 py-1 rounded text-xs font-medium"
-                style={{ 
-                  color: SUBSCRIPTION_TIERS.premium.badge.color,
-                  backgroundColor: SUBSCRIPTION_TIERS.premium.badge.bgColor 
+                style={{
+                  color: SUBSCRIPTION_TIERS.medium.badge.color,
+                  backgroundColor: SUBSCRIPTION_TIERS.medium.badge.bgColor
                 }}
               >
-                {SUBSCRIPTION_TIERS.premium.badge.text}
+                {SUBSCRIPTION_TIERS.medium.badge.text}
               </div>
             </div>
-            
+
             <div className="text-2xl font-bold text-on-surface mb-3">
-              ${SUBSCRIPTION_TIERS.premium.price}
+              &euro;{SUBSCRIPTION_TIERS.medium.price}
               <span className="text-sm font-normal text-outline">/month</span>
             </div>
-            
+
             <div className="space-y-1 mb-4">
-              {SUBSCRIPTION_TIERS.premium.features.slice(0, 4).map((feature, index) => (
+              {SUBSCRIPTION_TIERS.medium.features.map((feature, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <CheckCircle className="h-3 w-3 text-primary" />
                   <span className="text-xs text-on-surface-variant">{feature}</span>
                 </div>
               ))}
             </div>
-            
+
             <button
-              onClick={() => handleUpgrade('premium')}
+              onClick={() => handleUpgrade('medium')}
               disabled={actionLoading}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
+              className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50"
             >
-              {actionLoading ? 'Processing...' : 'Upgrade to Premium'}
+              {actionLoading ? 'Processing...' : 'Become a Supporter'}
             </button>
           </div>
         </div>

@@ -85,32 +85,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
       bgColor: '#D1FAE5'
     }
   },
-  premium: {
-    id: 'premium',
-    name: 'Premium',
-    price: 5,
-    yearlyPrice: 40,
-    currency: 'EUR',
-    interval: 'month',
-    features: [
-      'Premium supporter badge',
-      'Discuss and vote on platform\'s future',
-      'Priority support',
-      'Our eternal gratitude',
-    ],
-    maxPostLength: -1,
-    maxImages: -1,
-    maxVideos: 10,
-    maxVideoSize: 50 * 1024 * 1024,
-    maxVideoLength: 300,
-    maxPacks: 20,
-    verifiedBadge: true,
-    badge: {
-      text: 'Premium',
-      color: '#7C3AED',
-      bgColor: '#EDE9FE'
-    }
-  }
+  // Premium tier removed — single $3/month Supporter tier only
 }
 
 export interface UserSubscription {
@@ -159,7 +134,7 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
  * Create Stripe checkout session
  */
 export async function createCheckoutSession(
-  tierId: 'medium' | 'premium',
+  tierId: 'medium',
   userId: string,
   successUrl: string,
   cancelUrl: string,
@@ -202,7 +177,7 @@ export async function createCheckoutSession(
  * Redirect to Stripe checkout
  */
 export async function redirectToCheckout(
-  tierId: 'medium' | 'premium',
+  tierId: 'medium',
   userId: string,
   interval: 'month' | 'year' = 'month'
 ) {
@@ -301,7 +276,8 @@ export function canPerformAction(
  * Get tier badge component props
  */
 export function getTierBadge(tier: 'free' | 'medium' | 'premium') {
-  const config = SUBSCRIPTION_TIERS[tier]
+  // Legacy premium users get shown as supporter
+  const config = SUBSCRIPTION_TIERS[tier] || SUBSCRIPTION_TIERS.medium
   return {
     text: config.badge.text,
     color: config.badge.color,
