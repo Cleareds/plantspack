@@ -86,3 +86,7 @@ scripts/data/
 scripts/osm-europe-vegan-places.json
 scripts/verified-places-import.json
 scripts/high-confidence-places.json
+scripts/verified-places.json
+scripts/import-ready-places.json
+scripts/uncertain-places.json
+scripts/verify-checkpoint.json

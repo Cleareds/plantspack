@@ -121,6 +121,8 @@ export default function MapView({
                     src={(place as any).main_image_url || (place as any).images[0]}
                     alt={place.name}
                     className="w-full h-20 object-cover rounded-md mb-2"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                   />
                 )}
                 <div className="flex items-start justify-between mb-2">

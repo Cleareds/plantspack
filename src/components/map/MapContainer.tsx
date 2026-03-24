@@ -47,6 +47,7 @@ export default function MapContainerComponent() {
   // Nearby places hook
   const {
     places: sidebarPlaces,
+    mapPlaces,
     allFiltered: filteredPlaces,
     loading,
     page,
@@ -54,6 +55,7 @@ export default function MapContainerComponent() {
     totalCount,
     goToPage,
     refetch,
+    fetchViewportPlaces,
     addPlaceLocally,
   } = useNearbyPlaces({
     lat: searchCenter?.[0] ?? null,
@@ -238,13 +240,27 @@ export default function MapContainerComponent() {
     setCustomCenter(latlng)
   }, [setCustomCenter])
 
-  // Map move handler
+  // Map move handler — also fetches places in the new viewport
   const handleMapMove = useCallback(() => {
     if (mapRef.current) {
       const center = mapRef.current.getCenter()
       setMapCenter([center.lat, center.lng])
+
+      // Fetch all places visible in the current map viewport
+      const bounds = mapRef.current.getBounds()
+      if (bounds) {
+        fetchViewportPlaces(
+          {
+            minLat: bounds.getSouth(),
+            minLng: bounds.getWest(),
+            maxLat: bounds.getNorth(),
+            maxLng: bounds.getEast(),
+          },
+          selectedCategory,
+        )
+      }
     }
-  }, [])
+  }, [fetchViewportPlaces, selectedCategory])
 
   // Toggle favorite
   const toggleFavorite = async (placeId: string) => {
@@ -416,11 +432,13 @@ export default function MapContainerComponent() {
     geocodeInitialLocation()
   }, [initialLocation, authReady])
 
-  // Map event listeners
+  // Map event listeners — fetch viewport places on pan/zoom
   useEffect(() => {
     const mapInstance = mapRef.current
     if (mapInstance) {
       mapInstance.on('moveend', handleMapMove)
+      // Also fetch on initial load
+      setTimeout(() => handleMapMove(), 500)
       return () => {
         if (mapInstance) {
           mapInstance.off('moveend', handleMapMove)
@@ -547,9 +565,9 @@ export default function MapContainerComponent() {
 
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
-        {/* Map */}
+        {/* Map — show all viewport places, not just paginated sidebar */}
         <MapView
-          places={filteredPlaces}
+          places={mapPlaces.length > 0 ? mapPlaces : filteredPlaces}
           userLocation={userLocation}
           mapCenter={mapCenter}
           customCenter={customCenter}

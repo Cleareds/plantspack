@@ -197,6 +197,8 @@ export default async function CityPage({ params }: PageProps) {
                         src={thumbnail}
                         alt={place.name}
                         className="w-20 h-20 md:w-28 md:h-20 rounded-lg object-cover flex-shrink-0"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                       />
                     ) : (
                       <div className="w-20 h-20 md:w-28 md:h-20 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">

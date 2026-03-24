@@ -23,6 +23,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: '*.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'commons.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
         hostname: 'graph.facebook.com',
       },
       {

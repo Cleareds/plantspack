@@ -30,12 +30,14 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
 }
 
 export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPlacesOptions) {
-  const [places, setPlaces] = useState<PlaceWithDistance[]>([])
+  const [places, setPlaces] = useState<PlaceWithDistance[]>([])       // sidebar (paginated)
+  const [mapPlaces, setMapPlaces] = useState<PlaceWithDistance[]>([]) // map (viewport)
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
   const fetchIdRef = useRef(0) // prevent stale responses
+  const viewportRef = useRef<{ minLat: number; minLng: number; maxLat: number; maxLng: number } | null>(null)
 
   const fetchPage = useCallback(async (pageNum: number, currentLat: number, currentLng: number, cat: string) => {
     const fetchId = ++fetchIdRef.current
@@ -102,6 +104,66 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     }
   }, [limit])
 
+  // Fetch places within map viewport (for map markers)
+  const fetchViewportPlaces = useCallback(async (bounds: { minLat: number; minLng: number; maxLat: number; maxLng: number }, cat: string) => {
+    viewportRef.current = bounds
+    try {
+      const { data: rpcData, error: rpcError } = await supabase
+        .rpc('viewport_places', {
+          min_lat: bounds.minLat,
+          min_lng: bounds.minLng,
+          max_lat: bounds.maxLat,
+          max_lng: bounds.maxLng,
+          cat,
+          lim: 500,
+        })
+
+      if (rpcError) throw rpcError
+
+      const rawPlaces = rpcData || []
+      if (rawPlaces.length === 0) {
+        setMapPlaces([])
+        return
+      }
+
+      const placeIds = rawPlaces.map((p: any) => p.id)
+
+      // Fetch in batches of 100 to avoid URL length limits
+      const allFullPlaces: any[] = []
+      for (let i = 0; i < placeIds.length; i += 100) {
+        const batch = placeIds.slice(i, i + 100)
+        const { data: fullPlaces } = await supabase
+          .from('places')
+          .select(`
+            *,
+            users (id, username, first_name, last_name),
+            favorite_places (id, user_id)
+          `)
+          .in('id', batch)
+        if (fullPlaces) allFullPlaces.push(...fullPlaces)
+      }
+
+      const fullMap = new Map(allFullPlaces.map(p => [p.id, p]))
+      const centerLat = (bounds.minLat + bounds.maxLat) / 2
+      const centerLng = (bounds.minLng + bounds.maxLng) / 2
+
+      const enriched = rawPlaces
+        .map((rpcPlace: any) => {
+          const full = fullMap.get(rpcPlace.id)
+          if (!full) return null
+          return {
+            ...full,
+            distance: calculateDistance(centerLat, centerLng, full.latitude, full.longitude),
+          }
+        })
+        .filter(Boolean) as PlaceWithDistance[]
+
+      setMapPlaces(enriched)
+    } catch (error) {
+      console.error('Error fetching viewport places:', error)
+    }
+  }, [])
+
   // Fetch count for pagination display
   const fetchCount = useCallback(async (cat: string) => {
     try {
@@ -124,6 +186,13 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     }
   }, [lat, lng, category, fetchPage, fetchCount])
 
+  // Re-fetch viewport places when category changes
+  useEffect(() => {
+    if (viewportRef.current) {
+      fetchViewportPlaces(viewportRef.current, category)
+    }
+  }, [category, fetchViewportPlaces])
+
   const goToPage = useCallback((pageNum: number) => {
     if (lat != null && lng != null) {
       fetchPage(pageNum, lat, lng, category)
@@ -134,8 +203,11 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     if (lat != null && lng != null) {
       fetchPage(page, lat, lng, category)
       fetchCount(category)
+      if (viewportRef.current) {
+        fetchViewportPlaces(viewportRef.current, category)
+      }
     }
-  }, [lat, lng, category, page, fetchPage, fetchCount])
+  }, [lat, lng, category, page, fetchPage, fetchCount, fetchViewportPlaces])
 
   const addPlaceLocally = useCallback((place: Place) => {
     if (lat == null || lng == null) return
@@ -148,6 +220,7 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
       updated.sort((a, b) => a.distance - b.distance)
       return updated.slice(0, limit)
     })
+    setMapPlaces(prev => [...prev, placeWithDist])
     setTotalCount(prev => prev + 1)
   }, [lat, lng, limit])
 
@@ -155,7 +228,8 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
 
   return {
     places,
-    allFiltered: places,
+    mapPlaces,
+    allFiltered: mapPlaces.length > 0 ? mapPlaces : places,
     loading,
     hasMore,
     page,
@@ -164,6 +238,7 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     goToPage,
     refetch,
     fetchPlaces: refetch,
+    fetchViewportPlaces,
     addPlaceLocally,
     loadMore: () => goToPage(page + 1), // backward compat
   }

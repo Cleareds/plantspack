@@ -17,6 +17,7 @@ export default function ImageSlider({
 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoaded, setIsLoaded] = useState<boolean[]>(new Array(images.length).fill(false))
+  const [hasError, setHasError] = useState<boolean[]>(new Array(images.length).fill(false))
   const sliderRef = useRef<HTMLDivElement>(null)
 
   if (!images || images.length === 0) return null
@@ -40,6 +41,15 @@ export default function ImageSlider({
       return newLoaded
     })
   }
+
+  const handleImageError = (index: number) => {
+    setHasError(prev => {
+      const newErrors = [...prev]
+      newErrors[index] = true
+      return newErrors
+    })
+  }
+
 
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
@@ -79,9 +89,11 @@ export default function ImageSlider({
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 quality={75}
                 onLoad={() => handleImageLoad(index)}
+                onError={() => handleImageError(index)}
+                referrerPolicy="no-referrer"
                 className={`object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
-                }`}
+                } ${hasError[index] ? 'hidden' : ''}`}
               />
             </div>
           ))}
@@ -115,9 +127,11 @@ export default function ImageSlider({
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 quality={75}
                 onLoad={() => handleImageLoad(index)}
+                onError={() => handleImageError(index)}
+                referrerPolicy="no-referrer"
                 className={`object-contain transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
-                }`}
+                } ${hasError[index] ? 'hidden' : ''}`}
               />
             </div>
           ))}
