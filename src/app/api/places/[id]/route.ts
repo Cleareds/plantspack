@@ -16,6 +16,10 @@ export async function GET(
   try {
     const { id } = await params
 
+    // Support both UUID and slug lookups
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    const column = isUuid ? 'id' : 'slug'
+
     // Fetch place with creator info and favorites
     const { data: place, error } = await supabase
       .from('places')
@@ -33,7 +37,7 @@ export async function GET(
           user_id
         )
       `)
-      .eq('id', id)
+      .eq(column, id)
       .single()
 
     if (error) {

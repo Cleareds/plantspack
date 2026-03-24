@@ -188,7 +188,7 @@ export default async function CityPage({ params }: PageProps) {
                 return (
                   <Link
                     key={place.id}
-                    href={`/place/${place.id}`}
+                    href={`/place/${(place as any).slug || place.id}`}
                     className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
                   >
                     {/* Thumbnail */}

@@ -817,7 +817,7 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
             {/* Place Card */}
             {post.place && (
               <Link
-                href={`/place/${post.place.id}`}
+                href={`/place/${(post.place as any).slug || post.place.id}`}
                 onClick={(e) => e.stopPropagation()}
                 className="mt-3 block bg-secondary/5 rounded-xl overflow-hidden hover:bg-secondary/10 transition-colors"
               >

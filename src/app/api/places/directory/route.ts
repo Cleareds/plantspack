@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       // Get places in a specific city
       let query = supabase
         .from('places')
-        .select('id, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, latitude, longitude, city, country')
+        .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, latitude, longitude, city, country')
         .ilike('country', fromSlug(country))
         .ilike('city', fromSlug(city))
 

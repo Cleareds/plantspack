@@ -168,7 +168,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                     {places.map((place) => (
                       <Link
                         key={place.id}
-                        href={`/place/${place.id}`}
+                        href={`/place/${(place as any).slug || place.id}`}
                         onClick={handleResultClick}
                         className="flex items-center gap-3 p-3 hover:bg-surface-container-low transition-colors"
                       >

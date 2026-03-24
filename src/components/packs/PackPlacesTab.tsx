@@ -132,7 +132,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/place/${place.id}`}
+                        href={`/place/${(place as any).slug || place.id}`}
                         className="text-lg font-semibold text-on-surface hover:text-primary transition-colors line-clamp-1"
                       >
                         {place.name}

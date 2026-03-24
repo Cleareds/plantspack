@@ -452,7 +452,7 @@ export default function ProfilePage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-1">
                           <Link
-                            href={`/place/${place.id}`}
+                            href={`/place/${(place as any).slug || place.id}`}
                             className="font-medium text-on-surface text-sm truncate hover:text-primary transition-colors"
                           >
                             {place.name}
@@ -540,7 +540,7 @@ export default function ProfilePage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2 mb-1">
                             <Link
-                              href={`/place/${place.id}`}
+                              href={`/place/${(place as any).slug || place.id}`}
                               className="font-medium text-on-surface text-sm truncate hover:text-primary transition-colors"
                             >
                               {place.name}

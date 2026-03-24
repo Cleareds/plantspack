@@ -22,6 +22,15 @@ export default function ImageSlider({
 
   if (!images || images.length === 0) return null
 
+  // Domains whitelisted in next.config.ts — use optimized Image for these
+  const OPTIMIZED_DOMAINS = ['supabase.co', 'googleusercontent.com', 'googleapis.com', 'wikimedia.org']
+  const isOptimized = (url: string) => {
+    try {
+      const hostname = new URL(url).hostname
+      return OPTIMIZED_DOMAINS.some(d => hostname.endsWith(d))
+    } catch { return false }
+  }
+
   const goToPrevious = () => {
     setCurrentIndex(prev => prev === 0 ? images.length - 1 : prev - 1)
   }
@@ -88,6 +97,7 @@ export default function ImageSlider({
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 quality={75}
+                unoptimized={!isOptimized(image)}
                 onLoad={() => handleImageLoad(index)}
                 onError={() => handleImageError(index)}
                 referrerPolicy="no-referrer"
@@ -126,6 +136,7 @@ export default function ImageSlider({
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 quality={75}
+                unoptimized={!isOptimized(image)}
                 onLoad={() => handleImageLoad(index)}
                 onError={() => handleImageError(index)}
                 referrerPolicy="no-referrer"
