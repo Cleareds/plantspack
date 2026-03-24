@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, ArrowRight } from 'lucide-react'
-import { getCountryDescription } from '@/lib/vegan-scene-descriptions'
+import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
 
 interface PageProps {
   params: Promise<{ country: string }>
@@ -46,7 +46,32 @@ export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
   const { cities, country: countryName } = await getCities(country)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
-  const sceneDescription = getCountryDescription(countryName)
+
+  // Aggregate city stats for country description
+  const countryStats = {
+    total: totalPlaces,
+    categories: {} as Record<string, number>,
+    fullyVegan: 0,
+    petFriendly: 0,
+    cuisines: [] as string[],
+    sampleNames: [] as string[],
+    cityCount: cities.length,
+  }
+  const cuisineCounts: Record<string, number> = {}
+  for (const city of cities) {
+    if (!city.stats) continue
+    for (const [cat, n] of Object.entries(city.stats.categories || {})) {
+      countryStats.categories[cat] = (countryStats.categories[cat] || 0) + (n as number)
+    }
+    countryStats.fullyVegan += city.stats.fullyVegan || 0
+    countryStats.petFriendly += city.stats.petFriendly || 0
+    for (const c of city.stats.cuisines || []) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
+    if (countryStats.sampleNames.length < 5) countryStats.sampleNames.push(...(city.stats.sampleNames || []).slice(0, 2))
+  }
+  countryStats.cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k)
+  countryStats.sampleNames = countryStats.sampleNames.slice(0, 5)
+
+  const sceneDescription = generateCountryDescription(countryName, countryStats)
 
   return (
     <div className="min-h-screen bg-surface">

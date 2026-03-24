@@ -1,64 +1,282 @@
 /**
- * Vegan scene descriptions for countries and cities.
- * Used on /vegan-places/[country] and /vegan-places/[country]/[city] pages.
+ * Generate SEO-rich, data-driven descriptions for country and city pages.
+ * Every description is unique because it's built from actual place data.
  */
 
-export const COUNTRY_DESCRIPTIONS: Record<string, string> = {
-  'Germany': 'Germany is one of Europe\'s most vegan-friendly countries, with Berlin widely regarded as the vegan capital of the world. From traditional dishes reimagined plant-based — like vegan currywurst and döner — to innovative fine dining, the German vegan scene is thriving. Most supermarkets carry extensive vegan ranges, and cities like Hamburg, Munich, and Leipzig have vibrant plant-based communities.',
-  'United Kingdom': 'The UK has seen explosive growth in veganism, with Veganuary starting here and now a global movement. London leads with hundreds of fully vegan restaurants, from upscale dining to street food markets. Cities like Bristol, Brighton, and Manchester are also hotspots. Most UK restaurants now offer dedicated vegan menus, and the country boasts Europe\'s highest rate of vegan product launches.',
-  'France': 'France\'s vegan scene has blossomed remarkably despite its meat-and-cheese traditions. Paris now has a thriving plant-based restaurant scene, from vegan patisseries to Michelin-quality dining. Lyon, Bordeaux, and Montpellier are catching up fast. French vegan cuisine often brings the country\'s culinary artistry to plant-based cooking, with beautiful presentations and rich flavors.',
-  'Spain': 'Spain\'s vegan movement is growing rapidly, particularly in Barcelona and Madrid. The Mediterranean diet\'s emphasis on vegetables, legumes, and olive oil provides a natural foundation for plant-based eating. Many traditional tapas are already vegan, and dedicated vegan restaurants are popping up across the country. The Canary Islands and Valencia are also emerging vegan destinations.',
-  'Netherlands': 'The Netherlands punches well above its weight in vegan dining. Amsterdam is a plant-based paradise with dozens of fully vegan restaurants, and Dutch cities like Utrecht, Rotterdam, and The Hague follow closely. The country is also a leader in plant-based food innovation, being home to major meat-alternative companies and a progressive food culture that embraces sustainability.',
-  'Austria': 'Vienna has become one of Europe\'s most exciting vegan destinations, with a scene that blends Austrian culinary tradition with modern plant-based innovation. Vegan schnitzels, strudels, and café culture thrive here. Graz, Innsbruck, and Salzburg also offer excellent options. Austria\'s strong organic farming tradition means high-quality local produce in most vegan restaurants.',
-  'Italy': 'Italy\'s vegan scene beautifully merges la cucina italiana with plant-based principles. Milan leads with contemporary vegan dining, while Rome, Florence, and Bologna offer traditional Italian dishes reimagined without animal products. Many Italian staples — pasta with marinara, bruschetta, focaccia — are naturally vegan, and the country\'s emphasis on fresh, seasonal ingredients shines in its plant-based offerings.',
-  'Greece': 'Greek cuisine is naturally vegan-friendly thanks to its Orthodox fasting tradition, which has produced centuries of delicious plant-based recipes. Athens has a growing dedicated vegan scene, and islands like Crete and Santorini offer incredible local produce. Traditional dishes like fasolada, gigantes, briam, and horta are all plant-based classics that every visitor should try.',
-  'Belgium': 'Belgium\'s vegan scene is flourishing, led by Ghent — which was the first city in the world to have an official weekly veggie day. Brussels, Antwerp, and Leuven also offer excellent plant-based dining. Belgian vegan cuisine ranges from creative takes on traditional dishes to international fusion, and the country\'s famous chocolate and waffle traditions now include impressive vegan versions.',
-  'Poland': 'Poland has emerged as an unexpected vegan hotspot in Central Europe. Warsaw\'s vegan scene is remarkable for its affordability and variety, with vegan milk bars (bar mleczny) and modern restaurants alike. Kraków, Wrocław, and Gdańsk follow with their own thriving scenes. Traditional Polish pierogi and other comfort foods have been brilliantly adapted for vegan diners.',
-  'Sweden': 'Sweden\'s progressive food culture embraces plant-based eating wholeheartedly. Stockholm, Gothenburg, and Malmö have excellent vegan options, and most Swedish restaurants offer substantial vegan menus. The country\'s focus on sustainability and "lagom" (balanced) living aligns naturally with plant-based choices. Swedish vegan cuisine often features Nordic ingredients like lingonberries, root vegetables, and foraged mushrooms.',
-  'Czech Republic': 'Prague has quietly become one of Central Europe\'s best vegan cities, with affordable and creative plant-based restaurants throughout the old town and beyond. The Czech vegan scene draws on local culinary traditions — hearty stews, dumplings, and pastries — reimagined without animal products. Brno and other cities are following Prague\'s lead.',
-  'Switzerland': 'Switzerland\'s vegan scene reflects the country\'s emphasis on quality and sustainability. Zurich leads with upscale vegan dining, while Bern, Basel, and Geneva offer diverse options. Swiss vegan cuisine often features locally sourced organic ingredients. Despite the country\'s cheese and chocolate fame, plant-based alternatives are widely available and of exceptional quality.',
-  'Portugal': 'Lisbon has become one of Southern Europe\'s most exciting vegan destinations. The city\'s creative food scene has embraced plant-based cooking with enthusiasm, from traditional Portuguese flavors to international fusion. Porto and the Algarve region are catching up. Portugal\'s warm climate means abundant fresh produce year-round, and many traditional dishes are naturally plant-based.',
-  'Finland': 'Finland\'s vegan scene is growing alongside the country\'s reputation for innovation and sustainability. Helsinki offers excellent plant-based options, from Nordic-inspired fine dining to casual cafés. Finnish vegan cuisine features unique Nordic ingredients like wild berries, mushrooms, and root vegetables. The country\'s school lunch programs now routinely include vegan options.',
-  'Denmark': 'Copenhagen\'s food scene is world-renowned, and its vegan offerings are no exception. The city that gave the world New Nordic cuisine now applies those same principles to plant-based cooking. Danish vegan restaurants emphasize seasonal, local ingredients and beautiful presentation. Aarhus and other cities are following suit with their own plant-based scenes.',
-  'Hungary': 'Budapest offers surprisingly excellent vegan dining at very affordable prices. The city\'s ruin bars and restaurants increasingly cater to plant-based diners, and dedicated vegan spots serve creative Hungarian-inspired cuisine. Traditional dishes like lángos and gulyás have been adapted for vegans, alongside international options.',
-  'Norway': 'Norway\'s vegan scene is growing in Oslo and other cities, with a focus on sustainability that aligns with the country\'s environmental values. Norwegian vegan cuisine often features local and seasonal ingredients, with creative takes on Nordic flavors. Despite the country\'s fishing traditions, plant-based options are increasingly mainstream.',
-  'Ireland': 'Dublin and other Irish cities are embracing veganism with enthusiasm. The country\'s farm-to-table tradition translates well to plant-based dining, with many restaurants highlighting local produce. Ireland\'s café culture has also adapted, with most coffee shops offering plant milks and vegan bakes.',
-  'Croatia': 'Croatia\'s vegan scene is emerging, particularly in Zagreb and along the Dalmatian coast. Mediterranean influences mean plenty of naturally plant-based options, from grilled vegetables to olive oil-dressed salads. Dedicated vegan restaurants are growing in number.',
-  'Romania': 'Romania\'s Orthodox fasting traditions mean that many traditional dishes are naturally vegan. Bucharest has a growing dedicated vegan scene, and traditional Romanian cuisine offers excellent plant-based options like zacuscă, fasole bătută, and sarmale de post.',
-  'Slovakia': 'Bratislava and Košice have growing vegan scenes with affordable, creative plant-based restaurants. Slovak cuisine\'s hearty tradition of dumplings, stews, and pastries is being reimagined for vegan diners.',
-  'Slovenia': 'Ljubljana, the green capital of Europe, has a thriving vegan scene. Slovenian cuisine draws on Mediterranean, Central European, and Balkan influences, all of which translate beautifully to plant-based cooking.',
-  'Bulgaria': 'Sofia has a small but passionate vegan community with several dedicated restaurants. Bulgarian cuisine features many naturally vegan dishes, including shopska salad (without the cheese), bean stews, and grilled vegetables.',
-  'Estonia': 'Tallinn offers a surprisingly good vegan scene for a small capital, with modern plant-based restaurants alongside traditional Estonian cuisine that includes naturally vegan options.',
-  'Latvia': 'Riga\'s food scene is evolving to include more vegan options, with several dedicated plant-based restaurants and most mainstream restaurants offering vegan choices.',
-  'Lithuania': 'Vilnius has a growing vegan community with dedicated restaurants and cafés. Lithuanian cuisine is adapting traditional dishes like šaltibarščiai and cepelinai for plant-based diners.',
-  'Luxembourg': 'Luxembourg City offers quality vegan dining that reflects the country\'s multicultural character, with French, German, and international plant-based influences.',
-  'Ukraine': 'Kyiv and Lviv have passionate vegan communities with creative plant-based restaurants that draw on Ukrainian culinary traditions. Traditional dishes like borscht and varenyky are often naturally vegan.',
+// Cultural context that makes descriptions richer and more authentic
+const COUNTRY_CONTEXT: Record<string, { veganCulture: string; localDishes: string }> = {
+  'Germany': {
+    veganCulture: 'Berlin is widely regarded as the vegan capital of the world, and the movement has spread to every major German city',
+    localDishes: 'vegan currywurst, plant-based döner kebab, and reimagined Black Forest cake',
+  },
+  'United Kingdom': {
+    veganCulture: 'the UK is where Veganuary started and now drives one of the fastest-growing vegan markets in Europe',
+    localDishes: 'vegan fish and chips, plant-based full English breakfasts, and dairy-free afternoon teas',
+  },
+  'France': {
+    veganCulture: 'France has surprised the world by embracing plant-based cuisine with the same artistry it brings to traditional cooking',
+    localDishes: 'vegan croissants, plant-based crêpes, and cruelty-free patisserie',
+  },
+  'Spain': {
+    veganCulture: 'the Mediterranean diet provides a natural foundation, and Spanish cities are rapidly embracing dedicated vegan dining',
+    localDishes: 'vegan tapas, plant-based paella, and patatas bravas',
+  },
+  'Netherlands': {
+    veganCulture: 'the Netherlands leads in plant-based food innovation, being home to major meat-alternative companies',
+    localDishes: 'vegan bitterballen, plant-based stroopwafels, and Dutch-style vegan cheese',
+  },
+  'Austria': {
+    veganCulture: 'Vienna\'s legendary café culture now serves plant-based Sachertorte and vegan Wiener Schnitzel alongside its traditional offerings',
+    localDishes: 'vegan schnitzel, plant-based strudel, and dairy-free Viennese pastries',
+  },
+  'Italy': {
+    veganCulture: 'Italian cuisine\'s emphasis on fresh vegetables, olive oil, and pasta means many traditional dishes are already vegan or easily adapted',
+    localDishes: 'vegan pizza, plant-based gelato, and dairy-free risotto',
+  },
+  'Greece': {
+    veganCulture: 'centuries of Orthodox fasting traditions have produced some of Europe\'s best naturally plant-based recipes',
+    localDishes: 'fasolada, gigantes plaki, briam, and horta — all traditional and naturally vegan',
+  },
+  'Belgium': {
+    veganCulture: 'Ghent was the first city in the world to declare an official weekly veggie day, setting the tone for the country',
+    localDishes: 'vegan waffles, plant-based Belgian chocolate, and dairy-free frites with vegan mayo',
+  },
+  'Poland': {
+    veganCulture: 'Poland has become an unexpected vegan hotspot with some of Europe\'s most affordable plant-based dining',
+    localDishes: 'vegan pierogi, plant-based bigos, and dairy-free pączki',
+  },
+  'Sweden': {
+    veganCulture: 'Sweden\'s sustainability-focused culture makes plant-based eating mainstream across the country',
+    localDishes: 'vegan Swedish meatballs, plant-based kanelbullar, and foraged Nordic ingredients',
+  },
+  'Czech Republic': {
+    veganCulture: 'Prague has become one of Central Europe\'s best-kept vegan secrets with remarkably affordable plant-based restaurants',
+    localDishes: 'vegan svíčková, plant-based trdelník, and Czech-style vegan pub food',
+  },
+  'Switzerland': {
+    veganCulture: 'home to the world\'s oldest vegetarian restaurant (Hiltl, since 1898), Switzerland has deep plant-based roots',
+    localDishes: 'vegan fondue, plant-based rösti, and Swiss-quality dairy-free chocolate',
+  },
+  'Portugal': {
+    veganCulture: 'Lisbon has rapidly become one of Southern Europe\'s most exciting vegan destinations with creative, affordable dining',
+    localDishes: 'vegan pastéis de nata, plant-based bacalhau alternatives, and Algarve-style grilled vegetables',
+  },
+  'Finland': {
+    veganCulture: 'Finnish school lunches routinely include vegan options, reflecting how mainstream plant-based eating has become',
+    localDishes: 'vegan karjalanpiirakka, plant-based Finnish berry desserts, and Nordic-style mushroom dishes',
+  },
+  'Denmark': {
+    veganCulture: 'Copenhagen\'s New Nordic cuisine movement has naturally embraced plant-based cooking with seasonal, local ingredients',
+    localDishes: 'vegan smørrebrød, plant-based Danish pastries, and Nordic root vegetable dishes',
+  },
+  'Hungary': {
+    veganCulture: 'Budapest offers excellent vegan dining at remarkably low prices, making it a top destination for budget-conscious plant-based travellers',
+    localDishes: 'vegan lángos, plant-based gulyás, and Hungarian-style stuffed peppers',
+  },
+  'Norway': {
+    veganCulture: 'Norway\'s strong environmental values are driving growing interest in plant-based dining across the country',
+    localDishes: 'Nordic-style vegan dishes with local berries, root vegetables, and foraged ingredients',
+  },
+  'Ireland': {
+    veganCulture: 'Ireland\'s farm-to-table tradition translates surprisingly well to plant-based dining',
+    localDishes: 'vegan Irish soda bread, plant-based colcannon, and dairy-free Irish coffee',
+  },
+  'Croatia': {
+    veganCulture: 'Mediterranean influences mean the Croatian coast offers plenty of naturally plant-based dishes',
+    localDishes: 'grilled vegetables, olive oil-dressed salads, and Dalmatian-style vegan cooking',
+  },
+  'Romania': {
+    veganCulture: 'Orthodox fasting traditions mean many traditional Romanian dishes are naturally plant-based',
+    localDishes: 'zacuscă, fasole bătută, and sarmale de post',
+  },
+  'Slovakia': {
+    veganCulture: 'Bratislava\'s food scene is evolving with affordable, creative plant-based restaurants',
+    localDishes: 'vegan bryndzové halušky alternatives and traditional Slovak pastries',
+  },
+  'Slovenia': {
+    veganCulture: 'Ljubljana, the green capital of Europe, has naturally embraced plant-based dining',
+    localDishes: 'dishes that blend Mediterranean, Central European, and Balkan plant-based traditions',
+  },
+  'Bulgaria': {
+    veganCulture: 'Sofia has a passionate vegan community with several dedicated restaurants',
+    localDishes: 'traditional bean stews, grilled vegetables, and vegan banitsa',
+  },
+  'Estonia': {
+    veganCulture: 'Tallinn offers a surprisingly good vegan scene for a small capital',
+    localDishes: 'modern Nordic-Estonian plant-based cuisine with local seasonal ingredients',
+  },
+  'Latvia': {
+    veganCulture: 'Riga\'s food scene is evolving with more plant-based options emerging',
+    localDishes: 'Latvian-style vegan dishes with local grains, mushrooms, and root vegetables',
+  },
+  'Lithuania': {
+    veganCulture: 'Vilnius has a growing vegan community adapting traditional Lithuanian recipes',
+    localDishes: 'vegan cepelinai, plant-based šaltibarščiai, and Lithuanian mushroom dishes',
+  },
+  'Luxembourg': {
+    veganCulture: 'Luxembourg City\'s multicultural character brings diverse plant-based influences',
+    localDishes: 'vegan dishes reflecting French, German, and international culinary traditions',
+  },
+  'Ukraine': {
+    veganCulture: 'despite challenges, Ukrainian cities maintain passionate vegan communities',
+    localDishes: 'vegan borscht, plant-based varenyky, and Ukrainian-style pickled vegetables',
+  },
 }
 
-export const CITY_DESCRIPTIONS: Record<string, string> = {
-  'Berlin, Germany': 'Berlin is widely considered the vegan capital of the world. With over 100 fully vegan restaurants, the city offers everything from döner kebab shops to fine dining. Kreuzberg, Friedrichshain, and Neukölln are particularly rich in plant-based options. The city\'s international and alternative culture has made it a magnet for vegan innovation.',
-  'London, United Kingdom': 'London\'s vegan scene is one of the most diverse on the planet. From Shoreditch\'s trendy plant-based cafés to Soho\'s vegan fine dining, the city offers thousands of options. Borough Market, Camden, and Brick Lane are excellent for vegan street food. Most London restaurants now offer dedicated vegan menus.',
-  'Paris, France': 'Paris has transformed its vegan scene in recent years. The city now boasts vegan patisseries, fromageries, and bistros that bring French culinary excellence to plant-based cuisine. Le Marais, the 11th arrondissement, and Bastille are particularly good areas for vegan dining.',
-  'Wien, Austria': 'Vienna\'s vegan scene is thriving within the city\'s famous café culture. Vegan sachertorte, schnitzels, and traditional Viennese pastries are all available. The city has dozens of fully vegan restaurants, plus nearly every traditional café now offers plant-based options.',
-  'Amsterdam, Netherlands': 'Amsterdam is a vegan paradise with dozens of dedicated plant-based restaurants. The city\'s progressive culture embraces veganism fully, from food trucks to upscale dining. De Pijp, Jordaan, and the canal ring area are excellent for plant-based exploration.',
-  'Barcelona, Spain': 'Barcelona combines Mediterranean cuisine with a vibrant vegan scene. The Gothic Quarter, El Born, and Gràcia neighborhoods are packed with plant-based options. Spanish tapas culture translates brilliantly to vegan dining, with patatas bravas, pan con tomate, and grilled vegetables leading the way.',
-  'Madrid, Spain': 'Madrid\'s vegan scene has grown enormously, with Malasaña and Lavapiés neighborhoods leading the charge. From traditional Spanish cooking reimagined plant-based to international fusion, Madrid offers a rich variety of vegan dining experiences.',
-  'Praha, Czech Republic': 'Prague is one of Central Europe\'s best-kept vegan secrets. The city offers dozens of fully plant-based restaurants at remarkably affordable prices. From traditional Czech cuisine to raw food cafés, Prague\'s vegan scene is diverse and welcoming.',
-  'Hamburg, Germany': 'Hamburg\'s vegan scene centers around the Schanzenviertel and St. Pauli neighborhoods, with creative restaurants, cafés, and the famous vegan Portuguese tart shops. The city\'s cosmopolitan port culture brings diverse plant-based influences.',
-  'München, Germany': 'Munich proves that Bavarian cuisine can go vegan. The city offers plant-based versions of traditional dishes alongside international vegan restaurants. Haidhausen, Glockenbach, and Maxvorstadt are the best neighborhoods for vegan dining.',
-  'Milano, Italy': 'Milan leads Italy\'s vegan revolution with contemporary plant-based restaurants that apply Italian culinary artistry to vegan cuisine. The Navigli district and Brera neighborhood are particularly good for finding vegan gems.',
-  'Warszawa, Poland': 'Warsaw is arguably the best-value vegan city in Europe. Plant-based restaurants are abundant and incredibly affordable, from modern vegan bistros to reimagined traditional Polish milk bars. The Praga and Mokotów districts are vegan hotspots.',
-  'Αθήνα, Greece': 'Athens offers a wonderful blend of traditional Greek plant-based dishes and modern vegan restaurants. Many Greek classics — fava, giant beans, horta, and more — are naturally vegan, and the city\'s food scene is embracing dedicated plant-based dining.',
-  'Zürich, Switzerland': 'Zurich has a sophisticated vegan dining scene, with the world\'s oldest vegetarian restaurant, Hiltl, serving since 1898. The city offers high-quality plant-based options across all price ranges, from casual lunch spots to upscale dining.',
-  'Bruxelles - Brussel, Belgium': 'Brussels combines Belgian culinary tradition with a growing vegan scene. From plant-based waffles and chocolate to creative international cuisine, the EU capital has something for every vegan diner.',
-  'Lisboa, Portugal': 'Lisbon has become a vegan hotspot, with creative plant-based restaurants popping up across the city. The combination of Portuguese culinary flair, fresh Atlantic produce, and affordable prices makes it an ideal vegan destination.',
-  'København, Denmark': 'Copenhagen\'s world-class food scene extends to its vegan offerings. New Nordic cuisine principles — seasonal, local, sustainable — align perfectly with plant-based cooking. The city offers everything from casual plant-based cafés to innovative fine dining.',
+const CITY_CONTEXT: Record<string, string> = {
+  'Berlin, Germany': 'Kreuzberg, Friedrichshain, and Neukölln are the most concentrated areas for plant-based dining. The city\'s international and alternative culture has made it a global magnet for vegan innovation, from late-night döner shops to zero-waste restaurants.',
+  'Paris, France': 'Le Marais, the 11th arrondissement, and Bastille are the best neighborhoods for vegan dining. Paris\'s plant-based patisseries and fromageries bring French culinary artistry to cruelty-free cooking.',
+  'Wien, Austria': 'The city\'s legendary Kaffeehaus culture now serves plant-based Sachertorte and vegan Melange. Nearly every traditional café offers plant-milk options, and dedicated vegan restaurants span from the 1st district to the outer Bezirke.',
+  'Hamburg, Germany': 'The Schanzenviertel and St. Pauli neighborhoods are the heart of Hamburg\'s vegan scene. The city\'s cosmopolitan port culture brings diverse plant-based influences from across the globe.',
+  'Frankfurt am Main, Germany': 'The Nordend and Bornheim neighborhoods are hotspots for plant-based dining. Frankfurt\'s financial hub status means a diverse international vegan scene alongside reimagined Hessian specialties.',
+  'Praha, Czech Republic': 'Old Town, Vinohrady, and Žižkov neighborhoods are packed with affordable vegan spots. Prague offers some of the best-value plant-based dining in all of Europe.',
+  'Helsinki, Finland': 'Helsinki\'s vegan scene features unique Nordic ingredients — wild berries, forest mushrooms, and root vegetables. The city\'s design-forward culture extends to beautifully presented plant-based dishes.',
+  'Gent, Belgium': 'The world\'s first city with an official weekly veggie day, Ghent\'s plant-based scene punches far above its size. The medieval city center is packed with creative vegan restaurants and cafés.',
+  'Lyon, France': 'France\'s gastronomic capital has embraced plant-based cooking with characteristic Lyonnaise passion. The Presqu\'île and Croix-Rousse neighborhoods are the best areas for vegan exploration.',
+  'København, Denmark': 'Copenhagen applies New Nordic cuisine principles to plant-based cooking — seasonal, local, and beautifully presented. The city that pioneered foraging in fine dining now applies those same techniques to vegan dishes.',
+  'Bruxelles - Brussel, Belgium': 'The EU capital offers plant-based dining that reflects its multicultural character. From vegan waffles near Grand Place to innovative restaurants in Ixelles, Brussels has embraced plant-based eating.',
+  'Graz, Austria': 'Austria\'s second city has a growing vegan scene, with the university district and Lend neighborhood leading the way. Strong organic farming traditions in Styria mean excellent local produce.',
+  'Brno, Czech Republic': 'Brno\'s student population drives a vibrant, affordable vegan scene. The city centre and Veveří neighborhoods offer diverse plant-based options.',
+  'Dresden, Germany': 'The Neustadt district is Dresden\'s vegan heartland, with creative plant-based restaurants alongside the city\'s famous Baroque architecture.',
+  'Bremen, Germany': 'Bremen\'s Viertel (Das Viertel) neighborhood is the center of the city\'s plant-based scene, with cafés and restaurants reflecting the area\'s alternative culture.',
 }
 
-export function getCountryDescription(country: string): string | null {
-  return COUNTRY_DESCRIPTIONS[country] || null
+interface PlaceStats {
+  total: number
+  categories: Record<string, number>
+  cuisines: string[]
+  sampleNames: string[]
+  fullyVegan: number
+  petFriendly: number
+  cityCount?: number
 }
 
-export function getCityDescription(city: string, country: string): string | null {
-  return CITY_DESCRIPTIONS[`${city}, ${country}`] || null
+function formatCuisineList(cuisines: string[]): string {
+  if (cuisines.length === 0) return ''
+  const cleaned = cuisines
+    .filter(c => c && c !== 'vegan' && c !== 'regional')
+    .map(c => c.replace(/_/g, ' '))
+    .slice(0, 4)
+  if (cleaned.length === 0) return ''
+  if (cleaned.length === 1) return cleaned[0]
+  return cleaned.slice(0, -1).join(', ') + ' and ' + cleaned[cleaned.length - 1]
+}
+
+function formatPlaceNames(names: string[], max: number = 3): string {
+  const clean = names.filter(n => n.length > 2 && n.length < 40).slice(0, max)
+  if (clean.length === 0) return ''
+  if (clean.length === 1) return clean[0]
+  return clean.slice(0, -1).join(', ') + ' and ' + clean[clean.length - 1]
+}
+
+export function generateCountryDescription(
+  countryName: string,
+  stats: PlaceStats,
+): string {
+  const ctx = COUNTRY_CONTEXT[countryName]
+  const parts: string[] = []
+
+  // Opening with search-intent targeting
+  if (stats.total > 50) {
+    parts.push(`Looking for vegan restaurants in ${countryName}? Browse ${stats.total} verified plant-based places across ${stats.cityCount || 'multiple'} cities.`)
+  } else if (stats.total > 10) {
+    parts.push(`Discover ${stats.total} vegan restaurants, shops, and cafés across ${countryName}.`)
+  } else {
+    parts.push(`Find vegan-friendly places in ${countryName} — we currently list ${stats.total} verified spots.`)
+  }
+
+  // Category breakdown
+  const catParts: string[] = []
+  if (stats.categories.eat) catParts.push(`${stats.categories.eat} restaurants and cafés`)
+  if (stats.categories.store) catParts.push(`${stats.categories.store} vegan shops`)
+  if (stats.categories.hotel) catParts.push(`${stats.categories.hotel} vegan-friendly places to stay`)
+  if (catParts.length > 1) {
+    parts.push(`That includes ${catParts.join(', ')}.`)
+  }
+
+  // Fully vegan stat
+  if (stats.fullyVegan > 5) {
+    const pct = Math.round((stats.fullyVegan / stats.total) * 100)
+    parts.push(`${pct}% are 100% vegan — not just vegan-friendly, but fully plant-based menus.`)
+  }
+
+  // Cuisine variety
+  const cuisineStr = formatCuisineList(stats.cuisines)
+  if (cuisineStr) {
+    parts.push(`Popular cuisines include ${cuisineStr}.`)
+  }
+
+  // Cultural context
+  if (ctx) {
+    parts.push(`Why ${countryName}? Because ${ctx.veganCulture}. Look out for ${ctx.localDishes}.`)
+  }
+
+  // Sample places
+  const placeStr = formatPlaceNames(stats.sampleNames)
+  if (placeStr) {
+    parts.push(`Popular spots include ${placeStr}.`)
+  }
+
+  // Pet-friendly callout
+  if (stats.petFriendly > 0) {
+    parts.push(`${stats.petFriendly} ${stats.petFriendly === 1 ? 'place is' : 'places are'} confirmed dog-friendly.`)
+  }
+
+  return parts.join(' ')
+}
+
+export function generateCityDescription(
+  cityName: string,
+  countryName: string,
+  stats: PlaceStats,
+): string {
+  const ctx = CITY_CONTEXT[`${cityName}, ${countryName}`]
+  const parts: string[] = []
+
+  // Search-intent opening
+  if (stats.total > 30) {
+    parts.push(`Looking for the best vegan food in ${cityName}? We've verified ${stats.total} plant-based restaurants, cafés, and shops across the city.`)
+  } else if (stats.total > 10) {
+    parts.push(`${cityName} has ${stats.total} vegan-friendly places worth visiting — from fully plant-based restaurants to shops stocking vegan products.`)
+  } else {
+    parts.push(`Find ${stats.total} vegan ${stats.total === 1 ? 'place' : 'places'} in ${cityName}, ${countryName}.`)
+  }
+
+  // Breakdown
+  const catParts: string[] = []
+  if (stats.categories.eat) catParts.push(`${stats.categories.eat} places to eat`)
+  if (stats.categories.store) catParts.push(`${stats.categories.store} vegan ${stats.categories.store === 1 ? 'shop' : 'shops'}`)
+  if (stats.categories.hotel) catParts.push(`${stats.categories.hotel} places to stay`)
+  if (catParts.length > 1) {
+    parts.push(`Browse ${catParts.join(', ')}.`)
+  }
+
+  // Cuisine variety
+  const cuisineStr = formatCuisineList(stats.cuisines)
+  if (cuisineStr) {
+    parts.push(`You'll find ${cuisineStr} cuisine — all vegan.`)
+  }
+
+  // City-specific context
+  if (ctx) {
+    parts.push(ctx)
+  }
+
+  // Sample places
+  const placeStr = formatPlaceNames(stats.sampleNames, 4)
+  if (placeStr) {
+    parts.push(`Highlights include ${placeStr}.`)
+  }
+
+  // Fully vegan stat
+  if (stats.fullyVegan > 3) {
+    parts.push(`${stats.fullyVegan} of these are 100% vegan.`)
+  }
+
+  // Pet-friendly
+  if (stats.petFriendly > 0) {
+    parts.push(`${stats.petFriendly} ${stats.petFriendly === 1 ? 'place welcomes' : 'places welcome'} dogs.`)
+  }
+
+  return parts.join(' ')
 }

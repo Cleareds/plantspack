@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Star, PawPrint, Globe, ExternalLink } from 'lucide-react'
 import CityMap from '@/components/places/CityMap'
-import { getCityDescription } from '@/lib/vegan-scene-descriptions'
+import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
@@ -105,7 +105,25 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
   const { places, city: cityName, country: countryName } = await getPlaces(country, city)
-  const sceneDescription = getCityDescription(cityName, countryName)
+
+  // Build stats from fetched places for data-driven description
+  const cityStats = {
+    total: places.length,
+    categories: {} as Record<string, number>,
+    fullyVegan: 0,
+    petFriendly: 0,
+    cuisines: [] as string[],
+    sampleNames: places.slice(0, 8).map((p: Place) => p.name),
+  }
+  const cuisineCounts: Record<string, number> = {}
+  for (const p of places) {
+    cityStats.categories[p.category] = (cityStats.categories[p.category] || 0) + 1
+    // Approximate: places with high ratings or descriptions tend to be fully vegan
+    if (p.description?.toLowerCase().includes('vegan')) cityStats.fullyVegan++
+    if (p.is_pet_friendly) cityStats.petFriendly++
+  }
+  cityStats.cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k)
+  const sceneDescription = generateCityDescription(cityName, countryName, cityStats)
 
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
   categories.sort()

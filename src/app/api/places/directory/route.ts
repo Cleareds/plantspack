@@ -19,27 +19,51 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get('limit') || '200'), 500)
 
     if (level === 'countries') {
-      // Get countries with place counts
+      // Get countries with place counts and stats for SEO descriptions
       const { data, error } = await supabase
         .from('places')
-        .select('country')
+        .select('country, category, vegan_level, is_pet_friendly, cuisine_types, city, name')
         .not('country', 'is', null)
         .neq('country', '')
 
       if (error) throw error
 
-      // Count per country
-      const counts: Record<string, number> = {}
+      const countryMap: Record<string, {
+        count: number, categories: Record<string, number>,
+        fullyVegan: number, petFriendly: number,
+        cuisines: Record<string, number>, cities: Set<string>,
+        sampleNames: string[]
+      }> = {}
+
       for (const row of data || []) {
         const c = row.country!
-        counts[c] = (counts[c] || 0) + 1
+        if (!countryMap[c]) countryMap[c] = { count: 0, categories: {}, fullyVegan: 0, petFriendly: 0, cuisines: {}, cities: new Set(), sampleNames: [] }
+        const s = countryMap[c]
+        s.count++
+        s.categories[row.category] = (s.categories[row.category] || 0) + 1
+        if (row.vegan_level === 'fully_vegan') s.fullyVegan++
+        if (row.is_pet_friendly) s.petFriendly++
+        if (row.city) s.cities.add(row.city)
+        if (s.sampleNames.length < 5) s.sampleNames.push(row.name)
+        for (const ct of (row.cuisine_types || [])) {
+          if (ct && ct !== 'vegan') s.cuisines[ct] = (s.cuisines[ct] || 0) + 1
+        }
       }
 
-      const countries = Object.entries(counts)
-        .map(([name, count]) => ({
+      const countries = Object.entries(countryMap)
+        .map(([name, s]) => ({
           name,
           slug: toSlug(name),
-          count,
+          count: s.count,
+          stats: {
+            total: s.count,
+            categories: s.categories,
+            fullyVegan: s.fullyVegan,
+            petFriendly: s.petFriendly,
+            cuisines: Object.entries(s.cuisines).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k),
+            sampleNames: s.sampleNames,
+            cityCount: s.cities.size,
+          },
         }))
         .sort((a, b) => b.count - a.count)
 
@@ -50,24 +74,46 @@ export async function GET(request: NextRequest) {
       // Get cities in a country with place counts
       const { data, error } = await supabase
         .from('places')
-        .select('city')
+        .select('city, category, vegan_level, is_pet_friendly, cuisine_types, name')
         .not('city', 'is', null)
         .neq('city', '')
         .ilike('country', fromSlug(country))
 
       if (error) throw error
 
-      const counts: Record<string, number> = {}
+      const cityMap: Record<string, {
+        count: number, categories: Record<string, number>,
+        fullyVegan: number, petFriendly: number,
+        cuisines: Record<string, number>, sampleNames: string[]
+      }> = {}
+
       for (const row of data || []) {
         const c = row.city!
-        counts[c] = (counts[c] || 0) + 1
+        if (!cityMap[c]) cityMap[c] = { count: 0, categories: {}, fullyVegan: 0, petFriendly: 0, cuisines: {}, sampleNames: [] }
+        const s = cityMap[c]
+        s.count++
+        s.categories[row.category] = (s.categories[row.category] || 0) + 1
+        if (row.vegan_level === 'fully_vegan') s.fullyVegan++
+        if (row.is_pet_friendly) s.petFriendly++
+        if (s.sampleNames.length < 8) s.sampleNames.push(row.name)
+        for (const ct of (row.cuisine_types || [])) {
+          if (ct && ct !== 'vegan') s.cuisines[ct] = (s.cuisines[ct] || 0) + 1
+        }
       }
 
-      const cities = Object.entries(counts)
-        .map(([name, count]) => ({
+      const cities = Object.entries(cityMap)
+        .map(([name, s]) => ({
           name,
           slug: toSlug(name),
-          count,
+          count: s.count,
+          stats: {
+            total: s.count,
+            categories: s.categories,
+            fullyVegan: s.fullyVegan,
+            petFriendly: s.petFriendly,
+            cuisines: Object.entries(s.cuisines).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k),
+            sampleNames: s.sampleNames,
+          },
         }))
         .sort((a, b) => b.count - a.count)
         .slice(0, limit)
