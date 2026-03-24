@@ -29,22 +29,35 @@ const MapClickHandler = dynamic(() =>
   { ssr: false }
 )
 
-// Fires viewport fetch ONCE when map first becomes ready
-const MapReadyHandler = dynamic(() =>
+// Attaches moveend/zoomend listeners and fires initial fetch when map is ready
+const MapEventHandler = dynamic(() =>
   import('react-leaflet').then(mod => {
     const { useMap } = mod
     const { useEffect, useRef } = require('react')
-    return function MapReadyHandlerComponent({ onReady }: { onReady: () => void }) {
+    return function MapEventHandlerComponent({ onMapMove }: { onMapMove: () => void }) {
       const map = useMap()
-      const firedRef = useRef(false)
+      const attachedRef = useRef(false)
+      const onMapMoveRef = useRef(onMapMove)
+      onMapMoveRef.current = onMapMove
+
       useEffect(() => {
-        if (map && !firedRef.current) {
-          firedRef.current = true
-          // Small delay to ensure tiles have loaded
-          const timer = setTimeout(() => onReady(), 300)
-          return () => clearTimeout(timer)
+        if (!map || attachedRef.current) return
+        attachedRef.current = true
+
+        const handler = () => onMapMoveRef.current()
+
+        map.on('moveend', handler)
+        map.on('zoomend', handler)
+
+        // Initial fetch after map renders
+        setTimeout(handler, 300)
+
+        return () => {
+          map.off('moveend', handler)
+          map.off('zoomend', handler)
         }
-      }, [map]) // eslint-disable-line react-hooks/exhaustive-deps
+      }, [map])
+
       return null
     }
   }),
@@ -58,7 +71,7 @@ interface MapViewProps {
   customCenter: [number, number] | null
   onMapClick: (latlng: [number, number]) => void
   onResetCenter: () => void
-  onMapReady?: () => void
+  onMapMove: () => void
   mapRef: MutableRefObject<any>
   placeMarkerIcon: any
   leafletIcon: any
@@ -75,7 +88,7 @@ export default function MapView({
   customCenter,
   onMapClick,
   onResetCenter,
-  onMapReady,
+  onMapMove,
   mapRef,
   placeMarkerIcon,
   leafletIcon,
@@ -99,7 +112,7 @@ export default function MapView({
         />
 
         <MapClickHandler onMapClick={onMapClick} />
-        {onMapReady && <MapReadyHandler onReady={onMapReady} />}
+        <MapEventHandler onMapMove={onMapMove} />
 
         {/* Custom search center marker */}
         {customCenter && leafletIcon && (

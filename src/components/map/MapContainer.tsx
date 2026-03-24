@@ -444,27 +444,8 @@ export default function MapContainerComponent() {
     geocodeInitialLocation()
   }, [initialLocation, authReady])
 
-  // Called once when Leaflet map is actually ready and rendered
-  const handleMapReady = useCallback(() => {
-    if (mapRef.current) {
-      handleMapMove()
-    }
-  }, [handleMapMove])
-
-  // Map event listeners — fetch viewport places on pan/zoom
-  useEffect(() => {
-    const mapInstance = mapRef.current
-    if (mapInstance) {
-      mapInstance.on('moveend', handleMapMove)
-      mapInstance.on('zoomend', handleMapMove)
-      return () => {
-        if (mapInstance) {
-          mapInstance.off('moveend', handleMapMove)
-          mapInstance.off('zoomend', handleMapMove)
-        }
-      }
-    }
-  }, [handleMapMove])
+  // Event listeners are now attached inside MapEventHandler (in MapView)
+  // which has direct access to the Leaflet map instance via useMap()
 
   // Category changes are handled by useNearbyPlaces hook automatically
 
@@ -592,7 +573,7 @@ export default function MapContainerComponent() {
           customCenter={customCenter}
           onMapClick={handleMapClick}
           onResetCenter={() => setCustomCenter(null)}
-          onMapReady={handleMapReady}
+          onMapMove={handleMapMove}
           mapRef={mapRef}
           placeMarkerIcon={placeMarkerIcon}
           leafletIcon={leafletIcon}
