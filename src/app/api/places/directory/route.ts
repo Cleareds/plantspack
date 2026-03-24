@@ -20,11 +20,13 @@ export async function GET(request: NextRequest) {
 
     if (level === 'countries') {
       // Get countries with place counts and stats for SEO descriptions
+      // IMPORTANT: override Supabase default 1000 row limit
       const { data, error } = await supabase
         .from('places')
         .select('country, category, vegan_level, is_pet_friendly, cuisine_types, city, name')
         .not('country', 'is', null)
         .neq('country', '')
+        .limit(10000)
 
       if (error) throw error
 
@@ -74,10 +76,11 @@ export async function GET(request: NextRequest) {
       // Get cities in a country with place counts
       const { data, error } = await supabase
         .from('places')
-        .select('city, category, vegan_level, is_pet_friendly, cuisine_types, name')
+        .select('city, country, category, vegan_level, is_pet_friendly, cuisine_types, name')
         .not('city', 'is', null)
         .neq('city', '')
         .ilike('country', fromSlug(country))
+        .limit(5000)
 
       if (error) throw error
 
@@ -118,7 +121,10 @@ export async function GET(request: NextRequest) {
         .sort((a, b) => b.count - a.count)
         .slice(0, limit)
 
-      return NextResponse.json({ cities, country: fromSlug(country) })
+      // Get actual country name from DB (proper casing)
+      const dbCountryName = data?.[0]?.country || fromSlugDisplay(country)
+
+      return NextResponse.json({ cities, country: dbCountryName })
     }
 
     if (level === 'places' && country && city) {
@@ -142,10 +148,14 @@ export async function GET(request: NextRequest) {
       const { data, error } = await query.limit(limit)
       if (error) throw error
 
+      // Use actual DB names for proper casing
+      const dbCity = data?.[0]?.city || fromSlugDisplay(city)
+      const dbCountry = data?.[0]?.country || fromSlugDisplay(country)
+
       return NextResponse.json({
         places: data || [],
-        city: fromSlug(city),
-        country: fromSlug(country),
+        city: dbCity,
+        country: dbCountry,
         total: data?.length || 0,
       })
     }
@@ -163,6 +173,12 @@ function toSlug(name: string): string {
 
 function fromSlug(slug: string): string {
   // Convert slug back to approximate name for ilike matching
-  // "new-york" → "new york" (ilike is case-insensitive)
+  // "united-kingdom" → "united kingdom" (ilike is case-insensitive)
   return slug.replace(/-/g, ' ')
+}
+
+function fromSlugDisplay(slug: string): string {
+  // Convert slug to display name with proper capitalization
+  // "united-kingdom" → "United Kingdom"
+  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }

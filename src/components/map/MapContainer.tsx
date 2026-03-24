@@ -432,13 +432,19 @@ export default function MapContainerComponent() {
     geocodeInitialLocation()
   }, [initialLocation, authReady])
 
+  // Called when Leaflet map is actually ready and rendered
+  const handleMapReady = useCallback(() => {
+    if (mapRef.current) {
+      // Fetch all places in the initial viewport
+      handleMapMove()
+    }
+  }, [handleMapMove])
+
   // Map event listeners — fetch viewport places on pan/zoom
   useEffect(() => {
     const mapInstance = mapRef.current
     if (mapInstance) {
       mapInstance.on('moveend', handleMapMove)
-      // Also fetch on initial load
-      setTimeout(() => handleMapMove(), 500)
       return () => {
         if (mapInstance) {
           mapInstance.off('moveend', handleMapMove)
@@ -573,6 +579,7 @@ export default function MapContainerComponent() {
           customCenter={customCenter}
           onMapClick={handleMapClick}
           onResetCenter={() => setCustomCenter(null)}
+          onMapReady={handleMapReady}
           mapRef={mapRef}
           placeMarkerIcon={placeMarkerIcon}
           leafletIcon={leafletIcon}
@@ -598,10 +605,10 @@ export default function MapContainerComponent() {
           </button>
         )}
 
-        {/* Map Instructions */}
-        <div className="absolute top-4 left-4 z-30 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg p-3 editorial-shadow ghost-border max-w-xs hidden md:block">
+        {/* Map count indicator */}
+        <div className="absolute top-4 left-4 z-30 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg px-3 py-2 editorial-shadow ghost-border hidden md:block">
           <p className="text-xs text-on-surface-variant">
-            <strong>Tip:</strong> Click anywhere on the map to set a new search center.
+            {mapPlaces.length > 0 ? `${mapPlaces.length} places in view` : loading ? 'Loading...' : 'Zoom in to see places'}
           </p>
         </div>
 

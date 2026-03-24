@@ -29,6 +29,23 @@ const MapClickHandler = dynamic(() =>
   { ssr: false }
 )
 
+// Fires viewport fetch when map first becomes ready
+const MapReadyHandler = dynamic(() =>
+  import('react-leaflet').then(mod => {
+    const { useMap } = mod
+    return function MapReadyHandlerComponent({ onReady }: { onReady: () => void }) {
+      const map = useMap()
+      // useMap gives us the map instance — fire onReady once
+      if (map) {
+        // Use requestAnimationFrame to ensure map is fully rendered
+        requestAnimationFrame(() => onReady())
+      }
+      return null
+    }
+  }),
+  { ssr: false }
+)
+
 interface MapViewProps {
   places: PlaceWithDistance[]
   userLocation: [number, number] | null
@@ -36,6 +53,7 @@ interface MapViewProps {
   customCenter: [number, number] | null
   onMapClick: (latlng: [number, number]) => void
   onResetCenter: () => void
+  onMapReady?: () => void
   mapRef: MutableRefObject<any>
   placeMarkerIcon: any
   leafletIcon: any
@@ -52,6 +70,7 @@ export default function MapView({
   customCenter,
   onMapClick,
   onResetCenter,
+  onMapReady,
   mapRef,
   placeMarkerIcon,
   leafletIcon,
@@ -75,6 +94,7 @@ export default function MapView({
         />
 
         <MapClickHandler onMapClick={onMapClick} />
+        {onMapReady && <MapReadyHandler onReady={onMapReady} />}
 
         {/* Custom search center marker */}
         {customCenter && leafletIcon && (
