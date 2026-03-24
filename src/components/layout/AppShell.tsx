@@ -32,11 +32,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar - always visible on lg+ */}
       <Sidebar />
 
-      {/* Top bar */}
-      <TopBar />
+      {/* Top bar - hidden on desktop for map page (map has its own controls) */}
+      <div className={isMapPage ? 'lg:hidden' : ''}>
+        <TopBar />
+      </div>
 
       {/* Main content area */}
-      <main className={`min-h-screen pt-[80px] ${isMapPage ? 'sm:pt-16 lg:ml-64' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
+      <main className={`min-h-screen pt-[80px] ${isMapPage ? 'sm:pt-16 lg:ml-64 lg:pt-0' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
         {children}
       </main>
 
