@@ -70,7 +70,7 @@ export default function MapDiscoveryPanel({
           <X className="h-5 w-5 text-on-surface-variant" />
         </button>
 
-        <div className="p-4 pt-14 lg:pt-4">
+        <div className="p-4 pt-14 lg:pt-4 pb-24 lg:pb-4">
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-lg font-medium text-on-surface">
               Nearby Places
