@@ -456,9 +456,11 @@ export default function MapContainerComponent() {
     const mapInstance = mapRef.current
     if (mapInstance) {
       mapInstance.on('moveend', handleMapMove)
+      mapInstance.on('zoomend', handleMapMove)
       return () => {
         if (mapInstance) {
           mapInstance.off('moveend', handleMapMove)
+          mapInstance.off('zoomend', handleMapMove)
         }
       }
     }
