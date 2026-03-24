@@ -54,7 +54,7 @@ export const getCountries = cache(async () => {
 
   const countries = (data || []).map((row: any) => ({
     name: row.country,
-    slug: toSlug(row.country),
+    slug: row.country_slug || toSlug(row.country),
     count: row.place_count,
     stats: {
       total: row.place_count,
@@ -73,28 +73,34 @@ export const getCountries = cache(async () => {
 
 /**
  * Get cities for a country — 1 query to directory_cities view
+ * Matches on country_slug (accent-safe) via the country_slug column in directory_countries
  */
 export const getCities = cache(async (countrySlug: string) => {
   const supabase = createAdminClient()
-  const countryName = countrySlug.replace(/-/g, ' ')
+
+  // First get the actual country name from the slug
+  const { data: countryRow } = await supabase
+    .from('directory_countries')
+    .select('country')
+    .eq('country_slug', countrySlug)
+    .single()
+
+  const actualCountry = countryRow?.country || countrySlug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
 
   const { data, error } = await supabase
     .from('directory_cities')
     .select('*')
-    .ilike('country', countryName)
+    .eq('country', actualCountry)
     .order('place_count', { ascending: false })
 
   if (error) {
     console.error('[getCities]', error.message)
-    return { cities: [], country: countryName }
+    return { cities: [], country: actualCountry }
   }
-
-  // Get actual country name from first row
-  const actualCountry = data?.[0]?.country || countryName.replace(/\b\w/g, (c: string) => c.toUpperCase())
 
   const cities = (data || []).map((row: any) => ({
     name: row.city,
-    slug: toSlug(row.city),
+    slug: row.city_slug || toSlug(row.city),
     count: row.place_count,
     stats: {
       total: row.place_count,
@@ -110,28 +116,34 @@ export const getCities = cache(async (countrySlug: string) => {
 })
 
 /**
- * Get places for a city — 1 query to places table
+ * Get places for a city — looks up actual city name from view, then 1 query to places
  */
 export const getCityPlaces = cache(async (countrySlug: string, citySlug: string) => {
   const supabase = createAdminClient()
-  const countryName = countrySlug.replace(/-/g, ' ')
-  const cityName = citySlug.replace(/-/g, ' ')
+
+  // Look up actual city + country names from the slug-indexed view
+  const { data: cityRow } = await supabase
+    .from('directory_cities')
+    .select('city, country')
+    .eq('city_slug', citySlug)
+    .single()
+
+  // Fallback to slug-to-name conversion if not found
+  const actualCity = cityRow?.city || citySlug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+  const actualCountry = cityRow?.country || countrySlug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
 
   const { data, error } = await supabase
     .from('places')
     .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, latitude, longitude, city, country, vegan_level, cuisine_types')
-    .ilike('country', countryName)
-    .ilike('city', cityName)
+    .eq('country', actualCountry)
+    .eq('city', actualCity)
     .order('name', { ascending: true })
     .limit(500)
 
   if (error) {
     console.error('[getCityPlaces]', error.message)
-    return { places: [], city: cityName, country: countryName, total: 0 }
+    return { places: [], city: actualCity, country: actualCountry, total: 0 }
   }
-
-  const actualCity = data?.[0]?.city || cityName.replace(/\b\w/g, (c: string) => c.toUpperCase())
-  const actualCountry = data?.[0]?.country || countryName.replace(/\b\w/g, (c: string) => c.toUpperCase())
 
   return {
     places: data || [],

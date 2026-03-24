@@ -235,11 +235,6 @@ export default function MapContainerComponent() {
     }
   }, [])
 
-  // Map click handler
-  const handleMapClick = useCallback((latlng: [number, number]) => {
-    setCustomCenter(latlng)
-  }, [setCustomCenter])
-
   // Debounced viewport fetch — prevents spamming API on rapid pan/zoom
   const viewportTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const fetchViewportRef = useRef(fetchViewportPlaces)
@@ -271,6 +266,13 @@ export default function MapContainerComponent() {
       }
     }, 400)
   }, []) // stable — no deps, uses refs
+
+  // Map click handler — also triggers viewport refresh
+  const handleMapClick = useCallback((latlng: [number, number]) => {
+    setCustomCenter(latlng)
+    // Trigger viewport fetch since the map didn't actually move
+    handleMapMove()
+  }, [setCustomCenter, handleMapMove])
 
   // Toggle favorite
   const toggleFavorite = async (placeId: string) => {
