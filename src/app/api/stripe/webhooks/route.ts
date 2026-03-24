@@ -201,7 +201,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Check for early purchaser promotion after successful subscription activation
     if (tierId === 'medium') {
       try {
-        const { error: promoError } = await supabase.rpc('grant_early_purchaser_subscription' as never, {
+        const { error: promoError } = await (supabase.rpc as any)('grant_early_purchaser_subscription', {
           target_user_id: userId
         })
 

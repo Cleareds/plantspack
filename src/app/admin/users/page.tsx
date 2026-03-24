@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 
-type User = Tables<'users'>
+type User = Tables<'users'> & { role?: string | null; is_banned?: boolean | null }
 
 const USERS_PER_PAGE = 20
 
