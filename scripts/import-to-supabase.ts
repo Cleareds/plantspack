@@ -89,46 +89,21 @@ function parseOpeningHours(osmHours: string | null): Record<string, string> | nu
   return Object.keys(result).length > 0 ? result : { raw: osmHours }
 }
 
-// ─── Get or create system import user ────────────────────────────────────
+// ─── Get admin user for import ownership ─────────────────────────────────
 
-async function getOrCreateImportUser(): Promise<string> {
-  const importEmail = 'osm-import@plantspack.system'
-
-  // Check if system user exists
-  const { data: existing } = await supabase
+async function getAdminUser(): Promise<string> {
+  const { data, error } = await supabase
     .from('users')
     .select('id')
-    .eq('email', importEmail)
+    .eq('role', 'admin')
+    .limit(1)
     .single()
 
-  if (existing) return existing.id
-
-  // Create system user via auth admin
-  const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
-    email: importEmail,
-    password: `system-${Date.now()}-${Math.random().toString(36)}`,
-    email_confirm: true,
-    user_metadata: { name: 'OSM Import', is_system: true },
-  })
-
-  if (authError) {
-    // If user exists in auth but not in users table, find it
-    const { data: users } = await supabase.auth.admin.listUsers()
-    const found = users?.users?.find(u => u.email === importEmail)
-    if (found) return found.id
-    throw new Error(`Failed to create import user: ${authError.message}`)
+  if (error || !data) {
+    throw new Error('No admin user found. Create an admin user first.')
   }
 
-  // Ensure users row exists
-  const userId = authUser.user.id
-  await supabase.from('users').upsert({
-    id: userId,
-    email: importEmail,
-    name: 'OSM Import',
-    username: 'osm-import',
-  }, { onConflict: 'id' })
-
-  return userId
+  return data.id
 }
 
 // ─── Main import ─────────────────────────────────────────────────────────
@@ -179,16 +154,16 @@ async function main() {
     return
   }
 
-  // Get import user
-  console.log('\n📋 Setting up import user...')
-  const importUserId = await getOrCreateImportUser()
-  console.log(`  Import user ID: ${importUserId}`)
+  // Get admin user for ownership
+  console.log('\n📋 Finding admin user...')
+  const importUserId = await getAdminUser()
+  console.log(`  Admin user ID: ${importUserId}`)
 
   // Upsert in batches
   console.log(`\n📦 Importing ${places.length} places in batches of ${BATCH_SIZE}...`)
 
   let inserted = 0
-  let updated = 0
+
   let errors = 0
   const startTime = Date.now()
 
