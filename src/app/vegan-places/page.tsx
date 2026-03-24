@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Globe, ArrowRight } from 'lucide-react'
+import { getCountries } from '@/lib/directory-queries'
+
+export const revalidate = 3600 // ISR: 1 hour
 
 export const metadata: Metadata = {
   title: 'Vegan Places Directory - Find Vegan Restaurants & Stores | PlantsPack',
@@ -12,19 +15,6 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'PlantsPack',
   },
-}
-
-async function getCountries() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/places/directory?level=countries`, {
-      next: { revalidate: 3600 },
-    })
-    if (!res.ok) return { countries: [], total: 0 }
-    return res.json()
-  } catch {
-    return { countries: [], total: 0 }
-  }
 }
 
 export default async function VeganPlacesPage() {

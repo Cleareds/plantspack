@@ -2,26 +2,12 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, ArrowRight } from 'lucide-react'
 import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
+import { getCities } from '@/lib/directory-queries'
+
+export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ country: string }>
-}
-
-function fromSlug(slug: string): string {
-  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-}
-
-async function getCities(country: string) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/places/directory?level=cities&country=${country}&limit=300`, {
-      next: { revalidate: 3600 },
-    })
-    if (!res.ok) return { cities: [], country: fromSlug(country) }
-    return res.json()
-  } catch {
-    return { cities: [], country: fromSlug(country) }
-  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -44,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
+  // Single query via materialized view — cache() deduplicates with generateMetadata
   const { cities, country: countryName } = await getCities(country)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
 

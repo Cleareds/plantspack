@@ -3,17 +3,17 @@ import Link from 'next/link'
 import { MapPin, Star, PawPrint, Globe, ExternalLink } from 'lucide-react'
 import CityMap from '@/components/places/CityMap'
 import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
+import { getCityPlaces } from '@/lib/directory-queries'
+
+export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
 }
 
-function fromSlug(slug: string): string {
-  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-}
-
 interface Place {
   id: string
+  slug: string | null
   name: string
   category: string
   address: string
@@ -26,24 +26,14 @@ interface Place {
   website: string | null
   latitude: number
   longitude: number
-}
-
-async function getPlaces(country: string, city: string) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${country}&city=${city}&limit=500`, {
-      next: { revalidate: 3600 },
-    })
-    if (!res.ok) return { places: [], city: fromSlug(city), country: fromSlug(country), total: 0 }
-    return res.json()
-  } catch {
-    return { places: [], city: fromSlug(city), country: fromSlug(country), total: 0 }
-  }
+  vegan_level: string | null
+  cuisine_types: string[]
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country, city } = await params
-  const { places, city: cityName, country: countryName } = await getPlaces(country, city)
+  // Single query — cache() deduplicates with page render
+  const { places, city: cityName, country: countryName } = await getCityPlaces(country, city)
 
   const title = `Vegan Restaurants & Places in ${cityName}, ${countryName} (${places.length})`
   const description = `Discover ${places.length} vegan restaurants, stores, and stays in ${cityName}. Community-verified with ratings and reviews.`
@@ -104,7 +94,8 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
 
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
-  const { places, city: cityName, country: countryName } = await getPlaces(country, city)
+  // Single query — cache() deduplicates with generateMetadata
+  const { places, city: cityName, country: countryName } = await getCityPlaces(country, city)
 
   // Build stats from fetched places for data-driven description
   const cityStats = {
@@ -118,9 +109,11 @@ export default async function CityPage({ params }: PageProps) {
   const cuisineCounts: Record<string, number> = {}
   for (const p of places) {
     cityStats.categories[p.category] = (cityStats.categories[p.category] || 0) + 1
-    // Approximate: places with high ratings or descriptions tend to be fully vegan
-    if (p.description?.toLowerCase().includes('vegan')) cityStats.fullyVegan++
+    if ((p as any).vegan_level === 'fully_vegan') cityStats.fullyVegan++
     if (p.is_pet_friendly) cityStats.petFriendly++
+    for (const ct of ((p as any).cuisine_types || [])) {
+      if (ct && ct !== 'vegan') cuisineCounts[ct] = (cuisineCounts[ct] || 0) + 1
+    }
   }
   cityStats.cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k)
   const sceneDescription = generateCityDescription(cityName, countryName, cityStats)
@@ -211,7 +204,7 @@ export default async function CityPage({ params }: PageProps) {
                 return (
                   <Link
                     key={place.id}
-                    href={`/place/${(place as any).slug || place.id}`}
+                    href={`/place/${place.slug || place.id}`}
                     className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
                   >
                     {/* Thumbnail */}
