@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import PostPageContent from '@/components/posts/PostPageContent'
@@ -81,8 +81,11 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
   const { id } = await params
   const post = await getPost(id)
 
-  if (!post) {
-    notFound()
+  if (!post) notFound()
+
+  // Redirect recipe posts to the /recipe/ route
+  if (post.category === 'recipe') {
+    redirect(`/recipe/${(post as any).slug || id}`)
   }
 
   return (
