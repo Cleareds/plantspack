@@ -7,9 +7,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 // Initialize Stripe with secret key
-const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-06-30.basil',
-}) : null
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null
 
 const PRICE_IDS: Record<string, { month: string; year: string }> = {
   medium: {
@@ -173,7 +171,6 @@ export async function POST(request: NextRequest) {
           const portalSession = await stripe.billingPortal.sessions.create({
             customer: user.stripe_customer_id,
             return_url: returnUrl,
-            configuration: 'bpc_1Slz6vAqP7U8Au3xYpLZ2VX9',
           })
 
           return NextResponse.json({

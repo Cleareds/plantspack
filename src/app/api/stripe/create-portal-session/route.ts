@@ -6,9 +6,7 @@ import { supabase } from '@/lib/supabase'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-06-30.basil',
-}) : null
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null
 
 export async function POST(request: NextRequest) {
   if (!stripe) {
@@ -51,8 +49,6 @@ export async function POST(request: NextRequest) {
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripe_customer_id,
       return_url: returnUrl,
-      // Use the PlantsPack portal configuration
-      configuration: 'bpc_1Slz6vAqP7U8Au3xYpLZ2VX9',
     })
 
     return NextResponse.json({ url: session.url })

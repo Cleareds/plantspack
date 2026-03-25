@@ -7,9 +7,7 @@ import { sendSubscriptionEmail } from '@/lib/email'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-06-30.basil',
-}) : null
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 

@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const stripe = process.env.STRIPE_SECRET_KEY
-      ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-06-30.basil' })
+      ? new Stripe(process.env.STRIPE_SECRET_KEY!)
       : null
 
     if (!stripe) {
