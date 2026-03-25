@@ -200,6 +200,7 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
+      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
       .order('engagement_score', { ascending: false })
 
     if (category && category !== 'all') {
@@ -501,6 +502,7 @@ async function getPopularPosts(limit: number, offset: number, category?: string,
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
+      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
       .gte('created_at', startDate.toISOString())
       .order('engagement_score', { ascending: false })
 
@@ -542,6 +544,7 @@ async function getMostLikedAllTime(limit: number, offset: number, category?: str
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
+      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
       .order('engagement_score', { ascending: false })
 
     if (category && category !== 'all') {
