@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useAuth } from '@/lib/auth'
 import { useSearchParams } from 'next/navigation'
 import { Search, X } from 'lucide-react'
@@ -9,6 +9,14 @@ import { usePageState } from '@/hooks/usePageState'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 
 export default function RecipesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-surface-container-low flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
+      <RecipesContent />
+    </Suspense>
+  )
+}
+
+function RecipesContent() {
   const { user } = useAuth()
   const searchParams = useSearchParams()
   const tagFromUrl = searchParams.get('tag') || ''
