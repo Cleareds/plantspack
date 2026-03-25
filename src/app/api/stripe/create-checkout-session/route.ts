@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
   }
 
   // Check if price IDs are configured
-  if (!process.env.STRIPE_MEDIUM_PRICE_ID || !process.env.STRIPE_PREMIUM_PRICE_ID) {
-    console.error('Missing Stripe price IDs in environment variables')
+  if (!process.env.STRIPE_MEDIUM_PRICE_ID) {
+    console.error('Missing STRIPE_MEDIUM_PRICE_ID in environment variables')
     return NextResponse.json(
       { error: 'Payment configuration error. Please try again later.' },
       { status: 500 }
