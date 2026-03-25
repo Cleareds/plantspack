@@ -17,8 +17,13 @@ type RecipePost = {
     ingredients?: string[]
     prep_time_min?: number
     cook_time_min?: number
+    total_time_min?: number
     servings?: number
     difficulty?: 'easy' | 'medium' | 'hard'
+    cuisine?: string
+    nutrition?: { calories?: string; protein?: string; fat?: string; carbs?: string; fiber?: string }
+    source_url?: string
+    source_attribution?: string
   } | null
   created_at: string
   users: {
@@ -28,6 +33,24 @@ type RecipePost = {
     last_name: string | null
     avatar_url: string | null
   }
+}
+
+type SimilarRecipe = {
+  id: string
+  title: string | null
+  slug: string | null
+  images: string[] | null
+  recipe_data: any
+}
+
+async function getSimilarRecipes(postId: string): Promise<SimilarRecipe[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const resp = await fetch(`${baseUrl}/api/recipes?limit=4&offset=0`, { next: { revalidate: 3600 } })
+    if (!resp.ok) return []
+    const data = await resp.json()
+    return (data.recipes || []).filter((r: any) => r.id !== postId).slice(0, 3)
+  } catch { return [] }
 }
 
 async function getRecipePost(id: string): Promise<RecipePost | null> {
