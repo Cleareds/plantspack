@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const maxPrepTime = searchParams.get('maxPrepTime')
     const servings = searchParams.get('servings')
     const mealType = searchParams.get('mealType')
+    const tag = searchParams.get('tag')
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
@@ -35,6 +36,11 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       query = query.ilike('content', `%${search}%`)
+    }
+
+    // Filter by tag using Postgres array contains
+    if (tag) {
+      query = query.contains('secondary_tags', [tag])
     }
 
     const { data: posts, error } = await query

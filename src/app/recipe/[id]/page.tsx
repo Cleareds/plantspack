@@ -233,9 +233,10 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             {post.secondary_tags && post.secondary_tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {post.secondary_tags.map((tag: string) => (
-                  <span key={tag} className="px-2 py-0.5 rounded-full text-xs bg-surface-container-low text-on-surface-variant">
+                  <Link key={tag} href={`/recipes?tag=${encodeURIComponent(tag)}`}
+                    className="px-2 py-0.5 rounded-full text-xs bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors">
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}

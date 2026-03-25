@@ -2,17 +2,24 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
-import { Search } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { Search, X } from 'lucide-react'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import { usePageState } from '@/hooks/usePageState'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 
 export default function RecipesPage() {
   const { user } = useAuth()
+  const searchParams = useSearchParams()
+  const tagFromUrl = searchParams.get('tag') || ''
   const [recipes, setRecipes] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
+  const [activeTag, setActiveTag] = useState(tagFromUrl)
+
+  // Sync tag from URL
+  useEffect(() => { setActiveTag(tagFromUrl) }, [tagFromUrl])
 
   const [state, setState] = usePageState({
     key: 'recipes_state',
@@ -60,6 +67,7 @@ export default function RecipesPage() {
       if (state.maxPrepTime) params.append('maxPrepTime', state.maxPrepTime)
       if (state.servings) params.append('servings', state.servings)
       if (state.mealType) params.append('mealType', state.mealType)
+      if (activeTag) params.append('tag', activeTag)
       params.append('limit', '20')
       params.append('offset', String(offset))
 
@@ -84,7 +92,7 @@ export default function RecipesPage() {
 
   useEffect(() => {
     fetchRecipes()
-  }, [state.search, state.difficulty, state.maxPrepTime, state.servings, state.mealType])
+  }, [state.search, state.difficulty, state.maxPrepTime, state.servings, state.mealType, activeTag])
 
   return (
     <div className="min-h-screen bg-surface-container-low">
@@ -98,6 +106,19 @@ export default function RecipesPage() {
             Discover delicious vegan recipes from the community
           </p>
         </div>
+
+        {/* Active tag filter */}
+        {activeTag && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm text-on-surface-variant">Filtered by tag:</span>
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-primary text-on-primary-btn">
+              {activeTag}
+              <button onClick={() => { setActiveTag(''); window.history.replaceState(null, '', '/recipes') }} className="ml-1 hover:opacity-80">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </span>
+          </div>
+        )}
 
         {/* Search and Filters */}
         <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4 mb-6">

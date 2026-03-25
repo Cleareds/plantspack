@@ -104,9 +104,11 @@ export default function RecipeCard({ recipe }: { recipe: RecipePost }) {
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-2">
             {tags.slice(0, 3).map(tag => (
-              <span key={tag} className="px-1.5 py-0.5 rounded text-[10px] bg-surface-container-low text-on-surface-variant">
+              <Link key={tag} href={`/recipes?tag=${encodeURIComponent(tag)}`}
+                onClick={(e) => e.stopPropagation()}
+                className="px-1.5 py-0.5 rounded text-[10px] bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors">
                 {tag}
-              </span>
+              </Link>
             ))}
           </div>
         )}
