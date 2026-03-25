@@ -243,7 +243,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   <div className="text-sm text-on-surface-variant mb-2">{place.address}</div>
                   <div className="flex gap-2">
                     <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.address)}`}
+                      href={`https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}&query_place_id=${(place as any).google_place_id || ''}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary"
@@ -253,7 +253,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                     </a>
                     <span className="text-outline">•</span>
                     <a
-                      href={`http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.address)}`}
+                      href={`http://maps.apple.com/?q=${encodeURIComponent(place.name)}&ll=${place.latitude},${place.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary"
