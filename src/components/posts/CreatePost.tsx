@@ -671,7 +671,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 )}
 
                 <div className="flex space-x-3">
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0 overflow-hidden">
                         {/* Optional title for SEO */}
                         <input
                             type="text"
@@ -788,9 +788,9 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 </select>
 
                                 {/* Tags: cooking style + diet (clickable chips) */}
-                                <div>
+                                <div className="overflow-x-auto">
                                     <p className="text-xs text-on-surface-variant mb-1.5">Tags (select all that apply)</p>
-                                    <div className="flex flex-wrap gap-1.5">
+                                    <div className="flex flex-wrap gap-1.5 max-w-full">
                                         {[
                                             { group: 'Style', tags: ['Quick & Easy', 'One-Pot', 'Meal Prep', 'Raw', 'No-Bake', 'Baking', 'Comfort Food', 'Fermented'] },
                                             { group: 'Diet', tags: ['Gluten-Free', 'Nut-Free', 'Soy-Free', 'Oil-Free', 'High-Protein', 'Low-Carb', 'Whole Foods'] },
@@ -960,10 +960,65 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             </div>
                         )}
 
+                        {category === 'hotel' && (
+                            <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Stay Details</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {['Vegan Breakfast', 'Fully Vegan', 'Eco-Friendly', 'Pet-Friendly', 'City Center', 'Nature/Rural', 'Kitchen Available', 'Pool/Spa'].map(tag => {
+                                        const isSelected = secondaryTags.includes(tag.toLowerCase());
+                                        return (
+                                            <button key={tag} type="button"
+                                                onClick={() => {
+                                                    const lower = tag.toLowerCase();
+                                                    if (isSelected) setSecondaryTags(prev => prev.filter(t => t !== lower));
+                                                    else setSecondaryTags(prev => [...prev, lower]);
+                                                }}
+                                                className={`px-2 py-0.5 rounded-full text-xs transition-colors ${
+                                                    isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
+                                                }`}>
+                                                {tag}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <input type="url" placeholder="Booking URL (optional)" value="" onChange={() => {}}
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                <input type="text" placeholder="Price range (e.g. €50-100/night)" value="" onChange={() => {}}
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                            </div>
+                        )}
+
+                        {category === 'organisation' && (
+                            <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Organisation Details</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                    {['Animal Sanctuary', 'Vegan Non-Profit', 'Advocacy Group', 'Food Bank', 'Community Kitchen', 'Education', 'Health & Wellness', 'Environmental'].map(tag => {
+                                        const isSelected = secondaryTags.includes(tag.toLowerCase());
+                                        return (
+                                            <button key={tag} type="button"
+                                                onClick={() => {
+                                                    const lower = tag.toLowerCase();
+                                                    if (isSelected) setSecondaryTags(prev => prev.filter(t => t !== lower));
+                                                    else setSecondaryTags(prev => [...prev, lower]);
+                                                }}
+                                                className={`px-2 py-0.5 rounded-full text-xs transition-colors ${
+                                                    isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
+                                                }`}>
+                                                {tag}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <input type="url" placeholder="Website URL" value="" onChange={() => {}}
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                <input type="text" placeholder="Location / region" value="" onChange={() => {}}
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                            </div>
+                        )}
+
                         {category === 'place' && (
                             <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Place
-                                    Details</p>
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Place Details</p>
                                 <input
                                     type="text"
                                     value={placeData.name}
