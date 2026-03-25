@@ -107,7 +107,7 @@ export default function SubscriptionStatus({ className = '', showDetails = false
         <div className="flex items-center justify-between">
           <span>Price:</span>
           <span className="font-medium">
-            ${tier.price}
+            {tier.price > 0 ? `€${tier.price}` : 'Free'}
             {tier.price > 0 && <span className="text-outline">/month</span>}
           </span>
         </div>

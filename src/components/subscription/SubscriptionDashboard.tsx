@@ -135,7 +135,7 @@ export default function SubscriptionDashboard() {
                 {currentTier.badge.text}
               </div>
               <span className="text-2xl font-bold text-on-surface">
-                ${currentTier.price}
+                {currentTier.price > 0 ? `€${currentTier.price}` : 'Free'}
                 {currentTier.price > 0 && <span className="text-sm font-normal text-outline">/month</span>}
               </span>
             </div>
