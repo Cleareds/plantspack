@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Clock, ChefHat, Users, BarChart3 } from 'lucide-react'
 import ImageSlider from '@/components/ui/ImageSlider'
 import InlineComments from '@/components/posts/InlineComments'
+import RecipeActions from '@/components/recipes/RecipeActions'
 
 type RecipePost = {
   id: string
@@ -171,9 +172,14 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           )}
 
           <div className="p-6">
-            <h1 className="text-2xl font-bold text-on-surface mb-4">
+            <h1 className="text-2xl font-bold text-on-surface mb-3">
               {post.title || post.content.split('\n')[0]}
             </h1>
+
+            {/* Save, Add to Pack, Share */}
+            <div className="mb-4">
+              <RecipeActions postId={post.id} />
+            </div>
 
             {recipe && (
               <div className="flex flex-wrap items-center gap-4 mb-6 p-3 bg-primary-container/10 rounded-xl">

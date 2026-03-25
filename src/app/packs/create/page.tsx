@@ -28,9 +28,11 @@ export default function CreatePackPage() {
 
   const categories: { value: PackCategory; label: string; icon: string; description: string }[] = [
     { value: 'recipes', label: 'Recipes', icon: '🍽️', description: 'Collections of vegan recipes' },
-    { value: 'traveling', label: 'Traveling', icon: '✈️', description: 'Travel guides, vegan restaurants, places' },
+    { value: 'places', label: 'Places', icon: '📍', description: 'Curated vegan restaurants, shops, stays' },
+    { value: 'traveling', label: 'Travel Guides', icon: '✈️', description: 'City guides and travel itineraries' },
+    { value: 'meal-prep', label: 'Meal Prep', icon: '🥗', description: 'Meal prep plans and batch cooking' },
     { value: 'products', label: 'Products', icon: '🛍️', description: 'Product reviews and recommendations' },
-    { value: 'resources', label: 'Resources', icon: '📚', description: 'Educational content and guides' },
+    { value: 'activism', label: 'Activism', icon: '✊', description: 'Activism resources and campaigns' },
     { value: 'lifestyle', label: 'Lifestyle', icon: '🌱', description: 'Lifestyle tips and inspiration' },
     { value: 'other', label: 'Other', icon: '📦', description: 'Other types of content' }
   ]

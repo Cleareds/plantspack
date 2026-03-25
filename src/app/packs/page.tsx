@@ -32,9 +32,11 @@ export default function PacksPage() {
   const categories: { value: PackCategory | ''; label: string; icon: string }[] = [
     { value: '', label: 'All', icon: 'apps' },
     { value: 'recipes', label: 'Recipes', icon: 'restaurant_menu' },
-    { value: 'traveling', label: 'Traveling', icon: 'flight' },
+    { value: 'places', label: 'Places', icon: 'place' },
+    { value: 'traveling', label: 'Travel Guides', icon: 'flight' },
+    { value: 'meal-prep', label: 'Meal Prep', icon: 'kitchen' },
     { value: 'products', label: 'Products', icon: 'shopping_bag' },
-    { value: 'resources', label: 'Resources', icon: 'menu_book' },
+    { value: 'activism', label: 'Activism', icon: 'volunteer_activism' },
     { value: 'lifestyle', label: 'Lifestyle', icon: 'self_improvement' },
     { value: 'other', label: 'Other', icon: 'more_horiz' }
   ]

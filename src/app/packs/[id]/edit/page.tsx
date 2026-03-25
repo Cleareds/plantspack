@@ -32,9 +32,11 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
 
   const categories: { value: PackCategory; label: string; icon: string }[] = [
     { value: 'recipes', label: 'Recipes', icon: '🍽️' },
-    { value: 'traveling', label: 'Traveling', icon: '✈️' },
+    { value: 'places', label: 'Places', icon: '📍' },
+    { value: 'traveling', label: 'Travel Guides', icon: '✈️' },
+    { value: 'meal-prep', label: 'Meal Prep', icon: '🥗' },
     { value: 'products', label: 'Products', icon: '🛍️' },
-    { value: 'resources', label: 'Resources', icon: '📚' },
+    { value: 'activism', label: 'Activism', icon: '✊' },
     { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' },
     { value: 'other', label: 'Other', icon: '📦' }
   ]

@@ -2,7 +2,7 @@
  * TypeScript types for Packs system
  */
 
-export type PackCategory = 'recipes' | 'traveling' | 'products' | 'resources' | 'lifestyle' | 'other'
+export type PackCategory = 'recipes' | 'places' | 'traveling' | 'meal-prep' | 'products' | 'activism' | 'lifestyle' | 'other'
 
 export type PackMemberRole = 'admin' | 'moderator' | 'member'
 
