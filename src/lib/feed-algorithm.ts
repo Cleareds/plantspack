@@ -99,6 +99,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
       .eq('privacy', 'public') // Only public posts for main feed
       .eq('users.is_banned', false) // Exclude banned users
       .is('deleted_at', null) // Exclude soft-deleted posts
+      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports from feed
 
     // Apply category filter
     if (category && category !== 'all') {
