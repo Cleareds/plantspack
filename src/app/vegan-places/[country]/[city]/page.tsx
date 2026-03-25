@@ -24,6 +24,9 @@ interface Place {
   review_count: number
   is_pet_friendly: boolean
   website: string | null
+  phone: string | null
+  opening_hours: Record<string, string> | null
+  google_place_id: string | null
   latitude: number
   longitude: number
   vegan_level: string | null

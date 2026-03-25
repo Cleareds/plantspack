@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MapPin, Star, PawPrint, ExternalLink } from 'lucide-react'
+import { MapPin, Star, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation } from 'lucide-react'
 import CityMap from './CityMap'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -12,6 +12,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   event: 'Event',
   organisation: 'Organisation',
   other: 'Other',
+}
+
+const VEGAN_LABELS: Record<string, string> = {
+  fully_vegan: '100% Vegan',
+  vegan_friendly: 'Vegan-Friendly',
 }
 
 interface Place {
@@ -27,8 +32,13 @@ interface Place {
   review_count: number
   is_pet_friendly: boolean
   website: string | null
+  phone: string | null
+  opening_hours: Record<string, string> | null
+  google_place_id: string | null
   latitude: number
   longitude: number
+  vegan_level: string | null
+  cuisine_types: string[] | null
 }
 
 export default function CityPlacesList({ places }: { places: Place[] }) {
@@ -72,57 +82,110 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
         <div className="flex-1 space-y-4 min-w-0">
           {filtered.map(place => {
             const thumbnail = place.main_image_url || place.images?.[0]
-            return (
-              <Link
-                key={place.id}
-                href={`/place/${place.slug || place.id}`}
-                prefetch={false}
-                className="group flex gap-4 p-4 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
-              >
-                {thumbnail ? (
-                  <img
-                    src={thumbnail}
-                    alt={place.name}
-                    className="w-20 h-20 md:w-28 md:h-20 rounded-lg object-cover flex-shrink-0"
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <div className="w-20 h-20 md:w-28 md:h-20 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-outline" />
-                  </div>
-                )}
+            const googleMapsUrl = place.google_place_id
+              ? `https://www.google.com/maps/place/?q=place_id:${place.google_place_id}`
+              : `https://www.google.com/maps/search/${encodeURIComponent(place.name + ' ' + place.address)}`
+            const appleMapsUrl = `http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.address)}&ll=${place.latitude},${place.longitude}`
+            const cuisines = (place.cuisine_types || []).filter(c => c && c !== 'vegan' && c !== 'regional').slice(0, 3)
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
+            return (
+              <div key={place.id} className="bg-surface-container-lowest rounded-xl editorial-shadow ghost-border overflow-hidden hover:border-primary/20 transition-all">
+                <Link
+                  href={`/place/${place.slug || place.id}`}
+                  prefetch={false}
+                  className="group flex gap-4 p-4"
+                >
+                  {thumbnail ? (
+                    <img
+                      src={thumbnail}
+                      alt={place.name}
+                      className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover flex-shrink-0"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-6 w-6 text-outline" />
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0">
                     <h2 className="font-semibold text-on-surface text-sm group-hover:text-primary transition-colors line-clamp-1">
                       {place.name}
                     </h2>
-                    {place.website && (
-                      <ExternalLink className="h-3.5 w-3.5 text-outline flex-shrink-0 mt-0.5" />
-                    )}
-                  </div>
 
-                  <div className="flex items-center flex-wrap gap-1.5 mt-1">
-                    <span className="bg-secondary-container text-on-surface px-1.5 py-0.5 rounded text-xs capitalize font-medium">
-                      {CATEGORY_LABELS[place.category] || place.category}
-                    </span>
-                    {place.is_pet_friendly && (
-                      <span className="bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded text-xs flex items-center gap-0.5">
-                        <PawPrint className="h-3 w-3" />
-                        Pets
+                    {/* Badges */}
+                    <div className="flex items-center flex-wrap gap-1.5 mt-1">
+                      <span className="bg-secondary-container text-on-surface px-1.5 py-0.5 rounded text-xs capitalize font-medium">
+                        {CATEGORY_LABELS[place.category] || place.category}
                       </span>
-                    )}
+                      {place.vegan_level && (
+                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${place.vegan_level === 'fully_vegan' ? 'bg-green-100 text-green-800' : 'bg-lime-100 text-lime-800'}`}>
+                          {VEGAN_LABELS[place.vegan_level] || place.vegan_level}
+                        </span>
+                      )}
+                      {place.is_pet_friendly && (
+                        <span className="bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded text-xs flex items-center gap-0.5">
+                          <PawPrint className="h-3 w-3" /> Pets
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Rating */}
                     {place.average_rating > 0 && (
-                      <span className="flex items-center gap-0.5 text-xs text-on-surface-variant">
-                        <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                        {place.average_rating.toFixed(1)}
-                      </span>
+                      <div className="flex items-center gap-1 mt-1.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={`h-3 w-3 ${i < Math.round(place.average_rating) ? 'text-yellow-500 fill-yellow-500' : 'text-outline'}`} />
+                        ))}
+                        <span className="text-xs text-on-surface-variant ml-0.5">
+                          {place.average_rating.toFixed(1)} ({place.review_count} {place.review_count === 1 ? 'review' : 'reviews'})
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Description */}
+                    {place.description && (
+                      <p className="text-xs text-on-surface-variant mt-1.5 line-clamp-2">{place.description}</p>
+                    )}
+
+                    {/* Cuisine tags */}
+                    {cuisines.length > 0 && (
+                      <div className="flex gap-1 mt-1.5">
+                        {cuisines.map(c => (
+                          <span key={c} className="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-low text-on-surface-variant capitalize">
+                            {c.replace(/_/g, ' ')}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
+                </Link>
 
-                  <p className="text-xs text-on-surface-variant mt-1 line-clamp-1">{place.address}</p>
+                {/* Contact & Maps bar */}
+                <div className="flex items-center gap-3 px-4 pb-3 pt-0 text-xs">
+                  <span className="flex items-center gap-1 text-on-surface-variant">
+                    <MapPin className="h-3 w-3" />
+                    <span className="line-clamp-1">{place.address}</span>
+                  </span>
+                  <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+                    {place.phone && (
+                      <a href={`tel:${place.phone}`} onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title={place.phone}>
+                        <Phone className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                    {place.website && (
+                      <a href={place.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="Website">
+                        <Globe className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                    <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="Google Maps">
+                      <Navigation className="h-3.5 w-3.5" />
+                    </a>
+                    <a href={appleMapsUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="Apple Maps">
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
                 </div>
-              </Link>
+              </div>
             )
           })}
 
