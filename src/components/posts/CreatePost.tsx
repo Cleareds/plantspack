@@ -773,8 +773,47 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                         {/* Category-Specific Fields */}
                         {category === 'recipe' && (
                             <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Recipe
-                                    Details</p>
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Recipe Details</p>
+
+                                {/* Meal type (primary category) */}
+                                <select value={recipeData.meal_type || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, meal_type: e.target.value as RecipeData['meal_type'] }))}
+                                        className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
+                                    <option value="">Meal type...</option>
+                                    <option value="breakfast">Breakfast & Brunch</option>
+                                    <option value="lunch">Lunch</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="snacks">Snacks & Appetizers</option>
+                                    <option value="desserts">Desserts & Sweets</option>
+                                    <option value="drinks">Drinks & Smoothies</option>
+                                </select>
+
+                                {/* Tags: cooking style + diet (clickable chips) */}
+                                <div>
+                                    <p className="text-xs text-on-surface-variant mb-1.5">Tags (select all that apply)</p>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {[
+                                            { group: 'Style', tags: ['Quick & Easy', 'One-Pot', 'Meal Prep', 'Raw', 'No-Bake', 'Baking', 'Comfort Food', 'Fermented'] },
+                                            { group: 'Diet', tags: ['Gluten-Free', 'Nut-Free', 'Soy-Free', 'Oil-Free', 'High-Protein', 'Low-Carb', 'Whole Foods'] },
+                                            { group: 'Other', tags: ['Budget-Friendly', 'Kid-Friendly', 'Batch Cooking', 'Holiday', 'BBQ & Grill'] },
+                                        ].map(group => group.tags.map(tag => {
+                                            const isSelected = secondaryTags.includes(tag.toLowerCase());
+                                            return (
+                                                <button key={tag} type="button"
+                                                    onClick={() => {
+                                                        const lower = tag.toLowerCase();
+                                                        if (isSelected) setSecondaryTags(prev => prev.filter(t => t !== lower));
+                                                        else setSecondaryTags(prev => [...prev, lower]);
+                                                    }}
+                                                    className={`px-2 py-0.5 rounded-full text-xs transition-colors ${
+                                                        isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
+                                                    }`}>
+                                                    {tag}
+                                                </button>
+                                            );
+                                        }))}
+                                    </div>
+                                </div>
+
                                 <textarea
                                     value={recipeData.ingredients?.join('\n') || ''}
                                     onChange={(e) => setRecipeData(prev => ({
@@ -853,14 +892,32 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
                         {category === 'event' && (
                             <div className="mt-3 p-3 bg-surface-container-low rounded-lg space-y-2">
-                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Event
-                                    Details</p>
+                                <p className="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Event Details</p>
+
+                                {/* Event type */}
+                                <select value={secondaryTags.find(t => ['festival','market','workshop','activism','community','screening','sports','sanctuary','talk'].includes(t)) || ''}
+                                        onChange={(e) => {
+                                            const eventTypes = ['festival','market','workshop','activism','community','screening','sports','sanctuary','talk'];
+                                            const filtered = secondaryTags.filter(t => !eventTypes.includes(t));
+                                            if (e.target.value) filtered.push(e.target.value);
+                                            setSecondaryTags(filtered);
+                                        }}
+                                        className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
+                                    <option value="">Event type...</option>
+                                    <option value="festival">Vegan Festival / Fair</option>
+                                    <option value="market">Vegan Market / Pop-Up</option>
+                                    <option value="workshop">Cooking Class / Workshop</option>
+                                    <option value="activism">Activism & Outreach</option>
+                                    <option value="community">Community Meetup / Potluck</option>
+                                    <option value="screening">Documentary Screening</option>
+                                    <option value="sanctuary">Farm Sanctuary Visit</option>
+                                    <option value="talk">Health & Nutrition Talk</option>
+                                    <option value="sports">Vegan Run / Sports Event</option>
+                                </select>
+
                                 <div className="flex gap-2">
                                     <input type="datetime-local" value={eventData.start_time || ''}
-                                           onChange={(e) => setEventData(prev => ({
-                                               ...prev,
-                                               start_time: e.target.value
-                                           }))}
+                                           onChange={(e) => setEventData(prev => ({ ...prev, start_time: e.target.value }))}
                                            className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
                                     <input type="datetime-local" value={eventData.end_time || ''}
                                            onChange={(e) => setEventData(prev => ({...prev, end_time: e.target.value}))}

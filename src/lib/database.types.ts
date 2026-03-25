@@ -33,8 +33,10 @@ export interface RecipeData {
   total_time_min?: number
   servings: number
   difficulty: 'easy' | 'medium' | 'hard'
+  meal_type?: 'breakfast' | 'lunch' | 'dinner' | 'snacks' | 'desserts' | 'drinks'
   cuisine?: string
   nutrition?: RecipeNutrition
+  source_url?: string
   source_attribution?: string
 }
 
