@@ -18,12 +18,24 @@ export interface CategoryInfo {
   color: string
 }
 
+export interface RecipeNutrition {
+  calories?: string
+  protein?: string
+  fat?: string
+  carbs?: string
+  fiber?: string
+}
+
 export interface RecipeData {
   ingredients: string[]
   prep_time_min: number
   cook_time_min: number
+  total_time_min?: number
   servings: number
   difficulty: 'easy' | 'medium' | 'hard'
+  cuisine?: string
+  nutrition?: RecipeNutrition
+  source_attribution?: string
 }
 
 export interface EventData {

@@ -383,12 +383,26 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                       <input type="number" placeholder="Cook (min)" value={recipeData.cook_time_min || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, cook_time_min: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
                       <input type="number" placeholder="Servings" value={recipeData.servings || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, servings: Number(e.target.value) }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
                     </div>
-                    <select value={recipeData.difficulty || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, difficulty: e.target.value as RecipeData['difficulty'] }))} className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
-                      <option value="">Difficulty...</option>
-                      <option value="easy">Easy</option>
-                      <option value="medium">Medium</option>
-                      <option value="hard">Hard</option>
-                    </select>
+                    <div className="flex gap-2">
+                      <select value={recipeData.difficulty || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, difficulty: e.target.value as RecipeData['difficulty'] }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none">
+                        <option value="">Difficulty...</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                      </select>
+                      <input type="text" placeholder="Cuisine (e.g. Italian)" value={recipeData.cuisine || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, cuisine: e.target.value }))} className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                    </div>
+                    <details className="text-xs">
+                      <summary className="cursor-pointer text-on-surface-variant hover:text-on-surface transition-colors py-1">Nutrition info (optional)</summary>
+                      <div className="grid grid-cols-3 gap-2 mt-2">
+                        <input type="text" placeholder="Calories" value={recipeData.nutrition?.calories || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, nutrition: { ...prev.nutrition, calories: e.target.value } }))} className="p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                        <input type="text" placeholder="Protein (g)" value={recipeData.nutrition?.protein || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, nutrition: { ...prev.nutrition, protein: e.target.value } }))} className="p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                        <input type="text" placeholder="Carbs (g)" value={recipeData.nutrition?.carbs || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, nutrition: { ...prev.nutrition, carbs: e.target.value } }))} className="p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                        <input type="text" placeholder="Fat (g)" value={recipeData.nutrition?.fat || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, nutrition: { ...prev.nutrition, fat: e.target.value } }))} className="p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                        <input type="text" placeholder="Fiber (g)" value={recipeData.nutrition?.fiber || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, nutrition: { ...prev.nutrition, fiber: e.target.value } }))} className="p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
+                      </div>
+                    </details>
+                    <input type="text" placeholder="Source / attribution (optional)" value={recipeData.source_attribution || ''} onChange={(e) => setRecipeData(prev => ({ ...prev, source_attribution: e.target.value }))} className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none" />
                   </div>
                 )}
 
