@@ -101,7 +101,7 @@ export default function ImageSlider({
                 onLoad={() => handleImageLoad(index)}
                 onError={() => handleImageError(index)}
                 referrerPolicy="no-referrer"
-                className={`object-contain transition-opacity duration-200 ${
+                className={`object-cover transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 } ${hasError[index] ? 'hidden' : ''}`}
               />
@@ -140,7 +140,7 @@ export default function ImageSlider({
                 onLoad={() => handleImageLoad(index)}
                 onError={() => handleImageError(index)}
                 referrerPolicy="no-referrer"
-                className={`object-contain transition-opacity duration-200 ${
+                className={`object-cover transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 } ${hasError[index] ? 'hidden' : ''}`}
               />

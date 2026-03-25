@@ -16,7 +16,7 @@ export default function RecipesPage() {
 
   const [state, setState] = usePageState({
     key: 'recipes_state',
-    defaultValue: { search: '', difficulty: '', maxPrepTime: '', servings: '' },
+    defaultValue: { search: '', difficulty: '', maxPrepTime: '', servings: '', mealType: '' },
     userId: user?.id,
   })
 
@@ -24,6 +24,7 @@ export default function RecipesPage() {
   const setDifficulty = useCallback((d: string) => setState(prev => ({ ...prev, difficulty: d })), [setState])
   const setMaxPrepTime = useCallback((t: string) => setState(prev => ({ ...prev, maxPrepTime: t })), [setState])
   const setServings = useCallback((s: string) => setState(prev => ({ ...prev, servings: s })), [setState])
+  const setMealType = useCallback((m: string) => setState(prev => ({ ...prev, mealType: m })), [setState])
 
   useScrollRestoration({ key: 'recipes_scroll' })
 
@@ -58,6 +59,7 @@ export default function RecipesPage() {
       if (state.difficulty) params.append('difficulty', state.difficulty)
       if (state.maxPrepTime) params.append('maxPrepTime', state.maxPrepTime)
       if (state.servings) params.append('servings', state.servings)
+      if (state.mealType) params.append('mealType', state.mealType)
       params.append('limit', '20')
       params.append('offset', String(offset))
 
@@ -82,7 +84,7 @@ export default function RecipesPage() {
 
   useEffect(() => {
     fetchRecipes()
-  }, [state.search, state.difficulty, state.maxPrepTime, state.servings])
+  }, [state.search, state.difficulty, state.maxPrepTime, state.servings, state.mealType])
 
   return (
     <div className="min-h-screen bg-surface-container-low">
@@ -132,6 +134,31 @@ export default function RecipesPage() {
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Meal type pills */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              {[
+                { value: '', label: 'All' },
+                { value: 'breakfast', label: 'Breakfast' },
+                { value: 'lunch', label: 'Lunch' },
+                { value: 'dinner', label: 'Dinner' },
+                { value: 'snacks', label: 'Snacks' },
+                { value: 'desserts', label: 'Desserts' },
+                { value: 'drinks', label: 'Drinks' },
+              ].map((m) => (
+                <button
+                  key={m.value}
+                  onClick={() => setMealType(m.value)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                    state.mealType === m.value
+                      ? 'bg-primary text-on-primary-btn'
+                      : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
             </div>
 
             {/* Difficulty pills */}

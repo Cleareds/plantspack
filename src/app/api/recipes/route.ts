@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     const difficulty = searchParams.get('difficulty')
     const maxPrepTime = searchParams.get('maxPrepTime')
     const servings = searchParams.get('servings')
+    const mealType = searchParams.get('mealType')
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
@@ -48,6 +49,11 @@ export async function GET(request: NextRequest) {
     // Filter by difficulty in JS (JSON field)
     if (difficulty) {
       filtered = filtered.filter((p: any) => p.recipe_data?.difficulty === difficulty)
+    }
+
+    // Filter by meal type in JS (JSON field)
+    if (mealType) {
+      filtered = filtered.filter((p: any) => p.recipe_data?.meal_type === mealType)
     }
 
     // Filter by max prep time in JS

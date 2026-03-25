@@ -25,6 +25,7 @@ type RecipePost = {
     source_url?: string
     source_attribution?: string
   } | null
+  secondary_tags?: string[] | null
   created_at: string
   users: {
     id: string
@@ -35,22 +36,50 @@ type RecipePost = {
   }
 }
 
-type SimilarRecipe = {
-  id: string
-  title: string | null
-  slug: string | null
-  images: string[] | null
-  recipe_data: any
+function SimilarRecipes({ postId }: { postId: string }) {
+  // Client-side fetch for similar recipes
+  return (
+    <div className="mt-6 bg-surface-container-lowest rounded-2xl editorial-shadow p-6">
+      <h2 className="text-lg font-semibold text-on-surface mb-4">More Recipes</h2>
+      <SimilarRecipesClient postId={postId} />
+    </div>
+  )
 }
 
-async function getSimilarRecipes(postId: string): Promise<SimilarRecipe[]> {
+async function SimilarRecipesClient({ postId }: { postId: string }) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const resp = await fetch(`${baseUrl}/api/recipes?limit=4&offset=0`, { next: { revalidate: 3600 } })
-    if (!resp.ok) return []
+    const resp = await fetch(`${baseUrl}/api/recipes?limit=6&offset=0`, { next: { revalidate: 3600 } })
+    if (!resp.ok) return <p className="text-sm text-on-surface-variant">No recipes found</p>
     const data = await resp.json()
-    return (data.recipes || []).filter((r: any) => r.id !== postId).slice(0, 3)
-  } catch { return [] }
+    const similar = (data.recipes || []).filter((r: any) => r.id !== postId).slice(0, 3)
+    if (similar.length === 0) return <p className="text-sm text-on-surface-variant">No recipes found</p>
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {similar.map((r: any) => {
+          const img = r.images?.[0] || r.image_url
+          const title = r.title || r.content?.split('\n')[0]?.slice(0, 60)
+          const rd = r.recipe_data
+          const time = (rd?.prep_time_min || 0) + (rd?.cook_time_min || 0)
+          return (
+            <Link key={r.id} href={`/recipe/${r.slug || r.id}`} className="group block rounded-xl overflow-hidden ghost-border hover:border-primary/20 transition-all">
+              <div className="aspect-[4/3] bg-surface-container-high overflow-hidden">
+                {img ? <img src={img} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" referrerPolicy="no-referrer" /> : <div className="w-full h-full flex items-center justify-center"><span className="material-symbols-outlined text-3xl text-outline">restaurant_menu</span></div>}
+              </div>
+              <div className="p-3">
+                <h3 className="text-sm font-medium text-on-surface line-clamp-2 group-hover:text-primary transition-colors">{title}</h3>
+                <div className="flex items-center gap-2 mt-1 text-xs text-on-surface-variant">
+                  {time > 0 && <span>{time}min</span>}
+                  {rd?.difficulty && <span className="capitalize">{rd.difficulty}</span>}
+                </div>
+              </div>
+            </Link>
+          )
+        })}
+      </div>
+    )
+  } catch { return <p className="text-sm text-on-surface-variant">Could not load recipes</p> }
 }
 
 async function getRecipePost(id: string): Promise<RecipePost | null> {
@@ -200,6 +229,43 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               </div>
             )}
 
+            {/* Tags */}
+            {post.secondary_tags && post.secondary_tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {post.secondary_tags.map((tag: string) => (
+                  <span key={tag} className="px-2 py-0.5 rounded-full text-xs bg-surface-container-low text-on-surface-variant">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Nutrition */}
+            {recipe?.nutrition && (
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-on-surface mb-3">Nutrition (per serving)</h2>
+                <div className="grid grid-cols-5 gap-2 text-center">
+                  {recipe.nutrition.calories && <div className="p-2 bg-surface-container-low rounded-lg"><div className="text-sm font-semibold text-on-surface">{recipe.nutrition.calories.replace(' kcal','')}</div><div className="text-[10px] text-on-surface-variant">kcal</div></div>}
+                  {recipe.nutrition.protein && <div className="p-2 bg-surface-container-low rounded-lg"><div className="text-sm font-semibold text-on-surface">{recipe.nutrition.protein.replace(' g','')}</div><div className="text-[10px] text-on-surface-variant">protein</div></div>}
+                  {recipe.nutrition.carbs && <div className="p-2 bg-surface-container-low rounded-lg"><div className="text-sm font-semibold text-on-surface">{recipe.nutrition.carbs.replace(' g','')}</div><div className="text-[10px] text-on-surface-variant">carbs</div></div>}
+                  {recipe.nutrition.fat && <div className="p-2 bg-surface-container-low rounded-lg"><div className="text-sm font-semibold text-on-surface">{recipe.nutrition.fat.replace(' g','')}</div><div className="text-[10px] text-on-surface-variant">fat</div></div>}
+                  {recipe.nutrition.fiber && <div className="p-2 bg-surface-container-low rounded-lg"><div className="text-sm font-semibold text-on-surface">{recipe.nutrition.fiber.replace(' g','')}</div><div className="text-[10px] text-on-surface-variant">fiber</div></div>}
+                </div>
+              </div>
+            )}
+
+            {/* Source attribution */}
+            {recipe?.source_url && (
+              <div className="mb-4 p-3 bg-surface-container-low rounded-lg">
+                <p className="text-xs text-on-surface-variant">
+                  Recipe from{' '}
+                  <a href={recipe.source_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                    {recipe.source_attribution || new URL(recipe.source_url).hostname}
+                  </a>
+                </p>
+              </div>
+            )}
+
             <div className="pt-4 border-t border-outline-variant/15">
               <Link href={`/user/${post.users.username}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 {post.users.avatar_url ? (
@@ -217,6 +283,9 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             </div>
           </div>
         </div>
+
+        {/* Similar Recipes */}
+        <SimilarRecipes postId={post.id} />
 
         <div className="mt-6 bg-surface-container-lowest rounded-2xl editorial-shadow p-6">
           <h2 className="text-lg font-semibold text-on-surface mb-4">Comments</h2>
