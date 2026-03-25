@@ -84,7 +84,7 @@ export default async function CountryPage({ params }: PageProps) {
             }
           </p>
           {sceneDescription && (
-            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl">{sceneDescription}</p>
+            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
           )}
           <div className="flex gap-3 mt-4">
             <Link

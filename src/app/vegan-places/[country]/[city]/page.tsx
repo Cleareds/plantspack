@@ -157,7 +157,7 @@ export default async function CityPage({ params }: PageProps) {
             }
           </p>
           {sceneDescription && (
-            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl">{sceneDescription}</p>
+            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
           )}
           <div className="flex flex-wrap gap-3">
             <Link
