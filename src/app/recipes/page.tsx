@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { Suspense } from 'react'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
 
 export const metadata: Metadata = {
@@ -114,8 +115,14 @@ export default async function RecipesPage() {
           ))}
         </div>
 
-        {/* Client-side filter + grid (hydrates on top of SSR content) */}
-        <RecipeFilters initialRecipes={recipes} />
+        {/* Client-side filter + grid (Suspense needed for useSearchParams) */}
+        <Suspense fallback={
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recipes.slice(0, 6).map(r => <div key={r.id} className="h-64 bg-surface-container-lowest rounded-2xl animate-pulse" />)}
+          </div>
+        }>
+          <RecipeFilters initialRecipes={recipes} />
+        </Suspense>
       </div>
     </div>
   )
