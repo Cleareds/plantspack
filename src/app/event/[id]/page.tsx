@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { MapPin, Ticket, ExternalLink } from 'lucide-react'
 import ImageSlider from '@/components/ui/ImageSlider'
 import InlineComments from '@/components/posts/InlineComments'
+import EventResponseButtons from '@/components/events/EventResponseButtons'
 
 type EventPost = {
   id: string
@@ -172,6 +173,11 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                 </a>
               </div>
             )}
+
+            {/* Interested / Going buttons */}
+            <div className="mb-6">
+              <EventResponseButtons postId={post.id} />
+            </div>
 
             {/* Content body */}
             {post.content.split('\n').length > 1 && (

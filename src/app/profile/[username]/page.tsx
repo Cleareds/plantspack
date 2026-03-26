@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 import { savePageState, loadPageState } from '@/lib/page-state-storage'
 import Link from 'next/link'
-import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package } from 'lucide-react'
+import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package, Star, CalendarCheck } from 'lucide-react'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
@@ -30,6 +30,7 @@ export default function ProfilePage() {
   const [userPacks, setUserPacks] = useState<any[]>([])
   const [joinedPacks, setJoinedPacks] = useState<any[]>([])
   const [ownedPlaces, setOwnedPlaces] = useState<UserOwnedPlace[]>([])
+  const [myEvents, setMyEvents] = useState<any[]>([])
   const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -215,6 +216,27 @@ export default function ProfilePage() {
         }
       } catch (err) {
         console.error('Error loading joined packs:', err)
+      }
+
+      // Fetch user's event responses (interested/going)
+      try {
+        const { data: eventResponses } = await supabase
+          .from('event_responses')
+          .select(`
+            status,
+            post_id,
+            posts:post_id (id, title, content, event_data)
+          `)
+          .eq('user_id', profileData.id)
+          .order('created_at', { ascending: false })
+          .limit(10)
+
+        const events = (eventResponses || [])
+          .filter((r: any) => r.posts)
+          .map((r: any) => ({ ...r.posts, response_status: r.status }))
+        setMyEvents(events)
+      } catch (err) {
+        console.error('Error loading events:', err)
       }
 
       // Fetch subscription if viewing own profile
@@ -420,7 +442,53 @@ export default function ProfilePage() {
         <div className="space-y-6">
           {/* Following/Followers */}
           <ProfileFollowers userId={profile.id} />
-          
+
+          {/* My Events */}
+          {myEvents.length > 0 && (
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+              <div className="p-4 border-b border-outline-variant/15">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold text-on-surface">
+                    My Events ({myEvents.length})
+                  </h3>
+                </div>
+              </div>
+              <div className="divide-y divide-outline-variant/15">
+                {myEvents.slice(0, 5).map((event: any) => {
+                  const ed = event.event_data
+                  const startDate = ed?.start_time ? new Date(ed.start_time) : null
+                  return (
+                    <Link key={event.id} href={`/event/${event.id}`} className="flex items-center gap-3 p-4 hover:bg-surface-container-low transition-colors">
+                      {startDate && (
+                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex flex-col items-center justify-center">
+                          <span className="text-[8px] font-bold text-primary uppercase leading-none">
+                            {startDate.toLocaleDateString(undefined, { month: 'short' })}
+                          </span>
+                          <span className="text-sm font-bold text-on-surface leading-none">
+                            {startDate.getDate()}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-on-surface truncate">
+                          {event.title || event.content?.split('\n')[0]?.substring(0, 60)}
+                        </p>
+                        <div className="flex items-center gap-1 text-xs text-on-surface-variant">
+                          {event.response_status === 'going' ? (
+                            <><CalendarCheck className="h-3 w-3 text-green-600" /><span className="text-green-600">Going</span></>
+                          ) : (
+                            <><Star className="h-3 w-3 text-primary" /><span className="text-primary">Interested</span></>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
           {/* My Added Places */}
           <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
             <div className="p-4 border-b border-outline-variant/15">
