@@ -117,8 +117,9 @@ export const getCities = cache(async (countrySlug: string) => {
 
 /**
  * Get places for a city — looks up actual city name from view, then 1 query to places
+ * No cache() — force-dynamic pages need fresh data every time
  */
-export const getCityPlaces = cache(async (countrySlug: string, citySlug: string) => {
+export const getCityPlaces = async (countrySlug: string, citySlug: string) => {
   const supabase = createAdminClient()
 
   // Look up actual city + country names from the slug-indexed view
@@ -151,7 +152,7 @@ export const getCityPlaces = cache(async (countrySlug: string, citySlug: string)
     country: actualCountry,
     total: data?.length || 0,
   }
-})
+}
 
 /**
  * Get a single place with all details — 1 query
