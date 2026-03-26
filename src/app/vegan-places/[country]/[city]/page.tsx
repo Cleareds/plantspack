@@ -5,7 +5,7 @@ import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
 import { getCityPlaces } from '@/lib/directory-queries'
 import CityPlacesList from '@/components/places/CityPlacesList'
 
-export const revalidate = 3600
+export const revalidate = 300 // 5 minutes — shorter to pick up new places faster
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>

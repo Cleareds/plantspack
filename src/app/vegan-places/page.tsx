@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { MapPin, Globe, ArrowRight } from 'lucide-react'
 import { getCountries } from '@/lib/directory-queries'
 
-export const revalidate = 3600 // ISR: 1 hour
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Vegan Places Directory - Find Vegan Restaurants & Stores | PlantsPack',

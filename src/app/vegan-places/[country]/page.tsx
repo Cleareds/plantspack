@@ -4,7 +4,7 @@ import { MapPin, ArrowRight } from 'lucide-react'
 import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 interface PageProps {
   params: Promise<{ country: string }>
