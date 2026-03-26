@@ -256,7 +256,7 @@ export default function MapContainerComponent() {
     const center = mapRef.current.getCenter()
     setMapCenter([center.lat, center.lng])
 
-    // Debounce viewport fetch — wait 400ms after last move
+    // Debounce viewport fetch — wait 600ms after last move
     if (viewportTimerRef.current) clearTimeout(viewportTimerRef.current)
     viewportTimerRef.current = setTimeout(() => {
       if (!mapRef.current) return

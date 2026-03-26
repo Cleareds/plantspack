@@ -105,7 +105,12 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
   }, [limit])
 
   // Fetch places within map viewport (for map markers)
+  const lastBoundsKey = useRef('')
   const fetchViewportPlaces = useCallback(async (bounds: { minLat: number; minLng: number; maxLat: number; maxLng: number }, cat: string) => {
+    // Skip if bounds haven't meaningfully changed (rounded to 3 decimals ~100m precision)
+    const key = `${bounds.minLat.toFixed(3)},${bounds.minLng.toFixed(3)},${bounds.maxLat.toFixed(3)},${bounds.maxLng.toFixed(3)},${cat}`
+    if (key === lastBoundsKey.current) return
+    lastBoundsKey.current = key
     viewportRef.current = bounds
     try {
       const { data: rpcData, error: rpcError } = await supabase
