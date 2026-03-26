@@ -40,7 +40,7 @@ const mealTypeLabels: Record<string, string> = {
   drinks: 'Drinks',
 }
 
-export default function RecipeCard({ recipe }: { recipe: RecipePost }) {
+export default function RecipeCard({ recipe, onTagClick }: { recipe: RecipePost; onTagClick?: (tag: string) => void }) {
   const title = recipe.title || recipe.content.split('\n')[0].substring(0, 80)
   const images = recipe.images?.length ? recipe.images : recipe.image_url ? [recipe.image_url] : []
   const data = recipe.recipe_data
@@ -104,11 +104,18 @@ export default function RecipeCard({ recipe }: { recipe: RecipePost }) {
         {tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-2">
             {tags.slice(0, 3).map(tag => (
-              <Link key={tag} href={`/recipes?tag=${encodeURIComponent(tag)}`}
-                onClick={(e) => e.stopPropagation()}
-                className="px-1.5 py-0.5 rounded text-[10px] bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors">
-                {tag}
-              </Link>
+              onTagClick ? (
+                <button key={tag} onClick={(e) => { e.preventDefault(); e.stopPropagation(); onTagClick(tag); }}
+                  className="px-1.5 py-0.5 rounded text-[10px] bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors">
+                  {tag}
+                </button>
+              ) : (
+                <Link key={tag} href={`/recipes?tag=${encodeURIComponent(tag)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="px-1.5 py-0.5 rounded text-[10px] bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors">
+                  {tag}
+                </Link>
+              )
             ))}
           </div>
         )}
