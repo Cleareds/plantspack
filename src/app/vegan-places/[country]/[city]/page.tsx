@@ -5,7 +5,7 @@ import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
 import { getCityPlaces } from '@/lib/directory-queries'
 import CityPlacesList from '@/components/places/CityPlacesList'
 
-export const revalidate = 300 // 5 minutes — shorter to pick up new places faster
+export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
