@@ -198,6 +198,10 @@ export interface Database {
           content: string
           created_at: string
           updated_at: string
+          deleted_at: string | null
+          edited_at: string | null
+          edit_count: number
+          parent_comment_id: string | null
         }
         Insert: {
           id?: string
@@ -206,6 +210,10 @@ export interface Database {
           content: string
           created_at?: string
           updated_at?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          edit_count?: number
+          parent_comment_id?: string | null
         }
         Update: {
           id?: string
@@ -214,6 +222,10 @@ export interface Database {
           content?: string
           created_at?: string
           updated_at?: string
+          deleted_at?: string | null
+          edited_at?: string | null
+          edit_count?: number
+          parent_comment_id?: string | null
         }
       }
       follows: {

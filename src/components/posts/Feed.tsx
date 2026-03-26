@@ -7,6 +7,7 @@ import PostCard from './PostCard'
 import {Tables} from '@/lib/supabase'
 import {Loader2, ArrowUp} from 'lucide-react'
 import FeedSorting, {type SortOption} from './FeedSorting'
+import {PostSkeleton} from '../ui/Skeleton'
 import {getFeedPosts} from '@/lib/feed-algorithm'
 import {useRealtimePosts} from '@/hooks/useRealtimePosts'
 import {usePageState} from '@/hooks/usePageState'
@@ -509,16 +510,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
             <div className="max-w-2xl mx-auto px-4">
                 <div className="space-y-4">
                     {[...Array(3)].map((_, i) => (
-                        <div key={i} className="bg-surface-container-lowest rounded-2xl editorial-shadow p-4 animate-pulse">
-                            <div className="flex space-x-3">
-                                <div className="h-10 w-10 bg-surface-container-high rounded-full"></div>
-                                <div className="flex-1">
-                                    <div className="h-4 bg-surface-container-high rounded w-1/3 mb-2"></div>
-                                    <div className="h-4 bg-surface-container-high rounded w-full mb-2"></div>
-                                    <div className="h-4 bg-surface-container-high rounded w-2/3"></div>
-                                </div>
-                            </div>
-                        </div>
+                        <PostSkeleton key={i} />
                     ))}
                 </div>
             </div>
@@ -658,14 +650,9 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                         )}
 
                         {/* End of feed message */}
-                        {!hasMore && posts.length > 0 && (
-                            <div className="text-center">
-                                <div className="border-t border-outline-variant/10 pt-6">
-                                    <p className="text-outline/60 text-sm mb-1">You&apos;ve reached the end of the feed</p>
-                                    <p className="text-outline/40 text-xs">
-                                        {posts.length} post{posts.length !== 1 ? 's' : ''} loaded
-                                    </p>
-                                </div>
+                        {!hasMore && posts.length > 0 && !loading && (
+                            <div className="text-center py-8">
+                                <p className="text-outline text-sm">You&apos;re all caught up!</p>
                             </div>
                         )}
                     </div>
