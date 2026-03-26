@@ -8,7 +8,7 @@ const navItems = [
   { href: '/', label: 'Home', icon: 'home' },
   { href: '/vegan-places', label: 'Places', icon: 'place' },
   { href: '/map', label: 'Map', icon: 'explore' },
-  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
+  { href: '/packs', label: 'Packs', icon: 'inventory_2' },
 ]
 
 export default function BottomNav() {

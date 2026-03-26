@@ -4,7 +4,7 @@ import {useState} from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {useAuth} from '@/lib/auth'
-import {Menu, X, Home, Map, User, Crown, Package} from 'lucide-react'
+import {Menu, X, Home, Map, User, Crown, Package, UtensilsCrossed} from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 import NotificationBell from '@/components/notifications/NotificationBell'
 
@@ -65,6 +65,13 @@ export default function Header() {
                         >
                             <Package className="h-5 w-5"/>
                             <span>Packs</span>
+                        </Link>
+                        <Link
+                            href="/recipes"
+                            className="flex items-center space-x-1 text-on-surface-variant hover:text-primary transition-colors"
+                        >
+                            <UtensilsCrossed className="h-5 w-5"/>
+                            <span>Recipes</span>
                         </Link>
                         <Link
                             href="/support"
@@ -146,6 +153,14 @@ export default function Header() {
                         >
                             <Package className="h-5 w-5"/>
                             <span>Packs</span>
+                        </Link>
+                        <Link
+                            href="/recipes"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="flex items-center space-x-2 px-3 py-2 rounded-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low"
+                        >
+                            <UtensilsCrossed className="h-5 w-5"/>
+                            <span>Recipes</span>
                         </Link>
                         <Link
                             href="/support"

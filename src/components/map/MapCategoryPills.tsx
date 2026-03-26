@@ -64,7 +64,7 @@ export default function MapCategoryPills({ selected, onSelect, veganOnly, onVega
         <button
           onClick={() => onPetToggle(!petFriendly)}
           className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-            petFriendly ? 'bg-orange-500 text-white' : 'bg-secondary-container text-on-surface hover:opacity-80'
+            petFriendly ? 'bg-green-600 text-white' : 'bg-secondary-container text-on-surface hover:opacity-80'
           }`}
         >
           <span style={{ fontSize: '14px' }}>🐾</span>
