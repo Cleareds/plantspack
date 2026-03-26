@@ -221,8 +221,17 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
           {/* Image Gallery */}
           {place.images?.length > 0 && (
-            <div className="p-6 border-b border-outline-variant/15">
+            <div className="p-6 border-b border-outline-variant/15 relative">
               <ImageSlider images={place.images} />
+              {/* Vegan + Pet badges */}
+              <div className="absolute top-8 left-8 flex gap-2 z-10">
+                {(place as any).vegan_level === 'fully_vegan' && (
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-green-600 text-white shadow">100% Vegan</span>
+                )}
+                {place.is_pet_friendly && (
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-orange-500 text-white shadow">🐾 Pet-Friendly</span>
+                )}
+              </div>
             </div>
           )}
 

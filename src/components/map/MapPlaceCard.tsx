@@ -20,13 +20,25 @@ export default function MapPlaceCard({ place, user, onToggleFavorite, onPanToPla
       onClick={() => onPanToPlace(place.latitude, place.longitude)}
     >
       {((place as any).main_image_url || (place as any).images?.length > 0) && (
-        <img
-          src={(place as any).main_image_url || (place as any).images[0]}
-          alt={place.name}
-          className="w-full h-24 object-cover rounded-lg mb-2"
-          referrerPolicy="no-referrer"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-        />
+        <div className="relative mb-2">
+          <img
+            src={(place as any).main_image_url || (place as any).images[0]}
+            alt={place.name}
+            className="w-full h-24 object-cover rounded-lg"
+            referrerPolicy="no-referrer"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+          <div className="absolute top-1.5 left-1.5 flex gap-1">
+            {(place as any).vegan_level === 'fully_vegan' && (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-600 text-white">100% Vegan</span>
+            )}
+            {place.is_pet_friendly && (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500 text-white flex items-center gap-0.5">
+                <PawPrint className="h-2.5 w-2.5" /> Pets
+              </span>
+            )}
+          </div>
+        </div>
       )}
       <div className="flex items-start justify-between mb-2">
         <Link

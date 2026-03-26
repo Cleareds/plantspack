@@ -13,9 +13,13 @@ const categories = [
 interface MapCategoryPillsProps {
   selected: string
   onSelect: (category: string) => void
+  veganOnly?: boolean
+  onVeganToggle?: (value: boolean) => void
+  petFriendly?: boolean
+  onPetToggle?: (value: boolean) => void
 }
 
-export default function MapCategoryPills({ selected, onSelect }: MapCategoryPillsProps) {
+export default function MapCategoryPills({ selected, onSelect, veganOnly, onVeganToggle, petFriendly, onPetToggle }: MapCategoryPillsProps) {
   return (
     <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
       {categories.map((cat) => {
@@ -38,6 +42,35 @@ export default function MapCategoryPills({ selected, onSelect }: MapCategoryPill
           </button>
         )
       })}
+
+      {/* Divider */}
+      <div className="w-px h-6 bg-outline-variant/30 flex-shrink-0" />
+
+      {/* Vegan-only toggle */}
+      {onVeganToggle && (
+        <button
+          onClick={() => onVeganToggle(!veganOnly)}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+            veganOnly ? 'bg-green-600 text-white' : 'bg-secondary-container text-on-surface hover:opacity-80'
+          }`}
+        >
+          <span style={{ fontSize: '14px' }}>🌿</span>
+          100% Vegan
+        </button>
+      )}
+
+      {/* Pet-friendly toggle */}
+      {onPetToggle && (
+        <button
+          onClick={() => onPetToggle(!petFriendly)}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+            petFriendly ? 'bg-orange-500 text-white' : 'bg-secondary-container text-on-surface hover:opacity-80'
+          }`}
+        >
+          <span style={{ fontSize: '14px' }}>🐾</span>
+          Pet-Friendly
+        </button>
+      )}
     </div>
   )
 }

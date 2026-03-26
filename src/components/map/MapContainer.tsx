@@ -37,6 +37,10 @@ export default function MapContainerComponent() {
   const setSelectedCategory = useCallback((c: string) => setMapState(prev => ({ ...prev, selectedCategory: c })), [setMapState])
   const setCustomCenter = useCallback((c: [number, number] | null) => setMapState(prev => ({ ...prev, customCenter: c })), [setMapState])
 
+  // Filter state
+  const [veganOnly, setVeganOnly] = useState(false)
+  const [petFriendly, setPetFriendly] = useState(false)
+
   // Location state
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
   const [mapCenter, setMapCenter] = useState<[number, number] | null>(null)
@@ -509,7 +513,7 @@ export default function MapContainerComponent() {
           <div className="hidden lg:flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <h1 className="text-xl font-semibold text-on-surface">Vegan Places</h1>
-              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} />
+              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} veganOnly={veganOnly} onVeganToggle={setVeganOnly} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
 
               {/* Reset Center Button */}
               {customCenter && (
@@ -551,7 +555,7 @@ export default function MapContainerComponent() {
 
           {/* Mobile: Filters and search in separate rows */}
           <div className="lg:hidden space-y-3">
-            <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} />
+            <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} veganOnly={veganOnly} onVeganToggle={setVeganOnly} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
 
             {/* Mobile Search Bar */}
             <MapSearchBar
@@ -565,9 +569,13 @@ export default function MapContainerComponent() {
 
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
-        {/* Map — show all viewport places, not just paginated sidebar */}
+        {/* Map — show all viewport places, filtered by vegan/pet toggles */}
         <MapView
-          places={mapPlaces.length > 0 ? mapPlaces : filteredPlaces}
+          places={(mapPlaces.length > 0 ? mapPlaces : filteredPlaces).filter(p => {
+            if (veganOnly && (p as any).vegan_level !== 'fully_vegan') return false
+            if (petFriendly && !(p as any).is_pet_friendly) return false
+            return true
+          })}
           userLocation={userLocation}
           mapCenter={mapCenter}
           customCenter={customCenter}

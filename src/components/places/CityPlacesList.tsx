@@ -44,38 +44,53 @@ interface Place {
 export default function CityPlacesList({ places }: { places: Place[] }) {
   const categories = [...new Set(places.map(p => p.category))].sort()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [veganOnly, setVeganOnly] = useState(false)
+  const [petOnly, setPetOnly] = useState(false)
 
-  const filtered = activeCategory ? places.filter(p => p.category === activeCategory) : places
+  const filtered = places.filter(p => {
+    if (activeCategory && p.category !== activeCategory) return false
+    if (veganOnly && p.vegan_level !== 'fully_vegan') return false
+    if (petOnly && !p.is_pet_friendly) return false
+    return true
+  })
 
   return (
     <div>
-      {/* Category filter pills */}
-      {categories.length > 1 && (
-        <div className="flex flex-wrap gap-2 mb-8">
-          <button
-            onClick={() => setActiveCategory(null)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              !activeCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-            }`}
-          >
-            All ({places.length})
-          </button>
-          {categories.map(cat => {
-            const count = places.filter(p => p.category === cat).length
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  activeCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-                }`}
-              >
-                {CATEGORY_LABELS[cat] || cat} ({count})
-              </button>
-            )
-          })}
-        </div>
-      )}
+      {/* Filters */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {/* Category pills */}
+        <button onClick={() => setActiveCategory(null)}
+          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!activeCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+          All ({places.length})
+        </button>
+        {categories.map(cat => {
+          const count = places.filter(p => p.category === cat).length
+          return (
+            <button key={cat} onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+              {CATEGORY_LABELS[cat] || cat} ({count})
+            </button>
+          )
+        })}
+
+        {/* Divider */}
+        <div className="w-px h-8 bg-outline-variant/30 self-center" />
+
+        {/* Vegan-only toggle */}
+        <button onClick={() => setVeganOnly(!veganOnly)}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${veganOnly ? 'bg-green-600 text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+          🌿 100% Vegan
+        </button>
+
+        {/* Pet-friendly toggle */}
+        <button onClick={() => setPetOnly(!petOnly)}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${petOnly ? 'bg-orange-500 text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+          🐾 Pet-Friendly
+        </button>
+
+        {/* Result count */}
+        <span className="self-center text-xs text-on-surface-variant">{filtered.length} results</span>
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Places List */}
@@ -95,18 +110,29 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
                   prefetch={false}
                   className="group flex gap-4 p-4"
                 >
-                  {thumbnail ? (
-                    <img
-                      src={thumbnail}
-                      alt={place.name}
-                      className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover flex-shrink-0"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-surface-container-low flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-6 w-6 text-outline" />
+                  <div className="relative flex-shrink-0">
+                    {thumbnail ? (
+                      <img
+                        src={thumbnail}
+                        alt={place.name}
+                        className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-surface-container-low flex items-center justify-center">
+                        <MapPin className="h-6 w-6 text-outline" />
+                      </div>
+                    )}
+                    {/* Overlay badges */}
+                    <div className="absolute top-1 left-1 flex flex-col gap-0.5">
+                      {place.vegan_level === 'fully_vegan' && (
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-green-600 text-white leading-none">VEGAN</span>
+                      )}
+                      {place.is_pet_friendly && (
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-orange-500 text-white leading-none">🐾</span>
+                      )}
                     </div>
-                  )}
+                  </div>
 
                   <div className="flex-1 min-w-0">
                     <h2 className="font-semibold text-on-surface text-sm group-hover:text-primary transition-colors line-clamp-1">
