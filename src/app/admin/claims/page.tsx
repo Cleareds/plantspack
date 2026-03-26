@@ -3,14 +3,20 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
-import { CheckCircle, XCircle, Clock, MapPin, User, Mail, FileText, Loader2 } from 'lucide-react'
+import { CheckCircle, XCircle, Clock, MapPin, User, Mail, FileText, Loader2, Phone, Globe, Briefcase } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface PlaceClaim {
   id: string
   place_id: string
   user_id: string
-  proof_text: string
+  first_name: string
+  last_name: string
+  email: string
+  phone: string | null
+  business_role: string | null
+  website_url: string | null
+  proof_description: string
   status: string
   created_at: string
   reviewed_at: string | null
@@ -49,7 +55,13 @@ export default function ClaimsManagement() {
           id,
           place_id,
           user_id,
-          proof_text,
+          first_name,
+          last_name,
+          email,
+          phone,
+          business_role,
+          website_url,
+          proof_description,
           status,
           created_at,
           reviewed_at,
@@ -236,12 +248,32 @@ export default function ClaimsManagement() {
                   Claimant Information
                 </h4>
                 <div className="space-y-1 text-sm text-on-surface-variant">
-                  <p><strong>Name:</strong> {claim.users?.first_name} {claim.users?.last_name}</p>
+                  <p><strong>Name:</strong> {claim.first_name} {claim.last_name}</p>
                   <p><strong>Username:</strong> @{claim.users?.username}</p>
-                  <p className="flex items-center">
-                    <Mail className="h-3 w-3 mr-1" />
-                    {claim.users?.email}
+                  {claim.business_role && (
+                    <p className="flex items-center gap-1">
+                      <Briefcase className="h-3 w-3" />
+                      <strong>Role:</strong> <span className="capitalize">{claim.business_role.replace('_', ' ')}</span>
+                    </p>
+                  )}
+                  <p className="flex items-center gap-1">
+                    <Mail className="h-3 w-3" />
+                    {claim.email}
                   </p>
+                  {claim.phone && (
+                    <p className="flex items-center gap-1">
+                      <Phone className="h-3 w-3" />
+                      {claim.phone}
+                    </p>
+                  )}
+                  {claim.website_url && (
+                    <p className="flex items-center gap-1">
+                      <Globe className="h-3 w-3" />
+                      <a href={claim.website_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        {claim.website_url}
+                      </a>
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -251,7 +283,7 @@ export default function ClaimsManagement() {
                   <FileText className="h-4 w-4 mr-2" />
                   Proof of Ownership
                 </h4>
-                <p className="text-sm text-on-surface-variant whitespace-pre-wrap">{claim.proof_text}</p>
+                <p className="text-sm text-on-surface-variant whitespace-pre-wrap">{claim.proof_description}</p>
               </div>
 
               {/* Rejection Reason */}

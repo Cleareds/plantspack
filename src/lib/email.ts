@@ -252,6 +252,9 @@ export async function sendClaimRequestEmail(claimData: {
   first_name: string
   last_name: string
   email: string
+  phone: string
+  business_role: string
+  website_url: string
   proof_description: string
   claim_id: string
 }) {
@@ -286,7 +289,10 @@ export async function sendClaimRequestEmail(claimData: {
       <div style="background: #fefce8; border-radius: 8px; padding: 20px; margin: 20px 0;">
         <h2 style="color: #854d0e; margin-top: 0;">Claimant Details</h2>
         <p><strong>Name:</strong> ${claimData.first_name} ${claimData.last_name}</p>
+        <p><strong>Role:</strong> ${claimData.business_role.replace('_', ' ')}</p>
         <p><strong>Email:</strong> ${claimData.email}</p>
+        ${claimData.phone ? `<p><strong>Phone:</strong> ${claimData.phone}</p>` : ''}
+        ${claimData.website_url ? `<p><strong>Website:</strong> <a href="${claimData.website_url}" style="color: #854d0e;">${claimData.website_url}</a></p>` : ''}
         <p><strong>Username:</strong> ${claimData.user_name}</p>
         <p style="margin-bottom: 0;">
           <a href="https://www.plantspack.com/profile/${claimData.user_name}"

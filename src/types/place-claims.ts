@@ -9,6 +9,9 @@ export interface PlaceClaimRequest {
   first_name: string
   last_name: string
   email: string
+  phone: string | null
+  business_role: ClaimRole | null
+  website_url: string | null
   proof_description: string
   status: ClaimStatus
   reviewed_by: string | null
@@ -48,10 +51,15 @@ export interface UserOwnedPlace {
   verified_at: string
 }
 
+export type ClaimRole = 'owner' | 'manager' | 'authorized_representative'
+
 export interface ClaimFormData {
   first_name: string
   last_name: string
   email: string
+  phone: string
+  business_role: ClaimRole
+  website_url: string
   proof_description: string
 }
 

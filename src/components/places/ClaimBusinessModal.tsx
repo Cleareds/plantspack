@@ -27,6 +27,9 @@ export default function ClaimBusinessModal({
     first_name: profile?.first_name || '',
     last_name: profile?.last_name || '',
     email: user?.email || '',
+    phone: '',
+    business_role: 'owner',
+    website_url: '',
     proof_description: ''
   })
 
@@ -70,6 +73,23 @@ export default function ClaimBusinessModal({
       return
     }
 
+    if (formData.phone.trim() && !/^[+\d\s\-()]{6,20}$/.test(formData.phone.trim())) {
+      setError('Please enter a valid phone number')
+      return
+    }
+
+    if (formData.website_url.trim()) {
+      try {
+        const url = formData.website_url.trim().startsWith('http')
+          ? formData.website_url.trim()
+          : `https://${formData.website_url.trim()}`
+        new URL(url)
+      } catch {
+        setError('Please enter a valid website URL')
+        return
+      }
+    }
+
     if (formData.proof_description.trim().length < 10) {
       setError('Proof description must be at least 10 characters')
       return
@@ -101,6 +121,9 @@ export default function ClaimBusinessModal({
       // Reset form
       setFormData({
         ...formData,
+        phone: '',
+        business_role: 'owner',
+        website_url: '',
         proof_description: ''
       })
     } catch (err) {
@@ -208,6 +231,58 @@ export default function ClaimBusinessModal({
               <p className="text-xs text-outline mt-1">
                 We'll use this email to contact you about your claim
               </p>
+            </div>
+
+            {/* Role at Business */}
+            <div>
+              <label htmlFor="business_role" className="block text-sm font-medium text-on-surface-variant mb-2">
+                Your Role <span className="text-error">*</span>
+              </label>
+              <select
+                id="business_role"
+                required
+                value={formData.business_role}
+                onChange={(e) => setFormData({ ...formData, business_role: e.target.value as ClaimFormData['business_role'] })}
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
+                <option value="owner">Owner</option>
+                <option value="manager">Manager</option>
+                <option value="authorized_representative">Authorized Representative</option>
+              </select>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-on-surface-variant mb-2">
+                Business Phone
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                maxLength={20}
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="+49 123 456 7890"
+              />
+              <p className="text-xs text-outline mt-1">Optional — helps us verify your claim faster</p>
+            </div>
+
+            {/* Website URL */}
+            <div>
+              <label htmlFor="website_url" className="block text-sm font-medium text-on-surface-variant mb-2">
+                Business Website
+              </label>
+              <input
+                type="url"
+                id="website_url"
+                maxLength={500}
+                value={formData.website_url}
+                onChange={(e) => setFormData({ ...formData, website_url: e.target.value })}
+                className="w-full px-4 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="https://your-business.com"
+              />
+              <p className="text-xs text-outline mt-1">Optional — we'll cross-check with the place listing</p>
             </div>
 
             {/* Proof of Ownership */}

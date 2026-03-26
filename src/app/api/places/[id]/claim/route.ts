@@ -146,7 +146,7 @@ export async function POST(
 
     // Parse and validate request body
     const body: ClaimFormData = await request.json()
-    const { first_name, last_name, email, proof_description } = body
+    const { first_name, last_name, email, phone, business_role, website_url, proof_description } = body
 
     // Validation
     if (!first_name || first_name.trim().length < 1 || first_name.trim().length > 100) {
@@ -177,6 +177,36 @@ export async function POST(
         { error: 'Invalid email format' },
         { status: 400 }
       )
+    }
+
+    // Validate business_role
+    const validRoles = ['owner', 'manager', 'authorized_representative']
+    if (!business_role || !validRoles.includes(business_role)) {
+      return NextResponse.json(
+        { error: 'Please select a valid business role' },
+        { status: 400 }
+      )
+    }
+
+    // Validate optional phone
+    if (phone && phone.trim() && !/^[+\d\s\-()]{6,20}$/.test(phone.trim())) {
+      return NextResponse.json(
+        { error: 'Invalid phone number format' },
+        { status: 400 }
+      )
+    }
+
+    // Validate optional website URL
+    if (website_url && website_url.trim()) {
+      try {
+        const url = website_url.trim().startsWith('http') ? website_url.trim() : `https://${website_url.trim()}`
+        new URL(url)
+      } catch {
+        return NextResponse.json(
+          { error: 'Invalid website URL format' },
+          { status: 400 }
+        )
+      }
     }
 
     if (!proof_description || proof_description.trim().length < 10 || proof_description.trim().length > 1000) {
@@ -222,6 +252,9 @@ export async function POST(
         first_name: first_name.trim(),
         last_name: last_name.trim(),
         email: email.trim(),
+        phone: phone?.trim() || null,
+        business_role: business_role,
+        website_url: website_url?.trim() || null,
         proof_description: proof_description.trim()
       })
       .select()
@@ -242,6 +275,9 @@ export async function POST(
         first_name: first_name.trim(),
         last_name: last_name.trim(),
         email: email.trim(),
+        phone: phone?.trim() || '',
+        business_role: business_role,
+        website_url: website_url?.trim() || '',
         proof_description: proof_description.trim(),
         claim_id: claim.id
       })

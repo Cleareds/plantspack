@@ -25,13 +25,14 @@ interface PlaceEditButtonProps {
 }
 
 export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const router = useRouter()
   const [showEdit, setShowEdit] = useState(false)
 
   if (!user) return null
 
-  const canEdit = user.id === place.created_by || user.id === place.owner?.user_id
+  const isAdmin = (profile as any)?.role === 'admin'
+  const canEdit = isAdmin || user.id === place.created_by || user.id === place.owner?.user_id
   if (!canEdit) return null
 
   return (

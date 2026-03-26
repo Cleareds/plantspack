@@ -114,10 +114,17 @@ export async function PUT(
       return NextResponse.json({ error: 'Place not found' }, { status: 404 })
     }
 
-    // Check authorization: creator or verified owner
+    // Check authorization: admin, creator, or verified owner
+    const { data: userProfile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
+
+    const isAdmin = userProfile?.role === 'admin'
     const isCreator = existingPlace.created_by === session.user.id
     let isOwner = false
-    if (!isCreator) {
+    if (!isAdmin && !isCreator) {
       const { data: ownerRecord } = await supabase
         .from('place_owners')
         .select('id')
@@ -128,7 +135,7 @@ export async function PUT(
       isOwner = !!ownerRecord
     }
 
-    if (!isCreator && !isOwner) {
+    if (!isAdmin && !isCreator && !isOwner) {
       return NextResponse.json({ error: 'Not authorized to edit this place' }, { status: 403 })
     }
 
