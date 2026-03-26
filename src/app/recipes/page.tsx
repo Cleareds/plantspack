@@ -16,8 +16,12 @@ export const metadata: Metadata = {
   },
 }
 
+const PAGE_SIZE = 50
+
 async function getRecipes() {
   const supabase = createAdminClient()
+
+  // Fetch first page + 1 extra to know if there are more
   const { data } = await supabase
     .from('posts')
     .select(`
@@ -30,9 +34,29 @@ async function getRecipes() {
     .is('deleted_at', null)
     .not('recipe_data', 'is', null)
     .order('created_at', { ascending: false })
-    .limit(200)
+    .limit(PAGE_SIZE + 1)
 
-  return data || []
+  const recipes = data || []
+  const hasMore = recipes.length > PAGE_SIZE
+
+  return {
+    recipes: hasMore ? recipes.slice(0, PAGE_SIZE) : recipes,
+    hasMore,
+  }
+}
+
+// Separate query to get total count for the header (cheap exact count)
+async function getRecipeCount() {
+  const supabase = createAdminClient()
+  const { count } = await supabase
+    .from('posts')
+    .select('id', { count: 'exact', head: true })
+    .eq('category', 'recipe')
+    .eq('privacy', 'public')
+    .is('deleted_at', null)
+    .not('recipe_data', 'is', null)
+
+  return count || 0
 }
 
 // Collect all unique tags and meal types for SEO links
@@ -62,7 +86,10 @@ const MEAL_LABELS: Record<string, string> = {
 }
 
 export default async function RecipesPage() {
-  const recipes = await getRecipes()
+  const [{ recipes, hasMore }, totalCount] = await Promise.all([
+    getRecipes(),
+    getRecipeCount(),
+  ])
   const { mealTypes, tags } = getFilterOptions(recipes)
 
   // JSON-LD for the recipe collection
@@ -70,8 +97,8 @@ export default async function RecipesPage() {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: 'Vegan Recipes',
-    description: `${recipes.length} vegan recipes — breakfast, lunch, dinner, desserts, and more.`,
-    numberOfItems: recipes.length,
+    description: `${totalCount} vegan recipes — breakfast, lunch, dinner, desserts, and more.`,
+    numberOfItems: totalCount,
   }
 
   return (
@@ -85,7 +112,7 @@ export default async function RecipesPage() {
             Vegan Recipes
           </h1>
           <p className="text-on-surface-variant">
-            {recipes.length} delicious plant-based recipes with step-by-step instructions
+            {totalCount} delicious plant-based recipes with step-by-step instructions
           </p>
         </div>
 
@@ -105,7 +132,7 @@ export default async function RecipesPage() {
             {recipes.slice(0, 6).map(r => <div key={r.id} className="h-64 bg-surface-container-lowest rounded-2xl animate-pulse" />)}
           </div>
         }>
-          <RecipeFilters initialRecipes={recipes} />
+          <RecipeFilters initialRecipes={recipes} initialHasMore={hasMore} pageSize={PAGE_SIZE} />
         </Suspense>
       </div>
     </div>

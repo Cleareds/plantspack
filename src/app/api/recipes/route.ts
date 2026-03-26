@@ -12,27 +12,29 @@ export async function GET(request: NextRequest) {
     const servings = searchParams.get('servings')
     const mealType = searchParams.get('mealType')
     const tag = searchParams.get('tag')
-    const limit = parseInt(searchParams.get('limit') || '20')
+    const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Fetch a larger batch for JS-side filtering
-    const fetchLimit = limit + offset + 100
+    const hasJsFilters = !!(difficulty || maxPrepTime || servings || mealType)
+
+    // When JS-side filters are active, fetch a larger batch to compensate
+    // for rows that will be filtered out client-side
+    const fetchLimit = hasJsFilters ? limit + offset + 100 : limit + 1
+    const fetchOffset = hasJsFilters ? 0 : offset
 
     let query = supabase
       .from('posts')
       .select(`
-        *,
-        users!inner(id, username, first_name, last_name, avatar_url, subscription_tier, is_banned),
-        post_likes(id),
-        comments(id)
+        id, title, slug, content, images, image_url, secondary_tags, created_at,
+        recipe_data,
+        users!inner(id, username, first_name, last_name, avatar_url)
       `)
       .eq('category', 'recipe')
       .eq('privacy', 'public')
       .is('deleted_at', null)
-      .eq('users.is_banned', false)
       .not('recipe_data', 'is', null)
       .order('created_at', { ascending: false })
-      .limit(fetchLimit)
+      .range(fetchOffset, fetchOffset + fetchLimit - 1)
 
     if (search) {
       query = query.ilike('content', `%${search}%`)
@@ -82,8 +84,15 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const paginated = filtered.slice(offset, offset + limit)
-    const hasMore = filtered.length > offset + limit
+    if (hasJsFilters) {
+      const paginated = filtered.slice(offset, offset + limit)
+      const hasMore = filtered.length > offset + limit
+      return NextResponse.json({ recipes: paginated, hasMore })
+    }
+
+    // No JS filters — we fetched limit+1 rows starting at offset
+    const hasMore = filtered.length > limit
+    const paginated = hasMore ? filtered.slice(0, limit) : filtered
 
     return NextResponse.json({ recipes: paginated, hasMore })
   } catch (error) {

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { Search, SlidersHorizontal, X, Loader2 } from 'lucide-react'
 import RecipeCard from './RecipeCard'
 
 const MEAL_TYPES = [
@@ -30,9 +30,11 @@ const ALL_TAGS = [
 
 interface RecipeFiltersProps {
   initialRecipes: any[]
+  initialHasMore: boolean
+  pageSize: number
 }
 
-export default function RecipeFilters({ initialRecipes }: RecipeFiltersProps) {
+export default function RecipeFilters({ initialRecipes, initialHasMore, pageSize }: RecipeFiltersProps) {
   const searchParams = useSearchParams()
   const tagFromUrl = searchParams?.get('tag') || ''
   const mealFromUrl = searchParams?.get('mealType') || ''
@@ -42,6 +44,34 @@ export default function RecipeFilters({ initialRecipes }: RecipeFiltersProps) {
   const [difficulty, setDifficulty] = useState('')
   const [activeTags, setActiveTags] = useState<string[]>(tagFromUrl ? [tagFromUrl] : [])
   const [showFilters, setShowFilters] = useState(false)
+
+  // Pagination state
+  const [allRecipes, setAllRecipes] = useState<any[]>(initialRecipes)
+  const [hasMore, setHasMore] = useState(initialHasMore)
+  const [loading, setLoading] = useState(false)
+
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return
+    setLoading(true)
+    try {
+      const offset = allRecipes.length
+      const res = await fetch(`/api/recipes?offset=${offset}&limit=${pageSize}`)
+      if (!res.ok) throw new Error('Failed to fetch')
+      const data = await res.json()
+      const newRecipes: any[] = data.recipes || []
+      setAllRecipes(prev => {
+        // Deduplicate by id in case of overlap
+        const existingIds = new Set(prev.map((r: any) => r.id))
+        const unique = newRecipes.filter((r: any) => !existingIds.has(r.id))
+        return [...prev, ...unique]
+      })
+      setHasMore(data.hasMore ?? false)
+    } catch (err) {
+      console.error('Failed to load more recipes:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [loading, hasMore, allRecipes.length, pageSize])
 
   const toggleTag = (tag: string) => {
     setActiveTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
@@ -58,7 +88,7 @@ export default function RecipeFilters({ initialRecipes }: RecipeFiltersProps) {
   const activeFilterCount = (mealType ? 1 : 0) + (difficulty ? 1 : 0) + activeTags.length
 
   const filtered = useMemo(() => {
-    return initialRecipes.filter(r => {
+    return allRecipes.filter(r => {
       const rd = r.recipe_data as any
       if (search && !(r.title || r.content || '').toLowerCase().includes(search.toLowerCase())) return false
       if (mealType && rd?.meal_type !== mealType) return false
@@ -66,14 +96,14 @@ export default function RecipeFilters({ initialRecipes }: RecipeFiltersProps) {
       if (activeTags.length > 0 && !activeTags.every(tag => (r.secondary_tags || []).includes(tag))) return false
       return true
     })
-  }, [initialRecipes, search, mealType, difficulty, activeTags])
+  }, [allRecipes, search, mealType, difficulty, activeTags])
 
   // Collect tags that exist in the data for relevance
   const availableTags = useMemo(() => {
     const tagSet = new Set<string>()
-    initialRecipes.forEach(r => (r.secondary_tags || []).forEach((t: string) => tagSet.add(t)))
+    allRecipes.forEach(r => (r.secondary_tags || []).forEach((t: string) => tagSet.add(t)))
     return tagSet
-  }, [initialRecipes])
+  }, [allRecipes])
 
   return (
     <>
@@ -211,6 +241,26 @@ export default function RecipeFilters({ initialRecipes }: RecipeFiltersProps) {
           {activeFilterCount > 0 && (
             <button onClick={clearAll} className="mt-3 text-sm text-primary hover:underline font-medium">Clear all filters</button>
           )}
+        </div>
+      )}
+
+      {/* Load More */}
+      {hasMore && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={loadMore}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium bg-primary text-on-primary-btn hover:bg-primary/90 disabled:opacity-60 transition-colors"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              'Load More Recipes'
+            )}
+          </button>
         </div>
       )}
     </>
