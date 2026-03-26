@@ -45,6 +45,7 @@ export default function UserProfilePage() {
   const [loadingPosts, setLoadingPosts] = useState(false)
   const [hasMorePosts, setHasMorePosts] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState('all')
 
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -319,50 +320,83 @@ export default function UserProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content - Posts */}
         <div className="lg:col-span-2">
-          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4 mb-4">
-            <h2 className="text-lg font-semibold text-on-surface mb-4">Posts</h2>
-          </div>
-          
-          {posts.length === 0 && !loadingPosts ? (
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center">
-              <p className="text-outline">No posts yet.</p>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                {posts.map((post) => (
-                  <PostCard key={post.id} post={post} onUpdate={() => fetchPosts()} />
-                ))}
-              </div>
+          {(() => {
+            const recipePosts = posts.filter(p => p.category === 'recipe')
+            const placePosts = posts.filter(p => p.category === 'place')
+            const eventPosts = posts.filter(p => p.category === 'event')
 
-              {/* Infinite scroll trigger */}
-              <div ref={loadMoreRef} className="flex justify-center py-8">
-                {hasMorePosts && (
+            const tabs = [
+              { key: 'all', label: 'All', count: posts.length },
+              { key: 'recipe', label: 'Recipes', count: recipePosts.length },
+              { key: 'place', label: 'Places', count: placePosts.length },
+              { key: 'event', label: 'Events', count: eventPosts.length },
+            ]
+
+            const filteredPosts = activeTab === 'all'
+              ? posts
+              : posts.filter(p => p.category === activeTab)
+
+            return (
+              <>
+                <div className="flex gap-4 mb-4 border-b border-outline-variant/15 overflow-x-auto">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                        activeTab === tab.key
+                          ? 'border-primary text-primary'
+                          : 'border-transparent text-outline hover:text-on-surface-variant'
+                      }`}
+                    >
+                      {tab.label} ({tab.count})
+                    </button>
+                  ))}
+                </div>
+
+                {filteredPosts.length === 0 && !loadingPosts ? (
+                  <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center">
+                    <p className="text-outline">No {activeTab === 'all' ? 'posts' : activeTab === 'recipe' ? 'recipes' : activeTab === 'place' ? 'places' : 'events'} yet.</p>
+                  </div>
+                ) : (
                   <>
-                    {loadingPosts ? (
-                      <div className="flex items-center space-x-2 text-outline">
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                        <span>Loading more posts...</span>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={loadMorePosts}
-                        className="px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md font-medium transition-colors"
-                      >
-                        Load More Posts
-                      </button>
-                    )}
+                    <div className="space-y-4">
+                      {filteredPosts.map((post) => (
+                        <PostCard key={post.id} post={post} onUpdate={() => fetchPosts()} />
+                      ))}
+                    </div>
+
+                    {/* Infinite scroll trigger */}
+                    <div ref={loadMoreRef} className="flex justify-center py-8">
+                      {hasMorePosts && (
+                        <>
+                          {loadingPosts ? (
+                            <div className="flex items-center space-x-2 text-outline">
+                              <Loader2 className="h-5 w-5 animate-spin" />
+                              <span>Loading more...</span>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={loadMorePosts}
+                              className="px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-md font-medium transition-colors"
+                            >
+                              Load More
+                            </button>
+                          )}
+                        </>
+                      )}
+
+                      {!hasMorePosts && posts.length > 0 && (
+                        <div className="text-center">
+                          <p className="text-outline text-sm">End of posts</p>
+                        </div>
+                      )}
+                    </div>
                   </>
                 )}
-                
-                {!hasMorePosts && posts.length > 0 && (
-                  <div className="text-center">
-                    <p className="text-outline text-sm">End of posts</p>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+              </>
+            )
+          })()}
         </div>
 
         {/* Sidebar */}
