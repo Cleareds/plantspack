@@ -89,31 +89,15 @@ export default async function RecipesPage() {
           </p>
         </div>
 
-        {/* Meal type SEO links (visible to Google, also useful navigation) */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        {/* Hidden SEO links for Google crawling (not visible to users) */}
+        <nav className="sr-only" aria-label="Recipe categories">
           {mealTypes.map(mt => (
-            <Link
-              key={mt}
-              href={`/recipes?mealType=${mt}`}
-              className="px-3 py-1.5 rounded-full text-sm font-medium bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors"
-            >
-              {MEAL_LABELS[mt] || mt}
-            </Link>
+            <Link key={mt} href={`/recipes?mealType=${mt}`}>{MEAL_LABELS[mt] || mt} recipes</Link>
           ))}
-        </div>
-
-        {/* Tag SEO links */}
-        <div className="flex flex-wrap gap-1.5 mb-6">
           {tags.slice(0, 15).map(tag => (
-            <Link
-              key={tag}
-              href={`/recipes?tag=${encodeURIComponent(tag)}`}
-              className="px-2 py-0.5 rounded text-xs bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors"
-            >
-              {tag}
-            </Link>
+            <Link key={tag} href={`/recipes?tag=${encodeURIComponent(tag)}`}>{tag} vegan recipes</Link>
           ))}
-        </div>
+        </nav>
 
         {/* Client-side filter + grid (Suspense needed for useSearchParams) */}
         <Suspense fallback={
