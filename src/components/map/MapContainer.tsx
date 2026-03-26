@@ -100,6 +100,8 @@ export default function MapContainerComponent() {
   // Leaflet icons
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
   const [placeMarkerIcon, setPlaceMarkerIcon] = useState<any>(null)
+  const [fullyVeganIcon, setFullyVeganIcon] = useState<any>(null)
+  const [veganFriendlyIcon, setVeganFriendlyIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
 
   // Initialize Leaflet icons
@@ -108,6 +110,8 @@ export default function MapContainerComponent() {
       import('leaflet').then((L) => {
         import('@/lib/leaflet-config').then((config) => {
           setPlaceMarkerIcon(config.veganMarkerIcon)
+          setFullyVeganIcon(config.fullyVeganDivIcon)
+          setVeganFriendlyIcon(config.veganFriendlyDivIcon)
         })
         setLeafletIcon(new L.Icon({
           iconUrl: 'data:image/svg+xml;base64,' + btoa(`
@@ -584,6 +588,8 @@ export default function MapContainerComponent() {
           onMapMove={handleMapMove}
           mapRef={mapRef}
           placeMarkerIcon={placeMarkerIcon}
+          fullyVeganIcon={fullyVeganIcon}
+          veganFriendlyIcon={veganFriendlyIcon}
           leafletIcon={leafletIcon}
           user={user}
           onToggleFavorite={toggleFavorite}

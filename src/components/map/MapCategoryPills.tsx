@@ -71,6 +71,27 @@ export default function MapCategoryPills({ selected, onSelect, veganOnly, onVega
           Pet-Friendly
         </button>
       )}
+
+      {/* Divider */}
+      <div className="w-px h-6 bg-outline-variant/30 flex-shrink-0" />
+
+      {/* Map legend */}
+      <div className="flex items-center gap-3 pl-1 flex-shrink-0">
+        <div className="flex items-center gap-1.5">
+          <span
+            className="inline-block w-3.5 h-3.5 rounded-full flex-shrink-0"
+            style={{ background: '#2d6a4f', border: '2px solid #fff', boxShadow: '0 0 0 1px #d1d5db' }}
+          />
+          <span className="text-xs text-on-surface-variant whitespace-nowrap">100% Vegan</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span
+            className="inline-block w-3.5 h-3.5 rounded-full flex-shrink-0"
+            style={{ background: '#e6a817', border: '2px solid #fff', boxShadow: '0 0 0 1px #d1d5db' }}
+          />
+          <span className="text-xs text-on-surface-variant whitespace-nowrap">Vegan-Friendly</span>
+        </div>
+      </div>
     </div>
   )
 }

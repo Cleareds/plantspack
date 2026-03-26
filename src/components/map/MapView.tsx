@@ -11,7 +11,12 @@ const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mo
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
-// Circle removed — no longer showing radius
+
+// Dynamic import for MarkerClusterGroup (client-only)
+const MarkerClusterGroup = dynamic(
+  () => import('react-leaflet-cluster').then(mod => mod.default),
+  { ssr: false }
+)
 
 const MapClickHandler = dynamic(() =>
   import('react-leaflet').then(mod => {
@@ -74,11 +79,21 @@ interface MapViewProps {
   onMapMove: () => void
   mapRef: MutableRefObject<any>
   placeMarkerIcon: any
+  fullyVeganIcon: any
+  veganFriendlyIcon: any
   leafletIcon: any
   user: { id: string } | null
   onToggleFavorite: (placeId: string) => void
   onDeletePlace: (placeId: string) => void
   loading: boolean
+}
+
+// Returns the right icon for the place based on vegan_level
+function getPlaceIcon(place: PlaceWithDistance, fullyVeganIcon: any, veganFriendlyIcon: any, fallbackIcon: any) {
+  if (!fullyVeganIcon || !veganFriendlyIcon) return fallbackIcon
+  const veganLevel = (place as any).vegan_level
+  if (veganLevel === 'fully_vegan') return fullyVeganIcon
+  return veganFriendlyIcon
 }
 
 export default function MapView({
@@ -91,6 +106,8 @@ export default function MapView({
   onMapMove,
   mapRef,
   placeMarkerIcon,
+  fullyVeganIcon,
+  veganFriendlyIcon,
   leafletIcon,
   user,
   onToggleFavorite,
@@ -144,88 +161,130 @@ export default function MapView({
           </Marker>
         )}
 
-        {/* Place markers */}
-        {places.map((place) => (
-          <Marker
-            key={place.id}
-            position={[place.latitude, place.longitude]}
-            icon={placeMarkerIcon}
-          >
-            <Popup>
-              <div className="p-2 min-w-[200px]">
-                {/* Thumbnail */}
-                {((place as any).main_image_url || (place as any).images?.[0]) && (
-                  <img
-                    src={(place as any).main_image_url || (place as any).images[0]}
-                    alt={place.name}
-                    className="w-full h-20 object-cover rounded-md mb-2"
-                    referrerPolicy="no-referrer"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                  />
-                )}
-                <div className="flex items-start justify-between mb-2">
-                  <Link
-                    href={`/place/${(place as any).slug || place.id}`}
-                    className="font-semibold text-on-surface hover:text-primary transition-colors"
-                  >
-                    {place.name}
-                  </Link>
-                  <div className="flex items-center space-x-1">
-                    {user && (
-                      <button
-                        onClick={() => onToggleFavorite(place.id)}
-                        className={`p-1 rounded ${
-                          place.favorite_places.some(fav => fav.user_id === user.id)
-                            ? 'text-red-500'
-                            : 'text-outline hover:text-red-500'
-                        }`}
-                      >
-                        <Heart className={`h-4 w-4 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
-                      </button>
-                    )}
-                    {user && user.id === place.created_by && (
-                      <button
-                        onClick={() => onDeletePlace(place.id)}
-                        className="p-1 rounded text-outline hover:text-error"
-                        title="Delete place"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                </div>
+        {/* Place markers — wrapped in MarkerClusterGroup */}
+        <MarkerClusterGroup
+          chunkedLoading
+          maxClusterRadius={60}
+          spiderfyOnMaxZoom
+          showCoverageOnHover={false}
+          zoomToBoundsOnClick
+          iconCreateFunction={(cluster: any) => {
+            const count = cluster.getChildCount()
+            let size = 'small'
+            let diameter = 36
+            if (count >= 100) { size = 'large'; diameter = 48 }
+            else if (count >= 10) { size = 'medium'; diameter = 42 }
 
-                <div className="space-y-1 text-sm text-on-surface-variant">
-                  <div className="flex items-center space-x-1">
-                    <span className="capitalize">{place.category}</span>
-                    {place.is_pet_friendly && (
-                      <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
-                        <PawPrint className="h-3 w-3" />
-                        <span>Pet Friendly</span>
-                      </span>
-                    )}
-                  </div>
-                  <p>{place.address}</p>
-                  {place.description && <p>{place.description}</p>}
-                  {place.website && (
-                    <a
-                      href={place.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      Visit Website
-                    </a>
+            // Dynamic import means L may not be on window yet, so use inline require
+            const L = typeof window !== 'undefined' ? require('leaflet') : null
+            if (!L) return null
+
+            return L.divIcon({
+              html: `<div style="
+                width: ${diameter}px; height: ${diameter}px; border-radius: 50%;
+                background: #2d6a4f; border: 3px solid #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                display: flex; align-items: center; justify-content: center;
+                color: #fff; font-weight: 700; font-size: ${count >= 100 ? 14 : 13}px;
+                font-family: system-ui, sans-serif;
+              ">${count}</div>`,
+              className: `leaflet-cluster-icon leaflet-cluster-${size}`,
+              iconSize: L.point(diameter, diameter),
+            })
+          }}
+        >
+          {places.map((place) => (
+            <Marker
+              key={place.id}
+              position={[place.latitude, place.longitude]}
+              icon={getPlaceIcon(place, fullyVeganIcon, veganFriendlyIcon, placeMarkerIcon)}
+            >
+              <Popup>
+                <div className="p-2 min-w-[200px]">
+                  {/* Thumbnail */}
+                  {((place as any).main_image_url || (place as any).images?.[0]) && (
+                    <img
+                      src={(place as any).main_image_url || (place as any).images[0]}
+                      alt={place.name}
+                      className="w-full h-20 object-cover rounded-md mb-2"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                    />
                   )}
-                </div>
+                  <div className="flex items-start justify-between mb-2">
+                    <Link
+                      href={`/place/${(place as any).slug || place.id}`}
+                      className="font-semibold text-on-surface hover:text-primary transition-colors"
+                    >
+                      {place.name}
+                    </Link>
+                    <div className="flex items-center space-x-1">
+                      {user && (
+                        <button
+                          onClick={() => onToggleFavorite(place.id)}
+                          className={`p-1 rounded ${
+                            place.favorite_places.some(fav => fav.user_id === user.id)
+                              ? 'text-red-500'
+                              : 'text-outline hover:text-red-500'
+                          }`}
+                        >
+                          <Heart className={`h-4 w-4 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
+                        </button>
+                      )}
+                      {user && user.id === place.created_by && (
+                        <button
+                          onClick={() => onDeletePlace(place.id)}
+                          className="p-1 rounded text-outline hover:text-error"
+                          title="Delete place"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
 
-                <div className="mt-2 pt-2 border-t border-outline-variant/15 text-xs text-outline">
-                  Added by @{place.users.username}
+                  <div className="space-y-1 text-sm text-on-surface-variant">
+                    <div className="flex items-center space-x-1">
+                      <span className="capitalize">{place.category}</span>
+                      {(place as any).vegan_level === 'fully_vegan' && (
+                        <span className="bg-green-100 text-green-800 px-1.5 py-0.5 rounded text-xs font-medium">
+                          100% Vegan
+                        </span>
+                      )}
+                      {(place as any).vegan_level && (place as any).vegan_level !== 'fully_vegan' && (
+                        <span className="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded text-xs font-medium">
+                          Vegan-Friendly
+                        </span>
+                      )}
+                      {place.is_pet_friendly && (
+                        <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
+                          <PawPrint className="h-3 w-3" />
+                          <span>Pet Friendly</span>
+                        </span>
+                      )}
+                    </div>
+                    <p>{place.address}</p>
+                    {place.description && <p>{place.description}</p>}
+                    {place.website && (
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Visit Website
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="mt-2 pt-2 border-t border-outline-variant/15 text-xs text-outline">
+                    Added by @{place.users.username}
+                  </div>
                 </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </LeafletMapContainer>
 
       {loading && (

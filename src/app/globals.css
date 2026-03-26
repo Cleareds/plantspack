@@ -196,3 +196,26 @@ body {
   margin-top: -6px;
   cursor: w-resize;
 }
+
+/* Custom Leaflet marker & cluster styles */
+.leaflet-vegan-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-cluster-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Override default MarkerCluster styles */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: transparent !important;
+}
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: transparent !important;
+}
