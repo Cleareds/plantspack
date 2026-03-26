@@ -38,6 +38,9 @@ export default function CookieConsent() {
     setPreferences(prefs)
     setShowBanner(false)
     setShowSettings(false)
+
+    // Notify other components (e.g. GoogleAnalytics) about the consent change
+    window.dispatchEvent(new Event('cookie-consent-changed'))
   }
 
   const handleAcceptAll = () => {

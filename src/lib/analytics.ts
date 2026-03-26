@@ -15,15 +15,32 @@ declare global {
 }
 
 const GA_MEASUREMENT_ID = 'G-402EVF2GP0'
+const COOKIE_CONSENT_KEY = 'plantspack_cookie_consent'
 
 /**
- * Check if analytics is available and we're in production
+ * Check if the user has given analytics cookie consent
+ */
+function hasAnalyticsConsent(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
+    if (!consent) return false
+    const prefs = JSON.parse(consent)
+    return prefs.analytics === true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Check if analytics is available, we're in production, and user has consented
  */
 function isAnalyticsAvailable(): boolean {
   return (
     typeof window !== 'undefined' &&
     process.env.NODE_ENV === 'production' &&
-    typeof window.gtag === 'function'
+    typeof window.gtag === 'function' &&
+    hasAnalyticsConsent()
   )
 }
 

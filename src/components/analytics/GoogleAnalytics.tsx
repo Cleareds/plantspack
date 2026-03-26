@@ -4,24 +4,56 @@ import Script from 'next/script'
 import { useEffect, useState } from 'react'
 
 const GA_MEASUREMENT_ID = 'G-402EVF2GP0'
+const COOKIE_CONSENT_KEY = 'plantspack_cookie_consent'
+
+function hasAnalyticsConsent(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
+    if (!consent) return false
+    const prefs = JSON.parse(consent)
+    return prefs.analytics === true
+  } catch {
+    return false
+  }
+}
+
+function isProductionBrowser(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    process.env.NODE_ENV === 'production' &&
+    !window.location.hostname.includes('localhost') &&
+    !window.location.hostname.includes('127.0.0.1')
+  )
+}
 
 export default function GoogleAnalytics() {
   const [shouldLoad, setShouldLoad] = useState(false)
 
   useEffect(() => {
-    // Only load in production to avoid polluting analytics during development
-    // Also check if we're in a browser environment
-    if (
-      typeof window !== 'undefined' &&
-      process.env.NODE_ENV === 'production' &&
-      !window.location.hostname.includes('localhost') &&
-      !window.location.hostname.includes('127.0.0.1')
-    ) {
+    if (!isProductionBrowser()) return
+
+    // Check consent on mount
+    if (hasAnalyticsConsent()) {
       setShouldLoad(true)
+    }
+
+    // Listen for consent changes (dispatched by CookieConsent component)
+    const handleConsentChange = () => {
+      if (hasAnalyticsConsent()) {
+        setShouldLoad(true)
+      } else {
+        setShouldLoad(false)
+      }
+    }
+
+    window.addEventListener('cookie-consent-changed', handleConsentChange)
+    return () => {
+      window.removeEventListener('cookie-consent-changed', handleConsentChange)
     }
   }, [])
 
-  // Don't render anything in development or server-side
+  // Don't render anything until user has given analytics consent
   if (!shouldLoad) {
     return null
   }
