@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Globe } from 'lucide-react'
 import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
-import { getCityPlaces } from '@/lib/directory-queries'
 import CityPlacesList from '@/components/places/CityPlacesList'
 
 export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
@@ -36,7 +35,7 @@ interface Place {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country, city } = await params
   // Single query — cache() deduplicates with page render
-  const { places, city: cityName, country: countryName } = await getCityPlaces(country, city)
+  const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
 
   const title = `Vegan Restaurants & Places in ${cityName}, ${countryName} (${places.length})`
   const description = `Discover ${places.length} vegan restaurants, stores, and stays in ${cityName}. Community-verified with ratings and reviews.`
@@ -86,10 +85,20 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
   }
 }
 
+async function fetchCityPlaces(country: string, city: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}&limit=500`, { cache: 'no-store' })
+    if (!res.ok) return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
+    return res.json()
+  } catch {
+    return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
+  }
+}
+
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
-  // Single query — cache() deduplicates with generateMetadata
-  const { places, city: cityName, country: countryName } = await getCityPlaces(country, city)
+  const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
 
   // Build stats from fetched places for data-driven description
   const cityStats = {
