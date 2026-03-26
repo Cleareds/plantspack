@@ -15,7 +15,8 @@ import {
   Star,
   Plus,
   X,
-  CheckCircle
+  CheckCircle,
+  BadgeCheck
 } from 'lucide-react'
 
 interface Place {
@@ -309,11 +310,26 @@ export default function PlacesManagement() {
 
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => window.open(`/places?lat=${place.latitude}&lng=${place.longitude}`, '_blank')}
-                    className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
+                    onClick={async () => {
+                      const newVal = !(place as any).is_verified;
+                      await supabase.from('places').update({ is_verified: newVal }).eq('id', place.id);
+                      setPlaces((prev: any) => prev.map((p: any) => p.id === place.id ? { ...p, is_verified: newVal } : p));
+                    }}
+                    className={`inline-flex items-center justify-center px-3 py-2 border rounded-md text-xs font-medium ${
+                      (place as any).is_verified
+                        ? 'border-primary text-primary bg-primary/10'
+                        : 'border-outline-variant text-on-surface-variant bg-white hover:bg-surface-container-low'
+                    }`}
+                  >
+                    <BadgeCheck className="h-3 w-3 mr-1" />
+                    {(place as any).is_verified ? 'Verified' : 'Verify'}
+                  </button>
+                  <button
+                    onClick={() => window.open(`/place/${(place as any).slug || place.id}`, '_blank')}
+                    className="inline-flex items-center justify-center px-3 py-2 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
                   >
                     <Eye className="h-3 w-3 mr-1" />
-                    View on Map
+                    View
                   </button>
                   <button
                     onClick={() => handleDeletePlace(place.id, place.name)}

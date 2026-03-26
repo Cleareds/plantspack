@@ -6,6 +6,7 @@ import { PackWithStats, PackPostWithPost } from '@/types/packs'
 import PackHeader from '@/components/packs/PackHeader'
 import PostCard from '@/components/posts/PostCard'
 import PackPlacesTab from '@/components/packs/PackPlacesTab'
+import PackMembersTab from '@/components/packs/PackMembersTab'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { CheckCircle, AlertCircle } from 'lucide-react'
 
@@ -315,15 +316,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         )}
 
         {activeTab === 'members' && (
-          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
-            <div className="text-6xl mb-4">👥</div>
-            <h3 className="text-lg font-medium text-on-surface mb-2">
-              Members Tab
-            </h3>
-            <p className="text-on-surface-variant">
-              Members list coming soon
-            </p>
-          </div>
+          <PackMembersTab packId={pack.id} userRole={pack.user_role} />
         )}
       </div>
     </div>

@@ -3,7 +3,9 @@
 import { PackWithStats } from '@/types/packs'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Users, FileText, Crown } from 'lucide-react'
+import { Users, FileText, Crown, BadgeCheck } from 'lucide-react'
+
+const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
 
 interface PackCardProps {
   pack: PackWithStats
@@ -70,10 +72,15 @@ export default function PackCard({ pack }: PackCardProps) {
 
         {/* Content */}
         <div className="p-4">
-          {/* Title */}
-          <h3 className="font-semibold text-on-surface mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-            {pack.title}
-          </h3>
+          {/* Title + Verified */}
+          <div className="flex items-start gap-1.5 mb-2">
+            <h3 className="font-semibold text-on-surface line-clamp-2 group-hover:text-primary transition-colors">
+              {pack.title}
+            </h3>
+            {pack.creator_id === ADMIN_ID && (
+              <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+            )}
+          </div>
 
           {/* Description */}
           {pack.description && (

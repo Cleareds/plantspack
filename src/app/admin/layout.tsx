@@ -16,7 +16,9 @@ import {
   Loader2,
   Menu,
   X,
-  Building2
+  Building2,
+  ChefHat,
+  Calendar
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -71,6 +73,8 @@ export default function AdminLayout({
     { name: 'Posts', href: '/admin/posts', icon: FileText },
     { name: 'Comments', href: '/admin/comments', icon: MessageSquare },
     { name: 'Places', href: '/admin/places', icon: MapPin },
+    { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
+    { name: 'Events', href: '/admin/events', icon: Calendar },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
     { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
     { name: 'Contact Forms', href: '/admin/contact', icon: Mail },

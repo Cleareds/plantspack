@@ -4,7 +4,11 @@ import { useState } from 'react'
 import { PackWithStats } from '@/types/packs'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check } from 'lucide-react'
+import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, Bell, BellOff, BadgeCheck } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
+
+const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
 
 interface PackHeaderProps {
   pack: PackWithStats
@@ -13,7 +17,27 @@ interface PackHeaderProps {
 }
 
 export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
+  const { user } = useAuth()
   const [isJoining, setIsJoining] = useState(false)
+  const [isFollowing, setIsFollowing] = useState((pack as any).is_following || false)
+  const [followLoading, setFollowLoading] = useState(false)
+
+  const isAdminPack = pack.creator_id === ADMIN_ID
+
+  const toggleFollow = async () => {
+    if (!user) return
+    setFollowLoading(true)
+    try {
+      if (isFollowing) {
+        await fetch(`/api/packs/${pack.id}/follow`, { method: 'DELETE' })
+        setIsFollowing(false)
+      } else {
+        await fetch(`/api/packs/${pack.id}/follow`, { method: 'POST' })
+        setIsFollowing(true)
+      }
+    } catch {}
+    setFollowLoading(false)
+  }
 
   const handleJoin = async () => {
     setIsJoining(true)
@@ -77,10 +101,17 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
               </div>
             )}
 
-            {/* Title */}
-            <h1 className="text-3xl font-bold text-on-surface mb-2">
-              {pack.title}
-            </h1>
+            {/* Title + Verified Badge */}
+            <div className="flex items-center gap-2 mb-2">
+              <h1 className="text-3xl font-bold text-on-surface">
+                {pack.title}
+              </h1>
+              {isAdminPack && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary" title="Curated by PlantsPack team">
+                  <BadgeCheck className="h-3.5 w-3.5" /> Verified
+                </span>
+              )}
+            </div>
 
             {/* Description */}
             {pack.description && (
@@ -203,6 +234,22 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                 className="flex items-center justify-center gap-2 bg-surface-container-low hover:bg-surface-container text-on-surface-variant px-4 py-2 rounded-md font-medium transition-colors"
               >
                 <span>Leave Pack</span>
+              </button>
+            )}
+
+            {/* Follow button */}
+            {user && (
+              <button
+                onClick={toggleFollow}
+                disabled={followLoading}
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
+                  isFollowing
+                    ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                    : 'ghost-border text-on-surface-variant hover:bg-surface-container-low'
+                }`}
+              >
+                {isFollowing ? <BellOff className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
+                <span>{followLoading ? '...' : isFollowing ? 'Following' : 'Follow'}</span>
               </button>
             )}
           </div>
