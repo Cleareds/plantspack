@@ -10,6 +10,15 @@ type Post = Tables<'posts'> & {
   users: Tables<'users'>
 }
 type Place = Tables<'places'>
+type Recipe = {
+  id: string
+  title: string | null
+  slug: string | null
+  images: string[] | null
+  recipe_data: any
+  secondary_tags: string[] | null
+  users: { id: string; username: string; avatar_url: string | null }
+}
 
 const ALL_CATEGORIES: { slug: PostCategory; display_name: string; icon_name: string }[] = [
   { slug: 'recipe', display_name: 'Recipes', icon_name: 'restaurant_menu' },
@@ -34,6 +43,7 @@ export interface SearchResults {
   posts: Post[]
   users: User[]
   places: Place[]
+  recipes: Recipe[]
   categories: SearchCategory[]
   loading: boolean
   error: string | null
@@ -44,6 +54,7 @@ export function useSearch(query: string, minLength: number = 3) {
     posts: [],
     users: [],
     places: [],
+    recipes: [],
     categories: [],
     loading: false,
     error: null
@@ -58,6 +69,28 @@ export function useSearch(query: string, minLength: number = 3) {
 
     return () => clearTimeout(timer)
   }, [query])
+
+  const searchRecipes = useCallback(async (searchTerm: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select(`
+          id, title, slug, images, recipe_data, secondary_tags,
+          users (id, username, avatar_url)
+        `)
+        .eq('category', 'recipe')
+        .eq('privacy', 'public')
+        .ilike('title', `%${searchTerm}%`)
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+      if (error) throw error
+      return (data || []) as any as Recipe[]
+    } catch (error) {
+      console.error('Error searching recipes:', error)
+      return []
+    }
+  }, [])
 
   const searchPosts = useCallback(async (searchTerm: string) => {
     try {
@@ -77,6 +110,7 @@ export function useSearch(query: string, minLength: number = 3) {
           )
         `)
         .eq('privacy', 'public')
+        .neq('category', 'recipe')
         .ilike('content', `%${searchTerm}%`)
         .order('created_at', { ascending: false })
         .limit(5)
@@ -111,7 +145,7 @@ export function useSearch(query: string, minLength: number = 3) {
       const { data, error } = await supabase
         .from('places')
         .select('*')
-        .ilike('name', `%${searchTerm}%`)
+        .or(`name.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,address.ilike.%${searchTerm}%`)
         .order('average_rating', { ascending: false })
         .limit(5)
 
@@ -138,6 +172,7 @@ export function useSearch(query: string, minLength: number = 3) {
           posts: [],
           users: [],
           places: [],
+          recipes: [],
           categories: [],
           loading: false,
           error: null
@@ -149,7 +184,8 @@ export function useSearch(query: string, minLength: number = 3) {
 
       try {
         const categories = matchCategories(debouncedQuery)
-        const [posts, users, places] = await Promise.all([
+        const [recipes, posts, users, places] = await Promise.all([
+          searchRecipes(debouncedQuery),
           searchPosts(debouncedQuery),
           searchUsers(debouncedQuery),
           searchPlaces(debouncedQuery),
@@ -159,6 +195,7 @@ export function useSearch(query: string, minLength: number = 3) {
           posts,
           users,
           places,
+          recipes,
           categories,
           loading: false,
           error: null
@@ -168,6 +205,7 @@ export function useSearch(query: string, minLength: number = 3) {
           posts: [],
           users: [],
           places: [],
+          recipes: [],
           categories: [],
           loading: false,
           error: error instanceof Error ? error.message : 'Search failed'
@@ -176,7 +214,7 @@ export function useSearch(query: string, minLength: number = 3) {
     }
 
     performSearch()
-  }, [debouncedQuery, minLength, searchPosts, searchUsers, searchPlaces, matchCategories])
+  }, [debouncedQuery, minLength, searchRecipes, searchPosts, searchUsers, searchPlaces, matchCategories])
 
   return results
 }

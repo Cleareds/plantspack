@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Search, X, User, MessageSquare, MapPin, Loader2 } from 'lucide-react'
+import { Search, X, User, MessageSquare, MapPin, Loader2, ChefHat, Clock } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -18,7 +18,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
-  const { posts, users, places, categories, loading, error } = useSearch(query)
+  const { posts, users, places, recipes, categories, loading, error } = useSearch(query)
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
     )
   }
 
-  const hasResults = posts.length > 0 || users.length > 0 || places.length > 0 || categories.length > 0
+  const hasResults = posts.length > 0 || users.length > 0 || places.length > 0 || recipes.length > 0 || categories.length > 0
   const showNoResults = query.length >= 3 && !loading && !hasResults && !error
 
   return (
@@ -78,7 +78,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search posts, places, users..."
+          placeholder="Search recipes, places, users..."
           className="w-full pl-10 pr-10 py-2 bg-surface-container-low border-0 ghost-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-outline text-sm"
         />
         {query && (
@@ -153,6 +153,61 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                 </div>
               )}
 
+              {/* Recipes Section */}
+              {recipes.length > 0 && (
+                <div>
+                  <div className="sticky top-0 bg-surface-container-low px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <ChefHat className="h-4 w-4 text-on-surface-variant" />
+                      <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">
+                        Recipes ({recipes.length})
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    {recipes.map((recipe) => {
+                      const rd = recipe.recipe_data as any
+                      return (
+                        <Link
+                          key={recipe.id}
+                          href={`/recipe/${recipe.slug || recipe.id}`}
+                          onClick={handleResultClick}
+                          className="flex items-center gap-3 p-3 hover:bg-surface-container-low transition-colors"
+                        >
+                          {recipe.images?.[0] ? (
+                            <img
+                              src={recipe.images[0]}
+                              alt=""
+                              className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <ChefHat className="h-5 w-5 text-primary" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-on-surface truncate">
+                              {highlightMatch(recipe.title || '', query)}
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-outline">
+                              {rd?.meal_type && <span>{rd.meal_type}</span>}
+                              {rd?.total_time_min && (
+                                <span className="flex items-center gap-0.5">
+                                  <Clock className="h-3 w-3" />
+                                  {rd.total_time_min}min
+                                </span>
+                              )}
+                              {rd?.difficulty && <span>{rd.difficulty}</span>}
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Places Section */}
               {places.length > 0 && (
                 <div>
@@ -180,7 +235,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                             {highlightMatch(place.name, query)}
                           </div>
                           <div className="text-xs text-outline truncate">
-                            {place.address}
+                            {(place as any).city ? `${(place as any).city}${place.address ? ` · ${place.address}` : ''}` : place.address}
                           </div>
                         </div>
                         {place.average_rating > 0 && (
