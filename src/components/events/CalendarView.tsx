@@ -2,8 +2,10 @@
 
 type CalendarEvent = {
   id: string
+  title?: string | null
   event_data?: {
     start_time?: string
+    title?: string
   } | null
 }
 
@@ -23,14 +25,16 @@ export default function CalendarView({ events, selectedDay, onDaySelect, current
   const firstDay = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-  // Build set of days that have events
-  const eventDays = new Set<number>()
+  // Build map of days → events for that day
+  const eventsByDay = new Map<number, CalendarEvent[]>()
   for (const e of events) {
     const start = e.event_data?.start_time
     if (start) {
       const d = new Date(start)
       if (d.getFullYear() === year && d.getMonth() === month) {
-        eventDays.add(d.getDate())
+        const day = d.getDate()
+        if (!eventsByDay.has(day)) eventsByDay.set(day, [])
+        eventsByDay.get(day)!.push(e)
       }
     }
   }
@@ -66,13 +70,14 @@ export default function CalendarView({ events, selectedDay, onDaySelect, current
       <div className="grid grid-cols-7 gap-1">
         {/* Empty cells for offset */}
         {Array.from({ length: firstDay }).map((_, i) => (
-          <div key={`empty-${i}`} className="aspect-square" />
+          <div key={`empty-${i}`} className="min-h-[4.5rem]" />
         ))}
 
         {/* Day cells */}
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const day = i + 1
-          const hasEvents = eventDays.has(day)
+          const dayEvents = eventsByDay.get(day) || []
+          const hasEvents = dayEvents.length > 0
           const isSelected = selectedDay === day
           const isToday = new Date().getDate() === day &&
             new Date().getMonth() === month &&
@@ -82,20 +87,42 @@ export default function CalendarView({ events, selectedDay, onDaySelect, current
             <button
               key={day}
               onClick={() => onDaySelect(isSelected ? null : day)}
-              className={`aspect-square flex flex-col items-center justify-center rounded-lg text-xs font-medium transition-colors relative ${
+              className={`min-h-[4.5rem] flex flex-col items-start p-1 rounded-lg text-xs font-medium transition-colors ${
                 isSelected
-                  ? 'bg-primary text-on-primary'
+                  ? 'bg-primary/10 ring-2 ring-primary'
                   : isToday
-                  ? 'bg-primary/10 text-primary font-bold'
+                  ? 'bg-primary/5 ring-1 ring-primary/30'
                   : hasEvents
-                  ? 'hover:bg-surface-container text-on-surface'
-                  : 'text-on-surface-variant/60 hover:bg-surface-container-low'
+                  ? 'hover:bg-surface-container'
+                  : 'hover:bg-surface-container-low'
               }`}
             >
-              {day}
-              {hasEvents && !isSelected && (
-                <span className="absolute bottom-1 w-1 h-1 rounded-full bg-primary" />
-              )}
+              <span className={`text-[11px] mb-0.5 ${
+                isSelected ? 'text-primary font-bold'
+                : isToday ? 'text-primary font-bold'
+                : hasEvents ? 'text-on-surface font-semibold'
+                : 'text-on-surface-variant/60'
+              }`}>
+                {day}
+              </span>
+              {/* Event bars */}
+              <div className="flex flex-col gap-0.5 w-full min-w-0 overflow-hidden">
+                {dayEvents.slice(0, 2).map((ev) => {
+                  const label = ev.title || ev.event_data?.title || 'Event'
+                  return (
+                    <div
+                      key={ev.id}
+                      className="w-full bg-primary/15 text-primary rounded px-1 py-px truncate text-[9px] leading-tight font-medium"
+                      title={label}
+                    >
+                      {label}
+                    </div>
+                  )
+                })}
+                {dayEvents.length > 2 && (
+                  <span className="text-[9px] text-on-surface-variant pl-0.5">+{dayEvents.length - 2} more</span>
+                )}
+              </div>
             </button>
           )
         })}
