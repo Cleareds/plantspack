@@ -13,14 +13,21 @@ import { CheckCircle, AlertCircle } from 'lucide-react'
 
 type TabType = 'posts' | 'recipes' | 'places' | 'events' | 'members'
 
-export default function PackDetailClient({ id }: { id: string }) {
+interface PackDetailClientProps {
+  id: string
+  initialPack?: any
+  initialPlaces?: any[]
+  initialPosts?: any[]
+}
+
+export default function PackDetailClient({ id, initialPack, initialPlaces, initialPosts }: PackDetailClientProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useAuth()
-  const [pack, setPack] = useState<PackWithStats | null>(null)
-  const [posts, setPosts] = useState<PackPostWithPost[]>([])
-  const [loading, setLoading] = useState(true)
-  const [postsLoading, setPostsLoading] = useState(true)
+  const [pack, setPack] = useState<PackWithStats | null>(initialPack || null)
+  const [posts, setPosts] = useState<PackPostWithPost[]>(initialPosts || [])
+  const [loading, setLoading] = useState(!initialPack)
+  const [postsLoading, setPostsLoading] = useState(!initialPosts)
   const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'places')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
@@ -33,7 +40,6 @@ export default function PackDetailClient({ id }: { id: string }) {
       if (response.ok) {
         setPack(data.pack)
       } else {
-        console.error('Error fetching pack:', data.error)
         router.push('/packs')
       }
     } catch (error) {
@@ -59,9 +65,10 @@ export default function PackDetailClient({ id }: { id: string }) {
     }
   }
 
+  // Only fetch client-side if no initial data was provided
   useEffect(() => {
-    fetchPack()
-    fetchPosts()
+    if (!initialPack) fetchPack()
+    if (!initialPosts) fetchPosts()
   }, [id])
 
   const handleJoin = async () => {
@@ -309,6 +316,7 @@ export default function PackDetailClient({ id }: { id: string }) {
               packId={id}
               userRole={pack.user_role}
               userId={user?.id || null}
+              initialPlaces={initialPlaces}
             />
           </div>
         )}

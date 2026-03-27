@@ -45,11 +45,12 @@ interface PackPlacesTabProps {
   packId: string
   userRole: 'admin' | 'moderator' | 'member' | null
   userId: string | null
+  initialPlaces?: PackPlace[]
 }
 
-export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTabProps) {
-  const [places, setPlaces] = useState<PackPlace[]>([])
-  const [loading, setLoading] = useState(true)
+export default function PackPlacesTab({ packId, userRole, userId, initialPlaces }: PackPlacesTabProps) {
+  const [places, setPlaces] = useState<PackPlace[]>(initialPlaces || [])
+  const [loading, setLoading] = useState(!initialPlaces)
   const [showAddModal, setShowAddModal] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
@@ -72,7 +73,7 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
   }
 
   useEffect(() => {
-    fetchPlaces()
+    if (!initialPlaces) fetchPlaces()
   }, [packId])
 
   const handleRemovePlace = async (packPlaceId: string, placeName: string) => {

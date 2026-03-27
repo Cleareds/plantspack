@@ -2,15 +2,38 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import PackDetailClient from './PackDetailClient'
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+
 async function fetchPackData(id: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/packs/${id}`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE_URL}/api/packs/${id}`, { next: { revalidate: 60 } })
     if (!res.ok) return null
     const data = await res.json()
     return data.pack || null
   } catch {
     return null
+  }
+}
+
+async function fetchPackPlaces(id: string) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/packs/${id}/places?limit=100`, { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.places || []
+  } catch {
+    return []
+  }
+}
+
+async function fetchPackPosts(id: string) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/packs/${id}/posts?limit=50`, { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.posts || []
+  } catch {
+    return []
   }
 }
 
@@ -44,6 +67,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function PackPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
+  // Fetch all data server-side in parallel
+  const [pack, places, posts] = await Promise.all([
+    fetchPackData(id),
+    fetchPackPlaces(id),
+    fetchPackPosts(id),
+  ])
+
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
@@ -53,7 +83,7 @@ export default async function PackPage({ params }: { params: Promise<{ id: strin
         </div>
       </div>
     }>
-      <PackDetailClient id={id} />
+      <PackDetailClient id={id} initialPack={pack} initialPlaces={places} initialPosts={posts} />
     </Suspense>
   )
 }
