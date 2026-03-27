@@ -687,8 +687,8 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                   value={content}
                   onChange={handleContentChange}
                   placeholder="Share your vegan journey..."
-                  className="w-full p-3 bg-surface-container-low border-0 rounded-lg resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
-                  rows={3}
+                  className="w-full p-3 bg-surface-container-low border-0 rounded-lg resize-y focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border text-sm"
+                  rows={5}
               />
 
                             {/* Mention Autocomplete */}
