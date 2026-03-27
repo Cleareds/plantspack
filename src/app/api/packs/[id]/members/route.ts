@@ -162,6 +162,73 @@ export async function POST(
 }
 
 /**
+ * PATCH /api/packs/[id]/members - Update member role (admin only)
+ */
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const supabase = await createClient()
+
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    let packId = id
+
+    if (!isUUID) {
+      const { data: pack } = await supabase
+        .from('packs')
+        .select('id')
+        .eq('slug', id)
+        .single()
+      if (!pack) return NextResponse.json({ error: 'Pack not found' }, { status: 404 })
+      packId = pack.id
+    }
+
+    // Verify caller is admin of this pack
+    const { data: callerMembership } = await supabase
+      .from('pack_members')
+      .select('role')
+      .eq('pack_id', packId)
+      .eq('user_id', session.user.id)
+      .single()
+
+    if (!callerMembership || callerMembership.role !== 'admin') {
+      return NextResponse.json({ error: 'Only pack admins can change roles' }, { status: 403 })
+    }
+
+    const { userId, role } = await request.json()
+
+    if (!userId || !['moderator', 'member'].includes(role)) {
+      return NextResponse.json({ error: 'Invalid userId or role' }, { status: 400 })
+    }
+
+    // Don't allow changing own role
+    if (userId === session.user.id) {
+      return NextResponse.json({ error: 'Cannot change your own role' }, { status: 400 })
+    }
+
+    const { error } = await supabase
+      .from('pack_members')
+      .update({ role })
+      .eq('pack_id', packId)
+      .eq('user_id', userId)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true, role })
+  } catch (error) {
+    console.error('[Pack Members API] PATCH error:', error)
+    return NextResponse.json({ error: 'Failed to update member role' }, { status: 500 })
+  }
+}
+
+/**
  * DELETE /api/packs/[id]/members - Leave pack
  */
 export async function DELETE(
