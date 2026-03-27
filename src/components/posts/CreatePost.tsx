@@ -1313,21 +1313,13 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                         className={`text-sm ${maxChars !== -1 && charCount > maxChars * 0.9 ? 'text-red-500' : 'text-outline'}`}>
                       {charCount}{maxChars === -1 ? '' : `/${maxChars}`}
                     </span>
-                                    {subscription?.tier === 'free' && charCount > 400 && (
-                                        <Link
-                                            href="/support"
-                                            className="text-xs text-primary hover:text-primary-container underline"
-                                        >
-                                            Upgrade for unlimited chars
-                                        </Link>
-                                    )}
                                 </div>
                             </div>
 
-                            {/* Promotional note for free tier users */}
+                            {/* Support note for free tier users */}
                             {(!subscription || subscription.tier === 'free') && (
                                 <p className="text-xs text-on-surface-variant">
-                                    Get more posting freedom by{' '}
+                                    Enjoying PlantsPack? Consider{' '}
                                     <Link
                                         href="/support"
                                         className="text-primary hover:text-primary-container underline font-medium"
