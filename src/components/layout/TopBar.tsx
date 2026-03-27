@@ -42,7 +42,6 @@ export default function TopBar() {
             className="object-contain"
           />
           <span className="font-headline font-extrabold text-primary text-xl tracking-tight">Plants Pack</span>
-          <span className="text-[9px] font-bold text-on-secondary bg-secondary-container px-1.5 py-0.5 rounded-full">BETA</span>
         </Link>
 
         {/* Search Bar - center (desktop only) */}

@@ -5,7 +5,6 @@ import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 import BottomNav from './BottomNav'
 import Footer from './Footer'
-import BetaBanner from './BetaBanner'
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -26,8 +25,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet"
       />
-
-      <BetaBanner />
 
       {/* Desktop sidebar - always visible on lg+ */}
       <Sidebar />

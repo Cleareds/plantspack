@@ -31,9 +31,6 @@ export default function Header() {
                             <span className="text-xl font-bold text-on-surface tracking-editorial leading-[1.1]">PLANTS PACK</span>
                             <span className="text-sm font-light text-on-surface-variant leading-[1.1]">vegan syndicate</span>
                         </div>
-                        <span className="text-xs font-semibold text-on-secondary bg-secondary-container px-2 py-1 rounded-full">
-              BETA
-            </span>
                     </Link>
 
                     {/* Search Bar - Only for logged in users */}
