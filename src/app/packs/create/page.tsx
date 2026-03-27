@@ -30,7 +30,6 @@ export default function CreatePackPage() {
     { value: 'recipes', label: 'Recipes', icon: '🍽️', description: 'Collections of vegan recipes' },
     { value: 'places', label: 'Places', icon: '📍', description: 'Curated vegan restaurants, shops, stays' },
     { value: 'traveling', label: 'Travel Guides', icon: '✈️', description: 'City guides and travel itineraries' },
-    { value: 'meal-prep', label: 'Meal Prep', icon: '🥗', description: 'Meal prep plans and batch cooking' },
     { value: 'products', label: 'Products', icon: '🛍️', description: 'Product reviews and recommendations' },
     { value: 'activism', label: 'Activism', icon: '✊', description: 'Activism resources and campaigns' },
     { value: 'lifestyle', label: 'Lifestyle', icon: '🌱', description: 'Lifestyle tips and inspiration' },
@@ -65,7 +64,7 @@ export default function CreatePackPage() {
           ...formData,
           title: formData.title.trim(),
           description: formData.description.trim() || null,
-          categories: formData.categories
+          categories: formData.categories.map(c => categories.find(cat => cat.value === c)?.label || c)
         })
       })
 

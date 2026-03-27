@@ -34,12 +34,19 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
     { value: 'recipes', label: 'Recipes', icon: '🍽️' },
     { value: 'places', label: 'Places', icon: '📍' },
     { value: 'traveling', label: 'Travel Guides', icon: '✈️' },
-    { value: 'meal-prep', label: 'Meal Prep', icon: '🥗' },
     { value: 'products', label: 'Products', icon: '🛍️' },
     { value: 'activism', label: 'Activism', icon: '✊' },
     { value: 'lifestyle', label: 'Lifestyle', icon: '🌱' },
     { value: 'other', label: 'Other', icon: '📦' }
   ]
+
+  // Map display names to slugs for normalization
+  const displayToSlug: Record<string, PackCategory> = {
+    'Recipes': 'recipes', 'Places': 'places', 'Travel Guides': 'traveling',
+    'Products': 'products', 'Activism': 'activism', 'Lifestyle': 'lifestyle', 'Other': 'other',
+  }
+  const normalizeCategories = (cats: string[]): PackCategory[] =>
+    cats.map(c => displayToSlug[c] || c as PackCategory).filter(c => categories.some(cat => cat.value === c))
 
   const toggleCategory = (value: PackCategory) => {
     setFormData(prev => ({
@@ -67,7 +74,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
             twitter_url: data.pack.twitter_url || '',
             instagram_url: data.pack.instagram_url || '',
             tiktok_url: data.pack.tiktok_url || '',
-            categories: data.pack.categories || (data.pack.category ? [data.pack.category] : [])
+            categories: normalizeCategories(data.pack.categories || (data.pack.category ? [data.pack.category] : []))
           })
         } else {
           router.push('/packs')
@@ -102,7 +109,7 @@ export default function EditPackPage({ params }: { params: Promise<{ id: string 
           ...formData,
           title: formData.title.trim(),
           description: formData.description.trim() || null,
-          categories: formData.categories
+          categories: formData.categories.map(c => categories.find(cat => cat.value === c)?.label || c)
         })
       })
 

@@ -34,7 +34,6 @@ export default function PacksPage() {
     { value: 'recipes', label: 'Recipes', icon: 'restaurant_menu' },
     { value: 'places', label: 'Places', icon: 'place' },
     { value: 'traveling', label: 'Travel Guides', icon: 'flight' },
-    { value: 'meal-prep', label: 'Meal Prep', icon: 'kitchen' },
     { value: 'products', label: 'Products', icon: 'shopping_bag' },
     { value: 'activism', label: 'Activism', icon: 'volunteer_activism' },
     { value: 'lifestyle', label: 'Lifestyle', icon: 'self_improvement' },
