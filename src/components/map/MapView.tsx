@@ -214,6 +214,7 @@ export default function MapView({
                   <div className="flex items-start justify-between mb-2">
                     <Link
                       href={`/place/${(place as any).slug || place.id}`}
+                      prefetch={false}
                       className="font-semibold text-on-surface hover:text-primary transition-colors"
                     >
                       {place.name}

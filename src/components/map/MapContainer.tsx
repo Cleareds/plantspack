@@ -493,7 +493,7 @@ export default function MapContainerComponent() {
       )}
 
       {/* Controls */}
-      <div className="bg-surface-container-lowest border-b border-outline-variant/15 p-3 md:p-4 flex-shrink-0">
+      <div className="bg-surface-container-lowest border-b border-outline-variant/15 p-3 md:p-4 flex-shrink-0 overflow-x-hidden">
         <div className="max-w-full mx-auto">
           {/* Mobile: Single row with menu button and title */}
           <div className="flex items-center justify-between gap-2 mb-3 lg:hidden">
@@ -517,48 +517,48 @@ export default function MapContainerComponent() {
             )}
           </div>
 
-          {/* Desktop: All controls in one row */}
-          <div className="hidden lg:flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <h1 className="text-xl font-semibold text-on-surface">Vegan Places</h1>
-              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} veganOnly={veganOnly} onVeganToggle={setVeganOnly} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
+          {/* Desktop: Controls in two rows to prevent overflow */}
+          <div className="hidden lg:block space-y-3">
+            <div className="flex items-center justify-between gap-4">
+              <h1 className="text-xl font-semibold text-on-surface flex-shrink-0">Vegan Places</h1>
 
-              {/* Reset Center Button */}
+              {/* Search Bar */}
+              <MapSearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                onSelect={handleSearchSelect}
+                className="flex-1 max-w-md"
+              />
+
+              {user ? (
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors flex-shrink-0"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Place</span>
+                </button>
+              ) : (
+                <Link
+                  href="/auth"
+                  className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors flex-shrink-0"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Sign Up</span>
+                </Link>
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} veganOnly={veganOnly} onVeganToggle={setVeganOnly} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
               {customCenter && (
                 <button
                   onClick={() => setCustomCenter(null)}
-                  className="text-xs px-2 py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant rounded ghost-border"
+                  className="text-xs px-2 py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant rounded ghost-border flex-shrink-0"
                 >
                   Reset Center
                 </button>
               )}
             </div>
-
-            {/* Search Bar */}
-            <MapSearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onSelect={handleSearchSelect}
-              className="flex-1 max-w-md"
-            />
-
-            {user ? (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Add Place</span>
-              </button>
-            ) : (
-              <Link
-                href="/auth"
-                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                <span>Sign Up</span>
-              </Link>
-            )}
           </div>
 
           {/* Mobile: Filters and search in separate rows */}
