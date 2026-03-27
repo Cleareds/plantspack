@@ -67,6 +67,12 @@ export default function PackCard({ pack }: PackCardProps) {
               Draft
             </div>
           )}
+          {/* Verified badge on image */}
+          {pack.is_published && pack.creator_id === ADMIN_ID && (
+            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
+              <BadgeCheck className="h-4 w-4 text-orange-500" />
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -77,7 +83,7 @@ export default function PackCard({ pack }: PackCardProps) {
               {pack.title}
             </h3>
             {pack.creator_id === ADMIN_ID && (
-              <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+              <BadgeCheck className="h-4 w-4 text-orange-500 flex-shrink-0 mt-0.5" />
             )}
           </div>
 
