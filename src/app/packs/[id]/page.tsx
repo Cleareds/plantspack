@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth'
 import { PackWithStats, PackPostWithPost } from '@/types/packs'
 import PackHeader from '@/components/packs/PackHeader'
 import PostCard from '@/components/posts/PostCard'
+import RecipeCard from '@/components/recipes/RecipeCard'
 import PackPlacesTab from '@/components/packs/PackPlacesTab'
 import PackMembersTab from '@/components/packs/PackMembersTab'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -21,7 +22,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
   const [posts, setPosts] = useState<PackPostWithPost[]>([])
   const [loading, setLoading] = useState(true)
   const [postsLoading, setPostsLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'posts')
+  const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'places')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
 
@@ -182,9 +183,9 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         <div className="border-b border-outline-variant/15 mb-6">
           <nav className="-mb-px flex space-x-6 overflow-x-auto">
             {([
-              ...(generalPosts.length > 0 ? [{ key: 'posts' as TabType, label: 'Posts', count: generalPosts.length }] : []),
-              ...(recipePosts.length > 0 ? [{ key: 'recipes' as TabType, label: 'Recipes', count: recipePosts.length }] : []),
               { key: 'places' as TabType, label: 'Places', count: (pack.places_count || 0) + placePosts.length },
+              ...(recipePosts.length > 0 ? [{ key: 'recipes' as TabType, label: 'Recipes', count: recipePosts.length }] : []),
+              ...(generalPosts.length > 0 ? [{ key: 'posts' as TabType, label: 'Posts', count: generalPosts.length }] : []),
               ...(eventPosts.length > 0 ? [{ key: 'events' as TabType, label: 'Events', count: eventPosts.length }] : []),
               { key: 'members' as TabType, label: 'Members', count: pack.member_count },
             ]).map((tab) => (
@@ -250,13 +251,11 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         {activeTab === 'recipes' && (
           <div className="mb-6">
             {recipePosts.length > 0 ? (
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {recipePosts.map((packPost) => (
-                  <PostCard
+                  <RecipeCard
                     key={packPost.id}
-                    post={packPost.posts as any}
-                    onUpdate={fetchPosts}
-                    packContext={{ packId: id, userRole: pack.user_role }}
+                    recipe={packPost.posts as any}
                   />
                 ))}
               </div>
