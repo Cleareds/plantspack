@@ -98,20 +98,6 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     const [shareLocation, setShareLocation] = useState(false)
     const [showLocationPicker, setShowLocationPicker] = useState(false)
     const [analyzedMetadata, setAnalyzedMetadata] = useState<Pick<PostMetadata, 'tags' | 'contentType' | 'mood'> | null>(null)
-    const [isAnalyzing, setIsAnalyzing] = useState(false)
-
-    // GPT content analysis state
-    const [gptAnalysis, setGptAnalysis] = useState<{
-        sentiment: string
-        tags: string[]
-        isAntiVegan: boolean
-        antiVeganReason?: string
-        shouldBlock: boolean
-        reasoning: string
-        fallback?: boolean
-        error?: boolean
-    } | null>(null)
-    const [isGptAnalyzing, setIsGptAnalyzing] = useState(false)
 
     // Load user subscription on mount
     useEffect(() => {
@@ -267,60 +253,9 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
         }
 
         const timeoutId = setTimeout(() => {
-            setIsAnalyzing(true)
             const metadata = analyzePostContent(content)
             setAnalyzedMetadata(metadata)
-            setIsAnalyzing(false)
         }, 500) // Debounce analysis
-
-        return () => clearTimeout(timeoutId)
-    }, [content])
-
-    // GPT-based content analysis with 1-second debounce
-    useEffect(() => {
-        if (content.trim().length < 10) {
-            setGptAnalysis(null)
-            return
-        }
-
-        const timeoutId = setTimeout(async () => {
-            setIsGptAnalyzing(true)
-            try {
-                const response = await fetch('/api/content/analyze', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({content: content.trim()})
-                })
-
-                if (response.ok) {
-                    const result = await response.json()
-                    setGptAnalysis(result)
-                } else {
-                    // Fallback to neutral if API fails - don't block posting
-                    setGptAnalysis({
-                        sentiment: 'neutral',
-                        tags: [],
-                        isAntiVegan: false,
-                        shouldBlock: false,
-                        reasoning: 'Analysis unavailable',
-                        error: true
-                    })
-                }
-            } catch (error) {
-                console.error('GPT analysis failed:', error)
-                // Don't block posting if analysis fails
-                setGptAnalysis({
-                    sentiment: 'neutral',
-                    tags: [],
-                    isAntiVegan: false,
-                    shouldBlock: false,
-                    reasoning: 'Analysis error',
-                    error: true
-                })
-            } finally {
-                setIsGptAnalyzing(false)
-            }
-        }, 1000) // 1 second debounce - faster response
 
         return () => clearTimeout(timeoutId)
     }, [content])
@@ -605,8 +540,6 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             setShareLocation(false)
             setLocationData(null)
             setAnalyzedMetadata(null)
-            setGptAnalysis(null)
-            setIsGptAnalyzing(false)
             setError(null)
             clearDraft()
 
@@ -1125,80 +1058,6 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             </div>
                         )}
 
-                        {/* Content Analysis Preview */}
-                        {(gptAnalysis || isGptAnalyzing) && (
-                            <div className="mt-3">
-                                {/* Analyzing indicator */}
-                                {isGptAnalyzing && (
-                                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                                        <div className="flex items-center space-x-2">
-                                            <div
-                                                className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
-                                            <span className="text-sm text-blue-800">Checking content...</span>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Block Warning */}
-                                {gptAnalysis && gptAnalysis.shouldBlock && !isGptAnalyzing && (
-                                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                                        <div className="flex items-start space-x-2">
-                                            <span className="text-red-600 text-lg">🚫</span>
-                                            <div className="flex-1">
-                                                <p className="text-sm font-semibold text-red-800">Cannot post this
-                                                    content</p>
-                                                <p className="text-xs text-red-700 mt-1">{gptAnalysis.reasoning}</p>
-                                                {gptAnalysis.antiVeganReason && (
-                                                    <p className="text-xs text-red-600 mt-1 italic">{gptAnalysis.antiVeganReason}</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Warning (flagged but not blocking) */}
-                                {gptAnalysis && gptAnalysis.isAntiVegan && !gptAnalysis.shouldBlock && !isGptAnalyzing && (
-                                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                        <div className="flex items-start space-x-2">
-                                            <span className="text-yellow-600 text-lg">⚠️</span>
-                                            <div className="flex-1">
-                                                <p className="text-sm font-semibold text-yellow-800">Content flagged</p>
-                                                <p className="text-xs text-yellow-700 mt-1">{gptAnalysis.antiVeganReason || gptAnalysis.reasoning}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Positive Feedback */}
-                                {gptAnalysis && !gptAnalysis.shouldBlock && !gptAnalysis.isAntiVegan && !isGptAnalyzing && (
-                                    <div className="p-3 bg-surface-container-low ghost-border rounded-lg">
-                                        <div className="flex items-start space-x-2">
-                                            <span className="text-primary text-lg">✅</span>
-                                            <div className="flex-1">
-                                                <p className="text-sm font-semibold text-primary">
-                                                    {gptAnalysis.sentiment === 'positive' && 'Great content!'}
-                                                    {gptAnalysis.sentiment === 'transformation' && 'Inspiring journey!'}
-                                                    {gptAnalysis.sentiment === 'question' && 'Great question!'}
-                                                    {gptAnalysis.sentiment === 'educational' && 'Educational content!'}
-                                                    {gptAnalysis.sentiment === 'neutral' && 'Ready to post'}
-                                                </p>
-                                                {gptAnalysis.tags && gptAnalysis.tags.length > 0 && (
-                                                    <div className="flex flex-wrap gap-1 mt-2">
-                                                        {gptAnalysis.tags.slice(0, 5).map((tag, index) => (
-                                                            <span key={index}
-                                                                  className="text-xs bg-surface-container-low text-primary px-2 py-1 rounded-full">
-                                #{tag}
-                              </span>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
                         {/* Location Preview */}
                         {shareLocation && locationData && (
                             <div className="mt-3 p-3 bg-blue-50 rounded-lg border">
@@ -1291,22 +1150,12 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     disabled={
                                         (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) ||
                                         loading ||
-                                        (maxChars !== -1 && charCount > maxChars) ||
-                                        isGptAnalyzing ||
-                                        (gptAnalysis?.shouldBlock === true) ||
-                                        // Disable if content has text but hasn't been analyzed yet (or analysis pending)
-                                        (content.trim().length >= 10 && !gptAnalysis)
+                                        (maxChars !== -1 && charCount > maxChars)
                                     }
                                     className="flex items-center space-x-1 silk-gradient hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md font-medium transition-colors"
                                 >
                                     <Send className="h-4 w-4"/>
-                                    <span>
-                        {loading ? 'Posting...' :
-                            isGptAnalyzing ? 'Checking...' :
-                                gptAnalysis?.shouldBlock ? 'Blocked' :
-                                    (content.trim().length >= 10 && !gptAnalysis) ? 'Checking...' :
-                                        'Post'}
-                      </span>
+                                    <span>{loading ? 'Posting...' : 'Post'}</span>
                                 </button>
                                 <div className="flex items-center space-x-2">
                     <span
