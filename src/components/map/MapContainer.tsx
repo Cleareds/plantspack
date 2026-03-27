@@ -253,8 +253,12 @@ export default function MapContainerComponent() {
   const handleMapMove = useCallback(() => {
     if (!mapRef.current) return
 
-    const center = mapRef.current.getCenter()
-    setMapCenter([center.lat, center.lng])
+    // Only update mapCenter state if it hasn't been set yet (initial load)
+    // Subsequent pans use the ref — no React re-render needed
+    if (!mapCenter) {
+      const center = mapRef.current.getCenter()
+      setMapCenter([center.lat, center.lng])
+    }
 
     // Debounce viewport fetch — wait 600ms after last move
     if (viewportTimerRef.current) clearTimeout(viewportTimerRef.current)
@@ -272,8 +276,8 @@ export default function MapContainerComponent() {
           categoryRef.current,
         )
       }
-    }, 400)
-  }, []) // stable — no deps, uses refs
+    }, 600)
+  }, [mapCenter]) // only dep is mapCenter for initial set
 
   // Map click handler — also triggers viewport refresh
   const handleMapClick = useCallback((latlng: [number, number]) => {

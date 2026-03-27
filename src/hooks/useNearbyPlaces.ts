@@ -105,13 +105,19 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
   }, [limit])
 
   // Fetch places within map viewport (for map markers)
+  // Uses ONLY the RPC result — no enrichment query needed.
+  // viewport_places already returns all place columns.
   const lastBoundsKey = useRef('')
+  const fetchInFlight = useRef(false)
   const fetchViewportPlaces = useCallback(async (bounds: { minLat: number; minLng: number; maxLat: number; maxLng: number }, cat: string) => {
-    // Skip if bounds haven't meaningfully changed (rounded to 3 decimals ~100m precision)
+    // Skip if bounds haven't meaningfully changed (rounded to 3 decimals ~100m)
     const key = `${bounds.minLat.toFixed(3)},${bounds.minLng.toFixed(3)},${bounds.maxLat.toFixed(3)},${bounds.maxLng.toFixed(3)},${cat}`
     if (key === lastBoundsKey.current) return
+    // Skip if a fetch is already in progress
+    if (fetchInFlight.current) return
     lastBoundsKey.current = key
     viewportRef.current = bounds
+    fetchInFlight.current = true
     try {
       const { data: rpcData, error: rpcError } = await supabase
         .rpc('viewport_places', {
@@ -131,41 +137,22 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
         return
       }
 
-      const placeIds = rawPlaces.map((p: any) => p.id)
-
-      // Fetch in batches of 100 to avoid URL length limits
-      const allFullPlaces: any[] = []
-      for (let i = 0; i < placeIds.length; i += 100) {
-        const batch = placeIds.slice(i, i + 100)
-        const { data: fullPlaces } = await supabase
-          .from('places')
-          .select(`
-            *,
-            users (id, username, first_name, last_name),
-            favorite_places (id, user_id)
-          `)
-          .in('id', batch)
-        if (fullPlaces) allFullPlaces.push(...fullPlaces)
-      }
-
-      const fullMap = new Map(allFullPlaces.map(p => [p.id, p]))
       const centerLat = (bounds.minLat + bounds.maxLat) / 2
       const centerLng = (bounds.minLng + bounds.maxLng) / 2
 
-      const enriched = rawPlaces
-        .map((rpcPlace: any) => {
-          const full = fullMap.get(rpcPlace.id)
-          if (!full) return null
-          return {
-            ...full,
-            distance: calculateDistance(centerLat, centerLng, full.latitude, full.longitude),
-          }
-        })
-        .filter(Boolean) as PlaceWithDistance[]
+      // RPC returns all needed fields — just add distance and cast
+      const enriched = rawPlaces.map((p: any) => ({
+        ...p,
+        users: { id: p.created_by, username: '', first_name: null, last_name: null },
+        favorite_places: [],
+        distance: calculateDistance(centerLat, centerLng, p.latitude, p.longitude),
+      })) as PlaceWithDistance[]
 
       setMapPlaces(enriched)
     } catch (error) {
       console.error('Error fetching viewport places:', error)
+    } finally {
+      fetchInFlight.current = false
     }
   }, [])
 
