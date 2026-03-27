@@ -99,7 +99,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
       .eq('privacy', 'public') // Only public posts for main feed
       .eq('users.is_banned', false) // Exclude banned users
       .is('deleted_at', null) // Exclude soft-deleted posts
-      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports from feed
+      .or('user_id.neq.d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c,category.not.in.(recipe,event)') // Exclude admin imported recipes/events, keep manual posts
 
     // Apply category filter
     if (category && category !== 'all') {
@@ -200,7 +200,7 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
-      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
+      .or('user_id.neq.d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c,category.not.in.(recipe,event)') // Exclude admin imported recipes/events, keep manual posts
       .order('engagement_score', { ascending: false })
 
     if (category && category !== 'all') {
@@ -502,7 +502,7 @@ async function getPopularPosts(limit: number, offset: number, category?: string,
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
-      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
+      .or('user_id.neq.d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c,category.not.in.(recipe,event)') // Exclude admin imported recipes/events, keep manual posts
       .gte('created_at', startDate.toISOString())
       .order('engagement_score', { ascending: false })
 
@@ -544,7 +544,7 @@ async function getMostLikedAllTime(limit: number, offset: number, category?: str
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
-      .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
+      .or('user_id.neq.d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c,category.not.in.(recipe,event)') // Exclude admin imported recipes/events, keep manual posts
       .order('engagement_score', { ascending: false })
 
     if (category && category !== 'all') {

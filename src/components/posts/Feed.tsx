@@ -321,7 +321,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                     .eq('privacy', 'friends')
                     .eq('users.is_banned', false)
                     .is('deleted_at', null)
-                    .neq('user_id', 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c') // Exclude admin imports
+                    .or('user_id.neq.d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c,category.not.in.(recipe,event)') // Exclude admin imported recipes/events
                     .in('user_id', followingIds)
 
                 // Apply category filter
