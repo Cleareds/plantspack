@@ -30,6 +30,8 @@ type PlaceData = {
   tags: string[]
   opening_hours: Record<string, string> | null
   event_time: { start: string; end: string } | null
+  city: string | null
+  country: string | null
   created_at: string
   created_by: string
   users: {
@@ -151,18 +153,33 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     <div className="min-h-screen bg-surface-container-low">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeJsonLd) }} />
       <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Breadcrumb */}
+        {/* Breadcrumb — full on desktop, short on mobile */}
         <nav className="mb-6 text-sm text-on-surface-variant">
-          <Link href="/" className="hover:text-primary transition-colors">
-            Home
-          </Link>
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <span className="mx-2">/</span>
-          <Link
-            href={`/map?location=${encodeURIComponent(place.address)}`}
-            className="hover:text-primary transition-colors"
-          >
-            Map
-          </Link>
+          <Link href="/vegan-places" className="hover:text-primary transition-colors">Vegan Places</Link>
+          {place.country && (
+            <>
+              <span className="mx-2 hidden sm:inline">/</span>
+              <Link
+                href={`/vegan-places/${place.country.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                className="hover:text-primary transition-colors hidden sm:inline"
+              >
+                {place.country}
+              </Link>
+            </>
+          )}
+          {place.city && place.country && (
+            <>
+              <span className="mx-2 hidden sm:inline">/</span>
+              <Link
+                href={`/vegan-places/${place.country.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${place.city.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                className="hover:text-primary transition-colors hidden sm:inline"
+              >
+                {place.city}
+              </Link>
+            </>
+          )}
           <span className="mx-2">/</span>
           <span className="text-on-surface">{place.name}</span>
         </nav>
