@@ -17,6 +17,7 @@ export interface PostMetadata {
 }
 
 // Content analysis keywords and patterns
+// Keys MUST match valid content_type values in the DB constraint
 const CONTENT_PATTERNS = {
   recipe: [
     'recipe', 'cook', 'bake', 'ingredient', 'dish', 'meal', 'food', 'preparation',
@@ -28,26 +29,17 @@ const CONTENT_PATTERNS = {
     'atmosphere', 'ambiance', 'staff', 'price', 'expensive', 'cheap', 'worth',
     'recommend', 'visit', 'tried', 'ordered', 'tasted'
   ],
-  health: [
+  lifestyle: [
+    'lifestyle', 'living', 'daily', 'routine', 'journey', 'experience', 'life',
+    'personal', 'story', 'sharing', 'inspiration', 'motivation', 'habit',
     'health', 'healthy', 'nutrition', 'vitamin', 'protein', 'fitness', 'wellness',
-    'energy', 'nutrients', 'mineral', 'antioxidant', 'superfood', 'diet', 'weight'
-  ],
-  environment: [
-    'environment', 'eco', 'sustainable', 'climate', 'planet', 'green', 'carbon',
-    'footprint', 'renewable', 'organic', 'local', 'seasonal', 'zero-waste'
+    'energy', 'nutrients', 'community', 'connect', 'friends', 'together',
+    'environment', 'eco', 'sustainable', 'climate', 'planet', 'green', 'organic'
   ],
   activism: [
     'activism', 'rights', 'ethical', 'justice', 'campaign', 'awareness', 'protest',
     'movement', 'change', 'advocate', 'support', 'fight', 'stand', 'voice'
   ],
-  lifestyle: [
-    'lifestyle', 'living', 'daily', 'routine', 'journey', 'experience', 'life',
-    'personal', 'story', 'sharing', 'inspiration', 'motivation', 'habit'
-  ],
-  community: [
-    'community', 'group', 'meet', 'event', 'gathering', 'social', 'friends',
-    'together', 'join', 'participate', 'connect', 'network', 'local'
-  ]
 }
 
 const MOOD_PATTERNS = {
