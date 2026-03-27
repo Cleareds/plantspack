@@ -2,7 +2,6 @@
 
 import { PackWithStats } from '@/types/packs'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Users, FileText, Crown, BadgeCheck } from 'lucide-react'
 
 const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
@@ -41,11 +40,11 @@ export default function PackCard({ pack }: PackCardProps) {
         {/* Banner Image */}
         <div className="relative w-full h-40 bg-gradient-to-br from-surface-container-low to-surface-container">
           {pack.banner_url ? (
-            <Image
+            <img
               src={pack.banner_url}
               alt={pack.title}
-              fill
-              className="object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
+              referrerPolicy="no-referrer"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-6xl">

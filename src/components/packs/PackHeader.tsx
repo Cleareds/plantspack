@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { PackWithStats } from '@/types/packs'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, Bell, BellOff, BadgeCheck } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
@@ -72,11 +71,11 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
       {/* Banner */}
       <div className="relative w-full h-48 md:h-64 bg-gradient-to-br from-surface-container-low to-surface-container">
         {pack.banner_url ? (
-          <Image
+          <img
             src={pack.banner_url}
             alt={pack.title}
-            fill
-            className="object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
+            referrerPolicy="no-referrer"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-8xl">
