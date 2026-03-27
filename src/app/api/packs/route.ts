@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
     // Batch load stats for all packs (prevents N+1 queries)
     const packIds = (packs || []).map(p => p.id)
 
-    const [membersResult, postsResult, userMemberships, userFollows] = await Promise.all([
+    const [membersResult, postsResult, placesResult, recipePostsResult, userMemberships, userFollows] = await Promise.all([
       // Get member counts for all packs in one query
       supabase
         .from('pack_members')
@@ -109,8 +109,17 @@ export async function GET(request: NextRequest) {
       // Get post counts for all packs in one query
       supabase
         .from('pack_posts')
+        .select('pack_id, posts!inner(category)')
+        .in('pack_id', packIds),
+
+      // Get place counts for all packs
+      supabase
+        .from('pack_places')
         .select('pack_id')
         .in('pack_id', packIds),
+
+      // We'll derive recipe count from postsResult below
+      Promise.resolve({ data: null }),
 
       // Get user's memberships for all packs in one query
       userId
@@ -134,6 +143,8 @@ export async function GET(request: NextRequest) {
     // Build lookup maps
     const memberCounts: Record<string, number> = {}
     const postCounts: Record<string, number> = {}
+    const recipeCounts: Record<string, number> = {}
+    const placesCounts: Record<string, number> = {}
     const membershipMap: Record<string, string> = {}
     const followSet = new Set<string>()
 
@@ -141,7 +152,16 @@ export async function GET(request: NextRequest) {
       memberCounts[row.pack_id] = (memberCounts[row.pack_id] || 0) + 1
     }
     for (const row of postsResult.data || []) {
+      const cat = (row as any).posts?.category
+      // Count all posts
       postCounts[row.pack_id] = (postCounts[row.pack_id] || 0) + 1
+      // Count recipes separately
+      if (cat === 'recipe') {
+        recipeCounts[row.pack_id] = (recipeCounts[row.pack_id] || 0) + 1
+      }
+    }
+    for (const row of placesResult.data || []) {
+      placesCounts[row.pack_id] = (placesCounts[row.pack_id] || 0) + 1
     }
     for (const row of userMemberships.data || []) {
       membershipMap[row.pack_id] = row.role
@@ -154,6 +174,8 @@ export async function GET(request: NextRequest) {
       ...pack,
       member_count: memberCounts[pack.id] || 0,
       post_count: postCounts[pack.id] || 0,
+      places_count: placesCounts[pack.id] || 0,
+      recipe_count: recipeCounts[pack.id] || 0,
       is_member: !!membershipMap[pack.id],
       is_following: followSet.has(pack.id),
       user_role: membershipMap[pack.id] || null

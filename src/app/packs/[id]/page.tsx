@@ -113,6 +113,11 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
   const recipePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'recipe'), [posts])
   const placePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'place' || (p.posts as any)?.place_id), [posts])
   const eventPosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'event'), [posts])
+  // General posts: exclude recipe, place, and event posts — they show in dedicated tabs
+  const generalPosts = useMemo(() => posts.filter(p => {
+    const cat = (p.posts as any)?.category
+    return cat !== 'recipe' && cat !== 'place' && cat !== 'event' && !(p.posts as any)?.place_id
+  }), [posts])
 
   if (loading) {
     return (
@@ -177,7 +182,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
         <div className="border-b border-outline-variant/15 mb-6">
           <nav className="-mb-px flex space-x-6 overflow-x-auto">
             {([
-              { key: 'posts' as TabType, label: 'All Posts', count: pack.post_count },
+              ...(generalPosts.length > 0 ? [{ key: 'posts' as TabType, label: 'Posts', count: generalPosts.length }] : []),
               ...(recipePosts.length > 0 ? [{ key: 'recipes' as TabType, label: 'Recipes', count: recipePosts.length }] : []),
               { key: 'places' as TabType, label: 'Places', count: (pack.places_count || 0) + placePosts.length },
               ...(eventPosts.length > 0 ? [{ key: 'events' as TabType, label: 'Events', count: eventPosts.length }] : []),
@@ -210,9 +215,9 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
               </div>
             )}
 
-            {!postsLoading && posts.length > 0 && (
+            {!postsLoading && generalPosts.length > 0 && (
               <div className="space-y-6">
-                {posts.map((packPost) => (
+                {generalPosts.map((packPost) => (
                   <PostCard
                     key={packPost.id}
                     post={packPost.posts as any}
@@ -226,7 +231,7 @@ export default function PackDetailPage({ params }: { params: Promise<{ id: strin
               </div>
             )}
 
-            {!postsLoading && posts.length === 0 && (
+            {!postsLoading && generalPosts.length === 0 && (
               <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
                 <div className="text-6xl mb-4">📭</div>
                 <h3 className="text-lg font-medium text-on-surface mb-2">
