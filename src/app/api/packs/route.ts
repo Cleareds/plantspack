@@ -57,9 +57,15 @@ export async function GET(request: NextRequest) {
       query = query.eq('is_published', true)
     }
 
-    // Apply filters
+    // Apply filters — map slug values to display names for categories array matching
+    const categoryDisplayMap: Record<string, string> = {
+      'recipes': 'Recipes', 'places': 'Places', 'traveling': 'Travel Guides',
+      'meal-prep': 'Meal Prep', 'products': 'Products', 'activism': 'Activism',
+      'lifestyle': 'Lifestyle', 'other': 'Other',
+    }
     if (category) {
-      query = query.contains('categories', [category])
+      const displayName = categoryDisplayMap[category] || category
+      query = query.contains('categories', [displayName])
     }
 
     if (search) {

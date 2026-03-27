@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, X, Check } from 'lucide-react'
+import { Plus, X, Check, Circle } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
@@ -23,6 +23,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
   const [packs, setPacks] = useState<Pack[]>([])
   const [loading, setLoading] = useState(false)
   const [adding, setAdding] = useState<string | null>(null)
+  const [added, setAdded] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (showModal && user) {
@@ -81,9 +82,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       })
 
       if (response.ok) {
-        // Show success feedback
-        alert(`"${placeName}" added to pack successfully!`)
-        setShowModal(false)
+        setAdded(prev => new Set(prev).add(packId))
       } else {
         const error = await response.json()
         if (error.error?.includes('already in pack')) {
@@ -158,13 +157,15 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                             </p>
                           )}
                         </div>
-                        {adding === pack.id ? (
-                          <div className="flex-shrink-0 ml-3">
+                        <div className="flex-shrink-0 ml-3">
+                          {adding === pack.id ? (
                             <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                          </div>
-                        ) : (
-                          <Check className="flex-shrink-0 ml-3 h-5 w-5 text-primary" />
-                        )}
+                          ) : added.has(pack.id) ? (
+                            <Check className="h-5 w-5 text-green-600" />
+                          ) : (
+                            <Circle className="h-5 w-5 text-outline" />
+                          )}
+                        </div>
                       </div>
                     </button>
                   ))}
