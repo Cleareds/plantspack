@@ -92,7 +92,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
                 {pack.title}
               </h1>
               {isAdminPack && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-600" title="Curated by PlantsPack team">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-600" title="Checked by PlantsPack founders">
                   <BadgeCheck className="h-3.5 w-3.5" /> Verified
                 </span>
               )}
