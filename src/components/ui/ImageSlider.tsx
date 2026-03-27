@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface ImageSliderProps {
@@ -10,10 +9,10 @@ interface ImageSliderProps {
   aspectRatio?: 'square' | 'wide' | 'auto'
 }
 
-export default function ImageSlider({ 
-  images, 
-  className = '', 
-  aspectRatio = 'auto' 
+export default function ImageSlider({
+  images,
+  className = '',
+  aspectRatio = 'auto'
 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoaded, setIsLoaded] = useState<boolean[]>(new Array(images.length).fill(false))
@@ -21,15 +20,6 @@ export default function ImageSlider({
   const sliderRef = useRef<HTMLDivElement>(null)
 
   if (!images || images.length === 0) return null
-
-  // Domains whitelisted in next.config.ts — use optimized Image for these
-  const OPTIMIZED_DOMAINS = ['supabase.co', 'googleusercontent.com', 'googleapis.com', 'wikimedia.org']
-  const isOptimized = (url: string) => {
-    try {
-      const hostname = new URL(url).hostname
-      return OPTIMIZED_DOMAINS.some(d => hostname.endsWith(d))
-    } catch { return false }
-  }
 
   const goToPrevious = () => {
     setCurrentIndex(prev => prev === 0 ? images.length - 1 : prev - 1)
@@ -59,25 +49,21 @@ export default function ImageSlider({
     })
   }
 
-
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
-      case 'square':
-        return 'aspect-square'
-      case 'wide':
-        return 'aspect-video'
-      default:
-        return 'h-80' // Explicit height for proper child rendering
+      case 'square': return 'aspect-square'
+      case 'wide': return 'aspect-video'
+      default: return 'h-80'
     }
   }
 
   const getLayoutClass = () => {
     if (images.length === 1) return 'grid-cols-1'
     if (images.length === 2) return 'grid-cols-2'
-    return 'grid-cols-1' // For 3+ images, use slider
+    return 'grid-cols-1'
   }
 
-  // For 1-2 images, use a grid layout instead of slider
+  // For 1-2 images, use a grid layout
   if (images.length <= 2) {
     return (
       <div className={`relative overflow-hidden rounded-lg ${className}`}>
@@ -88,20 +74,17 @@ export default function ImageSlider({
               className={`relative bg-surface-container-low ${getAspectRatioClass()}`}
               style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
             >
-              {!isLoaded[index] && (
+              {!isLoaded[index] && !hasError[index] && (
                 <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
               )}
-              <Image
+              <img
                 src={image}
                 alt={`Image ${index + 1}`}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                quality={75}
-                unoptimized={!isOptimized(image)}
+                loading="lazy"
                 onLoad={() => handleImageLoad(index)}
                 onError={() => handleImageError(index)}
                 referrerPolicy="no-referrer"
-                className={`object-cover transition-opacity duration-200 ${
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 } ${hasError[index] ? 'hidden' : ''}`}
               />
@@ -115,7 +98,6 @@ export default function ImageSlider({
   // For 3+ images, use slider
   return (
     <div className={`relative overflow-hidden rounded-lg ${className}`}>
-      {/* Main Image Container */}
       <div
         ref={sliderRef}
         className={`relative ${getAspectRatioClass()} overflow-hidden bg-surface-container-low w-full`}
@@ -127,20 +109,17 @@ export default function ImageSlider({
         >
           {images.map((image, index) => (
             <div key={index} className="w-full h-full flex-shrink-0 relative bg-surface-container-low">
-              {!isLoaded[index] && (
+              {!isLoaded[index] && !hasError[index] && (
                 <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
               )}
-              <Image
+              <img
                 src={image}
                 alt={`Image ${index + 1}`}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                quality={75}
-                unoptimized={!isOptimized(image)}
+                loading={index <= 1 ? 'eager' : 'lazy'}
                 onLoad={() => handleImageLoad(index)}
                 onError={() => handleImageError(index)}
                 referrerPolicy="no-referrer"
-                className={`object-cover transition-opacity duration-200 ${
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
                   isLoaded[index] ? 'opacity-100' : 'opacity-0'
                 } ${hasError[index] ? 'hidden' : ''}`}
               />
