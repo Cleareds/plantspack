@@ -12,27 +12,27 @@ interface PackCardProps {
 
 export default function PackCard({ pack }: PackCardProps) {
   const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'recipes': return '🍽️'
-      case 'places': return '📍'
-      case 'traveling': return '✈️'
-      case 'meal-prep': return '🥗'
-      case 'products': return '🛍️'
-      case 'activism': return '✊'
-      case 'lifestyle': return '🌱'
-      case 'resources': return '📚'
-      case 'other': return '📦'
-      default: return '📦'
-    }
+    const c = category.toLowerCase()
+    if (c === 'recipes') return '🍽️'
+    if (c === 'places') return '📍'
+    if (c === 'travel guides' || c === 'traveling') return '✈️'
+    if (c === 'products') return '🛍️'
+    if (c === 'activism') return '✊'
+    if (c === 'lifestyle') return '🌱'
+    return '📦'
   }
 
-  const getCategoryLabel = (category: string) => {
-    return category.charAt(0).toUpperCase() + category.slice(1)
-  }
-
-  const packCategories: string[] = (pack as any).categories?.length > 0
+  // Deduplicate categories
+  const rawCats: string[] = (pack as any).categories?.length > 0
     ? (pack as any).categories
     : (pack.category ? [pack.category] : [])
+  const seen = new Set<string>()
+  const packCategories = rawCats.filter(c => {
+    const key = c.toLowerCase()
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 
   return (
     <Link href={`/packs/${pack.slug}`}>
@@ -56,7 +56,7 @@ export default function PackCard({ pack }: PackCardProps) {
             <div className="absolute top-2 left-2 flex flex-wrap gap-1">
               {packCategories.map((cat) => (
                 <div key={cat} className="bg-surface-container-lowest px-2 py-1 rounded-full text-xs font-medium text-on-surface-variant">
-                  {getCategoryIcon(cat)} {getCategoryLabel(cat)}
+                  {getCategoryIcon(cat)} {cat}
                 </div>
               ))}
             </div>
