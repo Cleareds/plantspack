@@ -2,7 +2,7 @@
 
 import { PackWithStats } from '@/types/packs'
 import Link from 'next/link'
-import { Users, FileText, Crown, BadgeCheck } from 'lucide-react'
+import { Users, FileText, MapPin, Crown, BadgeCheck } from 'lucide-react'
 
 const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
 
@@ -109,10 +109,18 @@ export default function PackCard({ pack }: PackCardProps) {
               <Users className="h-4 w-4" />
               <span>{pack.member_count}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <FileText className="h-4 w-4" />
-              <span>{pack.post_count} posts</span>
-            </div>
+            {(pack.places_count || 0) > 0 && (
+              <div className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" />
+                <span>{pack.places_count} places</span>
+              </div>
+            )}
+            {(pack.post_count || 0) > 0 && (
+              <div className="flex items-center gap-1">
+                <FileText className="h-4 w-4" />
+                <span>{pack.post_count} posts</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

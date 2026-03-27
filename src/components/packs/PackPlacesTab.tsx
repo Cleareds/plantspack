@@ -1,10 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MapPin, Plus, Trash2 } from 'lucide-react'
+import { MapPin, Plus, Trash2, Globe, Phone, PawPrint, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import StarRating from '@/components/places/StarRating'
-import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import AddPlaceModal from './AddPlaceModal'
 
@@ -16,11 +15,18 @@ type PackPlace = {
   added_at: string
   places: {
     id: string
+    slug: string | null
     name: string
     category: string
     address: string
     description: string | null
     tags: string[]
+    images: string[] | null
+    main_image_url: string | null
+    vegan_level: string | null
+    is_pet_friendly: boolean
+    website: string | null
+    phone: string | null
     latitude: number
     longitude: number
     users: {
@@ -127,28 +133,61 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                 key={packPlace.id}
                 className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border overflow-hidden hover:shadow-md transition-shadow"
               >
+                {/* Image */}
+                {(place.images?.[0] || place.main_image_url) && (
+                  <Link href={`/place/${place.slug || place.id}`}>
+                    <div className="relative w-full h-40 bg-surface-container-low">
+                      <img
+                        src={place.images?.[0] || place.main_image_url || ''}
+                        alt={place.name}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                      {/* Badges overlay */}
+                      <div className="absolute top-2 left-2 flex gap-1.5">
+                        {place.vegan_level === 'fully_vegan' && (
+                          <span className="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">100% Vegan</span>
+                        )}
+                        {place.is_pet_friendly && (
+                          <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                            <PawPrint className="h-3 w-3" /> Pet-Friendly
+                          </span>
+                        )}
+                      </div>
+                      {canManagePlaces && (
+                        <button
+                          onClick={(e) => { e.preventDefault(); handleRemovePlace(packPlace.id, place.name) }}
+                          disabled={deletingId === packPlace.id}
+                          className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-1.5 text-outline hover:text-error transition-colors disabled:opacity-50"
+                          title="Remove from pack"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </Link>
+                )}
+
                 <div className="p-4">
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/place/${(place as any).slug || place.id}`}
-                        className="text-lg font-semibold text-on-surface hover:text-primary transition-colors line-clamp-1"
+                        href={`/place/${place.slug || place.id}`}
+                        className="text-base font-semibold text-on-surface hover:text-primary transition-colors line-clamp-1"
                       >
                         {place.name}
                       </Link>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-on-surface-variant">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-on-surface-variant capitalize">
                           {place.category}
                         </span>
-                        {packPlace.is_pinned && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-primary">
-                            📌 Pinned
-                          </span>
+                        {!place.images?.[0] && !place.main_image_url && place.vegan_level === 'fully_vegan' && (
+                          <span className="text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded">100% Vegan</span>
                         )}
                       </div>
                     </div>
-                    {canManagePlaces && (
+                    {!place.images?.[0] && !place.main_image_url && canManagePlaces && (
                       <button
                         onClick={() => handleRemovePlace(packPlace.id, place.name)}
                         disabled={deletingId === packPlace.id}
@@ -170,13 +209,6 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                     </div>
                   )}
 
-                  {/* Tags */}
-                  {place.tags && place.tags.length > 0 && (
-                    <div className="mb-3">
-                      <PlaceTagBadges tags={place.tags} size="sm" />
-                    </div>
-                  )}
-
                   {/* Description */}
                   {place.description && (
                     <p className="text-sm text-on-surface-variant line-clamp-2 mb-3">
@@ -185,22 +217,36 @@ export default function PackPlacesTab({ packId, userRole, userId }: PackPlacesTa
                   )}
 
                   {/* Address */}
-                  <div className="flex items-start gap-2 text-sm text-outline mb-3">
+                  <div className="flex items-start gap-2 text-sm text-outline mb-2">
                     <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
                     <span className="line-clamp-1">{place.address}</span>
                   </div>
 
-                  {/* Footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-outline-variant/15">
-                    <div className="text-xs text-outline">
-                      Added by{' '}
-                      <Link
-                        href={`/user/${place.users.username}`}
-                        className="text-primary hover:text-primary"
+                  {/* Contact bar */}
+                  {(place.website || place.phone) && (
+                    <div className="flex items-center gap-3 mb-3 text-xs">
+                      {place.website && (
+                        <a href={place.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary hover:text-primary/80">
+                          <Globe className="h-3.5 w-3.5" /> Website
+                        </a>
+                      )}
+                      {place.phone && (
+                        <a href={`tel:${place.phone}`} className="flex items-center gap-1 text-primary hover:text-primary/80">
+                          <Phone className="h-3.5 w-3.5" /> {place.phone}
+                        </a>
+                      )}
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + place.address)}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-primary hover:text-primary/80"
                       >
-                        {place.users.first_name || place.users.username}
-                      </Link>
+                        <ExternalLink className="h-3.5 w-3.5" /> Map
+                      </a>
                     </div>
+                  )}
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-end pt-2 border-t border-outline-variant/15">
                     <FavoriteButton
                       entityType="place"
                       entityId={place.id}
