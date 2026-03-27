@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { PackWithStats } from '@/types/packs'
 import Link from 'next/link'
-import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, Bell, BellOff, BadgeCheck } from 'lucide-react'
+import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, BadgeCheck } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
@@ -18,25 +18,7 @@ interface PackHeaderProps {
 export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
   const { user } = useAuth()
   const [isJoining, setIsJoining] = useState(false)
-  const [isFollowing, setIsFollowing] = useState((pack as any).is_following || false)
-  const [followLoading, setFollowLoading] = useState(false)
-
   const isAdminPack = pack.creator_id === ADMIN_ID
-
-  const toggleFollow = async () => {
-    if (!user) return
-    setFollowLoading(true)
-    try {
-      if (isFollowing) {
-        await fetch(`/api/packs/${pack.id}/follow`, { method: 'DELETE' })
-        setIsFollowing(false)
-      } else {
-        await fetch(`/api/packs/${pack.id}/follow`, { method: 'POST' })
-        setIsFollowing(true)
-      }
-    } catch {}
-    setFollowLoading(false)
-  }
 
   const handleJoin = async () => {
     setIsJoining(true)
@@ -236,21 +218,6 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
               </button>
             )}
 
-            {/* Follow button */}
-            {user && (
-              <button
-                onClick={toggleFollow}
-                disabled={followLoading}
-                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium transition-colors ${
-                  isFollowing
-                    ? 'bg-primary/10 text-primary hover:bg-primary/20'
-                    : 'ghost-border text-on-surface-variant hover:bg-surface-container-low'
-                }`}
-              >
-                {isFollowing ? <BellOff className="h-4 w-4" /> : <Bell className="h-4 w-4" />}
-                <span>{followLoading ? '...' : isFollowing ? 'Following' : 'Follow'}</span>
-              </button>
-            )}
           </div>
         </div>
       </div>
