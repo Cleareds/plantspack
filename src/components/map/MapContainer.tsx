@@ -611,7 +611,7 @@ export default function MapContainerComponent() {
             <div className="flex items-center gap-2">
               <Menu className="h-5 w-5 text-on-surface-variant" />
               <span className="text-sm font-medium text-on-surface-variant">
-                {sidebarPlaces.length} places
+                {mapPlaces.length || sidebarPlaces.length} places
               </span>
             </div>
           </button>
@@ -626,17 +626,17 @@ export default function MapContainerComponent() {
 
         {/* Discovery Panel - RIGHT side */}
         <MapDiscoveryPanel
-          places={sidebarPlaces}
-          totalCount={totalCount}
+          places={mapPlaces.length > 0 ? [...mapPlaces].sort((a, b) => a.distance - b.distance).slice(0, 20) : sidebarPlaces}
+          totalCount={mapPlaces.length > 0 ? mapPlaces.length : totalCount}
           customCenter={customCenter}
           user={user}
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onToggleFavorite={toggleFavorite}
           onPanToPlace={handlePanToPlace}
-          page={page}
-          totalPages={totalPages}
-          onPageChange={goToPage}
+          page={mapPlaces.length > 0 ? 1 : page}
+          totalPages={mapPlaces.length > 0 ? 1 : totalPages}
+          onPageChange={mapPlaces.length > 0 ? () => {} : goToPage}
           loading={loading}
         />
       </div>
