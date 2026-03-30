@@ -99,9 +99,10 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
   const [signUpAction, setSignUpAction] = useState<'like' | 'comment' | 'share'>('like')
   const [isDeleted, setIsDeleted] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const { deletePost, loading: deleting, error: deleteError } = usePostActions()
 
+  const isAdmin = (profile as any)?.role === 'admin'
   const isOwnPost = user?.id === post.user_id
   const isPublicPost = post.privacy === 'public'
   const canRemoveFromPack = packContext && (packContext.userRole === 'admin' || packContext.userRole === 'moderator')
@@ -221,6 +222,21 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
       onUpdate?.() // Refresh feed
     } else {
       alert(deleteError || 'Failed to delete post. Please try again.')
+    }
+  }
+
+  const handleTogglePin = async () => {
+    try {
+      const isPinned = (post as any).is_pinned
+      if (!isPinned) {
+        // Unpin any currently pinned post first
+        await supabase.from('posts').update({ is_pinned: false }).eq('is_pinned', true)
+      }
+      await supabase.from('posts').update({ is_pinned: !isPinned }).eq('id', post.id)
+      setPost(prev => ({ ...prev, is_pinned: !isPinned }))
+      setShowMenu(false)
+    } catch {
+      alert('Failed to update pin status')
     }
   }
 
@@ -401,6 +417,15 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                             <span>Delete post</span>
                           </button>
                         </>
+                      )}
+                      {isAdmin && (
+                        <button
+                          onClick={handleTogglePin}
+                          className="w-full px-4 py-2 text-left text-sm text-on-surface-variant hover:bg-surface-container-low flex items-center space-x-2"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>push_pin</span>
+                          <span>{(post as any).is_pinned ? 'Unpin post' : 'Pin post'}</span>
+                        </button>
                       )}
                     </div>
                   )}
@@ -607,6 +632,15 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                             <span>Delete post</span>
                           </button>
                         </>
+                      )}
+                      {isAdmin && (
+                        <button
+                          onClick={handleTogglePin}
+                          className="w-full px-4 py-2 text-left text-sm text-on-surface-variant hover:bg-surface-container-low flex items-center space-x-2"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>push_pin</span>
+                          <span>{(post as any).is_pinned ? 'Unpin post' : 'Pin post'}</span>
+                        </button>
                       )}
                     </div>
                   )}

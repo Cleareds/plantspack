@@ -35,6 +35,7 @@ interface FeedProps {
 
 export default function Feed({onPostCreated, category, excludeCategories}: FeedProps) {
     const [posts, setPosts] = useState<Post[]>([])
+    const [pinnedPost, setPinnedPost] = useState<Post | null>(null)
     const [loading, setLoading] = useState(true)
     const [loadingMore, setLoadingMore] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -471,6 +472,22 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
         }
     }, [hasMore, loadingMore, loadMorePosts, posts.length])
 
+    // Fetch pinned post
+    useEffect(() => {
+        (async () => {
+            try {
+                const { data } = await supabase
+                    .from('posts')
+                    .select(`*, users (id, username, first_name, last_name, avatar_url, subscription_tier), post_likes (id, user_id), comments (id)`)
+                    .eq('is_pinned', true)
+                    .eq('privacy', 'public')
+                    .is('deleted_at', null)
+                    .maybeSingle()
+                setPinnedPost(data as any)
+            } catch {}
+        })()
+    }, [])
+
     // Initialize feed when auth is ready OR after a timeout (for guests)
     useEffect(() => {
         let timeoutId: NodeJS.Timeout
@@ -613,8 +630,22 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
             ) : (
                 <>
                     <div className="space-y-6">
+                        {/* Pinned post */}
+                        {pinnedPost && !posts.some(p => p.id === pinnedPost.id) && (
+                            <div className="relative">
+                                <div className="absolute -top-2 left-4 z-10 bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>push_pin</span>
+                                    Pinned
+                                </div>
+                                <PostCard
+                                    key={pinnedPost.id}
+                                    post={pinnedPost}
+                                    onUpdate={() => {}}
+                                />
+                            </div>
+                        )}
                         {posts
-                            .filter(post => !blockedUserIds.includes(post.user_id) && !mutedUserIds.includes(post.user_id))
+                            .filter(post => !blockedUserIds.includes(post.user_id) && !mutedUserIds.includes(post.user_id) && post.id !== pinnedPost?.id)
                             .map((post) => (
                                 <PostCard
                                     key={post.id}
