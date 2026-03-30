@@ -51,6 +51,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
   const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
   const [userReview, setUserReview] = useState<Review | null>(null)
+  const [validationError, setValidationError] = useState('')
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [showImageUploader, setShowImageUploader] = useState(false)
@@ -153,7 +154,17 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!user || !newContent.trim() || newRating === 0 || submitting) return
+    setValidationError('')
+    if (!user) return
+    if (newRating === 0) {
+      setValidationError('Please select a star rating')
+      return
+    }
+    if (!newContent.trim()) {
+      setValidationError('Please write a review')
+      return
+    }
+    if (submitting) return
 
     if (profile?.is_banned) {
       alert('Your account has been suspended and cannot create reviews')
@@ -380,6 +391,10 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                     maxVideoSizeMB={50}
                   />
                 </div>
+              )}
+
+              {validationError && (
+                <p className="text-xs text-error mt-2">{validationError}</p>
               )}
 
               <div className="flex items-center justify-between mt-2">

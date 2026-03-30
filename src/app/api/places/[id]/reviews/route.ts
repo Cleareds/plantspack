@@ -233,33 +233,12 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-
-    // Create Supabase client with cookies for auth
-    const cookieStore = await cookies()
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
-            })
-          },
-        },
-      }
-    )
+    const { createClient: createAuthClient } = await import('@/lib/supabase-server')
+    const supabase = await createAuthClient()
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Soft delete the review
@@ -273,10 +252,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('[Place Reviews API] Error:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete review' },
-      { status: 500 }
-    )
+    console.error('[Place Reviews API] Delete error:', error)
+    return NextResponse.json({ error: 'Failed to delete review' }, { status: 500 })
   }
 }
