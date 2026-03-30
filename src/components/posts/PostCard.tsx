@@ -83,7 +83,8 @@ interface PostCardProps {
   }  // Pack context for showing remove button
 }
 
-function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostCardProps) {
+function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packContext }: PostCardProps) {
+  const [post, setPost] = useState(initialPost)
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(post.post_likes?.length || 0)
   const commentCount = post.comments?.length || 0
@@ -223,9 +224,13 @@ function PostCard({ post, onUpdate, reactions, isFollowing, packContext }: PostC
     }
   }
 
-  const handleEditSave = () => {
+  const handleEditSave = (updatedPost?: any) => {
     setShowEdit(false)
-    onUpdate?.() // Refresh feed
+    if (updatedPost) {
+      // Merge updated fields into local post state, keep relations (users, likes, comments)
+      setPost(prev => ({ ...prev, ...updatedPost, users: updatedPost.users || prev.users, post_likes: prev.post_likes, comments: prev.comments }))
+    }
+    onUpdate?.()
   }
 
   const handleRemoveFromPack = async () => {

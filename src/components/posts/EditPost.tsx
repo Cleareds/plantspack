@@ -29,7 +29,7 @@ interface EditPostProps {
   }
   isOpen: boolean
   onClose: () => void
-  onSaved: () => void
+  onSaved: (updatedPost?: any) => void
 }
 
 export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostProps) {
@@ -218,11 +218,12 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
       })
 
       if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Failed to update post')
+        const errData = await response.json()
+        throw new Error(errData.error || 'Failed to update post')
       }
 
-      onSaved()
+      const data = await response.json()
+      onSaved(data.post || data)
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update post')
