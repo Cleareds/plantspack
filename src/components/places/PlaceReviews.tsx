@@ -5,12 +5,13 @@ import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
-import { Star, Send, Edit2, Trash2, Image as ImageIcon, X } from 'lucide-react'
+import { Star, Send, Edit2, Trash2, Image as ImageIcon, Video, X } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
 import ReportButton from '../moderation/ReportButton'
 import ReviewReactions from '../reactions/ReviewReactions'
 import StarRating from './StarRating'
 import ImageUploader from '../ui/ImageUploader'
+import VideoUploader from '../ui/VideoUploader'
 
 type Review = {
   id: string
@@ -19,6 +20,7 @@ type Review = {
   rating: number
   content: string
   images: string[]
+  video_url: string | null
   deleted_at: string | null
   edited_at: string | null
   edit_count: number
@@ -50,7 +52,9 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
   const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
   const [userReview, setUserReview] = useState<Review | null>(null)
   const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [showImageUploader, setShowImageUploader] = useState(false)
+  const [showVideoUploader, setShowVideoUploader] = useState(false)
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
   const { user, profile } = useAuth()
 
@@ -159,10 +163,13 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
     const reviewContent = newContent.trim()
     const reviewRating = newRating
     const reviewImages = [...imageUrls]
+    const reviewVideo = videoUrl
     setNewContent('')
     setNewRating(0)
     setImageUrls([])
+    setVideoUrl(null)
     setShowImageUploader(false)
+    setShowVideoUploader(false)
     setSubmitting(true)
 
     try {
@@ -180,6 +187,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
         setNewContent(reviewContent)
         setNewRating(reviewRating)
         setImageUrls(reviewImages)
+        setVideoUrl(reviewVideo)
         throw new Error('Rate limit exceeded. Please wait before reviewing again.')
       }
 
@@ -191,7 +199,8 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
         body: JSON.stringify({
           rating: reviewRating,
           content: reviewContent,
-          images: reviewImages
+          images: reviewImages,
+          video_url: reviewVideo,
         })
       })
 
@@ -217,6 +226,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
       setNewContent(reviewContent)
       setNewRating(reviewRating)
       setImageUrls(reviewImages)
+      setVideoUrl(reviewVideo)
       alert(error instanceof Error ? error.message : 'Failed to submit review. Please try again.')
     } finally {
       setSubmitting(false)
@@ -228,7 +238,9 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
     setNewRating(review.rating)
     setNewContent(review.content)
     setImageUrls(review.images || [])
+    setVideoUrl(review.video_url || null)
     setShowImageUploader((review.images || []).length > 0)
+    setShowVideoUploader(!!review.video_url)
   }
 
   const handleCancelEdit = () => {
@@ -236,7 +248,9 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
     setNewRating(0)
     setNewContent('')
     setImageUrls([])
+    setVideoUrl(null)
     setShowImageUploader(false)
+    setShowVideoUploader(false)
   }
 
   const handleDeleteReview = async (reviewId: string) => {
@@ -343,6 +357,31 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                 </div>
               )}
 
+              {/* Video preview */}
+              {videoUrl && (
+                <div className="relative mt-2 inline-block">
+                  <video src={videoUrl} className="h-20 rounded-md border border-outline-variant" />
+                  <button
+                    type="button"
+                    onClick={() => setVideoUrl(null)}
+                    className="absolute -top-1.5 -right-1.5 bg-error text-on-error rounded-full p-0.5"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+
+              {/* Video uploader */}
+              {showVideoUploader && !videoUrl && (
+                <div className="mt-2">
+                  <VideoUploader
+                    onVideosChange={(urls) => { if (urls.length > 0) setVideoUrl(urls[0]) }}
+                    maxVideos={1}
+                    maxVideoSizeMB={50}
+                  />
+                </div>
+              )}
+
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-3">
                   <span className={`text-xs ${newContent.length > 450 ? 'text-error' : 'text-outline'}`}>
@@ -360,6 +399,19 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                   >
                     <ImageIcon className="h-4 w-4" />
                     <span>{imageUrls.length > 0 ? `${imageUrls.length}/5` : 'Photos'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowVideoUploader(!showVideoUploader)}
+                    className={`flex items-center gap-1 text-xs px-2 py-1 rounded-md transition-colors ${
+                      showVideoUploader || videoUrl
+                        ? 'text-primary bg-primary-container/30'
+                        : 'text-on-surface-variant hover:text-primary hover:bg-surface-container-low'
+                    }`}
+                    title="Add video"
+                  >
+                    <Video className="h-4 w-4" />
+                    <span>{videoUrl ? '1/1' : 'Video'}</span>
                   </button>
                 </div>
                 <div className="flex gap-2">
@@ -524,6 +576,17 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                               />
                             </button>
                           ))}
+                        </div>
+                      )}
+
+                      {/* Review video */}
+                      {review.video_url && (
+                        <div className="mb-3">
+                          <video
+                            src={review.video_url}
+                            controls
+                            className="max-h-60 rounded-md border border-outline-variant"
+                          />
                         </div>
                       )}
 

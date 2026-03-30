@@ -106,7 +106,7 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { rating, content, images } = body
+    const { rating, content, images, video_url } = body
 
     // Validation
     if (!rating || !content) {
@@ -130,8 +130,9 @@ export async function POST(
       )
     }
 
-    // Validate images array
+    // Validate images array and video
     const reviewImages: string[] = Array.isArray(images) ? images.slice(0, 5) : []
+    const reviewVideo: string | null = typeof video_url === 'string' && video_url.startsWith('http') ? video_url : null
 
     // Check if user already has a review for this place
     const { data: existingReview } = await supabase
@@ -152,6 +153,7 @@ export async function POST(
           rating,
           content,
           images: reviewImages,
+          video_url: reviewVideo,
           edited_at: new Date().toISOString(),
           edit_count: (existingReview.edit_count || 0) + 1,
           deleted_at: null // Restore if soft-deleted
@@ -181,7 +183,8 @@ export async function POST(
           user_id: session.user.id,
           rating,
           content,
-          images: reviewImages
+          images: reviewImages,
+          video_url: reviewVideo,
         })
         .select(`
           *,
