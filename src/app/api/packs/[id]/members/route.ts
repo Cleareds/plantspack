@@ -267,14 +267,40 @@ export async function DELETE(
       packId = pack.id
     }
 
-    // Delete membership
-    const { error } = await supabase
-      .from('pack_members')
-      .delete()
-      .eq('pack_id', packId)
-      .eq('user_id', session.user.id)
+    // Check if admin is removing another user
+    const { searchParams } = new URL(request.url)
+    const targetUserId = searchParams.get('userId')
 
-    if (error) throw error
+    if (targetUserId && targetUserId !== session.user.id) {
+      // Admin removing another member — verify caller is admin
+      const { data: callerMembership } = await supabase
+        .from('pack_members')
+        .select('role')
+        .eq('pack_id', packId)
+        .eq('user_id', session.user.id)
+        .single()
+
+      if (!callerMembership || callerMembership.role !== 'admin') {
+        return NextResponse.json({ error: 'Only pack admins can remove members' }, { status: 403 })
+      }
+
+      const { error } = await supabase
+        .from('pack_members')
+        .delete()
+        .eq('pack_id', packId)
+        .eq('user_id', targetUserId)
+
+      if (error) throw error
+    } else {
+      // User leaving the pack themselves
+      const { error } = await supabase
+        .from('pack_members')
+        .delete()
+        .eq('pack_id', packId)
+        .eq('user_id', session.user.id)
+
+      if (error) throw error
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

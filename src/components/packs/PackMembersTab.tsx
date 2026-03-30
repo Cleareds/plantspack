@@ -47,9 +47,11 @@ export default function PackMembersTab({ packId, userRole }: { packId: string; u
     setLoading(false)
   }
 
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
+
   const promoteMember = async (memberId: string, userId: string) => {
+    setActionLoading(userId)
     try {
-      // Use supabase admin to update role
       const resp = await fetch(`/api/packs/${packId}/members`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -57,19 +59,53 @@ export default function PackMembersTab({ packId, userRole }: { packId: string; u
       })
       if (resp.ok) {
         setMembers(prev => prev.map(m => m.user_id === userId ? { ...m, role: 'moderator' } : m))
+      } else {
+        const data = await resp.json()
+        alert(data.error || 'Failed to promote member')
       }
-    } catch {}
+    } catch {
+      alert('Failed to promote member. Please try again.')
+    }
+    setActionLoading(null)
+    setActionMenu(null)
+  }
+
+  const demoteMember = async (userId: string) => {
+    setActionLoading(userId)
+    try {
+      const resp = await fetch(`/api/packs/${packId}/members`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, role: 'member' }),
+      })
+      if (resp.ok) {
+        setMembers(prev => prev.map(m => m.user_id === userId ? { ...m, role: 'member' } : m))
+      } else {
+        const data = await resp.json()
+        alert(data.error || 'Failed to demote member')
+      }
+    } catch {
+      alert('Failed to demote member. Please try again.')
+    }
+    setActionLoading(null)
     setActionMenu(null)
   }
 
   const removeMember = async (userId: string) => {
     if (!confirm('Remove this member from the pack?')) return
+    setActionLoading(userId)
     try {
       const resp = await fetch(`/api/packs/${packId}/members?userId=${userId}`, { method: 'DELETE' })
       if (resp.ok) {
         setMembers(prev => prev.filter(m => m.user_id !== userId))
+      } else {
+        const data = await resp.json()
+        alert(data.error || 'Failed to remove member')
       }
-    } catch {}
+    } catch {
+      alert('Failed to remove member. Please try again.')
+    }
+    setActionLoading(null)
     setActionMenu(null)
   }
 
@@ -142,22 +178,39 @@ export default function PackMembersTab({ packId, userRole }: { packId: string; u
                   </button>
                   {actionMenu === member.id && (
                     <div className="absolute right-0 top-8 z-10 bg-surface-container-lowest rounded-lg editorial-shadow ghost-border py-1 w-44">
-                      {member.role === 'member' && (
-                        <button
-                          onClick={() => promoteMember(member.id, member.user_id)}
-                          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container-low"
-                        >
-                          <ShieldPlus className="h-4 w-4 text-blue-600" />
-                          Make Moderator
-                        </button>
+                      {actionLoading === member.user_id ? (
+                        <div className="flex items-center justify-center py-3">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+                        </div>
+                      ) : (
+                        <>
+                          {member.role === 'member' && (
+                            <button
+                              onClick={() => promoteMember(member.id, member.user_id)}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container-low"
+                            >
+                              <ShieldPlus className="h-4 w-4 text-blue-600" />
+                              Make Moderator
+                            </button>
+                          )}
+                          {member.role === 'moderator' && (
+                            <button
+                              onClick={() => demoteMember(member.user_id)}
+                              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container-low"
+                            >
+                              <Shield className="h-4 w-4 text-on-surface-variant" />
+                              Demote to Member
+                            </button>
+                          )}
+                          <button
+                            onClick={() => removeMember(member.user_id)}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                          >
+                            <UserMinus className="h-4 w-4" />
+                            Remove Member
+                          </button>
+                        </>
                       )}
-                      <button
-                        onClick={() => removeMember(member.user_id)}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
-                      >
-                        <UserMinus className="h-4 w-4" />
-                        Remove Member
-                      </button>
                     </div>
                   )}
                 </div>
