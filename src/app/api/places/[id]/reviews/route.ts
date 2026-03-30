@@ -106,7 +106,7 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { rating, content } = body
+    const { rating, content, images } = body
 
     // Validation
     if (!rating || !content) {
@@ -130,6 +130,9 @@ export async function POST(
       )
     }
 
+    // Validate images array
+    const reviewImages: string[] = Array.isArray(images) ? images.slice(0, 5) : []
+
     // Check if user already has a review for this place
     const { data: existingReview } = await supabase
       .from('place_reviews')
@@ -148,6 +151,7 @@ export async function POST(
         .update({
           rating,
           content,
+          images: reviewImages,
           edited_at: new Date().toISOString(),
           edit_count: (existingReview.edit_count || 0) + 1,
           deleted_at: null // Restore if soft-deleted
@@ -176,7 +180,8 @@ export async function POST(
           place_id: id,
           user_id: session.user.id,
           rating,
-          content
+          content,
+          images: reviewImages
         })
         .select(`
           *,

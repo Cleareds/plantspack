@@ -5,11 +5,12 @@ import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
-import { Star, Send, Edit2, Trash2 } from 'lucide-react'
+import { Star, Send, Edit2, Trash2, Image as ImageIcon, X } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
 import ReportButton from '../moderation/ReportButton'
 import ReviewReactions from '../reactions/ReviewReactions'
 import StarRating from './StarRating'
+import ImageUploader from '../ui/ImageUploader'
 
 type Review = {
   id: string
@@ -17,6 +18,7 @@ type Review = {
   user_id: string
   rating: number
   content: string
+  images: string[]
   deleted_at: string | null
   edited_at: string | null
   edit_count: number
@@ -47,6 +49,9 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
   const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
   const [userReview, setUserReview] = useState<Review | null>(null)
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [showImageUploader, setShowImageUploader] = useState(false)
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
   const { user, profile } = useAuth()
 
   const REVIEWS_PER_PAGE = 20
@@ -153,8 +158,11 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
 
     const reviewContent = newContent.trim()
     const reviewRating = newRating
+    const reviewImages = [...imageUrls]
     setNewContent('')
     setNewRating(0)
+    setImageUrls([])
+    setShowImageUploader(false)
     setSubmitting(true)
 
     try {
@@ -171,6 +179,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
       } else if (rateLimitData === false) {
         setNewContent(reviewContent)
         setNewRating(reviewRating)
+        setImageUrls(reviewImages)
         throw new Error('Rate limit exceeded. Please wait before reviewing again.')
       }
 
@@ -181,7 +190,8 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
         },
         body: JSON.stringify({
           rating: reviewRating,
-          content: reviewContent
+          content: reviewContent,
+          images: reviewImages
         })
       })
 
@@ -206,6 +216,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
     } catch (error) {
       setNewContent(reviewContent)
       setNewRating(reviewRating)
+      setImageUrls(reviewImages)
       alert(error instanceof Error ? error.message : 'Failed to submit review. Please try again.')
     } finally {
       setSubmitting(false)
@@ -216,12 +227,16 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
     setEditingReviewId(review.id)
     setNewRating(review.rating)
     setNewContent(review.content)
+    setImageUrls(review.images || [])
+    setShowImageUploader((review.images || []).length > 0)
   }
 
   const handleCancelEdit = () => {
     setEditingReviewId(null)
     setNewRating(0)
     setNewContent('')
+    setImageUrls([])
+    setShowImageUploader(false)
   }
 
   const handleDeleteReview = async (reviewId: string) => {
@@ -296,10 +311,57 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                 rows={4}
                 maxLength={500}
               />
+              {/* Uploaded image thumbnails */}
+              {imageUrls.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {imageUrls.map((url, idx) => (
+                    <div key={idx} className="relative group">
+                      <img
+                        src={url}
+                        alt={`Upload ${idx + 1}`}
+                        className="h-16 w-16 object-cover rounded-md border border-outline-variant"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setImageUrls(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute -top-1.5 -right-1.5 bg-error text-on-error rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Image uploader */}
+              {showImageUploader && (
+                <div className="mt-2">
+                  <ImageUploader
+                    onImagesChange={(urls) => setImageUrls(prev => [...prev, ...urls].slice(0, 5))}
+                    maxImages={5 - imageUrls.length}
+                  />
+                </div>
+              )}
+
               <div className="flex items-center justify-between mt-2">
-                <span className={`text-xs ${newContent.length > 450 ? 'text-error' : 'text-outline'}`}>
-                  {newContent.length}/500
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className={`text-xs ${newContent.length > 450 ? 'text-error' : 'text-outline'}`}>
+                    {newContent.length}/500
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowImageUploader(!showImageUploader)}
+                    className={`flex items-center gap-1 text-xs px-2 py-1 rounded-md transition-colors ${
+                      showImageUploader || imageUrls.length > 0
+                        ? 'text-primary bg-primary-container/30'
+                        : 'text-on-surface-variant hover:text-primary hover:bg-surface-container-low'
+                    }`}
+                    title="Add images"
+                  >
+                    <ImageIcon className="h-4 w-4" />
+                    <span>{imageUrls.length > 0 ? `${imageUrls.length}/5` : 'Photos'}</span>
+                  </button>
+                </div>
                 <div className="flex gap-2">
                   {editingReviewId && (
                     <button
@@ -445,6 +507,26 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
 
                       <p className="text-on-surface-variant text-sm mb-3 whitespace-pre-wrap">{review.content}</p>
 
+                      {/* Review images */}
+                      {review.images && review.images.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {review.images.map((img, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setLightboxImage(img)}
+                              className="block"
+                            >
+                              <img
+                                src={img}
+                                alt={`Review photo ${idx + 1}`}
+                                className="h-20 w-20 object-cover rounded-md border border-outline-variant hover:opacity-80 transition-opacity cursor-pointer"
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
                       <ReviewReactions
                         reviewId={review.id}
                       />
@@ -468,6 +550,27 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
           </div>
         )}
       </div>
+
+      {/* Image lightbox */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <img
+            src={lightboxImage}
+            alt="Review photo"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   )
 }
