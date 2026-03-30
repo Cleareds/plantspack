@@ -615,7 +615,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                 </div>
             )}
 
-            {posts.length === 0 && !loading ? (
+            {posts.length === 0 && !pinnedPost && !loading ? (
                 <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-8 text-center">
                     <p className="text-outline mb-4">No posts yet.</p>
                     {!user && (
@@ -631,7 +631,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                 <>
                     <div className="space-y-6">
                         {/* Pinned post */}
-                        {pinnedPost && !posts.some(p => p.id === pinnedPost.id) && (
+                        {pinnedPost && (
                             <div className="relative">
                                 <div className="absolute -top-2 left-4 z-10 bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                                     <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>push_pin</span>
