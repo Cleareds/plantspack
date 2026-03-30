@@ -309,9 +309,11 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
           <h3 className="text-lg font-semibold text-on-surface mb-2">
             {editingReviewId ? 'Edit Your Review' : userReview ? 'Update Your Review' : 'Write a Review'}
           </h3>
-          <p className="text-sm text-on-surface-variant mb-4">
-            You can only leave one review per place. Submitting a new review will replace your previous one.
-          </p>
+          {userReview && !editingReviewId && (
+            <p className="text-xs text-on-surface-variant mb-3 bg-surface-container-low px-3 py-2 rounded-md">
+              You already have a review for this place. Submitting will update your existing review.
+            </p>
+          )}
           <form onSubmit={handleSubmitReview} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-on-surface-variant mb-2">

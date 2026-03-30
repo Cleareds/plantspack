@@ -233,16 +233,32 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    const { createClient: createAuthClient } = await import('@/lib/supabase-server')
-    const supabase = await createAuthClient()
 
-    const { data: { session } } = await supabase.auth.getSession()
+    // Get auth session
+    const cookieStore = await cookies()
+    const authSupabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return cookieStore.getAll() },
+          setAll() {},
+        },
+      }
+    )
+
+    const { data: { session } } = await authSupabase.auth.getSession()
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Soft delete the review
-    const { error } = await supabase
+    // Use admin client to bypass RLS for the soft delete
+    const adminSupabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    const { error } = await adminSupabase
       .from('place_reviews')
       .update({ deleted_at: new Date().toISOString() })
       .eq('place_id', id)
@@ -251,8 +267,8 @@ export async function DELETE(
     if (error) throw error
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('[Place Reviews API] Delete error:', error)
+  } catch (error: any) {
+    console.error('[Place Reviews API] Delete error:', error?.message || error)
     return NextResponse.json({ error: 'Failed to delete review' }, { status: 500 })
   }
 }
