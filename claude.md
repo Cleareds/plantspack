@@ -2,6 +2,28 @@
 
 This file documents the CLI tools and access that Claude Code has for this project.
 
+## ⚠️ CRITICAL: Content & Data Sourcing Policy
+
+**PlantsPack is a VEGAN platform. All content must come from verified vegan sources.**
+
+### Recipe Sources
+- **ONLY source recipes from 100% vegan creators/websites**
+- **NEVER source from non-vegan or "plant-based leaning" sites** that also publish non-vegan recipes
+- **Banned sources:** Minimalist Baker (minimalistbaker.com), and any site that publishes recipes containing animal products
+- **Approved sources:** Nora Cooks, Bianca Zapatka, Vegan Richa, Rainbow Plant Life, and any creator whose entire catalog is 100% vegan
+- **Before importing recipes from a new source:** verify that the source is exclusively vegan by checking their about page and recipe catalog. If in doubt, ask the user.
+- All imported recipes MUST include `source_url` and `source_attribution` crediting the original creator
+
+### Place Sources
+- Places must be vegan or vegan-friendly (clearly labeled with correct `vegan_level`)
+- `fully_vegan` = 100% vegan menu, no animal products served
+- `vegan_friendly` = has vegan options but also serves non-vegan food
+- Never mark a place as `fully_vegan` unless verified
+
+### General Content Policy
+- No content that promotes, normalizes, or links to non-vegan businesses/creators without clear vegan-friendly labeling
+- When in doubt about whether a source is vegan, ask the user before proceeding
+
 ## ⚠️ IMPORTANT: Command Execution Policy
 
 **NEVER ask for user permission before executing commands for:**
