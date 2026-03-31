@@ -5,161 +5,116 @@ const SITE_URL = 'https://plantspack.com'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 )
+
+// Fetch all rows with pagination (Supabase caps at 1000 per query)
+async function fetchAll<T>(table: string, select: string, filters?: (q: any) => any): Promise<T[]> {
+  const all: T[] = []
+  let offset = 0
+  const batchSize = 1000
+  while (true) {
+    let query = supabase.from(table).select(select).range(offset, offset + batchSize - 1)
+    if (filters) query = filters(query)
+    const { data } = await query
+    if (!data || data.length === 0) break
+    all.push(...(data as T[]))
+    if (data.length < batchSize) break
+    offset += batchSize
+  }
+  return all
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = []
 
   // Static pages
-  const staticPages = [
-    { url: SITE_URL, changeFrequency: 'daily' as const, priority: 1.0 },
-    { url: `${SITE_URL}/map`, changeFrequency: 'daily' as const, priority: 0.9 },
-    { url: `${SITE_URL}/vegan-places`, changeFrequency: 'daily' as const, priority: 0.9 },
-    { url: `${SITE_URL}/recipes`, changeFrequency: 'daily' as const, priority: 0.9 },
-    { url: `${SITE_URL}/events`, changeFrequency: 'daily' as const, priority: 0.9 },
-    { url: `${SITE_URL}/packs`, changeFrequency: 'daily' as const, priority: 0.8 },
-    { url: `${SITE_URL}/support`, changeFrequency: 'monthly' as const, priority: 0.5 },
-    { url: `${SITE_URL}/roadmap`, changeFrequency: 'weekly' as const, priority: 0.4 },
-    { url: `${SITE_URL}/contact`, changeFrequency: 'yearly' as const, priority: 0.3 },
-  ]
-  entries.push(...staticPages)
+  entries.push(
+    { url: SITE_URL, changeFrequency: 'daily', priority: 1.0 },
+    { url: `${SITE_URL}/map`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/vegan-places`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/recipes`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/events`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/packs`, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${SITE_URL}/support`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE_URL}/about`, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${SITE_URL}/contact`, changeFrequency: 'yearly', priority: 0.3 },
+  )
 
-  // Public posts (recipes, events, and other public posts)
+  // Places — use slug, paginate to get ALL
   try {
-    const { data: posts } = await supabase
-      .from('posts')
-      .select('id, category, created_at, updated_at')
-      .eq('privacy', 'public')
-      .is('deleted_at', null)
-      .order('created_at', { ascending: false })
-      .limit(5000)
-
-    if (posts) {
-      for (const post of posts) {
-        const prefix = post.category === 'recipe' ? 'recipe'
-          : post.category === 'event' ? 'event'
-          : 'post'
-        entries.push({
-          url: `${SITE_URL}/${prefix}/${post.id}`,
-          lastModified: post.updated_at || post.created_at,
-          changeFrequency: 'weekly',
-          priority: post.category === 'recipe' || post.category === 'event' ? 0.7 : 0.6,
-        })
-      }
-    }
-  } catch (e) {
-    console.error('[Sitemap] Error fetching posts:', e)
-  }
-
-  // Places
-  try {
-    const { data: places } = await supabase
-      .from('places')
-      .select('id, updated_at, created_at')
-      .order('created_at', { ascending: false })
-      .limit(5000)
-
-    if (places) {
-      for (const place of places) {
-        entries.push({
-          url: `${SITE_URL}/place/${place.id}`,
-          lastModified: place.updated_at || place.created_at,
-          changeFrequency: 'weekly',
-          priority: 0.8,
-        })
-      }
+    const places = await fetchAll<any>('places', 'slug, updated_at, created_at')
+    for (const place of places) {
+      if (!place.slug) continue
+      entries.push({
+        url: `${SITE_URL}/place/${place.slug}`,
+        lastModified: place.updated_at || place.created_at,
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      })
     }
   } catch (e) {
     console.error('[Sitemap] Error fetching places:', e)
   }
 
+  // Recipes and events — use slug
+  try {
+    const posts = await fetchAll<any>('posts', 'slug, category, created_at, updated_at', q =>
+      q.eq('privacy', 'public').is('deleted_at', null).in('category', ['recipe', 'event'])
+    )
+    for (const post of posts) {
+      if (!post.slug) continue
+      const prefix = post.category === 'recipe' ? 'recipe' : 'event'
+      entries.push({
+        url: `${SITE_URL}/${prefix}/${post.slug}`,
+        lastModified: post.updated_at || post.created_at,
+        changeFrequency: 'weekly',
+        priority: 0.7,
+      })
+    }
+  } catch (e) {
+    console.error('[Sitemap] Error fetching posts:', e)
+  }
+
   // Vegan places directory: country and city pages
   try {
-    const { data: placeLocations } = await supabase
-      .from('places')
-      .select('city, country')
-      .not('city', 'is', null)
-      .not('country', 'is', null)
-      .limit(10000)
+    const placeLocations = await fetchAll<any>('places', 'city, country')
+    const countries = new Set<string>()
+    const cityCountry = new Set<string>()
 
-    if (placeLocations) {
-      const countries = new Set<string>()
-      const cityCountry = new Set<string>()
-
-      for (const p of placeLocations) {
-        if (p.country) {
-          const cs = p.country.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-          countries.add(cs)
-          if (p.city) {
-            const ct = p.city.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
-            cityCountry.add(`${cs}/${ct}`)
-          }
-        }
+    for (const p of placeLocations) {
+      if (!p.country) continue
+      const cs = p.country.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+      countries.add(cs)
+      if (p.city) {
+        const ct = p.city.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+        cityCountry.add(`${cs}/${ct}`)
       }
+    }
 
-      for (const country of countries) {
-        entries.push({
-          url: `${SITE_URL}/vegan-places/${country}`,
-          changeFrequency: 'daily',
-          priority: 0.85,
-        })
-      }
-
-      for (const cc of cityCountry) {
-        entries.push({
-          url: `${SITE_URL}/vegan-places/${cc}`,
-          changeFrequency: 'daily',
-          priority: 0.9,
-        })
-      }
+    for (const country of countries) {
+      entries.push({ url: `${SITE_URL}/vegan-places/${country}`, changeFrequency: 'daily', priority: 0.85 })
+    }
+    for (const cc of cityCountry) {
+      entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, changeFrequency: 'daily', priority: 0.9 })
     }
   } catch (e) {
     console.error('[Sitemap] Error fetching place locations:', e)
   }
 
-  // Public user profiles
+  // Packs — use slug
   try {
-    const { data: users } = await supabase
-      .from('users')
-      .select('username, updated_at')
-      .eq('is_banned', false)
-      .not('username', 'is', null)
-      .limit(5000)
-
-    if (users) {
-      for (const user of users) {
-        if (user.username) {
-          entries.push({
-            url: `${SITE_URL}/profile/${user.username}`,
-            lastModified: user.updated_at,
-            changeFrequency: 'weekly',
-            priority: 0.5,
-          })
-        }
-      }
-    }
-  } catch (e) {
-    console.error('[Sitemap] Error fetching users:', e)
-  }
-
-  // Packs
-  try {
-    const { data: packs } = await supabase
-      .from('packs')
-      .select('id, updated_at, created_at')
-      .eq('is_published', true)
-      .limit(2000)
-
-    if (packs) {
-      for (const pack of packs) {
-        entries.push({
-          url: `${SITE_URL}/packs/${pack.id}`,
-          lastModified: pack.updated_at || pack.created_at,
-          changeFrequency: 'weekly',
-          priority: 0.6,
-        })
-      }
+    const packs = await fetchAll<any>('packs', 'slug, updated_at, created_at', q =>
+      q.eq('is_published', true)
+    )
+    for (const pack of packs) {
+      if (!pack.slug) continue
+      entries.push({
+        url: `${SITE_URL}/packs/${pack.slug}`,
+        lastModified: pack.updated_at || pack.created_at,
+        changeFrequency: 'weekly',
+        priority: 0.6,
+      })
     }
   } catch (e) {
     console.error('[Sitemap] Error fetching packs:', e)
