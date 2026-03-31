@@ -23,9 +23,8 @@ export default function VideoUploader({
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // All users get full video access
-  const actualMaxVideos = 10
-  const actualMaxSizeMB = 50
+  const actualMaxVideos = maxVideos
+  const actualMaxSizeMB = maxVideoSizeMB
 
   const uploadVideo = useCallback(async (file: File): Promise<string> => {
     const fileExt = file.name.split('.').pop()
