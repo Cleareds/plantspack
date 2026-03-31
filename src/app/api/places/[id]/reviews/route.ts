@@ -63,46 +63,30 @@ export async function POST(
   try {
     const { id } = await params
 
-    // Create Supabase client with cookies for auth
-    const cookieStore = await cookies()
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
-            })
-          },
-        },
-      }
-    )
+    // Auth via supabase-server (handles cookies properly)
+    const { createClient: createAuthClient } = await import('@/lib/supabase-server')
+    const supabase = await createAuthClient()
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Admin client for DB operations (bypasses RLS)
+    const adminSupabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
     // Check if user is banned
-    const { data: profile } = await supabase
+    const { data: profile } = await adminSupabase
       .from('users')
       .select('is_banned')
       .eq('id', session.user.id)
       .single()
 
     if (profile?.is_banned) {
-      return NextResponse.json(
-        { error: 'Your account has been suspended' },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: 'Your account has been suspended' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -110,24 +94,15 @@ export async function POST(
 
     // Validation
     if (!rating || !content) {
-      return NextResponse.json(
-        { error: 'Rating and content are required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Rating and content are required' }, { status: 400 })
     }
 
     if (rating < 1 || rating > 5) {
-      return NextResponse.json(
-        { error: 'Rating must be between 1 and 5' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Rating must be between 1 and 5' }, { status: 400 })
     }
 
     if (content.length < 1 || content.length > 500) {
-      return NextResponse.json(
-        { error: 'Content must be between 1 and 500 characters' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Content must be between 1 and 500 characters' }, { status: 400 })
     }
 
     // Validate images array and video
@@ -135,7 +110,7 @@ export async function POST(
     const reviewVideo: string | null = typeof video_url === 'string' && video_url.startsWith('http') ? video_url : null
 
     // Check if user already has a review for this place
-    const { data: existingReview } = await supabase
+    const { data: existingReview } = await adminSupabase
       .from('place_reviews')
       .select('id, edit_count')
       .eq('place_id', id)
@@ -146,8 +121,7 @@ export async function POST(
     let isUpdate = false
 
     if (existingReview) {
-      // Update existing review
-      const { data, error } = await supabase
+      const { data, error } = await adminSupabase
         .from('place_reviews')
         .update({
           rating,
@@ -156,27 +130,17 @@ export async function POST(
           video_url: reviewVideo,
           edited_at: new Date().toISOString(),
           edit_count: (existingReview.edit_count || 0) + 1,
-          deleted_at: null // Restore if soft-deleted
+          deleted_at: null
         })
         .eq('id', existingReview.id)
-        .select(`
-          *,
-          users (
-            id,
-            username,
-            first_name,
-            last_name,
-            avatar_url
-          )
-        `)
+        .select(`*, users (id, username, first_name, last_name, avatar_url)`)
         .single()
 
       if (error) throw error
       review = data
       isUpdate = true
     } else {
-      // Create new review
-      const { data, error } = await supabase
+      const { data, error } = await adminSupabase
         .from('place_reviews')
         .insert({
           place_id: id,
@@ -186,16 +150,7 @@ export async function POST(
           images: reviewImages,
           video_url: reviewVideo,
         })
-        .select(`
-          *,
-          users (
-            id,
-            username,
-            first_name,
-            last_name,
-            avatar_url
-          )
-        `)
+        .select(`*, users (id, username, first_name, last_name, avatar_url)`)
         .single()
 
       if (error) throw error
@@ -207,20 +162,9 @@ export async function POST(
       { status: isUpdate ? 200 : 201 }
     )
   } catch (error: any) {
-    console.error('[Place Reviews API] Error:', error)
-    console.error('[Place Reviews API] Error code:', error?.code)
-    console.error('[Place Reviews API] Error details:', error?.details)
-    console.error('[Place Reviews API] Error hint:', error?.hint)
-    console.error('[Place Reviews API] Full error:', JSON.stringify(error, null, 2))
-
+    console.error('[Place Reviews API] Error:', error?.message || error)
     return NextResponse.json(
-      {
-        error: 'Failed to create review',
-        message: error?.message || String(error),
-        code: error?.code,
-        details: error?.details,
-        hint: error?.hint
-      },
+      { error: 'Failed to create review', message: error?.message },
       { status: 500 }
     )
   }
