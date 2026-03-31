@@ -94,7 +94,7 @@ export default function AboutPage() {
           <div className="space-y-4 text-on-surface-variant text-lg leading-relaxed">
             <p>
               We&apos;re Oleksandra and Anton, originally from Ukraine, based in Belgium.
-              Oleksandra is 10+ years vegan and Anton joined her on this journey 1.5 years ago.
+              Oleksandra is 10+ years vegan and Anton joined her on this journey 2 years ago.
             </p>
             <p>
               There is no safe space for vegans to express their thoughts and share their joys
