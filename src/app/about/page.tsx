@@ -4,7 +4,7 @@ import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'l
 
 export const metadata: Metadata = {
   title: 'About PlantsPack - Built for the Mission, Not the Markets',
-  description: 'PlantsPack is a community-funded vegan platform. No investors, no ads, no paywalls. 50% of revenue goes to animal welfare causes.',
+  description: 'PlantsPack is a community-funded vegan platform. No investors, no ads, no paywalls. 50% of profit goes to animal welfare causes.',
 }
 
 export default function AboutPage() {
@@ -133,13 +133,13 @@ export default function AboutPage() {
               <div className="text-3xl font-extrabold text-primary mb-2">50%</div>
               <div className="font-semibold text-on-surface mb-1">Goes to the Animals</div>
               <p className="text-sm text-on-surface-variant">
-                Every cent of profit beyond our basic needs is donated to animal shelters
-                in Ukraine and community-voted vegan causes. We&apos;ll publish receipts.
+                50% of our profit — after taxes and operating expenses — is donated to animal
+                shelters in Ukraine and community-voted vegan causes. We&apos;ll publish receipts.
               </p>
             </div>
           </div>
           <p className="text-on-surface-variant text-sm italic">
-            No bloated salaries. No shady data selling. Just a community-funded tool that gives back.
+            No bloated salaries. No shady data selling. Just a community-funded tool that gives back. The 50% donation is calculated from net profit, not gross revenue — because Belgian law requires us to cover taxes and expenses first. We believe in full transparency about this.
           </p>
         </div>
 

@@ -109,8 +109,9 @@ export default function TermsOfService() {
               Supporter donations are non-refundable and may be cancelled at any time through the Stripe customer portal.
             </p>
             <p className="text-on-surface-variant mb-4">
-              <strong>The 50/50 Pledge:</strong> 50% of supporter donations fund platform operations (servers, security,
-              development). 50% is donated to animal welfare causes selected by the community and the PlantsPack team.
+              <strong>The 50/50 Pledge:</strong> 50% of net profit (after taxes and operating expenses) is donated to
+              animal welfare causes selected by the community and the PlantsPack team. The remaining 50% funds
+              platform operations (servers, security, development).
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">9. Privacy</h2>
