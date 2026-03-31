@@ -64,24 +64,8 @@ export async function POST(
     const { id } = await params
 
     // Create Supabase client with cookies for auth
-    const cookieStore = await cookies()
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
-            })
-          },
-        },
-      }
-    )
+    const { createClient: createAuthClient } = await import('@/lib/supabase-server')
+    const supabase = await createAuthClient()
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
@@ -134,8 +118,14 @@ export async function POST(
     const reviewImages: string[] = Array.isArray(images) ? images.slice(0, 5) : []
     const reviewVideo: string | null = typeof video_url === 'string' && video_url.startsWith('http') ? video_url : null
 
+    // Use admin client for DB operations (bypasses RLS)
+    const adminSupabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
     // Check if user already has a review for this recipe
-    const { data: existingReview } = await supabase
+    const { data: existingReview } = await adminSupabase
       .from('recipe_reviews')
       .select('id, edit_count')
       .eq('post_id', id)
@@ -147,7 +137,7 @@ export async function POST(
 
     if (existingReview) {
       // Update existing review
-      const { data, error } = await supabase
+      const { data, error } = await adminSupabase
         .from('recipe_reviews')
         .update({
           rating,
@@ -176,7 +166,7 @@ export async function POST(
       isUpdate = true
     } else {
       // Create new review
-      const { data, error } = await supabase
+      const { data, error } = await adminSupabase
         .from('recipe_reviews')
         .insert({
           post_id: id,
