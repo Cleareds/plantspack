@@ -3,7 +3,6 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Clock, ChefHat, Users, BarChart3 } from 'lucide-react'
 import ImageSlider from '@/components/ui/ImageSlider'
-import InlineComments from '@/components/posts/InlineComments'
 import RecipeActions from '@/components/recipes/RecipeActions'
 import RecipeReviews from '@/components/recipes/RecipeReviews'
 
@@ -301,10 +300,6 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           <RecipeReviews recipeId={post.id} />
         </div>
 
-        <div className="mt-6 bg-surface-container-lowest rounded-2xl editorial-shadow p-6">
-          <h2 className="text-lg font-semibold text-on-surface mb-4">Comments</h2>
-          <InlineComments postId={post.id} />
-        </div>
       </div>
     </div>
   )
