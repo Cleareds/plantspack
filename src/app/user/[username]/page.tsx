@@ -6,7 +6,8 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
 import PostCard from '@/components/posts/PostCard'
-import { Loader2, MapPin, Users, UserPlus, Ban } from 'lucide-react'
+import { Loader2, MapPin, Users, UserPlus, Ban, MessageSquareText } from 'lucide-react'
+import StarRating from '@/components/places/StarRating'
 import FollowButton from '@/components/social/FollowButton'
 import BlockButton from '@/components/social/BlockButton'
 import MuteButton from '@/components/social/MuteButton'
@@ -40,6 +41,7 @@ export default function UserProfilePage() {
   const [places, setPlaces] = useState<Place[]>([])
   const [followers, setFollowers] = useState<Follow[]>([])
   const [following, setFollowing] = useState<Follow[]>([])
+  const [userReviews, setUserReviews] = useState<any[]>([])
 
   const [loading, setLoading] = useState(true)
   const [loadingPosts, setLoadingPosts] = useState(false)
@@ -110,6 +112,32 @@ export default function UserProfilePage() {
         .limit(3)
 
       setFollowing(followingData || [])
+
+      // Fetch user's place reviews
+      const { data: placeReviews } = await supabase
+        .from('place_reviews')
+        .select('id, place_id, rating, content, images, video_url, created_at, places:place_id(id, name, slug)')
+        .eq('user_id', userData.id)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      // Fetch user's recipe reviews
+      const { data: recipeReviews } = await supabase
+        .from('recipe_reviews')
+        .select('id, post_id, rating, content, images, video_url, created_at, posts:post_id(id, title, slug)')
+        .eq('user_id', userData.id)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      // Combine and sort by date
+      const combinedReviews = [
+        ...(placeReviews || []).map((r: any) => ({ ...r, review_type: 'place' as const })),
+        ...(recipeReviews || []).map((r: any) => ({ ...r, review_type: 'recipe' as const })),
+      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+      setUserReviews(combinedReviews)
 
     } catch (err) {
       console.error('Error fetching profile:', err)
@@ -330,10 +358,13 @@ export default function UserProfilePage() {
               { key: 'recipe', label: 'Recipes', count: recipePosts.length },
               { key: 'place', label: 'Places', count: placePosts.length },
               { key: 'event', label: 'Events', count: eventPosts.length },
+              { key: 'reviews', label: 'Reviews', count: userReviews.length },
             ]
 
             const filteredPosts = activeTab === 'all'
               ? posts
+              : activeTab === 'reviews'
+              ? []
               : posts.filter(p => p.category === activeTab)
 
             return (
@@ -354,7 +385,81 @@ export default function UserProfilePage() {
                   ))}
                 </div>
 
-                {filteredPosts.length === 0 && !loadingPosts ? (
+                {activeTab === 'reviews' ? (
+                  userReviews.length === 0 ? (
+                    <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center">
+                      <p className="text-outline">No reviews yet.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {userReviews.map((review: any) => {
+                        const isPlace = review.review_type === 'place'
+                        const linkedName = isPlace
+                          ? review.places?.name
+                          : review.posts?.title
+                        const linkedHref = isPlace
+                          ? `/place/${review.places?.slug || review.place_id}`
+                          : `/recipe/${review.posts?.slug || review.post_id}`
+
+                        return (
+                          <div
+                            key={`${review.review_type}-${review.id}`}
+                            className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4"
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <span
+                                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                                  isPlace
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-purple-100 text-purple-800'
+                                }`}
+                              >
+                                {isPlace ? 'Place review' : 'Recipe review'}
+                              </span>
+                              <StarRating rating={review.rating} size="sm" />
+                            </div>
+
+                            {linkedName && (
+                              <Link
+                                href={linkedHref}
+                                className="text-sm font-medium text-primary hover:underline mb-1 inline-block"
+                              >
+                                {linkedName}
+                              </Link>
+                            )}
+
+                            {review.content && (
+                              <p className="text-sm text-on-surface-variant line-clamp-2 mt-1">
+                                {review.content}
+                              </p>
+                            )}
+
+                            {review.images && review.images.length > 0 && (
+                              <div className="flex gap-2 mt-2 overflow-x-auto">
+                                {review.images.slice(0, 4).map((img: string, i: number) => (
+                                  <img
+                                    key={i}
+                                    src={img}
+                                    alt={`Review image ${i + 1}`}
+                                    className="h-16 w-16 rounded-md object-cover flex-shrink-0"
+                                  />
+                                ))}
+                              </div>
+                            )}
+
+                            <p className="text-xs text-outline mt-2">
+                              {new Date(review.created_at).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )
+                ) : filteredPosts.length === 0 && !loadingPosts ? (
                   <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center">
                     <p className="text-outline">No {activeTab === 'all' ? 'posts' : activeTab === 'recipe' ? 'recipes' : activeTab === 'place' ? 'places' : 'events'} yet.</p>
                   </div>

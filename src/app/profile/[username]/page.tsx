@@ -7,7 +7,8 @@ import { useParams } from 'next/navigation'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 import { savePageState, loadPageState } from '@/lib/page-state-storage'
 import Link from 'next/link'
-import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package, Star, CalendarCheck } from 'lucide-react'
+import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package, Star, CalendarCheck, MessageSquareText } from 'lucide-react'
+import StarRating from '@/components/places/StarRating'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
@@ -31,6 +32,7 @@ export default function ProfilePage() {
   const [joinedPacks, setJoinedPacks] = useState<any[]>([])
   const [ownedPlaces, setOwnedPlaces] = useState<UserOwnedPlace[]>([])
   const [myEvents, setMyEvents] = useState<any[]>([])
+  const [userReviews, setUserReviews] = useState<any[]>([])
   const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -239,6 +241,36 @@ export default function ProfilePage() {
         console.error('Error loading events:', err)
       }
 
+      // Fetch user's place reviews
+      try {
+        const { data: placeReviews } = await supabase
+          .from('place_reviews')
+          .select('id, place_id, rating, content, images, video_url, created_at, places:place_id(id, name, slug)')
+          .eq('user_id', profileData.id)
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false })
+          .limit(20)
+
+        // Fetch user's recipe reviews
+        const { data: recipeReviews } = await supabase
+          .from('recipe_reviews')
+          .select('id, post_id, rating, content, images, video_url, created_at, posts:post_id(id, title, slug)')
+          .eq('user_id', profileData.id)
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false })
+          .limit(20)
+
+        // Combine and sort by date
+        const combined = [
+          ...(placeReviews || []).map((r: any) => ({ ...r, review_type: 'place' as const })),
+          ...(recipeReviews || []).map((r: any) => ({ ...r, review_type: 'recipe' as const })),
+        ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+        setUserReviews(combined)
+      } catch (err) {
+        console.error('Error loading reviews:', err)
+      }
+
       // Fetch subscription if viewing own profile
       if (user && profileData.id === user.id) {
         try {
@@ -394,10 +426,13 @@ export default function ProfilePage() {
               { key: 'recipe', label: 'Recipes', count: recipePosts.length },
               { key: 'place', label: 'Places', count: placePosts.length },
               { key: 'event', label: 'Events', count: eventPosts.length },
+              { key: 'reviews', label: 'Reviews', count: userReviews.length },
             ]
 
             const filteredPosts = profileTab === 'all'
               ? posts
+              : profileTab === 'reviews'
+              ? []
               : posts?.filter((p: any) => p.category === profileTab) || []
 
             return (
@@ -418,7 +453,81 @@ export default function ProfilePage() {
                   ))}
                 </div>
 
-                {!filteredPosts || filteredPosts.length === 0 ? (
+                {profileTab === 'reviews' ? (
+                  userReviews.length === 0 ? (
+                    <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
+                      <p>No reviews yet.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {userReviews.map((review: any) => {
+                        const isPlace = review.review_type === 'place'
+                        const linkedName = isPlace
+                          ? review.places?.name
+                          : review.posts?.title
+                        const linkedHref = isPlace
+                          ? `/place/${review.places?.slug || review.place_id}`
+                          : `/recipe/${review.posts?.slug || review.post_id}`
+
+                        return (
+                          <div
+                            key={`${review.review_type}-${review.id}`}
+                            className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4"
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <span
+                                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                                  isPlace
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-purple-100 text-purple-800'
+                                }`}
+                              >
+                                {isPlace ? 'Place review' : 'Recipe review'}
+                              </span>
+                              <StarRating rating={review.rating} size="sm" />
+                            </div>
+
+                            {linkedName && (
+                              <Link
+                                href={linkedHref}
+                                className="text-sm font-medium text-primary hover:underline mb-1 inline-block"
+                              >
+                                {linkedName}
+                              </Link>
+                            )}
+
+                            {review.content && (
+                              <p className="text-sm text-on-surface-variant line-clamp-2 mt-1">
+                                {review.content}
+                              </p>
+                            )}
+
+                            {review.images && review.images.length > 0 && (
+                              <div className="flex gap-2 mt-2 overflow-x-auto">
+                                {review.images.slice(0, 4).map((img: string, i: number) => (
+                                  <img
+                                    key={i}
+                                    src={img}
+                                    alt={`Review image ${i + 1}`}
+                                    className="h-16 w-16 rounded-md object-cover flex-shrink-0"
+                                  />
+                                ))}
+                              </div>
+                            )}
+
+                            <p className="text-xs text-outline mt-2">
+                              {new Date(review.created_at).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })}
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )
+                ) : !filteredPosts || filteredPosts.length === 0 ? (
                   <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
                     <p>No {profileTab === 'all' ? 'posts' : profileTab === 'recipe' ? 'recipes' : profileTab === 'place' ? 'places' : 'events'} yet.</p>
                   </div>
