@@ -126,7 +126,7 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
           max_lat: bounds.maxLat,
           max_lng: bounds.maxLng,
           cat,
-          lim: 500,
+          lim: 3000,
         })
 
       if (rpcError) throw rpcError
