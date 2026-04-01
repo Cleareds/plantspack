@@ -195,3 +195,66 @@ export async function PUT(
     return NextResponse.json({ error: 'Failed to update place' }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const serverSupabase = await createServerClient()
+
+    const { data: { session } } = await serverSupabase.auth.getSession()
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const admin = createAdminClient()
+
+    // Fetch place to check ownership
+    const { data: place } = await admin
+      .from('places')
+      .select('id, created_by')
+      .eq('id', id)
+      .single()
+
+    if (!place) {
+      return NextResponse.json({ error: 'Place not found' }, { status: 404 })
+    }
+
+    // Check authorization
+    const { data: userProfile } = await admin
+      .from('users')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
+
+    const isAdmin = userProfile?.role === 'admin'
+    const isCreator = place.created_by === session.user.id
+
+    if (!isAdmin && !isCreator) {
+      return NextResponse.json({ error: 'Not authorized to delete this place' }, { status: 403 })
+    }
+
+    // Delete linked posts first (FK constraint)
+    await admin.from('posts').delete().eq('place_id', id)
+
+    // Delete from pack_places
+    await admin.from('pack_places').delete().eq('place_id', id)
+
+    // Delete place reviews
+    await admin.from('place_reviews').delete().eq('place_id', id)
+
+    // Delete favorite_places
+    await admin.from('favorite_places').delete().eq('place_id', id)
+
+    // Delete the place
+    const { error } = await admin.from('places').delete().eq('id', id)
+    if (error) throw error
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('[Place API] Delete error:', error)
+    return NextResponse.json({ error: 'Failed to delete place' }, { status: 500 })
+  }
+}

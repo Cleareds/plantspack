@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Pencil } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import EditPlace from './EditPlace'
@@ -28,12 +28,31 @@ export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
   const { user, profile } = useAuth()
   const router = useRouter()
   const [showEdit, setShowEdit] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   if (!user) return null
 
   const isAdmin = (profile as any)?.role === 'admin'
   const canEdit = isAdmin || user.id === place.created_by || user.id === place.owner?.user_id
   if (!canEdit) return null
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete "${place.name}"? This will also remove any linked posts. This cannot be undone.`)) return
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/places/${place.id}`, { method: 'DELETE' })
+      if (response.ok) {
+        router.push('/vegan-places')
+      } else {
+        const data = await response.json()
+        alert(data.error || 'Failed to delete place')
+      }
+    } catch {
+      alert('Failed to delete place. Please try again.')
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <>
@@ -43,6 +62,15 @@ export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
       >
         <Pencil className="h-4 w-4" />
         <span>Edit</span>
+      </button>
+
+      <button
+        onClick={handleDelete}
+        disabled={deleting}
+        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 ghost-border hover:bg-red-50 rounded-xl transition-colors disabled:opacity-50"
+      >
+        <Trash2 className="h-4 w-4" />
+        <span>{deleting ? 'Deleting...' : 'Delete'}</span>
       </button>
 
       <EditPlace
