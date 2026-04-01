@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
   Search,
@@ -230,7 +230,8 @@ export default function PostsManagement() {
               {posts.map((post) => {
                 const isActing = actionLoading === post.id
                 return (
-                  <tr key={post.id} className={post.deleted_at ? 'bg-red-50' : 'hover:bg-surface-container-low'}>
+                  <React.Fragment key={post.id}>
+                  <tr className={post.deleted_at ? 'bg-red-50' : 'hover:bg-surface-container-low'}>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span className="text-sm font-medium text-on-surface">
                         @{post.users?.username || 'unknown'}
@@ -361,6 +362,7 @@ export default function PostsManagement() {
                       </td>
                     </tr>
                   )}
+                  </React.Fragment>
                 )
               })}
             </tbody>
