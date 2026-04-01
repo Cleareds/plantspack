@@ -38,7 +38,8 @@ interface Post {
     username: string
     avatar_url: string | null
   }
-  post_likes: { id: string; user_id: string; users: { username: string } }[]
+  post_likes: { id: string; user_id: string }[]
+  post_reactions: { id: string; user_id: string; reaction_type: string; users: { username: string } }[]
   comments: { id: string }[]
 }
 
@@ -64,7 +65,7 @@ export default function PostsManagement() {
     try {
       let query = supabase
         .from('posts')
-        .select('id, user_id, title, content, category, location_city, location_region, privacy, is_pinned, created_at, deleted_at, users(username, avatar_url), post_likes(id, user_id, users(username)), comments(id)', { count: 'exact' })
+        .select('id, user_id, title, content, category, location_city, location_region, privacy, is_pinned, created_at, deleted_at, users(username, avatar_url), post_likes(id, user_id), post_reactions(id, user_id, reaction_type, users(username)), comments(id)', { count: 'exact' })
 
       if (showDeleted) {
         query = query.not('deleted_at', 'is', null)
@@ -257,9 +258,9 @@ export default function PostsManagement() {
                         <button
                           onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
                           className="flex items-center gap-0.5 hover:text-red-600 transition-colors"
-                          title="Click to see who liked"
+                          title="Click to see who reacted"
                         >
-                          <Heart className="h-3 w-3" /> {post.post_likes?.length || 0}
+                          <Heart className="h-3 w-3" /> {post.post_reactions?.length || 0}
                         </button>
                         <span className="flex items-center gap-0.5">
                           <MessageCircle className="h-3 w-3" /> {post.comments?.length || 0}
@@ -330,16 +331,19 @@ export default function PostsManagement() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div>
                             <h4 className="font-medium text-on-surface mb-1 flex items-center gap-1">
-                              <Heart className="h-3.5 w-3.5 text-red-500" /> Likes ({post.post_likes?.length || 0})
+                              <Heart className="h-3.5 w-3.5 text-red-500" /> Reactions ({post.post_reactions?.length || 0})
                             </h4>
-                            {post.post_likes?.length > 0 ? (
+                            {post.post_reactions?.length > 0 ? (
                               <ul className="text-xs text-on-surface-variant space-y-0.5">
-                                {post.post_likes.map((like: any) => (
-                                  <li key={like.id}>@{like.users?.username || 'unknown'}</li>
+                                {post.post_reactions.map((r: any) => (
+                                  <li key={r.id}>
+                                    <a href={`/user/${r.users?.username}`} target="_blank" className="text-primary hover:underline">@{r.users?.username || 'unknown'}</a>
+                                    <span className="text-outline ml-1">({r.reaction_type})</span>
+                                  </li>
                                 ))}
                               </ul>
                             ) : (
-                              <p className="text-xs text-outline">No likes yet</p>
+                              <p className="text-xs text-outline">No reactions yet</p>
                             )}
                           </div>
                           <div>
