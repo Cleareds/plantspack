@@ -34,6 +34,7 @@ interface PlaceData {
     description: string
     website: string
     is_pet_friendly: boolean
+    vegan_level: 'fully_vegan' | 'vegan_friendly'
     city?: string
     country?: string
 }
@@ -73,8 +74,9 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     const [productData, setProductData] = useState<Partial<ProductData>>(() => loadDraft()?.productData || {})
     const [placeData, setPlaceData] = useState<PlaceData>(() => loadDraft()?.placeData || {
         name: '', category: 'eat', address: '', latitude: 0, longitude: 0,
-        description: '', website: '', is_pet_friendly: false,
+        description: '', website: '', is_pet_friendly: false, vegan_level: 'fully_vegan',
     })
+    const [publishToFeed, setPublishToFeed] = useState(true)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -309,7 +311,9 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
             return
         }
 
-        if (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) {
+        // When saving a place without publishing to feed, content is not required
+        const skipFeedPost = category === 'place' && !publishToFeed
+        if (!skipFeedPost && !content.trim() && imageUrls.length === 0 && videoUrls.length === 0) {
             setError('Please add some content, images, or videos')
             return
         }
@@ -400,6 +404,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             description: placeData.description.trim() || null,
                             website: placeData.website.trim() || null,
                             is_pet_friendly: placeData.is_pet_friendly,
+                            vegan_level: placeData.vegan_level,
                             images: imageUrls.length > 0 ? imageUrls : [],
                             created_by: user.id,
                             city: placeData.city || null,
@@ -418,96 +423,101 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 }
             }
 
-            // Add location data if user chose to share
-            if (shareLocation && locationData) {
-                if (locationData.city) postData.location_city = locationData.city
-                if (locationData.region) postData.location_region = locationData.region
-            }
+            // Skip post creation if place category with publishToFeed unchecked
+            const shouldCreatePost = !(category === 'place' && !publishToFeed)
 
-            // Only add images field if we have images to avoid database errors
-            if (imageUrls.length > 0) {
-                postData.images = imageUrls
-            }
-
-            // Only add videos field if we have videos
-            if (videoUrls.length > 0) {
-                postData.video_urls = videoUrls
-            }
-
-            // Extract hashtags and mentions before creating post
-            const hashtags = extractHashtags(content)
-            const mentions = extractMentions(content)
-
-            // Resolve mentions to user IDs
-            let mentionedUserIds: string[] = []
-            if (mentions.length > 0) {
-                mentionedUserIds = await resolveUsernames(mentions)
-                if (mentionedUserIds.length > 0) {
-                    postData.mentioned_users = mentionedUserIds
+            if (shouldCreatePost) {
+                // Add location data if user chose to share
+                if (shareLocation && locationData) {
+                    if (locationData.city) postData.location_city = locationData.city
+                    if (locationData.region) postData.location_region = locationData.region
                 }
-            }
 
-            const {data: createdPost, error: dbError} = await supabase
-                .from('posts')
-                .insert(postData)
-                .select('id')
-                .single()
+                // Only add images field if we have images to avoid database errors
+                if (imageUrls.length > 0) {
+                    postData.images = imageUrls
+                }
 
-            if (dbError) {
-                console.error('Database error:', dbError)
-                throw new Error(dbError.message || 'Failed to create post')
-            }
+                // Only add videos field if we have videos
+                if (videoUrls.length > 0) {
+                    postData.video_urls = videoUrls
+                }
 
-            if (!createdPost) {
-                throw new Error('Post created but ID not returned')
-            }
+                // Extract hashtags and mentions before creating post
+                const hashtags = extractHashtags(content)
+                const mentions = extractMentions(content)
 
-            // Process hashtags via API endpoint (uses service role)
-            if (hashtags.length > 0) {
-                try {
-                    const response = await fetch('/api/posts/hashtags', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            postId: createdPost.id,
-                            hashtags: hashtags
-                        })
-                    })
-
-                    if (!response.ok) {
-                        const errorData = await response.json()
-                        console.error('[Hashtags] API error:', errorData)
-                    } else {
-                        const result = await response.json()
-                        console.log('[Hashtags] Successfully processed:', result)
+                // Resolve mentions to user IDs
+                let mentionedUserIds: string[] = []
+                if (mentions.length > 0) {
+                    mentionedUserIds = await resolveUsernames(mentions)
+                    if (mentionedUserIds.length > 0) {
+                        postData.mentioned_users = mentionedUserIds
                     }
-                } catch (hashtagError) {
-                    console.error('[Hashtags] Error processing hashtags:', hashtagError)
-                    // Don't fail the post creation if hashtag processing fails
                 }
-            }
 
-            // Send notifications to mentioned users
-            if (mentionedUserIds.length > 0) {
-                try {
-                    for (const mentionedUserId of mentionedUserIds) {
-                        // Don't notify if user mentioned themselves
-                        if (mentionedUserId !== user.id) {
-                            await fetch('/api/notifications/create', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({
-                                    userId: mentionedUserId,
-                                    type: 'mention',
-                                    entityType: 'post',
-                                    entityId: createdPost.id,
-                                }),
+                const {data: createdPost, error: dbError} = await supabase
+                    .from('posts')
+                    .insert(postData)
+                    .select('id')
+                    .single()
+
+                if (dbError) {
+                    console.error('Database error:', dbError)
+                    throw new Error(dbError.message || 'Failed to create post')
+                }
+
+                if (!createdPost) {
+                    throw new Error('Post created but ID not returned')
+                }
+
+                // Process hashtags via API endpoint (uses service role)
+                if (hashtags.length > 0) {
+                    try {
+                        const response = await fetch('/api/posts/hashtags', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                postId: createdPost.id,
+                                hashtags: hashtags
                             })
+                        })
+
+                        if (!response.ok) {
+                            const errorData = await response.json()
+                            console.error('[Hashtags] API error:', errorData)
+                        } else {
+                            const result = await response.json()
+                            console.log('[Hashtags] Successfully processed:', result)
                         }
+                    } catch (hashtagError) {
+                        console.error('[Hashtags] Error processing hashtags:', hashtagError)
+                        // Don't fail the post creation if hashtag processing fails
                     }
-                } catch (notifError) {
-                    console.error('Error sending mention notifications:', notifError)
-                    // Don't fail the post creation if notification fails
+                }
+
+                // Send notifications to mentioned users
+                if (mentionedUserIds.length > 0) {
+                    try {
+                        for (const mentionedUserId of mentionedUserIds) {
+                            // Don't notify if user mentioned themselves
+                            if (mentionedUserId !== user.id) {
+                                await fetch('/api/notifications/create', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({
+                                        userId: mentionedUserId,
+                                        type: 'mention',
+                                        entityType: 'post',
+                                        entityId: createdPost.id,
+                                    }),
+                                })
+                            }
+                        }
+                    } catch (notifError) {
+                        console.error('Error sending mention notifications:', notifError)
+                        // Don't fail the post creation if notification fails
+                    }
                 }
             }
 
@@ -530,8 +540,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 longitude: 0,
                 description: '',
                 website: '',
-                is_pet_friendly: false
+                is_pet_friendly: false,
+                vegan_level: 'fully_vegan',
             })
+            setPublishToFeed(true)
             setImageUrls([])
             setVideoUrls([])
             setShowImageUploader(false)
@@ -1011,6 +1023,53 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     />
                                     <span className="text-sm text-on-surface-variant">Pet Friendly</span>
                                 </label>
+
+                                {/* Vegan Level */}
+                                <div>
+                                    <p className="text-xs font-medium text-on-surface-variant mb-1.5">Vegan Level</p>
+                                    <div className="flex items-center gap-4">
+                                        <label className="flex items-center gap-1.5 cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="vegan_level"
+                                                value="fully_vegan"
+                                                checked={placeData.vegan_level === 'fully_vegan'}
+                                                onChange={() => setPlaceData(prev => ({...prev, vegan_level: 'fully_vegan'}))}
+                                                className="text-primary focus:ring-primary"
+                                            />
+                                            <span className="text-sm text-on-surface-variant">100% Vegan</span>
+                                        </label>
+                                        <label className="flex items-center gap-1.5 cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="vegan_level"
+                                                value="vegan_friendly"
+                                                checked={placeData.vegan_level === 'vegan_friendly'}
+                                                onChange={() => setPlaceData(prev => ({...prev, vegan_level: 'vegan_friendly'}))}
+                                                className="text-primary focus:ring-primary"
+                                            />
+                                            <span className="text-sm text-on-surface-variant">Vegan-Friendly</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {/* Publish to feed checkbox */}
+                                <div>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={publishToFeed}
+                                            onChange={(e) => setPublishToFeed(e.target.checked)}
+                                            className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
+                                        />
+                                        <span className="text-sm text-on-surface-variant">Publish to community feed</span>
+                                    </label>
+                                    {!publishToFeed && (
+                                        <p className="text-xs text-outline mt-1 ml-6">
+                                            The place will be saved to the map but no feed post will be created. Post content and images will not be saved.
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         )}
 
@@ -1148,14 +1207,14 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 <button
                                     type="submit"
                                     disabled={
-                                        (!content.trim() && imageUrls.length === 0 && videoUrls.length === 0) ||
+                                        (!(category === 'place' && !publishToFeed) && !content.trim() && imageUrls.length === 0 && videoUrls.length === 0) ||
                                         loading ||
                                         (maxChars !== -1 && charCount > maxChars)
                                     }
                                     className="flex items-center space-x-1 silk-gradient hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md font-medium transition-colors"
                                 >
                                     <Send className="h-4 w-4"/>
-                                    <span>{loading ? 'Posting...' : 'Post'}</span>
+                                    <span>{loading ? 'Posting...' : (category === 'place' && !publishToFeed ? 'Save Place' : 'Post')}</span>
                                 </button>
                                 <div className="flex items-center space-x-2">
                     <span

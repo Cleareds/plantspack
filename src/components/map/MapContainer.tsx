@@ -91,6 +91,7 @@ export default function MapContainerComponent() {
     description: '',
     website: '',
     is_pet_friendly: false,
+    vegan_level: 'fully_vegan' as 'fully_vegan' | 'vegan_friendly',
     latitude: 0,
     longitude: 0,
     city: '' as string | undefined,
@@ -347,7 +348,7 @@ export default function MapContainerComponent() {
     try {
       const { data: insertedPlace, error } = await supabase
         .from('places')
-        .insert({ ...newPlace, images: placeImages, created_by: user.id, city: newPlace.city || null, country: newPlace.country || null })
+        .insert({ ...newPlace, vegan_level: newPlace.vegan_level, images: placeImages, created_by: user.id, city: newPlace.city || null, country: newPlace.country || null })
         .select(`*, users(id, username, first_name, last_name), favorite_places(id, user_id)`)
         .single()
       if (error) throw error
@@ -356,7 +357,7 @@ export default function MapContainerComponent() {
       const addedCoords: [number, number] = [newPlace.latitude, newPlace.longitude]
 
       setShowAddForm(false)
-      setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0, city: undefined, country: undefined })
+      setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, vegan_level: 'fully_vegan', latitude: 0, longitude: 0, city: undefined, country: undefined })
       setPlaceImages([])
       setShowPlaceImageUploader(false)
       setAddressSearchQuery('')
@@ -759,6 +760,35 @@ export default function MapContainerComponent() {
                 <label htmlFor="pet-friendly" className="ml-2 block text-sm text-on-surface-variant">
                   Pet Friendly
                 </label>
+              </div>
+
+              {/* Vegan Level */}
+              <div>
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">Vegan Level</label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="map_vegan_level"
+                      value="fully_vegan"
+                      checked={newPlace.vegan_level === 'fully_vegan'}
+                      onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: 'fully_vegan' }))}
+                      className="text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm text-on-surface-variant">100% Vegan</span>
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="map_vegan_level"
+                      value="vegan_friendly"
+                      checked={newPlace.vegan_level === 'vegan_friendly'}
+                      onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: 'vegan_friendly' }))}
+                      className="text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm text-on-surface-variant">Vegan-Friendly</span>
+                  </label>
+                </div>
               </div>
 
               {/* Images */}
