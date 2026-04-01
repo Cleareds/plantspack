@@ -55,6 +55,9 @@ export default function PlacesManagement() {
   })
   const [creating, setCreating] = useState(false)
   const [successPlace, setSuccessPlace] = useState<{ name: string; lat: number; lng: number } | null>(null)
+  const [ownerModal, setOwnerModal] = useState<{ placeId: string; placeName: string } | null>(null)
+  const [ownerUsername, setOwnerUsername] = useState('')
+  const [assigningOwner, setAssigningOwner] = useState(false)
 
   const loadPlaces = useCallback(async () => {
     setLoading(true)
@@ -166,6 +169,64 @@ export default function PlacesManagement() {
       alert(error instanceof Error ? error.message : 'Failed to create place')
     } finally {
       setCreating(false)
+    }
+  }
+
+  const handleAssignOwner = async () => {
+    if (!ownerModal || !ownerUsername.trim()) return
+    setAssigningOwner(true)
+    try {
+      // Find user by username
+      const { data: user, error: userErr } = await supabase
+        .from('users')
+        .select('id, username')
+        .eq('username', ownerUsername.trim())
+        .single()
+
+      if (userErr || !user) {
+        alert(`User "${ownerUsername}" not found`)
+        return
+      }
+
+      // Check if already owner
+      const { data: existing } = await supabase
+        .from('place_owners')
+        .select('id')
+        .eq('place_id', ownerModal.placeId)
+        .eq('user_id', user.id)
+        .is('removed_at', null)
+        .maybeSingle()
+
+      if (existing) {
+        alert(`${user.username} is already the owner of this place`)
+        return
+      }
+
+      // Remove any existing owner first
+      await supabase
+        .from('place_owners')
+        .update({ removed_at: new Date().toISOString() })
+        .eq('place_id', ownerModal.placeId)
+        .is('removed_at', null)
+
+      // Insert new owner
+      const { error } = await supabase
+        .from('place_owners')
+        .insert({
+          place_id: ownerModal.placeId,
+          user_id: user.id,
+          verified_by: user.id,
+        })
+
+      if (error) throw error
+
+      alert(`${user.username} is now the verified owner of "${ownerModal.placeName}"`)
+      setOwnerModal(null)
+      setOwnerUsername('')
+    } catch (error: any) {
+      alert(error?.message || 'Failed to assign owner')
+    } finally {
+      setAssigningOwner(false)
     }
   }
 
@@ -332,6 +393,13 @@ export default function PlacesManagement() {
                     View
                   </button>
                   <button
+                    onClick={() => setOwnerModal({ placeId: place.id, placeName: place.name })}
+                    className="inline-flex items-center justify-center px-3 py-2 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
+                  >
+                    <BadgeCheck className="h-3 w-3 mr-1" />
+                    Owner
+                  </button>
+                  <button
                     onClick={() => handleDeletePlace(place.id, place.name)}
                     className="inline-flex items-center justify-center px-3 py-2 border border-red-300 rounded-md text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100"
                   >
@@ -393,6 +461,50 @@ export default function PlacesManagement() {
             Next
             <ChevronRight className="h-4 w-4 ml-1" />
           </button>
+        </div>
+      )}
+
+      {/* Assign Owner Modal */}
+      {ownerModal && (
+        <div className="fixed inset-0 bg-outline bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="px-6 py-4 border-b flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-on-surface">Assign Owner</h2>
+              <button onClick={() => { setOwnerModal(null); setOwnerUsername('') }} className="text-outline hover:text-on-surface">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="px-6 py-4 space-y-4">
+              <p className="text-sm text-on-surface-variant">
+                Assign a verified owner to <strong>{ownerModal.placeName}</strong>. The user will get an owner badge and edit permissions.
+              </p>
+              <div>
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">Username</label>
+                <input
+                  type="text"
+                  value={ownerUsername}
+                  onChange={(e) => setOwnerUsername(e.target.value)}
+                  placeholder="e.g. kathi_flowerista"
+                  className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => { setOwnerModal(null); setOwnerUsername('') }}
+                  className="px-4 py-2 border border-outline-variant rounded-md text-sm font-medium text-on-surface-variant hover:bg-surface-container-low"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAssignOwner}
+                  disabled={!ownerUsername.trim() || assigningOwner}
+                  className="px-4 py-2 bg-primary text-white rounded-md text-sm font-medium hover:bg-primary disabled:opacity-50"
+                >
+                  {assigningOwner ? 'Assigning...' : 'Assign Owner'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
