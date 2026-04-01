@@ -106,6 +106,9 @@ export default function ProfilePage() {
           ),
           post_likes (id, user_id),
           comments (id),
+          place:place_id (
+            id, name, slug, address, category, images, average_rating, is_pet_friendly, website
+          ),
           parent_post:parent_post_id (
             id,
             user_id,

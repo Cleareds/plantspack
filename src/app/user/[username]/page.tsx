@@ -176,6 +176,9 @@ export default function UserProfilePage() {
           ),
           comments (
             id
+          ),
+          place:place_id (
+            id, name, slug, address, category, images, average_rating, is_pet_friendly, website
           )
         `)
         .eq('user_id', profileUser.id)
