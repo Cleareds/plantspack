@@ -119,19 +119,34 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     viewportRef.current = bounds
     fetchInFlight.current = true
     try {
-      const { data: rpcData, error: rpcError } = await supabase
-        .rpc('viewport_places', {
-          min_lat: bounds.minLat,
-          min_lng: bounds.minLng,
-          max_lat: bounds.maxLat,
-          max_lng: bounds.maxLng,
-          cat,
-          lim: 3000,
-        })
+      // Fetch all places in viewport with pagination (Supabase caps at 1000 per query)
+      const allPlaces: any[] = []
+      let offset = 0
+      const batchSize = 1000
+      while (true) {
+        let query = supabase
+          .from('places')
+          .select('*')
+          .gte('latitude', bounds.minLat)
+          .lte('latitude', bounds.maxLat)
+          .gte('longitude', bounds.minLng)
+          .lte('longitude', bounds.maxLng)
+          .order('name')
+          .range(offset, offset + batchSize - 1)
 
-      if (rpcError) throw rpcError
+        if (cat !== 'all') {
+          query = query.eq('category', cat)
+        }
 
-      const rawPlaces = rpcData || []
+        const { data, error: queryError } = await query
+        if (queryError) throw queryError
+        if (!data || data.length === 0) break
+        allPlaces.push(...data)
+        if (data.length < batchSize) break
+        offset += batchSize
+      }
+
+      const rawPlaces = allPlaces
       if (rawPlaces.length === 0) {
         setMapPlaces([])
         return
