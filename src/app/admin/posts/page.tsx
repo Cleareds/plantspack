@@ -233,9 +233,9 @@ export default function PostsManagement() {
                   <React.Fragment key={post.id}>
                   <tr className={post.deleted_at ? 'bg-red-50' : 'hover:bg-surface-container-low'}>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm font-medium text-on-surface">
+                      <a href={`/user/${post.users?.username}`} target="_blank" className="text-sm font-medium text-primary hover:underline">
                         @{post.users?.username || 'unknown'}
-                      </span>
+                      </a>
                     </td>
                     <td className="px-4 py-3 max-w-xs">
                       <p className="text-sm text-on-surface-variant truncate">
@@ -350,6 +350,22 @@ export default function PostsManagement() {
                               <p>Privacy: {post.privacy}</p>
                               <p>Comments: {post.comments?.length || 0}</p>
                               {post.is_pinned && <p className="text-primary font-medium">Pinned post</p>}
+                              <p>Author: <a href={`/user/${post.users?.username}`} target="_blank" className="text-primary hover:underline">@{post.users?.username}</a></p>
+                            </div>
+                            <div className="flex gap-2 mt-2">
+                              <a
+                                href={`/${post.category === 'recipe' ? 'recipe' : post.category === 'event' ? 'event' : 'post'}/${post.id}`}
+                                target="_blank"
+                                className="text-xs text-primary hover:underline"
+                              >
+                                View on site →
+                              </a>
+                              <a
+                                href={`/admin/users`}
+                                className="text-xs text-primary hover:underline"
+                              >
+                                Manage users →
+                              </a>
                             </div>
                           </div>
                           <div>
