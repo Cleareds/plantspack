@@ -400,7 +400,7 @@ export default function MapContainerComponent() {
     setAddressSearchQuery('')
     setAddressSearchResults([])
     setShowAddressSearchResults(false)
-    setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, latitude: 0, longitude: 0, city: undefined, country: undefined })
+    setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, vegan_level: 'fully_vegan', latitude: 0, longitude: 0, city: undefined, country: undefined })
     setPlaceImages([])
     setShowPlaceImageUploader(false)
   }, [])
