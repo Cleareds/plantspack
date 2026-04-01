@@ -14,22 +14,32 @@ import {
   MapPin,
   Lock,
   Globe,
-  Users
+  Users,
+  Heart,
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
+  Pin
 } from 'lucide-react'
 
 interface Post {
   id: string
   user_id: string
+  title: string | null
   content: string
+  category: string
   location_city: string | null
   location_region: string | null
   privacy: string
+  is_pinned: boolean
   created_at: string
   deleted_at: string | null
   users: {
     username: string
     avatar_url: string | null
   }
+  post_likes: { id: string; user_id: string; users: { username: string } }[]
+  comments: { id: string }[]
 }
 
 const POSTS_PER_PAGE = 30
@@ -43,6 +53,7 @@ export default function PostsManagement() {
   const [filterPrivacy, setFilterPrivacy] = useState<'all' | 'public' | 'friends' | 'private'>('all')
   const [showDeleted, setShowDeleted] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [expandedPost, setExpandedPost] = useState<string | null>(null)
 
   useEffect(() => {
     loadPosts()
@@ -53,7 +64,7 @@ export default function PostsManagement() {
     try {
       let query = supabase
         .from('posts')
-        .select('id, user_id, content, location_city, location_region, privacy, created_at, deleted_at, users(username, avatar_url)', { count: 'exact' })
+        .select('id, user_id, title, content, category, location_city, location_region, privacy, is_pinned, created_at, deleted_at, users(username, avatar_url), post_likes(id, user_id, users(username)), comments(id)', { count: 'exact' })
 
       if (showDeleted) {
         query = query.not('deleted_at', 'is', null)
@@ -208,6 +219,8 @@ export default function PostsManagement() {
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">User</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider">Content</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider hidden lg:table-cell">Category</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider hidden md:table-cell">Stats</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider hidden md:table-cell">Date</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-outline uppercase tracking-wider hidden sm:table-cell">Privacy</th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-outline uppercase tracking-wider">Actions</th>
@@ -225,14 +238,32 @@ export default function PostsManagement() {
                     </td>
                     <td className="px-4 py-3 max-w-xs">
                       <p className="text-sm text-on-surface-variant truncate">
-                        {post.content || <span className="text-outline italic">No text</span>}
+                        {post.title || post.content || <span className="text-outline italic">No text</span>}
                       </p>
-                      {post.location_city && (
-                        <p className="text-xs text-outline flex items-center gap-1 mt-0.5">
-                          <MapPin className="h-3 w-3" />
-                          {post.location_city}{post.location_region ? `, ${post.location_region}` : ''}
-                        </p>
+                      {post.is_pinned && (
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded mt-0.5">
+                          <Pin className="h-2.5 w-2.5" /> Pinned
+                        </span>
                       )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap hidden lg:table-cell">
+                      <span className="text-xs font-medium text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded capitalize">
+                        {post.category}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap hidden md:table-cell">
+                      <div className="flex items-center gap-3 text-xs text-on-surface-variant">
+                        <button
+                          onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                          className="flex items-center gap-0.5 hover:text-red-600 transition-colors"
+                          title="Click to see who liked"
+                        >
+                          <Heart className="h-3 w-3" /> {post.post_likes?.length || 0}
+                        </button>
+                        <span className="flex items-center gap-0.5">
+                          <MessageCircle className="h-3 w-3" /> {post.comments?.length || 0}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-xs text-outline hidden md:table-cell">
                       {new Date(post.created_at).toLocaleDateString()}
@@ -243,7 +274,17 @@ export default function PostsManagement() {
                     <td className="px-4 py-3 whitespace-nowrap text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => window.open(`/post/${post.id}`, '_blank')}
+                          onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                          className="p-1.5 text-outline hover:text-on-surface-variant hover:bg-surface-container rounded"
+                          title="Toggle details"
+                        >
+                          {expandedPost === post.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        </button>
+                        <button
+                          onClick={() => {
+                            const prefix = post.category === 'recipe' ? 'recipe' : post.category === 'event' ? 'event' : 'post'
+                            window.open(`/${prefix}/${post.id}`, '_blank')
+                          }}
                           className="p-1.5 text-outline hover:text-on-surface-variant hover:bg-surface-container rounded"
                           title="View post"
                         >
@@ -282,6 +323,44 @@ export default function PostsManagement() {
                       </div>
                     </td>
                   </tr>
+                  {expandedPost === post.id && (
+                    <tr>
+                      <td colSpan={7} className="px-4 py-3 bg-surface-container-low">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                          <div>
+                            <h4 className="font-medium text-on-surface mb-1 flex items-center gap-1">
+                              <Heart className="h-3.5 w-3.5 text-red-500" /> Likes ({post.post_likes?.length || 0})
+                            </h4>
+                            {post.post_likes?.length > 0 ? (
+                              <ul className="text-xs text-on-surface-variant space-y-0.5">
+                                {post.post_likes.map((like: any) => (
+                                  <li key={like.id}>@{like.users?.username || 'unknown'}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p className="text-xs text-outline">No likes yet</p>
+                            )}
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-on-surface mb-1">Details</h4>
+                            <div className="text-xs text-on-surface-variant space-y-0.5">
+                              <p>ID: <span className="font-mono text-[10px]">{post.id}</span></p>
+                              <p>Category: <span className="capitalize">{post.category}</span></p>
+                              <p>Privacy: {post.privacy}</p>
+                              <p>Comments: {post.comments?.length || 0}</p>
+                              {post.is_pinned && <p className="text-primary font-medium">Pinned post</p>}
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-on-surface mb-1">Content preview</h4>
+                            <p className="text-xs text-on-surface-variant line-clamp-4 whitespace-pre-wrap">
+                              {post.content?.slice(0, 300)}{post.content?.length > 300 ? '...' : ''}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 )
               })}
             </tbody>
