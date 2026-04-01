@@ -43,7 +43,8 @@ export default function PlaceMap({ latitude, longitude, name, address }: PlaceMa
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          referrerPolicy="origin"
         />
         {customIcon && <Marker position={[latitude, longitude]} icon={customIcon} />}
       </MapContainer>

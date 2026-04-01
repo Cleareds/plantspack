@@ -37,9 +37,10 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
         zoomControl: true,
       }).fitBounds(bounds, { padding: [30, 30] })
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://openstreetmap.org">OSM</a>',
         maxZoom: 18,
+        referrerPolicy: 'origin',
       }).addTo(map)
 
       // Custom green marker
