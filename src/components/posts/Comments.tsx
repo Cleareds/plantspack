@@ -421,7 +421,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                 onChange={(e) => setEditContent(e.target.value)}
                 className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none text-sm"
                 rows={2}
-                maxLength={280}
+                maxLength={500}
               />
               <div className="flex items-center space-x-2 mt-1">
                 <button
@@ -572,11 +572,11 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
               placeholder={replyingToComment ? `Reply to @${replyingToComment.users?.username || 'unknown'}...` : 'Write a comment...'}
               className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
               rows={2}
-              maxLength={280}
+              maxLength={500}
             />
             <div className="flex items-center justify-between mt-2">
-              <span className={`text-xs ${newComment.length > 250 ? 'text-red-500' : 'text-outline'}`}>
-                {newComment.length}/280
+              <span className={`text-xs ${newComment.length > 450 ? 'text-red-500' : 'text-outline'}`}>
+                {newComment.length}/500
               </span>
               <button
                 type="submit"
