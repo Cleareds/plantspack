@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, Globe } from 'lucide-react'
+import { Globe } from 'lucide-react'
+import AddPlaceButton from '@/components/places/AddPlaceButton'
 import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
 import CityPlacesList from '@/components/places/CityPlacesList'
 
@@ -170,13 +171,11 @@ export default async function CityPage({ params }: PageProps) {
               <Globe className="h-4 w-4" />
               View on map
             </Link>
-            <Link
-              href={`/map?location=${encodeURIComponent(cityName + ', ' + countryName)}`}
+            <AddPlaceButton
+              cityName={cityName}
+              countryName={countryName}
               className="inline-flex items-center gap-2 text-sm font-medium text-on-surface-variant ghost-border px-4 py-2 rounded-lg transition-colors hover:bg-surface-container-low"
-            >
-              <MapPin className="h-4 w-4" />
-              Add a place in {cityName}
-            </Link>
+            />
           </div>
         </div>
 
@@ -190,13 +189,11 @@ export default async function CityPage({ params }: PageProps) {
             <p className="text-on-surface-variant mb-6">
               Know a vegan restaurant or store in {cityName}? Be the first to add it!
             </p>
-            <Link
-              href="/map"
+            <AddPlaceButton
+              cityName={cityName}
+              countryName={countryName}
               className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-6 py-3 rounded-xl font-medium"
-            >
-              <MapPin className="h-5 w-5" />
-              Add a place
-            </Link>
+            />
           </div>
         )}
 
@@ -216,7 +213,7 @@ export default async function CityPage({ params }: PageProps) {
         <div className="mt-8 text-center">
           <div className="inline-block bg-surface-container-low rounded-xl px-6 py-4 max-w-lg">
             <p className="text-sm text-on-surface-variant">
-              Missing a place? <Link href="/map" className="text-primary hover:underline font-semibold">Add it to the map</Link> and help the vegan community in {cityName}.
+              Missing a place? <AddPlaceButton cityName={cityName} countryName={countryName} className="text-primary hover:underline font-semibold inline">Add it here</AddPlaceButton> and help the vegan community in {cityName}.
             </p>
           </div>
         </div>

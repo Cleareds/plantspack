@@ -5,9 +5,9 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase, Tables } from '@/lib/supabase'
-import { Plus, Search, Menu, CheckCircle, X, Image as ImageIcon } from 'lucide-react'
-import ImageUploader from '../ui/ImageUploader'
+import { Plus, Search, Menu, CheckCircle, X } from 'lucide-react'
 import { geocodingService } from '@/lib/geocoding'
+import AddPlaceModal from '../places/AddPlaceModal'
 import { usePageState } from '@/hooks/usePageState'
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces'
 import MapView from './MapView'
@@ -68,10 +68,6 @@ export default function MapContainerComponent() {
     limit: 20,
   })
 
-  // Place form images
-  const [placeImages, setPlaceImages] = useState<string[]>([])
-  const [showPlaceImageUploader, setShowPlaceImageUploader] = useState(false)
-
   // Search state
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -81,22 +77,6 @@ export default function MapContainerComponent() {
   // Add form state
   const [showAddForm, setShowAddForm] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
-  const [addressSearchQuery, setAddressSearchQuery] = useState('')
-  const [addressSearchResults, setAddressSearchResults] = useState<any[]>([])
-  const [showAddressSearchResults, setShowAddressSearchResults] = useState(false)
-  const [newPlace, setNewPlace] = useState({
-    name: '',
-    category: 'eat',
-    address: '',
-    description: '',
-    website: '',
-    is_pet_friendly: false,
-    vegan_level: 'fully_vegan' as 'fully_vegan' | 'vegan_friendly',
-    latitude: 0,
-    longitude: 0,
-    city: '' as string | undefined,
-    country: '' as string | undefined,
-  })
 
   // Leaflet icons
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
@@ -129,17 +109,6 @@ export default function MapContainerComponent() {
     }
   }, [])
 
-  // Close address search results when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (!target.closest('.address-search-container')) {
-        setShowAddressSearchResults(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
 
   // Get current location (only if permission already granted, to avoid repeated prompts)
   const getCurrentLocation = useCallback(async (forcePrompt = false) => {
@@ -197,52 +166,6 @@ export default function MapContainerComponent() {
     }
   }, [setCustomCenter])
 
-  // Address search for form
-  const searchFormAddresses = useCallback(async (query: string) => {
-    if (query.length < 3) {
-      setAddressSearchResults([])
-      setShowAddressSearchResults(false)
-      return
-    }
-    try {
-      const data = await geocodingService.search(query, {
-        limit: 8, addressDetails: true, extraTags: true, nameDetails: true,
-      })
-      setAddressSearchResults(data)
-      setShowAddressSearchResults(true)
-    } catch (error) {
-      console.error('Error searching addresses for form:', error)
-      setAddressSearchResults([])
-      setShowAddressSearchResults(false)
-    }
-  }, [])
-
-  // Debounce form address search
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (addressSearchQuery) {
-        searchFormAddresses(addressSearchQuery)
-      } else {
-        setAddressSearchResults([])
-        setShowAddressSearchResults(false)
-      }
-    }, 300)
-    return () => clearTimeout(timeoutId)
-  }, [addressSearchQuery, searchFormAddresses])
-
-  // Handle address selection in form
-  const handleAddressSelect = useCallback((result: any) => {
-    const lat = parseFloat(result.lat)
-    const lon = parseFloat(result.lon)
-    const city = result.address?.city || result.address?.town || result.address?.village || undefined
-    const country = result.address?.country || undefined
-    setNewPlace(prev => ({ ...prev, address: result.display_name, latitude: lat, longitude: lon, city, country }))
-    setAddressSearchQuery(result.display_name)
-    setShowAddressSearchResults(false)
-    if (mapRef.current) {
-      mapRef.current.setView([lat, lon], 15)
-    }
-  }, [])
 
   // Debounced viewport fetch — prevents spamming API on rapid pan/zoom
   const viewportTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -337,73 +260,18 @@ export default function MapContainerComponent() {
     }
   }
 
-  // Add place
-  const handleAddPlace = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user) return
-    if (!newPlace.latitude || !newPlace.longitude) {
-      alert('Please select an address from the search results')
-      return
+  // Handle place added from modal
+  const handlePlaceAdded = useCallback((insertedPlace: any) => {
+    addPlaceLocally(insertedPlace as Place)
+    const coords: [number, number] = [insertedPlace.latitude, insertedPlace.longitude]
+    setCustomCenter(null)
+    setMapCenter(coords)
+    if (mapRef.current) {
+      mapRef.current.setView(coords, 16)
     }
-    try {
-      const { data: insertedPlace, error } = await supabase
-        .from('places')
-        .insert({ ...newPlace, vegan_level: newPlace.vegan_level, images: placeImages, created_by: user.id, city: newPlace.city || null, country: newPlace.country || null })
-        .select(`*, users(id, username, first_name, last_name), favorite_places(id, user_id)`)
-        .single()
-      if (error) throw error
-
-      const addedName = newPlace.name
-      const addedCoords: [number, number] = [newPlace.latitude, newPlace.longitude]
-
-      setShowAddForm(false)
-      setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, vegan_level: 'fully_vegan', latitude: 0, longitude: 0, city: undefined, country: undefined })
-      setPlaceImages([])
-      setShowPlaceImageUploader(false)
-      setAddressSearchQuery('')
-      setAddressSearchResults([])
-      setShowAddressSearchResults(false)
-
-      // Auto-create a linked post for the new place
-      try {
-        await supabase.from('posts').insert({
-          user_id: user.id,
-          content: newPlace.description || `Check out ${newPlace.name}`,
-          category: 'place',
-          place_id: insertedPlace.id,
-          images: placeImages.length > 0 ? placeImages : [],
-          privacy: 'public',
-        })
-      } catch (postError) {
-        console.error('Error auto-creating post for place:', postError)
-      }
-
-      addPlaceLocally(insertedPlace as Place)
-      setCustomCenter(null)
-      setMapCenter(addedCoords)
-
-      if (mapRef.current) {
-        mapRef.current.setView(addedCoords, 16)
-      }
-
-      setSuccessMessage(`"${addedName}" has been added successfully!`)
-      setTimeout(() => setSuccessMessage(''), 5000)
-    } catch (error) {
-      console.error('Error adding place:', error)
-      alert('Failed to add place. Please try again.')
-    }
-  }
-
-  // Close add form
-  const handleFormClose = useCallback(() => {
-    setShowAddForm(false)
-    setAddressSearchQuery('')
-    setAddressSearchResults([])
-    setShowAddressSearchResults(false)
-    setNewPlace({ name: '', category: 'eat', address: '', description: '', website: '', is_pet_friendly: false, vegan_level: 'fully_vegan', latitude: 0, longitude: 0, city: undefined, country: undefined })
-    setPlaceImages([])
-    setShowPlaceImageUploader(false)
-  }, [])
+    setSuccessMessage(`"${insertedPlace.name}" has been added successfully!`)
+    setTimeout(() => setSuccessMessage(''), 5000)
+  }, [addPlaceLocally, setCustomCenter, setMapCenter])
 
   // Pan to place on map
   const handlePanToPlace = useCallback((lat: number, lng: number) => {
@@ -642,199 +510,12 @@ export default function MapContainerComponent() {
         />
       </div>
 
-      {/* Add Place Form Modal */}
+      {/* Add Place Modal */}
       {showAddForm && (
-        <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
-          <div className="bg-surface-container-lowest rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto editorial-shadow">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-on-surface">Add New Place</h2>
-              <button onClick={handleFormClose} className="text-outline hover:text-on-surface-variant">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleAddPlace} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-on-surface-variant mb-1">Place Name *</label>
-                <input
-                  type="text"
-                  value={newPlace.name}
-                  onChange={(e) => setNewPlace(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
-                <select
-                  value={newPlace.category}
-                  onChange={(e) => setNewPlace(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                >
-                  {categories.filter(c => c.value !== 'all').map((category) => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="address-search-container">
-                <label className="block text-sm font-medium text-on-surface-variant mb-1">Address *</label>
-                <div className="relative">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
-                    <input
-                      type="text"
-                      value={addressSearchQuery}
-                      onChange={(e) => setAddressSearchQuery(e.target.value)}
-                      placeholder="Search for address..."
-                      className="w-full pl-10 pr-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                      required
-                    />
-                  </div>
-
-                  {showAddressSearchResults && addressSearchResults.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 bg-surface-container-lowest ghost-border rounded-md editorial-shadow mt-1 z-50 max-h-40 overflow-y-auto">
-                      {addressSearchResults.map((result, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => handleAddressSelect(result)}
-                          className="w-full text-left px-3 py-2 hover:bg-surface-container border-b border-outline-variant/15 last:border-b-0"
-                        >
-                          <div className="text-sm font-medium text-on-surface truncate">
-                            {result.display_name}
-                          </div>
-                          <div className="text-xs text-outline mt-1">
-                            {result.type && <span className="capitalize">{result.type}</span>}
-                            {result.address && (
-                              <span className="ml-2">
-                                {[result.address.country, result.address.state, result.address.city]
-                                  .filter(Boolean)
-                                  .join(', ')}
-                              </span>
-                            )}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                {newPlace.address && (
-                  <div className="mt-1 text-xs text-outline">
-                    Selected: {newPlace.address}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-on-surface-variant mb-1">Description</label>
-                <textarea
-                  value={newPlace.description}
-                  onChange={(e) => setNewPlace(prev => ({ ...prev, description: e.target.value }))}
-                  rows={3}
-                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-on-surface-variant mb-1">Website</label>
-                <input
-                  type="url"
-                  value={newPlace.website}
-                  onChange={(e) => setNewPlace(prev => ({ ...prev, website: e.target.value }))}
-                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                />
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="pet-friendly"
-                  checked={newPlace.is_pet_friendly}
-                  onChange={(e) => setNewPlace(prev => ({ ...prev, is_pet_friendly: e.target.checked }))}
-                  className="h-4 w-4 text-primary focus:ring-primary border-outline-variant/15 rounded"
-                />
-                <label htmlFor="pet-friendly" className="ml-2 block text-sm text-on-surface-variant">
-                  Pet Friendly
-                </label>
-              </div>
-
-              {/* Vegan Level */}
-              <div>
-                <label className="block text-sm font-medium text-on-surface-variant mb-1">Vegan Level</label>
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="map_vegan_level"
-                      value="fully_vegan"
-                      checked={newPlace.vegan_level === 'fully_vegan'}
-                      onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: 'fully_vegan' }))}
-                      className="text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm text-on-surface-variant">100% Vegan</span>
-                  </label>
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="map_vegan_level"
-                      value="vegan_friendly"
-                      checked={newPlace.vegan_level === 'vegan_friendly'}
-                      onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: 'vegan_friendly' }))}
-                      className="text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm text-on-surface-variant">Vegan-Friendly</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Images */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setShowPlaceImageUploader(!showPlaceImageUploader)}
-                  className={`flex items-center gap-1.5 text-sm transition-colors ${
-                    placeImages.length > 0 || showPlaceImageUploader ? 'text-primary' : 'text-outline hover:text-on-surface-variant'
-                  }`}
-                >
-                  <ImageIcon className="h-4 w-4" />
-                  {placeImages.length > 0 ? `${placeImages.length} photo${placeImages.length > 1 ? 's' : ''}` : 'Add photos'}
-                </button>
-                {showPlaceImageUploader && (
-                  <div className="mt-2">
-                    <ImageUploader onImagesChange={setPlaceImages} maxImages={5} />
-                  </div>
-                )}
-                {placeImages.length > 0 && !showPlaceImageUploader && (
-                  <div className="flex gap-1.5 mt-2">
-                    {placeImages.map((url, i) => (
-                      <img key={i} src={url} alt="" className="h-12 w-12 rounded-md object-cover" />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={handleFormClose}
-                  className="flex-1 px-4 py-2 ghost-border rounded-full text-on-surface-variant hover:bg-surface-container-low"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 silk-gradient hover:opacity-90 text-on-primary rounded-full"
-                >
-                  Add Place
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <AddPlaceModal
+          onClose={() => setShowAddForm(false)}
+          onPlaceAdded={handlePlaceAdded}
+        />
       )}
     </div>
   )
