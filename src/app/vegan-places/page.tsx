@@ -26,7 +26,7 @@ export default async function VeganPlacesPage() {
         {/* Hero */}
         <div className="text-center mb-8">
           <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight leading-[1.1] mb-3">
-            Find Vegan Places in <span className="text-primary">Europe</span>
+            Find Vegan Places <span className="text-primary">Worldwide</span>
           </h1>
           <p className="text-on-surface-variant text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-3">
             {total > 0
@@ -82,7 +82,7 @@ export default async function VeganPlacesPage() {
             <div className="text-6xl mb-4">🗺️</div>
             <h2 className="text-xl font-semibold text-on-surface mb-2">Places are being added</h2>
             <p className="text-on-surface-variant mb-6 max-w-md mx-auto">
-              We&apos;re importing and verifying thousands of vegan places across Europe. Check back soon or help by adding places to the map.
+              We&apos;re importing and verifying thousands of vegan places worldwide. Check back soon or help by adding places to the map.
             </p>
             <Link
               href="/map"
@@ -94,11 +94,10 @@ export default async function VeganPlacesPage() {
           </div>
         )}
 
-        {/* Expansion Note */}
+        {/* Coverage Note */}
         <div className="mt-10 text-center">
           <p className="text-sm text-on-surface-variant">
-            Currently focused on Europe. Expanding to other continents soon.{' '}
-            <Link href="/contact" className="text-primary hover:underline">Want your region?</Link>
+            Can&apos;t find your city? <Link href="/map" className="text-primary hover:underline">Add a place</Link> and help grow the directory.
           </p>
         </div>
       </div>

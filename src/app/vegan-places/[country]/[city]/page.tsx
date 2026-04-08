@@ -137,12 +137,12 @@ export default async function CityPage({ params }: PageProps) {
       )}
 
       <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
-        {/* Breadcrumbs */}
+        {/* Breadcrumbs — mobile: Country > City, desktop: full path */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
-          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
-          <span className="text-outline">/</span>
-          <Link href="/vegan-places" className="hover:text-primary transition-colors">Vegan Places</Link>
-          <span className="text-outline">/</span>
+          <Link href="/" className="hidden md:inline hover:text-primary transition-colors">Home</Link>
+          <span className="hidden md:inline text-outline">/</span>
+          <Link href="/vegan-places" className="hidden md:inline hover:text-primary transition-colors">Vegan Places</Link>
+          <span className="hidden md:inline text-outline">/</span>
           <Link href={`/vegan-places/${country}`} className="hover:text-primary transition-colors">{countryName}</Link>
           <span className="text-outline">/</span>
           <span className="text-on-surface font-medium">{cityName}</span>
