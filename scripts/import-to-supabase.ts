@@ -206,6 +206,15 @@ async function main() {
     console.log('  ✅ Geometry updated')
   }
 
+  // Refresh materialized views so directory pages show updated numbers
+  console.log('\n📊 Refreshing directory views...')
+  const { error: viewError } = await supabase.rpc('refresh_directory_views')
+  if (viewError) {
+    console.log('  (refresh_directory_views failed, run manually: SELECT refresh_directory_views())')
+  } else {
+    console.log('  ✅ Directory views refreshed')
+  }
+
   // Summary
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
   console.log('\n═══ IMPORT COMPLETE ═══')
