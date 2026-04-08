@@ -80,6 +80,24 @@ const VEGAN_STRONG_KEYWORDS = [
   '100% vegan', 'complet vegan', 'restaurant vegan',
   // Croatian/Serbian
   '100% veganski', 'potpuno veganski',
+  // Japanese
+  '100%ヴィーガン', 'ヴィーガンレストラン', '完全菜食', 'ビーガン料理', 'ヴィーガン料理',
+  // Korean
+  '100% 비건', '비건 레스토랑', '비건 카페', '완전 채식',
+  // Chinese
+  '100%纯素', '纯素餐厅', '素食餐厅', '全素', '纯素食',
+  // Thai
+  'มังสวิรัติ', 'เจ', 'วีแกน',
+  // Hindi
+  'शाकाहारी', 'वीगन',
+  // Turkish
+  '100% vegan', 'tamamen vegan', 'vegan restoran',
+  // Hebrew
+  'טבעוני', 'מסעדה טבעונית', '100% טבעוני',
+  // Arabic
+  'نباتي', 'مطعم نباتي',
+  // Portuguese (Brazilian)
+  'totalmente vegano', 'restaurante vegano', '100% vegano', 'cozinha vegana',
 ];
 
 const VEGAN_WEAK_KEYWORDS = [
@@ -159,6 +177,17 @@ const KNOWN_VEGAN_CHAINS = [
   /\bthe green\b.*\bkitchen\b/i,
   /\bveggo\b/i,
   /\bveg\s?bar\b/i,
+  // Worldwide chains
+  /\bveganburg/i,
+  /\bveggie grill\b/i,
+  /\bnative foods\b/i,
+  /\bplant power\b/i,
+  /\bgreen monday\b/i,
+  /\bgreen common\b/i,
+  /\bfalafel[\s-]?vegan\b/i,
+  /\bain soph\b/i,
+  /\bt['']s tantan\b/i,
+  /\bkomaki\b.*\bvegan\b/i,
 ];
 
 // ─── HTTP Utilities ──────────────────────────────────────────────────────

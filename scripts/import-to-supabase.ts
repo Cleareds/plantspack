@@ -173,7 +173,7 @@ async function main() {
 
     const { data: result, error } = await supabase
       .from('places')
-      .insert(records)
+      .upsert(records, { onConflict: 'source,source_id', ignoreDuplicates: false })
       .select('id')
 
     if (error) {
