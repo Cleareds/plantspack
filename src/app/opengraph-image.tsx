@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'PlantsPack — Vegan Community Platform for Europe'
+export const alt = 'PlantsPack — Vegan Community Platform'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -10,7 +10,7 @@ export default async function Image() {
     (
       <div
         style={{
-          background: 'linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%)',
+          background: '#fafaf7',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -20,12 +20,19 @@ export default async function Image() {
           padding: '60px',
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://www.plantspack.com/plantspack9.png"
+          width={140}
+          height={140}
+          style={{ marginBottom: 32 }}
+        />
         <div
           style={{
-            fontSize: 72,
+            fontSize: 64,
             fontWeight: 800,
-            color: 'white',
-            marginBottom: 16,
+            color: '#1b4332',
+            marginBottom: 12,
             letterSpacing: '-2px',
           }}
         >
@@ -33,31 +40,31 @@ export default async function Image() {
         </div>
         <div
           style={{
-            fontSize: 20,
-            color: 'rgba(255,255,255,0.7)',
-            marginBottom: 40,
+            fontSize: 18,
+            color: '#6b7280',
+            marginBottom: 36,
             letterSpacing: '4px',
             textTransform: 'uppercase',
           }}
         >
-          vegan syndicate
+          vegan community platform
         </div>
         <div
           style={{
-            fontSize: 32,
-            color: 'white',
+            fontSize: 28,
+            color: '#2d6a4f',
             textAlign: 'center',
             maxWidth: 800,
-            lineHeight: 1.4,
+            lineHeight: 1.5,
           }}
         >
-          2,700+ vegan places · 29 countries · Recipes · Events
+          Vegan places · Recipes · Events · Packs
         </div>
         <div
           style={{
-            fontSize: 22,
-            color: 'rgba(255,255,255,0.6)',
-            marginTop: 30,
+            fontSize: 20,
+            color: '#9ca3af',
+            marginTop: 28,
           }}
         >
           Free · No ads · Community-driven

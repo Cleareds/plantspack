@@ -1,0 +1,775 @@
+[
+  {
+    "name": "Vegan Lasagna with Tofu Ricotta",
+    "description": "This cozy vegan lasagna layers rich marinara, creamy tofu ricotta, velvety mashed butternut squash, and sauteed mushrooms and shallots between tender noodles for a satisfying, crowd-pleasing meal.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/IMG_9900.jpg",
+    "ingredients": [
+      "24 oz marinara sauce",
+      "9 oz package of no-boil whole wheat lasagna noodles",
+      "1 medium butternut squash",
+      "2 tablespoons Earth Balance vegan butter at room temperature",
+      "Sea salt",
+      "Black pepper",
+      "5-6 shallots, chopped",
+      "1 pound shiitake mushrooms, sliced thinly",
+      "4 cloves garlic, minced",
+      "10-15 sprigs thyme",
+      "1 large handful of fresh sage leaves",
+      "Olive oil",
+      "2 tablespoons vegan parmesan cheese",
+      "A few leaves fresh basil or parsley",
+      "14 oz extra-firm tofu",
+      "1/4 cup nutritional yeast",
+      "1/2 teaspoon garlic powder",
+      "1/2 teaspoon onion powder",
+      "1 scant teaspoon sea salt",
+      "1/2 teaspoon black pepper",
+      "1.5 tablespoons extra virgin olive oil",
+      "10-15 leaves basil",
+      "1 lemon, zest and juice",
+      "2 tablespoons vegan parmesan cheese"
+    ],
+    "prepTime": "PT30M",
+    "cookTime": "PT85M",
+    "totalTime": "PT115M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "334 kcal",
+      "protein": "13 g",
+      "fat": "14 g",
+      "carbs": "42 g",
+      "fiber": "9.5 g"
+    },
+    "keywords": "",
+    "category": [
+      "Dinner"
+    ],
+    "cuisine": null,
+    "rating": "5",
+    "ratingCount": "1",
+    "sourceUrl": "https://rainbowplantlife.com/vegan-butternut-mushroom-lasgna-tofu-ricotta/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Vegan Instant Pot Chana Masala",
+    "description": "This vegan Instant Pot Chana Masala is packed with authentic Indian flavor and rivals any restaurant dish, but is easy and quick to make.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/372_image-asset.jpg",
+    "ingredients": [
+      "3 (15-ounce / 440g) cans of chickpeas OR 12 ounces dried chickpeas",
+      "3 tablespoons coconut oil or neutral cooking oil",
+      "2 teaspoons black mustard seeds",
+      "1 1/2 teaspoons cumin seeds",
+      "2 medium onions, finely diced",
+      "4 cloves garlic, minced",
+      "1 1/2 tablespoons freshly minced or grated ginger",
+      "1-2 serrano peppers, minced",
+      "3 bay leaves",
+      "2 teaspoons ground coriander",
+      "1 teaspoon ground turmeric",
+      "1/2 - 1 teaspoon Indian red chili powder",
+      "1 tablespoon garam masala",
+      "1/2 teaspoon black pepper",
+      "1 1/2 teaspoons kosher salt",
+      "1/2 of a 28-oz can whole peeled tomatoes, crushed",
+      "1 1/2 cups vegetable broth or water",
+      "1 1/2 tablespoons fresh lemon juice",
+      "1 cup fresh cilantro leaves, roughly chopped",
+      "Basmati rice and/or Indian flatbread"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT50M",
+    "totalTime": "PT65M",
+    "servings": "6",
+    "nutrition": {
+      "calories": "296 kcal",
+      "protein": "12 g",
+      "fat": "12 g",
+      "carbs": "38 g",
+      "fiber": "12 g"
+    },
+    "keywords": "chana masala, crispy chickpeas, gluten-free, indian recipes, instant pot, nut-free, soy-free",
+    "category": [
+      "Dinner"
+    ],
+    "cuisine": [
+      "Indian"
+    ],
+    "rating": "4.94",
+    "ratingCount": "135",
+    "sourceUrl": "https://rainbowplantlife.com/instant-pot-chana-masala/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Instant Pot Thai Red Curry Sweet Potato Soup",
+    "description": "A dump-and-go Instant Pot recipe that's perfect for busy weeknights. This Instant Pot Thai Red Curry Sweet Potato Soup is made with wholesome ingredients like red lentils and sweet potatoes and is incredibly creamy and aromatic.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/121_image-asset.jpg",
+    "ingredients": [
+      "1 large bunch of scallions, sliced",
+      "5 garlic cloves, minced",
+      "2 tablespoons freshly minced or grated ginger",
+      "1.5 pounds sweet potatoes, peeled and cubed",
+      "3 medium Roma tomatoes, chopped",
+      "4 tablespoons red curry paste",
+      "1 cup red lentils, rinsed and drained",
+      "2 cups vegetable broth",
+      "1/2 teaspoon kosher salt",
+      "1 tablespoon tamari",
+      "1 can lite coconut milk",
+      "1 tablespoon fresh lime juice",
+      "2-3 teaspoons agave nectar",
+      "1/2 cup chopped cilantro"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT30M",
+    "totalTime": "PT50M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "454 kcal",
+      "protein": "16 g",
+      "fat": "9 g",
+      "carbs": "76 g",
+      "fiber": "20 g"
+    },
+    "keywords": "baked sweet potato, curry, gluten-free, instant pot, no added oil, nut-free, thai",
+    "category": [
+      "Appetizer",
+      "Dinner",
+      "Lunch",
+      "Side Dish"
+    ],
+    "cuisine": [
+      "Thai-Inspired"
+    ],
+    "rating": "4.97",
+    "ratingCount": "112",
+    "sourceUrl": "https://rainbowplantlife.com/thai-red-curry-sweet-potato-soup/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Vegan Green Goddess Soup",
+    "description": "A green soup that's not your ordinary detox broth. This green goddess soup is creamy and satisfying, yet 100% wholesome, vegan, gluten-free, and even Paleo. Made with Brussels sprouts, cauliflower, and lots of fresh herbs!",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/313_image-asset.jpg",
+    "ingredients": [
+      "1 tablespoon olive oil",
+      "1 large sweet onion, diced",
+      "3 celery stalks, diced",
+      "6 garlic cloves, minced",
+      "1/2 teaspoon crushed red pepper",
+      "1 1/2 teaspoons kosher salt",
+      "Freshly cracked black pepper",
+      "6 cups vegetable broth",
+      "3 cups shredded Brussels sprouts",
+      "1 medium head of cauliflower, cut into small florets",
+      "1 cup raw cashews, soaked",
+      "3 large handfuls of baby spinach",
+      "1/4 cup mint leaves",
+      "1/4 cup basil leaves",
+      "1/2 cup parsley leaves",
+      "3 tablespoons lemon juice",
+      "1 cup lite canned coconut milk"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT35M",
+    "totalTime": "PT50M",
+    "servings": "6",
+    "nutrition": {
+      "calories": "282 kcal",
+      "protein": "11 g",
+      "fat": "15 g",
+      "carbs": "30 g",
+      "fiber": "7 g"
+    },
+    "keywords": "gluten-free, green goddess, soup, soy-free",
+    "category": [
+      "Dinner",
+      "Lunch",
+      "Soup"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.98",
+    "ratingCount": "35",
+    "sourceUrl": "https://rainbowplantlife.com/vegan-green-goddess-soup/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "One-Pot Pumpkin Pasta (Vegan Pumpkin Alfredo)",
+    "description": "Say goodbye to a sink full of dishes and hello to this one-pot pumpkin pasta! This is the creamiest pumpkin Alfredo pasta ever\u2014you would never even know it's vegan!",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/pumpkinalfredoonblue3x2281of129.jpg",
+    "ingredients": [
+      "1/4 cup olive oil",
+      "1 large yellow onion, diced",
+      "6 garlic cloves, minced",
+      "5 large sage leaves, finely chopped",
+      "1 large sprig of rosemary, leaves finely chopped",
+      "1 tablespoon fresh thyme leaves",
+      "1/4 cup all-purpose flour",
+      "1 can lite coconut milk",
+      "1 1/2 teaspoons kosher salt",
+      "Black pepper",
+      "1/4 teaspoon ground nutmeg",
+      "1 1/2 cups pumpkin puree",
+      "3 1/4 cups vegetable broth",
+      "1 1/2 tablespoons white miso paste",
+      "1/4 cup nutritional yeast",
+      "8 ounces pasta of choice"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT30M",
+    "totalTime": "PT45M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "528 kcal",
+      "protein": "13 g",
+      "fat": "22 g",
+      "carbs": "70 g",
+      "fiber": "8 g"
+    },
+    "keywords": "alfredo, gluten-free, nut-free, one-pot, pumpkin",
+    "category": [
+      "Dinner"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.86",
+    "ratingCount": "68",
+    "sourceUrl": "https://rainbowplantlife.com/one-pot-pumpkin-pasta/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Vegan Buffalo Chickpea Quesadillas",
+    "description": "These Vegan Buffalo Chickpea Quesadillas are the absolute best vegan quesadillas you'll ever try! Made with a spicy buffalo sauce, chickpeas, and a Mexican cheese sauce, this is the ultimate comfort food!",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/soup.jpg",
+    "ingredients": [
+      "1 cup raw cashews, soaked",
+      "1/2 cup vegan unsweetened plain yogurt",
+      "2 tablespoons water or vegetable broth",
+      "1/2 cup salsa of choice",
+      "1 teaspoon ground cumin",
+      "1/2 teaspoon chili powder",
+      "1/2 teaspoon smoked paprika",
+      "1 teaspoon kosher salt",
+      "2 tablespoons nutritional yeast",
+      "1/4 cup vegan butter",
+      "4 tablespoons Frank's hot sauce",
+      "1/8 teaspoon garlic powder",
+      "A pinch of cayenne pepper",
+      "2 teaspoons coconut sugar",
+      "2 teaspoons olive oil",
+      "1 medium yellow onion, diced",
+      "4 cloves garlic, minced",
+      "1 can chickpeas, drained and rinsed",
+      "1 small bunch of scallions, sliced thinly",
+      "8 large flour tortillas"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT40M",
+    "totalTime": "PT60M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "583 kcal",
+      "protein": "18 g",
+      "fat": "29 g",
+      "carbs": "67 g",
+      "fiber": "9 g"
+    },
+    "keywords": "",
+    "category": [
+      "Dinner",
+      "Lunch"
+    ],
+    "cuisine": [
+      "Tex-Mex"
+    ],
+    "rating": "5",
+    "ratingCount": "311",
+    "sourceUrl": "https://rainbowplantlife.com/vegan-buffalo-chickpea-quesadillas/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Smoky Sweet Potato and Pinto Bean Chili",
+    "description": "This Smoky Sweet Potato and Pinto Bean Chili is pantry-friendly, budget-friendly, meal prep-friendly, and freezer friendly! It's hearty, velvety, and sticks to your ribs but is healthy, vegan, and gluten-free.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/pintobeansweetpotatochili283of529.jpg",
+    "ingredients": [
+      "1 1/2 tablespoons olive oil",
+      "1 large yellow onion, diced",
+      "4 garlic cloves, chopped finely",
+      "2 jalapeno peppers, diced",
+      "2 tablespoons tomato paste",
+      "2 tablespoons chili powder",
+      "1 tablespoon ground cumin",
+      "2 teaspoons dried oregano",
+      "1 1/2 teaspoons paprika",
+      "2 cups vegetable broth",
+      "1 1/2 tablespoons unsweetened cocoa powder",
+      "1 bay leaf",
+      "1 1/2 teaspoons kosher salt",
+      "Black pepper",
+      "3 cans pinto beans, drained and rinsed",
+      "1 pound sweet potatoes, peeled and finely diced",
+      "2 chipotle peppers in adobo sauce",
+      "1 can diced tomatoes",
+      "2-3 tablespoons masa harina",
+      "1/4 cup chopped fresh cilantro",
+      "2 teaspoons lime juice"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT50M",
+    "totalTime": "PT70M",
+    "servings": "5",
+    "nutrition": {
+      "calories": "405 kcal",
+      "protein": "17 g",
+      "fat": "7 g",
+      "carbs": "75 g",
+      "fiber": "20 g"
+    },
+    "keywords": "chili, gluten-free, nut-free, soy-free, sweet potato",
+    "category": [
+      "Dinner",
+      "Lunch"
+    ],
+    "cuisine": [
+      "Mexican-inspired",
+      "Southwestern"
+    ],
+    "rating": "4.98",
+    "ratingCount": "75",
+    "sourceUrl": "https://rainbowplantlife.com/smoky-sweet-potato-and-pinto-bean-chili/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Vegan Mushroom Stroganoff",
+    "description": "This Vegan Mushroom Stroganoff is a creamy and hearty dinner fit for a king or queen. Chock-full of healthy, wholesome ingredients, this dish is extremely satisfying.",
+    "image": "https://elavegan.com/wp-content/uploads/2018/09/vegan-mushroom-stroganoff-with-brown-rice-on-a-plate.jpg",
+    "ingredients": [
+      "1 onion (diced)",
+      "2-3 garlic cloves (minced)",
+      "1 tbsp vegetable oil",
+      "11 oz fresh mushrooms (sliced)",
+      "4 tbsp white wine (optional)",
+      "1 tbsp tamari or soy sauce",
+      "3/4 cup vegetable broth",
+      "3/4 cup plant-based milk",
+      "2 tbsp cornstarch",
+      "1 tsp onion powder",
+      "1/2 tsp garlic powder",
+      "1/2 tsp smoked paprika",
+      "1 pinch of red pepper flakes",
+      "Salt & black pepper to taste",
+      "1 tbsp nutritional yeast flakes (optional)",
+      "Fresh thyme leaves and/or parsley",
+      "Serve with rice or pasta"
+    ],
+    "prepTime": "PT10M",
+    "cookTime": "PT20M",
+    "totalTime": "PT30M",
+    "servings": "2",
+    "nutrition": {
+      "calories": "220 kcal",
+      "protein": "9 g",
+      "fat": "9 g",
+      "carbs": "24 g",
+      "fiber": "4 g"
+    },
+    "keywords": "creamy, mushrooms, pasta sauce",
+    "category": [
+      "Dinner",
+      "Main Course"
+    ],
+    "cuisine": [
+      "Russian"
+    ],
+    "rating": "4.96",
+    "ratingCount": "207",
+    "sourceUrl": "https://elavegan.com/vegan-mushroom-stroganoff-gluten-free-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Easy Ratatouille Recipe",
+    "description": "This easy Ratatouille recipe can be made in about 30 minutes. It's low-carb, vegan, gluten-free, low in calories, and fat. A tasty dinner or side dish with eggplant, zucchini, tomatoes, peppers.",
+    "image": "https://elavegan.com/wp-content/uploads/2019/04/easy-ratatouille-recipe-with-eggplant-zucchini-tomatoes-pepper-onion-vegan-low-carb.jpg",
+    "ingredients": [
+      "1 large eggplant",
+      "1 large zucchini",
+      "3 tomatoes",
+      "1 bell pepper",
+      "1 onion, finely chopped",
+      "3 garlic cloves (minced)",
+      "1 tbsp oil",
+      "1/4 cup red wine or vegetable broth",
+      "1 tsp paprika",
+      "1 tsp brown sugar",
+      "3/4 tsp sea salt",
+      "1/2 tsp dried oregano",
+      "1/3 tsp smoked paprika",
+      "1/4 tsp red pepper flakes",
+      "1/4 tsp ground ginger",
+      "1 tbsp tomato paste",
+      "1 tbsp balsamic vinegar",
+      "Fresh thyme",
+      "Black pepper to taste"
+    ],
+    "prepTime": "PT7M",
+    "cookTime": "PT23M",
+    "totalTime": "PT30M",
+    "servings": "3",
+    "nutrition": {
+      "calories": "194 kcal",
+      "protein": "5.7 g",
+      "fat": "5.7 g",
+      "carbs": "20.8 g",
+      "fiber": "10.6 g"
+    },
+    "keywords": "gluten-free, low carb, ratatouille",
+    "category": [
+      "Main Course",
+      "Side Dish"
+    ],
+    "cuisine": [
+      "French"
+    ],
+    "rating": "4.96",
+    "ratingCount": "46",
+    "sourceUrl": "https://elavegan.com/easy-ratatouille-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Kung Pao Cauliflower",
+    "description": "This Kung Pao Cauliflower is a delicious stir-fry which is spicy, hearty, satisfying, and comforting. A great meat-free Chinese takeout alternative to Kung Pao Chicken!",
+    "image": "https://elavegan.com/wp-content/uploads/2019/05/Best-Kung-Pao-Cauliflower-with-gluten-free-rice-noodles.jpg",
+    "ingredients": [
+      "1/2 cup chickpea flour",
+      "4 tbsp cornstarch",
+      "1/2 cup plant-based milk",
+      "1/2 tbsp soy sauce",
+      "1 medium head of cauliflower",
+      "1/2 cup of water",
+      "3 tbsp soy sauce",
+      "2 tbsp rice vinegar",
+      "2 tbsp maple syrup",
+      "1 tbsp cornstarch",
+      "1/2 tsp smoked paprika",
+      "1/4-1/3 tsp cayenne pepper",
+      "2 tsp oil",
+      "4 cloves garlic (minced)",
+      "1 tbsp fresh ginger (minced)",
+      "3/4 tsp peppercorns",
+      "1 small bell pepper (sliced)",
+      "1 tsp sesame seeds",
+      "fresh chives",
+      "peanuts (optional)"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT35M",
+    "totalTime": "PT50M",
+    "servings": "2",
+    "nutrition": {
+      "calories": "266 kcal",
+      "protein": "14 g",
+      "fat": "4 g",
+      "carbs": "37 g",
+      "fiber": "10 g"
+    },
+    "keywords": "cauliflower, kung pao, spicy",
+    "category": [
+      "Main Course"
+    ],
+    "cuisine": [
+      "Chinese"
+    ],
+    "rating": "4.82",
+    "ratingCount": "61",
+    "sourceUrl": "https://elavegan.com/kung-pao-cauliflower/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Shakshuka",
+    "description": "A quick hearty dish which is easy to make. Flavorful and delicious vegan Shakshuka ready in 30 minutes, great as a main dish or side dish.",
+    "image": "https://elavegan.com/wp-content/uploads/2019/07/Egg-free-vegan-Shakshuka-with-plant-based-cheese-in-a-black-pan.jpg",
+    "ingredients": [
+      "1/2 tbsp oil",
+      "1 onion (diced)",
+      "4 cloves of garlic (minced)",
+      "3.5 oz greens of choice",
+      "14 oz diced tomatoes",
+      "11 oz marinara sauce",
+      "1 red bell pepper",
+      "3 heaped tbsp tomato paste",
+      "1/4 cup plant-based cream",
+      "1 1/2 tsp paprika",
+      "1 tsp dried oregano",
+      "1 tsp ground cumin",
+      "3/4 tsp smoked paprika",
+      "2 tsp maple syrup",
+      "1/2 tsp red pepper flakes",
+      "1 (15 oz) can chickpeas",
+      "Salt and pepper to taste",
+      "vegan cheese (optional)"
+    ],
+    "prepTime": "PT10M",
+    "cookTime": "PT20M",
+    "totalTime": "PT30M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "251 kcal",
+      "protein": "9.4 g",
+      "fat": "7.5 g",
+      "carbs": "30 g",
+      "fiber": "9.7 g"
+    },
+    "keywords": "chickpeas, Shakshuka, vegan",
+    "category": [
+      "Main Course",
+      "Side Dish"
+    ],
+    "cuisine": [
+      "African",
+      "Middle Eastern"
+    ],
+    "rating": "5",
+    "ratingCount": "4",
+    "sourceUrl": "https://elavegan.com/vegan-shakshuka/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Peanut Butter Noodles",
+    "description": "Creamy peanut butter noodles with veggies and textured soy protein. Perfect for lunch or weeknight dinner. Healthy, vegan, protein-rich, and ready in 25 minutes.",
+    "image": "https://elavegan.com/wp-content/uploads/2020/04/Peanut-butter-noodles-in-a-black-skillet.jpg",
+    "ingredients": [
+      "150 g rice noodles",
+      "2/3 cup coconut milk (canned)",
+      "1/2 cup vegetable broth",
+      "1 cup textured soy protein",
+      "3 tbsp peanut butter",
+      "1 small carrot",
+      "1 green pepper",
+      "1/2 zucchini",
+      "1/2 tbsp sesame oil",
+      "1 onion",
+      "2 cloves garlic (minced)",
+      "1/2 tbsp fresh ginger",
+      "2 tbsp soy sauce",
+      "2 tsp curry powder",
+      "1/4 tsp smoked paprika",
+      "Salt and pepper",
+      "2 tbsp peanuts",
+      "Cilantro or parsley"
+    ],
+    "prepTime": "PT10M",
+    "cookTime": "PT15M",
+    "totalTime": "PT25M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "415 kcal",
+      "protein": "15.8 g",
+      "fat": "16.7 g",
+      "carbs": "40 g",
+      "fiber": "6.7 g"
+    },
+    "keywords": "peanut butter, rice noodles, vegan",
+    "category": [
+      "Main Course"
+    ],
+    "cuisine": [
+      "Asian"
+    ],
+    "rating": "5",
+    "ratingCount": "15",
+    "sourceUrl": "https://elavegan.com/peanut-butter-noodles-vegan-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Garlic Butter Pasta",
+    "description": "Quick garlic butter pasta that is creamy, rich, and comforting! This weeknight dinner can be tossed together in about 20 minutes, with minimal effort.",
+    "image": "https://elavegan.com/wp-content/uploads/2020/05/close-up-of-creamy-noodles-in-a-skillet.jpg",
+    "ingredients": [
+      "2 tbsp vegan butter",
+      "5 cloves garlic (minced)",
+      "1 pepper (sliced)",
+      "1 tsp onion powder",
+      "3/4 tsp sea salt",
+      "Black pepper to taste",
+      "1/4 tsp smoked paprika",
+      "1/2 tsp hot sauce (optional)",
+      "2 tbsp cornstarch",
+      "1 1/2 cups plant-based milk",
+      "1 tbsp lemon juice",
+      "10 oz pasta of choice",
+      "Fresh herbs (parsley)",
+      "Nutritional yeast (optional)"
+    ],
+    "prepTime": "PT10M",
+    "cookTime": "PT10M",
+    "totalTime": "PT20M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "350 kcal",
+      "protein": "10 g",
+      "fat": "7 g",
+      "carbs": "61 g",
+      "fiber": "3 g"
+    },
+    "keywords": "creamy, noodles, pasta sauce",
+    "category": [
+      "Pasta"
+    ],
+    "cuisine": [
+      "American",
+      "Italian"
+    ],
+    "rating": "5",
+    "ratingCount": "36",
+    "sourceUrl": "https://elavegan.com/garlic-butter-pasta/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Black Bean Burger",
+    "description": "Hearty vegan black bean burger with lots of flavors! These tasty veggie burgers are a healthier fast-food option perfect for lunch or dinner.",
+    "image": "https://elavegan.com/wp-content/uploads/2020/02/close-up-of-vegan-black-bean-burger-with-veggies-and-cheese.jpg",
+    "ingredients": [
+      "1 (15 oz) can black beans",
+      "1/2 cup sunflower seeds",
+      "2/3 cup oats",
+      "1 tbsp tomato paste",
+      "1 1/2 tbsp soy sauce",
+      "3 garlic cloves (minced)",
+      "1/2 large onion (chopped)",
+      "3 chia eggs",
+      "2 tsp onion powder",
+      "2 tsp smoked paprika",
+      "1/2 tsp ground cumin",
+      "1/4 tsp red pepper flakes",
+      "3/4 tsp sea salt",
+      "Black pepper",
+      "3 tbsp fresh parsley",
+      "Oil for frying",
+      "4 burger buns",
+      "Fresh veggies"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT15M",
+    "totalTime": "PT30M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "275 kcal",
+      "protein": "12 g",
+      "fat": "10 g",
+      "carbs": "27 g",
+      "fiber": "12 g"
+    },
+    "keywords": "black beans, burgers, vegan",
+    "category": [
+      "Dinner",
+      "Lunch"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "5",
+    "ratingCount": "59",
+    "sourceUrl": "https://elavegan.com/vegan-black-bean-burger/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Moussaka",
+    "description": "Layers of roasted eggplant, a meaty and tomatoey lentil filling, and vegan bechamel sauce come together to create this incredible Vegan Moussaka.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2021/03/sq-3.jpg",
+    "ingredients": [
+      "2 medium eggplants",
+      "2 teaspoons salt",
+      "3 tablespoons olive oil",
+      "1 tablespoon olive oil",
+      "1 medium onion, diced",
+      "3 cloves garlic, minced",
+      "12 ounces impossible ground meat (or substitute)",
+      "3 cups cooked lentils",
+      "1/2 cup red wine",
+      "14 ounce can crushed tomatoes",
+      "1 cup vegetable broth",
+      "1 teaspoon granulated sugar",
+      "2 teaspoons dried oregano",
+      "1/2 teaspoon ground cinnamon",
+      "3/4 teaspoon salt",
+      "1 1/2 cups raw cashews",
+      "1 cup water",
+      "2 tablespoons nutritional yeast",
+      "2 tablespoons olive oil",
+      "3/4 teaspoon salt",
+      "1/4 teaspoon nutmeg",
+      "1/3 cup panko breadcrumbs"
+    ],
+    "prepTime": "PT40M",
+    "cookTime": "PT60M",
+    "totalTime": "PT100M",
+    "servings": "6",
+    "nutrition": {
+      "calories": "632 kcal",
+      "protein": "28 g",
+      "fat": "33 g",
+      "carbs": "59 g",
+      "fiber": "19 g"
+    },
+    "keywords": "vegan moussaka",
+    "category": [
+      "Main"
+    ],
+    "cuisine": [
+      "Greek-inspired"
+    ],
+    "rating": "4.87",
+    "ratingCount": "15",
+    "sourceUrl": "https://www.noracooks.com/vegan-moussaka/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Vegan Burrito Bowl",
+    "description": "Inspired by Chipotle, this Vegan Burrito Bowl has it all. Cilantro lime rice, sheet pan vegan chicken and peppers, beans, veggies and the best vegan queso!",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/06/Square-8.jpg",
+    "ingredients": [
+      "14.5 ounce block firm tofu, pressed",
+      "1 tablespoon olive oil",
+      "1 tablespoon cornstarch",
+      "1/2 teaspoon ground cumin",
+      "1 teaspoon onion powder",
+      "1/2 teaspoon salt",
+      "1 large red bell pepper, sliced",
+      "1 large green bell pepper, sliced",
+      "1/2 onion, sliced",
+      "2-3 tablespoons olive oil",
+      "1 1/2 cups long grain white rice",
+      "2 cups water",
+      "1 teaspoon salt",
+      "3 tablespoons fresh lime juice",
+      "1 cup cilantro, chopped",
+      "15 ounce can black beans",
+      "Salsa",
+      "2-3 cups chopped romaine lettuce",
+      "avocado slices (optional)"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT30M",
+    "totalTime": "PT50M",
+    "servings": "5",
+    "nutrition": {
+      "calories": "453 kcal",
+      "protein": "17 g",
+      "fat": "13 g",
+      "carbs": "67 g",
+      "fiber": "9 g"
+    },
+    "keywords": "burrito bowl, vegan burrito bowl",
+    "category": [
+      "Main Course"
+    ],
+    "cuisine": [
+      "Mexican"
+    ],
+    "rating": "5",
+    "ratingCount": "4",
+    "sourceUrl": "https://www.noracooks.com/vegan-burrito-bowl/",
+    "author": "Nora Cooks"
+  }
+]
