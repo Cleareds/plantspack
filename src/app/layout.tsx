@@ -45,10 +45,12 @@ export const metadata: Metadata = {
     title: 'PlantsPack - Vegan Community Platform',
     description: 'Discover vegan restaurants, share recipes, and connect with people who share your values.',
     locale: 'en_US',
+    images: [{ url: 'https://www.plantspack.com/og-image.png', width: 1200, height: 630, alt: 'PlantsPack — Vegan Community Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@plantspackX',
+    images: ['https://www.plantspack.com/og-image.png'],
   },
   alternates: {
     canonical: 'https://plantspack.com',
