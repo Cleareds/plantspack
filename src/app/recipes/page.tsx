@@ -132,7 +132,7 @@ export default async function RecipesPage() {
             {recipes.slice(0, 6).map(r => <div key={r.id} className="h-64 bg-surface-container-lowest rounded-2xl animate-pulse" />)}
           </div>
         }>
-          <RecipeFilters initialRecipes={recipes} initialHasMore={hasMore} pageSize={PAGE_SIZE} />
+          <RecipeFilters initialRecipes={recipes} initialHasMore={hasMore} pageSize={PAGE_SIZE} totalCount={totalCount} />
         </Suspense>
       </div>
     </div>

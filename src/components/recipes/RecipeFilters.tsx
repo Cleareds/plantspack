@@ -32,9 +32,10 @@ interface RecipeFiltersProps {
   initialRecipes: any[]
   initialHasMore: boolean
   pageSize: number
+  totalCount?: number
 }
 
-export default function RecipeFilters({ initialRecipes, initialHasMore, pageSize }: RecipeFiltersProps) {
+export default function RecipeFilters({ initialRecipes, initialHasMore, pageSize, totalCount }: RecipeFiltersProps) {
   const searchParams = useSearchParams()
   const tagFromUrl = searchParams?.get('tag') || ''
   const mealFromUrl = searchParams?.get('mealType') || ''
@@ -222,7 +223,14 @@ export default function RecipeFilters({ initialRecipes, initialHasMore, pageSize
       )}
 
       {/* Results count */}
-      <p className="text-xs text-on-surface-variant mb-4">{filtered.length} {filtered.length === 1 ? 'recipe' : 'recipes'}</p>
+      <p className="text-xs text-on-surface-variant mb-4">
+        {activeFilterCount > 0 || search
+          ? `${filtered.length} ${filtered.length === 1 ? 'recipe' : 'recipes'} found`
+          : totalCount && totalCount > allRecipes.length
+            ? `Showing ${allRecipes.length} of ${totalCount} recipes`
+            : `${filtered.length} ${filtered.length === 1 ? 'recipe' : 'recipes'}`
+        }
+      </p>
 
       {/* Grid */}
       {filtered.length > 0 ? (
