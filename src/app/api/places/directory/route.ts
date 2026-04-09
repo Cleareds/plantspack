@@ -150,6 +150,35 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ cities, country: dbCountryName })
     }
 
+    if (level === 'places' && country && !city) {
+      // Get all places in a country (for country pages)
+      let query = supabase
+        .from('places')
+        .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
+        .ilike('country', fromSlug(country))
+
+      if (category) {
+        query = query.eq('category', category)
+      }
+
+      if (sort === 'rating') {
+        query = query.order('average_rating', { ascending: false, nullsFirst: false })
+      } else {
+        query = query.order('name', { ascending: true })
+      }
+
+      const { data, error } = await query.limit(limit)
+      if (error) throw error
+
+      const dbCountry = data?.[0]?.country || fromSlugDisplay(country)
+
+      return NextResponse.json({
+        places: data || [],
+        country: dbCountry,
+        total: data?.length || 0,
+      })
+    }
+
     if (level === 'places' && country && city) {
       // Get places in a specific city
       let query = supabase

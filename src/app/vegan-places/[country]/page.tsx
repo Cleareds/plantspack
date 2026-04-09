@@ -1,13 +1,25 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, ArrowRight } from 'lucide-react'
+import { MapPin, ArrowRight, Globe } from 'lucide-react'
 import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
+import CityPlacesList from '@/components/places/CityPlacesList'
 
 export const revalidate = 300
 
 interface PageProps {
   params: Promise<{ country: string }>
+}
+
+async function fetchCountryPlaces(country: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=500`, { cache: 'no-store' })
+    if (!res.ok) return { places: [], country: country.replace(/-/g, ' '), total: 0 }
+    return res.json()
+  } catch {
+    return { places: [], country: country.replace(/-/g, ' '), total: 0 }
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -30,8 +42,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
-  // Single query via materialized view — cache() deduplicates with generateMetadata
-  const { cities, country: countryName } = await getCities(country)
+  const [{ cities, country: countryName }, { places }] = await Promise.all([
+    getCities(country),
+    fetchCountryPlaces(country),
+  ])
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
 
   // Aggregate city stats for country description
@@ -89,37 +103,54 @@ export default async function CountryPage({ params }: PageProps) {
           <div className="flex gap-3 mt-4">
             <Link
               href={`/map?location=${encodeURIComponent(countryName)}`}
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90"
             >
-              <MapPin className="h-4 w-4" />
+              <Globe className="h-4 w-4" />
               View on map
             </Link>
           </div>
         </div>
 
         {/* Cities Grid */}
-        {cities.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {cities.map((city: any) => (
-              <Link
-                key={city.slug}
-                href={`/vegan-places/${country}/${city.slug}`}
-                prefetch={false}
-                className="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
-              >
-                <div>
-                  <h2 className="font-semibold text-on-surface group-hover:text-primary transition-colors">
-                    {city.name}
-                  </h2>
-                  <p className="text-sm text-on-surface-variant mt-0.5">
-                    {city.count.toLocaleString()} {city.count === 1 ? 'place' : 'places'}
-                  </p>
-                </div>
-                <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors" />
-              </Link>
-            ))}
-          </div>
-        ) : (
+        {cities.length > 0 && (
+          <>
+            <h2 className="text-lg font-semibold text-on-surface mb-4">
+              Cities in {countryName}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+              {cities.map((city: any) => (
+                <Link
+                  key={city.slug}
+                  href={`/vegan-places/${country}/${city.slug}`}
+                  prefetch={false}
+                  className="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
+                >
+                  <div>
+                    <h3 className="font-semibold text-on-surface group-hover:text-primary transition-colors">
+                      {city.name}
+                    </h3>
+                    <p className="text-sm text-on-surface-variant mt-0.5">
+                      {city.count.toLocaleString()} {city.count === 1 ? 'place' : 'places'}
+                    </p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors" />
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* All places in country with map */}
+        {places.length > 0 && (
+          <>
+            <h2 className="text-lg font-semibold text-on-surface mb-4">
+              All {places.length} places in {countryName}
+            </h2>
+            <CityPlacesList places={places} />
+          </>
+        )}
+
+        {places.length === 0 && cities.length === 0 && (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🗺️</div>
             <h2 className="text-xl font-semibold text-on-surface mb-2">No places yet in {countryName}</h2>
