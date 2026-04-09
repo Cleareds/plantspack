@@ -1746,5 +1746,176 @@
     "ratingCount": "58",
     "sourceUrl": "https://rainbowplantlife.com/creamy-lentil-winter-bake/",
     "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "1 Bowl Vegan Coconut Cake",
+    "description": "The easiest vegan coconut cake ever, made in 1 bowl. Fluffy, light, oh-so-soft and topped with a creamy coconut frosting.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/04/square.jpg",
+    "ingredients": [
+      "2 1/2 cups all purpose flour",
+      "2 tbsp cornstarch",
+      "1 tbsp baking powder",
+      "1/2 tsp salt",
+      "1 1/2 cups granulated sugar",
+      "3/4 cup neutral oil or melted vegan butter",
+      "1 1/2 cups non-dairy coconut milk",
+      "2 tsp apple cider vinegar",
+      "2 tsp vanilla extract",
+      "1 tsp coconut extract",
+      "8 oz vegan cream cheese",
+      "1/2 cup vegan butter",
+      "3-4 cups powdered sugar",
+      "1 tsp vanilla extract",
+      "1 tsp coconut extract",
+      "1 cup shredded coconut"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT35M",
+    "totalTime": "PT50M",
+    "servings": "16",
+    "nutrition": {
+      "calories": "418 kcal",
+      "protein": "3 g",
+      "fat": "20 g",
+      "carbs": "59 g",
+      "fiber": "2 g"
+    },
+    "keywords": "coconut cake, vegan coconut cake",
+    "category": [
+      "Dessert"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.88",
+    "ratingCount": "106",
+    "sourceUrl": "https://www.noracooks.com/vegan-coconut-cake/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Tempeh Tacos",
+    "description": "Smoky and savory Tempeh Tacos loaded with seasoned tempeh and a variety of toppings. Easy weeknight meal!",
+    "image": "https://www.noracooks.com/wp-content/uploads/2021/05/sq-3.jpg",
+    "ingredients": [
+      "2 packages tempeh",
+      "2 tbsp olive oil",
+      "1/2 yellow onion, diced",
+      "1/3 cup low sodium soy sauce",
+      "2 tsp ground cumin",
+      "1 tsp smoked paprika",
+      "1 tbsp chili powder",
+      "1 tbsp garlic powder",
+      "Pinch cayenne pepper",
+      "4 tbsp tomato paste",
+      "1/2 cup water",
+      "Corn or flour tortillas",
+      "Chopped lettuce, tomatoes, avocado, salsa"
+    ],
+    "prepTime": "PT5M",
+    "cookTime": "PT15M",
+    "totalTime": "PT20M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "328 kcal",
+      "protein": "24 g",
+      "fat": "20 g",
+      "carbs": "20 g",
+      "fiber": "2 g"
+    },
+    "keywords": "tempeh tacos",
+    "category": [
+      "Main"
+    ],
+    "cuisine": [
+      "Mexican"
+    ],
+    "rating": "5",
+    "ratingCount": "1",
+    "sourceUrl": "https://www.noracooks.com/tempeh-tacos/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Mexican Pizza Recipe",
+    "description": "Delicious homemade Mexican Pizza topped with refried beans, onion, corn, peppers, jalapeno, and vegan cheese.",
+    "image": "https://elavegan.com/wp-content/uploads/2019/08/Mexican-Pizza-recipe-with-corn-refried-beans-peppers-and-vegan-cheese.jpg",
+    "ingredients": [
+      "Your favorite pizza crust",
+      "1 can refried beans",
+      "1 medium onion",
+      "1 medium red bell pepper",
+      "1/4 cup corn",
+      "2/3 tsp ground cumin",
+      "1/2 tsp paprika",
+      "1/2 tsp garlic powder",
+      "Pinch of cayenne pepper",
+      "1 jalapeno pepper",
+      "7-8 oz vegan cheese",
+      "Salt and pepper",
+      "Salsa (optional)"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT20M",
+    "totalTime": "PT40M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "429 kcal",
+      "protein": "8.5 g",
+      "fat": "11.3 g",
+      "carbs": "67.5 g",
+      "fiber": "7.1 g"
+    },
+    "keywords": "pizza, Tex Mex, vegan",
+    "category": [
+      "Main Course",
+      "Pizza"
+    ],
+    "cuisine": [
+      "American",
+      "Mexican"
+    ],
+    "rating": "5",
+    "ratingCount": "9",
+    "sourceUrl": "https://elavegan.com/mexican-pizza-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Chocolate Chip Sweet Potato Muffins",
+    "description": "Moist and soft chocolate chip sweet potato muffins! Vegan, gluten-free, and easy to make. Perfect for breakfast or dessert.",
+    "image": "https://elavegan.com/wp-content/uploads/2019/04/vegan-sweet-potato-muffins-with-chocolate-chips-recipe.jpg",
+    "ingredients": [
+      "1 1/2 cup ground oats",
+      "1/3 cup granulated sweetener",
+      "1/2 cup ground almonds",
+      "1 tsp baking powder",
+      "1/4 tsp baking soda",
+      "Pinch of salt",
+      "1/3 cup dairy-free chocolate chips",
+      "1 cup mashed sweet potato",
+      "2/3 cup plant-based milk",
+      "1 tsp vanilla extract",
+      "2 tsp vinegar"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT25M",
+    "totalTime": "PT40M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "200 kcal",
+      "protein": "5 g",
+      "fat": "7 g",
+      "carbs": "26 g",
+      "fiber": "3.5 g"
+    },
+    "keywords": "muffins, sweet potato, vegan",
+    "category": [
+      "Dessert"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.9",
+    "ratingCount": "28",
+    "sourceUrl": "https://elavegan.com/sweet-potato-muffins/",
+    "author": "Ela Vegan"
   }
 ]
