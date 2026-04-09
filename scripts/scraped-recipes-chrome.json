@@ -1917,5 +1917,259 @@
     "ratingCount": "28",
     "sourceUrl": "https://elavegan.com/sweet-potato-muffins/",
     "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Sausage Stuffed Butternut Squash",
+    "description": "Vegan sausage stuffing with kale and quinoa stuffed into roasted butternut squash, drizzled with creamy garlic white sauce.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/12/5_image-asset.jpg",
+    "ingredients": [
+      "3 medium butternut squash",
+      "Salt and pepper",
+      "Avocado oil",
+      "1 package vegan meatballs",
+      "2/3 cup uncooked quinoa",
+      "1 1/3 cups vegetable broth",
+      "10 cups chopped kale",
+      "3 tbsp avocado oil",
+      "1 medium yellow onion, diced",
+      "6 cloves garlic, minced",
+      "3-5 sage leaves",
+      "4 tbsp all-purpose flour",
+      "14 oz plant-based milk",
+      "1 tsp kosher salt",
+      "Black pepper"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT60M",
+    "totalTime": "PT80M",
+    "servings": "6",
+    "nutrition": {
+      "calories": "579 kcal",
+      "protein": "28 g",
+      "fat": "15 g",
+      "carbs": "96 g",
+      "fiber": "14 g"
+    },
+    "keywords": "butternut squash",
+    "category": [
+      "Dinner",
+      "Side Dish"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.66",
+    "ratingCount": "20",
+    "sourceUrl": "https://rainbowplantlife.com/vegan-sausage-stuffed-butternut-squash/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Vegan Dinner Rolls",
+    "description": "The best soft, fluffy, buttery vegan dinner rolls. Easy to make and completely irresistible.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/12/sq-2.jpg",
+    "ingredients": [
+      "2 cups unsweetened soy milk",
+      "2 tbsp instant yeast",
+      "1/4 cup granulated sugar",
+      "8 tbsp vegan butter, softened",
+      "5-5 1/2 cups all purpose flour",
+      "2 tsp salt",
+      "2 tbsp melted vegan butter"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT15M",
+    "totalTime": "PT95M",
+    "servings": "24",
+    "nutrition": {
+      "calories": "153 kcal",
+      "protein": "4 g",
+      "fat": "4 g",
+      "carbs": "24 g",
+      "fiber": "1 g"
+    },
+    "keywords": "dinner rolls, vegan dinner rolls",
+    "category": [
+      "Side Dish"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.97",
+    "ratingCount": "100",
+    "sourceUrl": "https://www.noracooks.com/vegan-dinner-rolls/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Peanut Butter Cake",
+    "description": "Ultra moist old fashioned peanut butter cake, perfect for get-togethers. Made with simple pantry ingredients!",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/12/square-6.jpg",
+    "ingredients": [
+      "1 cup soy milk",
+      "1 tbsp apple cider vinegar",
+      "2 cups all purpose flour",
+      "1 tbsp baking powder",
+      "1/4 tsp salt",
+      "3/4 cup creamy peanut butter",
+      "1 cup granulated sugar",
+      "3/4 cup vegetable oil",
+      "1 cup creamy peanut butter",
+      "3/4 cup vegan butter",
+      "3 cups powdered sugar",
+      "1 tsp vanilla extract",
+      "4-6 tbsp soy milk",
+      "Pinch of salt"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT30M",
+    "totalTime": "PT50M",
+    "servings": "16",
+    "nutrition": {
+      "calories": "443 kcal",
+      "protein": "8 g",
+      "fat": "27 g",
+      "carbs": "45 g",
+      "fiber": "2 g"
+    },
+    "keywords": "peanut butter cake",
+    "category": [
+      "Dessert"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.7",
+    "ratingCount": "13",
+    "sourceUrl": "https://www.noracooks.com/peanut-butter-cake/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Vegan Jalapeno Popper Mac and Cheese",
+    "description": "Tastes like a jalapeno popper in pasta form! Ultra creamy, perfectly spicy and crave worthy.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/06/sq.jpg",
+    "ingredients": [
+      "1 1/2 cups raw cashews",
+      "3 cups water",
+      "3 tbsp fresh lemon juice",
+      "1 1/2 tsp salt",
+      "2 tbsp tapioca starch",
+      "1 tbsp olive oil",
+      "1 small onion, diced",
+      "4 cloves garlic, minced",
+      "5 jalapenos, diced",
+      "16 oz elbow pasta",
+      "1/2 cup panko breadcrumbs",
+      "2 tbsp melted vegan butter"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT30M",
+    "totalTime": "PT50M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "411 kcal",
+      "protein": "13 g",
+      "fat": "16 g",
+      "carbs": "56 g",
+      "fiber": "3 g"
+    },
+    "keywords": "jalapeno mac and cheese",
+    "category": [
+      "Main Course",
+      "Side Dish"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "5",
+    "ratingCount": "9",
+    "sourceUrl": "https://www.noracooks.com/jalapeno-mac-and-cheese/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Broccoli Quinoa Casserole",
+    "description": "Healthy broccoli quinoa casserole which is vegan, gluten-free, and easy to make. Creamy cheesy broccoli bake perfect for weeknight dinner.",
+    "image": "https://elavegan.com/wp-content/uploads/2019/03/cooked-quinoa-bake-in-a-white-pan.jpg",
+    "ingredients": [
+      "1 cup quinoa",
+      "2 cups vegetable broth",
+      "1 cup dairy-free milk",
+      "1 can chickpeas",
+      "1 tsp onion powder",
+      "1 tsp oregano",
+      "3/4 tsp paprika",
+      "1/2 tsp sea salt",
+      "Black pepper",
+      "1 medium head broccoli",
+      "1 tbsp oil",
+      "3 tbsp oats",
+      "1 tbsp nutritional yeast",
+      "1/2 tsp onion powder",
+      "1/2 tsp paprika",
+      "Pinch of turmeric",
+      "1 tsp soy sauce",
+      "Pinch of smoked paprika",
+      "Vegan cheese sauce"
+    ],
+    "prepTime": "PT22M",
+    "cookTime": "PT20M",
+    "totalTime": "PT42M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "443 kcal",
+      "protein": "19 g",
+      "fat": "15.6 g",
+      "carbs": "47 g",
+      "fiber": "12.6 g"
+    },
+    "keywords": "broccoli, casserole, quinoa",
+    "category": [
+      "Main Course"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.98",
+    "ratingCount": "37",
+    "sourceUrl": "https://elavegan.com/broccoli-quinoa-casserole-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Scrambled Eggs",
+    "description": "Healthy tofu scramble alternative to eggs. Delicious, simple ingredients, ready in 15 minutes. Perfect savory breakfast.",
+    "image": "https://elavegan.com/wp-content/uploads/2020/04/vegan-scrambled-eggs-on-bread.jpg",
+    "ingredients": [
+      "9 oz firm tofu",
+      "1/2 tbsp oil",
+      "2 garlic cloves (minced)",
+      "1/4 cup plant-based milk",
+      "1 tbsp nutritional yeast",
+      "1 tsp onion powder",
+      "1/3 to 1/2 tsp black salt",
+      "1/4 tsp turmeric",
+      "1/4 tsp black pepper",
+      "1/4 tsp smoked paprika"
+    ],
+    "prepTime": "PT7M",
+    "cookTime": "PT8M",
+    "totalTime": "PT15M",
+    "servings": "2",
+    "nutrition": {
+      "calories": "167 kcal",
+      "protein": "14 g",
+      "fat": "10 g",
+      "carbs": "7 g",
+      "fiber": "2 g"
+    },
+    "keywords": "scramble, tofu, vegan",
+    "category": [
+      "Breakfast",
+      "Side"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "5",
+    "ratingCount": "13",
+    "sourceUrl": "https://elavegan.com/vegan-scrambled-eggs/",
+    "author": "Ela Vegan"
   }
 ]
