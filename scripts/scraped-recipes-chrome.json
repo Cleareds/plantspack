@@ -1429,5 +1429,322 @@
     "ratingCount": "32",
     "sourceUrl": "https://elavegan.com/vegan-gumbo-gluten-free/",
     "author": "Ela Vegan"
+  },
+  {
+    "name": "Pumpkin Pasta Bake with Almond Ricotta",
+    "description": "Cheesy, creamy, delightful fall dinner, completely vegan! Gluten free option available.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/10/square-4.jpg",
+    "ingredients": [
+      "12 oz rotini pasta",
+      "1 Recipe Vegan Ricotta",
+      "1-2 tbsp olive oil",
+      "1 small onion, diced",
+      "2-3 cloves garlic, minced",
+      "15 oz can pumpkin puree",
+      "13.5 oz can full fat coconut milk",
+      "1/4 tsp ground nutmeg",
+      "1 tsp salt",
+      "Black pepper",
+      "2 cups baby spinach",
+      "1 bag vegan mozzarella shreds"
+    ],
+    "prepTime": "PT30M",
+    "cookTime": "PT15M",
+    "totalTime": "PT45M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "450 kcal",
+      "protein": "13 g",
+      "fat": "26 g",
+      "carbs": "45 g",
+      "fiber": "6 g"
+    },
+    "keywords": "pumpkin pasta, vegan pasta bake",
+    "category": [
+      "Main"
+    ],
+    "cuisine": [
+      "American",
+      "Italian"
+    ],
+    "rating": "4.92",
+    "ratingCount": "12",
+    "sourceUrl": "https://www.noracooks.com/pumpkin-pasta-bake/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Buffalo Cauliflower Buddha Bowl",
+    "description": "Spicy roasted buffalo cauliflower paired with fresh spinach, chickpeas, grain of your choosing and topped with cashew cream sauce.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2017/08/IMG_2654.jpg",
+    "ingredients": [
+      "1 large head cauliflower",
+      "1 cup almond flour",
+      "1 cup water",
+      "1/2 tsp salt",
+      "1 tsp garlic powder",
+      "1 cup Frank's Red Hot Sauce",
+      "2 cups raw cashews, soaked",
+      "1 1/2 cups water",
+      "1/2 tsp garlic powder",
+      "1 tsp onion powder",
+      "1 tsp salt",
+      "4-5 cups cooked brown rice or quinoa",
+      "1 can chickpeas",
+      "2 cups baby spinach"
+    ],
+    "prepTime": "PT10M",
+    "cookTime": "PT40M",
+    "totalTime": "PT50M",
+    "servings": "7",
+    "nutrition": {
+      "calories": "525 kcal"
+    },
+    "keywords": "buffalo cauliflower, buddha bowl",
+    "category": [
+      "Main Course"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "5",
+    "ratingCount": "6",
+    "sourceUrl": "https://www.noracooks.com/buffalo-cauliflower-buddha-bowl/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Creamy Lemon Tofu",
+    "description": "One-pan creamy lemon tofu, ready in about 15 minutes! Crispy fried slabs of tofu smothered in a delightful creamy lemon sauce.",
+    "image": "https://www.noracooks.com/wp-content/uploads/2020/11/square.jpg",
+    "ingredients": [
+      "1 block extra-firm tofu",
+      "1/4 tsp salt",
+      "Black pepper",
+      "1/4 cup cornstarch",
+      "3 tbsp olive oil",
+      "2 cloves garlic",
+      "3/4 cup vegetable broth",
+      "3/4 cup full fat coconut milk",
+      "3-4 tbsp fresh lemon juice",
+      "Salt to taste",
+      "1 tbsp cornstarch + 2 tbsp water",
+      "8 oz pasta",
+      "Chopped fresh parsley"
+    ],
+    "prepTime": "PT5M",
+    "cookTime": "PT10M",
+    "totalTime": "PT15M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "476 kcal",
+      "protein": "16 g",
+      "fat": "22 g",
+      "carbs": "54 g",
+      "fiber": "2 g"
+    },
+    "keywords": "lemon tofu",
+    "category": [
+      "Main Course"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "5",
+    "ratingCount": "14",
+    "sourceUrl": "https://www.noracooks.com/creamy-lemon-tofu/",
+    "author": "Nora Cooks"
+  },
+  {
+    "name": "Vegan Spinach Quesadillas",
+    "description": "Spinach quesadillas filled with eggplant and vegan cheese sauce. Great for lunch, dinner or as a filling snack! Gluten-free and dairy-free.",
+    "image": "https://elavegan.com/wp-content/uploads/2019/03/vegan-eggplant-quesadillas-with-gluten-free-tortillas-spinach-and-mushrooms.jpg",
+    "ingredients": [
+      "4-6 tortillas",
+      "1 medium onion (diced)",
+      "3 cloves garlic (minced)",
+      "1 large eggplant, cubed",
+      "6 oz fresh spinach",
+      "1/2 tbsp oil",
+      "4-5 tbsp red wine",
+      "1 tbsp soy sauce",
+      "1 tbsp balsamic vinegar",
+      "2 tsp onion powder",
+      "1 tsp paprika",
+      "1/2 tsp cumin",
+      "1/2 tsp oregano",
+      "1/4 tsp smoked paprika",
+      "Chipotle chili powder",
+      "Salt and pepper",
+      "Vegan cheese sauce"
+    ],
+    "prepTime": "PT7M",
+    "cookTime": "PT20M",
+    "totalTime": "PT27M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "171 kcal",
+      "protein": "4 g",
+      "fat": "7 g",
+      "carbs": "21 g",
+      "fiber": "4 g"
+    },
+    "keywords": "eggplant, quesadilla, spinach",
+    "category": [
+      "Main Course",
+      "Side"
+    ],
+    "cuisine": [
+      "American",
+      "Mexican"
+    ],
+    "rating": "5",
+    "ratingCount": "16",
+    "sourceUrl": "https://elavegan.com/vegan-spinach-quesadillas/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Chocolate Muffins",
+    "description": "The best vegan chocolate muffins with simple ingredients, made in one bowl, in about 30 minutes! Gluten-free, refined sugar-free, and super easy.",
+    "image": "https://elavegan.com/wp-content/uploads/2020/02/the-best-vegan-chocolate-muffins.jpg",
+    "ingredients": [
+      "1 1/3 cup oat flour",
+      "1/3 to 1/2 cup coconut sugar",
+      "1/2 cup unsweetened cocoa powder",
+      "1 tsp baking powder",
+      "1/4 tsp baking soda",
+      "1/4 tsp salt",
+      "1/2 cup chocolate chips",
+      "3/4 cup almond milk",
+      "2/3 cup applesauce",
+      "1/4 cup nut butter",
+      "1 tbsp apple cider vinegar",
+      "1 tsp vanilla extract"
+    ],
+    "prepTime": "PT10M",
+    "cookTime": "PT25M",
+    "totalTime": "PT35M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "223 kcal",
+      "protein": "6 g",
+      "fat": "11 g",
+      "carbs": "26 g",
+      "fiber": "5 g"
+    },
+    "keywords": "chocolate, muffins, vegan",
+    "category": [
+      "Dessert"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.99",
+    "ratingCount": "80",
+    "sourceUrl": "https://elavegan.com/vegan-chocolate-muffins/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Breakfast Burritos",
+    "description": "Loaded with roasted potatoes, avocado, mushrooms, and peppers. Great for a healthy protein-packed breakfast or brunch!",
+    "image": "https://elavegan.com/wp-content/uploads/2019/01/eating-vegan-breakfast-burritos.jpg",
+    "ingredients": [
+      "4-5 medium potatoes",
+      "1/2 tbsp oil",
+      "1/2 tsp onion powder",
+      "1/4 tsp smoked paprika",
+      "1/4 tsp cumin seeds",
+      "Salt and pepper",
+      "1 avocado, sliced",
+      "1 can kidney beans",
+      "1 green pepper, chopped",
+      "2 tomatoes, chopped",
+      "5 oz mushrooms, sliced",
+      "1 onion, chopped",
+      "2 cloves garlic, minced",
+      "2-3 tbsp red cabbage, shredded",
+      "4 flour tortillas",
+      "1/2 tbsp oil",
+      "1 tsp dried oregano",
+      "3/4 tsp ground cumin",
+      "1/2 tsp onion powder",
+      "1/3 tsp smoked paprika",
+      "Salt and pepper",
+      "2 tbsp cashew butter",
+      "Juice of 1/2 lime",
+      "Hot sauce"
+    ],
+    "prepTime": "PT15M",
+    "cookTime": "PT30M",
+    "totalTime": "PT45M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "274 kcal",
+      "protein": "9.1 g",
+      "fat": "8.7 g",
+      "carbs": "34.5 g",
+      "fiber": "7.7 g"
+    },
+    "keywords": "breakfast, burritos, vegan",
+    "category": [
+      "Breakfast",
+      "Snack"
+    ],
+    "cuisine": [
+      "American",
+      "Mexican"
+    ],
+    "rating": "4.96",
+    "ratingCount": "23",
+    "sourceUrl": "https://elavegan.com/vegan-breakfast-burritos-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Creamy Lentil and Vegetable Bake",
+    "description": "The ultimate comfort food. Caramelized roasted vegetables and creamy lentils baked in rich cashew cream. Vegan, gluten-free.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/lentilbake5281of129.jpg",
+    "ingredients": [
+      "1 cup raw cashews, soaked",
+      "1/2 cup + 2 tbsp water",
+      "2 garlic cloves",
+      "2 tbsp nutritional yeast",
+      "1 1/2 tbsp lemon juice",
+      "1/2 tsp sea salt",
+      "Black pepper",
+      "1 large head cauliflower",
+      "1 large sweet potato",
+      "6 medium carrots",
+      "2 tbsp olive oil",
+      "Salt and pepper",
+      "1 1/2 tbsp olive oil",
+      "1 large sweet onion, diced",
+      "6 garlic cloves, minced",
+      "1 1/2 cups French green lentils",
+      "4 cups vegetable broth",
+      "Thyme sprigs",
+      "1/4 cup tahini",
+      "2 tbsp miso paste",
+      "2 tbsp balsamic vinegar"
+    ],
+    "prepTime": "PT35M",
+    "cookTime": "PT70M",
+    "totalTime": "PT105M",
+    "servings": "8",
+    "nutrition": {
+      "calories": "425 kcal",
+      "protein": "18 g",
+      "fat": "18 g",
+      "carbs": "51 g",
+      "fiber": "17 g"
+    },
+    "keywords": "lentils, gluten-free",
+    "category": [
+      "Dinner"
+    ],
+    "cuisine": [
+      "American"
+    ],
+    "rating": "4.9",
+    "ratingCount": "58",
+    "sourceUrl": "https://rainbowplantlife.com/creamy-lentil-winter-bake/",
+    "author": "Rainbow Plant Life"
   }
 ]
