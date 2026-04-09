@@ -2171,5 +2171,137 @@
     "ratingCount": "13",
     "sourceUrl": "https://elavegan.com/vegan-scrambled-eggs/",
     "author": "Ela Vegan"
+  },
+  {
+    "name": "Nacho Fries Recipe",
+    "description": "Loaded nacho fries with cheesy sauce, vegan beef, and all the toppings. Fun and easy to make for families.",
+    "image": "https://elavegan.com/wp-content/uploads/2020/04/hand-grabbing-loaded-chips-on-a-large-platter.jpg",
+    "ingredients": [
+      "700 g potatoes, cut into sticks",
+      "1 1/2 tbsp taco seasoning",
+      "1 tbsp oil",
+      "1 1/2 cup TVP granules",
+      "2 cups warm water",
+      "1/2 tbsp oil",
+      "1/2 large onion, diced",
+      "3 cloves garlic, minced",
+      "3 tbsp soy sauce",
+      "1/2 tbsp balsamic vinegar",
+      "1 tsp ground cumin",
+      "1 tsp onion powder",
+      "1 tsp dried oregano",
+      "1/2 tsp smoked paprika",
+      "Red pepper flakes",
+      "Salt and pepper",
+      "Vegan cheese sauce",
+      "2 small tomatoes, diced",
+      "2 small sweet peppers, diced",
+      "2/3 cup salsa",
+      "Scallions"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT30M",
+    "totalTime": "PT50M",
+    "servings": "5",
+    "nutrition": {
+      "calories": "362 kcal",
+      "protein": "21 g",
+      "fat": "11 g",
+      "carbs": "39 g",
+      "fiber": "11 g"
+    },
+    "keywords": "loaded, spicy, vegan",
+    "category": [
+      "Main Course",
+      "Side Dish"
+    ],
+    "cuisine": [
+      "Tex Mex"
+    ],
+    "rating": "5",
+    "ratingCount": "5",
+    "sourceUrl": "https://elavegan.com/loaded-nacho-fries-recipe/",
+    "author": "Ela Vegan"
+  },
+  {
+    "name": "Vegan Pumpkin Tahini Chocolate Chip Muffins",
+    "description": "Tender and moist vegan pumpkin chocolate chip muffins made with tahini and whole grain flour. The best of healthy indulgence.",
+    "image": "https://rainbowplantlife.com/wp-content/uploads/2020/11/pumpkintahinimuffins-newedit281of129.jpg",
+    "ingredients": [
+      "1 cup unbleached cake flour",
+      "3/4 cup whole spelt flour",
+      "1 tsp ground cinnamon",
+      "1/2 tsp ground ginger",
+      "1/2 tsp nutmeg",
+      "1 1/2 tsp baking powder",
+      "1/4 tsp fine sea salt",
+      "3/4 cup unsweetened soy milk",
+      "1 tsp apple cider vinegar",
+      "1 cup canned pumpkin puree",
+      "1/4 cup coconut oil",
+      "1/4 cup tahini",
+      "1/2 cup pure maple syrup",
+      "1 tsp vanilla extract",
+      "1 flax egg",
+      "1 cup vegan chocolate chips"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT25M",
+    "totalTime": "PT45M",
+    "servings": "10",
+    "nutrition": {
+      "calories": "368 kcal",
+      "protein": "7 g",
+      "fat": "18 g",
+      "carbs": "45 g",
+      "fiber": "6 g"
+    },
+    "keywords": "chocolate chip, muffins, pumpkin",
+    "category": [
+      "Dessert"
+    ],
+    "cuisine": [
+      "Baking"
+    ],
+    "rating": "4.67",
+    "ratingCount": "6",
+    "sourceUrl": "https://rainbowplantlife.com/vegan-pumpkin-tahini-chocolate-chip-muffins/",
+    "author": "Rainbow Plant Life"
+  },
+  {
+    "name": "Vegan Chocolate Mousse",
+    "description": "Light but rich and creamy, decadent Vegan Chocolate Mousse. Easy to make with only 5 ingredients using aquafaba!",
+    "image": "https://www.noracooks.com/wp-content/uploads/2021/05/sq-2.jpg",
+    "ingredients": [
+      "6 oz vegan dark chocolate",
+      "3/4 cup aquafaba",
+      "1/4 tsp cream of tartar",
+      "1/4-1/2 cup granulated sugar",
+      "1 tsp vanilla extract",
+      "Vegan whipped cream",
+      "Chocolate shavings"
+    ],
+    "prepTime": "PT20M",
+    "cookTime": "PT0M",
+    "totalTime": "PT20M",
+    "servings": "4",
+    "nutrition": {
+      "calories": "306 kcal",
+      "protein": "3 g",
+      "fat": "18 g",
+      "carbs": "32 g",
+      "fiber": "5 g"
+    },
+    "keywords": "chocolate mousse, vegan mousse",
+    "category": [
+      "Dessert"
+    ],
+    "cuisine": [
+      "French"
+    ],
+    "rating": "4.75",
+    "ratingCount": "8",
+    "sourceUrl": "https://www.noracooks.com/vegan-chocolate-mousse/",
+    "author": "Nora Cooks"
   }
 ]
