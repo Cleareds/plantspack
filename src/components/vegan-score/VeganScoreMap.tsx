@@ -28,13 +28,13 @@ const MapEventHandler = dynamic(() =>
   { ssr: false }
 )
 
-const CATEGORY_CONFIG: Record<string, { color: string; emoji: string; label: string }> = {
+const CATEGORY_CONFIG: Record<string, { color: string; emoji: string; label: string; hidden?: boolean }> = {
   eat: { color: '#22c55e', emoji: '🌿', label: 'Eat' },
   hotel: { color: '#3b82f6', emoji: '🛏️', label: 'Stay' },
   store: { color: '#a855f7', emoji: '🛍️', label: 'Store' },
   organisation: { color: '#f97316', emoji: '🐾', label: 'Animal Sanctuary' },
-  event: { color: '#ec4899', emoji: '🎉', label: 'Event' },
-  other: { color: '#6b7280', emoji: '📍', label: 'Other' },
+  event: { color: '#ec4899', emoji: '🎉', label: 'Event', hidden: true },
+  other: { color: '#6b7280', emoji: '📍', label: 'Other', hidden: true },
 }
 
 interface Place {
@@ -243,7 +243,7 @@ export default function VeganScoreMap() {
             </button>
             {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => {
               const count = categoryCounts[key] || 0
-              if (count === 0) return null
+              if (count === 0 || cfg.hidden) return null
               return (
                 <button
                   key={key}
@@ -395,7 +395,7 @@ export default function VeganScoreMap() {
           {/* Legend */}
           <div className="absolute bottom-3 left-3 z-[1000] bg-white/90 backdrop-blur-sm rounded-lg shadow-md border border-gray-100 px-2.5 py-1.5">
             <div className="flex flex-wrap gap-x-2.5 gap-y-0.5 text-[10px]">
-              {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
+              {Object.entries(CATEGORY_CONFIG).filter(([, cfg]) => !cfg.hidden).map(([key, cfg]) => (
                 <span key={key} className="flex items-center gap-1">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: cfg.color }} />
                   {cfg.label}
