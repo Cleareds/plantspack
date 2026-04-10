@@ -57,9 +57,13 @@ function calculateScore(places: Place[]): { score: number; grade: string; breakd
   const fvCount = fullyVegan.length
   const totalCount = places.length
 
-  // Density (0-40): fully vegan places, logarithmic to not over-reward huge cities
-  // 1 fv = 8pts, 3 = 16, 8 = 25, 16 = 32, 30+ = 40
-  const density = Math.min(40, fvCount > 0 ? 8 * Math.log2(fvCount + 1) : 0)
+  // Density (0-40): concentration of fully-vegan places relative to city size
+  // Uses total places as proxy for city size — a small town with 8/12 fully vegan
+  // scores much higher than a big city with 8/200
+  const fvRatio = fvCount / totalCount
+  const concentration = fvRatio * 25 // up to 25 pts for high fully-vegan ratio
+  const presence = Math.min(15, fvCount > 0 ? 5 * Math.log2(fvCount + 1) : 0) // up to 15 pts for raw count
+  const density = Math.min(40, concentration + presence)
 
   // Variety (0-30): category diversity among FULLY VEGAN places only
   const fvCategories = new Set(fullyVegan.map(p => p.category))
@@ -71,12 +75,12 @@ function calculateScore(places: Place[]): { score: number; grade: string; breakd
     fvCategories.size * 2
   )
 
-  // Quality (0-30): ratio of fully vegan to total + ratings
-  // A city where 80% of places are fully vegan scores much higher than 20%
-  const fvRatio = fvCount / totalCount
+  // Quality (0-30): purely based on user ratings of fully-vegan places
+  // No ratings yet = 0 — honest, and incentivizes reviews
   const ratedFv = fullyVegan.filter(p => p.average_rating && p.average_rating > 0)
   const avgRating = ratedFv.length > 0 ? ratedFv.reduce((s, p) => s + (p.average_rating || 0), 0) / ratedFv.length : 0
-  const quality = Math.min(30, fvRatio * 20 + (avgRating / 5) * 10)
+  const reviewCoverage = ratedFv.length / Math.max(1, fvCount) // what % of fv places have ratings
+  const quality = Math.min(30, (avgRating / 5) * 20 + reviewCoverage * 10)
 
   const score = Math.round(Math.min(100, density + variety + quality))
   const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
@@ -492,7 +496,7 @@ export default function VeganScoreMap() {
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
                 <h3 className="font-bold text-emerald-800 text-sm mb-1">🏪 Density (0-40 pts)</h3>
-                <p className="text-xs text-emerald-700">How many 100% vegan places are in the city? Uses a logarithmic scale so smaller cities with dedicated vegan spots aren&apos;t overshadowed by big cities.</p>
+                <p className="text-xs text-emerald-700">Concentration of 100% vegan places relative to city size. A small town where most places are fully vegan scores higher than a big city with the same number — size matters, but in reverse.</p>
               </div>
               <div className="bg-blue-50 rounded-xl p-3">
                 <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-30 pts)</h3>
@@ -500,7 +504,7 @@ export default function VeganScoreMap() {
               </div>
               <div className="bg-purple-50 rounded-xl p-3">
                 <h3 className="font-bold text-purple-800 text-sm mb-1">⭐ Quality (0-30 pts)</h3>
-                <p className="text-xs text-purple-700">What percentage of all places are 100% vegan (vs just vegan-friendly)? A city where most places are fully vegan scores higher. Ratings of fully vegan places also factor in.</p>
+                <p className="text-xs text-purple-700">Based on community ratings of fully vegan places. No reviews yet? This score starts at 0 — visit and rate places to help your city climb the rankings!</p>
               </div>
             </div>
             <div className="bg-gray-50 rounded-xl p-3 mb-4">
