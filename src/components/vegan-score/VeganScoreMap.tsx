@@ -48,21 +48,29 @@ interface Place {
 interface CityScore {
   city: string; country: string; score: number; grade: string
   placeCount: number; breakdown: { density: number; variety: number; quality: number }
+  population?: number; perCapita?: number
 }
 
-function calculateScore(places: Place[]): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number } } {
+function calculateScore(places: Place[], population?: number): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number }; perCapita?: number } {
   if (places.length === 0) return { score: 0, grade: 'F', breakdown: { density: 0, variety: 0, quality: 0 } }
 
   const fullyVegan = places.filter(p => p.vegan_level === 'fully_vegan')
   const fvCount = fullyVegan.length
-  const totalCount = places.length
 
-  // Density (0-40): concentration of fully-vegan places relative to city size
-  // Uses total places as proxy for city size — a small town with 8/12 fully vegan
-  // scores much higher than a big city with 8/200
-  const fvRatio = fvCount / totalCount
-  const concentration = fvRatio * 25 // up to 25 pts for high fully-vegan ratio
-  const presence = Math.min(15, fvCount > 0 ? 5 * Math.log2(fvCount + 1) : 0) // up to 15 pts for raw count
+  // Density (0-40): fully-vegan places per capita + presence
+  // Concentration (0-25): per 100k residents — real city size from GeoNames
+  // Presence (0-15): logarithmic count — rewards having more fully-vegan spots
+  let concentration = 0
+  let perCapita: number | undefined
+  if (population && population > 0) {
+    perCapita = (fvCount / population) * 100000
+    // Scale: 0.5 per 100k = ~5pts, 2 per 100k = ~15pts, 5+ per 100k = 25pts
+    concentration = Math.min(25, perCapita * 5)
+  } else {
+    // Fallback for cities without population data: use fv ratio as rough proxy
+    concentration = Math.min(25, (fvCount / places.length) * 25)
+  }
+  const presence = Math.min(15, fvCount > 0 ? 5 * Math.log2(fvCount + 1) : 0)
   const density = Math.min(40, concentration + presence)
 
   // Variety (0-30): category diversity among FULLY VEGAN places only
@@ -84,7 +92,7 @@ function calculateScore(places: Place[]): { score: number; grade: string; breakd
 
   const score = Math.round(Math.min(100, density + variety + quality))
   const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
-  return { score, grade, breakdown: { density: Math.round(density), variety: Math.round(variety), quality: Math.round(quality) } }
+  return { score, grade, breakdown: { density: Math.round(density), variety: Math.round(variety), quality: Math.round(quality) }, perCapita }
 }
 
 function getGradeColor(grade: string) {
@@ -157,10 +165,17 @@ export default function VeganScoreMap() {
   useEffect(() => {
     async function fetchPlaces() {
       setLoading(true)
-      const { data } = await supabase
-        .from('places')
-        .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
-        .order('name').limit(5000)
+
+      // Load places and population data in parallel
+      const [placesRes, popRes] = await Promise.all([
+        supabase.from('places')
+          .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
+          .order('name').limit(5000),
+        fetch('/data/city-populations.json').then(r => r.json()).catch(() => ({})),
+      ])
+      const data = placesRes.data
+      const populations: Record<string, number> = popRes
+
       if (data) {
         setPlaces(data as Place[])
         const byCity: Record<string, Place[]> = {}
@@ -174,8 +189,9 @@ export default function VeganScoreMap() {
           .filter(([, ps]) => ps.length >= 2)
           .map(([key, ps]) => {
             const [city, country] = key.split('|||')
-            const { score, grade, breakdown } = calculateScore(ps)
-            return { city, country, score, grade, placeCount: ps.length, breakdown }
+            const pop = populations[key] || undefined
+            const { score, grade, breakdown, perCapita } = calculateScore(ps, pop)
+            return { city, country, score, grade, placeCount: ps.length, breakdown, population: pop, perCapita }
           })
           .sort((a, b) => b.score - a.score)
         setCityScores(scores)
@@ -378,6 +394,12 @@ export default function VeganScoreMap() {
                 <div className="flex justify-between"><span className="text-gray-500">Variety</span><span className="font-medium">{selectedCity.breakdown.variety}/30</span></div>
                 <div className="flex justify-between"><span className="text-gray-500">Quality</span><span className="font-medium">{selectedCity.breakdown.quality}/30</span></div>
               </div>
+              {(selectedCity.population || selectedCity.perCapita) && (
+                <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] text-gray-400 space-y-0.5">
+                  {selectedCity.population && <p>Population: {selectedCity.population.toLocaleString()}</p>}
+                  {selectedCity.perCapita !== undefined && <p>{selectedCity.perCapita.toFixed(1)} fully-vegan places per 100k residents</p>}
+                </div>
+              )}
               <Link
                 href={`/vegan-places/${selectedCity.country.toLowerCase().replace(/\s+/g, '-')}/${selectedCity.city.toLowerCase().replace(/\s+/g, '-')}`}
                 className="flex items-center justify-center gap-1 w-full mt-2 px-2 py-1 text-[11px] font-medium text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-colors"
@@ -496,7 +518,7 @@ export default function VeganScoreMap() {
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
                 <h3 className="font-bold text-emerald-800 text-sm mb-1">🏪 Density (0-40 pts)</h3>
-                <p className="text-xs text-emerald-700">Concentration of 100% vegan places relative to city size. A small town where most places are fully vegan scores higher than a big city with the same number — size matters, but in reverse.</p>
+                <p className="text-xs text-emerald-700">100% vegan places per 100,000 residents. Uses real population data from GeoNames for 1,200+ cities. A small town with 5 fully-vegan spots per 100k people scores higher than a metropolis with the same ratio. Both concentration and absolute count matter.</p>
               </div>
               <div className="bg-blue-50 rounded-xl p-3">
                 <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-30 pts)</h3>
