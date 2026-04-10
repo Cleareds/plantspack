@@ -49,6 +49,7 @@ interface CityScore {
   city: string; country: string; score: number; grade: string
   placeCount: number; breakdown: { density: number; variety: number; quality: number }
   population?: number; perCapita?: number
+  center: [number, number] // avg lat/lng of places
 }
 
 function calculateScore(places: Place[], population?: number): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number }; perCapita?: number } {
@@ -192,7 +193,9 @@ export default function VeganScoreMap() {
             const [city, country] = key.split('|||')
             const pop = populations[key] || undefined
             const { score, grade, breakdown, perCapita } = calculateScore(ps, pop)
-            return { city, country, score, grade, placeCount: ps.length, breakdown, population: pop, perCapita }
+            const avgLat = ps.reduce((s, p) => s + p.latitude, 0) / ps.length
+            const avgLng = ps.reduce((s, p) => s + p.longitude, 0) / ps.length
+            return { city, country, score, grade, placeCount: ps.length, breakdown, population: pop, perCapita, center: [avgLat, avgLng] as [number, number] }
           })
           .sort((a, b) => b.score - a.score)
         setCityScores(scores)
@@ -204,29 +207,28 @@ export default function VeganScoreMap() {
 
   const flyToCity = useCallback((city: CityScore) => {
     setSelectedCity(city)
-    // Geocode the city to fly to it
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city.city + ', ' + city.country)}&limit=1`)
-      .then(r => r.json())
-      .then(data => {
-        if (data[0]) {
-          mapRef.current?.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 12, { duration: 1.5 })
-        }
-      })
-      .catch(() => {})
+    mapRef.current?.flyTo(city.center, 13, { duration: 1.5 })
   }, [])
 
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return
+    // Try matching a ranked city first — instant, no geocoding needed
+    const match = cityScores.find(c =>
+      c.city.toLowerCase() === searchQuery.trim().toLowerCase() ||
+      searchQuery.toLowerCase().includes(c.city.toLowerCase()) ||
+      c.city.toLowerCase().includes(searchQuery.trim().toLowerCase())
+    )
+    if (match) {
+      setSelectedCity(match)
+      mapRef.current?.flyTo(match.center, 13, { duration: 1.5 })
+      return
+    }
+    // Fall back to geocoding for cities not in our rankings
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`)
       const data = await res.json()
       if (data[0]) {
         mapRef.current?.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 12, { duration: 1.5 })
-        const match = cityScores.find(c =>
-          searchQuery.toLowerCase().includes(c.city.toLowerCase()) ||
-          c.city.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        if (match) setSelectedCity(match)
       }
     } catch {}
   }, [searchQuery, cityScores])
