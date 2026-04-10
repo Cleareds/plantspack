@@ -52,16 +52,32 @@ interface CityScore {
 
 function calculateScore(places: Place[]): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number } } {
   if (places.length === 0) return { score: 0, grade: 'F', breakdown: { density: 0, variety: 0, quality: 0 } }
-  const density = Math.min(40, places.length * 2.5)
-  const categories = new Set(places.map(p => p.category))
+
+  const fullyVegan = places.filter(p => p.vegan_level === 'fully_vegan')
+  const fvCount = fullyVegan.length
+  const totalCount = places.length
+
+  // Density (0-40): fully vegan places, logarithmic to not over-reward huge cities
+  // 1 fv = 8pts, 3 = 16, 8 = 25, 16 = 32, 30+ = 40
+  const density = Math.min(40, fvCount > 0 ? 8 * Math.log2(fvCount + 1) : 0)
+
+  // Variety (0-30): category diversity among FULLY VEGAN places only
+  const fvCategories = new Set(fullyVegan.map(p => p.category))
   const variety = Math.min(30,
-    (categories.has('eat') ? 10 : 0) + (categories.has('hotel') ? 8 : 0) +
-    (categories.has('organisation') ? 7 : 0) + (categories.has('store') ? 5 : 0) + categories.size * 2
+    (fvCategories.has('eat') ? 10 : 0) +
+    (fvCategories.has('hotel') ? 8 : 0) +
+    (fvCategories.has('organisation') ? 7 : 0) +
+    (fvCategories.has('store') ? 5 : 0) +
+    fvCategories.size * 2
   )
-  const fullyVeganRatio = places.filter(p => p.vegan_level === 'fully_vegan').length / places.length
-  const rated = places.filter(p => p.average_rating && p.average_rating > 0)
-  const avgRating = rated.length > 0 ? rated.reduce((s, p) => s + (p.average_rating || 0), 0) / rated.length : 0
-  const quality = Math.min(30, fullyVeganRatio * 20 + (avgRating / 5) * 10)
+
+  // Quality (0-30): ratio of fully vegan to total + ratings
+  // A city where 80% of places are fully vegan scores much higher than 20%
+  const fvRatio = fvCount / totalCount
+  const ratedFv = fullyVegan.filter(p => p.average_rating && p.average_rating > 0)
+  const avgRating = ratedFv.length > 0 ? ratedFv.reduce((s, p) => s + (p.average_rating || 0), 0) / ratedFv.length : 0
+  const quality = Math.min(30, fvRatio * 20 + (avgRating / 5) * 10)
+
   const score = Math.round(Math.min(100, density + variety + quality))
   const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
   return { score, grade, breakdown: { density: Math.round(density), variety: Math.round(variety), quality: Math.round(quality) } }
@@ -476,15 +492,15 @@ export default function VeganScoreMap() {
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
                 <h3 className="font-bold text-emerald-800 text-sm mb-1">🏪 Density (0-40 pts)</h3>
-                <p className="text-xs text-emerald-700">How many vegan places are in the city? More places = higher score.</p>
+                <p className="text-xs text-emerald-700">How many 100% vegan places are in the city? Uses a logarithmic scale so smaller cities with dedicated vegan spots aren&apos;t overshadowed by big cities.</p>
               </div>
               <div className="bg-blue-50 rounded-xl p-3">
                 <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-30 pts)</h3>
-                <p className="text-xs text-blue-700">Mix of restaurants, stores, stays, and sanctuaries? Diversity scores higher.</p>
+                <p className="text-xs text-blue-700">Does the city have a mix of 100% vegan restaurants, stores, stays, and sanctuaries? Only fully vegan places count — vegan-friendly options don&apos;t boost this score.</p>
               </div>
               <div className="bg-purple-50 rounded-xl p-3">
                 <h3 className="font-bold text-purple-800 text-sm mb-1">⭐ Quality (0-30 pts)</h3>
-                <p className="text-xs text-purple-700">Percentage of 100% vegan places and average ratings.</p>
+                <p className="text-xs text-purple-700">What percentage of all places are 100% vegan (vs just vegan-friendly)? A city where most places are fully vegan scores higher. Ratings of fully vegan places also factor in.</p>
               </div>
             </div>
             <div className="bg-gray-50 rounded-xl p-3 mb-4">
