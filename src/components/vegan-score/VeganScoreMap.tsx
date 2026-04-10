@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Search, Info, X, TrendingUp, MapPin, ChevronRight, Plus } from 'lucide-react'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 // Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -189,7 +189,6 @@ export default function VeganScoreMap() {
 
   // Fetch all places for scoring
   useEffect(() => {
-    const supabase = createClient()
     async function fetchPlaces() {
       setLoading(true)
       const { data } = await supabase
