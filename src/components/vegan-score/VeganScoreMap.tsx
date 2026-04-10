@@ -58,19 +58,20 @@ function calculateScore(places: Place[], population?: number): { score: number; 
   const fvCount = fullyVegan.length
 
   // Density (0-40): fully-vegan places per capita + presence
-  // Concentration (0-25): per 100k residents — real city size from GeoNames
-  // Presence (0-15): logarithmic count — rewards having more fully-vegan spots
+  // Concentration (0-20): per 100k residents — real city size from GeoNames
+  // Presence (0-20): logarithmic count — rewards having more fully-vegan spots
   let concentration = 0
   let perCapita: number | undefined
   if (population && population > 0) {
     perCapita = (fvCount / population) * 100000
-    // Scale: 0.5 per 100k = ~5pts, 2 per 100k = ~15pts, 5+ per 100k = 25pts
-    concentration = Math.min(25, perCapita * 5)
+    // Scale: 0.3 per 100k = ~5pts, 1 per 100k = ~10pts, 3+ per 100k = 20pts
+    concentration = Math.min(20, perCapita * 7)
   } else {
-    // Fallback for cities without population data: use fv ratio as rough proxy
-    concentration = Math.min(25, (fvCount / places.length) * 25)
+    // Fallback for cities without population data: generous estimate
+    concentration = Math.min(20, fvCount >= 3 ? 10 : fvCount * 4)
   }
-  const presence = Math.min(15, fvCount > 0 ? 5 * Math.log2(fvCount + 1) : 0)
+  // Presence: 1 fv = 7pts, 2 = 11, 4 = 15, 8 = 18, 15+ = 20
+  const presence = Math.min(20, fvCount > 0 ? 7 * Math.log2(fvCount + 1) : 0)
   const density = Math.min(40, concentration + presence)
 
   // Variety (0-30): category diversity among FULLY VEGAN places only
@@ -186,7 +187,7 @@ export default function VeganScoreMap() {
           byCity[key].push(p as Place)
         }
         const scores: CityScore[] = Object.entries(byCity)
-          .filter(([, ps]) => ps.length >= 2)
+          .filter(([, ps]) => ps.some(p => p.vegan_level === 'fully_vegan'))
           .map(([key, ps]) => {
             const [city, country] = key.split('|||')
             const pop = populations[key] || undefined
