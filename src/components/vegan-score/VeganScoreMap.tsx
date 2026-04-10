@@ -50,11 +50,6 @@ interface CityScore {
   placeCount: number; breakdown: { density: number; variety: number; quality: number }
 }
 
-// Only allow Latin-script city names
-function isLatinScript(str: string): boolean {
-  return /^[\u0000-\u024F\u1E00-\u1EFF\u2C60-\u2C7F\uA720-\uA7FF\s\-'.,()/]+$/.test(str)
-}
-
 function calculateScore(places: Place[]): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number } } {
   if (places.length === 0) return { score: 0, grade: 'F', breakdown: { density: 0, variety: 0, quality: 0 } }
   const density = Math.min(40, places.length * 2.5)
@@ -150,7 +145,7 @@ export default function VeganScoreMap() {
         setPlaces(data as Place[])
         const byCity: Record<string, Place[]> = {}
         for (const p of data) {
-          if (!p.city || !isLatinScript(p.city)) continue
+          if (!p.city) continue
           const key = `${p.city}|||${p.country}`
           if (!byCity[key]) byCity[key] = []
           byCity[key].push(p as Place)
