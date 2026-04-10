@@ -10,7 +10,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   hotel: 'Stay',
   store: 'Store',
   event: 'Event',
-  organisation: 'Organisation',
+  organisation: 'Animal Sanctuary',
   other: 'Other',
 }
 

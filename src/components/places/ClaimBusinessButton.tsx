@@ -150,7 +150,7 @@ export default function ClaimBusinessButton({
         className="inline-flex items-center gap-2 px-4 py-2 border border-primary text-primary hover:bg-surface-container-low rounded-md text-sm font-medium transition-colors"
       >
         <Building2 className="h-4 w-4" />
-        <span>Claim this business</span>
+        <span>Claim ownership</span>
       </button>
 
       <ClaimBusinessModal

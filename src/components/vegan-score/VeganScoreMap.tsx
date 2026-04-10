@@ -1,38 +1,26 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { Search, Info, X, TrendingUp, MapPin, ChevronRight, Plus } from 'lucide-react'
+import { Search, Info, X, TrendingUp, ChevronRight, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
-// Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
 const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
+const MarkerClusterGroup = dynamic(() => import('react-leaflet-cluster').then(mod => mod.default), { ssr: false })
 
-const MarkerClusterGroup = dynamic(
-  () => import('react-leaflet-cluster').then(mod => mod.default),
-  { ssr: false }
-)
-
-// Map event handler for viewport changes
 const MapEventHandler = dynamic(() =>
   import('react-leaflet').then(mod => {
     const { useMap } = mod
-    return function MapEventHandlerComponent({ onMove }: { onMove: (bounds: any) => void }) {
+    return function MapEventHandlerComponent({ onMove }: { onMove: () => void }) {
       const map = useMap()
       useEffect(() => {
-        const handler = () => {
-          const b = map.getBounds()
-          onMove({ south: b.getSouth(), north: b.getNorth(), west: b.getWest(), east: b.getEast(), zoom: map.getZoom() })
-        }
-        // Fire once on mount
-        handler()
-        map.on('moveend', handler)
-        map.on('zoomend', handler)
-        return () => { map.off('moveend', handler); map.off('zoomend', handler) }
+        map.on('moveend', onMove)
+        map.on('zoomend', onMove)
+        return () => { map.off('moveend', onMove); map.off('zoomend', onMove) }
       }, [map, onMove])
       return null
     }
@@ -40,76 +28,47 @@ const MapEventHandler = dynamic(() =>
   { ssr: false }
 )
 
-// Category config with colors and icons
 const CATEGORY_CONFIG: Record<string, { color: string; emoji: string; label: string }> = {
-  eat: { color: '#22c55e', emoji: '🌿', label: 'Restaurant' },
+  eat: { color: '#22c55e', emoji: '🌿', label: 'Eat' },
   hotel: { color: '#3b82f6', emoji: '🛏️', label: 'Stay' },
   store: { color: '#a855f7', emoji: '🛍️', label: 'Store' },
-  organisation: { color: '#f97316', emoji: '🐾', label: 'Sanctuary' },
+  organisation: { color: '#f97316', emoji: '🐾', label: 'Animal Sanctuary' },
   event: { color: '#ec4899', emoji: '🎉', label: 'Event' },
   other: { color: '#6b7280', emoji: '📍', label: 'Other' },
 }
 
 interface Place {
-  id: string
-  name: string
-  slug: string
-  category: string
-  latitude: number
-  longitude: number
-  vegan_level: string
-  address: string
-  city: string
-  country: string
-  main_image_url: string | null
-  images: string[]
-  average_rating: number | null
-  description: string | null
-  website: string | null
+  id: string; name: string; slug: string; category: string
+  latitude: number; longitude: number; vegan_level: string
+  address: string; city: string; country: string
+  main_image_url: string | null; images: string[]
+  average_rating: number | null; description: string | null; website: string | null
 }
 
 interface CityScore {
-  city: string
-  country: string
-  score: number
-  grade: string
-  placeCount: number
-  breakdown: { density: number; variety: number; quality: number }
+  city: string; country: string; score: number; grade: string
+  placeCount: number; breakdown: { density: number; variety: number; quality: number }
+}
+
+// Only allow Latin-script city names
+function isLatinScript(str: string): boolean {
+  return /^[\u0000-\u024F\u1E00-\u1EFF\u2C60-\u2C7F\uA720-\uA7FF\s\-'.,()/]+$/.test(str)
 }
 
 function calculateScore(places: Place[]): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number } } {
   if (places.length === 0) return { score: 0, grade: 'F', breakdown: { density: 0, variety: 0, quality: 0 } }
-
-  // Density: up to 40 points based on place count
   const density = Math.min(40, places.length * 2.5)
-
-  // Variety: up to 30 points based on category diversity
   const categories = new Set(places.map(p => p.category))
-  const hasEat = categories.has('eat')
-  const hasStay = categories.has('hotel')
-  const hasSanctuary = categories.has('organisation')
-  const hasStore = categories.has('store')
   const variety = Math.min(30,
-    (hasEat ? 10 : 0) +
-    (hasStay ? 8 : 0) +
-    (hasSanctuary ? 7 : 0) +
-    (hasStore ? 5 : 0) +
-    categories.size * 2
+    (categories.has('eat') ? 10 : 0) + (categories.has('hotel') ? 8 : 0) +
+    (categories.has('organisation') ? 7 : 0) + (categories.has('store') ? 5 : 0) + categories.size * 2
   )
-
-  // Quality: up to 30 points based on vegan level + ratings
-  const fullyVegan = places.filter(p => p.vegan_level === 'fully_vegan').length
-  const fullyVeganRatio = fullyVegan / places.length
+  const fullyVeganRatio = places.filter(p => p.vegan_level === 'fully_vegan').length / places.length
   const rated = places.filter(p => p.average_rating && p.average_rating > 0)
   const avgRating = rated.length > 0 ? rated.reduce((s, p) => s + (p.average_rating || 0), 0) / rated.length : 0
-  const quality = Math.min(30,
-    fullyVeganRatio * 20 +
-    (avgRating / 5) * 10
-  )
-
+  const quality = Math.min(30, fullyVeganRatio * 20 + (avgRating / 5) * 10)
   const score = Math.round(Math.min(100, density + variety + quality))
   const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
-
   return { score, grade, breakdown: { density: Math.round(density), variety: Math.round(variety), quality: Math.round(quality) } }
 }
 
@@ -133,90 +92,77 @@ export default function VeganScoreMap() {
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [mapCenter, setMapCenter] = useState<[number, number]>([48.8, 10.5]) // Central Europe
-  const [zoom, setZoom] = useState(5)
+  const [mapCenter] = useState<[number, number]>([48.8, 10.5])
+  const [zoom] = useState(5)
   const [showInfo, setShowInfo] = useState(false)
+  const [showAllRankings, setShowAllRankings] = useState(false)
   const [cityScores, setCityScores] = useState<CityScore[]>([])
   const [selectedCity, setSelectedCity] = useState<CityScore | null>(null)
+  const [activeCategory, setActiveCategory] = useState<string>('all')
   const [icons, setIcons] = useState<Record<string, any>>({})
   const [clusterIcon, setClusterIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
 
-  // Initialize Leaflet icons
+  // Filtered places based on active category
+  const filteredPlaces = useMemo(() => {
+    if (activeCategory === 'all') return places
+    return places.filter(p => p.category === activeCategory)
+  }, [places, activeCategory])
+
+  // Category counts for filter pills
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const p of places) { counts[p.category] = (counts[p.category] || 0) + 1 }
+    return counts
+  }, [places])
+
   useEffect(() => {
     if (typeof window === 'undefined') return
     import('leaflet').then(L => {
       const makeIcon = (color: string, emoji: string) =>
         new L.DivIcon({
-          html: `<div style="
-            width: 32px; height: 32px; border-radius: 50%;
-            background: ${color}; border: 2.5px solid #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px; line-height: 1;
-          ">${emoji}</div>`,
+          html: `<div style="width:32px;height:32px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;">${emoji}</div>`,
           className: 'leaflet-score-marker',
-          iconSize: [32, 32],
-          iconAnchor: [16, 16],
-          popupAnchor: [0, -18],
+          iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -18],
         })
-
       const newIcons: Record<string, any> = {}
-      for (const [cat, cfg] of Object.entries(CATEGORY_CONFIG)) {
-        newIcons[cat] = makeIcon(cfg.color, cfg.emoji)
-      }
+      for (const [cat, cfg] of Object.entries(CATEGORY_CONFIG)) newIcons[cat] = makeIcon(cfg.color, cfg.emoji)
       setIcons(newIcons)
-
-      // Cluster icon creator
       setClusterIcon(() => (cluster: any) => {
         const count = cluster.getChildCount()
-        const diameter = count >= 100 ? 48 : count >= 10 ? 42 : 36
+        const d = count >= 100 ? 48 : count >= 10 ? 42 : 36
         return new L.DivIcon({
-          html: `<div style="
-            width: ${diameter}px; height: ${diameter}px; border-radius: 50%;
-            background: linear-gradient(135deg, #22c55e, #16a34a); border: 3px solid #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-weight: 700; font-size: ${count >= 100 ? 14 : 13}px;
-            font-family: system-ui, sans-serif;
-          ">${count}</div>`,
-          className: 'leaflet-cluster-score',
-          iconSize: [diameter, diameter],
+          html: `<div style="width:${d}px;height:${d}px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:${count >= 100 ? 14 : 13}px;font-family:system-ui,sans-serif;">${count}</div>`,
+          className: 'leaflet-cluster-score', iconSize: [d, d],
         })
       })
     })
   }, [])
 
-  // Fetch all places for scoring
   useEffect(() => {
     async function fetchPlaces() {
       setLoading(true)
       const { data } = await supabase
         .from('places')
         .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
-        .order('name')
-        .limit(5000)
-
+        .order('name').limit(5000)
       if (data) {
         setPlaces(data as Place[])
-
-        // Calculate city scores
         const byCity: Record<string, Place[]> = {}
         for (const p of data) {
+          if (!p.city || !isLatinScript(p.city)) continue
           const key = `${p.city}|||${p.country}`
           if (!byCity[key]) byCity[key] = []
           byCity[key].push(p as Place)
         }
-
         const scores: CityScore[] = Object.entries(byCity)
-          .filter(([, ps]) => ps.length >= 2) // need at least 2 places
+          .filter(([, ps]) => ps.length >= 2)
           .map(([key, ps]) => {
             const [city, country] = key.split('|||')
             const { score, grade, breakdown } = calculateScore(ps)
             return { city, country, score, grade, placeCount: ps.length, breakdown }
           })
           .sort((a, b) => b.score - a.score)
-
         setCityScores(scores)
       }
       setLoading(false)
@@ -224,20 +170,26 @@ export default function VeganScoreMap() {
     fetchPlaces()
   }, [])
 
-  // Search handler
+  const flyToCity = useCallback((city: CityScore) => {
+    setSelectedCity(city)
+    // Geocode the city to fly to it
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city.city + ', ' + city.country)}&limit=1`)
+      .then(r => r.json())
+      .then(data => {
+        if (data[0]) {
+          mapRef.current?.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 12, { duration: 1.5 })
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`)
       const data = await res.json()
       if (data[0]) {
-        const lat = parseFloat(data[0].lat)
-        const lon = parseFloat(data[0].lon)
-        setMapCenter([lat, lon])
-        setZoom(12)
-        mapRef.current?.flyTo([lat, lon], 12, { duration: 1.5 })
-
-        // Find the city score
+        mapRef.current?.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 12, { duration: 1.5 })
         const match = cityScores.find(c =>
           searchQuery.toLowerCase().includes(c.city.toLowerCase()) ||
           c.city.toLowerCase().includes(searchQuery.toLowerCase())
@@ -248,152 +200,172 @@ export default function VeganScoreMap() {
   }, [searchQuery, cityScores])
 
   const handleMapMove = useCallback(() => {}, [])
-
-  const topCities = cityScores.slice(0, 20)
+  const displayedCities = showAllRankings ? cityScores : cityScores.slice(0, 10)
 
   return (
-    <div className="min-h-screen bg-[#f8faf5] flex flex-col">
+    <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 py-3 z-50 relative">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/plantspack-logo-real.svg" alt="PlantsPack" className="h-8 w-auto" />
-            </Link>
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-gray-900 leading-tight">Vegan Score</h1>
-              <p className="text-xs text-gray-500">How vegan-friendly is your city?</p>
-            </div>
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-headline font-bold text-on-surface tracking-tight">
+              Vegan Score
+            </h1>
+            <p className="text-sm text-on-surface-variant mt-1">
+              How vegan-friendly is your city? {cityScores.length} cities ranked.
+            </p>
           </div>
-
-          {/* Search */}
-          <div className="flex-1 max-w-md">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search a city..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-full bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none"
-              />
-            </div>
-          </div>
-
-          {/* Info button */}
           <button
             onClick={() => setShowInfo(true)}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
           >
             <Info className="h-4 w-4" />
             <span className="hidden sm:inline">How it works</span>
           </button>
         </div>
-      </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar — City Rankings */}
-        <div className="hidden lg:flex flex-col w-80 bg-white border-r border-gray-100 overflow-y-auto">
-          <div className="p-4 border-b border-gray-100">
-            <h2 className="font-bold text-gray-900 flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-emerald-500" />
-              City Rankings
-            </h2>
-            <p className="text-xs text-gray-500 mt-1">{cityScores.length} cities scored</p>
+        {/* Search + Category filters */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-outline" />
+            <input
+              type="text"
+              placeholder="Search a city..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+              className="w-full pl-9 pr-4 py-2 text-sm border border-outline-variant/15 rounded-lg bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+            />
           </div>
-
-          {loading ? (
-            <div className="p-4 space-y-3">
-              {[...Array(8)].map((_, i) => <div key={i} className="h-12 bg-gray-100 rounded-lg animate-pulse" />)}
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-50">
-              {topCities.map((city, i) => (
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <button
+              onClick={() => setActiveCategory('all')}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+                activeCategory === 'all' ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-lowest ghost-border text-on-surface-variant hover:bg-surface-container-low'
+              }`}
+            >
+              All ({places.length})
+            </button>
+            {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => {
+              const count = categoryCounts[key] || 0
+              if (count === 0) return null
+              return (
                 <button
-                  key={`${city.city}-${city.country}`}
-                  onClick={() => {
-                    setSelectedCity(city)
-                    setSearchQuery(city.city)
-                    handleSearch()
-                  }}
-                  className={`w-full text-left px-4 py-3 hover:bg-emerald-50/50 transition-colors ${
-                    selectedCity?.city === city.city ? 'bg-emerald-50' : ''
+                  key={key}
+                  onClick={() => setActiveCategory(activeCategory === key ? 'all' : key)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1 ${
+                    activeCategory === key ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-lowest ghost-border text-on-surface-variant hover:bg-surface-container-low'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-gray-400 w-5">#{i + 1}</span>
+                  <span className="w-2 h-2 rounded-full" style={{ background: cfg.color }} />
+                  {cfg.label} ({count})
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-4" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
+        {/* Sidebar — City Rankings */}
+        <div className="hidden lg:flex flex-col w-72 bg-surface-container-lowest rounded-xl ghost-border overflow-hidden">
+          <div className="p-3 border-b border-outline-variant/10">
+            <h2 className="font-bold text-on-surface text-sm flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              City Rankings
+            </h2>
+          </div>
+
+          <div className="flex-1 overflow-y-auto divide-y divide-outline-variant/5">
+            {loading ? (
+              <div className="p-3 space-y-2">
+                {[...Array(8)].map((_, i) => <div key={i} className="h-10 bg-surface-container-low rounded-lg animate-pulse" />)}
+              </div>
+            ) : (
+              displayedCities.map((city, i) => (
+                <button
+                  key={`${city.city}-${city.country}`}
+                  onClick={() => flyToCity(city)}
+                  className={`w-full text-left px-3 py-2.5 hover:bg-primary/5 transition-colors ${
+                    selectedCity?.city === city.city ? 'bg-primary/5' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-on-surface-variant/50 w-4">#{i + 1}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 text-sm truncate">{city.city}</p>
-                      <p className="text-xs text-gray-500">{city.country} · {city.placeCount} places</p>
+                      <p className="font-medium text-on-surface text-sm truncate">{city.city}</p>
+                      <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
                     </div>
                     <div className="text-right">
-                      <span className={`text-lg font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
-                      <p className="text-xs text-gray-400">{city.score}/100</p>
+                      <span className={`text-base font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                      <p className="text-[10px] text-on-surface-variant">{city.score}</p>
                     </div>
                   </div>
                 </button>
-              ))}
-            </div>
+              ))
+            )}
+          </div>
+
+          {!showAllRankings && cityScores.length > 10 && (
+            <button
+              onClick={() => setShowAllRankings(true)}
+              className="p-3 border-t border-outline-variant/10 text-xs font-medium text-primary hover:bg-primary/5 transition-colors text-center"
+            >
+              See all {cityScores.length} cities
+            </button>
+          )}
+          {showAllRankings && (
+            <button
+              onClick={() => setShowAllRankings(false)}
+              className="p-3 border-t border-outline-variant/10 text-xs font-medium text-on-surface-variant hover:bg-surface-container-low transition-colors text-center"
+            >
+              Show top 10
+            </button>
           )}
 
-          {/* Add place CTA */}
-          <div className="p-4 mt-auto border-t border-gray-100">
+          <div className="p-3 border-t border-outline-variant/10">
             <Link
               href="/map"
-              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 w-full px-3 py-2 text-xs font-medium text-on-primary-btn silk-gradient rounded-lg transition-colors hover:opacity-90"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3 w-3" />
               Add a place & boost your city
             </Link>
           </div>
         </div>
 
         {/* Map */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative rounded-xl overflow-hidden ghost-border">
           {/* Selected city score overlay */}
           {selectedCity && (
-            <div className="absolute top-4 left-4 z-[1000] bg-white rounded-2xl shadow-lg border border-gray-100 p-4 max-w-xs">
+            <div className="absolute top-3 left-3 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 p-3 w-64">
               <button onClick={() => setSelectedCity(null)} className="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
                 <X className="h-4 w-4" />
               </button>
-              <div className="flex items-start gap-3 mb-3">
-                <div className={`text-3xl font-black ${getGradeColor(selectedCity.grade)}`}>
-                  {selectedCity.grade}
-                </div>
+              <div className="flex items-start gap-3 mb-2">
+                <div className={`text-2xl font-black ${getGradeColor(selectedCity.grade)}`}>{selectedCity.grade}</div>
                 <div>
-                  <h3 className="font-bold text-gray-900">{selectedCity.city}</h3>
-                  <p className="text-xs text-gray-500">{selectedCity.country} · {selectedCity.placeCount} places</p>
+                  <h3 className="font-bold text-gray-900 text-sm">{selectedCity.city}</h3>
+                  <p className="text-[11px] text-gray-500">{selectedCity.country} · {selectedCity.placeCount} places</p>
                 </div>
               </div>
-              {/* Score bar */}
-              <div className="mb-3">
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <div className="mb-2">
+                <div className="flex justify-between text-[11px] text-gray-500 mb-1">
                   <span>Vegan Score</span>
                   <span className="font-bold text-gray-900">{selectedCity.score}/100</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div className={`h-full rounded-full ${getScoreBarColor(selectedCity.score)} transition-all`} style={{ width: `${selectedCity.score}%` }} />
                 </div>
               </div>
-              {/* Breakdown */}
-              <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Density</span>
-                  <span className="font-medium text-gray-700">{selectedCity.breakdown.density}/40</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Variety</span>
-                  <span className="font-medium text-gray-700">{selectedCity.breakdown.variety}/30</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Quality</span>
-                  <span className="font-medium text-gray-700">{selectedCity.breakdown.quality}/30</span>
-                </div>
+              <div className="space-y-1 text-[11px]">
+                <div className="flex justify-between"><span className="text-gray-500">Density</span><span className="font-medium">{selectedCity.breakdown.density}/40</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Variety</span><span className="font-medium">{selectedCity.breakdown.variety}/30</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Quality</span><span className="font-medium">{selectedCity.breakdown.quality}/30</span></div>
               </div>
               <Link
                 href={`/vegan-places/${selectedCity.country.toLowerCase().replace(/\s+/g, '-')}/${selectedCity.city.toLowerCase().replace(/\s+/g, '-')}`}
-                className="flex items-center justify-center gap-1 w-full mt-3 px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+                className="flex items-center justify-center gap-1 w-full mt-2 px-2 py-1 text-[11px] font-medium text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-colors"
               >
                 View all places <ChevronRight className="h-3 w-3" />
               </Link>
@@ -401,47 +373,36 @@ export default function VeganScoreMap() {
           )}
 
           {/* Mobile rankings toggle */}
-          <div className="lg:hidden absolute top-4 right-4 z-[1000]">
+          <div className="lg:hidden absolute top-3 right-3 z-[1000]">
             <button
-              onClick={() => {
-                const el = document.getElementById('mobile-rankings')
-                if (el) el.classList.toggle('hidden')
-              }}
-              className="px-3 py-2 bg-white rounded-lg shadow-lg border border-gray-100 text-sm font-medium text-gray-700"
+              onClick={() => document.getElementById('mobile-rankings')?.classList.toggle('hidden')}
+              className="px-3 py-1.5 bg-white rounded-lg shadow-md border border-gray-100 text-xs font-medium text-gray-700"
             >
-              <TrendingUp className="h-4 w-4 inline mr-1" />
-              Rankings
+              <TrendingUp className="h-3.5 w-3.5 inline mr-1" /> Top 10
             </button>
           </div>
-
-          {/* Mobile rankings panel */}
-          <div id="mobile-rankings" className="hidden lg:hidden absolute top-16 right-4 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 max-h-64 overflow-y-auto w-64">
-            {topCities.slice(0, 10).map((city, i) => (
+          <div id="mobile-rankings" className="hidden lg:hidden absolute top-12 right-3 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 max-h-60 overflow-y-auto w-56">
+            {cityScores.slice(0, 10).map((city, i) => (
               <button
                 key={`m-${city.city}`}
-                onClick={() => {
-                  setSelectedCity(city)
-                  setSearchQuery(city.city)
-                  handleSearch()
-                  document.getElementById('mobile-rankings')?.classList.add('hidden')
-                }}
+                onClick={() => { flyToCity(city); document.getElementById('mobile-rankings')?.classList.add('hidden') }}
                 className="w-full text-left px-3 py-2 hover:bg-emerald-50 border-b border-gray-50 last:border-0"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-gray-400">#{i + 1}</span>
-                  <span className="text-sm font-medium text-gray-900 flex-1 truncate">{city.city}</span>
-                  <span className={`text-sm font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                  <span className="text-[10px] font-bold text-gray-400">#{i + 1}</span>
+                  <span className="text-xs font-medium text-gray-900 flex-1 truncate">{city.city}</span>
+                  <span className={`text-xs font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
                 </div>
               </button>
             ))}
           </div>
 
           {/* Legend */}
-          <div className="absolute bottom-6 left-4 z-[1000] bg-white/90 backdrop-blur-sm rounded-xl shadow-md border border-gray-100 px-3 py-2">
-            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+          <div className="absolute bottom-3 left-3 z-[1000] bg-white/90 backdrop-blur-sm rounded-lg shadow-md border border-gray-100 px-2.5 py-1.5">
+            <div className="flex flex-wrap gap-x-2.5 gap-y-0.5 text-[10px]">
               {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
                 <span key={key} className="flex items-center gap-1">
-                  <span className="w-3 h-3 rounded-full" style={{ background: cfg.color }} />
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: cfg.color }} />
                   {cfg.label}
                 </span>
               ))}
@@ -453,7 +414,7 @@ export default function VeganScoreMap() {
               ref={mapRef}
               center={mapCenter}
               zoom={zoom}
-              style={{ height: '100%', width: '100%', minHeight: '500px' }}
+              style={{ height: '100%', width: '100%' }}
               className="z-10"
             >
               <TileLayer
@@ -465,50 +426,36 @@ export default function VeganScoreMap() {
               <MapEventHandler onMove={handleMapMove} />
               {Object.keys(icons).length > 0 && clusterIcon && (
                 <MarkerClusterGroup
-                  chunkedLoading
-                  maxClusterRadius={50}
-                  spiderfyOnMaxZoom
-                  showCoverageOnHover={false}
-                  zoomToBoundsOnClick
+                  chunkedLoading maxClusterRadius={50} spiderfyOnMaxZoom
+                  showCoverageOnHover={false} zoomToBoundsOnClick
                   iconCreateFunction={clusterIcon}
                 >
-                  {places.map(place => (
-                    <Marker
-                      key={place.id}
-                      position={[place.latitude, place.longitude]}
-                      icon={icons[place.category] || icons.other}
-                    >
-                      <Popup maxWidth={280} className="vegan-score-popup">
+                  {filteredPlaces.map(place => (
+                    <Marker key={place.id} position={[place.latitude, place.longitude]} icon={icons[place.category] || icons.other}>
+                      <Popup maxWidth={260}>
                         <div className="font-sans">
                           {(place.main_image_url || place.images?.[0]) && (
-                            <img
-                              src={place.main_image_url || place.images[0]}
-                              alt={place.name}
-                              className="w-full h-28 object-cover rounded-t-lg -mt-[13px] -mx-[13px] mb-2"
-                              style={{ width: 'calc(100% + 26px)' }}
-                            />
+                            <img src={place.main_image_url || place.images[0]} alt={place.name}
+                              className="w-full h-24 object-cover rounded-t-lg -mt-[13px] -mx-[13px] mb-2"
+                              style={{ width: 'calc(100% + 26px)' }} />
                           )}
                           <div className="flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0" style={{ background: CATEGORY_CONFIG[place.category]?.color || '#6b7280' }}>
+                            <div className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] flex-shrink-0"
+                              style={{ background: CATEGORY_CONFIG[place.category]?.color || '#6b7280' }}>
                               {CATEGORY_CONFIG[place.category]?.emoji || '📍'}
                             </div>
                             <div className="min-w-0">
-                              <Link href={`/place/${place.slug || place.id}`} className="font-semibold text-sm text-gray-900 hover:text-emerald-600 block truncate">
+                              <Link href={`/place/${place.slug || place.id}`} className="font-semibold text-xs text-gray-900 hover:text-emerald-600 block truncate">
                                 {place.name}
                               </Link>
-                              <p className="text-xs text-gray-500 mt-0.5">
-                                {place.city}{place.country ? `, ${place.country}` : ''}
-                              </p>
+                              <p className="text-[10px] text-gray-500">{place.city}{place.country ? `, ${place.country}` : ''}</p>
                             </div>
                           </div>
-                          <div className="flex gap-1.5 mt-2 flex-wrap">
-                            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
+                          <div className="flex gap-1 mt-1.5 flex-wrap">
+                            <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${
                               place.vegan_level === 'fully_vegan' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
                             }`}>
                               {place.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
-                            </span>
-                            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                              {CATEGORY_CONFIG[place.category]?.label || place.category}
                             </span>
                           </div>
                         </div>
@@ -530,48 +477,38 @@ export default function VeganScoreMap() {
               <h2 className="text-xl font-bold text-gray-900">How Vegan Score Works</h2>
               <button onClick={() => setShowInfo(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
             </div>
-
-            <p className="text-sm text-gray-600 mb-4">
-              Every city gets a Vegan Score from 0 to 100 based on three dimensions:
-            </p>
-
-            <div className="space-y-4 mb-6">
-              <div className="bg-emerald-50 rounded-xl p-4">
+            <p className="text-sm text-gray-600 mb-4">Every city gets a Vegan Score from 0 to 100 based on three dimensions:</p>
+            <div className="space-y-3 mb-5">
+              <div className="bg-emerald-50 rounded-xl p-3">
                 <h3 className="font-bold text-emerald-800 text-sm mb-1">🏪 Density (0-40 pts)</h3>
-                <p className="text-xs text-emerald-700">How many vegan places are in the city? More places = higher density score. Each place contributes 2.5 points.</p>
+                <p className="text-xs text-emerald-700">How many vegan places are in the city? More places = higher score.</p>
               </div>
-              <div className="bg-blue-50 rounded-xl p-4">
+              <div className="bg-blue-50 rounded-xl p-3">
                 <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-30 pts)</h3>
-                <p className="text-xs text-blue-700">Does the city have a mix of restaurants, stores, stays, and sanctuaries? A city with all types scores higher than one with only restaurants.</p>
+                <p className="text-xs text-blue-700">Mix of restaurants, stores, stays, and sanctuaries? Diversity scores higher.</p>
               </div>
-              <div className="bg-purple-50 rounded-xl p-4">
+              <div className="bg-purple-50 rounded-xl p-3">
                 <h3 className="font-bold text-purple-800 text-sm mb-1">⭐ Quality (0-30 pts)</h3>
-                <p className="text-xs text-purple-700">What percentage of places are 100% vegan (vs. vegan-friendly)? How well-rated are they? Higher quality = higher score.</p>
+                <p className="text-xs text-purple-700">Percentage of 100% vegan places and average ratings.</p>
               </div>
             </div>
-
-            <div className="bg-gray-50 rounded-xl p-4 mb-4">
+            <div className="bg-gray-50 rounded-xl p-3 mb-4">
               <h3 className="font-bold text-gray-800 text-sm mb-2">Grade Scale</h3>
               <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="flex items-center gap-1.5"><span className="font-bold text-emerald-500">A+</span> <span className="text-gray-500">90-100</span></div>
-                <div className="flex items-center gap-1.5"><span className="font-bold text-emerald-500">A</span> <span className="text-gray-500">80-89</span></div>
-                <div className="flex items-center gap-1.5"><span className="font-bold text-green-500">B</span> <span className="text-gray-500">65-79</span></div>
-                <div className="flex items-center gap-1.5"><span className="font-bold text-yellow-500">C</span> <span className="text-gray-500">50-64</span></div>
-                <div className="flex items-center gap-1.5"><span className="font-bold text-orange-500">D</span> <span className="text-gray-500">35-49</span></div>
-                <div className="flex items-center gap-1.5"><span className="font-bold text-red-500">F</span> <span className="text-gray-500">0-34</span></div>
+                <div><span className="font-bold text-emerald-500">A+</span> <span className="text-gray-400">90-100</span></div>
+                <div><span className="font-bold text-emerald-500">A</span> <span className="text-gray-400">80-89</span></div>
+                <div><span className="font-bold text-green-500">B</span> <span className="text-gray-400">65-79</span></div>
+                <div><span className="font-bold text-yellow-500">C</span> <span className="text-gray-400">50-64</span></div>
+                <div><span className="font-bold text-orange-500">D</span> <span className="text-gray-400">35-49</span></div>
+                <div><span className="font-bold text-red-500">F</span> <span className="text-gray-400">0-34</span></div>
               </div>
             </div>
-
-            <div className="bg-emerald-50 rounded-xl p-4">
+            <div className="bg-emerald-50 rounded-xl p-3">
               <h3 className="font-bold text-emerald-800 text-sm mb-1">🚀 Improve Your City&apos;s Score</h3>
               <p className="text-xs text-emerald-700 mb-2">
-                Know a vegan place that&apos;s not on the map? Add it and your city&apos;s score will increase!
-                Every place matters — especially stores, stays, and sanctuaries that boost the variety score.
+                Add missing vegan places to boost your city&apos;s ranking! Stores, stays, and sanctuaries especially help the variety score.
               </p>
-              <Link
-                href="/map"
-                className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 hover:text-emerald-900"
-              >
+              <Link href="/map" className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 hover:text-emerald-900">
                 <Plus className="h-3 w-3" /> Add a place now
               </Link>
             </div>
