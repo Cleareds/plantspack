@@ -293,7 +293,7 @@ export default function VeganScoreMap() {
                     </div>
                     <div className="text-right">
                       <span className={`text-base font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
-                      <p className="text-[10px] text-on-surface-variant">{city.score}</p>
+                      <p className="text-[10px] text-on-surface-variant">{city.score}/100</p>
                     </div>
                   </div>
                 </button>
