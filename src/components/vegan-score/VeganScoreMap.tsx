@@ -247,7 +247,7 @@ export default function VeganScoreMap() {
         <div className="flex items-center justify-between mb-2">
           <div>
             <h1 className="text-2xl md:text-3xl font-headline font-bold text-on-surface tracking-tight">
-              Vegan Score
+              City Rankings
             </h1>
             <p className="text-sm text-on-surface-variant mt-1">
               How vegan-friendly is your city? {cityScores.length} cities ranked.

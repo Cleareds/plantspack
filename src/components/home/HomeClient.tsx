@@ -50,6 +50,7 @@ function HomeContent({ topCities, recentPosts }: Props) {
   const [userCountry, setUserCountry] = useState('')
   const [cityImageUrl, setCityImageUrl] = useState<string | null>(null)
   const [cityImageFailed, setCityImageFailed] = useState(false)
+  const [cityImages, setCityImages] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (searchParams?.get('create') === 'true' && user) {
@@ -59,13 +60,20 @@ function HomeContent({ topCities, recentPosts }: Props) {
   }, [searchParams, user, router])
 
   // Load location-aware data
+  const [locationLoading, setLocationLoading] = useState(true)
+
   useEffect(() => {
     async function load() {
-      await new Promise(r => setTimeout(r, 1200))
-      const lat = sessionStorage.getItem('user_lat') || ''
-      const lng = sessionStorage.getItem('user_lng') || ''
-      const city = sessionStorage.getItem('user_city') || ''
-      const country = sessionStorage.getItem('user_country') || ''
+      // Poll sessionStorage for geo data (set by AppShell) — max 3s
+      let lat = '', lng = '', city = '', country = ''
+      for (let i = 0; i < 15; i++) {
+        lat = sessionStorage.getItem('user_lat') || ''
+        lng = sessionStorage.getItem('user_lng') || ''
+        city = sessionStorage.getItem('user_city') || ''
+        country = sessionStorage.getItem('user_country') || ''
+        if (lat || city) break
+        await new Promise(r => setTimeout(r, 200))
+      }
 
       const params = new URLSearchParams()
       if (lat) params.set('lat', lat)
@@ -83,18 +91,23 @@ function HomeContent({ topCities, recentPosts }: Props) {
           setUserCity(data.nearbyPlaces[0].city)
           setUserCountry(data.nearbyPlaces[0].country)
         } else if (city) { setUserCity(city); setUserCountry(country) }
+        if (data.userCityScore) {
+          setUserCity(data.userCityScore.city)
+          setUserCountry(data.userCityScore.country)
+        }
       } catch {}
 
-      // Load city image
-      if (city || lat) {
-        try {
-          const imgs = await fetch('/data/city-images.json').then(r => r.json())
-          const detectedCity = sessionStorage.getItem('user_city') || ''
-          const detectedCountry = sessionStorage.getItem('user_country') || ''
-          const url = imgs[`${detectedCity}|||${detectedCountry}`] || null
-          if (url) setCityImageUrl(url)
-        } catch {}
-      }
+      // Load city images
+      try {
+        const imgs = await fetch('/data/city-images.json').then(r => r.json())
+        setCityImages(imgs)
+        const finalCity = sessionStorage.getItem('user_city') || city
+        const finalCountry = sessionStorage.getItem('user_country') || country
+        const url = imgs[`${finalCity}|||${finalCountry}`] || null
+        if (url) setCityImageUrl(url)
+      } catch {}
+
+      setLocationLoading(false)
     }
     load()
   }, [])
@@ -108,6 +121,16 @@ function HomeContent({ topCities, recentPosts }: Props) {
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">{greeting}</h1>
+
+            {/* Loading state for location-aware content */}
+            {locationLoading && !cityScore && !userCity && (
+              <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-5">
+                <div className="flex items-center gap-3">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
+                  <p className="text-sm text-on-surface-variant">Finding vegan places near you...</p>
+                </div>
+              </div>
+            )}
 
             {/* City Score Hero */}
             {(cityScore || userCity) && (
@@ -243,14 +266,26 @@ function HomeContent({ topCities, recentPosts }: Props) {
                   <Link href="/vegan-score" className="text-xs text-primary font-medium hover:underline">Full rankings</Link>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {topCities.map(city => (
-                    <Link key={city.city} href={`/vegan-places/${city.country.toLowerCase().replace(/\s+/g, '-')}/${city.city.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all text-center">
-                      <span className={`text-xl font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>
-                      <p className="font-medium text-sm text-on-surface truncate mt-1">{city.city}</p>
-                      <p className="text-[10px] text-on-surface-variant">{city.fvCount} vegan places</p>
-                    </Link>
-                  ))}
+                  {topCities.map(city => {
+                    const img = cityImages[`${city.city}|||${city.country}`]
+                    return (
+                      <Link key={city.city} href={`/vegan-places/${city.country.toLowerCase().replace(/\s+/g, '-')}/${city.city.toLowerCase().replace(/\s+/g, '-')}`}
+                        className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
+                        {img && (
+                          <div className="relative h-20 overflow-hidden">
+                            <img src={img} alt={city.city} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                            <span className={`absolute bottom-1 right-2 text-lg font-black drop-shadow-md ${city.grade.startsWith('A') ? 'text-emerald-400' : city.grade === 'B' ? 'text-green-400' : city.grade === 'C' ? 'text-yellow-300' : 'text-orange-300'}`}>{city.grade}</span>
+                          </div>
+                        )}
+                        <div className="p-2.5 text-center">
+                          {!img && <span className={`text-xl font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>}
+                          <p className="font-medium text-sm text-on-surface truncate">{city.city}</p>
+                          <p className="text-[10px] text-on-surface-variant">{city.fvCount} vegan places</p>
+                        </div>
+                      </Link>
+                    )
+                  })}
                 </div>
               </section>
             )}

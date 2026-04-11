@@ -3,8 +3,8 @@ import { Suspense } from 'react'
 import VeganScoreMap from '@/components/vegan-score/VeganScoreMap'
 
 export const metadata: Metadata = {
-  title: 'Vegan Score — How Vegan-Friendly Is Your City? | PlantsPack',
-  description: 'Discover the most vegan-friendly cities in Europe and beyond. See scores, rankings, and contribute to improve your city.',
+  title: 'City Rankings — Most Vegan-Friendly Cities | PlantsPack',
+  description: 'Discover the most vegan-friendly cities worldwide. See rankings, scores, and contribute to improve your city.',
   alternates: { canonical: 'https://plantspack.com/vegan-score' },
 }
 

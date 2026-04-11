@@ -106,7 +106,23 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Also try matching by city name
+  // Fallback: fetch places by city name when no coordinates
+  if (nearbyPlaces.length === 0 && city) {
+    const { data } = await supabase
+      .from('places')
+      .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating')
+      .ilike('city', city)
+      .order('average_rating', { ascending: false, nullsFirst: false })
+      .limit(20)
+
+    if (data && data.length > 0) {
+      nearbyPlaces = data.filter(p => p.category === 'eat').slice(0, 6)
+      nearbySanctuaries = data.filter(p => p.category === 'organisation').slice(0, 3)
+      nearbyStays = data.filter(p => p.category === 'hotel').slice(0, 3)
+    }
+  }
+
+  // Match city score by name
   if (!userCityScore && city) {
     userCityScore = cityScores.find(c => c.city.toLowerCase() === city.toLowerCase()) || null
   }
