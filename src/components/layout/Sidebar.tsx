@@ -67,20 +67,12 @@ export default function Sidebar() {
 
       {/* Bottom section */}
       <div className="mt-auto">
-        {!user ? (
+        {!user && (
           <Link
             href="/auth"
             className="w-full block text-center bg-primary text-on-primary-btn py-4 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
           >
             Sign In
-          </Link>
-        ) : (
-          <Link
-            href="/?create=true"
-            className="w-full flex items-center justify-center gap-2 silk-gradient text-on-primary-btn py-3 rounded-xl font-medium hover:opacity-90 transition-all active:scale-95"
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>edit_square</span>
-            Create Post
           </Link>
         )}
 
