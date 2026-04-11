@@ -18,6 +18,7 @@ import type { PlaceOwnerPublic } from '@/types/place-claims'
 type PlaceData = {
   id: string
   name: string
+  slug: string | null
   category: string
   address: string
   description: string | null
