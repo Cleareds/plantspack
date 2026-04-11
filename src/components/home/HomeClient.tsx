@@ -59,6 +59,8 @@ function HomeContent({ topCities, recentPosts }: Props) {
     }
   }, [searchParams, user, router])
 
+  const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number } | null>(null)
+
   // Load location-aware data
   const [locationLoading, setLocationLoading] = useState(true)
 
@@ -84,6 +86,7 @@ function HomeContent({ topCities, recentPosts }: Props) {
         const res = await fetch(`/api/home?${params}`)
         const data = await res.json()
         setCityScore(data.userCityScore)
+        if (data.stats) setStats(data.stats)
         setNearbyPlaces(data.nearbyPlaces || [])
         setNearbySanctuaries(data.nearbySanctuaries || [])
         setNearbyStays(data.nearbyStays || [])
@@ -121,6 +124,28 @@ function HomeContent({ topCities, recentPosts }: Props) {
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">{greeting}</h1>
+
+            {/* Platform stats for non-logged-in users */}
+            {!user && stats && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
+                  <p className="text-xl font-bold text-primary">{stats.totalPlaces.toLocaleString()}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Vegan Places</p>
+                </div>
+                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
+                  <p className="text-xl font-bold text-primary">{stats.cities.toLocaleString()}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Cities Ranked</p>
+                </div>
+                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
+                  <p className="text-xl font-bold text-primary">{stats.countries}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Countries</p>
+                </div>
+                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
+                  <p className="text-xl font-bold text-primary">{stats.sanctuaries}</p>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Animal Sanctuaries</p>
+                </div>
+              </div>
+            )}
 
             {/* Loading state for location-aware content */}
             {locationLoading && !cityScore && !userCity && (

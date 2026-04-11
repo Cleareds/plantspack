@@ -127,6 +127,16 @@ export async function GET(request: NextRequest) {
     userCityScore = cityScores.find(c => c.city.toLowerCase() === city.toLowerCase()) || null
   }
 
+  // Platform stats
+  const cats: Record<string, number> = {}
+  const countries = new Set<string>()
+  let fullyVeganCount = 0
+  for (const p of allPlaces) {
+    cats[p.category] = (cats[p.category] || 0) + 1
+    if (p.country) countries.add(p.country)
+    if (p.vegan_level === 'fully_vegan') fullyVeganCount++
+  }
+
   return NextResponse.json({
     topCities: cityScores.slice(0, 8),
     userCityScore,
@@ -135,6 +145,16 @@ export async function GET(request: NextRequest) {
     nearbyStays,
     totalCities: cityScores.length,
     totalPlaces: allPlaces.length,
+    stats: {
+      totalPlaces: allPlaces.length,
+      fullyVegan: fullyVeganCount,
+      restaurants: cats['eat'] || 0,
+      stores: cats['store'] || 0,
+      stays: cats['hotel'] || 0,
+      sanctuaries: cats['organisation'] || 0,
+      countries: countries.size,
+      cities: cityScores.length,
+    },
   })
 }
 
