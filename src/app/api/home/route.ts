@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
         distance: Math.round(haversine(lat, lng, p.latitude, p.longitude) * 10) / 10
       })).sort((a, b) => a.distance - b.distance)
 
-      nearbyPlaces = withDist.filter(p => p.category === 'eat').slice(0, 5)
+      nearbyPlaces = withDist.filter(p => p.category === 'eat').slice(0, 6)
       nearbySanctuaries = withDist.filter(p => p.category === 'organisation').slice(0, 3)
       nearbyStays = withDist.filter(p => p.category === 'hotel').slice(0, 3)
 

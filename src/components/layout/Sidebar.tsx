@@ -14,7 +14,6 @@ const navItems = [
   { href: '/feed', label: 'Feed', icon: 'forum' },
   { href: '/events', label: 'Events', icon: 'event' },
   { href: '/packs', label: 'Packs', icon: 'groups' },
-  { href: '/support', label: 'Support Us', icon: 'volunteer_activism' },
 ]
 
 export default function Sidebar() {
@@ -66,7 +65,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom section */}
-      <div className="mt-auto">
+      <div className="mt-auto space-y-4">
         {!user && (
           <Link
             href="/auth"
@@ -76,8 +75,16 @@ export default function Sidebar() {
           </Link>
         )}
 
+        <Link
+          href="/support"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-primary ghost-border hover:bg-primary/5 transition-all"
+        >
+          <span className="material-symbols-outlined text-lg">volunteer_activism</span>
+          Support Us
+        </Link>
+
         {user && username && (
-          <Link href={`/profile/${username}`} className="mt-6 flex items-center gap-3 pt-6 border-t border-outline-variant/15">
+          <Link href={`/profile/${username}`} className="flex items-center gap-3 pt-4 border-t border-outline-variant/15">
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
             ) : (
