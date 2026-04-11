@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { MapPin, Plus, TrendingUp, Heart, MessageCircle, Share2 } from 'lucide-react'
+import { MapPin, Plus, TrendingUp, Star } from 'lucide-react'
 import CompactFeed from "@/components/posts/CompactFeed"
 import CreatePostModal from "@/components/posts/CreatePostModal"
 import AddPlaceModal from "@/components/places/AddPlaceModal"
