@@ -171,44 +171,37 @@ export default function VeganScoreMap() {
     async function fetchPlaces() {
       setLoading(true)
 
-      // Load places (paginated to get ALL) and population data in parallel
-      const popPromise = fetch('/data/city-populations.json').then(r => r.json()).catch(() => ({}))
+      // Load pre-computed scores + places for map in parallel
+      const [scoresRes, placesData] = await Promise.all([
+        fetch('/api/scores').then(r => r.json()).catch(() => ({ scores: [] })),
+        // Load places for map display (paginated)
+        (async () => {
+          let all: any[] = []
+          let offset = 0
+          while (true) {
+            const { data: batch } = await supabase.from('places')
+              .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
+              .range(offset, offset + 999)
+            if (!batch || batch.length === 0) break
+            all.push(...batch)
+            offset += 1000
+            if (batch.length < 1000) break
+          }
+          return all
+        })(),
+      ])
 
-      // Paginate to get all places
-      let allData: any[] = []
-      let offset = 0
-      while (true) {
-        const { data: batch } = await supabase.from('places')
-          .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
-          .range(offset, offset + 999)
-        if (!batch || batch.length === 0) break
-        allData.push(...batch)
-        offset += 1000
-        if (batch.length < 1000) break
-      }
-      const populations: Record<string, number> = await popPromise
-      const data = allData.length > 0 ? allData : null
+      const data = placesData.length > 0 ? placesData : null
 
       if (data) {
         setPlaces(data as Place[])
-        const byCity: Record<string, Place[]> = {}
-        for (const p of data) {
-          if (!p.city) continue
-          const key = `${p.city}|||${p.country}`
-          if (!byCity[key]) byCity[key] = []
-          byCity[key].push(p as Place)
-        }
-        const scores: CityScore[] = Object.entries(byCity)
-          .filter(([, ps]) => ps.length >= 1)
-          .map(([key, ps]) => {
-            const [city, country] = key.split('|||')
-            const pop = populations[key] || undefined
-            const { score, grade, breakdown, perCapita } = calculateScore(ps, pop)
-            const avgLat = ps.reduce((s, p) => s + p.latitude, 0) / ps.length
-            const avgLng = ps.reduce((s, p) => s + p.longitude, 0) / ps.length
-            return { city, country, score, grade, placeCount: ps.length, breakdown, population: pop, perCapita, center: [avgLat, avgLng] as [number, number] }
-          })
-          .sort((a, b) => b.score - a.score)
+
+        // Use pre-computed scores from server API
+        const scores: CityScore[] = (scoresRes.scores || []).map((s: any) => ({
+          ...s,
+          breakdown: { accessibility: 0, choice: 0, variety: 0, quality: 0 }, // Server doesn't expose breakdown yet
+          population: undefined,
+        }))
         setCityScores(scores)
       }
       setLoading(false)
