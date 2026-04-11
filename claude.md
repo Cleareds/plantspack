@@ -2,6 +2,19 @@
 
 This file documents the CLI tools and access that Claude Code has for this project.
 
+## 🚫 ABSOLUTE RULE: Never Delete Data
+
+**NEVER delete any data from the database (places, posts, users, recipes, reviews, or any other records) unless the user explicitly confirms by saying "Yes delete."**
+
+- Do NOT delete places, even if they seem irrelevant, spammy, or incorrectly added
+- Do NOT delete posts, comments, reviews, or any user-generated content
+- Do NOT run DELETE queries as part of cleanup, migration, or import operations
+- If data seems wrong, ASK the user first and wait for "Yes delete" confirmation
+- This applies to ALL tables in Supabase — no exceptions
+- Batch imports must use a unique `source` tag so they can be rolled back without affecting other data
+
+**This rule overrides all other instructions. There are no circumstances where silent deletion is acceptable.**
+
 ## ⚠️ CRITICAL: Content & Data Sourcing Policy
 
 **PlantsPack is a VEGAN platform. All content must come from verified vegan sources.**
