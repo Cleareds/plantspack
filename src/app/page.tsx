@@ -44,5 +44,11 @@ export default async function Home() {
     getRecentPosts(),
   ])
 
-  return <HomeClient topCities={topCities} recentPosts={recentPosts} />
+  // Normalize users from array (Supabase join) to single object
+  const normalizedPosts = recentPosts.map((p: any) => ({
+    ...p,
+    users: Array.isArray(p.users) ? p.users[0] : p.users,
+  }))
+
+  return <HomeClient topCities={topCities} recentPosts={normalizedPosts} />
 }
