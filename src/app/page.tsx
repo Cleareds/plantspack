@@ -3,11 +3,11 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { MapPin, Star, ChevronRight, Plus, TrendingUp, Heart } from 'lucide-react'
+import { MapPin, Plus, TrendingUp, Heart, MessageCircle, Share2 } from 'lucide-react'
 import CompactFeed from "@/components/posts/CompactFeed"
 import CreatePostModal from "@/components/posts/CreatePostModal"
+import AddPlaceModal from "@/components/places/AddPlaceModal"
 import { useAuth } from "@/lib/auth"
-import { supabase } from '@/lib/supabase'
 
 export default function Home() {
   return (
@@ -25,14 +25,14 @@ interface NearbyPlace {
 }
 
 interface CityScoreData {
-  city: string; country: string; score: number; grade: string; fvCount: number
+  city: string; country: string; score: number; grade: string; fvCount: number; placeCount: number
 }
 
-const CATEGORY_EMOJI: Record<string, string> = {
-  eat: '🌿', hotel: '🛏️', store: '🛍️', organisation: '🐾', event: '🎉', other: '📍'
-}
 const CATEGORY_LABEL: Record<string, string> = {
-  eat: 'Restaurant', hotel: 'Stay', store: 'Store', organisation: 'Animal Sanctuary', event: 'Event', other: 'Other'
+  eat: 'Restaurant', hotel: 'Stay', store: 'Store', organisation: 'Animal Sanctuary', event: 'Event'
+}
+const CATEGORY_EMOJI: Record<string, string> = {
+  eat: '🌿', hotel: '🛏️', store: '🛍️', organisation: '🐾', event: '🎉'
 }
 
 function getGradeColor(grade: string) {
@@ -42,7 +42,6 @@ function getGradeColor(grade: string) {
   if (grade === 'D') return 'text-orange-500'
   return 'text-red-500'
 }
-
 function getScoreBarColor(score: number) {
   if (score >= 80) return 'bg-emerald-500'
   if (score >= 65) return 'bg-green-500'
@@ -51,28 +50,20 @@ function getScoreBarColor(score: number) {
   return 'bg-red-500'
 }
 
-function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371
-  const dLat = (lat2 - lat1) * Math.PI / 180
-  const dLon = (lon2 - lon1) * Math.PI / 180
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-}
-
 function HomeContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false)
   const { user, profile } = useAuth()
 
-  const [userCity, setUserCity] = useState<string>('')
-  const [userCountry, setUserCountry] = useState<string>('')
   const [nearbyPlaces, setNearbyPlaces] = useState<NearbyPlace[]>([])
   const [nearbySanctuaries, setNearbySanctuaries] = useState<NearbyPlace[]>([])
   const [nearbyStays, setNearbyStays] = useState<NearbyPlace[]>([])
   const [cityScore, setCityScore] = useState<CityScoreData | null>(null)
   const [topCities, setTopCities] = useState<CityScoreData[]>([])
+  const [userCity, setUserCity] = useState('')
+  const [userCountry, setUserCountry] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -82,102 +73,46 @@ function HomeContent() {
     }
   }, [searchParams, user, router])
 
-  // Load location-aware data
   useEffect(() => {
-    async function loadData() {
+    async function load() {
       setLoading(true)
-
-      // Wait a bit for geolocation to populate sessionStorage
+      // Wait for geolocation
       await new Promise(r => setTimeout(r, 1500))
 
-      const lat = parseFloat(sessionStorage.getItem('user_lat') || '0')
-      const lng = parseFloat(sessionStorage.getItem('user_lng') || '0')
-      const ipCity = sessionStorage.getItem('user_city') || ''
-      const ipCountry = sessionStorage.getItem('user_country') || ''
+      const lat = sessionStorage.getItem('user_lat') || ''
+      const lng = sessionStorage.getItem('user_lng') || ''
+      const city = sessionStorage.getItem('user_city') || ''
+      const country = sessionStorage.getItem('user_country') || ''
 
-      // Fetch nearby places
-      if (lat && lng) {
-        const { data } = await supabase
-          .from('places')
-          .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating')
-          .gte('latitude', lat - 0.5).lte('latitude', lat + 0.5)
-          .gte('longitude', lng - 1).lte('longitude', lng + 1)
-          .limit(100)
+      const params = new URLSearchParams()
+      if (lat) params.set('lat', lat)
+      if (lng) params.set('lng', lng)
+      if (city) params.set('city', city)
 
-        if (data && data.length > 0) {
-          const withDist = data.map(p => ({ ...p, distance: distanceKm(lat, lng, p.latitude, p.longitude) }))
-            .sort((a, b) => a.distance - b.distance)
+      try {
+        const res = await fetch(`/api/home?${params}`)
+        const data = await res.json()
 
-          setNearbyPlaces(withDist.filter(p => p.category === 'eat').slice(0, 5))
-          setNearbySanctuaries(withDist.filter(p => p.category === 'organisation').slice(0, 3))
-          setNearbyStays(withDist.filter(p => p.category === 'hotel').slice(0, 3))
+        setTopCities(data.topCities || [])
+        setCityScore(data.userCityScore)
+        setNearbyPlaces(data.nearbyPlaces || [])
+        setNearbySanctuaries(data.nearbySanctuaries || [])
+        setNearbyStays(data.nearbyStays || [])
 
-          // Detect user city from nearest place
-          if (withDist[0]) {
-            setUserCity(withDist[0].city)
-            setUserCountry(withDist[0].country)
-          }
-        } else if (ipCity) {
-          setUserCity(ipCity)
-          setUserCountry(ipCountry)
+        // Detect city name
+        if (data.nearbyPlaces?.[0]) {
+          setUserCity(data.nearbyPlaces[0].city)
+          setUserCountry(data.nearbyPlaces[0].country)
+        } else if (city) {
+          setUserCity(city)
+          setUserCountry(country)
         }
-      } else if (ipCity) {
-        setUserCity(ipCity)
-        setUserCountry(ipCountry)
-      }
-
-      // Fetch top cities for rankings (lightweight — use precomputed from vegan-score)
-      const { data: allPlaces } = await supabase
-        .from('places')
-        .select('city, country, vegan_level')
-        .limit(5000)
-
-      if (allPlaces) {
-        const byCity: Record<string, { total: number; fv: number; country: string }> = {}
-        for (const p of allPlaces) {
-          if (!p.city) continue
-          if (!byCity[p.city]) byCity[p.city] = { total: 0, fv: 0, country: p.country }
-          byCity[p.city].total++
-          if (p.vegan_level === 'fully_vegan') byCity[p.city].fv++
-        }
-
-        // Simple scoring for top cities display
-        const cities = Object.entries(byCity)
-          .filter(([, v]) => v.fv >= 1)
-          .map(([city, v]) => {
-            const score = Math.min(100, Math.round(
-              Math.min(20, v.fv * 4) + // presence
-              Math.min(20, (v.fv / v.total) * 20) + // concentration
-              (v.fv >= 3 ? 12 : 0) // variety placeholder
-            ))
-            const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
-            return { city, country: v.country, score, grade, fvCount: v.fv }
-          })
-          .sort((a, b) => b.score - a.score)
-
-        setTopCities(cities.slice(0, 8))
-
-        // Find current city score
-        if (userCity || ipCity) {
-          const match = cities.find(c => c.city === (userCity || ipCity))
-          if (match) setCityScore(match)
-        }
-      }
-
+      } catch {}
       setLoading(false)
     }
-    loadData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    load()
   }, [])
 
-  // Update city score when userCity changes
-  useEffect(() => {
-    if (!userCity || topCities.length === 0) return
-    const match = topCities.find(c => c.city === userCity)
-    if (match) setCityScore(match)
-  }, [userCity, topCities])
-
-  const handlePostCreated = () => { setRefreshKey(prev => prev + 1); setIsCreatePostOpen(false) }
   const greeting = user ? `Hello, ${profile?.first_name || profile?.username || 'Friend'}!` : 'Welcome to PlantsPack'
 
   return (
@@ -186,10 +121,7 @@ function HomeContent() {
         <div className="flex gap-6">
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
-            {/* Greeting */}
-            <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">
-              {greeting}
-            </h1>
+            <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">{greeting}</h1>
 
             {/* City Score Hero */}
             {(cityScore || userCity) && (
@@ -197,11 +129,9 @@ function HomeContent() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2 text-sm text-on-surface-variant">
                     <MapPin className="h-4 w-4" />
-                    <span>{userCity}{userCountry ? `, ${userCountry}` : ''}</span>
+                    <span>{userCity || cityScore?.city}{(userCountry || cityScore?.country) ? `, ${userCountry || cityScore?.country}` : ''}</span>
                   </div>
-                  {cityScore && (
-                    <span className={`text-3xl font-black ${getGradeColor(cityScore.grade)}`}>{cityScore.grade}</span>
-                  )}
+                  {cityScore && <span className={`text-3xl font-black ${getGradeColor(cityScore.grade)}`}>{cityScore.grade}</span>}
                 </div>
                 {cityScore ? (
                   <>
@@ -213,16 +143,19 @@ function HomeContent() {
                       <div className={`h-full rounded-full ${getScoreBarColor(cityScore.score)} transition-all`} style={{ width: `${cityScore.score}%` }} />
                     </div>
                     <p className="text-xs text-on-surface-variant mb-3">
-                      {cityScore.fvCount} fully-vegan {cityScore.fvCount === 1 ? 'place' : 'places'}
+                      {cityScore.fvCount} fully-vegan · {cityScore.placeCount} total places
                     </p>
                   </>
                 ) : (
                   <p className="text-sm text-on-surface-variant mb-3">No vegan score yet for {userCity}</p>
                 )}
                 <div className="flex gap-2">
-                  <Link href="/map" className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium silk-gradient text-on-primary-btn rounded-lg hover:opacity-90 transition-colors">
+                  <button
+                    onClick={() => setIsAddPlaceOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium silk-gradient text-on-primary-btn rounded-lg hover:opacity-90 transition-colors"
+                  >
                     <Plus className="h-3 w-3" /> Add a place
-                  </Link>
+                  </button>
                   <Link href="/vegan-score" className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary ghost-border rounded-lg hover:bg-primary/5 transition-colors">
                     <TrendingUp className="h-3 w-3" /> Full rankings
                   </Link>
@@ -230,7 +163,7 @@ function HomeContent() {
               </div>
             )}
 
-            {/* Nearby Vegan Places */}
+            {/* Nearby Places */}
             {nearbyPlaces.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-3">
@@ -251,30 +184,24 @@ function HomeContent() {
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm text-on-surface truncate">{place.name}</p>
                         <p className="text-xs text-on-surface-variant">
-                          {CATEGORY_LABEL[place.category]} · {place.distance ? `${place.distance.toFixed(1)} km` : place.city}
+                          {CATEGORY_LABEL[place.category]} · {place.distance ? `${place.distance} km` : place.city}
                         </p>
                       </div>
-                      <div className="flex-shrink-0">
-                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
-                          place.vegan_level === 'fully_vegan' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                        }`}>
-                          {place.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
-                        </span>
-                      </div>
+                      <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+                        place.vegan_level === 'fully_vegan' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                      }`}>
+                        {place.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
+                      </span>
                     </Link>
                   ))}
                 </div>
               </section>
             )}
 
-            {/* Nearby Sanctuaries */}
+            {/* Sanctuaries */}
             {nearbySanctuaries.length > 0 && (
               <section>
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-semibold text-on-surface flex items-center gap-2">
-                    <span>🐾</span> Nearby sanctuaries to support
-                  </h2>
-                </div>
+                <h2 className="font-semibold text-on-surface flex items-center gap-2 mb-3">🐾 Nearby sanctuaries to support</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {nearbySanctuaries.map(s => (
                     <Link key={s.id} href={`/place/${s.slug || s.id}`}
@@ -283,21 +210,17 @@ function HomeContent() {
                         <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />
                       )}
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
-                      <p className="text-xs text-on-surface-variant">{s.distance ? `${s.distance.toFixed(0)} km away` : s.city}</p>
+                      <p className="text-xs text-on-surface-variant">{s.distance ? `${s.distance} km away` : s.city}</p>
                     </Link>
                   ))}
                 </div>
               </section>
             )}
 
-            {/* Nearby Stays */}
+            {/* Stays */}
             {nearbyStays.length > 0 && (
               <section>
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="font-semibold text-on-surface flex items-center gap-2">
-                    <span>🛏️</span> Vegan stays nearby
-                  </h2>
-                </div>
+                <h2 className="font-semibold text-on-surface flex items-center gap-2 mb-3">🛏️ Vegan stays nearby</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {nearbyStays.map(s => (
                     <Link key={s.id} href={`/place/${s.slug || s.id}`}
@@ -306,14 +229,14 @@ function HomeContent() {
                         <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />
                       )}
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
-                      <p className="text-xs text-on-surface-variant">{s.distance ? `${s.distance.toFixed(0)} km away` : s.city}</p>
+                      <p className="text-xs text-on-surface-variant">{s.distance ? `${s.distance} km away` : s.city}</p>
                     </Link>
                   ))}
                 </div>
               </section>
             )}
 
-            {/* Top Vegan Cities */}
+            {/* Top Cities */}
             {topCities.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-3">
@@ -323,7 +246,7 @@ function HomeContent() {
                   <Link href="/vegan-score" className="text-xs text-primary font-medium hover:underline">Full rankings</Link>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {topCities.map((city, i) => (
+                  {topCities.map(city => (
                     <Link key={city.city} href={`/vegan-places/${city.country.toLowerCase().replace(/\s+/g, '-')}/${city.city.toLowerCase().replace(/\s+/g, '-')}`}
                       className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all text-center">
                       <span className={`text-xl font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>
@@ -335,26 +258,39 @@ function HomeContent() {
               </section>
             )}
 
-            {/* Loading state */}
             {loading && (
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => <div key={i} className="h-20 bg-surface-container-low rounded-xl animate-pulse" />)}
               </div>
             )}
+
+            {/* Community Feed — visible on all screen sizes */}
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-semibold text-on-surface">Community</h2>
+                <Link href="/feed" className="text-xs text-primary font-medium hover:underline">View all</Link>
+              </div>
+              <CompactFeed />
+            </section>
           </div>
 
-          {/* Right Sidebar — Community Feed */}
+          {/* Desktop Right Sidebar — compact feed (hidden, shown inline on mobile) */}
           <div className="hidden xl:block w-72 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-on-surface text-sm">Community</h3>
-                <Link href="/feed" className="text-xs text-primary font-medium hover:underline">
-                  View all
+              {user && (
+                <button
+                  onClick={() => setIsCreatePostOpen(true)}
+                  className="w-full flex items-center justify-center gap-2 silk-gradient text-on-primary-btn px-4 py-2.5 rounded-xl font-medium text-sm hover:opacity-90 transition-all"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit_square</span>
+                  Create Post
+                </button>
+              )}
+              {!user && (
+                <Link href="/auth" className="block w-full text-center bg-primary text-on-primary-btn py-3 rounded-xl font-medium text-sm">
+                  Sign In to Contribute
                 </Link>
-              </div>
-              <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
-                <CompactFeed />
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -370,11 +306,8 @@ function HomeContent() {
         </button>
       )}
 
-      <CreatePostModal
-        isOpen={isCreatePostOpen}
-        onClose={() => setIsCreatePostOpen(false)}
-        onPostCreated={handlePostCreated}
-      />
+      <CreatePostModal isOpen={isCreatePostOpen} onClose={() => setIsCreatePostOpen(false)} onPostCreated={() => setIsCreatePostOpen(false)} />
+      {isAddPlaceOpen && <AddPlaceModal onClose={() => setIsAddPlaceOpen(false)} defaultCity={userCity} defaultCountry={userCountry} />}
     </div>
   )
 }

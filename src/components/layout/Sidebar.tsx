@@ -12,6 +12,8 @@ const navItems = [
   { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
   { href: '/vegan-score', label: 'Vegan Score', icon: 'leaderboard' },
   { href: '/feed', label: 'Feed', icon: 'forum' },
+  { href: '/events', label: 'Events', icon: 'event' },
+  { href: '/packs', label: 'Packs', icon: 'groups' },
   { href: '/support', label: 'Support Us', icon: 'volunteer_activism' },
 ]
 

@@ -171,14 +171,23 @@ export default function VeganScoreMap() {
     async function fetchPlaces() {
       setLoading(true)
 
-      // Load places and population data in parallel
-      const [placesRes, popRes] = await Promise.all([
-        supabase.from('places')
+      // Load places (paginated to get ALL) and population data in parallel
+      const popPromise = fetch('/data/city-populations.json').then(r => r.json()).catch(() => ({}))
+
+      // Paginate to get all places
+      let allData: any[] = []
+      let offset = 0
+      while (true) {
+        const { data: batch } = await supabase.from('places')
           .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
-          .order('name').limit(5000),
-        fetch('/data/city-populations.json').then(r => r.json()).catch(() => ({})),
-      ])
-      const data = placesRes.data
+          .range(offset, offset + 999)
+        if (!batch || batch.length === 0) break
+        allData.push(...batch)
+        offset += 1000
+        if (batch.length < 1000) break
+      }
+      const populations: Record<string, number> = await popPromise
+      const data = allData.length > 0 ? allData : null
       const populations: Record<string, number> = popRes
 
       if (data) {
@@ -191,7 +200,7 @@ export default function VeganScoreMap() {
           byCity[key].push(p as Place)
         }
         const scores: CityScore[] = Object.entries(byCity)
-          .filter(([, ps]) => ps.some(p => p.vegan_level === 'fully_vegan'))
+          .filter(([, ps]) => ps.length >= 1)
           .map(([key, ps]) => {
             const [city, country] = key.split('|||')
             const pop = populations[key] || undefined
