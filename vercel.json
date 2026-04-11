@@ -7,12 +7,19 @@
     },
     "src/app/api/cron/backup/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/verify-places/route.ts": {
+      "maxDuration": 60
     }
   },
   "crons": [
     {
       "path": "/api/cron/backup",
       "schedule": "17 3 * * *"
+    },
+    {
+      "path": "/api/cron/verify-places",
+      "schedule": "23 4 * * *"
     }
   ]
 }

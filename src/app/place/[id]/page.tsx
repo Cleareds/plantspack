@@ -7,6 +7,7 @@ import RatingDistribution from '@/components/places/RatingDistribution'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import PlaceReviews from '@/components/places/PlaceReviews'
 import PlaceMap from '@/components/places/PlaceMap'
+import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
 import AddToPackButton from '@/components/places/AddToPackButton'
@@ -438,6 +439,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               <RatingDistribution distribution={place.rating_distribution} />
             </div>
           )}
+
+          {/* Verify prompt */}
+          <div className="px-6 pt-4">
+            <PlaceVerifyPrompt placeId={place.id} placeName={place.name} />
+          </div>
 
           {/* Reviews */}
           <div className="p-6">

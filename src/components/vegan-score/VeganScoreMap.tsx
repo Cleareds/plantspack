@@ -239,6 +239,8 @@ export default function VeganScoreMap() {
 
   const handleMapMove = useCallback(() => {}, [])
   const displayedCities = showAllRankings ? cityScores : cityScores.slice(0, 10)
+  // Top 3 threshold: include all cities that tie with #3's score
+  const top3Threshold = cityScores.length >= 3 ? cityScores[2]?.score : cityScores[0]?.score || 0
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -247,7 +249,7 @@ export default function VeganScoreMap() {
         <div className="flex items-center justify-between mb-2">
           <div>
             <h1 className="text-2xl md:text-3xl font-headline font-bold text-on-surface tracking-tight">
-              City Rankings
+              City Ranks
             </h1>
             <p className="text-sm text-on-surface-variant mt-1">
               How vegan-friendly is your city? {cityScores.length} cities ranked.
@@ -305,12 +307,12 @@ export default function VeganScoreMap() {
       </div>
 
       <div className="flex gap-4" style={{ height: 'calc(100vh - 280px)', minHeight: '500px' }}>
-        {/* Sidebar — City Rankings */}
+        {/* Sidebar — City Ranks */}
         <div className="hidden lg:flex flex-col w-72 bg-surface-container-lowest rounded-xl ghost-border overflow-hidden">
           <div className="p-3 border-b border-outline-variant/10">
             <h2 className="font-bold text-on-surface text-sm flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-primary" />
-              City Rankings
+              City Ranks
             </h2>
           </div>
 
@@ -320,27 +322,33 @@ export default function VeganScoreMap() {
                 {[...Array(8)].map((_, i) => <div key={i} className="h-10 bg-surface-container-low rounded-lg animate-pulse" />)}
               </div>
             ) : (
-              displayedCities.map((city, i) => (
-                <button
-                  key={`${city.city}-${city.country}`}
-                  onClick={() => flyToCity(city)}
-                  className={`w-full text-left px-3 py-2.5 hover:bg-primary/5 transition-colors ${
-                    selectedCity?.city === city.city ? 'bg-primary/5' : ''
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-on-surface-variant/50 w-4">#{i + 1}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-on-surface text-sm truncate">{city.city}</p>
-                      <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
+              displayedCities.map((city, i) => {
+                const isTop = city.score >= top3Threshold && top3Threshold > 0
+                return (
+                  <button
+                    key={`${city.city}-${city.country}`}
+                    onClick={() => flyToCity(city)}
+                    className={`w-full text-left px-3 py-2.5 transition-colors ${
+                      selectedCity?.city === city.city ? 'bg-primary/5' :
+                      isTop ? 'bg-primary/[0.03]' : ''
+                    } hover:bg-primary/5`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-bold w-4 ${isTop ? 'text-primary' : 'text-on-surface-variant/50'}`}>
+                        {isTop ? '🏆' : `#${i + 1}`}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className={`font-medium text-sm truncate ${isTop ? 'text-primary' : 'text-on-surface'}`}>{city.city}</p>
+                        <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-base font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                        <p className="text-[10px] text-on-surface-variant">{city.score}/100</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className={`text-base font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
-                      <p className="text-[10px] text-on-surface-variant">{city.score}/100</p>
-                    </div>
-                  </div>
-                </button>
-              ))
+                  </button>
+                )
+              }))
             )}
           </div>
 
@@ -519,10 +527,10 @@ export default function VeganScoreMap() {
         <div className="fixed inset-0 z-[2000] bg-black/50 flex items-center justify-center p-4" onClick={() => setShowInfo(false)}>
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">How Vegan Score Works</h2>
+              <h2 className="text-xl font-bold text-gray-900">How City Ranks Work</h2>
               <button onClick={() => setShowInfo(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">Every city gets a Vegan Score from 0 to 100 based on four dimensions:</p>
+            <p className="text-sm text-gray-600 mb-4">Every city gets a score from 0 to 100 based on four dimensions:</p>
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
                 <h3 className="font-bold text-emerald-800 text-sm mb-1">📊 Accessibility (0-20 pts)</h3>
