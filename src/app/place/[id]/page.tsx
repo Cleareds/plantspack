@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle } from 'lucide-react'
@@ -102,7 +102,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: `${place.name} ${rating} - PlantsPack`,
     description,
-    alternates: { canonical: `https://plantspack.com/place/${id}` },
+    alternates: { canonical: `https://plantspack.com/place/${place.slug || id}` },
     openGraph: {
       title: place.name,
       description,
@@ -119,6 +119,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   if (!place) {
     notFound()
+  }
+
+  // Redirect UUID URLs to slug URLs for SEO and cleaner URLs
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  if (isUuid && place.slug) {
+    redirect(`/place/${place.slug}`)
   }
 
   // JSON-LD for LocalBusiness

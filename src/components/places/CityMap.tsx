@@ -55,7 +55,7 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
       for (const place of places) {
         L.marker([place.latitude, place.longitude], { icon: veganIcon })
           .addTo(map)
-          .bindPopup(`<a href="/place/${place.id}" style="font-weight:600;text-decoration:none;color:#16a34a">${place.name}</a>`)
+          .bindPopup(`<a href="/place/${place.slug || place.id}" style="font-weight:600;text-decoration:none;color:#16a34a">${place.name}</a>`)
       }
 
       setMapInstance(map)
