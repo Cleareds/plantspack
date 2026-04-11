@@ -81,13 +81,22 @@ next-env.d.ts
 .env.sentry-build-plugin
 .claude/settings.local.json
 
-# Scraper data
+# Scraper data, import scripts, and DB details (keep out of repo)
+scripts/*.json
+scripts/*.log
 scripts/data/
-scripts/osm-europe-vegan-places.json
-scripts/verified-places-import.json
-scripts/high-confidence-places.json
-scripts/verified-places.json
-scripts/import-ready-places.json
-scripts/uncertain-places.json
-scripts/verify-checkpoint.json
-scripts/vegan-recipes.json
+scripts/scrape-*.js
+scripts/scrape-*.ts
+scripts/import-*.ts
+scripts/import-*.js
+scripts/enrich-*.ts
+scripts/enrich-*.js
+scripts/translate-*.ts
+scripts/transliterate-*.ts
+scripts/fetch-*.ts
+scripts/batch-scan-*.ts
+scripts/check-rls.ts
+scripts/osm-*.json
+scripts/db-backup-*.json
+scripts/cities-from-db.json
+osm-*.json

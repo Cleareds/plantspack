@@ -188,7 +188,6 @@ export default function VeganScoreMap() {
       }
       const populations: Record<string, number> = await popPromise
       const data = allData.length > 0 ? allData : null
-      const populations: Record<string, number> = popRes
 
       if (data) {
         setPlaces(data as Place[])
