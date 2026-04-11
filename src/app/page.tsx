@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MapPin, Star, ChevronRight, Plus, TrendingUp, Heart } from 'lucide-react'
-import Feed from "@/components/posts/Feed"
+import CompactFeed from "@/components/posts/CompactFeed"
 import CreatePostModal from "@/components/posts/CreatePostModal"
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
@@ -348,17 +348,12 @@ function HomeContent() {
             <div className="sticky top-24 space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-on-surface text-sm">Community</h3>
-                {user && (
-                  <button
-                    onClick={() => setIsCreatePostOpen(true)}
-                    className="text-xs text-primary font-medium hover:underline"
-                  >
-                    Create post
-                  </button>
-                )}
+                <Link href="/feed" className="text-xs text-primary font-medium hover:underline">
+                  View all
+                </Link>
               </div>
               <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
-                <Feed key={refreshKey} onPostCreated={handlePostCreated} />
+                <CompactFeed />
               </div>
             </div>
           </div>
