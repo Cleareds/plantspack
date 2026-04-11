@@ -310,8 +310,8 @@ function HomeContent() {
               </div>
             )}
 
-            {/* Community Feed — visible on all screen sizes */}
-            <section>
+            {/* Community Feed — mobile only (desktop shows in sidebar) */}
+            <section className="xl:hidden">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="font-semibold text-on-surface">Community</h2>
                 <Link href="/feed" className="text-xs text-primary font-medium hover:underline">View all</Link>
@@ -320,7 +320,7 @@ function HomeContent() {
             </section>
           </div>
 
-          {/* Desktop Right Sidebar — compact feed (hidden, shown inline on mobile) */}
+          {/* Desktop Right Sidebar — feed + create post */}
           <div className="hidden xl:block w-72 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {user && (
@@ -337,6 +337,15 @@ function HomeContent() {
                   Sign In to Contribute
                 </Link>
               )}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-on-surface text-sm">Community</h3>
+                  <Link href="/feed" className="text-xs text-primary font-medium hover:underline">View all</Link>
+                </div>
+                <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+                  <CompactFeed />
+                </div>
+              </div>
             </div>
           </div>
         </div>
