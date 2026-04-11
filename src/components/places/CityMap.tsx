@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 interface CityMapProps {
-  places: { id: string; name: string; latitude: number; longitude: number; category: string }[]
+  places: { id: string; name: string; slug?: string; latitude: number; longitude: number; category: string }[]
   className?: string
 }
 
