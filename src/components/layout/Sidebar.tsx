@@ -10,8 +10,7 @@ const navItems = [
   { href: '/map', label: 'Map', icon: 'explore' },
   { href: '/vegan-places', label: 'Vegan Places', icon: 'location_on' },
   { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
-  { href: '/events', label: 'Events', icon: 'event' },
-  { href: '/packs', label: 'Packs', icon: 'groups' },
+  { href: '/vegan-score', label: 'Vegan Score', icon: 'leaderboard' },
   { href: '/support', label: 'Support Us', icon: 'volunteer_activism' },
 ]
 

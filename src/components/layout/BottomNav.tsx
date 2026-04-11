@@ -5,11 +5,10 @@ import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 
 const navItems = [
-  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
-  { href: '/vegan-places', label: 'Places', icon: 'place' },
   { href: '/map', label: 'Map', icon: 'explore' },
-  { href: '/events', label: 'Events', icon: 'event' },
-  { href: '/packs', label: 'Packs', icon: 'inventory_2' },
+  { href: '/vegan-places', label: 'Places', icon: 'place' },
+  { href: '/vegan-score', label: 'Score', icon: 'leaderboard' },
+  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
 ]
 
 export default function BottomNav() {

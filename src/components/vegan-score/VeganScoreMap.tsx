@@ -47,54 +47,57 @@ interface Place {
 
 interface CityScore {
   city: string; country: string; score: number; grade: string
-  placeCount: number; breakdown: { density: number; variety: number; quality: number }
+  placeCount: number; breakdown: ScoreBreakdown
   population?: number; perCapita?: number
-  center: [number, number] // avg lat/lng of places
+  center: [number, number]
 }
 
-function calculateScore(places: Place[], population?: number): { score: number; grade: string; breakdown: { density: number; variety: number; quality: number }; perCapita?: number } {
-  if (places.length === 0) return { score: 0, grade: 'F', breakdown: { density: 0, variety: 0, quality: 0 } }
+interface ScoreBreakdown { accessibility: number; choice: number; variety: number; quality: number }
+
+function calculateScore(places: Place[], population?: number): { score: number; grade: string; breakdown: ScoreBreakdown; perCapita?: number } {
+  if (places.length === 0) return { score: 0, grade: 'F', breakdown: { accessibility: 0, choice: 0, variety: 0, quality: 0 } }
 
   const fullyVegan = places.filter(p => p.vegan_level === 'fully_vegan')
   const fvCount = fullyVegan.length
 
-  // Density (0-40): fully-vegan places per capita + presence
-  // Concentration (0-20): per 100k residents — real city size from GeoNames
-  // Presence (0-20): logarithmic count — rewards having more fully-vegan spots
-  let concentration = 0
+  // Accessibility (0-20): fully-vegan places per 100k residents
+  // Measures how likely a resident encounters vegan options
+  let accessibility = 0
   let perCapita: number | undefined
   if (population && population > 0) {
     perCapita = (fvCount / population) * 100000
-    // Scale: 0.3 per 100k = ~5pts, 1 per 100k = ~10pts, 3+ per 100k = 20pts
-    concentration = Math.min(20, perCapita * 7)
+    // Scale: 0.5 per 100k = ~4pts, 2 per 100k = ~12pts, 5+ per 100k = 20pts
+    accessibility = Math.min(20, perCapita * 4)
   } else {
-    // Fallback for cities without population data: generous estimate
-    concentration = Math.min(20, fvCount >= 3 ? 10 : fvCount * 4)
+    // Fallback for small towns without population data
+    accessibility = Math.min(20, fvCount >= 3 ? 10 : fvCount * 4)
   }
-  // Presence: 1 fv = 7pts, 2 = 11, 4 = 15, 8 = 18, 15+ = 20
-  const presence = Math.min(20, fvCount > 0 ? 7 * Math.log2(fvCount + 1) : 0)
-  const density = Math.min(40, concentration + presence)
 
-  // Variety (0-30): category diversity among FULLY VEGAN places only
+  // Choice (0-20): absolute count of fully-vegan places (log scale)
+  // Measures how much variety a visitor actually has
+  // 1=7, 2=11, 4=15, 8=18, 15+=20
+  const choice = Math.min(20, fvCount > 0 ? 7 * Math.log2(fvCount + 1) : 0)
+
+  // Variety (0-30): category diversity among fully-vegan places
+  // Sanctuaries excluded — they're rural, not a city amenity
   const fvCategories = new Set(fullyVegan.map(p => p.category))
   const variety = Math.min(30,
-    (fvCategories.has('eat') ? 10 : 0) +
-    (fvCategories.has('hotel') ? 8 : 0) +
-    (fvCategories.has('organisation') ? 7 : 0) +
-    (fvCategories.has('store') ? 5 : 0) +
-    fvCategories.size * 2
+    (fvCategories.has('eat') ? 12 : 0) +
+    (fvCategories.has('store') ? 8 : 0) +
+    (fvCategories.has('hotel') ? 6 : 0) +
+    (fvCategories.has('event') ? 4 : 0)
   )
 
-  // Quality (0-30): purely based on user ratings of fully-vegan places
-  // No ratings yet = 0 — honest, and incentivizes reviews
+  // Quality (0-30): community ratings of fully-vegan places
+  // No ratings yet = 0 — honest, incentivizes reviews
   const ratedFv = fullyVegan.filter(p => p.average_rating && p.average_rating > 0)
   const avgRating = ratedFv.length > 0 ? ratedFv.reduce((s, p) => s + (p.average_rating || 0), 0) / ratedFv.length : 0
-  const reviewCoverage = ratedFv.length / Math.max(1, fvCount) // what % of fv places have ratings
+  const reviewCoverage = ratedFv.length / Math.max(1, fvCount)
   const quality = Math.min(30, (avgRating / 5) * 20 + reviewCoverage * 10)
 
-  const score = Math.round(Math.min(100, density + variety + quality))
+  const score = Math.round(Math.min(100, accessibility + choice + variety + quality))
   const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
-  return { score, grade, breakdown: { density: Math.round(density), variety: Math.round(variety), quality: Math.round(quality) }, perCapita }
+  return { score, grade, breakdown: { accessibility: Math.round(accessibility), choice: Math.round(choice), variety: Math.round(variety), quality: Math.round(quality) }, perCapita }
 }
 
 function getGradeColor(grade: string) {
@@ -393,7 +396,8 @@ export default function VeganScoreMap() {
                 </div>
               </div>
               <div className="space-y-1 text-[11px]">
-                <div className="flex justify-between"><span className="text-gray-500">Density</span><span className="font-medium">{selectedCity.breakdown.density}/40</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Accessibility</span><span className="font-medium">{selectedCity.breakdown.accessibility}/20</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Choice</span><span className="font-medium">{selectedCity.breakdown.choice}/20</span></div>
                 <div className="flex justify-between"><span className="text-gray-500">Variety</span><span className="font-medium">{selectedCity.breakdown.variety}/30</span></div>
                 <div className="flex justify-between"><span className="text-gray-500">Quality</span><span className="font-medium">{selectedCity.breakdown.quality}/30</span></div>
               </div>
@@ -517,19 +521,23 @@ export default function VeganScoreMap() {
               <h2 className="text-xl font-bold text-gray-900">How Vegan Score Works</h2>
               <button onClick={() => setShowInfo(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">Every city gets a Vegan Score from 0 to 100 based on three dimensions:</p>
+            <p className="text-sm text-gray-600 mb-4">Every city gets a Vegan Score from 0 to 100 based on four dimensions:</p>
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
-                <h3 className="font-bold text-emerald-800 text-sm mb-1">🏪 Density (0-40 pts)</h3>
-                <p className="text-xs text-emerald-700">100% vegan places per 100,000 residents. Uses real population data from GeoNames for 1,200+ cities. A small town with 5 fully-vegan spots per 100k people scores higher than a metropolis with the same ratio. Both concentration and absolute count matter.</p>
+                <h3 className="font-bold text-emerald-800 text-sm mb-1">📊 Accessibility (0-20 pts)</h3>
+                <p className="text-xs text-emerald-700">100% vegan places per 100,000 residents. Uses real population data for 1,200+ cities. A small town with high vegan-per-capita scores higher — measures how likely residents encounter vegan options daily.</p>
+              </div>
+              <div className="bg-teal-50 rounded-xl p-3">
+                <h3 className="font-bold text-teal-800 text-sm mb-1">🏪 Choice (0-20 pts)</h3>
+                <p className="text-xs text-teal-700">How many fully-vegan places does the city actually have? More options means more choice for visitors. Logarithmic scale so the first few places matter most.</p>
               </div>
               <div className="bg-blue-50 rounded-xl p-3">
                 <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-30 pts)</h3>
-                <p className="text-xs text-blue-700">Does the city have a mix of 100% vegan restaurants, stores, stays, and sanctuaries? Only fully vegan places count — vegan-friendly options don&apos;t boost this score.</p>
+                <p className="text-xs text-blue-700">Mix of 100% vegan restaurants, stores, stays, and events. Only fully vegan places count. A city with restaurants AND a vegan store AND a vegan hotel scores higher than one with only restaurants.</p>
               </div>
               <div className="bg-purple-50 rounded-xl p-3">
                 <h3 className="font-bold text-purple-800 text-sm mb-1">⭐ Quality (0-30 pts)</h3>
-                <p className="text-xs text-purple-700">Based on community ratings of fully vegan places. No reviews yet? This score starts at 0 — visit and rate places to help your city climb the rankings!</p>
+                <p className="text-xs text-purple-700">Community ratings of fully vegan places. No reviews yet? This score starts at 0 — rate places to help your city climb the rankings!</p>
               </div>
             </div>
             <div className="bg-gray-50 rounded-xl p-3 mb-4">
