@@ -145,8 +145,8 @@ export async function PUT(
     // Build update object with allowed fields
     const updateData: Record<string, any> = {}
     const allowedFields = [
-      'name', 'description', 'category', 'address', 'website', 'phone',
-      'is_pet_friendly', 'images', 'main_image_url', 'tags',
+      'name', 'description', 'category', 'address', 'latitude', 'longitude',
+      'website', 'phone', 'is_pet_friendly', 'images', 'main_image_url', 'tags',
       'opening_hours', 'event_time', 'city', 'country'
     ]
 
@@ -162,8 +162,8 @@ export async function PUT(
       updateData.images = [...currentImages, ...body.append_images]
     }
 
-    // Geocode new address to update map coordinates
-    if (body.address && body.address !== existingPlace.address) {
+    // Geocode new address to update map coordinates (skip if client already sent coords)
+    if (body.address && body.address !== existingPlace.address && !body.latitude) {
       try {
         const geoRes = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(body.address)}&limit=1&addressdetails=1`,

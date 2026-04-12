@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, Save, Star, Loader2 } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
+import { geocodingService } from '@/lib/geocoding'
 
 interface EditPlaceProps {
   place: {
@@ -27,6 +28,10 @@ interface EditPlaceProps {
 export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlaceProps) {
   const [name, setName] = useState(place.name)
   const [address, setAddress] = useState(place.address || '')
+  const [addressResults, setAddressResults] = useState<any[]>([])
+  const [showAddressResults, setShowAddressResults] = useState(false)
+  const [selectedGeo, setSelectedGeo] = useState<{ lat: number; lng: number } | null>(null)
+  const addressRef = useRef<HTMLDivElement>(null)
   const [description, setDescription] = useState(place.description || '')
   const [category, setCategory] = useState(place.category)
   const [website, setWebsite] = useState(place.website || '')
@@ -45,6 +50,43 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
   const [showImageUploader, setShowImageUploader] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Debounced address search
+  useEffect(() => {
+    if (address.length < 3 || address === place.address) {
+      setAddressResults([])
+      setShowAddressResults(false)
+      return
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const data = await geocodingService.search(address, { limit: 5, addressDetails: true })
+        setAddressResults(data || [])
+        setShowAddressResults(data && data.length > 0)
+      } catch {
+        setAddressResults([])
+      }
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [address, place.address])
+
+  // Close address results on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (addressRef.current && !addressRef.current.contains(e.target as Node)) {
+        setShowAddressResults(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const handleSelectAddress = useCallback((result: any) => {
+    setAddress(result.display_name)
+    setSelectedGeo({ lat: parseFloat(result.lat), lng: parseFloat(result.lon) })
+    setShowAddressResults(false)
+    setAddressResults([])
+  }, [])
 
   if (!isOpen) return null
 
@@ -82,6 +124,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
         body: JSON.stringify({
           name: name.trim(),
           address: address.trim() || null,
+          ...(selectedGeo ? { latitude: selectedGeo.lat, longitude: selectedGeo.lng } : {}),
           description: description.trim() || null,
           category,
           website: website.trim() || null,
@@ -140,16 +183,33 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
               />
             </div>
 
-            {/* Address */}
-            <div>
+            {/* Address with autocomplete */}
+            <div ref={addressRef} className="relative">
               <label className="block text-sm font-medium text-on-surface-variant mb-1">Address</label>
               <input
                 type="text"
                 value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={(e) => { setAddress(e.target.value); setSelectedGeo(null) }}
                 placeholder="e.g. Vennestraat 203, 3600 Genk"
                 className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
               />
+              {selectedGeo && (
+                <p className="text-[10px] text-primary mt-1">Address verified</p>
+              )}
+              {showAddressResults && addressResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest ghost-border rounded-lg editorial-shadow z-50 max-h-48 overflow-y-auto">
+                  {addressResults.map((result: any, idx: number) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSelectAddress(result)}
+                      className="w-full text-left px-3 py-2 hover:bg-surface-container-low border-b border-outline-variant/10 last:border-0 transition-colors"
+                    >
+                      <p className="text-sm text-on-surface truncate">{result.display_name}</p>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Category */}
