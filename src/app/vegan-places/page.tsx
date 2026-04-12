@@ -4,7 +4,7 @@ import { MapPin, Globe, ArrowRight, TrendingUp } from 'lucide-react'
 import { getCountries } from '@/lib/directory-queries'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { loadCityImages, getCountryThumbnail } from '@/lib/city-images'
-import FilteredCount, { FilteredTotal } from '@/components/ui/FilteredCount'
+import FilteredCount, { FilteredTotal, FilteredLabel } from '@/components/ui/FilteredCount'
 
 export const revalidate = 300
 
@@ -111,7 +111,7 @@ export default async function VeganPlacesPage() {
             Find Vegan Places <span className="text-primary">Worldwide</span>
           </h1>
           <p className="text-on-surface-variant text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-3">
-            <strong className="text-on-surface"><FilteredTotal total={total} fullyVegan={totalFv} /></strong> vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries across {countries.length} countries.
+            <strong className="text-on-surface"><FilteredTotal total={total} fullyVegan={totalFv} /></strong> <FilteredLabel allLabel="vegan and vegan-friendly" veganLabel="fully vegan" /> restaurants, cafes, stores, stays, and sanctuaries across {countries.length} countries.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-4">
             <Link href="/map" className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">

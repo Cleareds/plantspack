@@ -23,3 +23,8 @@ export function FilteredTotal({ total, fullyVegan }: { total: number; fullyVegan
   const count = isFullyVeganOnly && fullyVegan !== undefined ? fullyVegan : total
   return <>{count.toLocaleString()}</>
 }
+
+export function FilteredLabel({ allLabel, veganLabel }: { allLabel: string; veganLabel: string }) {
+  const { isFullyVeganOnly } = useVeganFilter()
+  return <>{isFullyVeganOnly ? veganLabel : allLabel}</>
+}
