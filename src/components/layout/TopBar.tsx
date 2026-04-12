@@ -42,7 +42,10 @@ export default function TopBar() {
             height={36}
             className="object-contain"
           />
-          <span className="font-headline font-extrabold text-primary text-xl tracking-tight">Plants Pack</span>
+          <div className="flex flex-col">
+            <span className="font-headline font-extrabold text-primary text-lg tracking-tight leading-tight">Plants Pack</span>
+            <span className="text-[8px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">vegan syndicate</span>
+          </div>
         </Link>
 
         {/* Search Bar - center (desktop only) */}
@@ -64,7 +67,7 @@ export default function TopBar() {
             {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
           </button>
 
-          {user && <NotificationBell />}
+          {user && <div className="hidden sm:block"><NotificationBell /></div>}
           {!user && (
             <Link
               href="/auth"
@@ -88,6 +91,12 @@ export default function TopBar() {
             {isMenuOpen && (
               <div className="absolute right-0 top-full mt-2 w-64 bg-surface-container-lowest glass-float shadow-ambient rounded-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="py-2">
+                  {/* Notifications (mobile only) */}
+                  {user && (
+                    <div className="px-4 py-2 sm:hidden">
+                      <NotificationBell />
+                    </div>
+                  )}
                   {/* Company */}
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Company</span>
