@@ -322,33 +322,35 @@ export default function VeganScoreMap() {
                 {[...Array(8)].map((_, i) => <div key={i} className="h-10 bg-surface-container-low rounded-lg animate-pulse" />)}
               </div>
             ) : (
-              displayedCities.map((city, i) => {
-                const isTop = city.score >= top3Threshold && top3Threshold > 0
-                return (
-                  <button
-                    key={`${city.city}-${city.country}`}
-                    onClick={() => flyToCity(city)}
-                    className={`w-full text-left px-3 py-2.5 transition-colors ${
-                      selectedCity?.city === city.city ? 'bg-primary/5' :
-                      isTop ? 'bg-primary/[0.03]' : ''
-                    } hover:bg-primary/5`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-bold w-4 ${isTop ? 'text-primary' : 'text-on-surface-variant/50'}`}>
-                        {isTop ? '🏆' : `#${i + 1}`}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className={`font-medium text-sm truncate ${isTop ? 'text-primary' : 'text-on-surface'}`}>{city.city}</p>
-                        <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
+              <>
+                {displayedCities.map((city, i) => {
+                  const isTop = city.score >= top3Threshold && top3Threshold > 0
+                  return (
+                    <button
+                      key={`${city.city}-${city.country}`}
+                      onClick={() => flyToCity(city)}
+                      className={`w-full text-left px-3 py-2.5 transition-colors ${
+                        selectedCity?.city === city.city ? 'bg-primary/5' :
+                        isTop ? 'bg-primary/[0.03]' : ''
+                      } hover:bg-primary/5`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-bold w-4 ${isTop ? 'text-primary' : 'text-on-surface-variant/50'}`}>
+                          {isTop ? '🏆' : `#${i + 1}`}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className={`font-medium text-sm truncate ${isTop ? 'text-primary' : 'text-on-surface'}`}>{city.city}</p>
+                          <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={`text-base font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                          <p className="text-[10px] text-on-surface-variant">{city.score}/100</p>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <span className={`text-base font-bold ${getGradeColor(city.grade)}`}>{city.grade}</span>
-                        <p className="text-[10px] text-on-surface-variant">{city.score}/100</p>
-                      </div>
-                    </div>
-                  </button>
-                )
-              }))
+                    </button>
+                  )
+                })}
+              </>
             )}
           </div>
 
