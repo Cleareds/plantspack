@@ -129,7 +129,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
             {subcategories.map(sub => {
               if (!sub) return null
               const count = basePlaces.filter(p => p.category === validCategory && p.subcategory === sub).length
-              const label = SUBCATEGORY_LABELS[activeCategory]?.[sub] || sub
+              const label = (validCategory && SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub
               return (
                 <button key={sub} onClick={() => setFilter({ sub: validSubcategory === sub ? null : sub })}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${validSubcategory === sub ? 'bg-primary/80 text-on-primary-btn' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}`}>
