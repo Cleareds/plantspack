@@ -64,20 +64,53 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
 
   const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number } | null>(null)
 
-  // Load location-aware data
+  // Load location-aware data with localStorage caching
   const [locationLoading, setLocationLoading] = useState(true)
 
   useEffect(() => {
+    const CACHE_KEY = 'plantspack_home_cache'
+    const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+    function applyData(data: any, city: string, country: string) {
+      setCityScore(data.userCityScore)
+      if (data.stats) setStats(data.stats)
+      setNearbyPlaces(data.nearbyPlaces || [])
+      setNearbySanctuaries(data.nearbySanctuaries || [])
+      setNearbyStays(data.nearbyStays || [])
+      if (data.userCityScore) { setUserCity(data.userCityScore.city); setUserCountry(data.userCityScore.country) }
+      else if (data.nearbyPlaces?.[0]) { setUserCity(data.nearbyPlaces[0].city); setUserCountry(data.nearbyPlaces[0].country) }
+      else if (city) { setUserCity(city); setUserCountry(country) }
+      const imgUrl = serverCityImages[`${data.userCityScore?.city || city}|||${data.userCityScore?.country || country}`] || null
+      if (imgUrl) setCityImageUrl(imgUrl)
+    }
+
+    // Try cached data first — instant render
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
+      if (cached && Date.now() - cached.ts < CACHE_TTL) {
+        applyData(cached.data, cached.city, cached.country)
+        setLocationLoading(false)
+        return // Cache hit — done
+      }
+    } catch {}
+
     async function load() {
-      // Poll sessionStorage for geo data (set by AppShell) — max 3s
-      let lat = '', lng = '', city = '', country = ''
-      for (let i = 0; i < 15; i++) {
-        lat = sessionStorage.getItem('user_lat') || ''
-        lng = sessionStorage.getItem('user_lng') || ''
-        city = sessionStorage.getItem('user_city') || ''
-        country = sessionStorage.getItem('user_country') || ''
-        if (lat || city) break
-        await new Promise(r => setTimeout(r, 200))
+      // Check localStorage for geo data (persists across tabs/reloads)
+      let lat = localStorage.getItem('user_lat') || ''
+      let lng = localStorage.getItem('user_lng') || ''
+      let city = localStorage.getItem('user_city') || ''
+      let country = localStorage.getItem('user_country') || ''
+
+      // If no cached geo, poll briefly for AppShell to set it
+      if (!lat && !city) {
+        for (let i = 0; i < 10; i++) {
+          lat = localStorage.getItem('user_lat') || ''
+          lng = localStorage.getItem('user_lng') || ''
+          city = localStorage.getItem('user_city') || ''
+          country = localStorage.getItem('user_country') || ''
+          if (lat || city) break
+          await new Promise(r => setTimeout(r, 300))
+        }
       }
 
       const params = new URLSearchParams()
@@ -88,26 +121,10 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
       try {
         const res = await fetch(`/api/home?${params}`)
         const data = await res.json()
-        setCityScore(data.userCityScore)
-        if (data.stats) setStats(data.stats)
-        setNearbyPlaces(data.nearbyPlaces || [])
-        setNearbySanctuaries(data.nearbySanctuaries || [])
-        setNearbyStays(data.nearbyStays || [])
-        if (data.nearbyPlaces?.[0]) {
-          setUserCity(data.nearbyPlaces[0].city)
-          setUserCountry(data.nearbyPlaces[0].country)
-        } else if (city) { setUserCity(city); setUserCountry(country) }
-        if (data.userCityScore) {
-          setUserCity(data.userCityScore.city)
-          setUserCountry(data.userCityScore.country)
-        }
+        applyData(data, city, country)
+        // Cache the response
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data, city, country, ts: Date.now() }))
       } catch {}
-
-      // Set city image from server-provided data
-      const finalCity = sessionStorage.getItem('user_city') || city
-      const finalCountry = sessionStorage.getItem('user_country') || country
-      const url = serverCityImages[`${finalCity}|||${finalCountry}`] || null
-      if (url) setCityImageUrl(url)
 
       setLocationLoading(false)
     }

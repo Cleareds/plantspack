@@ -13,14 +13,16 @@ function useGeolocation() {
 
   useEffect(() => {
     if (typeof window === 'undefined' || !navigator.geolocation) return
-    if (sessionStorage.getItem('geo_resolved')) return
+    // Use localStorage for persistence across tabs/reloads
+    if (localStorage.getItem('geo_resolved')) return
 
     function storeLocation(lat: number, lng: number, city?: string, country?: string) {
-      sessionStorage.setItem('user_lat', String(lat))
-      sessionStorage.setItem('user_lng', String(lng))
-      if (city) sessionStorage.setItem('user_city', city)
-      if (country) sessionStorage.setItem('user_country', country)
-      sessionStorage.setItem('geo_resolved', '1')
+      localStorage.setItem('user_lat', String(lat))
+      localStorage.setItem('user_lng', String(lng))
+      if (city) localStorage.setItem('user_city', city)
+      if (country) localStorage.setItem('user_country', country)
+      localStorage.setItem('geo_resolved', '1')
+      localStorage.setItem('geo_timestamp', String(Date.now()))
       setShowBanner(false)
     }
 
@@ -32,7 +34,7 @@ function useGeolocation() {
             storeLocation(data.latitude, data.longitude, data.city, data.country_name)
           }
         })
-        .catch(() => { sessionStorage.setItem('geo_resolved', '1') })
+        .catch(() => { localStorage.setItem('geo_resolved', '1') })
     }
 
     // Check permission state
