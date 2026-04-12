@@ -4,10 +4,12 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MapPin, Plus, TrendingUp, Star, Heart, MessageCircle, Share2 } from 'lucide-react'
+import SearchBar from '@/components/search/SearchBar'
 import CreatePostModal from "@/components/posts/CreatePostModal"
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import AddPlaceModal from "@/components/places/AddPlaceModal"
 import { useAuth } from "@/lib/auth"
+import { supabase } from '@/lib/supabase'
 
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
@@ -113,7 +115,15 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
   }, [])
 
   const { isFullyVeganOnly } = useVeganFilter()
-  const greeting = user ? `Hello, ${profile?.first_name || profile?.username || 'Friend'}!` : 'Welcome to PlantsPack'
+  const [showCitySearch, setShowCitySearch] = useState(false)
+  const [userContributions, setUserContributions] = useState<number | null>(null)
+
+  // Load user contribution count
+  useEffect(() => {
+    if (!user) return
+    supabase.from('places').select('id', { count: 'exact', head: true }).eq('created_by', user.id)
+      .then(({ count }) => setUserContributions(count || 0))
+  }, [user])
 
   // Filter nearby places based on global vegan toggle
   const filteredNearby = isFullyVeganOnly ? nearbyPlaces.filter(p => p.vegan_level === 'fully_vegan') : nearbyPlaces
@@ -126,38 +136,44 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
         <div className="xl:flex xl:gap-6">
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
-            <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">{greeting}</h1>
-
-            {/* Platform stats for non-logged-in users */}
-            {!user && stats && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
-                  <p className="text-xl font-bold text-primary">{stats.totalPlaces.toLocaleString()}</p>
-                  <p className="text-[10px] text-on-surface-variant font-medium">Vegan Places</p>
-                </div>
-                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
-                  <p className="text-xl font-bold text-primary">{stats.cities.toLocaleString()}</p>
-                  <p className="text-[10px] text-on-surface-variant font-medium">Cities Ranked</p>
-                </div>
-                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
-                  <p className="text-xl font-bold text-primary">{stats.countries}</p>
-                  <p className="text-[10px] text-on-surface-variant font-medium">Countries</p>
-                </div>
-                <div className="bg-surface-container-lowest rounded-xl p-3 text-center ghost-border">
-                  <p className="text-xl font-bold text-primary">{stats.sanctuaries}</p>
-                  <p className="text-[10px] text-on-surface-variant font-medium">Animal Sanctuaries</p>
-                </div>
+            {/* Value prop + search */}
+            {user ? (
+              <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">
+                Hello, {profile?.first_name || profile?.username || 'Friend'}!
+              </h1>
+            ) : (
+              <div>
+                <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight mb-1">
+                  {stats ? `${stats.totalPlaces.toLocaleString()} vegan places across ${stats.countries} countries` : 'Discover vegan places worldwide'}
+                </h1>
+                <p className="text-sm text-on-surface-variant">Free, no ads, community-driven.</p>
               </div>
             )}
 
-            {/* Loading state for location-aware content */}
-            {locationLoading && !cityScore && !userCity && (
-              <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-5">
-                <div className="flex items-center gap-3">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
-                  <p className="text-sm text-on-surface-variant">Finding vegan places near you...</p>
-                </div>
+            {/* Search bar — shown before geolocation resolves, or when user wants to change city */}
+            {(locationLoading || showCitySearch || (!userCity && !locationLoading)) && (
+              <div className="max-w-md">
+                <SearchBar className="" />
+                <p className="text-[10px] text-on-surface-variant mt-1.5">Search a city to see vegan places and rankings</p>
               </div>
+            )}
+
+            {/* "Choose different city" link — shown when city is detected */}
+            {userCity && !showCitySearch && !locationLoading && (
+              <button onClick={() => setShowCitySearch(true)} className="text-xs text-primary hover:underline font-medium flex items-center gap-1">
+                <MapPin className="h-3 w-3" /> {userCity}, {userCountry} — choose a different city
+              </button>
+            )}
+
+            {/* User contribution counter */}
+            {user && stats && userContributions !== null && (
+              <p className="text-xs text-on-surface-variant">
+                Together we&apos;ve mapped <strong className="text-on-surface">{stats.totalPlaces.toLocaleString()}</strong> places.
+                {userContributions > 0
+                  ? <> You&apos;ve contributed <strong className="text-on-surface">{userContributions}</strong>!</>
+                  : <> <button onClick={() => setIsAddPlaceOpen(true)} className="text-primary hover:underline font-medium">Add your first place!</button></>
+                }
+              </p>
             )}
 
             {/* City Score Hero */}
@@ -284,6 +300,20 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
               </section>
             )}
 
+            {/* CTA: Add a place */}
+            {(filteredNearby.length > 0 || filteredSanctuaries.length > 0) && (
+              <div className="bg-primary/5 rounded-xl p-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-on-surface">Know a vegan place not on the map?</p>
+                  <p className="text-xs text-on-surface-variant">Add it in 30 seconds and boost your city&apos;s ranking</p>
+                </div>
+                <button onClick={() => setIsAddPlaceOpen(true)}
+                  className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 text-xs font-medium silk-gradient text-on-primary-btn rounded-lg hover:opacity-90 transition-colors">
+                  <Plus className="h-3.5 w-3.5" /> Add Place
+                </button>
+              </div>
+            )}
+
             {/* Top Cities — SSR data */}
             {topCities.length > 0 && (
               <section>
@@ -316,6 +346,19 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                   })}
                 </div>
               </section>
+            )}
+
+            {/* CTA: Rate a place */}
+            {topCities.length > 0 && (
+              <div className="bg-surface-container-lowest rounded-xl ghost-border p-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-on-surface">Been to a vegan place recently?</p>
+                  <p className="text-xs text-on-surface-variant">Rate it to help your city rank higher</p>
+                </div>
+                <Link href="/map" className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-primary ghost-border rounded-lg hover:bg-primary/5 transition-colors">
+                  <Star className="h-3.5 w-3.5" /> Find & Rate
+                </Link>
+              </div>
             )}
 
             {/* Community Feed — mobile only */}
