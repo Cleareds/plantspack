@@ -355,19 +355,27 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 </div>
               )}
 
-              {place.opening_hours && (place.category === 'restaurant' || place.category === 'cafe') && (
+              {place.opening_hours && (
                 <div className="flex items-start gap-3 md:col-span-2">
                   <Calendar className="h-5 w-5 text-outline flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <div className="text-sm font-medium text-on-surface mb-2">Opening Hours</div>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      {Object.entries(place.opening_hours).map(([day, hours]) => (
-                        <div key={day} className="flex justify-between">
-                          <span className="text-on-surface-variant capitalize">{day}:</span>
-                          <span className="text-on-surface">{hours}</span>
-                        </div>
-                      ))}
-                    </div>
+                    {typeof place.opening_hours === 'string' ? (
+                      <div className="text-sm text-on-surface-variant space-y-0.5">
+                        {(place.opening_hours as string).split(';').map((line, i) => (
+                          <p key={i}>{line.trim()}</p>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        {Object.entries(place.opening_hours).map(([day, hours]) => (
+                          <div key={day} className="flex justify-between">
+                            <span className="text-on-surface-variant capitalize">{day}:</span>
+                            <span className="text-on-surface">{hours as string}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
