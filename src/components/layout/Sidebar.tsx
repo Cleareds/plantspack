@@ -38,10 +38,7 @@ export default function Sidebar() {
           <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">vegan syndicate</span>
         </div>
       </Link>
-
-      {/* Global vegan filter */}
-      <VeganToggle className="mb-3" />
-
+        
       {/* Navigation */}
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
