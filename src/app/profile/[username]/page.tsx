@@ -160,11 +160,17 @@ export default function ProfilePage() {
           places (
             id,
             name,
+            slug,
             category,
             address,
             description,
             website,
             is_pet_friendly,
+            vegan_level,
+            images,
+            main_image_url,
+            city,
+            country,
             latitude,
             longitude
           )
@@ -705,62 +711,33 @@ export default function ProfilePage() {
                 {favoritePlaces.slice(0, 5).map((favorite) => {
                   const place = favorite.places
                   if (!place) return null
-                  
+                  const img = (place as any).main_image_url || (place as any).images?.[0]
+
                   return (
-                    <div key={favorite.id} className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <Link
-                              href={`/place/${(place as any).slug || place.id}`}
-                              className="font-medium text-on-surface text-sm truncate hover:text-primary transition-colors"
-                            >
-                              {place.name}
-                            </Link>
-                            {place.is_pet_friendly && (
-                              <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" />
-                            )}
-                          </div>
-                          <div className="flex items-center space-x-2 mb-2">
-                            <span className="bg-surface-container-low text-on-surface px-2 py-0.5 rounded text-xs capitalize">
-                              {place.category}
-                            </span>
-                            {place.is_pet_friendly && (
-                              <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
-                                <PawPrint className="h-3 w-3" />
-                                <span>Pet Friendly</span>
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-on-surface-variant mb-2">{place.address}</p>
-                          {place.description && (
-                            <p className="text-xs text-outline line-clamp-2">{place.description}</p>
-                          )}
-                        </div>
-                        <a
-                          href={generateGoogleMapsUrl(place.address, place.name)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="ml-3 flex-shrink-0 p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-                          title="Open in Google Maps"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </div>
-                      {place.website && (
-                        <div className="mt-2 pt-2 border-t border-outline-variant/15">
-                          <a
-                            href={place.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1"
-                          >
-                            <ExternalLink className="h-3 w-3" />
-                            <span>Visit Website</span>
-                          </a>
+                    <Link key={favorite.id} href={`/place/${(place as any).slug || place.id}`}
+                      className="flex items-center gap-3 p-4 hover:bg-surface-container-low/50 transition-colors">
+                      {img ? (
+                        <img src={img} alt={place.name} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                      ) : (
+                        <div className="w-16 h-16 rounded-lg bg-surface-container-low flex items-center justify-center text-xl flex-shrink-0">
+                          {place.category === 'eat' ? '🌿' : place.category === 'hotel' ? '🛏️' : place.category === 'store' ? '🛍️' : '📍'}
                         </div>
                       )}
-                    </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-on-surface text-sm truncate">{place.name}</p>
+                        <p className="text-xs text-on-surface-variant">
+                          {[place.address, (place as any).city, (place as any).country].filter(Boolean).join(', ')}
+                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                          {(place as any).vegan_level === 'fully_vegan' ? (
+                            <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">100% Vegan</span>
+                          ) : (
+                            <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">Vegan-Friendly</span>
+                          )}
+                          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-surface-container-low text-on-surface-variant capitalize">{place.category}</span>
+                        </div>
+                      </div>
+                    </Link>
                   )
                 })}
                 {favoritePlaces.length > 5 && (
