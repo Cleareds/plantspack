@@ -2,11 +2,12 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Search, Info, X, ChevronUp, ChevronDown, Plus, Map, Star } from 'lucide-react'
+import { Search, Info, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Plus, Map, Star } from 'lucide-react'
 import { getGradeColor, getScoreBarColor, type CityScore } from '@/lib/score-utils'
 
 type SortKey = 'score' | 'accessibility' | 'choice' | 'variety' | 'quality' | 'placeCount' | 'city'
 type SortDir = 'asc' | 'desc'
+const PAGE_SIZE = 50
 
 function getCitySlug(city: string) {
   return city.toLowerCase().replace(/\s+/g, '-')
@@ -24,8 +25,7 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('score')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
   const [showInfo, setShowInfo] = useState(false)
-
-  const loading = false
+  const [page, setPage] = useState(1)
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -34,6 +34,7 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
       setSortKey(key)
       setSortDir(key === 'city' ? 'asc' : 'desc')
     }
+    setPage(1)
   }
 
   const filtered = useMemo(() => {
@@ -59,6 +60,19 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
     })
   }, [scores, searchQuery, sortKey, sortDir])
 
+  // Pagination
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginated = useMemo(() => {
+    const start = (page - 1) * PAGE_SIZE
+    return filtered.slice(start, start + PAGE_SIZE)
+  }, [filtered, page])
+
+  // Reset to page 1 when search changes
+  const handleSearch = (q: string) => {
+    setSearchQuery(q)
+    setPage(1)
+  }
+
   // Top 3 threshold — scores are already sorted by score desc from server
   const top3Score = useMemo(() => scores.length >= 3 ? scores[2]?.score : scores[0]?.score || 0, [scores])
 
@@ -68,6 +82,9 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
     scores.forEach((s, i) => { map[`${s.city}|${s.country}`] = i + 1 })
     return map
   }, [scores])
+
+  // Global rank offset for current page
+  const rankOffset = (page - 1) * PAGE_SIZE
 
   function SortIcon({ col }: { col: SortKey }) {
     if (sortKey !== col) return <ChevronDown className="h-3 w-3 opacity-30" />
@@ -85,6 +102,58 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
           <SortIcon col={col} />
         </span>
       </th>
+    )
+  }
+
+  function Pagination() {
+    if (totalPages <= 1) return null
+    return (
+      <div className="flex items-center justify-between px-3 py-3 border-t border-outline-variant/10">
+        <p className="text-xs text-on-surface-variant">
+          {rankOffset + 1}–{Math.min(rankOffset + PAGE_SIZE, filtered.length)} of {filtered.length} cities
+        </p>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="p-1.5 rounded-lg hover:bg-surface-container-low disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4 text-on-surface-variant" />
+          </button>
+          {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+            let pageNum: number
+            if (totalPages <= 7) {
+              pageNum = i + 1
+            } else if (page <= 4) {
+              pageNum = i + 1
+            } else if (page >= totalPages - 3) {
+              pageNum = totalPages - 6 + i
+            } else {
+              pageNum = page - 3 + i
+            }
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setPage(pageNum)}
+                className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
+                  page === pageNum
+                    ? 'bg-primary text-on-primary-btn'
+                    : 'text-on-surface-variant hover:bg-surface-container-low'
+                }`}
+              >
+                {pageNum}
+              </button>
+            )
+          })}
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="p-1.5 rounded-lg hover:bg-surface-container-low disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight className="h-4 w-4 text-on-surface-variant" />
+          </button>
+        </div>
+      </div>
     )
   }
 
@@ -117,7 +186,7 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
             type="text"
             placeholder="Search a city or country..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-sm border border-outline-variant/15 rounded-xl bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
           />
         </div>
@@ -142,23 +211,16 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/5">
-              {loading ? (
-                [...Array(10)].map((_, i) => (
-                  <tr key={i}>
-                    <td colSpan={10} className="px-3 py-3">
-                      <div className="h-6 bg-surface-container-low rounded-lg animate-pulse" />
-                    </td>
-                  </tr>
-                ))
-              ) : filtered.length === 0 ? (
+              {filtered.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="px-3 py-12 text-center text-sm text-on-surface-variant">
                     {searchQuery ? 'No cities match your search.' : 'No city scores available.'}
                   </td>
                 </tr>
               ) : (
-                filtered.map((city, i) => {
-                  const rank = rankMap[`${city.city}|${city.country}`] || (i + 1)
+                paginated.map((city, i) => {
+                  const displayRank = rankOffset + i + 1
+                  const origRank = rankMap[`${city.city}|${city.country}`] || displayRank
                   const isTop = city.score >= top3Score && top3Score > 0
                   return (
                     <tr
@@ -169,7 +231,7 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
                         {isTop ? (
                           <span className="text-xs">🏆</span>
                         ) : (
-                          <span className="text-on-surface-variant/50 text-xs font-medium">{sortKey === 'score' && sortDir === 'desc' ? i + 1 : rank}</span>
+                          <span className="text-on-surface-variant/50 text-xs font-medium">{sortKey === 'score' && sortDir === 'desc' ? displayRank : origRank}</span>
                         )}
                       </td>
                       <td className="px-3 py-2.5">
@@ -212,59 +274,85 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
             </tbody>
           </table>
         </div>
+        <Pagination />
       </div>
 
       {/* Mobile Cards */}
-      <div className="md:hidden space-y-2">
-        {loading ? (
-          [...Array(6)].map((_, i) => (
-            <div key={i} className="h-20 bg-surface-container-low rounded-xl animate-pulse" />
-          ))
-        ) : filtered.length === 0 ? (
+      <div className="md:hidden">
+        {filtered.length === 0 ? (
           <div className="py-12 text-center text-sm text-on-surface-variant">
             {searchQuery ? 'No cities match your search.' : 'No city scores available.'}
           </div>
         ) : (
-          filtered.map((city, i) => {
-            const isTop = city.score >= top3Score && top3Score > 0
-            return (
-              <Link
-                key={`${city.city}-${city.country}`}
-                href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
-                className={`block bg-surface-container-lowest rounded-xl ghost-border p-3 hover:bg-primary/[0.03] transition-colors ${isTop ? 'ring-1 ring-primary/20' : ''}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 text-center flex-shrink-0">
-                    {isTop ? (
-                      <span className="text-sm">🏆</span>
-                    ) : (
-                      <span className="text-xs font-bold text-on-surface-variant/50">#{i + 1}</span>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-medium text-sm truncate ${isTop ? 'text-primary' : 'text-on-surface'}`}>{city.city}</p>
-                    <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <span className={`text-lg font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <div className="w-12 h-1 bg-surface-container-low rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${getScoreBarColor(city.score)}`} style={{ width: `${city.score}%` }} />
+          <>
+            <div className="space-y-2">
+              {paginated.map((city, i) => {
+                const displayRank = rankOffset + i + 1
+                const isTop = city.score >= top3Score && top3Score > 0
+                return (
+                  <Link
+                    key={`${city.city}-${city.country}`}
+                    href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                    className={`block bg-surface-container-lowest rounded-xl ghost-border p-3 hover:bg-primary/[0.03] transition-colors ${isTop ? 'ring-1 ring-primary/20' : ''}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 text-center flex-shrink-0">
+                        {isTop ? (
+                          <span className="text-sm">🏆</span>
+                        ) : (
+                          <span className="text-xs font-bold text-on-surface-variant/50">#{displayRank}</span>
+                        )}
                       </div>
-                      <span className="text-[10px] text-on-surface-variant">{city.score}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className={`font-medium text-sm truncate ${isTop ? 'text-primary' : 'text-on-surface'}`}>{city.city}</p>
+                        <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <span className={`text-lg font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <div className="w-12 h-1 bg-surface-container-low rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${getScoreBarColor(city.score)}`} style={{ width: `${city.score}%` }} />
+                          </div>
+                          <span className="text-[10px] text-on-surface-variant">{city.score}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                    <div className="flex gap-3 mt-2 ml-11 text-[10px] text-on-surface-variant">
+                      <span>Access {city.breakdown?.accessibility ?? 0}/20</span>
+                      <span>Choice {city.breakdown?.choice ?? 0}/20</span>
+                      <span>Variety {city.breakdown?.variety ?? 0}/30</span>
+                      <span>Quality {city.breakdown?.quality ?? 0}/30</span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+            {/* Mobile pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-4 px-1">
+                <p className="text-xs text-on-surface-variant">
+                  {rankOffset + 1}–{Math.min(rankOffset + PAGE_SIZE, filtered.length)} of {filtered.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setPage(p => Math.max(1, p - 1)); window.scrollTo(0, 0) }}
+                    disabled={page === 1}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium ghost-border hover:bg-surface-container-low disabled:opacity-30 transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-xs text-on-surface-variant">{page}/{totalPages}</span>
+                  <button
+                    onClick={() => { setPage(p => Math.min(totalPages, p + 1)); window.scrollTo(0, 0) }}
+                    disabled={page === totalPages}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium ghost-border hover:bg-surface-container-low disabled:opacity-30 transition-colors"
+                  >
+                    Next
+                  </button>
                 </div>
-                {/* Score breakdown row */}
-                <div className="flex gap-3 mt-2 ml-11 text-[10px] text-on-surface-variant">
-                  <span>Access {city.breakdown?.accessibility ?? 0}/20</span>
-                  <span>Choice {city.breakdown?.choice ?? 0}/20</span>
-                  <span>Variety {city.breakdown?.variety ?? 0}/30</span>
-                  <span>Quality {city.breakdown?.quality ?? 0}/30</span>
-                </div>
-              </Link>
-            )
-          })
+              </div>
+            )}
+          </>
         )}
       </div>
 
