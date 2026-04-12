@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { User, Edit, Crown, Settings, LogOut } from 'lucide-react'
+import { User, Edit, Crown, Bell, Settings, LogOut } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 
 interface ProfileSidebarProps {
@@ -35,6 +35,12 @@ export default function ProfileSidebar({ username }: ProfileSidebarProps) {
       icon: Crown,
       label: 'Subscription',
       match: (path: string) => path === `/profile/${username}/subscription`
+    },
+    {
+      href: `/profile/${username}/notifications`,
+      icon: Bell,
+      label: 'Notifications',
+      match: (path: string) => path === `/profile/${username}/notifications`
     },
     {
       href: `/profile/${username}/settings`,

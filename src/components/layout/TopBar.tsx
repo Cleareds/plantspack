@@ -91,12 +91,6 @@ export default function TopBar() {
             {isMenuOpen && (
               <div className="absolute right-0 top-full mt-2 w-64 bg-surface-container-lowest glass-float shadow-ambient rounded-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="py-2">
-                  {/* Notifications (mobile only) */}
-                  {user && (
-                    <div className="px-4 py-2 sm:hidden">
-                      <NotificationBell />
-                    </div>
-                  )}
                   {/* Company */}
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Company</span>
