@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
       // Get all places in a country (for country pages)
       let query = supabase
         .from('places')
-        .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
+        .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
         .ilike('country', fromSlug(country))
 
       if (category) {
@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
       // Get places in a specific city
       let query = supabase
         .from('places')
-        .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
+        .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
         .ilike('country', fromSlug(country))
         .ilike('city', fromSlug(city))
 

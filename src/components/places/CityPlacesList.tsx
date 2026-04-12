@@ -14,6 +14,12 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: 'Other',
 }
 
+const SUBCATEGORY_LABELS: Record<string, Record<string, string>> = {
+  eat: { restaurant: 'Restaurant', cafe: 'Cafe', fast_food: 'Fast Food', bar: 'Bar/Pub', bakery: 'Bakery', ice_cream: 'Ice Cream' },
+  store: { grocery: 'Grocery', bakery: 'Bakery', health_food: 'Health Food', specialty: 'Specialty', other_shop: 'Other' },
+  hotel: { hotel: 'Hotel', hostel: 'Hostel', bnb: 'B&B', retreat: 'Retreat', other_stay: 'Other' },
+}
+
 const VEGAN_LABELS: Record<string, string> = {
   fully_vegan: '100% Vegan',
   vegan_friendly: 'Vegan-Friendly',
@@ -24,6 +30,7 @@ interface Place {
   slug: string | null
   name: string
   category: string
+  subcategory: string | null
   address: string
   description: string | null
   images: string[]
@@ -44,11 +51,18 @@ interface Place {
 export default function CityPlacesList({ places }: { places: Place[] }) {
   const categories = [...new Set(places.map(p => p.category))].sort()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null)
   const [veganOnly, setVeganOnly] = useState(false)
   const [petOnly, setPetOnly] = useState(false)
 
+  // Get available subcategories for active category
+  const subcategories = activeCategory
+    ? [...new Set(places.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
+    : []
+
   const filtered = places.filter(p => {
     if (activeCategory && p.category !== activeCategory) return false
+    if (activeSubcategory && p.subcategory !== activeSubcategory) return false
     if (veganOnly && p.vegan_level !== 'fully_vegan') return false
     if (petOnly && !p.is_pet_friendly) return false
     return true
@@ -59,19 +73,37 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-6">
         {/* Category pills */}
-        <button onClick={() => setActiveCategory(null)}
+        <button onClick={() => { setActiveCategory(null); setActiveSubcategory(null); }}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!activeCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
           All ({places.length})
         </button>
         {categories.map(cat => {
           const count = places.filter(p => p.category === cat).length
           return (
-            <button key={cat} onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+            <button key={cat} onClick={() => { setActiveCategory(activeCategory === cat ? null : cat); setActiveSubcategory(null); }}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
               {CATEGORY_LABELS[cat] || cat} ({count})
             </button>
           )
         })}
+
+        {/* Subcategory pills — show when a category is selected */}
+        {activeCategory && subcategories.length > 1 && (
+          <>
+            <div className="w-px h-8 bg-outline-variant/30 self-center" />
+            {subcategories.map(sub => {
+              if (!sub) return null
+              const count = places.filter(p => p.category === activeCategory && p.subcategory === sub).length
+              const label = SUBCATEGORY_LABELS[activeCategory]?.[sub] || sub
+              return (
+                <button key={sub} onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${activeSubcategory === sub ? 'bg-primary/80 text-on-primary-btn' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}`}>
+                  {label} ({count})
+                </button>
+              )
+            })}
+          </>
+        )}
 
         {/* Divider */}
         <div className="w-px h-8 bg-outline-variant/30 self-center" />
