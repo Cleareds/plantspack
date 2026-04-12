@@ -774,6 +774,12 @@ export default function ProfilePage() {
             )}
             </div>
 
+          {/* Packs link */}
+          <Link href="/packs" className="flex items-center gap-3 p-4 bg-surface-container-lowest rounded-lg editorial-shadow ghost-border hover:border-primary/20 transition-all">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>groups</span>
+            <span className="text-sm font-medium text-on-surface">Browse Packs</span>
+          </Link>
+
           {/* My Packs */}
           {userPacks.length > 0 && (
             <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
