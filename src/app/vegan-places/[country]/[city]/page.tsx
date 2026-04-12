@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
+import PinCityButton from '@/components/places/PinCityButton'
 import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
@@ -214,6 +215,7 @@ export default async function CityPage({ params }: PageProps) {
               countryName={countryName}
               className="inline-flex items-center gap-2 text-sm font-medium text-on-surface-variant ghost-border px-4 py-2 rounded-lg transition-colors hover:bg-surface-container-low"
             />
+            <PinCityButton cityName={cityName} countryName={countryName} />
           </div>
         </div>
 

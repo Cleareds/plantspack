@@ -95,11 +95,22 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
     } catch {}
 
     async function load() {
-      // Check localStorage for geo data (persists across tabs/reloads)
-      let lat = localStorage.getItem('user_lat') || ''
-      let lng = localStorage.getItem('user_lng') || ''
-      let city = localStorage.getItem('user_city') || ''
-      let country = localStorage.getItem('user_country') || ''
+      // Check if a city is pinned — overrides geolocation
+      const pinnedCity = localStorage.getItem('pinned_city_name') || ''
+      const pinnedCountry = localStorage.getItem('pinned_country_name') || ''
+
+      let lat = '', lng = '', city = '', country = ''
+      if (pinnedCity) {
+        // Use pinned city
+        city = pinnedCity
+        country = pinnedCountry
+      } else {
+        // Check localStorage for geo data (persists across tabs/reloads)
+        lat = localStorage.getItem('user_lat') || ''
+        lng = localStorage.getItem('user_lng') || ''
+        city = localStorage.getItem('user_city') || ''
+        country = localStorage.getItem('user_country') || ''
+      }
 
       // If no cached geo, poll briefly for AppShell to set it
       if (!lat && !city) {
@@ -175,11 +186,30 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
               </div>
             )}
 
-            {/* "Choose different city" link — shown when city is detected */}
+            {/* Location controls — shown when city is detected */}
             {userCity && !showCitySearch && !locationLoading && (
-              <button onClick={() => setShowCitySearch(true)} className="text-xs text-primary hover:underline font-medium flex items-center gap-1">
-                <MapPin className="h-3 w-3" /> {userCity}, {userCountry} — choose a different city
-              </button>
+              <div className="flex flex-wrap items-center gap-3 text-xs">
+                <span className="text-on-surface-variant flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> {userCity}, {userCountry}
+                  {localStorage.getItem('pinned_city_name') && (
+                    <span className="text-primary font-medium ml-1">(pinned)</span>
+                  )}
+                </span>
+                <button onClick={() => setShowCitySearch(true)} className="text-primary hover:underline font-medium">
+                  Choose a different city
+                </button>
+                {localStorage.getItem('pinned_city_name') && (
+                  <button onClick={() => {
+                    localStorage.removeItem('pinned_city')
+                    localStorage.removeItem('pinned_city_name')
+                    localStorage.removeItem('pinned_country_name')
+                    localStorage.removeItem('plantspack_home_cache')
+                    window.location.reload()
+                  }} className="text-on-surface-variant hover:text-primary hover:underline font-medium">
+                    Use my location
+                  </button>
+                )}
+              </div>
             )}
 
             {/* User contribution counter */}
