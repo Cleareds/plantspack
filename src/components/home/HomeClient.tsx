@@ -252,7 +252,7 @@ function HomeContent({ topCities, recentPosts }: Props) {
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] text-on-surface-variant/60 text-center mt-2">Reviews help increase your city&apos;s Vegan Score</p>
+                <p className="text-[10px] text-on-surface-variant/60 text-center mt-2">New places and your reviews help increase your city&apos;s ranking</p>
               </section>
             )}
 
