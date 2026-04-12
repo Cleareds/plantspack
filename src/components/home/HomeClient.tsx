@@ -258,7 +258,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                   )}
                   <div className="flex gap-2">
                     <button onClick={() => setIsAddPlaceOpen(true)}
-                      className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium silk-gradient text-on-primary-btn rounded-lg hover:opacity-90 transition-colors">
+                      className="text-left">
                       <Plus className="h-3 w-3" /> Add a place to boost the score
                     </button>
                     <Link href="/city-ranks" className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-primary ghost-border rounded-lg hover:bg-primary/5 transition-colors">
