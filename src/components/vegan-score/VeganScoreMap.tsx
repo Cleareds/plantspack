@@ -199,7 +199,7 @@ export default function VeganScoreMap() {
         // Use pre-computed scores from server API
         const scores: CityScore[] = (scoresRes.scores || []).map((s: any) => ({
           ...s,
-          breakdown: { accessibility: 0, choice: 0, variety: 0, quality: 0 }, // Server doesn't expose breakdown yet
+          breakdown: s.breakdown || { accessibility: 0, choice: 0, variety: 0, quality: 0 },
           population: undefined,
         }))
         setCityScores(scores)

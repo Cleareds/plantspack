@@ -90,6 +90,12 @@ export async function GET() {
       return {
         city, country, score, grade, fvCount, placeCount: ps.length, perCapita,
         center: [avgLat, avgLng] as [number, number],
+        breakdown: {
+          accessibility: Math.round(accessibility),
+          choice: Math.round(choice),
+          variety: Math.round(variety),
+          quality: Math.round(quality),
+        },
       }
     })
     .sort((a, b) => b.score - a.score)
