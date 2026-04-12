@@ -356,26 +356,26 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               )}
 
               {place.opening_hours && (
-                <div className="flex items-start gap-3 md:col-span-2">
+                <div className="flex items-start gap-3">
                   <Calendar className="h-5 w-5 text-outline flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
+                  <div>
                     <div className="text-sm font-medium text-on-surface mb-2">Opening Hours</div>
-                    <div className="text-sm space-y-1">
+                    <div className="text-sm space-y-1 max-w-xs">
                       {typeof place.opening_hours === 'string' ? (
                         (place.opening_hours as string).split(';').map((line, i) => {
                           const trimmed = line.trim()
                           const match = trimmed.match(/^([A-Za-z,\-\s]+)\s+(.+)$/)
                           return (
-                            <div key={i} className="flex justify-between gap-4">
-                              <span className="text-on-surface-variant">{match ? match[1].trim() : trimmed}</span>
+                            <div key={i} className="flex gap-4">
+                              <span className="text-on-surface-variant w-20 flex-shrink-0">{match ? match[1].trim() : trimmed}</span>
                               {match && <span className="text-on-surface font-medium">{match[2].trim()}</span>}
                             </div>
                           )
                         })
                       ) : (
                         Object.entries(place.opening_hours).map(([day, hours]) => (
-                          <div key={day} className="flex justify-between gap-4">
-                            <span className="text-on-surface-variant capitalize">{day}</span>
+                          <div key={day} className="flex gap-4">
+                            <span className="text-on-surface-variant w-20 flex-shrink-0 capitalize">{day}:</span>
                             <span className="text-on-surface font-medium">{hours as string}</span>
                           </div>
                         ))
