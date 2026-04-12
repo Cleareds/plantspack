@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import Link from 'next/link'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { MapPin, Star, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation } from 'lucide-react'
 import CityMap from './CityMap'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
@@ -51,10 +52,28 @@ interface Place {
 
 export default function CityPlacesList({ places }: { places: Place[] }) {
   const { isFullyVeganOnly } = useVeganFilter()
-  const [activeCategory, setActiveCategory] = useState<string | null>(null)
-  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null)
-  const [petOnly, setPetOnly] = useState(false)
-  const [sortBy, setSortBy] = useState<'name' | 'rating' | 'vegan'>('name')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  // Read filters from URL params
+  const activeCategory = searchParams?.get('category') || null
+  const activeSubcategory = searchParams?.get('sub') || null
+  const petOnly = searchParams?.get('pet') === '1'
+  const sortBy = (searchParams?.get('sort') as 'name' | 'rating' | 'vegan') || 'name'
+
+  // Update URL params — alphabetical order for consistency
+  const setFilter = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams?.toString() || '')
+    for (const [key, value] of Object.entries(updates)) {
+      if (value === null || value === '') params.delete(key)
+      else params.set(key, value)
+    }
+    // Sort params alphabetically
+    const sorted = new URLSearchParams([...params.entries()].sort((a, b) => a[0].localeCompare(b[0])))
+    const qs = sorted.toString()
+    router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false })
+  }, [searchParams, router, pathname])
 
   // Pre-filter by global vegan toggle
   const basePlaces = isFullyVeganOnly ? places.filter(p => p.vegan_level === 'fully_vegan') : places
@@ -89,14 +108,14 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
       {/* Filters */}
       <div className="flex flex-wrap gap-2 mb-6">
         {/* Category pills */}
-        <button onClick={() => { setActiveCategory(null); setActiveSubcategory(null); }}
+        <button onClick={() => setFilter({ category: null, sub: null })}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!validCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
           All ({basePlaces.length})
         </button>
         {categories.map(cat => {
           const count = basePlaces.filter(p => p.category === cat).length
           return (
-            <button key={cat} onClick={() => { setActiveCategory(activeCategory === cat ? null : cat); setActiveSubcategory(null); }}
+            <button key={cat} onClick={() => setFilter({ category: validCategory === cat ? null : cat, sub: null })}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${validCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
               {CATEGORY_LABELS[cat] || cat} ({count})
             </button>
@@ -112,7 +131,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
               const count = basePlaces.filter(p => p.category === validCategory && p.subcategory === sub).length
               const label = SUBCATEGORY_LABELS[activeCategory]?.[sub] || sub
               return (
-                <button key={sub} onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
+                <button key={sub} onClick={() => setFilter({ sub: validSubcategory === sub ? null : sub })}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${validSubcategory === sub ? 'bg-primary/80 text-on-primary-btn' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}`}>
                   {label} ({count})
                 </button>
@@ -125,7 +144,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
         <div className="w-px h-8 bg-outline-variant/30 self-center" />
 
         {/* Pet-friendly toggle */}
-        <button onClick={() => setPetOnly(!petOnly)}
+        <button onClick={() => setFilter({ pet: petOnly ? null : '1' })}
           className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${petOnly ? 'bg-orange-500 text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
           🐾 Pet-Friendly
         </button>
@@ -133,7 +152,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
         {/* Sort */}
         <div className="w-px h-8 bg-outline-variant/30 self-center" />
         {(['name', 'rating', 'vegan'] as const).map(mode => (
-          <button key={mode} onClick={() => setSortBy(mode)}
+          <button key={mode} onClick={() => setFilter({ sort: mode === 'name' ? null : mode })}
             className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
               sortBy === mode ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container'
             }`}>

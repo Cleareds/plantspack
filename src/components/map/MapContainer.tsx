@@ -418,7 +418,7 @@ export default function MapContainerComponent() {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} veganOnly={veganOnly} onVeganToggle={setVeganOnly} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
+              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
               {customCenter && (
                 <button
                   onClick={() => setCustomCenter(null)}
@@ -432,7 +432,7 @@ export default function MapContainerComponent() {
 
           {/* Mobile: Filters and search in separate rows */}
           <div className="lg:hidden space-y-3">
-            <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} veganOnly={veganOnly} onVeganToggle={setVeganOnly} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
+            <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
 
             {/* Mobile Search Bar */}
             <MapSearchBar
