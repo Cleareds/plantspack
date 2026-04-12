@@ -34,9 +34,10 @@ function timeAgo(d: string) { const m = Math.floor((Date.now() - new Date(d).get
 interface Props {
   topCities: CityScoreData[]
   recentPosts: CompactPost[]
+  cityImages?: Record<string, string>
 }
 
-function HomeContent({ topCities, recentPosts }: Props) {
+function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {} }: Props) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
@@ -51,7 +52,6 @@ function HomeContent({ topCities, recentPosts }: Props) {
   const [userCountry, setUserCountry] = useState('')
   const [cityImageUrl, setCityImageUrl] = useState<string | null>(null)
   const [cityImageFailed, setCityImageFailed] = useState(false)
-  const [cityImages, setCityImages] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (searchParams?.get('create') === 'true' && user) {
@@ -101,15 +101,11 @@ function HomeContent({ topCities, recentPosts }: Props) {
         }
       } catch {}
 
-      // Load city images
-      try {
-        const imgs = await fetch('/data/city-images.json').then(r => r.json())
-        setCityImages(imgs)
-        const finalCity = sessionStorage.getItem('user_city') || city
-        const finalCountry = sessionStorage.getItem('user_country') || country
-        const url = imgs[`${finalCity}|||${finalCountry}`] || null
-        if (url) setCityImageUrl(url)
-      } catch {}
+      // Set city image from server-provided data
+      const finalCity = sessionStorage.getItem('user_city') || city
+      const finalCountry = sessionStorage.getItem('user_country') || country
+      const url = serverCityImages[`${finalCity}|||${finalCountry}`] || null
+      if (url) setCityImageUrl(url)
 
       setLocationLoading(false)
     }
@@ -299,7 +295,7 @@ function HomeContent({ topCities, recentPosts }: Props) {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {topCities.map(city => {
-                    const img = cityImages[`${city.city}|||${city.country}`]
+                    const img = serverCityImages[`${city.city}|||${city.country}`]
                     return (
                       <Link key={city.city} href={`/vegan-places/${city.country.toLowerCase().replace(/\s+/g, '-')}/${city.city.toLowerCase().replace(/\s+/g, '-')}`}
                         className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">

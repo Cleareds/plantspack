@@ -1,4 +1,6 @@
 import { Metadata } from 'next'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 import { createAdminClient } from '@/lib/supabase-admin'
 import HomeClient from '@/components/home/HomeClient'
 
@@ -38,11 +40,21 @@ async function getRecentPosts() {
   return data || []
 }
 
+function getCityImages(): Record<string, string> {
+  try {
+    return JSON.parse(readFileSync(join(process.cwd(), 'public/data/city-images.json'), 'utf-8'))
+  } catch {
+    return {}
+  }
+}
+
 export default async function Home() {
   const [topCities, recentPosts] = await Promise.all([
     getTopCities(),
     getRecentPosts(),
   ])
+
+  const cityImages = getCityImages()
 
   // Normalize users from array (Supabase join) to single object
   const normalizedPosts = recentPosts.map((p: any) => ({
@@ -50,5 +62,5 @@ export default async function Home() {
     users: Array.isArray(p.users) ? p.users[0] : p.users,
   }))
 
-  return <HomeClient topCities={topCities} recentPosts={normalizedPosts} />
+  return <HomeClient topCities={topCities} recentPosts={normalizedPosts} cityImages={cityImages} />
 }
