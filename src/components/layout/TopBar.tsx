@@ -52,6 +52,9 @@ export default function TopBar() {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+          {/* Vegan toggle */}
+          <VeganToggle />
+
           {/* Mobile search toggle */}
           <button
             onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMenuOpen(false) }}

@@ -24,23 +24,23 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden lg:flex flex-col p-6 gap-4 h-screen w-64 bg-surface fixed left-0 top-0 z-40 font-body">
-      {/* Logo + Vegan Toggle */}
-      <div className="flex items-center justify-between mb-6">
-        <Link href="/" className="flex items-end gap-1">
-          <Image
-            src="/plantspack-logo-real.svg"
-            alt="PlantsPack Logo"
-            width={52}
-            height={34}
-            className="object-contain"
-          />
-          <div className="flex flex-col">
-            <span className="font-headline font-extrabold text-primary text-base tracking-tight leading-tight">Plants Pack</span>
-            <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">vegan syndicate</span>
-          </div>
-        </Link>
-        <VeganToggle />
-      </div>
+      {/* Logo */}
+      <Link href="/" className="flex items-end gap-1 mb-3">
+        <Image
+          src="/plantspack-logo-real.svg"
+          alt="PlantsPack Logo"
+          width={64}
+          height={42}
+          className="object-contain"
+        />
+        <div className="flex flex-col">
+          <span className="font-headline font-extrabold text-primary text-lg tracking-tight leading-tight">Plants Pack</span>
+          <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">vegan syndicate</span>
+        </div>
+      </Link>
+
+      {/* Global vegan filter */}
+      <VeganToggle className="mb-3" />
 
       {/* Navigation */}
       <nav className="flex flex-col gap-1">
