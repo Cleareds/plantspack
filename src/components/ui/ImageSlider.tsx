@@ -87,9 +87,9 @@ export default function ImageSlider({
                   onLoad={() => handleImageLoad(index)}
                   onError={() => handleImageError(index)}
                   referrerPolicy="no-referrer"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
-                    isLoaded[index] ? 'opacity-100' : 'opacity-0'
-                  } ${hasError[index] ? 'hidden' : ''}`}
+                  className={`absolute inset-0 w-full h-full transition-opacity duration-200 ${
+                    images.length === 1 ? 'object-contain' : 'object-cover'
+                  } ${isLoaded[index] ? 'opacity-100' : 'opacity-0'} ${hasError[index] ? 'hidden' : ''}`}
                 />
               </div>
             ))}
