@@ -64,8 +64,8 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
 
   // Pre-compute original rank index for each city
   const rankMap = useMemo(() => {
-    const map = new Map<string, number>()
-    scores.forEach((s, i) => map.set(`${s.city}|${s.country}`, i + 1))
+    const map: Record<string, number> = {}
+    scores.forEach((s, i) => { map[`${s.city}|${s.country}`] = i + 1 })
     return map
   }, [scores])
 
@@ -158,7 +158,7 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
                 </tr>
               ) : (
                 filtered.map((city, i) => {
-                  const rank = rankMap.get(`${city.city}|${city.country}`) || (i + 1)
+                  const rank = rankMap[`${city.city}|${city.country}`] || (i + 1)
                   const isTop = city.score >= top3Score && top3Score > 0
                   return (
                     <tr
