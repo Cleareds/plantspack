@@ -26,6 +26,7 @@ interface EditPlaceProps {
 
 export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlaceProps) {
   const [name, setName] = useState(place.name)
+  const [address, setAddress] = useState(place.address || '')
   const [description, setDescription] = useState(place.description || '')
   const [category, setCategory] = useState(place.category)
   const [website, setWebsite] = useState(place.website || '')
@@ -80,6 +81,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
         credentials: 'include',
         body: JSON.stringify({
           name: name.trim(),
+          address: address.trim() || null,
           description: description.trim() || null,
           category,
           website: website.trim() || null,
@@ -135,6 +137,18 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                 onChange={(e) => setName(e.target.value)}
                 className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
                 required
+              />
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Address</label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="e.g. Vennestraat 203, 3600 Genk"
+                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
               />
             </div>
 
