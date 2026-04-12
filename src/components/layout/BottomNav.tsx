@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth'
 const navItems = [
   { href: '/map', label: 'Map', icon: 'explore' },
   { href: '/vegan-places', label: 'Places', icon: 'place' },
-  { href: '/vegan-score', label: 'Rankings', icon: 'leaderboard' },
+  { href: '/city-ranks', label: 'Rankings', icon: 'leaderboard' },
   { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
 ]
 

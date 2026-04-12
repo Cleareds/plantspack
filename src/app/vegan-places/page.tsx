@@ -117,7 +117,7 @@ export default async function VeganPlacesPage() {
             <Link href="/map" className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">
               <Globe className="h-4 w-4" /> Explore Map
             </Link>
-            <Link href="/vegan-score" className="inline-flex items-center gap-2 ghost-border hover:bg-surface-container-low text-on-surface px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">
+            <Link href="/city-ranks" className="inline-flex items-center gap-2 ghost-border hover:bg-surface-container-low text-on-surface px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">
               <TrendingUp className="h-4 w-4" /> City Ranks
             </Link>
           </div>

@@ -261,7 +261,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                       className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium silk-gradient text-on-primary-btn rounded-lg hover:opacity-90 transition-colors">
                       <Plus className="h-3 w-3" /> Add a place to boost the score
                     </button>
-                    <Link href="/vegan-score" className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-primary ghost-border rounded-lg hover:bg-primary/5 transition-colors">
+                    <Link href="/city-ranks" className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-primary ghost-border rounded-lg hover:bg-primary/5 transition-colors">
                       <TrendingUp className="h-3 w-3" /> Full rankings
                     </Link>
                   </div>
@@ -367,7 +367,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                   <h2 className="font-semibold text-on-surface flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-primary" /> Top vegan cities
                   </h2>
-                  <Link href="/vegan-score" className="text-xs text-primary font-medium hover:underline">Full rankings</Link>
+                  <Link href="/city-ranks" className="text-xs text-primary font-medium hover:underline">Full rankings</Link>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {topCities.map(city => {

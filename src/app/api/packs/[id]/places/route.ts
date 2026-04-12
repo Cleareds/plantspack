@@ -64,30 +64,40 @@ export async function GET(
 
     if (error) throw error
 
-    // Get average ratings for each place
-    const placesWithRatings = await Promise.all(
-      (packPlaces || []).map(async (packPlace: any) => {
-        if (!packPlace.places) return packPlace
+    // Batch fetch ratings and review counts for all places at once
+    const placeIds = (packPlaces || [])
+      .map((pp: any) => pp.places?.id)
+      .filter(Boolean) as string[]
 
-        const { data: avgRating } = await supabase
-          .rpc('get_place_average_rating', { p_place_id: packPlace.places.id })
-
-        const { count: reviewCount } = await supabase
+    // Get all review stats in one query instead of N individual calls
+    const { data: reviewStats } = placeIds.length > 0
+      ? await supabase
           .from('place_reviews')
-          .select('*', { count: 'exact', head: true })
-          .eq('place_id', packPlace.places.id)
+          .select('place_id, rating')
+          .in('place_id', placeIds)
           .is('deleted_at', null)
+      : { data: [] }
 
-        return {
-          ...packPlace,
-          places: {
-            ...packPlace.places,
-            average_rating: avgRating || 0,
-            review_count: reviewCount || 0
-          }
+    // Compute averages and counts in memory
+    const statsMap = new Map<string, { total: number; count: number }>()
+    for (const r of (reviewStats || [])) {
+      const s = statsMap.get(r.place_id) || { total: 0, count: 0 }
+      if (r.rating) { s.total += r.rating; s.count++ }
+      statsMap.set(r.place_id, s)
+    }
+
+    const placesWithRatings = (packPlaces || []).map((packPlace: any) => {
+      if (!packPlace.places) return packPlace
+      const stats = statsMap.get(packPlace.places.id)
+      return {
+        ...packPlace,
+        places: {
+          ...packPlace.places,
+          average_rating: stats && stats.count > 0 ? stats.total / stats.count : 0,
+          review_count: stats?.count || 0,
         }
-      })
-    )
+      }
+    })
 
     return NextResponse.json({
       places: placesWithRatings,

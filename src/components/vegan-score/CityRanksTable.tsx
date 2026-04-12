@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, Info, X, ChevronUp, ChevronDown, Plus, Map, Star } from 'lucide-react'
 import { getGradeColor, getScoreBarColor, type CityScore } from '@/lib/score-utils'
@@ -15,23 +15,17 @@ function getCountrySlug(country: string) {
   return country.toLowerCase().replace(/\s+/g, '-')
 }
 
-export default function CityRanksTable() {
-  const [scores, setScores] = useState<CityScore[]>([])
-  const [loading, setLoading] = useState(true)
+interface CityRanksTableProps {
+  scores: CityScore[]
+}
+
+export default function CityRanksTable({ scores }: CityRanksTableProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('score')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
   const [showInfo, setShowInfo] = useState(false)
 
-  useEffect(() => {
-    fetch('/api/scores')
-      .then(r => r.json())
-      .then(data => {
-        setScores(data.scores || [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
+  const loading = false
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -65,8 +59,15 @@ export default function CityRanksTable() {
     })
   }, [scores, searchQuery, sortKey, sortDir])
 
-  // Top 3 threshold
-  const top3Score = scores.length >= 3 ? scores.sort((a, b) => b.score - a.score)[2]?.score : scores[0]?.score || 0
+  // Top 3 threshold — scores are already sorted by score desc from server
+  const top3Score = useMemo(() => scores.length >= 3 ? scores[2]?.score : scores[0]?.score || 0, [scores])
+
+  // Pre-compute original rank index for each city
+  const rankMap = useMemo(() => {
+    const map = new Map<string, number>()
+    scores.forEach((s, i) => map.set(`${s.city}|${s.country}`, i + 1))
+    return map
+  }, [scores])
 
   function SortIcon({ col }: { col: SortKey }) {
     if (sortKey !== col) return <ChevronDown className="h-3 w-3 opacity-30" />
@@ -157,8 +158,7 @@ export default function CityRanksTable() {
                 </tr>
               ) : (
                 filtered.map((city, i) => {
-                  const origIdx = scores.findIndex(s => s.city === city.city && s.country === city.country)
-                  const rank = origIdx + 1
+                  const rank = rankMap.get(`${city.city}|${city.country}`) || (i + 1)
                   const isTop = city.score >= top3Score && top3Score > 0
                   return (
                     <tr
