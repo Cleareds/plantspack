@@ -113,7 +113,7 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
   const fetchInFlight = useRef(false)
   const fetchViewportPlaces = useCallback(async (bounds: { minLat: number; minLng: number; maxLat: number; maxLng: number }, cat: string) => {
     // Skip if bounds haven't meaningfully changed (rounded to 3 decimals ~100m)
-    const key = `${bounds.minLat.toFixed(3)},${bounds.minLng.toFixed(3)},${bounds.maxLat.toFixed(3)},${bounds.maxLng.toFixed(3)},${cat}`
+    const key = `${bounds.minLat.toFixed(3)},${bounds.minLng.toFixed(3)},${bounds.maxLat.toFixed(3)},${bounds.maxLng.toFixed(3)},${cat},${isFullyVeganOnly}`
     if (key === lastBoundsKey.current) return
     // Skip if a fetch is already in progress
     if (fetchInFlight.current) return

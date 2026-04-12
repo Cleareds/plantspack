@@ -39,7 +39,6 @@ export default function MapContainerComponent() {
 
   // Filter state
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null)
-  const [veganOnly, setVeganOnly] = useState(false)
   const [petFriendly, setPetFriendly] = useState(false)
 
   // Location state
@@ -420,7 +419,6 @@ export default function MapContainerComponent() {
         <MapView
           places={(mapPlaces.length > 0 ? mapPlaces : filteredPlaces).filter(p => {
             if (selectedSubcategory && (p as any).subcategory !== selectedSubcategory) return false
-            if (veganOnly && (p as any).vegan_level !== 'fully_vegan') return false
             if (petFriendly && !(p as any).is_pet_friendly) return false
             return true
           })}
@@ -461,7 +459,6 @@ export default function MapContainerComponent() {
           places={(() => {
             let list = mapPlaces.length > 0 ? [...mapPlaces].sort((a, b) => a.distance - b.distance) : sidebarPlaces;
             if (selectedSubcategory) list = list.filter(p => (p as any).subcategory === selectedSubcategory);
-            if (veganOnly) list = list.filter(p => (p as any).vegan_level === 'fully_vegan');
             if (petFriendly) list = list.filter(p => (p as any).is_pet_friendly);
             return list.slice(0, 20);
           })()}
