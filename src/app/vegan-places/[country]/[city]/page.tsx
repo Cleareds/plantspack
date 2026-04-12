@@ -4,6 +4,7 @@ import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
+import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
 
 export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
@@ -98,9 +99,22 @@ async function fetchCityPlaces(country: string, city: string) {
   }
 }
 
+async function getCityScore(cityName: string, countryName: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.scores?.find((s: any) => s.city === cityName && s.country === countryName) || null
+  } catch { return null }
+}
+
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
-  const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
+  const [{ places, city: cityName, country: countryName }, cityScore] = await Promise.all([
+    fetchCityPlaces(country, city),
+    getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),
+  ])
 
   // Build stats from fetched places for data-driven description
   const cityStats = {
@@ -152,9 +166,32 @@ export default async function CityPage({ params }: PageProps) {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
-            Vegan Places in <span className="text-primary">{cityName}</span>
-          </h1>
+          <div className="flex items-start justify-between gap-4 mb-3">
+            <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight">
+              Vegan Places in <span className="text-primary">{cityName}</span>
+            </h1>
+            {cityScore && (
+              <div className="text-right flex-shrink-0">
+                <span className={`text-3xl font-black ${getGradeColor(cityScore.grade)}`}>{cityScore.grade}</span>
+                <p className="text-[10px] text-on-surface-variant">{cityScore.score}/100</p>
+              </div>
+            )}
+          </div>
+          {cityScore?.breakdown && (
+            <div className="flex gap-4 mb-3 text-[10px] text-on-surface-variant">
+              <span>Accessibility <strong>{cityScore.breakdown.accessibility}</strong>/20</span>
+              <span>Choice <strong>{cityScore.breakdown.choice}</strong>/20</span>
+              <span>Variety <strong>{cityScore.breakdown.variety}</strong>/30</span>
+              <span>Quality <strong>{cityScore.breakdown.quality}</strong>/30</span>
+            </div>
+          )}
+          {cityScore && (
+            <div className="max-w-xs mb-3">
+              <div className="h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+                <div className={`h-full rounded-full ${getScoreBarColor(cityScore.score)} transition-all`} style={{ width: `${cityScore.score}%` }} />
+              </div>
+            </div>
+          )}
           <p className="text-on-surface-variant text-base mb-3">
             {places.length > 0
               ? <><FilteredTotal total={places.length} fullyVegan={places.filter((p: any) => p.vegan_level === 'fully_vegan').length} /> vegan restaurants, stores, and stays in {cityName}, {countryName}.</>

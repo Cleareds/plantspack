@@ -1,15 +1,28 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, ArrowRight, Globe } from 'lucide-react'
+import { Globe } from 'lucide-react'
 import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
+import { loadCityImages } from '@/lib/city-images'
+import { getGradeColor, getScoreBarColor, computeGrade } from '@/lib/score-utils'
+import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
-import FilteredCount, { FilteredTotal } from '@/components/ui/FilteredCount'
+import CountryCityGrid from '@/components/places/CountryCityGrid'
 
 export const revalidate = 300
 
 interface PageProps {
   params: Promise<{ country: string }>
+}
+
+async function getCityScores(): Promise<any[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
+    if (!res.ok) return []
+    const data = await res.json()
+    return data.scores || []
+  } catch { return [] }
 }
 
 async function fetchCountryPlaces(country: string) {
@@ -18,9 +31,7 @@ async function fetchCountryPlaces(country: string) {
     const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=500`, { cache: 'no-store' })
     if (!res.ok) return { places: [], country: country.replace(/-/g, ' '), total: 0 }
     return res.json()
-  } catch {
-    return { places: [], country: country.replace(/-/g, ' '), total: 0 }
-  }
+  } catch { return { places: [], country: country.replace(/-/g, ' '), total: 0 } }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -43,21 +54,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
-  const [{ cities, country: countryName }, { places }] = await Promise.all([
+  const [{ cities, country: countryName }, { places }, allScores, cityImages] = await Promise.all([
     getCities(country),
     fetchCountryPlaces(country),
+    getCityScores(),
+    loadCityImages(),
   ])
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
+  const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
 
-  // Aggregate city stats for country description
+  // Country scores
+  const countryScores = allScores.filter((s: any) => s.country === countryName)
+  const avgScore = countryScores.length > 0
+    ? Math.round(countryScores.reduce((sum: number, s: any) => sum + s.score, 0) / countryScores.length)
+    : null
+  const avgGrade = avgScore !== null ? computeGrade(avgScore) : null
+
+  // Country description
   const countryStats = {
-    total: totalPlaces,
-    categories: {} as Record<string, number>,
-    fullyVegan: 0,
-    petFriendly: 0,
-    cuisines: [] as string[],
-    sampleNames: [] as string[],
-    cityCount: cities.length,
+    total: totalPlaces, categories: {} as Record<string, number>,
+    fullyVegan: 0, petFriendly: 0, cuisines: [] as string[],
+    sampleNames: [] as string[], cityCount: cities.length,
   }
   const cuisineCounts: Record<string, number> = {}
   for (const city of cities) {
@@ -72,7 +89,6 @@ export default async function CountryPage({ params }: PageProps) {
   }
   countryStats.cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k)
   countryStats.sampleNames = countryStats.sampleNames.slice(0, 5)
-
   const sceneDescription = generateCountryDescription(countryName, countryStats)
 
   return (
@@ -89,66 +105,61 @@ export default async function CountryPage({ params }: PageProps) {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
-            Vegan Places in <span className="text-primary">{countryName}</span>
-          </h1>
+          <div className="flex items-start justify-between gap-4 mb-3">
+            <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight">
+              Vegan Places in <span className="text-primary">{countryName}</span>
+            </h1>
+            {avgScore !== null && avgGrade && (
+              <div className="text-right flex-shrink-0">
+                <span className={`text-3xl font-black ${getGradeColor(avgGrade)}`}>{avgGrade}</span>
+                <p className="text-[10px] text-on-surface-variant">{avgScore}/100 avg</p>
+              </div>
+            )}
+          </div>
           <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
-              ? <><FilteredTotal total={totalPlaces} fullyVegan={cities.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)} /> vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
+              ? <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} /> vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
+          {avgScore !== null && (
+            <div className="max-w-xs mb-3">
+              <div className="h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+                <div className={`h-full rounded-full ${getScoreBarColor(avgScore)} transition-all`} style={{ width: `${avgScore}%` }} />
+              </div>
+            </div>
+          )}
           {sceneDescription && (
             <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
           )}
           <div className="flex gap-3 mt-4">
-            <Link
-              href={`/map?location=${encodeURIComponent(countryName)}`}
-              className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90"
-            >
-              <Globe className="h-4 w-4" />
-              View on map
+            <Link href={`/map?location=${encodeURIComponent(countryName)}`}
+              className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90">
+              <Globe className="h-4 w-4" /> View on map
             </Link>
           </div>
         </div>
 
-        {/* Cities Grid */}
+        {/* Cities Grid — interactive with sorting */}
         {cities.length > 0 && (
           <>
-            <h2 className="text-lg font-semibold text-on-surface mb-4">
-              Cities in {countryName}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-              {cities.map((city: any) => (
-                <Link
-                  key={city.slug}
-                  href={`/vegan-places/${country}/${city.slug}`}
-                  prefetch={false}
-                  className="group flex items-center justify-between p-5 bg-surface-container-lowest rounded-xl editorial-shadow ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
-                >
-                  <div>
-                    <h3 className="font-semibold text-on-surface group-hover:text-primary transition-colors">
-                      {city.name}
-                    </h3>
-                    <p className="text-sm text-on-surface-variant mt-0.5">
-                      <FilteredCount total={city.count} fullyVegan={city.stats?.fullyVegan} />
-                    </p>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors" />
-                </Link>
-              ))}
-            </div>
+            <h2 className="text-lg font-semibold text-on-surface mb-4">Cities in {countryName}</h2>
+            <CountryCityGrid
+              cities={cities}
+              cityImages={cityImages}
+              countryName={countryName}
+              countrySlug={country}
+              cityScores={countryScores}
+            />
           </>
         )}
 
         {/* All places in country with map */}
         {places.length > 0 && (
-          <>
-            <h2 className="text-lg font-semibold text-on-surface mb-4">
-              All {places.length} places in {countryName}
-            </h2>
+          <div className="mt-12">
+            <h2 className="text-lg font-semibold text-on-surface mb-4">All {places.length} places in {countryName}</h2>
             <CityPlacesList places={places} />
-          </>
+          </div>
         )}
 
         {places.length === 0 && cities.length === 0 && (
@@ -156,13 +167,6 @@ export default async function CountryPage({ params }: PageProps) {
             <div className="text-6xl mb-4">🗺️</div>
             <h2 className="text-xl font-semibold text-on-surface mb-2">No places yet in {countryName}</h2>
             <p className="text-on-surface-variant mb-6">Be the first to add a vegan place!</p>
-            <Link
-              href="/map"
-              className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-6 py-3 rounded-xl font-medium"
-            >
-              <MapPin className="h-5 w-5" />
-              Add a place
-            </Link>
           </div>
         )}
       </div>

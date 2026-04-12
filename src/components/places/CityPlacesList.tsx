@@ -54,6 +54,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null)
   const [petOnly, setPetOnly] = useState(false)
+  const [sortBy, setSortBy] = useState<'name' | 'rating' | 'vegan'>('name')
 
   // Pre-filter by global vegan toggle
   const basePlaces = isFullyVeganOnly ? places.filter(p => p.vegan_level === 'fully_vegan') : places
@@ -69,6 +70,14 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
     if (activeSubcategory && p.subcategory !== activeSubcategory) return false
     if (petOnly && !p.is_pet_friendly) return false
     return true
+  }).sort((a, b) => {
+    if (sortBy === 'rating') return (b.average_rating || 0) - (a.average_rating || 0)
+    if (sortBy === 'vegan') {
+      if (a.vegan_level === 'fully_vegan' && b.vegan_level !== 'fully_vegan') return -1
+      if (b.vegan_level === 'fully_vegan' && a.vegan_level !== 'fully_vegan') return 1
+      return (b.average_rating || 0) - (a.average_rating || 0)
+    }
+    return a.name.localeCompare(b.name)
   })
 
   return (
@@ -116,6 +125,17 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
           className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${petOnly ? 'bg-orange-500 text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
           🐾 Pet-Friendly
         </button>
+
+        {/* Sort */}
+        <div className="w-px h-8 bg-outline-variant/30 self-center" />
+        {(['name', 'rating', 'vegan'] as const).map(mode => (
+          <button key={mode} onClick={() => setSortBy(mode)}
+            className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
+              sortBy === mode ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container'
+            }`}>
+            {mode === 'name' ? 'A-Z' : mode === 'rating' ? '⭐ Rating' : '🌿 Vegan first'}
+          </button>
+        ))}
 
         {/* Result count */}
         <span className="self-center text-xs text-on-surface-variant">{filtered.length} results</span>
