@@ -9,8 +9,17 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: placeId } = await params
+    const { id } = await params
     const supabase = await createClient()
+
+    // Resolve slug to UUID if needed
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+    let placeId = id
+    if (!isUuid) {
+      const { data: placeRow } = await supabase.from('places').select('id').eq('slug', id).single()
+      if (placeRow) placeId = placeRow.id
+      else return NextResponse.json({ owner: null })
+    }
 
     // Get owner using database function
     const { data, error } = await supabase
