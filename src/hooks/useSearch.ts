@@ -60,33 +60,33 @@ export function useSearch(query: string, minLength: number = 2) {
     try {
       const { data } = await supabase
         .from('directory_cities')
-        .select('city_name, country_name, city_slug, place_count')
-        .ilike('city_name', `%${term}%`)
+        .select('city, country, city_slug, place_count, fully_vegan_count')
+        .ilike('city', `%${term}%`)
         .order('place_count', { ascending: false })
         .limit(6)
 
       return (data || []).map((c: any) => ({
-        city: c.city_name,
-        country: c.country_name,
+        city: c.city,
+        country: c.country,
         slug: c.city_slug,
-        placeCount: c.place_count,
+        placeCount: isFullyVeganOnly ? (c.fully_vegan_count || 0) : c.place_count,
       }))
     } catch {
       return []
     }
-  }, [])
+  }, [isFullyVeganOnly])
 
   const searchCountries = useCallback(async (term: string): Promise<CountryResult[]> => {
     try {
       const { data } = await supabase
         .from('directory_countries')
-        .select('country_name, country_slug, place_count, city_count')
-        .ilike('country_name', `%${term}%`)
+        .select('country, country_slug, place_count, city_count')
+        .ilike('country', `%${term}%`)
         .order('place_count', { ascending: false })
         .limit(3)
 
       return (data || []).map((c: any) => ({
-        country: c.country_name,
+        country: c.country,
         slug: c.country_slug,
         placeCount: c.place_count,
         cityCount: c.city_count,
