@@ -95,6 +95,8 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <span className="text-outline">/</span>
+          <Link href="/feed" className="hover:text-primary transition-colors">Feed</Link>
+          <span className="text-outline">/</span>
           <span className="text-on-surface font-medium truncate max-w-[300px]">
             {post.title || 'Post'}
           </span>
