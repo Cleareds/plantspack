@@ -42,7 +42,7 @@ export default function MapCategoryPills({ selected, onSelect, selectedSub, onSu
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
+      <div className="flex items-center gap-1.5 overflow-x-auto lg:overflow-x-visible scrollbar-hide pb-0.5 flex-wrap lg:flex-nowrap">
         {categories.map((cat) => (
           <button
             key={cat.value}
@@ -67,14 +67,14 @@ export default function MapCategoryPills({ selected, onSelect, selectedSub, onSu
               petFriendly ? 'bg-orange-500 text-white' : 'bg-surface-container-lowest ghost-border text-on-surface-variant hover:bg-surface-container-low'
             }`}
           >
-            🐾 Pets
+            🐾 Pet Friendly
           </button>
         )}
       </div>
 
       {/* Subcategory pills */}
       {subs.length > 0 && onSubSelect && (
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-1 overflow-x-auto lg:overflow-x-visible scrollbar-hide flex-wrap lg:flex-nowrap">
           {subs.map(sub => (
             <button
               key={sub.value}
