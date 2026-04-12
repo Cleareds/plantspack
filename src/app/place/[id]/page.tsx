@@ -250,9 +250,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               <ImageSlider images={place.images} />
               {/* Vegan + Pet badges */}
               <div className="absolute top-8 left-8 flex gap-2 z-10">
-                {(place as any).vegan_level === 'fully_vegan' && (
+                {(place as any).vegan_level === 'fully_vegan' ? (
                   <span className="px-2 py-1 rounded-md text-xs font-bold bg-green-600 text-white shadow">100% Vegan</span>
-                )}
+                ) : (place as any).vegan_level === 'vegan_friendly' ? (
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-amber-500 text-white shadow">Vegan-Friendly</span>
+                ) : null}
                 {place.is_pet_friendly && (
                   <span className="px-2 py-1 rounded-md text-xs font-bold bg-orange-500 text-white shadow">🐾 Pet-Friendly</span>
                 )}
@@ -262,6 +264,23 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
           {/* Details */}
           <div className="p-6 space-y-4 border-b border-outline-variant/15">
+            {/* Vegan level + category badges */}
+            <div className="flex flex-wrap gap-2">
+              {(place as any).vegan_level === 'fully_vegan' ? (
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">🌿 100% Vegan</span>
+              ) : (place as any).vegan_level === 'vegan_friendly' ? (
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">🌿 Vegan-Friendly</span>
+              ) : null}
+              {(place as any).subcategory && (
+                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-surface-container-low text-on-surface-variant">
+                  {(place as any).subcategory.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                </span>
+              )}
+              {place.is_pet_friendly && (
+                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">🐾 Pet-Friendly</span>
+              )}
+            </div>
+
             {place.description && (
               <div>
                 <h2 className="text-lg font-semibold text-on-surface mb-2">About</h2>
@@ -274,7 +293,9 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 <MapPin className="h-5 w-5 text-outline flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <div className="text-sm font-medium text-on-surface mb-1">Address</div>
-                  <div className="text-sm text-on-surface-variant mb-2">{place.address}</div>
+                  <div className="text-sm text-on-surface-variant mb-2">
+                    {[place.address, place.city, place.country].filter(Boolean).join(', ')}
+                  </div>
                   <div className="flex gap-2">
                     <a
                       href={(place as any).google_place_id
