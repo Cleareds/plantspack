@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect, useRef } from 'react'
 import { AuthProvider, useAuth } from '@/lib/auth'
+import { VeganFilterProvider } from '@/lib/vegan-filter-context'
 import ErrorBoundary from '@/components/error/ErrorBoundary'
 import CookieConsent from '@/components/legal/CookieConsent'
 import { clearExpiredStates, clearUserStates } from '@/lib/page-state-storage'
@@ -34,9 +35,11 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <StateCleanup />
-        {children}
-        <CookieConsent />
+        <VeganFilterProvider>
+          <StateCleanup />
+          {children}
+          <CookieConsent />
+        </VeganFilterProvider>
       </AuthProvider>
     </ErrorBoundary>
   )

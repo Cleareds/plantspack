@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useVeganFilter } from '@/lib/vegan-filter-context'
 
 export interface CityResult {
   city: string
@@ -40,6 +41,7 @@ export interface SearchResults {
 }
 
 export function useSearch(query: string, minLength: number = 2) {
+  const { isFullyVeganOnly } = useVeganFilter()
   const [results, setResults] = useState<SearchResults>({
     cities: [],
     countries: [],
@@ -96,10 +98,12 @@ export function useSearch(query: string, minLength: number = 2) {
 
   const searchPlaces = useCallback(async (term: string): Promise<PlaceResult[]> => {
     try {
-      const { data } = await supabase
+      let q = supabase
         .from('places')
         .select('id, name, slug, category, subcategory, vegan_level, city, country, main_image_url')
         .ilike('name', `%${term}%`)
+      if (isFullyVeganOnly) q = q.eq('vegan_level', 'fully_vegan')
+      const { data } = await q
         .order('average_rating', { ascending: false, nullsFirst: false })
         .limit(6)
 

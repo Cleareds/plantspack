@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/lib/auth'
 import SearchBar from '@/components/search/SearchBar'
+import VeganToggle from '@/components/ui/VeganToggle'
 import NotificationBell from '@/components/notifications/NotificationBell'
 import { Search, Menu, X, Heart, HelpCircle, Mail } from 'lucide-react'
 
@@ -60,6 +61,7 @@ export default function TopBar() {
             {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
           </button>
 
+          <VeganToggle compact />
           {user && <NotificationBell />}
           {!user && (
             <Link

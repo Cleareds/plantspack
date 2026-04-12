@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MapPin, Plus, TrendingUp, Star, Heart, MessageCircle, Share2 } from 'lucide-react'
 import CreatePostModal from "@/components/posts/CreatePostModal"
+import { useVeganFilter } from '@/lib/vegan-filter-context'
 import AddPlaceModal from "@/components/places/AddPlaceModal"
 import { useAuth } from "@/lib/auth"
 
@@ -115,7 +116,13 @@ function HomeContent({ topCities, recentPosts }: Props) {
     load()
   }, [])
 
+  const { isFullyVeganOnly } = useVeganFilter()
   const greeting = user ? `Hello, ${profile?.first_name || profile?.username || 'Friend'}!` : 'Welcome to PlantsPack'
+
+  // Filter nearby places based on global vegan toggle
+  const filteredNearby = isFullyVeganOnly ? nearbyPlaces.filter(p => p.vegan_level === 'fully_vegan') : nearbyPlaces
+  const filteredSanctuaries = nearbySanctuaries // sanctuaries are always fully vegan
+  const filteredStays = isFullyVeganOnly ? nearbyStays.filter(p => p.vegan_level === 'fully_vegan') : nearbyStays
 
   return (
     <div className="min-h-screen bg-surface">
@@ -205,14 +212,14 @@ function HomeContent({ topCities, recentPosts }: Props) {
             )}
 
             {/* Nearby Places */}
-            {nearbyPlaces.length > 0 && (
+            {filteredNearby.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="font-semibold text-on-surface">Vegan places near you</h2>
                   <Link href="/map" className="text-xs text-primary font-medium hover:underline">View on map</Link>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {nearbyPlaces.map(place => (
+                  {filteredNearby.map(place => (
                     <div key={place.id} className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
                       {(place.main_image_url || place.images?.[0]) ? (
                         <Link href={`/place/${place.slug || place.id}`}>
@@ -250,11 +257,11 @@ function HomeContent({ topCities, recentPosts }: Props) {
             )}
 
             {/* Sanctuaries */}
-            {nearbySanctuaries.length > 0 && (
+            {filteredSanctuaries.length > 0 && (
               <section>
                 <h2 className="font-semibold text-on-surface flex items-center gap-2 mb-3">🐾 Nearby sanctuaries to support</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {nearbySanctuaries.map(s => (
+                  {filteredSanctuaries.map(s => (
                     <Link key={s.id} href={`/place/${s.slug || s.id}`} className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all">
                       {(s.main_image_url || s.images?.[0]) && <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />}
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
@@ -266,11 +273,11 @@ function HomeContent({ topCities, recentPosts }: Props) {
             )}
 
             {/* Stays */}
-            {nearbyStays.length > 0 && (
+            {filteredStays.length > 0 && (
               <section>
                 <h2 className="font-semibold text-on-surface flex items-center gap-2 mb-3">🛏️ Vegan stays nearby</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {nearbyStays.map(s => (
+                  {filteredStays.map(s => (
                     <Link key={s.id} href={`/place/${s.slug || s.id}`} className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all">
                       {(s.main_image_url || s.images?.[0]) && <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />}
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>

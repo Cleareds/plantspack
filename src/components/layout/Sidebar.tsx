@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
+import VeganToggle from '@/components/ui/VeganToggle'
 
 const navItems = [
   { href: '/', label: 'Home', icon: 'home' },
@@ -63,6 +64,11 @@ export default function Sidebar() {
           )
         })}
       </nav>
+
+      {/* Global vegan filter */}
+      <div className="px-2 mt-2">
+        <VeganToggle />
+      </div>
 
       {/* Bottom section */}
       <div className="mt-auto space-y-4">

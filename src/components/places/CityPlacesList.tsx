@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { MapPin, Star, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation } from 'lucide-react'
 import CityMap from './CityMap'
+import { useVeganFilter } from '@/lib/vegan-filter-context'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -49,6 +50,7 @@ interface Place {
 }
 
 export default function CityPlacesList({ places }: { places: Place[] }) {
+  const { isFullyVeganOnly } = useVeganFilter()
   const categories = [...new Set(places.map(p => p.category))].sort()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null)
@@ -61,6 +63,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
     : []
 
   const filtered = places.filter(p => {
+    if (isFullyVeganOnly && p.vegan_level !== 'fully_vegan') return false
     if (activeCategory && p.category !== activeCategory) return false
     if (activeSubcategory && p.subcategory !== activeSubcategory) return false
     if (veganOnly && p.vegan_level !== 'fully_vegan') return false
