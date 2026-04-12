@@ -361,15 +361,15 @@ export default function MapContainerComponent() {
 
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
-        {/* Map overlay controls */}
-        <div className="absolute top-3 left-3 z-30 flex flex-col gap-2 max-w-[calc(100%-8rem)] lg:max-w-md">
+        {/* Map overlay controls — bottom on mobile, top-left (offset for zoom buttons) on desktop */}
+        <div className="absolute bottom-20 left-2 right-2 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto lg:max-w-md">
           {/* Search bar */}
           <MapSearchBar
             value={searchQuery}
             onChange={setSearchQuery}
             onSelect={handleSearchSelect}
             placeholder="Search location..."
-            className="w-64 sm:w-80"
+            className="w-full lg:w-80"
           />
 
           {/* Filter pills */}
@@ -442,7 +442,7 @@ export default function MapContainerComponent() {
         {!sidebarOpen && (
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden absolute bottom-4 right-4 z-30 bg-surface-container-lowest hover:bg-surface-container-low p-3 rounded-xl editorial-shadow ghost-border transition-colors"
+            className="lg:hidden absolute top-3 right-3 z-30 bg-surface-container-lowest hover:bg-surface-container-low p-3 rounded-xl editorial-shadow ghost-border transition-colors"
             aria-label="Show places list"
           >
             <div className="flex items-center gap-2">
