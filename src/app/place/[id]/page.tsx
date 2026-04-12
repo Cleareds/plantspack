@@ -238,6 +238,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 <PlaceEditButton place={{
                   ...place,
                   main_image_url: (place as any).main_image_url || null,
+                  opening_hours: place.opening_hours,
                   owner: place.owner ? { user_id: place.owner.user_id } : null,
                 }} />
               </div>

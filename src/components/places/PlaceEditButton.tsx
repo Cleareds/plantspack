@@ -15,6 +15,7 @@ interface PlaceEditButtonProps {
     address: string
     website: string | null
     phone: string | null
+    opening_hours?: string | Record<string, string> | null
     is_pet_friendly: boolean
     images: string[]
     main_image_url?: string | null

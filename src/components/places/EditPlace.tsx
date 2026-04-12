@@ -30,7 +30,13 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
   const [category, setCategory] = useState(place.category)
   const [website, setWebsite] = useState(place.website || '')
   const [phone, setPhone] = useState(place.phone || '')
-  const [openingHours, setOpeningHours] = useState(typeof place.opening_hours === 'string' ? place.opening_hours : '')
+  const [openingHours, setOpeningHours] = useState(() => {
+    if (typeof place.opening_hours === 'string') return place.opening_hours
+    if (place.opening_hours && typeof place.opening_hours === 'object') {
+      return Object.entries(place.opening_hours).map(([day, hours]) => `${day}: ${hours}`).join('; ')
+    }
+    return ''
+  })
   const [isPetFriendly, setIsPetFriendly] = useState(place.is_pet_friendly)
   const [existingImages, setExistingImages] = useState<string[]>(place.images || [])
   const [newImages, setNewImages] = useState<string[]>([])
