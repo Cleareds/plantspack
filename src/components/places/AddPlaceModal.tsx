@@ -138,6 +138,15 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         })
       } catch {}
 
+      // Trigger cache revalidation for directory pages
+      try {
+        await fetch('/api/revalidate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ city: newPlace.city, country: newPlace.country }),
+        })
+      } catch {}
+
       onPlaceAdded?.(insertedPlace)
       onClose()
     } catch (error) {

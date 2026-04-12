@@ -76,8 +76,27 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // No cache for API routes
+        // Short cache for public API routes (ISR handles server-side freshness)
         source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=10, stale-while-revalidate=59',
+          },
+        ],
+      },
+      {
+        // No cache for auth/mutation API routes
+        source: '/api/auth/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/api/stripe/:path*',
         headers: [
           {
             key: 'Cache-Control',

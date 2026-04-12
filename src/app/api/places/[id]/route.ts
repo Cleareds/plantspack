@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -189,6 +190,17 @@ export async function PUT(
       }
     }
 
+    // Revalidate cached pages that show this place
+    try {
+      revalidatePath(`/place/${id}`)
+      if (updatedPlace?.city && updatedPlace?.country) {
+        const countrySlug = updatedPlace.country.toLowerCase().replace(/\s+/g, '-')
+        const citySlug = updatedPlace.city.toLowerCase().replace(/\s+/g, '-')
+        revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
+        revalidatePath(`/vegan-places/${countrySlug}`)
+      }
+    } catch {}
+
     return NextResponse.json({ place: updatedPlace })
   } catch (error) {
     console.error('[Place API] Error:', error)
@@ -251,6 +263,12 @@ export async function DELETE(
     // Delete the place
     const { error } = await admin.from('places').delete().eq('id', id)
     if (error) throw error
+
+    // Revalidate cached directory pages
+    try {
+      revalidatePath(`/place/${id}`)
+      revalidatePath('/vegan-places')
+    } catch {}
 
     return NextResponse.json({ success: true })
   } catch (error) {
