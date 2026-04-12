@@ -208,6 +208,40 @@ async function main() {
   }
   console.log(`  Filled: ${cityFills}\n`);
 
+  // === STEP 6: Fix city names with parentheses/special chars ===
+  console.log('--- STEP 6: Fix problematic city names ---');
+  let nameFixes = 0;
+  for (const p of all) {
+    if (!p.city) continue;
+    // Remove parenthetical suffixes: "Halle (Saale)" → "Halle"
+    if (/\(/.test(p.city)) {
+      const cleaned = p.city.replace(/\s*\([^)]*\)\s*/g, '').trim();
+      if (cleaned && cleaned !== p.city) {
+        await sb.from('places').update({ city: cleaned }).eq('id', p.id);
+        nameFixes++;
+      }
+    }
+    // Fix trailing/leading spaces
+    if (p.city !== p.city.trim()) {
+      await sb.from('places').update({ city: p.city.trim() }).eq('id', p.id);
+      nameFixes++;
+    }
+  }
+  console.log(`  Fixed: ${nameFixes} city names\n`);
+
+  // === STEP 7: Check directory view consistency ===
+  console.log('--- STEP 7: Directory view consistency ---');
+  const { data: dirCities } = await sb.from('directory_cities').select('city, country, place_count');
+  let staleViews = 0;
+  for (const dc of (dirCities || []).slice(0, 100)) {
+    const actual = all.filter(p => p.city === dc.city && p.country === dc.country).length;
+    if (actual !== dc.place_count) {
+      console.log(`  STALE: ${dc.city}, ${dc.country} | view: ${dc.place_count}, actual: ${actual}`);
+      staleViews++;
+    }
+  }
+  console.log(`  Stale views found: ${staleViews}\n`);
+
   // === REFRESH VIEWS ===
   console.log('Refreshing materialized views...');
   await sb.rpc('refresh_directory_views');
@@ -220,6 +254,8 @@ async function main() {
   console.log(`Non-Latin fixes: ${nonLatinFixes.length}`);
   console.log(`Duplicates removed: ${dupes.length}`);
   console.log(`Cities filled: ${cityFills}`);
+  console.log(`City name fixes: ${nameFixes}`);
+  console.log(`Stale views: ${staleViews}`);
   console.log(`Out-of-bounds remaining: ${outOfBounds.length - geoFixes} (need manual review)`);
 }
 
