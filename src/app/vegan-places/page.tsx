@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Globe, ArrowRight } from 'lucide-react'
 import { getCountries } from '@/lib/directory-queries'
+import FilteredCount, { FilteredTotal } from '@/components/ui/FilteredCount'
 
 export const revalidate = 300
 
@@ -68,7 +69,7 @@ export default async function VeganPlacesPage() {
           </h1>
           <p className="text-on-surface-variant text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-3">
             {total > 0
-              ? <><strong className="text-on-surface">{total.toLocaleString()}</strong> vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries across {countries.length} countries.</>
+              ? <><strong className="text-on-surface"><FilteredTotal total={total} fullyVegan={countries.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)} /></strong> vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries across {countries.length} countries.</>
               : <>Community-verified vegan restaurants, stores, and stays.</>
             }
           </p>
@@ -91,7 +92,7 @@ export default async function VeganPlacesPage() {
                   <span className="text-xl">{CONTINENT_EMOJI[continent.name] || '🌐'}</span>
                   <h2 className="text-xl font-bold text-on-surface">{continent.name}</h2>
                   <span className="text-sm text-on-surface-variant ml-1">
-                    {continent.totalPlaces.toLocaleString()} places · {continent.countries.length} countries
+                    <FilteredTotal total={continent.totalPlaces} fullyVegan={continent.countries.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)} /> places · {continent.countries.length} countries
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -107,7 +108,7 @@ export default async function VeganPlacesPage() {
                           {country.name}
                         </h3>
                         <p className="text-xs text-on-surface-variant mt-0.5">
-                          {country.count.toLocaleString()} {country.count === 1 ? 'place' : 'places'}
+                          <FilteredCount total={country.count} fullyVegan={country.stats?.fullyVegan} />
                         </p>
                       </div>
                       <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors" />

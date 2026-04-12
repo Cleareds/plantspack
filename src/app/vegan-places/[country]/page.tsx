@@ -4,6 +4,7 @@ import { MapPin, ArrowRight, Globe } from 'lucide-react'
 import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
 import CityPlacesList from '@/components/places/CityPlacesList'
+import FilteredCount, { FilteredTotal } from '@/components/ui/FilteredCount'
 
 export const revalidate = 300
 
@@ -93,7 +94,7 @@ export default async function CountryPage({ params }: PageProps) {
           </h1>
           <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
-              ? <>{totalPlaces.toLocaleString()} vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
+              ? <><FilteredTotal total={totalPlaces} fullyVegan={cities.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)} /> vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
@@ -130,7 +131,7 @@ export default async function CountryPage({ params }: PageProps) {
                       {city.name}
                     </h3>
                     <p className="text-sm text-on-surface-variant mt-0.5">
-                      {city.count.toLocaleString()} {city.count === 1 ? 'place' : 'places'}
+                      <FilteredCount total={city.count} fullyVegan={city.stats?.fullyVegan} />
                     </p>
                   </div>
                   <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors" />

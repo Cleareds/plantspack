@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
+import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
 
 export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
@@ -156,7 +157,7 @@ export default async function CityPage({ params }: PageProps) {
           </h1>
           <p className="text-on-surface-variant text-base mb-3">
             {places.length > 0
-              ? <>{places.length.toLocaleString()} vegan restaurants, stores, and stays in {cityName}, {countryName}.</>
+              ? <><FilteredTotal total={places.length} fullyVegan={places.filter((p: any) => p.vegan_level === 'fully_vegan').length} /> vegan restaurants, stores, and stays in {cityName}, {countryName}.</>
               : <>Discover vegan-friendly places in {cityName}.</>
             }
           </p>
