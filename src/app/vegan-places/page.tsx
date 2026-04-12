@@ -43,11 +43,13 @@ function getContinent(countryName: string): string {
 
 async function getRecentlyAdded() {
   const supabase = createAdminClient()
-  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+  // Show user-added and web-researched places, not bulk imports
+  const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
   const { data, count } = await supabase
     .from('places')
     .select('id, name, slug, city, country, category, main_image_url, vegan_level', { count: 'exact' })
-    .gte('created_at', oneWeekAgo)
+    .gte('created_at', oneMonthAgo)
+    .in('source', ['user', 'user_submission', 'web_research'])
     .not('main_image_url', 'is', null)
     .order('created_at', { ascending: false })
     .limit(6)

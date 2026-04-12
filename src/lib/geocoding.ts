@@ -146,8 +146,8 @@ class GeocodingService {
       this.setCache(cacheKey, data)
 
       return data
-    } catch (error) {
-      console.error('Geocoding search error:', error)
+    } catch {
+      // Silently fail — browser extensions or network issues may block Nominatim
       return []
     }
   }
@@ -199,8 +199,7 @@ class GeocodingService {
       this.setCache(cacheKey, [data])
 
       return data
-    } catch (error) {
-      console.error('Geocoding reverse error:', error)
+    } catch {
       return null
     }
   }
