@@ -1,13 +1,15 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, Globe, ArrowRight } from 'lucide-react'
+import { MapPin, Globe, ArrowRight, TrendingUp } from 'lucide-react'
 import { getCountries } from '@/lib/directory-queries'
+import { createAdminClient } from '@/lib/supabase-admin'
+import { loadCityImages, getCountryThumbnail } from '@/lib/city-images'
 import FilteredCount, { FilteredTotal } from '@/components/ui/FilteredCount'
 
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Vegan Places Directory - Find Vegan Restaurants & Stores | PlantsPack',
+  title: 'Vegan Places Directory — Find Vegan Restaurants & Stores | PlantsPack',
   description: 'Discover vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries worldwide. Community-verified directory across 130+ countries.',
   alternates: { canonical: 'https://plantspack.com/vegan-places' },
   openGraph: {
@@ -39,8 +41,44 @@ function getContinent(countryName: string): string {
   return 'Other'
 }
 
+async function getRecentlyAdded() {
+  const supabase = createAdminClient()
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+  const { data, count } = await supabase
+    .from('places')
+    .select('id, name, slug, city, country, category, main_image_url, vegan_level', { count: 'exact' })
+    .gte('created_at', oneWeekAgo)
+    .not('main_image_url', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(6)
+  return { places: data || [], count: count || 0 }
+}
+
+// Get top city per country for thumbnails
+async function getTopCityPerCountry(): Promise<Record<string, string>> {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('directory_cities')
+    .select('city, country')
+    .order('place_count', { ascending: false })
+    .limit(2000)
+
+  const result: Record<string, string> = {}
+  for (const row of data || []) {
+    if (!result[row.country]) result[row.country] = row.city
+  }
+  return result
+}
+
 export default async function VeganPlacesPage() {
-  const { countries, total } = await getCountries()
+  const [{ countries, total }, cityImages, { places: recentPlaces, count: recentCount }, topCityMap] = await Promise.all([
+    getCountries(),
+    loadCityImages(),
+    getRecentlyAdded(),
+    getTopCityPerCountry(),
+  ])
+
+  const totalFv = countries.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)
 
   // Group by continent
   const grouped: Record<string, any[]> = {}
@@ -50,14 +88,17 @@ export default async function VeganPlacesPage() {
     grouped[continent].push(country)
   }
 
-  // Sort continents by total places, countries within each by place count
   const sortedContinents = Object.entries(grouped)
     .map(([name, cs]) => ({
       name,
       countries: cs.sort((a: any, b: any) => b.count - a.count),
       totalPlaces: cs.reduce((sum: number, c: any) => sum + c.count, 0),
+      totalFv: cs.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0),
     }))
     .sort((a, b) => b.totalPlaces - a.totalPlaces)
+
+  // Popular destinations — top 6 countries
+  const popularDestinations = countries.slice(0, 6)
 
   return (
     <div className="min-h-screen bg-surface">
@@ -68,23 +109,74 @@ export default async function VeganPlacesPage() {
             Find Vegan Places <span className="text-primary">Worldwide</span>
           </h1>
           <p className="text-on-surface-variant text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-3">
-            {total > 0
-              ? <><strong className="text-on-surface"><FilteredTotal total={total} fullyVegan={countries.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)} /></strong> vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries across {countries.length} countries.</>
-              : <>Community-verified vegan restaurants, stores, and stays.</>
-            }
+            <strong className="text-on-surface"><FilteredTotal total={total} fullyVegan={totalFv} /></strong> vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries across {countries.length} countries.
           </p>
           <div className="flex flex-wrap justify-center gap-3 mt-4">
             <Link href="/map" className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">
               <Globe className="h-4 w-4" /> Explore Map
             </Link>
             <Link href="/vegan-score" className="inline-flex items-center gap-2 ghost-border hover:bg-surface-container-low text-on-surface px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">
-              <MapPin className="h-4 w-4" /> City Ranks
+              <TrendingUp className="h-4 w-4" /> City Ranks
             </Link>
           </div>
         </div>
 
+        {/* Popular Destinations */}
+        {popularDestinations.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-lg font-bold text-on-surface mb-4">Popular Destinations</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {popularDestinations.map((country: any) => {
+                const img = getCountryThumbnail(cityImages, country.name, topCityMap[country.name])
+                return (
+                  <Link key={country.slug} href={`/vegan-places/${country.slug}`} prefetch={false}
+                    className="group rounded-xl overflow-hidden ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5 bg-surface-container-lowest">
+                    {img ? (
+                      <div className="relative h-24 overflow-hidden">
+                        <img src={img} alt={country.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <p className="absolute bottom-2 left-2.5 text-white font-semibold text-sm drop-shadow">{country.name}</p>
+                      </div>
+                    ) : (
+                      <div className="h-24 flex items-center justify-center bg-surface-container-low">
+                        <p className="font-semibold text-sm text-on-surface">{country.name}</p>
+                      </div>
+                    )}
+                    <div className="px-2.5 py-2">
+                      <p className="text-[10px] text-on-surface-variant">
+                        <FilteredCount total={country.count} fullyVegan={country.stats?.fullyVegan} /> · {country.stats?.cityCount || 0} cities
+                      </p>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Recently Added */}
+        {recentCount > 0 && recentPlaces.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-lg font-bold text-on-surface mb-4">{recentCount} new places this week</h2>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {recentPlaces.map((place: any) => (
+                <Link key={place.id} href={`/place/${place.slug || place.id}`} prefetch={false}
+                  className="flex-shrink-0 w-48 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 overflow-hidden transition-all">
+                  {place.main_image_url && (
+                    <img src={place.main_image_url} alt={place.name} className="w-full h-24 object-cover" />
+                  )}
+                  <div className="p-2.5">
+                    <p className="text-xs font-medium text-on-surface truncate">{place.name}</p>
+                    <p className="text-[10px] text-on-surface-variant">{place.city}, {place.country}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Continents */}
-        {sortedContinents.length > 0 ? (
+        {sortedContinents.length > 0 && (
           <div className="space-y-10">
             {sortedContinents.map(continent => (
               <div key={continent.name}>
@@ -92,40 +184,35 @@ export default async function VeganPlacesPage() {
                   <span className="text-xl">{CONTINENT_EMOJI[continent.name] || '🌐'}</span>
                   <h2 className="text-xl font-bold text-on-surface">{continent.name}</h2>
                   <span className="text-sm text-on-surface-variant ml-1">
-                    <FilteredTotal total={continent.totalPlaces} fullyVegan={continent.countries.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)} /> places · {continent.countries.length} countries
+                    <FilteredTotal total={continent.totalPlaces} fullyVegan={continent.totalFv} /> places · {continent.countries.length} countries
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {continent.countries.map((country: any) => (
-                    <Link
-                      key={country.slug}
-                      href={`/vegan-places/${country.slug}`}
-                      prefetch={false}
-                      className="group flex items-center justify-between p-4 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5"
-                    >
-                      <div>
-                        <h3 className="font-semibold text-on-surface group-hover:text-primary transition-colors text-sm">
-                          {country.name}
-                        </h3>
-                        <p className="text-xs text-on-surface-variant mt-0.5">
-                          <FilteredCount total={country.count} fullyVegan={country.stats?.fullyVegan} />
-                        </p>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors" />
-                    </Link>
-                  ))}
+                  {continent.countries.map((country: any) => {
+                    const img = getCountryThumbnail(cityImages, country.name, topCityMap[country.name])
+                    return (
+                      <Link key={country.slug} href={`/vegan-places/${country.slug}`} prefetch={false}
+                        className="group flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5">
+                        {img ? (
+                          <img src={img} alt={country.name} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                        ) : (
+                          <div className="w-14 h-14 rounded-lg bg-surface-container-low flex items-center justify-center text-lg flex-shrink-0">🌍</div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-on-surface group-hover:text-primary transition-colors text-sm truncate">
+                            {country.name}
+                          </h3>
+                          <p className="text-[11px] text-on-surface-variant">
+                            <FilteredCount total={country.count} fullyVegan={country.stats?.fullyVegan} /> · {country.stats?.cityCount || 0} cities · {country.stats?.fullyVegan || 0} fully vegan
+                          </p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors flex-shrink-0" />
+                      </Link>
+                    )
+                  })}
                 </div>
               </div>
             ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🗺️</div>
-            <h2 className="text-xl font-semibold text-on-surface mb-2">Places are being added</h2>
-            <p className="text-on-surface-variant mb-6">Check back soon or help by adding places.</p>
-            <Link href="/map" className="inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-6 py-3 rounded-xl font-medium">
-              <MapPin className="h-5 w-5" /> Add the first place
-            </Link>
           </div>
         )}
 
