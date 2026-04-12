@@ -32,6 +32,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
     address: '',
     description: '',
     website: '',
+    opening_hours: '',
     is_pet_friendly: false,
     vegan_level: 'fully_vegan' as 'fully_vegan' | 'vegan_friendly',
     latitude: 0,
@@ -253,6 +254,17 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
               value={newPlace.website}
               onChange={(e) => setNewPlace(prev => ({ ...prev, website: e.target.value }))}
               className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Opening Hours</label>
+            <textarea
+              value={newPlace.opening_hours}
+              onChange={(e) => setNewPlace(prev => ({ ...prev, opening_hours: e.target.value }))}
+              placeholder="e.g. Mo-Fr 09:00-18:00; Sa 10:00-16:00"
+              rows={2}
+              className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none resize-none text-sm"
             />
           </div>
 

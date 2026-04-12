@@ -13,6 +13,7 @@ interface EditPlaceProps {
     address: string
     website: string | null
     phone: string | null
+    opening_hours: string | null
     is_pet_friendly: boolean
     images: string[]
     main_image_url?: string | null
@@ -29,6 +30,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
   const [category, setCategory] = useState(place.category)
   const [website, setWebsite] = useState(place.website || '')
   const [phone, setPhone] = useState(place.phone || '')
+  const [openingHours, setOpeningHours] = useState(typeof place.opening_hours === 'string' ? place.opening_hours : '')
   const [isPetFriendly, setIsPetFriendly] = useState(place.is_pet_friendly)
   const [existingImages, setExistingImages] = useState<string[]>(place.images || [])
   const [newImages, setNewImages] = useState<string[]>([])
@@ -76,6 +78,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
           category,
           website: website.trim() || null,
           phone: phone.trim() || null,
+          opening_hours: openingHours.trim() || null,
           is_pet_friendly: isPetFriendly,
           images: allImages,
           main_image_url: mainImageUrl,
@@ -178,6 +181,19 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                   className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
                 />
               </div>
+            </div>
+
+            {/* Opening Hours */}
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Opening Hours</label>
+              <textarea
+                value={openingHours}
+                onChange={(e) => setOpeningHours(e.target.value)}
+                placeholder="e.g. Mo-Fr 09:00-18:00; Sa 10:00-16:00; Su closed"
+                rows={2}
+                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border resize-none"
+              />
+              <p className="text-[10px] text-on-surface-variant mt-1">Separate days with semicolons, e.g. Mo-Fr 09:00-18:00; Sa 10:00-16:00</p>
             </div>
 
             {/* Pet Friendly */}
