@@ -180,12 +180,23 @@ export async function GET(request: NextRequest) {
     }
 
     if (level === 'places' && country && city) {
+      // Look up actual city name from directory view (handles hyphens, accents etc.)
+      const { data: cityRow } = await supabase
+        .from('directory_cities')
+        .select('city, country')
+        .eq('city_slug', city)
+        .limit(1)
+        .single()
+
+      const actualCity = cityRow?.city || fromSlug(city)
+      const actualCountry = cityRow?.country || fromSlug(country)
+
       // Get places in a specific city
       let query = supabase
         .from('places')
         .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
-        .ilike('country', fromSlug(country))
-        .ilike('city', fromSlug(city))
+        .eq('city', actualCity)
+        .eq('country', actualCountry)
 
       if (category) {
         query = query.eq('category', category)
