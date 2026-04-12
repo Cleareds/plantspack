@@ -38,6 +38,7 @@ export default function MapContainerComponent() {
   const setCustomCenter = useCallback((c: [number, number] | null) => setMapState(prev => ({ ...prev, customCenter: c })), [setMapState])
 
   // Filter state
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null)
   const [veganOnly, setVeganOnly] = useState(false)
   const [petFriendly, setPetFriendly] = useState(false)
 
@@ -418,7 +419,7 @@ export default function MapContainerComponent() {
               )}
             </div>
             <div className="flex items-center gap-3">
-              <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
+              <MapCategoryPills selected={selectedCategory} onSelect={(c) => { setSelectedCategory(c); setSelectedSubcategory(null); }} selectedSub={selectedSubcategory} onSubSelect={setSelectedSubcategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
               {customCenter && (
                 <button
                   onClick={() => setCustomCenter(null)}
@@ -432,7 +433,7 @@ export default function MapContainerComponent() {
 
           {/* Mobile: Filters and search in separate rows */}
           <div className="lg:hidden space-y-3">
-            <MapCategoryPills selected={selectedCategory} onSelect={setSelectedCategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
+            <MapCategoryPills selected={selectedCategory} onSelect={(c) => { setSelectedCategory(c); setSelectedSubcategory(null); }} selectedSub={selectedSubcategory} onSubSelect={setSelectedSubcategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
 
             {/* Mobile Search Bar */}
             <MapSearchBar
@@ -449,6 +450,7 @@ export default function MapContainerComponent() {
         {/* Map — show all viewport places, filtered by vegan/pet toggles */}
         <MapView
           places={(mapPlaces.length > 0 ? mapPlaces : filteredPlaces).filter(p => {
+            if (selectedSubcategory && (p as any).subcategory !== selectedSubcategory) return false
             if (veganOnly && (p as any).vegan_level !== 'fully_vegan') return false
             if (petFriendly && !(p as any).is_pet_friendly) return false
             return true

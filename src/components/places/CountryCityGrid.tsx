@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import Link from 'next/link'
+import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import FilteredCount from '@/components/ui/FilteredCount'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
@@ -32,8 +33,20 @@ interface Props {
 type SortMode = 'places' | 'alpha' | 'score'
 
 export default function CountryCityGrid({ cities, cityImages, countryName, countrySlug, cityScores }: Props) {
-  const [sortMode, setSortMode] = useState<SortMode>('places')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const { isFullyVeganOnly } = useVeganFilter()
+
+  const sortMode = (searchParams?.get('sort') as SortMode) || 'places'
+
+  const setSortMode = useCallback((mode: SortMode) => {
+    const params = new URLSearchParams(searchParams?.toString() || '')
+    if (mode === 'places') params.delete('sort')
+    else params.set('sort', mode)
+    const qs = params.toString()
+    router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false })
+  }, [searchParams, router, pathname])
 
   const scoreMap = useMemo(() => {
     const map = new Map<string, CityScore>()
