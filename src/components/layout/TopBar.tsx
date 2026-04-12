@@ -61,7 +61,7 @@ export default function TopBar() {
             {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
           </button>
 
-          <VeganToggle compact />
+          <VeganToggle />
           {user && <NotificationBell />}
           {!user && (
             <Link

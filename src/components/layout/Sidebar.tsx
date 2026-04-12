@@ -39,6 +39,9 @@ export default function Sidebar() {
         </div>
       </Link>
 
+      {/* Global vegan filter */}
+      <VeganToggle className="mb-2" />
+
       {/* Navigation */}
       <nav className="flex flex-col gap-1">
         {navItems.map((item) => {
@@ -64,11 +67,6 @@ export default function Sidebar() {
           )
         })}
       </nav>
-
-      {/* Global vegan filter */}
-      <div className="px-2 mt-2">
-        <VeganToggle />
-      </div>
 
       {/* Bottom section */}
       <div className="mt-auto space-y-4">

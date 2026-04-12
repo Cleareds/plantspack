@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { supabase, Tables } from '@/lib/supabase'
+import { useVeganFilter } from '@/lib/vegan-filter-context'
 
 type Place = Tables<'places'> & {
   users: Tables<'users'>
@@ -30,6 +31,7 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
 }
 
 export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPlacesOptions) {
+  const { isFullyVeganOnly } = useVeganFilter()
   const [places, setPlaces] = useState<PlaceWithDistance[]>([])       // sidebar (paginated)
   const [mapPlaces, setMapPlaces] = useState<PlaceWithDistance[]>([]) // map (viewport)
   const [loading, setLoading] = useState(true)
@@ -137,6 +139,9 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
         if (cat !== 'all') {
           query = query.eq('category', cat)
         }
+        if (isFullyVeganOnly) {
+          query = query.eq('vegan_level', 'fully_vegan')
+        }
 
         const { data, error: queryError } = await query
         if (queryError) throw queryError
@@ -185,20 +190,22 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     }
   }, [])
 
-  // Fetch page 1 when location or category changes
+  // Fetch page 1 when location, category, or vegan filter changes
   useEffect(() => {
     if (lat != null && lng != null) {
       fetchPage(1, lat, lng, category)
       fetchCount(category)
     }
-  }, [lat, lng, category, fetchPage, fetchCount])
+  }, [lat, lng, category, isFullyVeganOnly, fetchPage, fetchCount])
 
-  // Re-fetch viewport places when category changes
+  // Re-fetch viewport places when category or vegan filter changes
   useEffect(() => {
     if (viewportRef.current) {
+      // Reset bounds key to force refetch
+      lastBoundsKey.current = ''
       fetchViewportPlaces(viewportRef.current, category)
     }
-  }, [category, fetchViewportPlaces])
+  }, [category, isFullyVeganOnly, fetchViewportPlaces])
 
   const goToPage = useCallback((pageNum: number) => {
     if (lat != null && lng != null) {
