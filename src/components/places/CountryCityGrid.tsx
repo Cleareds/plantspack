@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import FilteredCount from '@/components/ui/FilteredCount'
@@ -35,20 +35,38 @@ export default function CountryCityGrid({ cities, cityImages, countryName, count
   const [sortMode, setSortMode] = useState<SortMode>('places')
   const { isFullyVeganOnly } = useVeganFilter()
 
-  const scoreMap = new Map(cityScores.map(s => [`${s.city}|||${s.country}`, s]))
-
-  const sorted = [...cities].sort((a, b) => {
-    if (sortMode === 'alpha') return a.name.localeCompare(b.name)
-    if (sortMode === 'score') {
-      const sa = scoreMap.get(`${a.name}|||${countryName}`)?.score || 0
-      const sb = scoreMap.get(`${b.name}|||${countryName}`)?.score || 0
-      return sb - sa
+  const scoreMap = useMemo(() => {
+    const map = new Map<string, CityScore>()
+    for (const s of cityScores) {
+      map.set(s.city, s)
     }
-    // Default: by place count (respecting vegan toggle)
-    const ca = isFullyVeganOnly ? (a.stats?.fullyVegan || 0) : a.count
-    const cb = isFullyVeganOnly ? (b.stats?.fullyVegan || 0) : b.count
-    return cb - ca
-  })
+    return map
+  }, [cityScores])
+
+  const sorted = useMemo(() => {
+    const arr = [...cities]
+    switch (sortMode) {
+      case 'alpha':
+        arr.sort((a, b) => a.name.localeCompare(b.name))
+        break
+      case 'score':
+        arr.sort((a, b) => {
+          const sa = scoreMap.get(a.name)?.score ?? -1
+          const sb = scoreMap.get(b.name)?.score ?? -1
+          return sb - sa
+        })
+        break
+      case 'places':
+      default:
+        arr.sort((a, b) => {
+          const ca = isFullyVeganOnly ? (a.stats?.fullyVegan || 0) : a.count
+          const cb = isFullyVeganOnly ? (b.stats?.fullyVegan || 0) : b.count
+          return cb - ca
+        })
+        break
+    }
+    return arr
+  }, [cities, sortMode, isFullyVeganOnly, scoreMap])
 
   return (
     <div>
@@ -68,7 +86,7 @@ export default function CountryCityGrid({ cities, cityImages, countryName, count
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {sorted.map(city => {
           const img = cityImages[`${city.name}|||${countryName}`]
-          const score = scoreMap.get(`${city.name}|||${countryName}`)
+          const score = scoreMap.get(city.name)
 
           return (
             <Link key={city.slug} href={`/vegan-places/${countrySlug}/${city.slug}`} prefetch={false}
