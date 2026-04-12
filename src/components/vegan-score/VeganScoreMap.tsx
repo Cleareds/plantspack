@@ -565,7 +565,7 @@ export default function VeganScoreMap() {
             <div className="bg-emerald-50 rounded-xl p-3">
               <h3 className="font-bold text-emerald-800 text-sm mb-1">🚀 Improve Your City&apos;s Score</h3>
               <p className="text-xs text-emerald-700 mb-2">
-                Add missing vegan places to boost your city&apos;s ranking! Stores, stays, and sanctuaries especially help the variety score.
+                Add missing vegan places to boost your city&apos;s ranking! Stores and stays especially help the variety score.
               </p>
               <Link href="/map" className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 hover:text-emerald-900">
                 <Plus className="h-3 w-3" /> Add a place now
