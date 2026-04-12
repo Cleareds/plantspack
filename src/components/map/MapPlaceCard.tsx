@@ -8,16 +8,16 @@ interface MapPlaceCardProps {
   place: PlaceWithDistance
   user: { id: string } | null
   onToggleFavorite: (placeId: string) => void
-  onPanToPlace: (lat: number, lng: number) => void
+  onPanToPlace?: (lat: number, lng: number) => void
 }
 
-export default function MapPlaceCard({ place, user, onToggleFavorite, onPanToPlace }: MapPlaceCardProps) {
+export default function MapPlaceCard({ place, user, onToggleFavorite }: MapPlaceCardProps) {
   const isFavorited = user ? place.favorite_places.some(fav => fav.user_id === user.id) : false
 
   return (
     <Link
       href={`/place/${(place as any).slug || place.id}`}
-      className="block bg-surface-container-lowest rounded-xl p-4 hover:scale-[1.02] transition-all duration-200 cursor-pointer ghost-border editorial-shadow"
+      className="block bg-surface-container-lowest rounded-xl p-4 hover:border-primary/20 transition-colors cursor-pointer ghost-border editorial-shadow"
     >
       {((place as any).main_image_url || (place as any).images?.length > 0) && (
         <div className="relative mb-2">
