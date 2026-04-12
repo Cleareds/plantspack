@@ -65,9 +65,13 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
     ? [...new Set(basePlaces.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
     : []
 
+  // Safety: reset stale filters when underlying data changes
+  const validCategory = activeCategory && categories.includes(activeCategory) ? activeCategory : null
+  const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
+
   const filtered = basePlaces.filter(p => {
-    if (activeCategory && p.category !== activeCategory) return false
-    if (activeSubcategory && p.subcategory !== activeSubcategory) return false
+    if (validCategory && p.category !== validCategory) return false
+    if (validSubcategory && p.subcategory !== validSubcategory) return false
     if (petOnly && !p.is_pet_friendly) return false
     return true
   }).sort((a, b) => {
@@ -86,30 +90,30 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
       <div className="flex flex-wrap gap-2 mb-6">
         {/* Category pills */}
         <button onClick={() => { setActiveCategory(null); setActiveSubcategory(null); }}
-          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!activeCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!validCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
           All ({basePlaces.length})
         </button>
         {categories.map(cat => {
           const count = basePlaces.filter(p => p.category === cat).length
           return (
             <button key={cat} onClick={() => { setActiveCategory(activeCategory === cat ? null : cat); setActiveSubcategory(null); }}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${validCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
               {CATEGORY_LABELS[cat] || cat} ({count})
             </button>
           )
         })}
 
         {/* Subcategory pills — show when a category is selected */}
-        {activeCategory && subcategories.length > 1 && (
+        {validCategory && subcategories.length > 1 && (
           <>
             <div className="w-px h-8 bg-outline-variant/30 self-center" />
             {subcategories.map(sub => {
               if (!sub) return null
-              const count = basePlaces.filter(p => p.category === activeCategory && p.subcategory === sub).length
+              const count = basePlaces.filter(p => p.category === validCategory && p.subcategory === sub).length
               const label = SUBCATEGORY_LABELS[activeCategory]?.[sub] || sub
               return (
                 <button key={sub} onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${activeSubcategory === sub ? 'bg-primary/80 text-on-primary-btn' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}`}>
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${validSubcategory === sub ? 'bg-primary/80 text-on-primary-btn' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}`}>
                   {label} ({count})
                 </button>
               )
