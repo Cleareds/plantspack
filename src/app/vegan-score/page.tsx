@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
-import VeganScoreMap from '@/components/vegan-score/VeganScoreMap'
+import CityRanksTable from '@/components/vegan-score/CityRanksTable'
 
 export const metadata: Metadata = {
   title: 'City Ranks — Most Vegan-Friendly Cities | PlantsPack',
@@ -15,7 +15,7 @@ export default function VeganScorePage() {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     }>
-      <VeganScoreMap />
+      <CityRanksTable />
     </Suspense>
   )
 }

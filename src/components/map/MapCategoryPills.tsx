@@ -50,7 +50,7 @@ export default function MapCategoryPills({ selected, onSelect, selectedSub, onSu
             className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
               selected === cat.value
                 ? 'bg-primary text-on-primary-btn'
-                : 'bg-secondary-container text-on-surface hover:opacity-80'
+                : 'bg-surface-container-lowest ghost-border text-on-surface-variant hover:bg-surface-container-low'
             }`}
           >
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cat.icon}</span>
@@ -64,7 +64,7 @@ export default function MapCategoryPills({ selected, onSelect, selectedSub, onSu
           <button
             onClick={() => onPetToggle(!petFriendly)}
             className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-              petFriendly ? 'bg-orange-500 text-white' : 'bg-secondary-container text-on-surface hover:opacity-80'
+              petFriendly ? 'bg-orange-500 text-white' : 'bg-surface-container-lowest ghost-border text-on-surface-variant hover:bg-surface-container-low'
             }`}
           >
             🐾 Pets

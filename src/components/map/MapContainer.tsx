@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase, Tables } from '@/lib/supabase'
-import { Plus, Search, Menu, CheckCircle, X } from 'lucide-react'
+import { Plus, Menu, CheckCircle } from 'lucide-react'
 import { geocodingService } from '@/lib/geocoding'
 import AddPlaceModal from '../places/AddPlaceModal'
 import { usePageState } from '@/hooks/usePageState'
@@ -81,9 +81,8 @@ export default function MapContainerComponent() {
 
   // Leaflet icons
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
-  const [placeMarkerIcon, setPlaceMarkerIcon] = useState<any>(null)
-  const [fullyVeganIcon, setFullyVeganIcon] = useState<any>(null)
-  const [veganFriendlyIcon, setVeganFriendlyIcon] = useState<any>(null)
+  const [categoryIconFn, setCategoryIconFn] = useState<((cat: string, vl?: string | null) => any) | null>(null)
+  const [clusterIconFn, setClusterIconFn] = useState<((cluster: any) => any) | null>(null)
   const mapRef = useRef<any>(null)
 
   // Initialize Leaflet icons
@@ -91,9 +90,8 @@ export default function MapContainerComponent() {
     if (typeof window !== 'undefined') {
       import('leaflet').then((L) => {
         import('@/lib/leaflet-config').then((config) => {
-          setPlaceMarkerIcon(config.veganMarkerIcon)
-          setFullyVeganIcon(config.fullyVeganDivIcon)
-          setVeganFriendlyIcon(config.veganFriendlyDivIcon)
+          setCategoryIconFn(() => config.getCategoryIcon)
+          setClusterIconFn(() => config.createClusterIcon)
         })
         setLeafletIcon(new L.Icon({
           iconUrl: 'data:image/svg+xml;base64,' + btoa(`
@@ -351,7 +349,7 @@ export default function MapContainerComponent() {
   ]
 
   return (
-    <div className="flex flex-col h-screen max-h-screen">
+    <div className="flex flex-col" style={{ height: 'calc(100vh - 80px)' }}>
       {/* Success Message */}
       {successMessage && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999]">
@@ -362,91 +360,62 @@ export default function MapContainerComponent() {
         </div>
       )}
 
-      {/* Controls */}
-      <div className="bg-surface-container-lowest border-b border-outline-variant/15 p-3 md:p-4 flex-shrink-0 overflow-x-hidden">
-        <div className="max-w-full mx-auto">
-          {/* Mobile: Single row with menu button and title */}
-          <div className="flex items-center justify-between gap-2 mb-3 lg:hidden">
-            <h1 className="text-lg font-semibold text-on-surface flex-1">Vegan Places</h1>
-            {user ? (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-3 py-2 rounded-full text-sm font-medium transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Add</span>
-              </button>
-            ) : (
-              <Link
-                href="/auth"
-                className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-3 py-2 rounded-full text-sm font-medium transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign Up</span>
-              </Link>
-            )}
-          </div>
-
-          {/* Desktop: Controls in two rows to prevent overflow */}
-          <div className="hidden lg:block space-y-3">
-            <div className="flex items-center justify-between gap-4">
-              <h1 className="text-xl font-semibold text-on-surface flex-shrink-0">Vegan Places</h1>
-
-              {/* Search Bar */}
-              <MapSearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                onSelect={handleSearchSelect}
-                className="flex-1 max-w-md"
-              />
-
-              {user ? (
-                <button
-                  onClick={() => setShowAddForm(true)}
-                  className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors flex-shrink-0"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Add Place</span>
-                </button>
-              ) : (
-                <Link
-                  href="/auth"
-                  className="flex items-center gap-1 silk-gradient hover:opacity-90 text-on-primary px-4 py-2 rounded-full font-medium transition-colors flex-shrink-0"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Sign Up</span>
-                </Link>
-              )}
-            </div>
-            <div className="flex items-center gap-3">
-              <MapCategoryPills selected={selectedCategory} onSelect={(c) => { setSelectedCategory(c); setSelectedSubcategory(null); }} selectedSub={selectedSubcategory} onSubSelect={setSelectedSubcategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
-              {customCenter && (
-                <button
-                  onClick={() => setCustomCenter(null)}
-                  className="text-xs px-2 py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant rounded ghost-border flex-shrink-0"
-                >
-                  Reset Center
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile: Filters and search in separate rows */}
-          <div className="lg:hidden space-y-3">
-            <MapCategoryPills selected={selectedCategory} onSelect={(c) => { setSelectedCategory(c); setSelectedSubcategory(null); }} selectedSub={selectedSubcategory} onSubSelect={setSelectedSubcategory} petFriendly={petFriendly} onPetToggle={setPetFriendly} />
-
-            {/* Mobile Search Bar */}
-            <MapSearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onSelect={handleSearchSelect}
-            />
-          </div>
-        </div>
-      </div>
-
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
+        {/* Map overlay controls */}
+        <div className="absolute top-3 left-3 z-30 flex flex-col gap-2 max-w-[calc(100%-8rem)] lg:max-w-md">
+          {/* Search bar */}
+          <MapSearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            onSelect={handleSearchSelect}
+            placeholder="Search location..."
+            className="w-64 sm:w-80"
+          />
+
+          {/* Filter pills */}
+          <div className="bg-surface-container-lowest/90 backdrop-blur-sm rounded-xl px-2 py-1.5 ghost-border editorial-shadow">
+            <MapCategoryPills
+              selected={selectedCategory}
+              onSelect={(c) => { setSelectedCategory(c); setSelectedSubcategory(null); }}
+              selectedSub={selectedSubcategory}
+              onSubSelect={setSelectedSubcategory}
+              petFriendly={petFriendly}
+              onPetToggle={setPetFriendly}
+            />
+          </div>
+
+          {customCenter && (
+            <button
+              onClick={() => setCustomCenter(null)}
+              className="self-start text-xs px-2.5 py-1.5 bg-surface-container-lowest/90 backdrop-blur-sm hover:bg-surface-container-low text-on-surface-variant rounded-lg ghost-border editorial-shadow"
+            >
+              Reset Center
+            </button>
+          )}
+        </div>
+
+        {/* Add place button overlay */}
+        <div className="absolute top-3 right-3 z-30">
+          {user ? (
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Add Place</span>
+            </button>
+          ) : (
+            <Link
+              href="/auth"
+              className="flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign Up</span>
+            </Link>
+          )}
+        </div>
+
         {/* Map — show all viewport places, filtered by vegan/pet toggles */}
         <MapView
           places={(mapPlaces.length > 0 ? mapPlaces : filteredPlaces).filter(p => {
@@ -462,9 +431,8 @@ export default function MapContainerComponent() {
           onResetCenter={() => setCustomCenter(null)}
           onMapMove={handleMapMove}
           mapRef={mapRef}
-          placeMarkerIcon={placeMarkerIcon}
-          fullyVeganIcon={fullyVeganIcon}
-          veganFriendlyIcon={veganFriendlyIcon}
+          getCategoryIcon={categoryIconFn}
+          createClusterIcon={clusterIconFn}
           leafletIcon={leafletIcon}
           user={user}
           onToggleFavorite={toggleFavorite}
@@ -476,7 +444,7 @@ export default function MapContainerComponent() {
         {!sidebarOpen && (
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden absolute top-4 right-4 z-30 bg-surface-container-lowest hover:bg-surface-container-low p-3 rounded-lg editorial-shadow ghost-border transition-colors"
+            className="lg:hidden absolute bottom-4 right-4 z-30 bg-surface-container-lowest hover:bg-surface-container-low p-3 rounded-xl editorial-shadow ghost-border transition-colors"
             aria-label="Show places list"
           >
             <div className="flex items-center gap-2">
@@ -487,13 +455,6 @@ export default function MapContainerComponent() {
             </div>
           </button>
         )}
-
-        {/* Map count indicator */}
-        <div className="absolute top-4 left-4 z-30 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg px-3 py-2 editorial-shadow ghost-border hidden md:block">
-          <p className="text-xs text-on-surface-variant">
-            {mapPlaces.length > 0 ? `${mapPlaces.length} places in view` : loading ? 'Loading...' : 'Zoom in to see places'}
-          </p>
-        </div>
 
         {/* Discovery Panel - RIGHT side */}
         <MapDiscoveryPanel

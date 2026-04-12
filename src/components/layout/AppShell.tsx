@@ -87,7 +87,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return <>{children}</>
   }
 
-  // Map page needs full-bleed content (no padding, sidebar overlays)
+  // Map page needs full-height content (no bottom padding, no footer)
   const isMapPage = pathname === '/map'
 
   return (
@@ -101,14 +101,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar - always visible on lg+ */}
       <Sidebar />
 
-      {/* Top bar - hidden on desktop for map page (map has its own controls) */}
-      <div className={isMapPage ? 'lg:hidden' : ''}>
-        <TopBar />
-      </div>
+      {/* Top bar - always visible */}
+      <TopBar />
 
       {/* Location banner */}
       {showBanner && (
-        <div className={`fixed top-[80px] left-0 right-0 z-30 ${isMapPage ? 'lg:left-64' : 'lg:left-64'}`}>
+        <div className="fixed top-[80px] left-0 right-0 z-30 lg:left-64">
           <div className="bg-primary/10 border-b border-primary/20 px-4 py-2.5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm text-on-surface">
               <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
@@ -130,11 +128,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main content area */}
-      <main className={`min-h-screen pt-[80px] ${showBanner ? 'pt-[124px]' : ''} ${isMapPage ? 'sm:pt-16 lg:ml-64 lg:pt-0' : 'lg:ml-64'} ${!isMapPage ? 'pb-24 lg:pb-0' : ''}`}>
+      <main className={`min-h-screen pt-[80px] ${showBanner ? 'pt-[124px]' : ''} lg:ml-64 ${isMapPage ? '' : 'pb-24 lg:pb-0'}`}>
         {children}
       </main>
 
-      {/* Footer - hidden on map page, shown in content flow on desktop */}
+      {/* Footer - hidden on map page */}
       {!isMapPage && (
         <div className="lg:ml-64 hidden lg:block">
           <Footer />

@@ -78,22 +78,13 @@ interface MapViewProps {
   onResetCenter: () => void
   onMapMove: () => void
   mapRef: MutableRefObject<any>
-  placeMarkerIcon: any
-  fullyVeganIcon: any
-  veganFriendlyIcon: any
+  getCategoryIcon: ((category: string, veganLevel?: string | null) => any) | null
+  createClusterIcon: ((cluster: any) => any) | null
   leafletIcon: any
   user: { id: string } | null
   onToggleFavorite: (placeId: string) => void
   onDeletePlace: (placeId: string) => void
   loading: boolean
-}
-
-// Returns the right icon for the place based on vegan_level
-function getPlaceIcon(place: PlaceWithDistance, fullyVeganIcon: any, veganFriendlyIcon: any, fallbackIcon: any) {
-  if (!fullyVeganIcon || !veganFriendlyIcon) return fallbackIcon
-  const veganLevel = (place as any).vegan_level
-  if (veganLevel === 'fully_vegan') return fullyVeganIcon
-  return veganFriendlyIcon
 }
 
 export default function MapView({
@@ -105,9 +96,8 @@ export default function MapView({
   onResetCenter,
   onMapMove,
   mapRef,
-  placeMarkerIcon,
-  fullyVeganIcon,
-  veganFriendlyIcon,
+  getCategoryIcon,
+  createClusterIcon,
   leafletIcon,
   user,
   onToggleFavorite,
@@ -124,9 +114,10 @@ export default function MapView({
         className="z-10"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          referrerPolicy="origin"
+          attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://api.maptiler.com/maps/pastel/{z}/{x}/{y}.png?key=99cVeZ5JM3met86KZyyD"
+          tileSize={512}
+          zoomOffset={-1}
         />
 
         <MapClickHandler onMapClick={onMapClick} />
@@ -165,40 +156,17 @@ export default function MapView({
         {/* Place markers — wrapped in MarkerClusterGroup */}
         <MarkerClusterGroup
           chunkedLoading
-          maxClusterRadius={60}
+          maxClusterRadius={50}
           spiderfyOnMaxZoom
           showCoverageOnHover={false}
           zoomToBoundsOnClick
-          iconCreateFunction={(cluster: any) => {
-            const count = cluster.getChildCount()
-            let size = 'small'
-            let diameter = 36
-            if (count >= 100) { size = 'large'; diameter = 48 }
-            else if (count >= 10) { size = 'medium'; diameter = 42 }
-
-            // Dynamic import means L may not be on window yet, so use inline require
-            const L = typeof window !== 'undefined' ? require('leaflet') : null
-            if (!L) return null
-
-            return L.divIcon({
-              html: `<div style="
-                width: ${diameter}px; height: ${diameter}px; border-radius: 50%;
-                background: #2d6a4f; border: 3px solid #fff;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-                display: flex; align-items: center; justify-content: center;
-                color: #fff; font-weight: 700; font-size: ${count >= 100 ? 14 : 13}px;
-                font-family: system-ui, sans-serif;
-              ">${count}</div>`,
-              className: `leaflet-cluster-icon leaflet-cluster-${size}`,
-              iconSize: L.point(diameter, diameter),
-            })
-          }}
+          iconCreateFunction={createClusterIcon || undefined}
         >
           {places.map((place) => (
             <Marker
               key={place.id}
               position={[place.latitude, place.longitude]}
-              icon={getPlaceIcon(place, fullyVeganIcon, veganFriendlyIcon, placeMarkerIcon)}
+              icon={getCategoryIcon ? getCategoryIcon(place.category, (place as any).vegan_level) : undefined}
             >
               <Popup>
                 <div className="p-2 min-w-[200px]">

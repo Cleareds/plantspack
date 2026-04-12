@@ -1,0 +1,345 @@
+'use client'
+
+import { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
+import { Search, Info, X, ChevronUp, ChevronDown, Plus, Map, Star } from 'lucide-react'
+import { getGradeColor, getScoreBarColor, type CityScore } from '@/lib/score-utils'
+
+type SortKey = 'score' | 'accessibility' | 'choice' | 'variety' | 'quality' | 'placeCount' | 'city'
+type SortDir = 'asc' | 'desc'
+
+function getCitySlug(city: string) {
+  return city.toLowerCase().replace(/\s+/g, '-')
+}
+function getCountrySlug(country: string) {
+  return country.toLowerCase().replace(/\s+/g, '-')
+}
+
+export default function CityRanksTable() {
+  const [scores, setScores] = useState<CityScore[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortKey, setSortKey] = useState<SortKey>('score')
+  const [sortDir, setSortDir] = useState<SortDir>('desc')
+  const [showInfo, setShowInfo] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/scores')
+      .then(r => r.json())
+      .then(data => {
+        setScores(data.scores || [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'desc' ? 'asc' : 'desc')
+    } else {
+      setSortKey(key)
+      setSortDir(key === 'city' ? 'asc' : 'desc')
+    }
+  }
+
+  const filtered = useMemo(() => {
+    let list = scores
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
+      list = list.filter(s =>
+        s.city.toLowerCase().includes(q) || s.country.toLowerCase().includes(q)
+      )
+    }
+    return [...list].sort((a, b) => {
+      let av: number | string, bv: number | string
+      if (sortKey === 'city') { av = a.city; bv = b.city }
+      else if (sortKey === 'accessibility') { av = a.breakdown?.accessibility ?? 0; bv = b.breakdown?.accessibility ?? 0 }
+      else if (sortKey === 'choice') { av = a.breakdown?.choice ?? 0; bv = b.breakdown?.choice ?? 0 }
+      else if (sortKey === 'variety') { av = a.breakdown?.variety ?? 0; bv = b.breakdown?.variety ?? 0 }
+      else if (sortKey === 'quality') { av = a.breakdown?.quality ?? 0; bv = b.breakdown?.quality ?? 0 }
+      else if (sortKey === 'placeCount') { av = a.placeCount; bv = b.placeCount }
+      else { av = a.score; bv = b.score }
+      if (av < bv) return sortDir === 'asc' ? -1 : 1
+      if (av > bv) return sortDir === 'asc' ? 1 : -1
+      return 0
+    })
+  }, [scores, searchQuery, sortKey, sortDir])
+
+  // Top 3 threshold
+  const top3Score = scores.length >= 3 ? scores.sort((a, b) => b.score - a.score)[2]?.score : scores[0]?.score || 0
+
+  function SortIcon({ col }: { col: SortKey }) {
+    if (sortKey !== col) return <ChevronDown className="h-3 w-3 opacity-30" />
+    return sortDir === 'desc' ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />
+  }
+
+  function SortableHeader({ col, label, className = '' }: { col: SortKey; label: string; className?: string }) {
+    return (
+      <th
+        className={`px-3 py-2.5 text-left text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider cursor-pointer hover:text-primary transition-colors select-none ${className}`}
+        onClick={() => handleSort(col)}
+      >
+        <span className="inline-flex items-center gap-1">
+          {label}
+          <SortIcon col={col} />
+        </span>
+      </th>
+    )
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-headline font-bold text-on-surface tracking-tight">
+              City Ranks
+            </h1>
+            <p className="text-sm text-on-surface-variant mt-1">
+              How vegan-friendly is your city? {scores.length} cities ranked.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowInfo(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+          >
+            <Info className="h-4 w-4" />
+            <span className="hidden sm:inline">How it works</span>
+          </button>
+        </div>
+
+        {/* Search */}
+        <div className="relative max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-outline" />
+          <input
+            type="text"
+            placeholder="Search a city or country..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 text-sm border border-outline-variant/15 rounded-xl bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+          />
+        </div>
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-surface-container-lowest rounded-2xl ghost-border overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-outline-variant/10">
+                <th className="px-3 py-2.5 text-left text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider w-12">#</th>
+                <SortableHeader col="city" label="City" />
+                <th className="px-3 py-2.5 text-left text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">Country</th>
+                <SortableHeader col="score" label="Grade" />
+                <SortableHeader col="score" label="Score" />
+                <SortableHeader col="accessibility" label="Access" className="hidden lg:table-cell" />
+                <SortableHeader col="choice" label="Choice" className="hidden lg:table-cell" />
+                <SortableHeader col="variety" label="Variety" className="hidden lg:table-cell" />
+                <SortableHeader col="quality" label="Quality" className="hidden lg:table-cell" />
+                <SortableHeader col="placeCount" label="Places" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-outline-variant/5">
+              {loading ? (
+                [...Array(10)].map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={10} className="px-3 py-3">
+                      <div className="h-6 bg-surface-container-low rounded-lg animate-pulse" />
+                    </td>
+                  </tr>
+                ))
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={10} className="px-3 py-12 text-center text-sm text-on-surface-variant">
+                    {searchQuery ? 'No cities match your search.' : 'No city scores available.'}
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((city, i) => {
+                  const origIdx = scores.findIndex(s => s.city === city.city && s.country === city.country)
+                  const rank = origIdx + 1
+                  const isTop = city.score >= top3Score && top3Score > 0
+                  return (
+                    <tr
+                      key={`${city.city}-${city.country}`}
+                      className={`hover:bg-primary/[0.03] transition-colors ${isTop ? 'bg-primary/[0.02]' : ''}`}
+                    >
+                      <td className="px-3 py-2.5 text-sm">
+                        {isTop ? (
+                          <span className="text-xs">🏆</span>
+                        ) : (
+                          <span className="text-on-surface-variant/50 text-xs font-medium">{sortKey === 'score' && sortDir === 'desc' ? i + 1 : rank}</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <Link
+                          href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                          className={`text-sm font-medium hover:text-primary transition-colors ${isTop ? 'text-primary' : 'text-on-surface'}`}
+                        >
+                          {city.city}
+                        </Link>
+                      </td>
+                      <td className="px-3 py-2.5 text-sm text-on-surface-variant">{city.country}</td>
+                      <td className="px-3 py-2.5">
+                        <span className={`text-base font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${getScoreBarColor(city.score)}`} style={{ width: `${city.score}%` }} />
+                          </div>
+                          <span className="text-xs font-medium text-on-surface-variant">{city.score}</span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
+                        {city.breakdown?.accessibility ?? 0}<span className="text-on-surface-variant/40">/20</span>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
+                        {city.breakdown?.choice ?? 0}<span className="text-on-surface-variant/40">/20</span>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
+                        {city.breakdown?.variety ?? 0}<span className="text-on-surface-variant/40">/30</span>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
+                        {city.breakdown?.quality ?? 0}<span className="text-on-surface-variant/40">/30</span>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs font-medium text-on-surface-variant">{city.placeCount}</td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-2">
+        {loading ? (
+          [...Array(6)].map((_, i) => (
+            <div key={i} className="h-20 bg-surface-container-low rounded-xl animate-pulse" />
+          ))
+        ) : filtered.length === 0 ? (
+          <div className="py-12 text-center text-sm text-on-surface-variant">
+            {searchQuery ? 'No cities match your search.' : 'No city scores available.'}
+          </div>
+        ) : (
+          filtered.map((city, i) => {
+            const isTop = city.score >= top3Score && top3Score > 0
+            return (
+              <Link
+                key={`${city.city}-${city.country}`}
+                href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                className={`block bg-surface-container-lowest rounded-xl ghost-border p-3 hover:bg-primary/[0.03] transition-colors ${isTop ? 'ring-1 ring-primary/20' : ''}`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 text-center flex-shrink-0">
+                    {isTop ? (
+                      <span className="text-sm">🏆</span>
+                    ) : (
+                      <span className="text-xs font-bold text-on-surface-variant/50">#{i + 1}</span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-medium text-sm truncate ${isTop ? 'text-primary' : 'text-on-surface'}`}>{city.city}</p>
+                    <p className="text-[11px] text-on-surface-variant">{city.country} · {city.placeCount} places</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <span className={`text-lg font-black ${getGradeColor(city.grade)}`}>{city.grade}</span>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <div className="w-12 h-1 bg-surface-container-low rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full ${getScoreBarColor(city.score)}`} style={{ width: `${city.score}%` }} />
+                      </div>
+                      <span className="text-[10px] text-on-surface-variant">{city.score}</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Score breakdown row */}
+                <div className="flex gap-3 mt-2 ml-11 text-[10px] text-on-surface-variant">
+                  <span>Access {city.breakdown?.accessibility ?? 0}/20</span>
+                  <span>Choice {city.breakdown?.choice ?? 0}/20</span>
+                  <span>Variety {city.breakdown?.variety ?? 0}/30</span>
+                  <span>Quality {city.breakdown?.quality ?? 0}/30</span>
+                </div>
+              </Link>
+            )
+          })
+        )}
+      </div>
+
+      {/* How to Contribute */}
+      <div className="mt-8 bg-surface-container-lowest rounded-2xl ghost-border p-6">
+        <h2 className="font-headline font-bold text-on-surface text-lg mb-2">Help Your City Climb the Ranks</h2>
+        <p className="text-sm text-on-surface-variant mb-4">
+          Every place, review, and verified business improves your city&apos;s score. Here&apos;s how you can contribute:
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/map"
+            className="inline-flex items-center gap-2 px-4 py-2.5 silk-gradient text-on-primary-btn rounded-xl text-sm font-medium hover:opacity-90 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Add a Place
+          </Link>
+          <Link
+            href="/map"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-low ghost-border text-on-surface-variant rounded-xl text-sm font-medium hover:bg-surface-container transition-colors"
+          >
+            <Map className="h-4 w-4" />
+            Explore the Map
+          </Link>
+          <Link
+            href="/vegan-places"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-low ghost-border text-on-surface-variant rounded-xl text-sm font-medium hover:bg-surface-container transition-colors"
+          >
+            <Star className="h-4 w-4" />
+            Write a Review
+          </Link>
+        </div>
+      </div>
+
+      {/* Info Modal */}
+      {showInfo && (
+        <div className="fixed inset-0 z-[2000] bg-black/50 flex items-center justify-center p-4" onClick={() => setShowInfo(false)}>
+          <div className="bg-surface-container-lowest rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-on-surface">How City Ranks Work</h2>
+              <button onClick={() => setShowInfo(false)} className="text-on-surface-variant hover:text-on-surface"><X className="h-5 w-5" /></button>
+            </div>
+            <p className="text-sm text-on-surface-variant mb-4">Every city gets a score from 0 to 100 based on four dimensions:</p>
+            <div className="space-y-3 mb-5">
+              <div className="bg-emerald-50 rounded-xl p-3">
+                <h3 className="font-bold text-emerald-800 text-sm mb-1">Accessibility (0-20 pts)</h3>
+                <p className="text-xs text-emerald-700">100% vegan places per 100,000 residents. Uses real population data for 1,200+ cities. A small town with high vegan-per-capita scores higher.</p>
+              </div>
+              <div className="bg-teal-50 rounded-xl p-3">
+                <h3 className="font-bold text-teal-800 text-sm mb-1">Choice (0-20 pts)</h3>
+                <p className="text-xs text-teal-700">How many fully-vegan places does the city have? More options = more choice. Logarithmic scale so the first few places matter most.</p>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3">
+                <h3 className="font-bold text-blue-800 text-sm mb-1">Variety (0-30 pts)</h3>
+                <p className="text-xs text-blue-700">Mix of 100% vegan restaurants, stores, stays. Only fully vegan places count. A city with restaurants + stores + hotels scores higher.</p>
+              </div>
+              <div className="bg-purple-50 rounded-xl p-3">
+                <h3 className="font-bold text-purple-800 text-sm mb-1">Quality (0-30 pts)</h3>
+                <p className="text-xs text-purple-700">Community ratings of fully vegan places. No reviews yet? Score starts at 0 — rate places to help your city climb!</p>
+              </div>
+            </div>
+            <div className="bg-surface-container-low rounded-xl p-3 mb-4">
+              <h3 className="font-bold text-on-surface text-sm mb-2">Grade Scale</h3>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div><span className="font-bold text-emerald-500">A+</span> <span className="text-on-surface-variant">90-100</span></div>
+                <div><span className="font-bold text-emerald-500">A</span> <span className="text-on-surface-variant">80-89</span></div>
+                <div><span className="font-bold text-green-500">B</span> <span className="text-on-surface-variant">65-79</span></div>
+                <div><span className="font-bold text-yellow-500">C</span> <span className="text-on-surface-variant">50-64</span></div>
+                <div><span className="font-bold text-orange-500">D</span> <span className="text-on-surface-variant">35-49</span></div>
+                <div><span className="font-bold text-red-500">F</span> <span className="text-on-surface-variant">0-34</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
