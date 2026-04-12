@@ -107,7 +107,7 @@ export async function PUT(
     // Fetch existing place to check ownership
     const { data: existingPlace, error: fetchError } = await supabase
       .from('places')
-      .select('id, created_by, images')
+      .select('id, created_by, images, address')
       .eq('id', id)
       .single()
 
@@ -160,6 +160,31 @@ export async function PUT(
     if (body.append_images && Array.isArray(body.append_images) && body.append_images.length > 0) {
       const currentImages = existingPlace.images || []
       updateData.images = [...currentImages, ...body.append_images]
+    }
+
+    // Geocode new address to update map coordinates
+    if (body.address && body.address !== existingPlace.address) {
+      try {
+        const geoRes = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(body.address)}&limit=1&addressdetails=1`,
+          { headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)' } }
+        )
+        if (geoRes.ok) {
+          const geoData = await geoRes.json()
+          if (geoData[0]) {
+            updateData.latitude = parseFloat(geoData[0].lat)
+            updateData.longitude = parseFloat(geoData[0].lon)
+            // Update city/country from geocoding if available
+            const addr = geoData[0].address || {}
+            const city = addr.city || addr.town || addr.village || addr.municipality
+            if (city) updateData.city = city
+            if (addr.country) updateData.country = addr.country
+          }
+        }
+      } catch (geoErr) {
+        console.error('[Place API] Geocoding failed:', geoErr)
+        // Continue without updating coordinates — address text still saves
+      }
     }
 
     updateData.updated_at = new Date().toISOString()
