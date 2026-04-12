@@ -15,9 +15,9 @@ export default function MapPlaceCard({ place, user, onToggleFavorite, onPanToPla
   const isFavorited = user ? place.favorite_places.some(fav => fav.user_id === user.id) : false
 
   return (
-    <div
-      className="bg-surface-container-lowest rounded-xl p-4 hover:scale-[1.02] transition-all duration-200 cursor-pointer ghost-border editorial-shadow"
-      onClick={() => onPanToPlace(place.latitude, place.longitude)}
+    <Link
+      href={`/place/${(place as any).slug || place.id}`}
+      className="block bg-surface-container-lowest rounded-xl p-4 hover:scale-[1.02] transition-all duration-200 cursor-pointer ghost-border editorial-shadow"
     >
       {((place as any).main_image_url || (place as any).images?.length > 0) && (
         <div className="relative mb-2">
@@ -41,16 +41,13 @@ export default function MapPlaceCard({ place, user, onToggleFavorite, onPanToPla
         </div>
       )}
       <div className="flex items-start justify-between mb-2">
-        <Link
-          href={`/place/${(place as any).slug || place.id}`}
-          className="font-semibold text-on-surface text-sm hover:text-primary transition-colors leading-tight"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <span className="font-semibold text-on-surface text-sm hover:text-primary transition-colors leading-tight">
           {place.name}
-        </Link>
+        </span>
         {user && (
           <button
             onClick={(e) => {
+              e.preventDefault()
               e.stopPropagation()
               onToggleFavorite(place.id)
             }}
@@ -104,6 +101,6 @@ export default function MapPlaceCard({ place, user, onToggleFavorite, onPanToPla
           <p className="text-xs text-on-surface-variant line-clamp-2">{place.description}</p>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
