@@ -4,7 +4,7 @@ import { Globe } from 'lucide-react'
 import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
 import { loadCityImages } from '@/lib/city-images'
-import { getGradeColor, getScoreBarColor, computeGrade } from '@/lib/score-utils'
+import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CountryCityGrid from '@/components/places/CountryCityGrid'
@@ -63,12 +63,8 @@ export default async function CountryPage({ params }: PageProps) {
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
   const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
 
-  // Country scores
+  // Country scores (for city cards, no average displayed)
   const countryScores = allScores.filter((s: any) => s.country === countryName)
-  const avgScore = countryScores.length > 0
-    ? Math.round(countryScores.reduce((sum: number, s: any) => sum + s.score, 0) / countryScores.length)
-    : null
-  const avgGrade = avgScore !== null ? computeGrade(avgScore) : null
 
   // Country description
   const countryStats = {
@@ -105,30 +101,15 @@ export default async function CountryPage({ params }: PageProps) {
 
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-start justify-between gap-4 mb-3">
-            <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight">
-              Vegan Places in <span className="text-primary">{countryName}</span>
-            </h1>
-            {avgScore !== null && avgGrade && (
-              <div className="text-right flex-shrink-0">
-                <span className={`text-3xl font-black ${getGradeColor(avgGrade)}`}>{avgGrade}</span>
-                <p className="text-[10px] text-on-surface-variant">{avgScore}/100 avg</p>
-              </div>
-            )}
-          </div>
+          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
+            Vegan Places in <span className="text-primary">{countryName}</span>
+          </h1>
           <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
               ? <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} /> vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
-          {avgScore !== null && (
-            <div className="max-w-xs mb-3">
-              <div className="h-1.5 bg-surface-container-low rounded-full overflow-hidden">
-                <div className={`h-full rounded-full ${getScoreBarColor(avgScore)} transition-all`} style={{ width: `${avgScore}%` }} />
-              </div>
-            </div>
-          )}
           {sceneDescription && (
             <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
           )}
