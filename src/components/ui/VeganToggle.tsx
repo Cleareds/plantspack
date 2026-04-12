@@ -12,14 +12,14 @@ export default function VeganToggle({ className = '' }: VeganToggleProps) {
   return (
     <button
       onClick={() => setVeganFilter(isFullyVeganOnly ? 'all' : 'fully_vegan')}
-      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+      className={`w-[68px] flex items-center justify-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold transition-all ${
         isFullyVeganOnly
           ? 'bg-emerald-600 text-white shadow-sm'
-          : 'bg-surface-container-low text-on-surface-variant ghost-border hover:bg-surface-container'
+          : 'bg-surface-container-low text-on-surface-variant ghost-border'
       } ${className}`}
       title={isFullyVeganOnly ? 'Showing 100% vegan only — click to show all' : 'Click to show only 100% vegan places'}
     >
-      🌿 {isFullyVeganOnly ? '100% Vegan' : 'All Places'}
+      🌿 {isFullyVeganOnly ? '100%' : 'All'}
     </button>
   )
 }

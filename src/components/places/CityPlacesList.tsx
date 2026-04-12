@@ -51,22 +51,22 @@ interface Place {
 
 export default function CityPlacesList({ places }: { places: Place[] }) {
   const { isFullyVeganOnly } = useVeganFilter()
-  const categories = [...new Set(places.map(p => p.category))].sort()
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeSubcategory, setActiveSubcategory] = useState<string | null>(null)
-  const [veganOnly, setVeganOnly] = useState(false)
   const [petOnly, setPetOnly] = useState(false)
+
+  // Pre-filter by global vegan toggle
+  const basePlaces = isFullyVeganOnly ? places.filter(p => p.vegan_level === 'fully_vegan') : places
+  const categories = [...new Set(basePlaces.map(p => p.category))].sort()
 
   // Get available subcategories for active category
   const subcategories = activeCategory
-    ? [...new Set(places.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
+    ? [...new Set(basePlaces.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
     : []
 
-  const filtered = places.filter(p => {
-    if (isFullyVeganOnly && p.vegan_level !== 'fully_vegan') return false
+  const filtered = basePlaces.filter(p => {
     if (activeCategory && p.category !== activeCategory) return false
     if (activeSubcategory && p.subcategory !== activeSubcategory) return false
-    if (veganOnly && p.vegan_level !== 'fully_vegan') return false
     if (petOnly && !p.is_pet_friendly) return false
     return true
   })
@@ -78,10 +78,10 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
         {/* Category pills */}
         <button onClick={() => { setActiveCategory(null); setActiveSubcategory(null); }}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!activeCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
-          All ({places.length})
+          All ({basePlaces.length})
         </button>
         {categories.map(cat => {
-          const count = places.filter(p => p.category === cat).length
+          const count = basePlaces.filter(p => p.category === cat).length
           return (
             <button key={cat} onClick={() => { setActiveCategory(activeCategory === cat ? null : cat); setActiveSubcategory(null); }}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${activeCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
@@ -96,7 +96,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
             <div className="w-px h-8 bg-outline-variant/30 self-center" />
             {subcategories.map(sub => {
               if (!sub) return null
-              const count = places.filter(p => p.category === activeCategory && p.subcategory === sub).length
+              const count = basePlaces.filter(p => p.category === activeCategory && p.subcategory === sub).length
               const label = SUBCATEGORY_LABELS[activeCategory]?.[sub] || sub
               return (
                 <button key={sub} onClick={() => setActiveSubcategory(activeSubcategory === sub ? null : sub)}
@@ -110,12 +110,6 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
 
         {/* Divider */}
         <div className="w-px h-8 bg-outline-variant/30 self-center" />
-
-        {/* Vegan-only toggle */}
-        <button onClick={() => setVeganOnly(!veganOnly)}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${veganOnly ? 'bg-green-600 text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
-          🌿 100% Vegan
-        </button>
 
         {/* Pet-friendly toggle */}
         <button onClick={() => setPetOnly(!petOnly)}
@@ -259,7 +253,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
         <div className="lg:w-[400px] flex-shrink-0">
           <div className="lg:sticky lg:top-24">
             <CityMap
-              places={filtered.map(p => ({ id: p.id, name: p.name, latitude: p.latitude, longitude: p.longitude, category: p.category }))}
+              places={filtered.map(p => ({ id: p.id, name: p.name, slug: p.slug || undefined, latitude: p.latitude, longitude: p.longitude, category: p.category }))}
               className="h-[300px] lg:h-[calc(100vh-8rem)]"
             />
           </div>
