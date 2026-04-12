@@ -129,8 +129,10 @@ class GeocodingService {
         `https://nominatim.openstreetmap.org/search?${params.toString()}`,
         {
           headers: {
-            'User-Agent': this.USER_AGENT
-          }
+            'User-Agent': this.USER_AGENT,
+            'Accept': 'application/json',
+          },
+          signal: AbortSignal.timeout(10000),
         }
       )
 
@@ -180,8 +182,10 @@ class GeocodingService {
         `https://nominatim.openstreetmap.org/reverse?${params.toString()}`,
         {
           headers: {
-            'User-Agent': this.USER_AGENT
-          }
+            'User-Agent': this.USER_AGENT,
+            'Accept': 'application/json',
+          },
+          signal: AbortSignal.timeout(10000),
         }
       )
 

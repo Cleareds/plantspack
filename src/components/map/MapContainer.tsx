@@ -497,7 +497,13 @@ export default function MapContainerComponent() {
 
         {/* Discovery Panel - RIGHT side */}
         <MapDiscoveryPanel
-          places={mapPlaces.length > 0 ? [...mapPlaces].sort((a, b) => a.distance - b.distance).slice(0, 20) : sidebarPlaces}
+          places={(() => {
+            let list = mapPlaces.length > 0 ? [...mapPlaces].sort((a, b) => a.distance - b.distance) : sidebarPlaces;
+            if (selectedSubcategory) list = list.filter(p => (p as any).subcategory === selectedSubcategory);
+            if (veganOnly) list = list.filter(p => (p as any).vegan_level === 'fully_vegan');
+            if (petFriendly) list = list.filter(p => (p as any).is_pet_friendly);
+            return list.slice(0, 20);
+          })()}
           totalCount={mapPlaces.length > 0 ? mapPlaces.length : totalCount}
           customCenter={customCenter}
           user={user}
