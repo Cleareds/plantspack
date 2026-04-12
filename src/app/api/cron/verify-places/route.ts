@@ -14,13 +14,13 @@ export async function GET(request: Request) {
   const supabase = createAdminClient()
 
   // Get places with websites that haven't been verified recently
-  // Check 100 places per run (rotate through all places over time)
+  // Check 500 places per run, runs every 6 hours — full cycle in ~8 days
   const { data: places } = await supabase
     .from('places')
     .select('id, name, website, is_verified, updated_at')
     .not('website', 'is', null)
     .order('updated_at', { ascending: true }) // oldest first
-    .limit(100)
+    .limit(500)
 
   if (!places || places.length === 0) {
     return NextResponse.json({ checked: 0, flagged: 0 })
@@ -30,13 +30,14 @@ export async function GET(request: Request) {
   let alive = 0
   let dead = 0
 
-  for (const place of places) {
-    if (!place.website) continue
+  // Check a single place website
+  async function checkPlace(place: any) {
+    if (!place.website) return
     checked++
 
     try {
       const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 8000)
+      const t = setTimeout(() => controller.abort(), 6000)
 
       const res = await fetch(place.website, {
         method: 'HEAD',
@@ -44,16 +45,13 @@ export async function GET(request: Request) {
         redirect: 'follow',
         headers: { 'User-Agent': 'PlantsPack-Verify/1.0' },
       })
-      clearTimeout(timeout)
+      clearTimeout(t)
 
       if (res.ok || res.status === 403 || res.status === 405) {
-        // Site is alive (403/405 = blocking HEAD but site exists)
         alive++
-        // Touch updated_at to mark as checked
         await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', place.id)
       } else if (res.status === 404 || res.status >= 500) {
         dead++
-        // Add a tag to flag this place
         const { data: current } = await supabase.from('places').select('tags').eq('id', place.id).single()
         const tags = current?.tags || []
         if (!tags.includes('website_unreachable')) {
@@ -64,7 +62,6 @@ export async function GET(request: Request) {
         }
       }
     } catch {
-      // Network error / timeout — site might be down
       dead++
       const { data: current } = await supabase.from('places').select('tags').eq('id', place.id).single()
       const tags = current?.tags || []
@@ -75,6 +72,12 @@ export async function GET(request: Request) {
         }).eq('id', place.id)
       }
     }
+  }
+
+  // Process in parallel batches of 20
+  for (let i = 0; i < places.length; i += 20) {
+    const batch = places.slice(i, i + 20)
+    await Promise.all(batch.map(checkPlace))
   }
 
   return NextResponse.json({
