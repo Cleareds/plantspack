@@ -6,7 +6,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'PlantsPack — Vegan Community Platform',
-  description: 'Discover vegan restaurants, stores, stays, and animal sanctuaries. See your city\'s Vegan Score and help improve it.',
+  description: 'Discover vegan and vegan-friendly restaurants, cafes, stores, stays, and animal sanctuaries worldwide. See your city\'s ranking and help improve it.',
 }
 
 async function getTopCities() {

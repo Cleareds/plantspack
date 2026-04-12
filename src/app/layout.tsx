@@ -26,7 +26,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "PlantsPack - Community Platform for Vegans and People Exploring Plant-Based Living",
-  description: "Discover vegan restaurants, share recipes, and connect with people who share your values. Free forever, community-funded.",
+  description: "Discover vegan and vegan-friendly restaurants, cafes, stores, stays, and animal sanctuaries worldwide. City rankings, community reviews. Free forever.",
   metadataBase: new URL('https://www.plantspack.com'),
   manifest: '/manifest.json',
   viewport: {
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'PlantsPack',
     title: 'PlantsPack - Vegan Community Platform',
-    description: 'Discover vegan restaurants, share recipes, and connect with people who share your values.',
+    description: 'Discover vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries worldwide. City rankings, community reviews. Free forever.',
     locale: 'en_US',
     images: [{ url: 'https://www.plantspack.com/og-image.png', width: 1200, height: 630, alt: 'PlantsPack — Vegan Community Platform' }],
   },
