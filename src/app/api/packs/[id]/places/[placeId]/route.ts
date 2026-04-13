@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 // DELETE /api/packs/[id]/places/[placeId] - Remove place from pack
 export async function DELETE(
@@ -12,37 +13,22 @@ export async function DELETE(
 
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check if id is UUID or slug
+    const admin = createAdminClient()
+
+    // Resolve slug to UUID if needed
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-
     let packId = id
-
-    // If it's a slug, resolve to UUID
     if (!isUUID) {
-      const { data: pack, error: packError } = await supabase
-        .from('packs')
-        .select('id')
-        .eq('slug', id)
-        .single()
-
-      if (packError || !pack) {
-        return NextResponse.json(
-          { error: 'Pack not found' },
-          { status: 404 }
-        )
-      }
-
+      const { data: pack } = await admin.from('packs').select('id').eq('slug', id).single()
+      if (!pack) return NextResponse.json({ error: 'Pack not found' }, { status: 404 })
       packId = pack.id
     }
 
     // Check if user is admin or moderator
-    const { data: membership } = await supabase
+    const { data: membership } = await admin
       .from('pack_members')
       .select('role')
       .eq('pack_id', packId)
@@ -50,14 +36,11 @@ export async function DELETE(
       .maybeSingle()
 
     if (!membership || !['admin', 'moderator'].includes(membership.role)) {
-      return NextResponse.json(
-        { error: 'Only admins and moderators can remove places' },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: 'Only admins and moderators can remove places' }, { status: 403 })
     }
 
-    // Remove place from pack
-    const { error } = await supabase
+    // Remove place from pack using admin client (bypasses RLS)
+    const { error } = await admin
       .from('pack_places')
       .delete()
       .eq('id', placeId)
@@ -68,9 +51,6 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('[Pack Places API] Error:', error)
-    return NextResponse.json(
-      { error: 'Failed to remove place from pack' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to remove place from pack' }, { status: 500 })
   }
 }
