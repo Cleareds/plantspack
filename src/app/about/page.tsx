@@ -4,7 +4,7 @@ import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'l
 
 export const metadata: Metadata = {
   title: 'About PlantsPack - Built for the Mission, Not the Markets',
-  description: 'PlantsPack is a community-funded vegan platform with 16,000+ places across 117 countries. No investors, no ads. 50% of profit goes to animal welfare.',
+  description: 'PlantsPack is a community-funded vegan platform with 33,000+ places across 117 countries. No investors, no ads. 50% of profit goes to animal welfare.',
 }
 
 export default function AboutPage() {

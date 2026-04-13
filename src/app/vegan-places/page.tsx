@@ -10,11 +10,11 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Vegan Places Directory — Find Vegan Restaurants & Stores | PlantsPack',
-  description: 'Browse 16,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries and 1,000+ cities. Community-verified with ratings and reviews.',
+  description: 'Browse 33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries and 1,000+ cities. Community-verified with ratings and reviews.',
   alternates: { canonical: 'https://plantspack.com/vegan-places' },
   openGraph: {
     title: 'Vegan Places Directory | PlantsPack',
-    description: 'Browse 16,000+ vegan places across 117 countries and 1,000+ cities. Community-driven, free forever.',
+    description: 'Browse 33,000+ vegan places across 117 countries and 1,000+ cities. Community-driven, free forever.',
     type: 'website',
     siteName: 'PlantsPack',
   },

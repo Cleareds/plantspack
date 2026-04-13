@@ -8,7 +8,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'PlantsPack — Vegan Community Platform',
-  description: '16,000+ vegan places across 117 countries. See your city\'s vegan ranking, find restaurants, stores, stays, and sanctuaries. 580+ recipes. Free forever.',
+  description: '33,000+ vegan places across 117 countries. See your city\'s vegan ranking, find restaurants, stores, stays, and sanctuaries. 580+ recipes. Free forever.',
 }
 
 async function getTopCities() {

@@ -26,7 +26,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide",
-  description: "16,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.",
+  description: "33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.",
   metadataBase: new URL('https://www.plantspack.com'),
   manifest: '/manifest.json',
   viewport: {
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'PlantsPack',
     title: 'PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide',
-    description: '16,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.',
+    description: '33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.',
     locale: 'en_US',
     images: [{ url: 'https://www.plantspack.com/og-image.png', width: 1200, height: 630, alt: 'PlantsPack — Vegan Community Platform' }],
   },
@@ -85,7 +85,7 @@ export default function RootLayout({
               name: 'PlantsPack',
               url: 'https://plantspack.com',
               logo: 'https://plantspack.com/plantspack-logo-real.svg',
-              description: 'Community-funded vegan platform with 16,000+ places across 117 countries, city vegan rankings, and 580+ recipes. Free forever, no ads.',
+              description: 'Community-funded vegan platform with 33,000+ places across 117 countries, city vegan rankings, and 580+ recipes. Free forever, no ads.',
               sameAs: [
                 'https://x.com/plantspackX',
                 'https://www.instagram.com/plants.pack/',
