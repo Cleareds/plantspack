@@ -15,18 +15,5 @@
       "maxDuration": 60
     }
   },
-  "crons": [
-    {
-      "path": "/api/cron/backup",
-      "schedule": "17 3 * * *"
-    },
-    {
-      "path": "/api/cron/verify-places",
-      "schedule": "23 4 * * *"
-    },
-    {
-      "path": "/api/cron/osm-sync",
-      "schedule": "0 5 * * 0"
-    }
-  ]
+  "crons": []
 }

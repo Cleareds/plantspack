@@ -35,7 +35,7 @@ async function getEventPost(id: string): Promise<EventPost | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
-      next: { revalidate: 60 },
+      next: { revalidate: 3600 },
     })
     if (!response.ok) return null
     const data = await response.json()

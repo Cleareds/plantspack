@@ -6,7 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
 
 async function fetchPackData(id: string) {
   try {
-    const res = await fetch(`${BASE_URL}/api/packs/${id}`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE_URL}/api/packs/${id}`, { next: { revalidate: 3600 } })
     if (!res.ok) return null
     const data = await res.json()
     return data.pack || null
@@ -17,7 +17,7 @@ async function fetchPackData(id: string) {
 
 async function fetchPackPlaces(id: string) {
   try {
-    const res = await fetch(`${BASE_URL}/api/packs/${id}/places?limit=100`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE_URL}/api/packs/${id}/places?limit=100`, { next: { revalidate: 3600 } })
     if (!res.ok) return []
     const data = await res.json()
     return data.places || []
@@ -28,7 +28,7 @@ async function fetchPackPlaces(id: string) {
 
 async function fetchPackPosts(id: string) {
   try {
-    const res = await fetch(`${BASE_URL}/api/packs/${id}/posts?limit=50`, { next: { revalidate: 60 } })
+    const res = await fetch(`${BASE_URL}/api/packs/${id}/posts?limit=50`, { next: { revalidate: 3600 } })
     if (!res.ok) return []
     const data = await res.json()
     return data.posts || []

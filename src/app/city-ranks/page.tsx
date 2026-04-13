@@ -3,7 +3,7 @@ import { computeAllScores } from '@/lib/compute-scores'
 import { loadCityImages } from '@/lib/city-images'
 import CityRanksTable from '@/components/vegan-score/CityRanksTable'
 
-export const revalidate = 600
+export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'City Ranks — Most Vegan-Friendly Cities | PlantsPack',

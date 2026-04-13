@@ -22,7 +22,7 @@ export async function GET() {
 
     // Get live scores from cached API (much faster than recomputing)
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const scoresRes = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
+    const scoresRes = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 86400 } })
     const scoresData = await scoresRes.json()
     const scores = scoresData.scores || []
     const scoreMap: Record<string, any> = {}

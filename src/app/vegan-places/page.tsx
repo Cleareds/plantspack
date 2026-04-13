@@ -7,7 +7,7 @@ import { loadCityImages, getCountryThumbnail } from '@/lib/city-images'
 import FilteredCount, { FilteredTotal, FilteredLabel } from '@/components/ui/FilteredCount'
 import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
 
-export const revalidate = 300
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Vegan Places Directory — Find Vegan Restaurants & Stores | PlantsPack',

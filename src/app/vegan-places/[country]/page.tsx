@@ -9,7 +9,7 @@ import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CountryCityGrid from '@/components/places/CountryCityGrid'
 
-export const revalidate = 300
+export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ country: string }>
@@ -18,7 +18,7 @@ interface PageProps {
 async function getCityScores(): Promise<any[]> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
+    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 86400 } })
     if (!res.ok) return []
     const data = await res.json()
     return data.scores || []
@@ -28,7 +28,7 @@ async function getCityScores(): Promise<any[]> {
 async function fetchCountryPlaces(country: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=500`, { next: { revalidate: 300 } })
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=500`, { next: { revalidate: 3600 } })
     if (!res.ok) return { places: [], country: country.replace(/-/g, ' '), total: 0 }
     return res.json()
   } catch { return { places: [], country: country.replace(/-/g, ' '), total: 0 } }

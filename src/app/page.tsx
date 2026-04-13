@@ -4,7 +4,7 @@ import { join } from 'path'
 import { createAdminClient } from '@/lib/supabase-admin'
 import HomeClient from '@/components/home/HomeClient'
 
-export const revalidate = 300
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'PlantsPack — Vegan Community Platform',
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 async function getTopCities() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
+    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 86400 } })
     if (!res.ok) return []
     const data = await res.json()
     return data.scores?.slice(0, 8) || []

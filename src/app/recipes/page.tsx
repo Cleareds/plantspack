@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { Suspense } from 'react'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
 
-export const revalidate = 300
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Vegan Recipes — Easy, Delicious Plant-Based Cooking | PlantsPack',

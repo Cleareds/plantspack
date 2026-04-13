@@ -26,7 +26,7 @@ async function getPost(id: string): Promise<Post | null> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     // The API handles both UUIDs and slugs
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
-      next: { revalidate: 60 }
+      next: { revalidate: 3600 }
     })
     if (!response.ok) return null
     const data = await response.json()
