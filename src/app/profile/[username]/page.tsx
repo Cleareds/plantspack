@@ -781,8 +781,8 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-2 mb-1">
                           <h4 className="font-medium text-on-surface text-sm truncate">{pack.title}</h4>
                           {!pack.is_published && (
-                            <span className="bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-xs">
-                              Draft
+                            <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs">
+                              Private
                             </span>
                           )}
                         </div>

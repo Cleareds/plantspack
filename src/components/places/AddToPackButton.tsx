@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus, X, Check, Circle, MapPinned, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
@@ -20,6 +21,7 @@ interface AddToPackButtonProps {
 
 export default function AddToPackButton({ placeId, placeName }: AddToPackButtonProps) {
   const { user } = useAuth()
+  const router = useRouter()
   const [showModal, setShowModal] = useState(false)
   const [packs, setPacks] = useState<Pack[]>([])
   const [loading, setLoading] = useState(false)
@@ -179,6 +181,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       setPacks(prev => [{ id: pack.id, title: pack.title, description: null, user_role: 'admin', categories: ['Trip'] }, ...prev])
       setAdded(prev => new Set(prev).add(pack.id))
       setNewTripName('')
+      router.refresh() // Invalidate cached pack listings
     } catch {
       alert('Failed to create trip')
     } finally {

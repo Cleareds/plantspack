@@ -72,8 +72,9 @@ export default function PackPlacesTab({ packId, userRole, userId, initialPlaces 
     }
   }
 
+  // Always fetch fresh data client-side (SSR cache may be stale)
   useEffect(() => {
-    if (!initialPlaces) fetchPlaces()
+    fetchPlaces()
   }, [packId])
 
   const handleRemovePlace = async (packPlaceId: string, placeName: string) => {

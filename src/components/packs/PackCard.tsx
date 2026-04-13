@@ -61,10 +61,10 @@ export default function PackCard({ pack }: PackCardProps) {
               ))}
             </div>
           )}
-          {/* Draft badge */}
+          {/* Private badge */}
           {!pack.is_published && (
-            <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
-              Draft
+            <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+              Private
             </div>
           )}
           {/* Verified badge on image */}
