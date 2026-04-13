@@ -18,7 +18,8 @@ import {
   X,
   Building2,
   ChefHat,
-  Calendar
+  Calendar,
+  PenLine
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -76,6 +77,7 @@ export default function AdminLayout({
     { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
     { name: 'Events', href: '/admin/events', icon: Calendar },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
+    { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
     { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
     { name: 'Contact Forms', href: '/admin/contact', icon: Mail },
   ]

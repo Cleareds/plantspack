@@ -63,6 +63,13 @@ export default function AboutPage() {
                 <p className="text-sm text-on-surface-variant">Vote on features and shape the platform&apos;s future on the <Link href="/roadmap" className="text-primary hover:underline">roadmap</Link>.</p>
               </div>
             </div>
+            <div className="flex gap-3">
+              <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-on-surface text-sm">Community Contributions</div>
+                <p className="text-sm text-on-surface-variant">Anyone can suggest corrections to places. <Link href="/support" className="text-primary hover:underline">Supporters</Link> get direct edit access to keep data accurate.</p>
+              </div>
+            </div>
           </div>
         </div>
 

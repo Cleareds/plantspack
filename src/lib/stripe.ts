@@ -69,6 +69,7 @@ export const SUBSCRIPTION_TIERS: Record<string, SubscriptionTier> = {
     interval: 'month',
     features: [
       'Supporter badge',
+      'Direct edit access to all places',
       'Discuss and vote on platform\'s future',
       'Our eternal gratitude',
     ],
