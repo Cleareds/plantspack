@@ -66,7 +66,23 @@ export async function PUT(request: NextRequest) {
 
     if (action === 'approve') {
       // Apply corrections to the place
-      const updateData: Record<string, any> = { ...correction.corrections, updated_at: new Date().toISOString() }
+      const corrections = { ...correction.corrections }
+      const updateData: Record<string, any> = { updated_at: new Date().toISOString() }
+
+      // Handle image append separately — merge with existing images
+      if (corrections.append_images && Array.isArray(corrections.append_images)) {
+        const { data: currentPlace } = await admin.from('places').select('images, main_image_url').eq('id', correction.place_id).single()
+        const existingImages = currentPlace?.images || []
+        updateData.images = [...existingImages, ...corrections.append_images]
+        // Set main image if none exists
+        if (!currentPlace?.main_image_url && corrections.append_images.length > 0) {
+          updateData.main_image_url = corrections.append_images[0]
+        }
+        delete corrections.append_images
+      }
+
+      // Apply remaining field corrections
+      Object.assign(updateData, corrections)
 
       const { error: updateError } = await admin
         .from('places')

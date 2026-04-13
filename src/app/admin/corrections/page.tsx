@@ -123,9 +123,17 @@ export default function AdminCorrectionsPage() {
                         {FIELD_LABELS[field] || field}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-emerald-400 break-words">
-                          {String(newValue)}
-                        </p>
+                        {field === 'append_images' && Array.isArray(newValue) ? (
+                          <div className="flex flex-wrap gap-2">
+                            {newValue.map((url: string, i: number) => (
+                              <img key={i} src={url} alt="" className="h-16 w-16 rounded-lg object-cover" />
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-emerald-400 break-words">
+                            {String(newValue)}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}

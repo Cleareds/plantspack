@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Send, Loader2, CheckCircle } from 'lucide-react'
+import { X, Send, Loader2, CheckCircle, Camera } from 'lucide-react'
+import ImageUploader from '../ui/ImageUploader'
 
 interface SuggestCorrectionModalProps {
   place: {
@@ -31,7 +32,9 @@ const FIELD_LABELS: Record<string, string> = {
 }
 
 export default function SuggestCorrectionModal({ place, isOpen, onClose }: SuggestCorrectionModalProps) {
-  const [corrections, setCorrections] = useState<Record<string, string>>({})
+  const [corrections, setCorrections] = useState<Record<string, any>>({})
+  const [newImages, setNewImages] = useState<string[]>([])
+  const [showUploader, setShowUploader] = useState(false)
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -53,8 +56,9 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
   }
 
   const handleSubmit = async () => {
-    if (Object.keys(corrections).length === 0) {
-      setError('Please make at least one change')
+    const hasChanges = Object.keys(corrections).length > 0 || newImages.length > 0
+    if (!hasChanges) {
+      setError('Please make at least one change or add photos')
       return
     }
 
@@ -62,10 +66,15 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
     setError(null)
 
     try {
+      const allCorrections = { ...corrections }
+      if (newImages.length > 0) {
+        allCorrections.append_images = newImages
+      }
+
       const res = await fetch(`/api/places/${place.id}/corrections`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ corrections, note: note.trim() || null }),
+        body: JSON.stringify({ corrections: allCorrections, note: note.trim() || null }),
       })
 
       if (!res.ok) {
@@ -166,6 +175,42 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
             )
           })}
 
+          {/* Add photos */}
+          <div>
+            <label className="block text-sm font-medium text-on-surface-variant mb-2">
+              Add Photos
+              {newImages.length > 0 && <span className="ml-1.5 text-[10px] text-primary font-bold">{newImages.length} ADDED</span>}
+            </label>
+            {newImages.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2">
+                {newImages.map((url, i) => (
+                  <div key={i} className="relative group">
+                    <img src={url} alt="" className="h-16 w-16 rounded-lg object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setNewImages(prev => prev.filter((_, j) => j !== i))}
+                      className="absolute -top-1 -right-1 bg-error text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {showUploader ? (
+              <ImageUploader onImagesChange={(urls) => setNewImages(prev => [...prev, ...urls])} maxImages={5} />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowUploader(true)}
+                className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium"
+              >
+                <Camera className="h-4 w-4" />
+                Upload photos
+              </button>
+            )}
+          </div>
+
           {/* Optional note */}
           <div>
             <label className="block text-sm font-medium text-on-surface-variant mb-1">Note (optional)</label>
@@ -181,7 +226,7 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
           {/* Actions */}
           <div className="flex items-center justify-between pt-2">
             <p className="text-xs text-on-surface-variant">
-              {Object.keys(corrections).length} field{Object.keys(corrections).length !== 1 ? 's' : ''} changed
+              {Object.keys(corrections).length + (newImages.length > 0 ? 1 : 0)} change{Object.keys(corrections).length + (newImages.length > 0 ? 1 : 0) !== 1 ? 's' : ''}
             </p>
             <div className="flex gap-3">
               <button onClick={onClose} className="px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-xl font-medium transition-colors text-sm">
@@ -189,7 +234,7 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={loading || Object.keys(corrections).length === 0}
+                disabled={loading || (Object.keys(corrections).length === 0 && newImages.length === 0)}
                 className="flex items-center gap-2 silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary-btn px-5 py-2.5 rounded-xl font-medium transition-colors text-sm"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
