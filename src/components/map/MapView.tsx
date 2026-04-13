@@ -248,7 +248,7 @@ export default function MapView({
                   </div>
 
                   <div className="mt-2 pt-2 border-t border-outline-variant/15 text-xs text-outline">
-                    Added by @{place.users.username}
+                    Added by {place.users.username === 'admin' ? 'PlantsPack Team' : `@${place.users.username}`}
                   </div>
                 </div>
               </Popup>

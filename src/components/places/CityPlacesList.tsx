@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { MapPin, Star, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation } from 'lucide-react'
+import { MapPin, Star, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight } from 'lucide-react'
 import CityMap from './CityMap'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 
@@ -65,11 +65,12 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
   // Update URL params — alphabetical order for consistency
   const setFilter = useCallback((updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams?.toString() || '')
+    // Reset to page 1 when filters change (unless explicitly setting page)
+    if (!('page' in updates)) params.delete('page')
     for (const [key, value] of Object.entries(updates)) {
       if (value === null || value === '') params.delete(key)
       else params.set(key, value)
     }
-    // Sort params alphabetically
     const sorted = new URLSearchParams([...params.entries()].sort((a, b) => a[0].localeCompare(b[0])))
     const qs = sorted.toString()
     router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false })
@@ -88,6 +89,9 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
   const validCategory = activeCategory && categories.includes(activeCategory) ? activeCategory : null
   const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
 
+  const PAGE_SIZE = 50
+  const currentPage = parseInt(searchParams?.get('page') || '1') || 1
+
   const filtered = basePlaces.filter(p => {
     if (validCategory && p.category !== validCategory) return false
     if (validSubcategory && p.subcategory !== validSubcategory) return false
@@ -102,6 +106,10 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
     }
     return a.name.localeCompare(b.name)
   })
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const needsPagination = filtered.length > PAGE_SIZE
 
   return (
     <div>
@@ -161,13 +169,15 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
         ))}
 
         {/* Result count */}
-        <span className="self-center text-xs text-on-surface-variant">{filtered.length} results</span>
+        <span className="self-center text-xs text-on-surface-variant">
+          {needsPagination ? `${(currentPage-1)*PAGE_SIZE+1}–${Math.min(currentPage*PAGE_SIZE, filtered.length)} of ` : ''}{filtered.length} results
+        </span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Places List */}
         <div className="flex-1 space-y-4 min-w-0">
-          {filtered.map(place => {
+          {paginated.map(place => {
             const thumbnail = place.main_image_url || place.images?.[0]
             const googleMapsUrl = place.google_place_id
               ? `https://www.google.com/maps/place/?q=place_id:${place.google_place_id}`
@@ -289,6 +299,32 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
 
           {filtered.length === 0 && (
             <p className="text-center text-on-surface-variant py-8">No places found in this category.</p>
+          )}
+
+          {/* Pagination */}
+          {needsPagination && (
+            <div className="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+              <p className="text-xs text-on-surface-variant">
+                {(currentPage-1)*PAGE_SIZE+1}–{Math.min(currentPage*PAGE_SIZE, filtered.length)} of {filtered.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { setFilter({ page: String(currentPage - 1) }); window.scrollTo(0, 0) }}
+                  disabled={currentPage <= 1}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium ghost-border hover:bg-surface-container-low disabled:opacity-30 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4 inline" /> Previous
+                </button>
+                <span className="text-xs text-on-surface-variant">{currentPage}/{totalPages}</span>
+                <button
+                  onClick={() => { setFilter({ page: String(currentPage + 1) }); window.scrollTo(0, 0) }}
+                  disabled={currentPage >= totalPages}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium ghost-border hover:bg-surface-container-low disabled:opacity-30 transition-colors"
+                >
+                  Next <ChevronRight className="h-4 w-4 inline" />
+                </button>
+              </div>
+            </div>
           )}
         </div>
 

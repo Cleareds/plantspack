@@ -168,7 +168,7 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
               City Ranks
             </h1>
             <p className="text-sm text-on-surface-variant mt-1">
-              How vegan-friendly is your city? {scores.length} cities ranked.
+              {scores.length} cities ranked by vegan density, variety, and community ratings.
             </p>
           </div>
           <button
@@ -192,6 +192,25 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
           />
         </div>
       </div>
+
+      {/* Popular Cities — top by total places */}
+      {!searchQuery && (
+        <div className="mb-6">
+          <h2 className="text-sm font-semibold text-on-surface-variant mb-3">Most vegan places</h2>
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+            {[...scores].sort((a, b) => b.placeCount - a.placeCount).slice(0, 8).map(city => (
+              <Link
+                key={`pop-${city.city}-${city.country}`}
+                href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                className="flex-shrink-0 bg-surface-container-lowest ghost-border rounded-xl px-4 py-2.5 hover:bg-primary/[0.03] transition-colors"
+              >
+                <p className="text-sm font-medium text-on-surface whitespace-nowrap">{city.city}</p>
+                <p className="text-[10px] text-on-surface-variant">{city.placeCount} places · <span className={getGradeColor(city.grade)}>{city.grade}</span></p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Desktop Table */}
       <div className="hidden md:block bg-surface-container-lowest rounded-2xl ghost-border overflow-hidden">

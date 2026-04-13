@@ -424,14 +424,18 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 <User className="h-5 w-5 text-outline flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="text-sm font-medium text-on-surface">Added by</div>
-                  <Link
-                    href={`/profile/${place.users.username}`}
-                    className="text-sm text-primary hover:text-primary"
-                  >
-                    {place.users.first_name
-                      ? `${place.users.first_name} ${place.users.last_name || ''}`.trim()
-                      : place.users.username}
-                  </Link>
+                  {place.users.username === 'admin' ? (
+                    <span className="text-sm text-on-surface-variant">PlantsPack Team</span>
+                  ) : (
+                    <Link
+                      href={`/profile/${place.users.username}`}
+                      className="text-sm text-primary hover:text-primary"
+                    >
+                      {place.users.first_name
+                        ? `${place.users.first_name} ${place.users.last_name || ''}`.trim()
+                        : place.users.username}
+                    </Link>
+                  )}
                 </div>
               </div>
 

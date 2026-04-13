@@ -34,7 +34,7 @@ export async function computeAllScores(): Promise<{ scores: CityScore[]; totalPl
   }
 
   const scores: CityScore[] = Object.entries(byCity)
-    .filter(([, ps]) => ps.length >= 1)
+    .filter(([, ps]) => ps.length >= 5)
     .map(([key, ps]) => {
       const [city, country] = key.split('|||')
       const fv = ps.filter((p: any) => p.vegan_level === 'fully_vegan')
