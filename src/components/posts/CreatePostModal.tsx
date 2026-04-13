@@ -23,6 +23,14 @@ export default function CreatePostModal({ isOpen, onClose, onPostCreated }: Crea
     }
   }, [isOpen])
 
+  // Escape key to close
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   return (

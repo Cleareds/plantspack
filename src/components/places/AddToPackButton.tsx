@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, X, Check, Circle, MapPinned, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
@@ -27,6 +27,16 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
   const [added, setAdded] = useState<Set<string>>(new Set())
   const [newTripName, setNewTripName] = useState('')
   const [creatingTrip, setCreatingTrip] = useState(false)
+
+  const closeModal = useCallback(() => setShowModal(false), [])
+
+  // Escape key + click outside
+  useEffect(() => {
+    if (!showModal) return
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [showModal, closeModal])
 
   useEffect(() => {
     if (showModal && user) fetchUserPacks()
@@ -74,6 +84,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       const response = await fetch(`/api/packs/${packId}/places`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ place_id: placeId, is_pinned: false })
       })
 
@@ -99,10 +110,10 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
     setCreatingTrip(true)
 
     try {
-      // Create private pack with trip category
       const res = await fetch('/api/packs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           title: newTripName.trim(),
           is_published: false,
@@ -122,10 +133,10 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       await fetch(`/api/packs/${pack.id}/places`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ place_id: placeId, is_pinned: false }),
       })
 
-      // Add to local state
       setPacks(prev => [{ id: pack.id, title: pack.title, description: null, user_role: 'admin', categories: ['Trip'] }, ...prev])
       setAdded(prev => new Set(prev).add(pack.id))
       setNewTripName('')
@@ -138,7 +149,6 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
 
   if (!user) return null
 
-  // Separate trips from regular packs
   const trips = packs.filter(p => p.categories?.some(c => c.toLowerCase() === 'trip'))
   const regularPacks = packs.filter(p => !p.categories?.some(c => c.toLowerCase() === 'trip'))
 
@@ -153,19 +163,19 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-[70] flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full max-h-[80vh] flex flex-col editorial-shadow">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4" onClick={closeModal}>
+          <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full max-h-[80vh] flex flex-col editorial-shadow" onClick={e => e.stopPropagation()}>
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
               <h2 className="text-lg font-bold text-on-surface">Save Place</h2>
-              <button onClick={() => setShowModal(false)} className="text-on-surface-variant hover:text-on-surface">
+              <button onClick={closeModal} className="text-on-surface-variant hover:text-on-surface">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto">
-              {/* Create new trip — always visible at top */}
+              {/* Create new trip */}
               <div className="px-6 py-4 border-b border-outline-variant/10">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPinned className="h-4 w-4 text-primary" />
@@ -196,7 +206,6 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                 </div>
               ) : (
                 <div className="px-6 py-3">
-                  {/* Trips */}
                   {trips.length > 0 && (
                     <div className="mb-4">
                       <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mb-2">My Trips</p>
@@ -227,7 +236,6 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                     </div>
                   )}
 
-                  {/* Regular Packs */}
                   {regularPacks.length > 0 && (
                     <div>
                       <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mb-2">My Packs</p>

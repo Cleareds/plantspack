@@ -14,7 +14,7 @@ const navItems = [
   { href: '/city-ranks', label: 'City Ranks', icon: 'leaderboard' },
   { href: '/feed', label: 'Feed', icon: 'forum' },
   { href: '/events', label: 'Events', icon: 'event' },
-  { href: '/packs', label: 'Packs', icon: 'groups' },
+  { href: '/packs', label: 'Packs / Trips', icon: 'groups' },
 ]
 
 export default function Sidebar() {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Send, Loader2, CheckCircle, Camera } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 
@@ -39,6 +39,13 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 

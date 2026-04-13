@@ -159,10 +159,11 @@ export default function PackPlacesTab({ packId, userRole, userId, initialPlaces 
                         <button
                           onClick={(e) => { e.preventDefault(); handleRemovePlace(packPlace.id, place.name) }}
                           disabled={deletingId === packPlace.id}
-                          className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-1.5 text-outline hover:text-error transition-colors disabled:opacity-50"
+                          className="absolute top-2 right-2 bg-error/90 backdrop-blur-sm rounded-lg px-2 py-1 text-white text-[10px] font-medium hover:bg-error transition-colors disabled:opacity-50 flex items-center gap-1"
                           title="Remove from pack"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <Trash2 className="h-3 w-3" />
+                          Remove
                         </button>
                       )}
                     </div>

@@ -88,6 +88,13 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
     setAddressResults([])
   }, [])
 
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   const allImages = [...existingImages, ...newImages]
