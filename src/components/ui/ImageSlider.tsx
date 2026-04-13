@@ -54,7 +54,7 @@ export default function ImageSlider({
     switch (aspectRatio) {
       case 'square': return 'aspect-square'
       case 'wide': return 'aspect-video'
-      default: return 'h-80'
+      default: return 'aspect-[4/3] max-h-[480px]'
     }
   }
 
@@ -74,7 +74,6 @@ export default function ImageSlider({
               <div
                 key={index}
                 className={`relative bg-surface-container-low ${getAspectRatioClass()} cursor-pointer`}
-                style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
                 onClick={() => setLightboxIndex(index)}
               >
                 {!isLoaded[index] && !hasError[index] && (
@@ -87,9 +86,7 @@ export default function ImageSlider({
                   onLoad={() => handleImageLoad(index)}
                   onError={() => handleImageError(index)}
                   referrerPolicy="no-referrer"
-                  className={`absolute inset-0 w-full h-full transition-opacity duration-200 ${
-                    images.length === 1 ? 'object-contain' : 'object-cover'
-                  } ${isLoaded[index] ? 'opacity-100' : 'opacity-0'} ${hasError[index] ? 'hidden' : ''}`}
+                  className={`absolute inset-0 w-full h-full transition-opacity duration-200 object-cover ${isLoaded[index] ? 'opacity-100' : 'opacity-0'} ${hasError[index] ? 'hidden' : ''}`}
                 />
               </div>
             ))}
@@ -113,7 +110,6 @@ export default function ImageSlider({
         <div
           ref={sliderRef}
           className={`relative ${getAspectRatioClass()} overflow-hidden bg-surface-container-low w-full cursor-pointer`}
-          style={{ minHeight: aspectRatio === 'auto' ? '16rem' : undefined }}
           onClick={() => setLightboxIndex(currentIndex)}
         >
           <div
