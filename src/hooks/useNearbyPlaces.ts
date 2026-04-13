@@ -174,7 +174,7 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
     } finally {
       fetchInFlight.current = false
     }
-  }, [])
+  }, [isFullyVeganOnly])
 
   // Fetch count for pagination display
   const fetchCount = useCallback(async (cat: string) => {
