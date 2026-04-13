@@ -32,10 +32,20 @@ export interface PlaceResult {
   main_image_url: string | null
 }
 
+export interface RecipeResult {
+  id: string
+  title: string
+  slug: string | null
+  image_url: string | null
+  meal_type: string | null
+  cuisine: string | null
+}
+
 export interface SearchResults {
   cities: CityResult[]
   countries: CountryResult[]
   places: PlaceResult[]
+  recipes: RecipeResult[]
   loading: boolean
   error: string | null
 }
@@ -46,6 +56,7 @@ export function useSearch(query: string, minLength: number = 2) {
     cities: [],
     countries: [],
     places: [],
+    recipes: [],
     loading: false,
     error: null
   })
@@ -113,30 +124,56 @@ export function useSearch(query: string, minLength: number = 2) {
     }
   }, [])
 
+  const searchRecipes = useCallback(async (term: string): Promise<RecipeResult[]> => {
+    try {
+      const { data } = await supabase
+        .from('posts')
+        .select('id, title, slug, image_url, recipe_data')
+        .eq('category', 'recipe')
+        .is('deleted_at', null)
+        .not('recipe_data', 'is', null)
+        .ilike('title', `%${term}%`)
+        .order('created_at', { ascending: false })
+        .limit(4)
+
+      return (data || []).map((r: any) => ({
+        id: r.id,
+        title: r.title,
+        slug: r.slug,
+        image_url: r.image_url,
+        meal_type: r.recipe_data?.meal_type || null,
+        cuisine: r.recipe_data?.cuisine || null,
+      }))
+    } catch {
+      return []
+    }
+  }, [])
+
   useEffect(() => {
     const performSearch = async () => {
       if (!debouncedQuery || debouncedQuery.length < minLength) {
-        setResults({ cities: [], countries: [], places: [], loading: false, error: null })
+        setResults({ cities: [], countries: [], places: [], recipes: [], loading: false, error: null })
         return
       }
 
       setResults(prev => ({ ...prev, loading: true, error: null }))
 
       try {
-        const [cities, countries, places] = await Promise.all([
+        const [cities, countries, places, recipes] = await Promise.all([
           searchCities(debouncedQuery),
           searchCountries(debouncedQuery),
           searchPlaces(debouncedQuery),
+          searchRecipes(debouncedQuery),
         ])
 
-        setResults({ cities, countries, places, loading: false, error: null })
+        setResults({ cities, countries, places, recipes, loading: false, error: null })
       } catch (error) {
-        setResults({ cities: [], countries: [], places: [], loading: false, error: 'Search failed' })
+        setResults({ cities: [], countries: [], places: [], recipes: [], loading: false, error: 'Search failed' })
       }
     }
 
     performSearch()
-  }, [debouncedQuery, minLength, searchCities, searchCountries, searchPlaces])
+  }, [debouncedQuery, minLength, searchCities, searchCountries, searchPlaces, searchRecipes])
 
   return results
 }
