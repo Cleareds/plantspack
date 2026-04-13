@@ -8,7 +8,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Vegan Recipes — Easy, Delicious Plant-Based Cooking | PlantsPack',
-  description: 'Browse 500+ vegan recipes with step-by-step instructions, nutrition info, and beautiful photos. Filter by meal type, difficulty, and dietary tags.',
+  description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step instructions, nutrition info, and photos. Filter by meal type, cuisine, and difficulty.',
   alternates: { canonical: 'https://plantspack.com/recipes' },
   openGraph: {
     title: 'Vegan Recipes | PlantsPack',

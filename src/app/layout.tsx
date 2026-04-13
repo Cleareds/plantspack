@@ -25,8 +25,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "PlantsPack - Community Platform for Vegans and People Exploring Plant-Based Living",
-  description: "Discover vegan and vegan-friendly restaurants, cafes, stores, stays, and animal sanctuaries worldwide. City rankings, community reviews. Free forever.",
+  title: "PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide",
+  description: "16,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.",
   metadataBase: new URL('https://www.plantspack.com'),
   manifest: '/manifest.json',
   viewport: {
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'PlantsPack',
-    title: 'PlantsPack - Vegan Community Platform',
-    description: 'Discover vegan and vegan-friendly restaurants, cafes, stores, stays, and sanctuaries worldwide. City rankings, community reviews. Free forever.',
+    title: 'PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide',
+    description: '16,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.',
     locale: 'en_US',
     images: [{ url: 'https://www.plantspack.com/og-image.png', width: 1200, height: 630, alt: 'PlantsPack — Vegan Community Platform' }],
   },
@@ -85,7 +85,7 @@ export default function RootLayout({
               name: 'PlantsPack',
               url: 'https://plantspack.com',
               logo: 'https://plantspack.com/plantspack-logo-real.svg',
-              description: 'Community-funded vegan platform. Find vegan places, share recipes, connect with the community.',
+              description: 'Community-funded vegan platform with 16,000+ places across 117 countries, city vegan rankings, and 580+ recipes. Free forever, no ads.',
               sameAs: [
                 'https://x.com/plantspackX',
                 'https://www.instagram.com/plants.pack/',

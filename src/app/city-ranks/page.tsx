@@ -6,7 +6,7 @@ export const revalidate = 600
 
 export const metadata: Metadata = {
   title: 'City Ranks — Most Vegan-Friendly Cities | PlantsPack',
-  description: 'Discover the most vegan-friendly cities worldwide. See rankings, scores, and contribute to improve your city.',
+  description: '1,000+ cities ranked by vegan-friendliness. Scores based on place density, variety, and community ratings. See how your city compares.',
   alternates: { canonical: 'https://plantspack.com/city-ranks' },
 }
 
