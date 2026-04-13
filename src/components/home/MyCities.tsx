@@ -27,8 +27,8 @@ export default function MyCities() {
   useEffect(() => {
     if (!authReady || !user) { setLoading(false); return }
 
-    fetch('/api/cities/followed')
-      .then(r => r.json())
+    fetch('/api/cities/followed', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : { cities: [] })
       .then(data => setCities(data.cities || []))
       .catch(() => {})
       .finally(() => setLoading(false))

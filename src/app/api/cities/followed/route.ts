@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
-import { computeAllScores } from '@/lib/compute-scores'
 
 // GET /api/cities/followed — get user's followed cities with live scores + deltas
 export async function GET() {
@@ -21,9 +20,12 @@ export async function GET() {
       return NextResponse.json({ cities: [] })
     }
 
-    // Get live scores (cached via computeAllScores)
-    const { scores } = await computeAllScores()
-    const scoreMap = new Map(scores.map(s => [`${s.city}|||${s.country}`, s]))
+    // Get live scores from cached API (much faster than recomputing)
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const scoresRes = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
+    const scoresData = await scoresRes.json()
+    const scores = scoresData.scores || []
+    const scoreMap = new Map(scores.map((s: any) => [`${s.city}|||${s.country}`, s]))
 
     // Grade thresholds for "next grade" calculation
     const gradeThresholds = [
