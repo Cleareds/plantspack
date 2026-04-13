@@ -5,6 +5,7 @@ import { getCountries } from '@/lib/directory-queries'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { loadCityImages, getCountryThumbnail } from '@/lib/city-images'
 import FilteredCount, { FilteredTotal, FilteredLabel } from '@/components/ui/FilteredCount'
+import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
 
 export const revalidate = 300
 
@@ -220,7 +221,7 @@ export default async function VeganPlacesPage() {
 
         <div className="mt-10 text-center">
           <p className="text-sm text-on-surface-variant">
-            Can&apos;t find your city? <Link href="/map" className="text-primary hover:underline">Add a place</Link> and help grow the directory.
+            Can&apos;t find your city? <GlobalAddPlaceButton className="text-primary hover:underline inline"><>Add a place</></GlobalAddPlaceButton> and help grow the directory.
           </p>
         </div>
       </div>

@@ -159,7 +159,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
 
   if (!user) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center p-4 z-[60]" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} onClick={onClose}>
+      <div className="fixed inset-0 flex items-center justify-center p-4 z-[80]" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} onClick={onClose}>
         <div className="bg-surface-container-lowest rounded-lg p-6 w-full max-w-sm editorial-shadow" onClick={e => e.stopPropagation()}>
           <p className="text-on-surface-variant text-center mb-4">Please sign in to add a place.</p>
           <button onClick={onClose} className="w-full px-4 py-2 ghost-border rounded-full text-on-surface-variant hover:bg-surface-container-low">Close</button>
@@ -169,8 +169,8 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4 z-[60]" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} onClick={onClose}>
-      <div className="bg-surface-container-lowest rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto editorial-shadow" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-[80]" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} onClick={onClose}>
+      <div className="bg-surface-container-lowest sm:rounded-lg p-6 w-full max-w-md max-h-[100vh] sm:max-h-[90vh] overflow-y-auto editorial-shadow text-left fixed sm:relative inset-0 sm:inset-auto" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-on-surface">Add New Place</h2>
           <button onClick={onClose} className="text-outline hover:text-on-surface-variant">

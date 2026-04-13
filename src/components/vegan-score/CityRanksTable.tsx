@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { Search, Info, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Plus, Map, Star } from 'lucide-react'
+import { Search, Info, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Map, Star } from 'lucide-react'
 import { getGradeColor, getScoreBarColor, type CityScore } from '@/lib/score-utils'
+import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
 
 type SortKey = 'score' | 'accessibility' | 'choice' | 'variety' | 'quality' | 'placeCount' | 'city'
 type SortDir = 'asc' | 'desc'
@@ -363,13 +364,9 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
           Every place, review, and verified business improves your city&apos;s score. Here&apos;s how you can contribute:
         </p>
         <div className="flex flex-wrap gap-3">
-          <Link
-            href="/map"
+          <GlobalAddPlaceButton
             className="inline-flex items-center gap-2 px-4 py-2.5 silk-gradient text-on-primary-btn rounded-xl text-sm font-medium hover:opacity-90 transition-colors"
-          >
-            <Plus className="h-4 w-4" />
-            Add a Place
-          </Link>
+          />
           <Link
             href="/map"
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-low ghost-border text-on-surface-variant rounded-xl text-sm font-medium hover:bg-surface-container transition-colors"
