@@ -27,6 +27,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
   const [added, setAdded] = useState<Set<string>>(new Set())
   const [newTripName, setNewTripName] = useState('')
   const [creatingTrip, setCreatingTrip] = useState(false)
+  const [packPlaceIds, setPackPlaceIds] = useState<Record<string, string>>({})
 
   const closeModal = useCallback(() => setShowModal(false), [])
 
@@ -46,6 +47,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
     if (!user) return
     try {
       setLoading(true)
+      // Fetch packs where user is admin/moderator
       const { data, error } = await supabase
         .from('pack_members')
         .select(`
@@ -71,6 +73,22 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
         }))
 
       setPacks(userPacks)
+
+      // Check which packs already contain this place
+      if (userPacks.length > 0) {
+        const { data: existing } = await supabase
+          .from('pack_places')
+          .select('pack_id, id')
+          .eq('place_id', placeId)
+          .in('pack_id', userPacks.map(p => p.id))
+
+        const existingMap = new Set((existing || []).map((e: any) => e.pack_id))
+        setAdded(existingMap)
+        // Store pack_place IDs for removal
+        const idMap: Record<string, string> = {}
+        for (const e of (existing || [])) idMap[e.pack_id] = e.id
+        setPackPlaceIds(idMap)
+      }
     } catch (error) {
       console.error('Error fetching packs:', error)
     } finally {
@@ -78,28 +96,49 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
     }
   }
 
-  const handleAddToPack = async (packId: string) => {
-    try {
-      setAdding(packId)
-      const response = await fetch(`/api/packs/${packId}/places`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ place_id: placeId, is_pinned: false })
-      })
+  const handleTogglePack = async (packId: string) => {
+    const isInPack = added.has(packId)
+    setAdding(packId)
 
-      if (response.ok) {
-        setAdded(prev => new Set(prev).add(packId))
+    try {
+      if (isInPack) {
+        // Remove from pack
+        const packPlaceId = packPlaceIds[packId]
+        if (!packPlaceId) return
+        const response = await fetch(`/api/packs/${packId}/places/${packPlaceId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        })
+        if (response.ok) {
+          setAdded(prev => { const next = new Set(prev); next.delete(packId); return next })
+          const newIds = { ...packPlaceIds }
+          delete newIds[packId]
+          setPackPlaceIds(newIds)
+        }
       } else {
-        const error = await response.json()
-        if (error.error?.includes('already')) {
+        // Add to pack
+        const response = await fetch(`/api/packs/${packId}/places`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ place_id: placeId, is_pinned: false })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
           setAdded(prev => new Set(prev).add(packId))
+          if (data.packPlace?.id) setPackPlaceIds(prev => ({ ...prev, [packId]: data.packPlace.id }))
         } else {
-          alert(error.error || 'Failed to add place')
+          const error = await response.json()
+          if (error.error?.includes('already')) {
+            setAdded(prev => new Set(prev).add(packId))
+          } else {
+            alert(error.error || 'Failed to add place')
+          }
         }
       }
     } catch {
-      alert('Failed to add place. Please try again.')
+      alert('Failed. Please try again.')
     } finally {
       setAdding(null)
     }
@@ -213,8 +252,8 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                         {trips.map(pack => (
                           <button
                             key={pack.id}
-                            onClick={() => handleAddToPack(pack.id)}
-                            disabled={adding === pack.id || added.has(pack.id)}
+                            onClick={() => handleTogglePack(pack.id)}
+                            disabled={adding === pack.id}
                             className="w-full text-left p-3 ghost-border rounded-lg hover:bg-surface-container-low transition-colors disabled:opacity-60"
                           >
                             <div className="flex items-center justify-between">
@@ -243,8 +282,8 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                         {regularPacks.map(pack => (
                           <button
                             key={pack.id}
-                            onClick={() => handleAddToPack(pack.id)}
-                            disabled={adding === pack.id || added.has(pack.id)}
+                            onClick={() => handleTogglePack(pack.id)}
+                            disabled={adding === pack.id}
                             className="w-full text-left p-3 ghost-border rounded-lg hover:bg-surface-container-low transition-colors disabled:opacity-60"
                           >
                             <div className="flex items-center justify-between">
