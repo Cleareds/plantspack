@@ -65,11 +65,12 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
     }
   }
 
-  // Only fetch client-side if no initial data was provided
+  // Fetch client-side if no initial data, or re-fetch when user logs in to get user_role
   useEffect(() => {
     if (!initialPack) fetchPack()
+    else if (user && !pack?.user_role) fetchPack() // Re-fetch with auth to get user_role
     if (!initialPosts) fetchPosts()
-  }, [id])
+  }, [id, user])
 
   const handleJoin = async () => {
     try {
