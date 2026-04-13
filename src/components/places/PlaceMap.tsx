@@ -16,17 +16,18 @@ interface PlaceMapProps {
   longitude: number
   name: string
   address: string
+  category?: string
+  veganLevel?: string
 }
 
-export default function PlaceMap({ latitude, longitude, name, address }: PlaceMapProps) {
+export default function PlaceMap({ latitude, longitude, name, address, category, veganLevel }: PlaceMapProps) {
   const [customIcon, setCustomIcon] = useState<Icon | null>(null)
 
   useEffect(() => {
-    // Import leaflet config only on client side
     import('@/lib/leaflet-config').then((mod) => {
-      setCustomIcon(mod.veganMarkerIcon)
+      setCustomIcon(mod.getCategoryIcon(category || 'eat', veganLevel) as unknown as Icon)
     })
-  }, [])
+  }, [category, veganLevel])
 
   return (
     <Link
@@ -42,9 +43,10 @@ export default function PlaceMap({ latitude, longitude, name, address }: PlaceMa
         dragging={false}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          referrerPolicy="origin"
+          attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://api.maptiler.com/maps/pastel/{z}/{x}/{y}.png?key=99cVeZ5JM3met86KZyyD"
+          tileSize={512}
+          zoomOffset={-1}
         />
         {customIcon && <Marker position={[latitude, longitude]} icon={customIcon} />}
       </MapContainer>
