@@ -34,7 +34,14 @@ export default function MyCities() {
       .finally(() => setLoading(false))
   }, [user, authReady])
 
-  if (!user || loading || cities.length === 0) return null
+  // Exclude the pinned city (already shown in hero)
+  const pinnedCity = typeof window !== 'undefined' ? localStorage.getItem('pinned_city_name') : null
+  const pinnedCountry = typeof window !== 'undefined' ? localStorage.getItem('pinned_country_name') : null
+  const displayCities = cities.filter(c =>
+    !(c.city === pinnedCity && c.country === pinnedCountry)
+  )
+
+  if (!user || loading || displayCities.length === 0) return null
 
   return (
     <div className="mt-6">
@@ -43,7 +50,7 @@ export default function MyCities() {
         <h2 className="font-semibold text-on-surface">My Cities</h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {cities.map(city => {
+        {displayCities.map(city => {
           const countrySlug = city.country.toLowerCase().replace(/\s+/g, '-')
           const citySlug = city.city.toLowerCase().replace(/\s+/g, '-')
 

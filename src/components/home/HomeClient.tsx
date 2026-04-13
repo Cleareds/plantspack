@@ -102,7 +102,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
 
       let lat = '', lng = '', city = '', country = ''
       if (pinnedCity) {
-        // Use pinned city
+        // Pinned city — skip geolocation entirely, use pinned data directly
         city = pinnedCity
         country = pinnedCountry
       } else {
@@ -111,17 +111,17 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
         lng = localStorage.getItem('user_lng') || ''
         city = localStorage.getItem('user_city') || ''
         country = localStorage.getItem('user_country') || ''
-      }
 
-      // If no cached geo, poll briefly for AppShell to set it
-      if (!lat && !city) {
-        for (let i = 0; i < 10; i++) {
-          lat = localStorage.getItem('user_lat') || ''
-          lng = localStorage.getItem('user_lng') || ''
-          city = localStorage.getItem('user_city') || ''
-          country = localStorage.getItem('user_country') || ''
-          if (lat || city) break
-          await new Promise(r => setTimeout(r, 300))
+        // If no cached geo, poll briefly for AppShell to set it
+        if (!lat && !city) {
+          for (let i = 0; i < 10; i++) {
+            lat = localStorage.getItem('user_lat') || ''
+            lng = localStorage.getItem('user_lng') || ''
+            city = localStorage.getItem('user_city') || ''
+            country = localStorage.getItem('user_country') || ''
+            if (lat || city) break
+            await new Promise(r => setTimeout(r, 300))
+          }
         }
       }
 
