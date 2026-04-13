@@ -12,7 +12,7 @@ interface SuggestCorrectionModalProps {
     category: string
     website: string | null
     phone: string | null
-    opening_hours?: string | null
+    opening_hours?: string | Record<string, string> | null
     vegan_level?: string
   }
   isOpen: boolean
