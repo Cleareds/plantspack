@@ -10,7 +10,7 @@ import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Vegan Places Directory — Find Vegan Restaurants & Stores | PlantsPack',
+  title: 'Vegan Places Directory — Worldwide | PlantsPack',
   description: 'Browse 33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries and 1,000+ cities. Community-verified with ratings and reviews.',
   alternates: { canonical: 'https://plantspack.com/vegan-places' },
   openGraph: {

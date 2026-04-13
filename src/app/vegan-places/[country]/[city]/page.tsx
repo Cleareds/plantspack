@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // Single query — cache() deduplicates with page render
   const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
 
-  const title = `Vegan Restaurants & Places in ${cityName}, ${countryName} (${places.length})`
+  const title = `Vegan Places in ${cityName} (${places.length}) | PlantsPack`
   const description = `Discover ${places.length} vegan restaurants, stores, and stays in ${cityName}. Community-verified with ratings and reviews.`
 
   return {

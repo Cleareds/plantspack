@@ -64,5 +64,11 @@ export default async function Home() {
     users: Array.isArray(p.users) ? p.users[0] : p.users,
   }))
 
-  return <HomeClient topCities={topCities} recentPosts={normalizedPosts} cityImages={cityImages} />
+  return (
+    <>
+      {/* SSR h1 for SEO crawlers that don't execute JS */}
+      <h1 className="sr-only">PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide</h1>
+      <HomeClient topCities={topCities} recentPosts={normalizedPosts} cityImages={cityImages} />
+    </>
+  )
 }
