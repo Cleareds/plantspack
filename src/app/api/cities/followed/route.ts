@@ -25,7 +25,8 @@ export async function GET() {
     const scoresRes = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 600 } })
     const scoresData = await scoresRes.json()
     const scores = scoresData.scores || []
-    const scoreMap = new Map(scores.map((s: any) => [`${s.city}|||${s.country}`, s]))
+    const scoreMap: Record<string, any> = {}
+    for (const s of scores) scoreMap[`${s.city}|||${s.country}`] = s
 
     // Grade thresholds for "next grade" calculation
     const gradeThresholds = [
@@ -37,7 +38,7 @@ export async function GET() {
     ]
 
     const cities = followed.map((f: any) => {
-      const score = scoreMap.get(`${f.city}|||${f.country}`)
+      const score = scoreMap[`${f.city}|||${f.country}`]
       const currentScore = score?.score || 0
       const currentGrade = score?.grade || 'F'
       const delta = f.last_seen_score != null ? currentScore - f.last_seen_score : null
@@ -71,7 +72,7 @@ export async function GET() {
     // Update last_seen scores (mark as read)
     const admin = createAdminClient()
     for (const f of followed) {
-      const score = scoreMap.get(`${f.city}|||${f.country}`)
+      const score = scoreMap[`${f.city}|||${f.country}`]
       if (score && (f.last_seen_score !== score.score || f.last_seen_grade !== score.grade)) {
         await admin.from('user_followed_cities').update({
           last_seen_score: score.score,
