@@ -10,6 +10,7 @@ import { useVeganFilter } from '@/lib/vegan-filter-context'
 import AddPlaceModal from "@/components/places/AddPlaceModal"
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
+import MyCities from './MyCities'
 
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
@@ -270,6 +271,9 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
             )}
 
             {/* Nearby Places */}
+            {/* My followed cities */}
+            <MyCities />
+
             {filteredNearby.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-3">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, X, Check, Circle } from 'lucide-react'
+import { Plus, X, Check, Circle, MapPinned, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
@@ -10,6 +10,7 @@ interface Pack {
   title: string
   description: string | null
   user_role: 'admin' | 'moderator' | 'member' | null
+  categories?: string[]
 }
 
 interface AddToPackButtonProps {
@@ -24,16 +25,15 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
   const [loading, setLoading] = useState(false)
   const [adding, setAdding] = useState<string | null>(null)
   const [added, setAdded] = useState<Set<string>>(new Set())
+  const [newTripName, setNewTripName] = useState('')
+  const [creatingTrip, setCreatingTrip] = useState(false)
 
   useEffect(() => {
-    if (showModal && user) {
-      fetchUserPacks()
-    }
+    if (showModal && user) fetchUserPacks()
   }, [showModal, user])
 
   const fetchUserPacks = async () => {
     if (!user) return
-
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -42,9 +42,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
           pack_id,
           role,
           packs!inner (
-            id,
-            title,
-            description
+            id, title, description, categories, is_published
           )
         `)
         .eq('user_id', user.id)
@@ -58,7 +56,8 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
           id: pm.packs.id,
           title: pm.packs.title,
           description: pm.packs.description,
-          user_role: pm.role
+          user_role: pm.role,
+          categories: pm.packs.categories || [],
         }))
 
       setPacks(userPacks)
@@ -75,33 +74,73 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       const response = await fetch(`/api/packs/${packId}/places`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          place_id: placeId,
-          is_pinned: false
-        })
+        body: JSON.stringify({ place_id: placeId, is_pinned: false })
       })
 
       if (response.ok) {
         setAdded(prev => new Set(prev).add(packId))
       } else {
         const error = await response.json()
-        if (error.error?.includes('already in pack')) {
-          alert('This place is already in the pack')
+        if (error.error?.includes('already')) {
+          setAdded(prev => new Set(prev).add(packId))
         } else {
-          alert(error.error || 'Failed to add place to pack')
+          alert(error.error || 'Failed to add place')
         }
       }
-    } catch (error) {
-      console.error('Error adding place to pack:', error)
-      alert('Failed to add place to pack. Please try again.')
+    } catch {
+      alert('Failed to add place. Please try again.')
     } finally {
       setAdding(null)
     }
   }
 
-  if (!user) {
-    return null
+  const handleCreateTrip = async () => {
+    if (!newTripName.trim() || newTripName.trim().length < 3) return
+    setCreatingTrip(true)
+
+    try {
+      // Create private pack with trip category
+      const res = await fetch('/api/packs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newTripName.trim(),
+          is_published: false,
+          categories: ['Trip'],
+        }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        alert(err.error || 'Failed to create trip')
+        return
+      }
+
+      const { pack } = await res.json()
+
+      // Add the current place to the new trip
+      await fetch(`/api/packs/${pack.id}/places`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ place_id: placeId, is_pinned: false }),
+      })
+
+      // Add to local state
+      setPacks(prev => [{ id: pack.id, title: pack.title, description: null, user_role: 'admin', categories: ['Trip'] }, ...prev])
+      setAdded(prev => new Set(prev).add(pack.id))
+      setNewTripName('')
+    } catch {
+      alert('Failed to create trip')
+    } finally {
+      setCreatingTrip(false)
+    }
   }
+
+  if (!user) return null
+
+  // Separate trips from regular packs
+  const trips = packs.filter(p => p.categories?.some(c => c.toLowerCase() === 'trip'))
+  const regularPacks = packs.filter(p => !p.categories?.some(c => c.toLowerCase() === 'trip'))
 
   return (
     <>
@@ -110,65 +149,122 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
         className="inline-flex items-center gap-2 px-4 py-2 silk-gradient text-on-primary rounded-md hover:opacity-90 font-medium transition-colors"
       >
         <Plus className="h-4 w-4" />
-        Add to Pack
+        Add to Pack / Trip
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-surface-container-lowest rounded-lg max-w-md w-full max-h-[80vh] flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[70] flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest rounded-2xl max-w-md w-full max-h-[80vh] flex flex-col editorial-shadow">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-outline-variant/15">
-              <h2 className="text-xl font-semibold text-on-surface">Add to Pack</h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-outline hover:text-on-surface-variant transition-colors"
-              >
-                <X className="h-6 w-6" />
+            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
+              <h2 className="text-lg font-bold text-on-surface">Save Place</h2>
+              <button onClick={() => setShowModal(false)} className="text-on-surface-variant hover:text-on-surface">
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto">
+              {/* Create new trip — always visible at top */}
+              <div className="px-6 py-4 border-b border-outline-variant/10">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPinned className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium text-on-surface">New Trip</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newTripName}
+                    onChange={(e) => setNewTripName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleCreateTrip()}
+                    placeholder="e.g. Barcelona June 2026"
+                    className="flex-1 px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                  />
+                  <button
+                    onClick={handleCreateTrip}
+                    disabled={creatingTrip || newTripName.trim().length < 3}
+                    className="px-3 py-2 silk-gradient text-on-primary-btn rounded-lg text-sm font-medium disabled:opacity-40 hover:opacity-90 transition-colors"
+                  >
+                    {creatingTrip ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create'}
+                  </button>
+                </div>
+              </div>
+
               {loading ? (
                 <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                  <p className="mt-2 text-on-surface-variant">Loading your packs...</p>
-                </div>
-              ) : packs.length === 0 ? (
-                <div className="text-center py-8 text-outline">
-                  <p className="mb-4">You don't have any packs where you can add places.</p>
-                  <p className="text-sm">Only pack admins and moderators can add places.</p>
+                  <Loader2 className="h-6 w-6 animate-spin mx-auto text-primary" />
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {packs.map((pack) => (
-                    <button
-                      key={pack.id}
-                      onClick={() => handleAddToPack(pack.id)}
-                      disabled={adding === pack.id}
-                      className="w-full text-left p-4 ghost-border rounded-lg hover:border-primary hover:bg-surface-container-low transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-on-surface mb-1">{pack.title}</h3>
-                          {pack.description && (
-                            <p className="text-sm text-on-surface-variant line-clamp-2">
-                              {pack.description}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex-shrink-0 ml-3">
-                          {adding === pack.id ? (
-                            <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                          ) : added.has(pack.id) ? (
-                            <Check className="h-5 w-5 text-green-600" />
-                          ) : (
-                            <Circle className="h-5 w-5 text-outline" />
-                          )}
-                        </div>
+                <div className="px-6 py-3">
+                  {/* Trips */}
+                  {trips.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mb-2">My Trips</p>
+                      <div className="space-y-2">
+                        {trips.map(pack => (
+                          <button
+                            key={pack.id}
+                            onClick={() => handleAddToPack(pack.id)}
+                            disabled={adding === pack.id || added.has(pack.id)}
+                            className="w-full text-left p-3 ghost-border rounded-lg hover:bg-surface-container-low transition-colors disabled:opacity-60"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <MapPinned className="h-4 w-4 text-primary flex-shrink-0" />
+                                <span className="text-sm font-medium text-on-surface truncate">{pack.title}</span>
+                              </div>
+                              {adding === pack.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin text-primary flex-shrink-0" />
+                              ) : added.has(pack.id) ? (
+                                <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                              ) : (
+                                <Circle className="h-4 w-4 text-outline flex-shrink-0" />
+                              )}
+                            </div>
+                          </button>
+                        ))}
                       </div>
-                    </button>
-                  ))}
+                    </div>
+                  )}
+
+                  {/* Regular Packs */}
+                  {regularPacks.length > 0 && (
+                    <div>
+                      <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mb-2">My Packs</p>
+                      <div className="space-y-2">
+                        {regularPacks.map(pack => (
+                          <button
+                            key={pack.id}
+                            onClick={() => handleAddToPack(pack.id)}
+                            disabled={adding === pack.id || added.has(pack.id)}
+                            className="w-full text-left p-3 ghost-border rounded-lg hover:bg-surface-container-low transition-colors disabled:opacity-60"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium text-on-surface truncate">{pack.title}</p>
+                                {pack.description && (
+                                  <p className="text-[11px] text-on-surface-variant truncate">{pack.description}</p>
+                                )}
+                              </div>
+                              {adding === pack.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin text-primary flex-shrink-0" />
+                              ) : added.has(pack.id) ? (
+                                <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                              ) : (
+                                <Circle className="h-4 w-4 text-outline flex-shrink-0" />
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {trips.length === 0 && regularPacks.length === 0 && (
+                    <p className="text-sm text-on-surface-variant text-center py-4">
+                      Create your first trip above to save this place!
+                    </p>
+                  )}
                 </div>
               )}
             </div>
