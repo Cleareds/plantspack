@@ -176,17 +176,42 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 
 ## Build & Deployment Optimization
 
-**IMPORTANT - Token & Time Optimization:**
-- ❌ **DO NOT wait for Vercel builds to complete** - Just push to GitHub and move on
+**CRITICAL - Vercel Free Tier Resource Management:**
+- ⚠️ **Vercel free tier: 1,000,000 function invocations/month** — we've hit this limit before
+- ❌ **DO NOT push more than 1-2 times per session** — each push triggers a deployment which revalidates all ISR pages
+- ❌ **DO NOT push rapid fix-after-fix commits** — batch all changes into ONE push at the end of a work session
 - ❌ **DO NOT run local builds** (`npm run build`, `next build`) - They consume tokens unnecessarily
-- ✅ **DO push code and continue** - Vercel will build automatically in the background
+- ❌ **DO NOT enable Vercel cron jobs on free tier that run more than daily** — free tier only allows daily crons
+- ✅ **DO accumulate commits locally** and push once when a chunk of work is complete
+- ✅ **DO use aggressive caching** — prefer `revalidate: 3600` (1 hour) or higher for all SSR pages
+- ✅ **DO use on-demand revalidation** (`revalidatePath`) instead of short timer-based ISR
+- ✅ **Before pushing, ASK the user** if they want to deploy now or batch more changes
+
+**Caching strategy:**
+- SSR pages: `revalidate = 3600` (1 hour minimum)
+- Score computation: `revalidate = 86400` (24 hours — scores rarely change)
+- Use `revalidatePath()` in mutation APIs (add/edit/delete place) for instant cache busting
+- Client-side features (search, follow, trips) hit Supabase directly — no Vercel function needed
+
+**Token & Time Optimization:**
+- ❌ **DO NOT wait for Vercel builds to complete** - Just push to GitHub and move on
 - ✅ **DO verify deployment later** if needed using `vercel logs` or the Vercel dashboard
 
-**Reasoning:**
-- Vercel builds happen automatically on GitHub push
-- Waiting for builds blocks progress and wastes time
-- Local builds consume Claude's token budget without benefit
-- Production builds are handled by Vercel's infrastructure
+## Data Quality Rules
+
+**Places:**
+- No chain restaurants or supermarkets (McDonald's, Subway, Starbucks, Aldi, Lidl, etc.)
+- Russian places are excluded from the platform
+- Admin-imported places show "PlantsPack Team" attribution (username check: 'admin')
+- Minimum 5 places for a city to appear in City Ranks
+- All `fully_vegan` places should be verified (scan website for non-vegan menu items)
+- Opening hours must be sorted Monday→Sunday
+- Non-Latin city names must be translated to English
+
+**Recipes:**
+- Only from 100% vegan creators (see approved sources list above)
+- Must include `source_url` and `source_attribution`
+- Banned: Minimalist Baker
 
 ## Notes
 
