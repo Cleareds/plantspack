@@ -1,0 +1,128 @@
+name: Weekly OSM Sync
+
+on:
+  schedule:
+    # Every Sunday at 5:00 AM UTC
+    - cron: '0 5 * * 0'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  osm-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Fetch new OSM vegan places
+        run: |
+          npx tsx -e "
+          const OVERPASS_API = 'https://overpass-api.de/api/interpreter';
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+          const regions = [
+            { name: 'Europe-West', bbox: '36,-11,60,25' },
+            { name: 'Europe-East', bbox: '36,25,72,60' },
+            { name: 'North-America', bbox: '15,-170,72,-50' },
+            { name: 'South-America', bbox: '-56,-82,15,-34' },
+            { name: 'Asia-West', bbox: '10,25,55,80' },
+            { name: 'Asia-East', bbox: '-10,80,55,180' },
+            { name: 'Africa', bbox: '-35,-20,37,52' },
+            { name: 'Oceania', bbox: '-50,110,0,180' },
+          ];
+
+          async function scrapeRegion(region) {
+            const [s, w, n, e] = region.bbox.split(',');
+            // Only fetch places changed in last 9 days (overlap for safety)
+            const since = new Date(Date.now() - 9 * 86400000).toISOString().split('T')[0] + 'T00:00:00Z';
+            const query = '[out:json][timeout:90];(node[\"diet:vegan\"~\"yes|only\"](newer:\"' + since + '\")(' + s + ',' + w + ',' + n + ',' + e + ');way[\"diet:vegan\"~\"yes|only\"](newer:\"' + since + '\")(' + s + ',' + w + ',' + n + ',' + e + '););out center meta;';
+            try {
+              const res = await fetch(OVERPASS_API, {
+                method: 'POST',
+                body: 'data=' + encodeURIComponent(query),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              });
+              if (!res.ok) return [];
+              const data = await res.json();
+              console.log('  ' + region.name + ': ' + (data.elements?.length || 0));
+              return data.elements || [];
+            } catch { return []; }
+          }
+
+          (async () => {
+            console.log('OSM Weekly Sync - fetching new/changed places...');
+            let allElements = [];
+            for (const region of regions) {
+              const elements = await scrapeRegion(region);
+              allElements.push(...elements);
+              await new Promise(r => setTimeout(r, 5000));
+            }
+
+            // Parse into places
+            const places = allElements.filter(el => (el.tags || {}).name).map(el => {
+              const tags = el.tags || {};
+              const lat = el.type === 'way' ? el.center?.lat : el.lat;
+              const lng = el.type === 'way' ? el.center?.lon : el.lon;
+              if (!lat || !lng) return null;
+              return {
+                name: tags['name:en'] || tags.name,
+                latitude: lat,
+                longitude: lng,
+                vegan_level: tags['diet:vegan'] === 'only' ? 'fully_vegan' : 'vegan_friendly',
+                website: tags.website || tags['contact:website'] || null,
+                phone: tags.phone || tags['contact:phone'] || null,
+                opening_hours: tags.opening_hours || null,
+                address: [tags['addr:housenumber'], tags['addr:street'], tags['addr:postcode'], tags['addr:city']].filter(Boolean).join(', ') || null,
+                city: tags['addr:city'] || null,
+                country: tags['addr:country'] || null,
+              };
+            }).filter(Boolean);
+
+            console.log('Parsed ' + places.length + ' places with names');
+
+            // Dedup against existing DB
+            let existing = [];
+            let offset = 0;
+            while (true) {
+              const { data } = await supabase.from('places').select('name, latitude, longitude').range(offset, offset + 999);
+              if (!data || data.length === 0) break;
+              existing.push(...data);
+              offset += 1000;
+              if (data.length < 1000) break;
+            }
+            const existingSet = new Set(existing.map(p => p.name.toLowerCase() + '|' + Math.round(p.latitude * 1000) + '|' + Math.round(p.longitude * 1000)));
+
+            const newPlaces = places.filter(p => !existingSet.has(p.name.toLowerCase() + '|' + Math.round(p.latitude * 1000) + '|' + Math.round(p.longitude * 1000)));
+
+            console.log('New places (not in DB): ' + newPlaces.length);
+
+            // Store report
+            const report = {
+              date: new Date().toISOString(),
+              osmTotal: allElements.length,
+              parsed: places.length,
+              newPlaces: newPlaces.length,
+              candidates: newPlaces.slice(0, 100),
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            await supabase.storage.from('backups').upload(
+              'osm-sync/report-' + new Date().toISOString().split('T')[0] + '.json',
+              blob, { upsert: true }
+            );
+
+            console.log('Report saved to Supabase Storage');
+            console.log('Done!');
+          })();
+          "

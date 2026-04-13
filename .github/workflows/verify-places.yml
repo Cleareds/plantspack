@@ -1,0 +1,95 @@
+name: Daily Place Verification
+
+on:
+  schedule:
+    # Every day at 4:00 AM UTC
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify place websites
+        run: |
+          npx tsx -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+          (async () => {
+            // Get 500 places with websites, oldest checked first
+            const { data: places } = await supabase
+              .from('places')
+              .select('id, name, website, tags, updated_at')
+              .not('website', 'is', null)
+              .order('updated_at', { ascending: true })
+              .limit(500);
+
+            if (!places || places.length === 0) {
+              console.log('No places to verify');
+              return;
+            }
+
+            console.log('Verifying', places.length, 'place websites...');
+            let alive = 0, dead = 0, errors = 0;
+
+            // Check in parallel batches of 20
+            for (let i = 0; i < places.length; i += 20) {
+              const batch = places.slice(i, i + 20);
+              await Promise.all(batch.map(async (place) => {
+                try {
+                  const controller = new AbortController();
+                  const timeout = setTimeout(() => controller.abort(), 6000);
+                  const res = await fetch(place.website, {
+                    method: 'HEAD',
+                    signal: controller.signal,
+                    redirect: 'follow',
+                    headers: { 'User-Agent': 'PlantsPack-Verify/1.0' },
+                  });
+                  clearTimeout(timeout);
+
+                  if (res.ok || res.status === 403 || res.status === 405) {
+                    alive++;
+                    await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', place.id);
+                  } else if (res.status === 404 || res.status >= 500) {
+                    dead++;
+                    const tags = place.tags || [];
+                    if (!tags.includes('website_unreachable')) {
+                      await supabase.from('places').update({
+                        tags: [...tags, 'website_unreachable'],
+                        updated_at: new Date().toISOString(),
+                      }).eq('id', place.id);
+                    }
+                  }
+                } catch {
+                  dead++;
+                  const tags = place.tags || [];
+                  if (!tags.includes('website_unreachable')) {
+                    await supabase.from('places').update({
+                      tags: [...tags, 'website_unreachable'],
+                      updated_at: new Date().toISOString(),
+                    }).eq('id', place.id);
+                  }
+                }
+              }));
+
+              if ((i + 20) % 100 === 0) console.log('  Progress:', i + 20, '/', places.length);
+            }
+
+            console.log('Done! Alive:', alive, 'Dead:', dead);
+          })();
+          "
