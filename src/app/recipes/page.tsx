@@ -4,9 +4,11 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { Suspense } from 'react'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
 
+export const revalidate = 300
+
 export const metadata: Metadata = {
   title: 'Vegan Recipes — Easy, Delicious Plant-Based Cooking | PlantsPack',
-  description: 'Browse 170+ vegan recipes with step-by-step instructions, nutrition info, and beautiful photos. Filter by meal type, difficulty, and dietary tags.',
+  description: 'Browse 500+ vegan recipes with step-by-step instructions, nutrition info, and beautiful photos. Filter by meal type, difficulty, and dietary tags.',
   alternates: { canonical: 'https://plantspack.com/recipes' },
   openGraph: {
     title: 'Vegan Recipes | PlantsPack',
