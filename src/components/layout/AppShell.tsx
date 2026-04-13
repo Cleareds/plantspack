@@ -92,11 +92,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* Material Symbols font for sidebar/bottom nav icons */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet"
-      />
+      {/* Material Symbols font loaded in layout.tsx */}
 
       {/* Desktop sidebar - always visible on lg+ */}
       <Sidebar />

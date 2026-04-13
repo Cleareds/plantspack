@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Plus, X, Check, Circle, MapPinned, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
@@ -29,6 +30,7 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
   const [added, setAdded] = useState<Set<string>>(new Set())
   const [newTripName, setNewTripName] = useState('')
   const [creatingTrip, setCreatingTrip] = useState(false)
+  const [createdTripSlug, setCreatedTripSlug] = useState<string | null>(null)
   const [packPlaceIds, setPackPlaceIds] = useState<Record<string, string>>({})
 
   const closeModal = useCallback(() => setShowModal(false), [])
@@ -181,7 +183,8 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
       setPacks(prev => [{ id: pack.id, title: pack.title, description: null, user_role: 'admin', categories: ['Trip'] }, ...prev])
       setAdded(prev => new Set(prev).add(pack.id))
       setNewTripName('')
-      router.refresh() // Invalidate cached pack listings
+      setCreatedTripSlug(pack.slug || pack.id)
+      router.refresh()
     } catch {
       alert('Failed to create trip')
     } finally {
@@ -240,6 +243,15 @@ export default function AddToPackButton({ placeId, placeName }: AddToPackButtonP
                     {creatingTrip ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create'}
                   </button>
                 </div>
+                {createdTripSlug && (
+                  <Link
+                    href={`/packs/${createdTripSlug}`}
+                    className="flex items-center gap-1.5 mt-2 text-xs font-medium text-primary hover:underline"
+                    onClick={closeModal}
+                  >
+                    <MapPinned className="h-3 w-3" /> View your new trip
+                  </Link>
+                )}
               </div>
 
               {loading ? (
