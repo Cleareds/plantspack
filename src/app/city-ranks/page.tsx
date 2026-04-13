@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { computeAllScores } from '@/lib/compute-scores'
+import { loadCityImages } from '@/lib/city-images'
 import CityRanksTable from '@/components/vegan-score/CityRanksTable'
 
 export const revalidate = 600
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
 }
 
 export default async function CityRanksPage() {
-  const { scores } = await computeAllScores()
+  const [{ scores }, cityImages] = await Promise.all([
+    computeAllScores(),
+    loadCityImages(),
+  ])
 
-  return <CityRanksTable scores={scores} />
+  return <CityRanksTable scores={scores} cityImages={cityImages} />
 }

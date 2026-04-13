@@ -19,9 +19,10 @@ function getCountrySlug(country: string) {
 
 interface CityRanksTableProps {
   scores: CityScore[]
+  cityImages?: Record<string, string>
 }
 
-export default function CityRanksTable({ scores }: CityRanksTableProps) {
+export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTableProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('score')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
@@ -193,21 +194,32 @@ export default function CityRanksTable({ scores }: CityRanksTableProps) {
         </div>
       </div>
 
-      {/* Popular Cities — top by total places */}
+      {/* Popular Cities — top 10 by total places with images */}
       {!searchQuery && (
         <div className="mb-6">
           <h2 className="text-sm font-semibold text-on-surface-variant mb-3">Most vegan places</h2>
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-            {[...scores].sort((a, b) => b.placeCount - a.placeCount).slice(0, 8).map(city => (
-              <Link
-                key={`pop-${city.city}-${city.country}`}
-                href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
-                className="flex-shrink-0 bg-surface-container-lowest ghost-border rounded-xl px-4 py-2.5 hover:bg-primary/[0.03] transition-colors"
-              >
-                <p className="text-sm font-medium text-on-surface whitespace-nowrap">{city.city}</p>
-                <p className="text-[10px] text-on-surface-variant">{city.placeCount} places · <span className={getGradeColor(city.grade)}>{city.grade}</span></p>
-              </Link>
-            ))}
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+            {[...scores].sort((a, b) => b.placeCount - a.placeCount).slice(0, 10).map(city => {
+              const imgKey = `${city.city}|||${city.country}`
+              const img = cityImages[imgKey]
+              return (
+                <Link
+                  key={`pop-${city.city}-${city.country}`}
+                  href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                  className="flex-shrink-0 w-36 bg-surface-container-lowest ghost-border rounded-xl overflow-hidden hover:border-primary/20 transition-all group"
+                >
+                  {img ? (
+                    <img src={img} alt={city.city} className="w-full h-20 object-cover" />
+                  ) : (
+                    <div className="w-full h-20 bg-surface-container-low flex items-center justify-center text-2xl">🏙️</div>
+                  )}
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium text-on-surface truncate group-hover:text-primary transition-colors">{city.city}</p>
+                    <p className="text-[10px] text-on-surface-variant">{city.placeCount} places · <span className={getGradeColor(city.grade)}>{city.grade}</span></p>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}
