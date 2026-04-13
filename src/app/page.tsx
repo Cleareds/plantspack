@@ -25,6 +25,7 @@ async function getTopCities() {
 
 async function getRecentPosts() {
   const supabase = createAdminClient()
+  const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
   const { data } = await supabase
     .from('posts')
     .select(`
@@ -35,6 +36,7 @@ async function getRecentPosts() {
     `)
     .eq('privacy', 'public')
     .is('deleted_at', null)
+    .or(`user_id.neq.${ADMIN_ID},category.not.in.(recipe,event)`)
     .order('created_at', { ascending: false })
     .limit(8)
   return data || []
