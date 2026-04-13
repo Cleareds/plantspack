@@ -54,7 +54,7 @@ export default function ImageSlider({
     switch (aspectRatio) {
       case 'square': return 'aspect-square'
       case 'wide': return 'aspect-video'
-      default: return 'aspect-[4/3] max-h-[480px]'
+      default: return 'aspect-[3/2]'
     }
   }
 
@@ -73,20 +73,17 @@ export default function ImageSlider({
             {images.map((image, index) => (
               <div
                 key={index}
-                className={`relative bg-surface-container-low ${getAspectRatioClass()} cursor-pointer`}
+                className={`relative bg-surface-container-low ${getAspectRatioClass()} cursor-pointer overflow-hidden`}
                 onClick={() => setLightboxIndex(index)}
               >
-                {!isLoaded[index] && !hasError[index] && (
-                  <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
-                )}
+                <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
                 <img
                   src={image}
                   alt={`Image ${index + 1}`}
-                  loading="lazy"
-                  onLoad={() => handleImageLoad(index)}
+                  loading="eager"
                   onError={() => handleImageError(index)}
                   referrerPolicy="no-referrer"
-                  className={`absolute inset-0 w-full h-full transition-opacity duration-200 object-cover ${isLoaded[index] ? 'opacity-100' : 'opacity-0'} ${hasError[index] ? 'hidden' : ''}`}
+                  className={`absolute inset-0 w-full h-full object-cover ${hasError[index] ? 'hidden' : ''}`}
                 />
               </div>
             ))}
