@@ -62,10 +62,10 @@ async function getPlace(id: string): Promise<PlaceData | null> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     const [placeResponse, ownerResponse] = await Promise.all([
       fetch(`${baseUrl}/api/places/${id}`, {
-        next: { revalidate: 3600 }
+        next: { revalidate: 3600, tags: [`place-${id}`] }
       }),
       fetch(`${baseUrl}/api/places/${id}/owner`, {
-        next: { revalidate: 3600 }
+        next: { revalidate: 3600, tags: [`place-${id}`] }
       })
     ])
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -217,7 +217,12 @@ export async function PUT(
 
     // Revalidate cached pages that show this place
     try {
+      revalidateTag(`place-${id}`)
+      if (updatedPlace?.slug) revalidateTag(`place-${updatedPlace.slug}`)
       revalidatePath(`/place/${id}`)
+      if (updatedPlace?.slug && updatedPlace.slug !== id) {
+        revalidatePath(`/place/${updatedPlace.slug}`)
+      }
       if (updatedPlace?.city && updatedPlace?.country) {
         const countrySlug = updatedPlace.country.toLowerCase().replace(/\s+/g, '-')
         const citySlug = updatedPlace.city.toLowerCase().replace(/\s+/g, '-')
@@ -291,6 +296,8 @@ export async function DELETE(
 
     // Revalidate cached pages — both UUID and slug paths
     try {
+      revalidateTag(`place-${id}`)
+      if (place?.slug) revalidateTag(`place-${place.slug}`)
       revalidatePath(`/place/${id}`)
       if (place?.slug) revalidatePath(`/place/${place.slug}`)
       revalidatePath('/vegan-places')
