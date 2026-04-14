@@ -64,7 +64,32 @@ jobs:
 
                   if (res.ok || res.status === 403 || res.status === 405) {
                     alive++;
-                    await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', place.id);
+                    // For OK sites, do a GET to check for closed signals
+                    try {
+                      const getRes = await fetch(place.website, {
+                        headers: { 'User-Agent': 'PlantsPack-Verify/1.0' },
+                        signal: AbortSignal.timeout(6000),
+                      });
+                      const html = await getRes.text();
+                      const lower = html.toLowerCase();
+                      const closedSignals = ['permanently closed', 'definitively closed', 'chiuso definitivamente',
+                        'dauerhaft geschlossen', 'définitivement fermé', 'we have closed', 'no longer open',
+                        'ceased trading', 'this business has closed', 'this restaurant has closed'];
+                      const isClosed = closedSignals.some(s => lower.includes(s));
+                      if (isClosed) {
+                        const tags = place.tags || [];
+                        if (!tags.includes('possibly_closed')) {
+                          await supabase.from('places').update({
+                            tags: [...tags, 'possibly_closed'],
+                            updated_at: new Date().toISOString(),
+                          }).eq('id', place.id);
+                        }
+                      } else {
+                        await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', place.id);
+                      }
+                    } catch {
+                      await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', place.id);
+                    }
                   } else if (res.status === 404 || res.status >= 500) {
                     dead++;
                     const tags = place.tags || [];
