@@ -65,14 +65,17 @@ export default function PlaceTagBadges({ tags, size = 'md' }: PlaceTagBadgesProp
     md: 'h-4 w-4'
   }
 
+  // Only show tags that have explicit config — hide system/internal tags
+  const visibleTags = tags.filter(tag => tag in tagConfig)
+
+  if (visibleTags.length === 0) {
+    return null
+  }
+
   return (
     <div className="flex flex-wrap gap-2">
-      {tags.map((tag) => {
-        const config = tagConfig[tag] || {
-          label: tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          icon: Sparkles,
-          color: 'bg-tertiary-container text-white border-tertiary-container'
-        }
+      {visibleTags.map((tag) => {
+        const config = tagConfig[tag]
         const Icon = config.icon
 
         return (
