@@ -248,10 +248,10 @@ export async function DELETE(
 
     const admin = createAdminClient()
 
-    // Fetch place to check ownership
+    // Fetch place to check ownership (include slug + city for revalidation)
     const { data: place } = await admin
       .from('places')
-      .select('id, created_by')
+      .select('id, created_by, slug, city, country')
       .eq('id', id)
       .single()
 
@@ -289,10 +289,17 @@ export async function DELETE(
     const { error } = await admin.from('places').delete().eq('id', id)
     if (error) throw error
 
-    // Revalidate cached directory pages
+    // Revalidate cached pages — both UUID and slug paths
     try {
       revalidatePath(`/place/${id}`)
+      if (place?.slug) revalidatePath(`/place/${place.slug}`)
       revalidatePath('/vegan-places')
+      if (place?.city && place?.country) {
+        const countrySlug = place.country.toLowerCase().replace(/\s+/g, '-')
+        const citySlug = place.city.toLowerCase().replace(/\s+/g, '-')
+        revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
+        revalidatePath(`/vegan-places/${countrySlug}`)
+      }
     } catch {}
 
     return NextResponse.json({ success: true })

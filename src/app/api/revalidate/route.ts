@@ -4,7 +4,13 @@ import { revalidatePath } from 'next/cache'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}))
-    const { city, country } = body
+    const { city, country, path } = body
+
+    // Revalidate a specific path if provided
+    if (path) {
+      revalidatePath(path)
+      return NextResponse.json({ revalidated: true, path })
+    }
 
     // Always revalidate the main directory
     revalidatePath('/vegan-places')
