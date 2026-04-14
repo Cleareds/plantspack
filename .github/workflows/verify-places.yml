@@ -13,6 +13,7 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -118,3 +119,7 @@ jobs:
             console.log('Done! Alive:', alive, 'Dead:', dead);
           })();
           "
+
+      - name: Check Google Places for closed businesses
+        if: env.GOOGLE_PLACES_API_KEY != ''
+        run: npx tsx scripts/check-google-closed.ts --limit 200 --flagged-first --delete

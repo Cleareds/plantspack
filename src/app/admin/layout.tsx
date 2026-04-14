@@ -19,7 +19,8 @@ import {
   Building2,
   ChefHat,
   Calendar,
-  PenLine
+  PenLine,
+  BarChart3
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -76,6 +77,7 @@ export default function AdminLayout({
     { name: 'Places', href: '/admin/places', icon: MapPin },
     { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
     { name: 'Events', href: '/admin/events', icon: Calendar },
+    { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
     { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
     { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
