@@ -114,9 +114,24 @@ jobs:
             console.log('Missing description:', noDesc);
             console.log('With images:', withImages, '/', totalPlaces, '(' + Math.round(withImages / totalPlaces * 100) + '%)');
 
-            // Website unreachable tags
+            // Flagged places
             const { count: unreachable } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['website_unreachable']);
+            const { count: possiblyClosed } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['possibly_closed']);
+            const { count: reportedClosed } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:permanently_closed']);
+            const { count: reportedHours } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:hours_wrong']);
+            console.log('\n--- Flagged Places ---');
             console.log('Website unreachable:', unreachable);
+            console.log('Possibly closed (auto-detected):', possiblyClosed);
+            console.log('Reported closed (by users):', reportedClosed);
+            console.log('Reported hours wrong (by users):', reportedHours);
+
+            // Show reported closed places with names
+            if (reportedClosed > 0) {
+              const { data: closedPlaces } = await supabase.from('places').select('name, city, country, slug')
+                .contains('tags', ['community_report:permanently_closed']).limit(20);
+              console.log('Reported closed places:');
+              (closedPlaces || []).forEach(p => console.log('  - ' + p.name + ' (' + p.city + ', ' + p.country + ') /place/' + p.slug));
+            }
 
             // Pending corrections
             const { count: pendingCorrections } = await supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending');
