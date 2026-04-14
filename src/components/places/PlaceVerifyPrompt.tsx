@@ -11,25 +11,25 @@ interface PlaceVerifyPromptProps {
 
 export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPromptProps) {
   const [dismissed, setDismissed] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [issue, setIssue] = useState<string | null>(null)
+  const [submitted, setSubmitted] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
-  if (dismissed || submitted) return null
+  if (dismissed) return null
 
   // Only show if user hasn't verified this place in this session
   const key = `verified_${placeId}`
   if (typeof window !== 'undefined' && sessionStorage.getItem(key)) return null
 
   const handleConfirm = async () => {
+    setSubmitting(true)
     sessionStorage.setItem(key, '1')
-    // Touch the place to mark as community-verified
     await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', placeId)
-    setSubmitted(true)
+    setSubmitted('confirmed')
   }
 
   const handleReport = async (type: string) => {
+    setSubmitting(true)
     sessionStorage.setItem(key, '1')
-    // Add a report/tag
     const { data } = await supabase.from('places').select('tags').eq('id', placeId).single()
     const tags = data?.tags || []
     const reportTag = `community_report:${type}`
@@ -39,15 +39,22 @@ export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPro
         updated_at: new Date().toISOString(),
       }).eq('id', placeId)
     }
-    setSubmitted(true)
-    setIssue(type)
+    setSubmitted(type)
   }
 
   if (submitted) {
     return (
-      <div className="bg-emerald-50 rounded-lg p-3 text-xs text-emerald-700 flex items-center gap-2">
+      <div className={`rounded-lg p-3 text-xs flex items-center gap-2 ${
+        submitted === 'confirmed'
+          ? 'bg-emerald-50 text-emerald-700'
+          : 'bg-amber-50 text-amber-700'
+      }`}>
         <CheckCircle className="h-4 w-4 flex-shrink-0" />
-        {issue ? 'Thanks for reporting! We\'ll review this.' : 'Thanks for confirming!'}
+        <span>
+          {submitted === 'confirmed' && 'Thanks for confirming this place is still open!'}
+          {submitted === 'hours_wrong' && 'Thanks! We\'ve flagged the opening hours for review.'}
+          {submitted === 'permanently_closed' && 'Thanks for reporting. We\'ll review and remove it if confirmed.'}
+        </span>
       </div>
     )
   }
@@ -61,16 +68,16 @@ export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPro
         </button>
       </div>
       <div className="flex flex-wrap gap-2">
-        <button onClick={handleConfirm}
-          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors">
+        <button onClick={handleConfirm} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors disabled:opacity-50">
           <CheckCircle className="h-3 w-3" /> Yes, looks correct
         </button>
-        <button onClick={() => handleReport('hours_wrong')}
-          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-md transition-colors">
+        <button onClick={() => handleReport('hours_wrong')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-md transition-colors disabled:opacity-50">
           <Clock className="h-3 w-3" /> Hours changed
         </button>
-        <button onClick={() => handleReport('permanently_closed')}
-          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md transition-colors">
+        <button onClick={() => handleReport('permanently_closed')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50">
           <AlertTriangle className="h-3 w-3" /> Closed
         </button>
       </div>

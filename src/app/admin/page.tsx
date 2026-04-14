@@ -12,8 +12,20 @@ interface Stats {
   pendingReports: number
   pendingContacts: number
   pendingClaims: number
+  pendingCorrections: number
+  reportedClosed: number
+  reportedHours: number
   todayUsers: number
   todayPosts: number
+}
+
+interface ReportedPlace {
+  id: string
+  name: string
+  slug: string
+  city: string
+  country: string
+  tags: string[]
 }
 
 export default function AdminDashboard() {
@@ -25,9 +37,13 @@ export default function AdminDashboard() {
     pendingReports: 0,
     pendingContacts: 0,
     pendingClaims: 0,
+    pendingCorrections: 0,
+    reportedClosed: 0,
+    reportedHours: 0,
     todayUsers: 0,
     todayPosts: 0,
   })
+  const [reportedPlaces, setReportedPlaces] = useState<ReportedPlace[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -48,8 +64,11 @@ export default function AdminDashboard() {
         { count: pendingReports },
         { count: pendingContacts },
         { count: pendingClaims },
+        { count: pendingCorrections },
         { count: todayUsers },
         { count: todayPosts },
+        { data: closedPlaces },
+        { data: hoursPlaces },
       ] = await Promise.all([
         supabase.from('users').select('*', { count: 'exact', head: true }),
         supabase.from('posts').select('*', { count: 'exact', head: true }).is('deleted_at', null),
@@ -58,9 +77,14 @@ export default function AdminDashboard() {
         supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('place_claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('place_corrections').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('users').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
         supabase.from('posts').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
+        supabase.from('places').select('id, name, slug, city, country, tags').contains('tags', ['community_report:permanently_closed']).limit(20),
+        supabase.from('places').select('id, name, slug, city, country, tags').contains('tags', ['community_report:hours_wrong']).limit(20),
       ])
+
+      setReportedPlaces([...(closedPlaces || []), ...(hoursPlaces || [])] as ReportedPlace[])
 
       setStats({
         totalUsers: totalUsers || 0,
@@ -70,6 +94,9 @@ export default function AdminDashboard() {
         pendingReports: pendingReports || 0,
         pendingContacts: pendingContacts || 0,
         pendingClaims: pendingClaims || 0,
+        pendingCorrections: pendingCorrections || 0,
+        reportedClosed: closedPlaces?.length || 0,
+        reportedHours: hoursPlaces?.length || 0,
         todayUsers: todayUsers || 0,
         todayPosts: todayPosts || 0,
       })
@@ -245,8 +272,50 @@ export default function AdminDashboard() {
               </span>
             )}
           </a>
+          <a
+            href="/admin/corrections"
+            className="p-4 border-2 border-surface-container-high rounded-lg hover:border-primary transition-colors text-center"
+          >
+            <AlertCircle className="h-6 w-6 mx-auto mb-2 text-orange-600" />
+            <span className="text-sm font-medium">Corrections</span>
+            {stats.pendingCorrections > 0 && (
+              <span className="block mt-1 text-xs text-orange-600">
+                {stats.pendingCorrections} pending
+              </span>
+            )}
+          </a>
         </div>
       </div>
+
+      {/* Community Reported Places */}
+      {reportedPlaces.length > 0 && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-bold text-on-surface mb-4 flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+            Community Reports ({reportedPlaces.length})
+          </h2>
+          <div className="space-y-2">
+            {reportedPlaces.map(place => {
+              const isClosed = place.tags?.includes('community_report:permanently_closed')
+              return (
+                <div key={place.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <a href={`/place/${place.slug}`} target="_blank" className="text-sm font-medium text-on-surface hover:text-primary">
+                      {place.name}
+                    </a>
+                    <p className="text-xs text-on-surface-variant">{place.city}, {place.country}</p>
+                  </div>
+                  <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                    isClosed ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
+                  }`}>
+                    {isClosed ? 'Reported Closed' : 'Hours Wrong'}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* System Health */}
       <div className="bg-white rounded-lg shadow p-6">
