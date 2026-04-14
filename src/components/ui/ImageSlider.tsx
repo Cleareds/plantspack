@@ -76,14 +76,19 @@ export default function ImageSlider({
                 className={`relative bg-surface-container-low ${getAspectRatioClass()} cursor-pointer overflow-hidden`}
                 onClick={() => setLightboxIndex(index)}
               >
-                <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
+                {!isLoaded[index] && !hasError[index] && (
+                  <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
+                )}
                 <img
                   src={image}
                   alt={`Image ${index + 1}`}
                   loading="eager"
+                  onLoad={() => handleImageLoad(index)}
                   onError={() => handleImageError(index)}
                   referrerPolicy="no-referrer"
-                  className={`absolute inset-0 w-full h-full object-cover ${hasError[index] ? 'hidden' : ''}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
+                    isLoaded[index] ? 'opacity-100' : 'opacity-0'
+                  } ${hasError[index] ? 'hidden' : ''}`}
                 />
               </div>
             ))}
