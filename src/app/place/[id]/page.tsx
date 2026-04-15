@@ -297,7 +297,16 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   <div className="text-sm text-on-surface-variant mb-2">
                     {[place.address, place.city, place.country].filter(Boolean).join(', ')}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}&destination_place_id=${(place as any).google_place_id || ''}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-on-primary-btn silk-gradient px-2.5 py-1 rounded-md"
+                    >
+                      <MapPin className="h-3 w-3" />
+                      Get Directions
+                    </a>
                     <a
                       href={(place as any).google_place_id
                         ? `https://www.google.com/maps/place/?q=place_id:${(place as any).google_place_id}`

@@ -115,9 +115,8 @@ export default function MapView({
       >
         <TileLayer
           attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://api.maptiler.com/maps/pastel/{z}/{x}/{y}.png?key=99cVeZ5JM3met86KZyyD"
-          tileSize={512}
-          zoomOffset={-1}
+          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=99cVeZ5JM3met86KZyyD"
+          tileSize={256}
         />
 
         <MapClickHandler onMapClick={onMapClick} />
