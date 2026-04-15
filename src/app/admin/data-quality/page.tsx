@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Loader2, ExternalLink, Trash2, XCircle, AlertTriangle,
-  Clock, Globe, WifiOff, Users, CheckCircle, BarChart3
+  Clock, Globe, WifiOff, Users, CheckCircle, BarChart3, Leaf
 } from 'lucide-react'
 
 interface FlaggedPlace {
@@ -15,6 +15,7 @@ interface FlaggedPlace {
   country: string | null
   tags: string[] | null
   website: string | null
+  vegan_level?: string | null
   opening_hours?: Record<string, string> | null
   updated_at: string
 }
@@ -40,6 +41,7 @@ interface Stats {
   reportedHours: number
   pendingCorrections: number
   googleNotFound: number
+  reportedNotVegan: number
 }
 
 const TABS = [
@@ -47,6 +49,7 @@ const TABS = [
   { id: 'temp_closed', label: 'Temp Closed', icon: Clock, color: 'text-amber-400' },
   { id: 'reported_closed', label: 'Reported Closed', icon: Users, color: 'text-orange-400' },
   { id: 'reported_hours', label: 'Wrong Hours', icon: AlertTriangle, color: 'text-yellow-400' },
+  { id: 'not_vegan', label: 'Vegan Status', icon: Leaf, color: 'text-orange-400' },
   { id: 'unreachable', label: 'Website Down', icon: WifiOff, color: 'text-gray-400' },
   { id: 'corrections', label: 'Corrections', icon: CheckCircle, color: 'text-emerald-400' },
 ] as const
@@ -113,7 +116,8 @@ export default function DataQualityPage() {
           const statsKey = tab === 'closed' ? 'googleClosed' :
             tab === 'temp_closed' ? 'googleTempClosed' :
             tab === 'reported_closed' ? 'reportedClosed' :
-            tab === 'reported_hours' ? 'reportedHours' : 'unreachable'
+            tab === 'reported_hours' ? 'reportedHours' :
+            tab === 'not_vegan' ? 'reportedNotVegan' : 'unreachable'
           setStats({ ...stats, [statsKey]: (stats[statsKey as keyof Stats] as number) - 1 })
         }
       }
@@ -124,15 +128,27 @@ export default function DataQualityPage() {
   const handleDismiss = async (placeId: string, tag: string) => {
     setProcessing(placeId)
     try {
-      const res = await fetch('/api/admin/data-quality', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ placeId, removeTag: tag }),
-      })
-      if (res.ok) {
-        setPlaces(prev => prev.filter(p => p.id !== placeId))
-        setTotal(prev => prev - 1)
+      // For not_vegan tab, remove both possible tags
+      if (tab === 'not_vegan') {
+        await fetch('/api/admin/data-quality', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placeId, removeTag: 'community_report:not_fully_vegan' }),
+        })
+        await fetch('/api/admin/data-quality', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placeId, removeTag: 'community_report:not_vegan_friendly' }),
+        })
+      } else {
+        await fetch('/api/admin/data-quality', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placeId, removeTag: tag }),
+        })
       }
+      setPlaces(prev => prev.filter(p => p.id !== placeId))
+      setTotal(prev => prev - 1)
     } catch {}
     setProcessing(null)
   }
@@ -160,6 +176,7 @@ export default function DataQualityPage() {
       case 'temp_closed': return 'google_temporarily_closed'
       case 'reported_closed': return 'community_report:permanently_closed'
       case 'reported_hours': return 'community_report:hours_wrong'
+      case 'not_vegan': return '' // handled per-place since it could be either tag
       case 'unreachable': return 'website_unreachable'
       default: return ''
     }
@@ -173,6 +190,7 @@ export default function DataQualityPage() {
       case 'reported_closed': return stats.reportedClosed
       case 'reported_hours': return stats.reportedHours
       case 'unreachable': return stats.unreachable
+      case 'not_vegan': return stats.reportedNotVegan
       case 'corrections': return stats.pendingCorrections
       default: return 0
     }
@@ -180,7 +198,8 @@ export default function DataQualityPage() {
 
   const totalIssues = stats
     ? stats.googleClosed + stats.googleTempClosed + stats.reportedClosed +
-      stats.reportedHours + stats.unreachable + stats.pendingCorrections
+      stats.reportedHours + stats.unreachable + stats.pendingCorrections +
+      stats.reportedNotVegan
     : 0
 
   return (
@@ -335,8 +354,20 @@ export default function DataQualityPage() {
                         <ExternalLink className="h-3.5 w-3.5 flex-shrink-0" />
                       </Link>
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5">
+                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                       <p className="text-xs text-gray-400">{p.city}, {p.country}</p>
+                      {p.vegan_level && tab === 'not_vegan' && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                          p.vegan_level === 'fully_vegan' ? 'bg-emerald-900/50 text-emerald-300' : 'bg-amber-900/50 text-amber-300'
+                        }`}>
+                          {p.vegan_level.replace('_', ' ')}
+                        </span>
+                      )}
+                      {tab === 'not_vegan' && (p.tags || []).filter(t => t.startsWith('community_report:not')).map(t => (
+                        <span key={t} className="text-[10px] px-1.5 py-0.5 rounded-full bg-orange-900/50 text-orange-300 font-medium">
+                          {t.replace('community_report:', '').replace(/_/g, ' ')}
+                        </span>
+                      ))}
                       {p.website && (
                         <a href={p.website} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:underline truncate max-w-48">
                           {p.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}

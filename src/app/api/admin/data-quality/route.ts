@@ -78,6 +78,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ places: data || [], total: count || 0 })
   }
 
+  if (tab === 'not_vegan') {
+    const { data, count } = await supabase
+      .from('places')
+      .select('id, name, slug, city, country, tags, vegan_level, website, updated_at', { count: 'exact' })
+      .or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly}')
+      .order('updated_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+
+    return NextResponse.json({ places: data || [], total: count || 0 })
+  }
+
   if (tab === 'corrections') {
     const { data, count } = await supabase
       .from('place_corrections')
@@ -100,6 +111,7 @@ export async function GET(request: NextRequest) {
       { count: reportedHours },
       { count: pendingCorrections },
       { count: googleNotFound },
+      { count: reportedNotVegan },
     ] = await Promise.all([
       supabase.from('places').select('id', { count: 'exact', head: true }),
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_confirmed_closed']),
@@ -110,6 +122,7 @@ export async function GET(request: NextRequest) {
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:hours_wrong']),
       supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_not_found']),
+      supabase.from('places').select('id', { count: 'exact', head: true }).or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly}'),
     ])
 
     return NextResponse.json({
@@ -123,6 +136,7 @@ export async function GET(request: NextRequest) {
         reportedHours: reportedHours || 0,
         pendingCorrections: pendingCorrections || 0,
         googleNotFound: googleNotFound || 0,
+        reportedNotVegan: reportedNotVegan || 0,
       }
     })
   }

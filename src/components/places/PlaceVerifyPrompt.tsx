@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, AlertTriangle, Clock, X } from 'lucide-react'
+import { CheckCircle, AlertTriangle, Clock, X, Leaf } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 interface PlaceVerifyPromptProps {
@@ -54,6 +54,8 @@ export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPro
           {submitted === 'confirmed' && 'Thanks for confirming this place is still open!'}
           {submitted === 'hours_wrong' && 'Thanks! We\'ve flagged the opening hours for review.'}
           {submitted === 'permanently_closed' && 'Thanks for reporting. We\'ll review and remove it if confirmed.'}
+          {submitted === 'not_fully_vegan' && 'Thanks! We\'ll review the vegan status of this place.'}
+          {submitted === 'not_vegan_friendly' && 'Thanks! We\'ll review whether this place still has vegan options.'}
         </span>
       </div>
     )
@@ -79,6 +81,14 @@ export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPro
         <button onClick={() => handleReport('permanently_closed')} disabled={submitting}
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50">
           <AlertTriangle className="h-3 w-3" /> Closed
+        </button>
+        <button onClick={() => handleReport('not_fully_vegan')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-md transition-colors disabled:opacity-50">
+          <Leaf className="h-3 w-3" /> Not 100% vegan
+        </button>
+        <button onClick={() => handleReport('not_vegan_friendly')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-md transition-colors disabled:opacity-50">
+          <Leaf className="h-3 w-3" /> Not vegan-friendly
         </button>
       </div>
       <p className="text-[10px] text-on-surface-variant/50 mt-2">Your feedback helps keep our data accurate</p>
