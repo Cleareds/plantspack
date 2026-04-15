@@ -145,7 +145,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (!isMounted) return
-      
+
+      // Password recovery flow — redirect to set new password page
+      if (event === 'PASSWORD_RECOVERY') {
+        window.location.href = '/auth/update-password'
+        return
+      }
+
       if (event === 'SIGNED_OUT') {
         setAuthReady(false)
         setLoading(true)

@@ -496,14 +496,22 @@ export default function ProfileSettingsPage() {
                     autoComplete="new-password"
                   />
                 </div>
-                <button
-                  type="submit"
-                  disabled={passwordLoading}
-                  className="flex items-center gap-2 silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary-btn font-medium py-2 px-4 rounded-md transition-colors"
-                >
-                  <Shield className="h-4 w-4" />
-                  <span>{passwordLoading ? 'Changing...' : 'Change Password'}</span>
-                </button>
+                <div className="flex items-center gap-4">
+                  <button
+                    type="submit"
+                    disabled={passwordLoading}
+                    className="flex items-center gap-2 silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary-btn font-medium py-2 px-4 rounded-md transition-colors"
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>{passwordLoading ? 'Changing...' : 'Change Password'}</span>
+                  </button>
+                  <a
+                    href="/auth/reset-password"
+                    className="text-sm text-primary hover:text-primary/80 font-medium"
+                  >
+                    Forgot current password?
+                  </a>
+                </div>
               </form>
             </div>
 

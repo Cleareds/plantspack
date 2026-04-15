@@ -109,8 +109,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (data.user) {
-      console.log('[Auth Callback] Token hash verified for user:', data.user.id)
+      console.log('[Auth Callback] Token hash verified for user:', data.user.id, 'type:', type)
       await createProfileIfNeeded(data.user.id, data.user.user_metadata || {}, data.user.email || '')
+
+      // Password recovery flow → redirect to set new password page
+      if (type === 'recovery') {
+        return NextResponse.redirect(`${origin}/auth/update-password`)
+      }
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
