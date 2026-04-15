@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { CheckCircle, AlertTriangle, Clock, X, Leaf } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 
 interface PlaceVerifyPromptProps {
   placeId: string
@@ -23,21 +22,25 @@ export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPro
   const handleConfirm = async () => {
     setSubmitting(true)
     sessionStorage.setItem(key, '1')
-    await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', placeId)
+    // Confirm via API (uses admin client to bypass RLS)
+    await fetch(`/api/places/${placeId}/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'confirmed' }),
+    }).catch(() => {})
     setSubmitted('confirmed')
   }
 
   const handleReport = async (type: string) => {
     setSubmitting(true)
     sessionStorage.setItem(key, '1')
-    const { data } = await supabase.from('places').select('tags').eq('id', placeId).single()
-    const tags = data?.tags || []
-    const reportTag = `community_report:${type}`
-    if (!tags.includes(reportTag)) {
-      await supabase.from('places').update({
-        tags: [...tags, reportTag],
-        updated_at: new Date().toISOString(),
-      }).eq('id', placeId)
+    const res = await fetch(`/api/places/${placeId}/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type }),
+    })
+    if (!res.ok) {
+      console.error('Failed to submit report')
     }
     setSubmitted(type)
   }
