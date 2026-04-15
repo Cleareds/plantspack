@@ -100,7 +100,7 @@ export default function AboutPage() {
           </div>
           <div className="space-y-4 text-on-surface-variant text-lg leading-relaxed">
             <p>
-              We&apos;re Oleksandra and Anton, originally from Ukraine, based in Belgium.
+              We&apos;re Oleksandra and Anton, originally from Ukraine.
               Oleksandra is 10+ years vegan and Anton joined her on this journey 2 years ago.
             </p>
             <p>
@@ -146,7 +146,7 @@ export default function AboutPage() {
             </div>
           </div>
           <p className="text-on-surface-variant text-sm italic">
-            No bloated salaries. No shady data selling. Just a community-funded tool that gives back. The 50% donation is calculated from net profit, not gross revenue — because Belgian law requires us to cover taxes and expenses first. We believe in full transparency about this.
+            No bloated salaries. No shady data selling. Just a community-funded tool that gives back. The 50% donation is calculated from net profit, not gross revenue — because the law requires us to cover taxes and expenses first. We believe in full transparency about this.
           </p>
         </div>
 
@@ -211,7 +211,7 @@ export default function AboutPage() {
 
         {/* Legal */}
         <div className="bg-surface-container-low rounded-lg p-6 text-sm text-on-surface-variant">
-          <p>Cleareds is an official Belgian company entity from Anton Kravchuk (admin).</p>
+          <p>Cleareds is an official company entity from Anton Kravchuk (admin).</p>
         </div>
       </div>
     </div>
