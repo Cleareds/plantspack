@@ -24,6 +24,12 @@ export default function ProfileSettingsPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [savingNotifications, setSavingNotifications] = useState(false)
   const [resendingEmail, setResendingEmail] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
+  const [passwordLoading, setPasswordLoading] = useState(false)
+  const [passwordMessage, setPasswordMessage] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
   useEffect(() => {
     if (authReady && !user) {
@@ -288,6 +294,68 @@ export default function ProfileSettingsPage() {
     }
   }
 
+  const validatePassword = (pwd: string): string | null => {
+    if (pwd.length < 8) return 'Password must be at least 8 characters long'
+    if (!/[A-Z]/.test(pwd)) return 'Must contain at least one uppercase letter'
+    if (!/[a-z]/.test(pwd)) return 'Must contain at least one lowercase letter'
+    if (!/[0-9]/.test(pwd)) return 'Must contain at least one number'
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) return 'Must contain at least one special character'
+    return null
+  }
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPasswordError('')
+    setPasswordMessage('')
+
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      setPasswordError('Please fill in all fields')
+      return
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setPasswordError('New passwords do not match')
+      return
+    }
+
+    const validationError = validatePassword(newPassword)
+    if (validationError) {
+      setPasswordError(validationError)
+      return
+    }
+
+    setPasswordLoading(true)
+    try {
+      // Verify current password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user!.email!,
+        password: currentPassword,
+      })
+
+      if (signInError) {
+        setPasswordError('Current password is incorrect')
+        setPasswordLoading(false)
+        return
+      }
+
+      // Update to new password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
+      })
+
+      if (updateError) throw updateError
+
+      setPasswordMessage('Password changed successfully!')
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmNewPassword('')
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : 'Failed to change password')
+    } finally {
+      setPasswordLoading(false)
+    }
+  }
+
   if (!authReady) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -374,6 +442,69 @@ export default function ProfileSettingsPage() {
                   </a>
                 </div>
               </div>
+            </div>
+
+            {/* Change Password */}
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <Lock className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Change Password</h2>
+              </div>
+
+              {passwordMessage && (
+                <div className="mb-4 p-3 rounded bg-surface-container-low border border-primary/15 text-primary text-sm">
+                  {passwordMessage}
+                </div>
+              )}
+              {passwordError && (
+                <div className="mb-4 p-3 rounded bg-error/5 border border-error/15 text-error text-sm">
+                  {passwordError}
+                </div>
+              )}
+
+              <form onSubmit={handleChangePassword} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">Current Password</label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                    autoComplete="current-password"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">New Password</label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                    autoComplete="new-password"
+                  />
+                  <p className="text-xs text-outline mt-1">
+                    Min 8 characters with uppercase, lowercase, number, and special character
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">Confirm New Password</label>
+                  <input
+                    type="password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                    autoComplete="new-password"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="flex items-center gap-2 silk-gradient hover:opacity-90 disabled:opacity-50 text-on-primary-btn font-medium py-2 px-4 rounded-md transition-colors"
+                >
+                  <Shield className="h-4 w-4" />
+                  <span>{passwordLoading ? 'Changing...' : 'Change Password'}</span>
+                </button>
+              </form>
             </div>
 
             {/* Privacy Settings */}

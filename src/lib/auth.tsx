@@ -334,15 +334,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       // Always try to upsert (update or insert) with all required fields
+      // Use !== undefined checks (not ||) so empty strings are preserved
       const profileData = {
         id: user.id,
         email: user.email || '',
-        username: updates.username || profile?.username || user.user_metadata?.username || `user_${user.id.slice(0, 8)}`,
-        first_name: updates.first_name || profile?.first_name || user.user_metadata?.first_name || '',
-        last_name: updates.last_name || profile?.last_name || user.user_metadata?.last_name || '',
+        username: updates.username !== undefined ? updates.username : (profile?.username || user.user_metadata?.username || `user_${user.id.slice(0, 8)}`),
+        first_name: updates.first_name !== undefined ? updates.first_name : (profile?.first_name || user.user_metadata?.first_name || ''),
+        last_name: updates.last_name !== undefined ? updates.last_name : (profile?.last_name || user.user_metadata?.last_name || ''),
         bio: updates.bio !== undefined ? updates.bio : (profile?.bio || ''),
         avatar_url: updates.avatar_url !== undefined ? updates.avatar_url : (profile?.avatar_url || null),
-        ...updates // This ensures any passed updates override the defaults
       }
 
       const { data, error } = await supabase
@@ -352,8 +352,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (error) throw error
-      
+
       setProfile(data)
+      profileCache.current.set(user.id, data as any)
       console.log('Profile updated successfully')
       
       return { data, error: null }
