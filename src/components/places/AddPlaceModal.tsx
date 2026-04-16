@@ -59,6 +59,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
   const [addressSearchResults, setAddressSearchResults] = useState<any[]>([])
   const [showAddressResults, setShowAddressResults] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   // Save draft to sessionStorage on every change
   useEffect(() => {
@@ -123,28 +124,61 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
     return () => clearTimeout(timeoutId)
   }, [addressSearchQuery, searchAddresses])
 
-  const handleAddressSelect = (result: any) => {
+  const handleAddressSelect = async (result: any) => {
     const lat = parseFloat(result.lat)
     const lon = parseFloat(result.lon)
-    const city = result.address?.city || result.address?.town || result.address?.village || undefined
-    const country = result.address?.country || undefined
-    setNewPlace(prev => ({ ...prev, address: result.display_name, latitude: lat, longitude: lon, city, country }))
-    setAddressSearchQuery(result.display_name)
+
+    // Get English address via reverse geocoding (translates Cyrillic etc.)
+    let city = result.address?.city || result.address?.town || result.address?.village || undefined
+    let country = result.address?.country || undefined
+    let address = result.display_name
+
+    try {
+      const enResult = await geocodingService.reverse(lat, lon)
+      if (enResult) {
+        address = enResult.display_name || address
+        city = enResult.address?.city || enResult.address?.town || enResult.address?.village || city
+        country = enResult.address?.country || country
+      }
+    } catch {}
+
+    setNewPlace(prev => ({ ...prev, address, latitude: lat, longitude: lon, city, country }))
+    setAddressSearchQuery(address)
     setShowAddressResults(false)
+  }
+
+  const [successPlace, setSuccessPlace] = useState<{ name: string; slug: string; id: string } | null>(null)
+
+  const generateSlug = (name: string, city?: string) => {
+    const base = [name, city].filter(Boolean).join(' ')
+    return base.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 100)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
     if (!newPlace.latitude || !newPlace.longitude) {
-      alert('Please select an address from the search results')
+      setSubmitError('Please select an address from the search results')
       return
     }
     setSubmitting(true)
+    setSubmitError(null)
     try {
+      const slug = generateSlug(newPlace.name, newPlace.city as string | undefined)
+      const mainImage = placeImages.length > 0 ? placeImages[0] : null
+
       const { data: insertedPlace, error } = await supabase
         .from('places')
-        .insert({ ...newPlace, vegan_level: newPlace.vegan_level, images: placeImages, created_by: user.id, city: newPlace.city || null, country: newPlace.country || null })
+        .insert({
+          ...newPlace,
+          slug,
+          vegan_level: newPlace.vegan_level,
+          images: placeImages,
+          main_image_url: mainImage,
+          created_by: user.id,
+          city: newPlace.city || null,
+          country: newPlace.country || null,
+        })
         .select(`*, users(id, username, first_name, last_name), favorite_places(id, user_id)`)
         .single()
       if (error) throw error
@@ -173,13 +207,50 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
       sessionStorage.removeItem('add_place_draft')
       track('place_added', { city: newPlace.city, country: newPlace.country, category: newPlace.category })
       onPlaceAdded?.(insertedPlace)
-      onClose()
-    } catch (error) {
+      setSuccessPlace({ name: insertedPlace.name, slug: insertedPlace.slug || insertedPlace.id, id: insertedPlace.id })
+    } catch (error: any) {
       console.error('Error adding place:', error)
-      alert('Failed to add place. Please try again.')
+      const msg = error?.message || error?.code || 'Unknown error'
+      if (msg.includes('row-level security') || msg.includes('RLS') || msg.includes('policy')) {
+        setSubmitError('Permission denied. Please make sure you are logged in and try again.')
+      } else if (msg.includes('duplicate') || msg.includes('unique')) {
+        setSubmitError('A place with this name already exists in this location.')
+      } else {
+        setSubmitError(`Failed to add place: ${msg}`)
+      }
     } finally {
       setSubmitting(false)
     }
+  }
+
+  if (successPlace) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center p-4 z-[100]" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }} onClick={onClose}>
+        <div className="bg-surface-container-lowest rounded-lg p-6 w-full max-w-sm editorial-shadow text-center" onClick={e => e.stopPropagation()}>
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <span className="text-2xl">🌿</span>
+          </div>
+          <h3 className="text-lg font-bold text-on-surface mb-2">Place Added!</h3>
+          <p className="text-sm text-on-surface-variant mb-4">
+            <strong>{successPlace.name}</strong> has been added to PlantsPack.
+          </p>
+          <div className="flex flex-col gap-2">
+            <a
+              href={`/place/${successPlace.slug}`}
+              className="w-full px-4 py-2 silk-gradient text-on-primary-btn rounded-lg font-medium text-sm text-center"
+            >
+              View Place
+            </a>
+            <button
+              onClick={onClose}
+              className="w-full px-4 py-2 ghost-border rounded-lg text-on-surface-variant hover:bg-surface-container-low text-sm"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!user) {
@@ -204,6 +275,11 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {submitError && (
+            <div className="p-3 bg-error/5 border border-error/15 rounded-lg">
+              <p className="text-sm text-error">{submitError}</p>
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-on-surface-variant mb-1">Place Name *</label>
             <input

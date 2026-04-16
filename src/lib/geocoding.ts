@@ -181,7 +181,8 @@ class GeocodingService {
         format: 'json',
         lat: lat.toString(),
         lon: lon.toString(),
-        addressdetails: '1'
+        addressdetails: '1',
+        'accept-language': 'en',
       })
 
       const response = await fetch(
