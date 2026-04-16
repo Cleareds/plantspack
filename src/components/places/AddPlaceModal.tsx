@@ -55,7 +55,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
 
   const [placeImages, setPlaceImages] = useState<string[]>(draft?.images || [])
   const [showImageUploader, setShowImageUploader] = useState(false)
-  const [addressSearchQuery, setAddressSearchQuery] = useState(draft?.address || '')
+  const [addressSearchQuery, setAddressSearchQuery] = useState(draft?.addressQuery || draft?.address || '')
   const [addressSearchResults, setAddressSearchResults] = useState<any[]>([])
   const [showAddressResults, setShowAddressResults] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -65,10 +65,11 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
     try {
       sessionStorage.setItem('add_place_draft', JSON.stringify({
         ...newPlace,
+        addressQuery: addressSearchQuery,
         images: placeImages,
       }))
     } catch {}
-  }, [newPlace, placeImages])
+  }, [newPlace, placeImages, addressSearchQuery])
 
   // Close on escape
   useEffect(() => {

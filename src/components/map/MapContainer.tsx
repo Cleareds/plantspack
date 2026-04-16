@@ -76,8 +76,15 @@ export default function MapContainerComponent() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Add form state
-  const [showAddForm, setShowAddForm] = useState(shouldOpenAddForm && !!user)
+  const [showAddForm, setShowAddForm] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+
+  // Auto-open add form from ?add=true param (after auth loads)
+  useEffect(() => {
+    if (shouldOpenAddForm && authReady && user) {
+      setShowAddForm(true)
+    }
+  }, [shouldOpenAddForm, authReady, user])
 
   // Leaflet icons
   const [leafletIcon, setLeafletIcon] = useState<any>(null)
