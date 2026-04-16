@@ -3,7 +3,7 @@
 import { MutableRefObject } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { Heart, X, PawPrint } from 'lucide-react'
+import { Heart, PawPrint, Navigation } from 'lucide-react'
 import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
 
 // Dynamic imports for react-leaflet (SSR-safe)
@@ -200,15 +200,15 @@ export default function MapView({
                           <Heart className={`h-4 w-4 ${place.favorite_places.some(fav => fav.user_id === user.id) ? 'fill-current' : ''}`} />
                         </button>
                       )}
-                      {user && user.id === place.created_by && (
-                        <button
-                          onClick={() => onDeletePlace(place.id)}
-                          className="p-1 rounded text-outline hover:text-error"
-                          title="Delete place"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      )}
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1 rounded text-outline hover:text-primary"
+                        title="Get Directions"
+                      >
+                        <Navigation className="h-4 w-4" />
+                      </a>
                     </div>
                   </div>
 
