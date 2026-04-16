@@ -19,6 +19,16 @@ export default function ImageSlider({
   const [hasError, setHasError] = useState<boolean[]>(new Array(images.length).fill(false))
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const sliderRef = useRef<HTMLDivElement>(null)
+  const imgRefs = useRef<(HTMLImageElement | null)[]>([])
+
+  // Check if images are already loaded (browser cache / hydration)
+  useEffect(() => {
+    imgRefs.current.forEach((img, index) => {
+      if (img && img.complete && img.naturalHeight > 0 && !isLoaded[index]) {
+        handleImageLoad(index)
+      }
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!images || images.length === 0) return null
 
@@ -80,6 +90,7 @@ export default function ImageSlider({
                   <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
                 )}
                 <img
+                  ref={el => { imgRefs.current[index] = el }}
                   src={image}
                   alt={`Image ${index + 1}`}
                   loading="eager"
@@ -124,6 +135,7 @@ export default function ImageSlider({
                   <div className="absolute inset-0 bg-surface-container-high animate-pulse" />
                 )}
                 <img
+                  ref={el => { imgRefs.current[index] = el }}
                   src={image}
                   alt={`Image ${index + 1}`}
                   loading={index <= 1 ? 'eager' : 'lazy'}
