@@ -183,15 +183,15 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         .single()
       if (error) throw error
 
-      // Auto-create a linked post
+      // Auto-create a linked post via API (bypasses RLS issues for non-admin users)
       try {
-        await supabase.from('posts').insert({
-          user_id: user.id,
-          content: newPlace.description || `Check out ${newPlace.name}`,
-          category: 'place',
-          place_id: insertedPlace.id,
-          images: placeImages.length > 0 ? placeImages : [],
-          privacy: 'public',
+        await fetch('/api/places/' + insertedPlace.id + '/auto-post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: newPlace.description || `Check out ${newPlace.name}`,
+            images: placeImages,
+          }),
         })
       } catch {}
 
