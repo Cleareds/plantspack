@@ -9,6 +9,7 @@ const navItems = [
   { href: '/vegan-places', label: 'Places', icon: 'place' },
   { href: '/city-ranks', label: 'Rankings', icon: 'leaderboard' },
   { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
+  { href: '/feed', label: 'Feed', icon: 'forum' },
 ]
 
 export default function BottomNav() {
