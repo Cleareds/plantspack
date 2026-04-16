@@ -196,34 +196,32 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border overflow-hidden">
           {/* Header */}
           <div className="p-6 border-b border-outline-variant/15">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container-low text-primary">
-                    {categoryLabels[place.category] || place.category}
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container-low text-primary">
+                  {categoryLabels[place.category] || place.category}
+                </span>
+                {place.is_pet_friendly && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-container text-white">
+                    🐾 Pet Friendly
                   </span>
-                  {place.is_pet_friendly && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-container text-white">
-                      🐾 Pet Friendly
-                    </span>
-                  )}
-                </div>
-                <h1 className="text-3xl font-bold text-on-surface mb-2">{place.name}</h1>
-                {place.average_rating > 0 && (
-                  <div className="flex items-center gap-3 mb-3">
-                    <StarRating rating={place.average_rating} size="md" showValue />
-                    <span className="text-sm text-on-surface-variant">
-                      ({place.review_count} {place.review_count === 1 ? 'review' : 'reviews'})
-                    </span>
-                  </div>
-                )}
-                {place.tags && place.tags.length > 0 && (
-                  <div className="mb-3">
-                    <PlaceTagBadges tags={place.tags} size="sm" />
-                  </div>
                 )}
               </div>
-              <div className="ml-4 flex flex-col md:flex-row items-stretch md:items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-on-surface mb-2">{place.name}</h1>
+              {place.average_rating > 0 && (
+                <div className="flex items-center gap-3 mb-3">
+                  <StarRating rating={place.average_rating} size="md" showValue />
+                  <span className="text-sm text-on-surface-variant">
+                    ({place.review_count} {place.review_count === 1 ? 'review' : 'reviews'})
+                  </span>
+                </div>
+              )}
+              {place.tags && place.tags.length > 0 && (
+                <div className="mb-3">
+                  <PlaceTagBadges tags={place.tags} size="sm" />
+                </div>
+              )}
+              <div className="flex flex-wrap items-center gap-2 mt-3">
                 <FavoriteButton
                   entityType="place"
                   entityId={place.id}

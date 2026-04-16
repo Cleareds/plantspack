@@ -336,7 +336,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 placeholder="Share your experience..."
-                className="w-full px-3 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                className="w-full px-3 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-y"
                 rows={4}
                 maxLength={500}
               />
@@ -401,7 +401,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
                 <p className="text-xs text-error mt-2">{validationError}</p>
               )}
 
-              <div className="flex items-center justify-between mt-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 mt-2">
                 <div className="flex items-center gap-3">
                   <span className={`text-xs ${newContent.length > 450 ? 'text-error' : 'text-outline'}`}>
                     {newContent.length}/500

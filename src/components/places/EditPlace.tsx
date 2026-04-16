@@ -243,7 +243,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm resize-none focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm resize-y focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
               />
             </div>
 
@@ -277,8 +277,8 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                 value={openingHours}
                 onChange={(e) => setOpeningHours(e.target.value)}
                 placeholder="e.g. Mo-Fr 09:00-18:00; Sa 10:00-16:00; Su closed"
-                rows={2}
-                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border resize-none"
+                rows={4}
+                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm resize-y focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
               />
               <p className="text-[10px] text-on-surface-variant mt-1">Separate days with semicolons, e.g. Mo-Fr 09:00-18:00; Sa 10:00-16:00</p>
             </div>
