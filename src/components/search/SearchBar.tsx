@@ -138,7 +138,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
           {showNoResults && (
             <div className="p-4 text-center">
               <p className="text-sm text-outline mb-2">No results for &quot;{query}&quot;</p>
-              <Link href="/map" onClick={() => { setIsOpen(false); setQuery('') }}
+              <Link href="/map?add=true" onClick={() => { setIsOpen(false); setQuery('') }}
                 className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline">
                 <Plus className="h-3 w-3" /> Add this place to PlantsPack
               </Link>

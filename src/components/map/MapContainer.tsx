@@ -23,6 +23,7 @@ type Place = Tables<'places'> & {
 export default function MapContainerComponent() {
   const searchParams = useSearchParams()
   const initialLocation = searchParams.get('location')
+  const shouldOpenAddForm = searchParams.get('add') === 'true'
   const { user, authReady } = useAuth()
 
   // Persisted map state
@@ -75,7 +76,7 @@ export default function MapContainerComponent() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Add form state
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [showAddForm, setShowAddForm] = useState(shouldOpenAddForm && !!user)
   const [successMessage, setSuccessMessage] = useState('')
 
   // Leaflet icons
@@ -361,8 +362,8 @@ export default function MapContainerComponent() {
 
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
-        {/* Map overlay controls — bottom on mobile, top-left on desktop */}
-        <div className="absolute bottom-3 left-2 right-14 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto">
+        {/* Map overlay controls — above bottom nav on mobile, top-left on desktop */}
+        <div className="absolute bottom-24 left-2 right-14 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto">
           {/* Search bar */}
           <MapSearchBar
             value={searchQuery}
@@ -394,8 +395,8 @@ export default function MapContainerComponent() {
           )}
         </div>
 
-        {/* Add place button overlay — top-right on desktop, bottom-left on mobile (avoids sidebar toggle) */}
-        <div className="absolute bottom-28 left-3 z-30 lg:bottom-auto lg:left-auto lg:top-3 lg:right-3">
+        {/* Add place button overlay — below sidebar toggle on mobile, top-right on desktop */}
+        <div className="absolute top-14 right-3 z-20 lg:top-3 lg:right-3 lg:z-30">
           {user ? (
             <button
               onClick={() => setShowAddForm(true)}
