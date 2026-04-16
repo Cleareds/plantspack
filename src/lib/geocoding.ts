@@ -114,6 +114,12 @@ class GeocodingService {
     await this.waitForRateLimit()
 
     try {
+      // Detect browser language to improve results for non-Latin scripts (Ukrainian, etc.)
+      const browserLang = typeof navigator !== 'undefined' ? navigator.language?.split('-')[0] : 'en'
+      const acceptLanguage = browserLang === 'en'
+        ? 'en,uk,de,fr,es,nl'
+        : `${browserLang},en,uk,de,fr,es,nl`
+
       const params = new URLSearchParams({
         format: 'json',
         q: query,
@@ -121,7 +127,7 @@ class GeocodingService {
         addressdetails: addressDetails ? '1' : '0',
         extratags: extraTags ? '1' : '0',
         namedetails: nameDetails ? '1' : '0',
-        bounded: '0',
+        'accept-language': acceptLanguage,
         dedupe: '1'
       })
 

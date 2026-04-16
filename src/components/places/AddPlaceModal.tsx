@@ -27,27 +27,48 @@ interface AddPlaceModalProps {
 export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defaultCountry }: AddPlaceModalProps) {
   const { user } = useAuth()
 
+  // Restore draft from sessionStorage if available
+  const getInitialState = () => {
+    if (typeof window === 'undefined') return null
+    try {
+      const draft = sessionStorage.getItem('add_place_draft')
+      if (draft) return JSON.parse(draft)
+    } catch {}
+    return null
+  }
+  const draft = getInitialState()
+
   const [newPlace, setNewPlace] = useState({
-    name: '',
-    category: 'eat',
-    address: '',
-    description: '',
-    website: '',
-    opening_hours: '',
-    is_pet_friendly: false,
-    vegan_level: 'fully_vegan' as 'fully_vegan' | 'vegan_friendly',
-    latitude: 0,
-    longitude: 0,
-    city: defaultCity || ('' as string | undefined),
-    country: defaultCountry || ('' as string | undefined),
+    name: draft?.name || '',
+    category: draft?.category || 'eat',
+    address: draft?.address || '',
+    description: draft?.description || '',
+    website: draft?.website || '',
+    opening_hours: draft?.opening_hours || '',
+    is_pet_friendly: draft?.is_pet_friendly || false,
+    vegan_level: (draft?.vegan_level || 'fully_vegan') as 'fully_vegan' | 'vegan_friendly',
+    latitude: draft?.latitude || 0,
+    longitude: draft?.longitude || 0,
+    city: draft?.city || defaultCity || ('' as string | undefined),
+    country: draft?.country || defaultCountry || ('' as string | undefined),
   })
 
-  const [placeImages, setPlaceImages] = useState<string[]>([])
+  const [placeImages, setPlaceImages] = useState<string[]>(draft?.images || [])
   const [showImageUploader, setShowImageUploader] = useState(false)
-  const [addressSearchQuery, setAddressSearchQuery] = useState('')
+  const [addressSearchQuery, setAddressSearchQuery] = useState(draft?.address || '')
   const [addressSearchResults, setAddressSearchResults] = useState<any[]>([])
   const [showAddressResults, setShowAddressResults] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  // Save draft to sessionStorage on every change
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('add_place_draft', JSON.stringify({
+        ...newPlace,
+        images: placeImages,
+      }))
+    } catch {}
+  }, [newPlace, placeImages])
 
   // Close on escape
   useEffect(() => {
@@ -148,6 +169,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         })
       } catch {}
 
+      sessionStorage.removeItem('add_place_draft')
       track('place_added', { city: newPlace.city, country: newPlace.country, category: newPlace.category })
       onPlaceAdded?.(insertedPlace)
       onClose()

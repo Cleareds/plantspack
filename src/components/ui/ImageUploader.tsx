@@ -79,9 +79,9 @@ export default function ImageUploader({
   }, [])
 
   const validateFile = (file: File, existingImages: ImageFile[]): boolean => {
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
-    const maxSizePerFile = 5 * 1024 * 1024 // 5MB per file
-    const maxTotalSize = 10 * 1024 * 1024 // 10MB total
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif']
+    const maxSizePerFile = 15 * 1024 * 1024 // 15MB per file (iPhone photos can be 8-12MB)
+    const maxTotalSize = 40 * 1024 * 1024 // 40MB total (pre-compression; compressed output is much smaller)
 
     if (!validTypes.includes(file.type)) {
       alert('Please upload only JPEG, PNG, or WebP images.')
@@ -90,7 +90,7 @@ export default function ImageUploader({
 
     if (file.size > maxSizePerFile) {
       console.error('❌ File too large:', file.size, 'bytes. Max:', maxSizePerFile, 'bytes')
-      alert('Each image must be smaller than 5MB.')
+      alert('Each image must be smaller than 15MB.')
       return false
     }
 
@@ -107,7 +107,7 @@ export default function ImageUploader({
     
     if (totalAfterAdding > maxTotalSize) {
       console.error('❌ Total size would exceed limit:', totalAfterAdding, 'bytes. Max:', maxTotalSize, 'bytes')
-      alert('Total size of all images cannot exceed 10MB.')
+      alert('Total size of all images cannot exceed 40MB.')
       return false
     }
 
@@ -307,7 +307,7 @@ export default function ImageUploader({
             Drop images here or click to select
           </p>
           <p className="text-xs text-outline">
-            {images.length}/{maxImages === -1 ? 'Unlimited' : maxImages} images • JPEG, PNG, WebP up to 10MB
+            {images.length}/{maxImages === -1 ? 'Unlimited' : maxImages} images • JPEG, PNG, WebP • auto-compressed
           </p>
           <input
             ref={fileInputRef}
