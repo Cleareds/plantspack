@@ -396,11 +396,29 @@ export default function MapContainerComponent() {
         </div>
 
         {/* Add place button overlay — below sidebar toggle on mobile, top-right on desktop */}
-        <div className="absolute top-14 right-3 z-20 lg:top-3 lg:right-3 lg:z-30">
+        <div className="absolute top-[4.25rem] right-3 z-20 lg:top-3 lg:right-3 lg:z-30">
           {user ? (
             <button
               onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
+              className="lg:hidden flex items-center justify-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn p-3 rounded-xl text-sm font-medium transition-colors editorial-shadow w-full"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Add Place</span>
+            </button>
+          ) : (
+            <Link
+              href="/auth"
+              className="lg:hidden flex items-center justify-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn p-3 rounded-xl text-sm font-medium transition-colors editorial-shadow w-full"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Sign Up to Add</span>
+            </Link>
+          )}
+          {/* Desktop version */}
+          {user ? (
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="hidden lg:flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
             >
               <Plus className="h-4 w-4" />
               <span>Add Place</span>
@@ -408,7 +426,7 @@ export default function MapContainerComponent() {
           ) : (
             <Link
               href="/auth"
-              className="flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
+              className="hidden lg:flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
             >
               <Plus className="h-4 w-4" />
               <span>Sign Up to Add</span>
