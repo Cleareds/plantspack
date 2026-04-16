@@ -368,22 +368,22 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   <Calendar className="h-5 w-5 text-outline flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-sm font-medium text-on-surface mb-2">Opening Hours</div>
-                    <div className="text-sm space-y-1 max-w-xs">
+                    <div className="text-sm space-y-1">
                       {typeof place.opening_hours === 'string' ? (
                         (place.opening_hours as string).split(';').map((line, i) => {
                           const trimmed = line.trim()
                           const match = trimmed.match(/^([A-Za-z,\-\s]+)\s+(.+)$/)
                           return (
-                            <div key={i} className="flex gap-4">
-                              <span className="text-on-surface-variant w-20 flex-shrink-0">{match ? match[1].trim() : trimmed}</span>
+                            <div key={i} className="flex whitespace-nowrap">
+                              <span className="text-on-surface-variant w-28 flex-shrink-0">{match ? match[1].trim() : trimmed}</span>
                               {match && <span className="text-on-surface font-medium">{match[2].trim()}</span>}
                             </div>
                           )
                         })
                       ) : (
                         Object.entries(place.opening_hours).map(([day, hours]) => (
-                          <div key={day} className="flex gap-4">
-                            <span className="text-on-surface-variant w-20 flex-shrink-0 capitalize">{day}:</span>
+                          <div key={day} className="flex whitespace-nowrap">
+                            <span className="text-on-surface-variant w-28 flex-shrink-0 capitalize">{day}</span>
                             <span className="text-on-surface font-medium">{hours as string}</span>
                           </div>
                         ))
