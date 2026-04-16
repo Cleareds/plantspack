@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { track } from '@vercel/analytics'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
@@ -230,6 +231,7 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
         // Add new review at the beginning
         setReviews(prev => [review, ...prev])
         setUserReview(review)
+        track('review_submitted', { rating: review.rating })
       }
 
       setEditingReviewId(null)

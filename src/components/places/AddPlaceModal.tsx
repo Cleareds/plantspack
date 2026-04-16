@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { X, Search, Image as ImageIcon } from 'lucide-react'
+import { track } from '@vercel/analytics'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { geocodingService } from '@/lib/geocoding'
@@ -147,6 +148,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         })
       } catch {}
 
+      track('place_added', { city: newPlace.city, country: newPlace.country, category: newPlace.category })
       onPlaceAdded?.(insertedPlace)
       onClose()
     } catch (error) {
