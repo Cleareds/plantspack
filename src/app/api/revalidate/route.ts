@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,6 +12,12 @@ export async function POST(request: NextRequest) {
       revalidatePath(path)
       return NextResponse.json({ revalidated: true, path })
     }
+
+    // Refresh materialized directory views so new cities/countries appear
+    try {
+      const supabase = createAdminClient()
+      await supabase.rpc('refresh_directory_views')
+    } catch {}
 
     // Always revalidate the main directory
     revalidatePath('/vegan-places')
