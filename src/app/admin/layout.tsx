@@ -20,7 +20,8 @@ import {
   ChefHat,
   Calendar,
   PenLine,
-  BarChart3
+  BarChart3,
+  Star
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -75,6 +76,7 @@ export default function AdminLayout({
     { name: 'Posts', href: '/admin/posts', icon: FileText },
     { name: 'Comments', href: '/admin/comments', icon: MessageSquare },
     { name: 'Places', href: '/admin/places', icon: MapPin },
+    { name: 'Reviews', href: '/admin/reviews', icon: Star },
     { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
     { name: 'Events', href: '/admin/events', icon: Calendar },
     { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },

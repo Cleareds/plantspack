@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Users, FileText, MessageSquare, MapPin, Flag, Mail, TrendingUp, AlertCircle, Building2 } from 'lucide-react'
+import { Users, FileText, MessageSquare, MapPin, Flag, Mail, TrendingUp, AlertCircle, Building2, Star } from 'lucide-react'
 
 interface Stats {
   totalUsers: number
   totalPosts: number
   totalComments: number
   totalPlaces: number
+  totalReviews: number
   pendingReports: number
   pendingContacts: number
   pendingClaims: number
@@ -34,6 +35,7 @@ export default function AdminDashboard() {
     totalPosts: 0,
     totalComments: 0,
     totalPlaces: 0,
+    totalReviews: 0,
     pendingReports: 0,
     pendingContacts: 0,
     pendingClaims: 0,
@@ -61,6 +63,7 @@ export default function AdminDashboard() {
         { count: totalPosts },
         { count: totalComments },
         { count: totalPlaces },
+        { count: totalReviews },
         { count: pendingReports },
         { count: pendingContacts },
         { count: pendingClaims },
@@ -74,6 +77,7 @@ export default function AdminDashboard() {
         supabase.from('posts').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('comments').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('places').select('*', { count: 'exact', head: true }),
+        supabase.from('place_reviews').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('place_claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
@@ -91,6 +95,7 @@ export default function AdminDashboard() {
         totalPosts: totalPosts || 0,
         totalComments: totalComments || 0,
         totalPlaces: totalPlaces || 0,
+        totalReviews: totalReviews || 0,
         pendingReports: pendingReports || 0,
         pendingContacts: pendingContacts || 0,
         pendingClaims: pendingClaims || 0,
@@ -139,6 +144,14 @@ export default function AdminDashboard() {
       bg: 'bg-orange-100',
     },
     {
+      name: 'Place Reviews',
+      value: stats.totalReviews,
+      icon: Star,
+      color: 'text-amber-600',
+      bg: 'bg-amber-100',
+      href: '/admin/reviews',
+    },
+    {
       name: 'Pending Reports',
       value: stats.pendingReports,
       icon: Flag,
@@ -185,10 +198,12 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statCards.map((stat) => {
           const Icon = stat.icon
+          const Wrapper = (stat as any).href ? 'a' : 'div'
           return (
-            <div
+            <Wrapper
               key={stat.name}
-              className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
+              {...((stat as any).href ? { href: (stat as any).href } : {})}
+              className={`bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow ${(stat as any).href ? 'cursor-pointer' : ''}`}
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -213,7 +228,7 @@ export default function AdminDashboard() {
                   <span className="text-sm font-medium">Requires attention</span>
                 </div>
               )}
-            </div>
+            </Wrapper>
           )
         })}
       </div>
