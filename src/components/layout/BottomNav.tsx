@@ -17,7 +17,7 @@ export default function BottomNav() {
   const username = profile?.username || user?.user_metadata?.username
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 w-full z-40 flex justify-around items-end px-1 pb-[env(safe-area-inset-bottom,8px)] h-20 bg-surface/90 backdrop-blur-xl shadow-[0_-10px_40px_rgba(45,47,44,0.06)]">
+    <nav className="lg:hidden fixed bottom-0 left-0 w-full z-40 flex justify-around items-end px-1 pb-[env(safe-area-inset-bottom,4px)] h-16 bg-surface/90 backdrop-blur-xl shadow-[0_-10px_40px_rgba(45,47,44,0.06)]">
       {navItems.map((item) => {
         const isActive = item.href === '/' ? pathname === '/' : pathname?.startsWith(item.href)
         return (

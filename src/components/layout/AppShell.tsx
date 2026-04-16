@@ -124,7 +124,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main content area */}
-      <main className={`${isMapPage ? 'h-screen overflow-hidden' : 'min-h-screen'} pt-[80px] ${showBanner ? 'pt-[124px]' : ''} lg:ml-64 ${isMapPage ? '' : 'pb-24 lg:pb-0'}`}>
+      <main className={`${isMapPage ? 'h-screen overflow-hidden' : 'min-h-screen'} pt-[80px] ${showBanner ? 'pt-[124px]' : ''} lg:ml-64 ${isMapPage ? '' : 'pb-20 lg:pb-0'}`}>
         {children}
       </main>
 

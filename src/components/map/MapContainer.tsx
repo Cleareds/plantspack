@@ -370,7 +370,7 @@ export default function MapContainerComponent() {
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
         {/* Map overlay controls — above bottom nav on mobile, top-left on desktop */}
-        <div className="absolute bottom-24 left-2 right-14 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto">
+        <div className="absolute bottom-20 left-2 right-14 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto">
           {/* Search bar */}
           <MapSearchBar
             value={searchQuery}
