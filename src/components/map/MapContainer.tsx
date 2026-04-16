@@ -361,8 +361,8 @@ export default function MapContainerComponent() {
 
       {/* Main Content - Map and Discovery Panel */}
       <div className="flex-1 flex overflow-hidden max-h-full relative">
-        {/* Map overlay controls — bottom on mobile, top-left (offset for zoom buttons) on desktop */}
-        <div className="absolute bottom-20 left-2 right-2 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto">
+        {/* Map overlay controls — bottom on mobile, top-left on desktop */}
+        <div className="absolute bottom-3 left-2 right-14 z-30 flex flex-col gap-2 lg:bottom-auto lg:top-3 lg:left-14 lg:right-auto">
           {/* Search bar */}
           <MapSearchBar
             value={searchQuery}
@@ -394,15 +394,15 @@ export default function MapContainerComponent() {
           )}
         </div>
 
-        {/* Add place button overlay */}
-        <div className="absolute top-3 right-3 z-30">
+        {/* Add place button overlay — top-right on desktop, bottom-left on mobile (avoids sidebar toggle) */}
+        <div className="absolute bottom-28 left-3 z-30 lg:bottom-auto lg:left-auto lg:top-3 lg:right-3">
           {user ? (
             <button
               onClick={() => setShowAddForm(true)}
               className="flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
             >
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Add Place</span>
+              <span>Add Place</span>
             </button>
           ) : (
             <Link
@@ -410,7 +410,7 @@ export default function MapContainerComponent() {
               className="flex items-center gap-1.5 silk-gradient hover:opacity-90 text-on-primary-btn px-3 py-2 rounded-full text-sm font-medium transition-colors editorial-shadow"
             >
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Sign Up</span>
+              <span>Sign Up to Add</span>
             </Link>
           )}
         </div>
