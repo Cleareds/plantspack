@@ -13,7 +13,15 @@
     },
     "src/app/api/cron/osm-sync/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/refresh-scores/route.ts": {
+      "maxDuration": 60
     }
   },
-  "crons": []
+  "crons": [
+    {
+      "path": "/api/cron/refresh-scores",
+      "schedule": "17 3 * * *"
+    }
+  ]
 }

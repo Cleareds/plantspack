@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Search, Info, X, TrendingUp, ChevronRight, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -53,68 +54,6 @@ interface CityScore {
 }
 
 interface ScoreBreakdown { accessibility: number; choice: number; variety: number; quality: number }
-
-function calculateScore(places: Place[], population?: number): { score: number; grade: string; breakdown: ScoreBreakdown; perCapita?: number } {
-  if (places.length === 0) return { score: 0, grade: 'F', breakdown: { accessibility: 0, choice: 0, variety: 0, quality: 0 } }
-
-  const fullyVegan = places.filter(p => p.vegan_level === 'fully_vegan')
-  const fvCount = fullyVegan.length
-
-  // Accessibility (0-20): fully-vegan places per 100k residents
-  // Measures how likely a resident encounters vegan options
-  let accessibility = 0
-  let perCapita: number | undefined
-  if (population && population > 0) {
-    perCapita = (fvCount / population) * 100000
-    // Scale: 0.5 per 100k = ~4pts, 2 per 100k = ~12pts, 5+ per 100k = 20pts
-    accessibility = Math.min(20, perCapita * 4)
-  } else {
-    // Fallback for small towns without population data
-    accessibility = Math.min(20, fvCount >= 3 ? 10 : fvCount * 4)
-  }
-
-  // Choice (0-20): absolute count of fully-vegan places (log scale)
-  // Measures how much variety a visitor actually has
-  // 1=7, 2=11, 4=15, 8=18, 15+=20
-  const choice = Math.min(20, fvCount > 0 ? 7 * Math.log2(fvCount + 1) : 0)
-
-  // Variety (0-30): category diversity among fully-vegan places
-  // Sanctuaries excluded — they're rural, not a city amenity
-  const fvCategories = new Set(fullyVegan.map(p => p.category))
-  const variety = Math.min(30,
-    (fvCategories.has('eat') ? 12 : 0) +
-    (fvCategories.has('store') ? 8 : 0) +
-    (fvCategories.has('hotel') ? 6 : 0) +
-    (fvCategories.has('event') ? 4 : 0)
-  )
-
-  // Quality (0-30): community ratings of fully-vegan places
-  // No ratings yet = 0 — honest, incentivizes reviews
-  const ratedFv = fullyVegan.filter(p => p.average_rating && p.average_rating > 0)
-  const avgRating = ratedFv.length > 0 ? ratedFv.reduce((s, p) => s + (p.average_rating || 0), 0) / ratedFv.length : 0
-  const reviewCoverage = ratedFv.length / Math.max(1, fvCount)
-  const quality = Math.min(30, (avgRating / 5) * 20 + reviewCoverage * 10)
-
-  const score = Math.round(Math.min(100, accessibility + choice + variety + quality))
-  const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
-  return { score, grade, breakdown: { accessibility: Math.round(accessibility), choice: Math.round(choice), variety: Math.round(variety), quality: Math.round(quality) }, perCapita }
-}
-
-function getGradeColor(grade: string) {
-  if (grade.startsWith('A')) return 'text-emerald-500'
-  if (grade === 'B') return 'text-green-500'
-  if (grade === 'C') return 'text-yellow-500'
-  if (grade === 'D') return 'text-orange-500'
-  return 'text-red-500'
-}
-
-function getScoreBarColor(score: number) {
-  if (score >= 80) return 'bg-emerald-500'
-  if (score >= 65) return 'bg-green-500'
-  if (score >= 50) return 'bg-yellow-500'
-  if (score >= 35) return 'bg-orange-500'
-  return 'bg-red-500'
-}
 
 export default function VeganScoreMap() {
   const [places, setPlaces] = useState<Place[]>([])
@@ -407,10 +346,10 @@ export default function VeganScoreMap() {
                 </div>
               </div>
               <div className="space-y-1 text-[11px]">
-                <div className="flex justify-between"><span className="text-gray-500">Accessibility</span><span className="font-medium">{selectedCity.breakdown.accessibility}/20</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Choice</span><span className="font-medium">{selectedCity.breakdown.choice}/20</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Variety</span><span className="font-medium">{selectedCity.breakdown.variety}/30</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Quality</span><span className="font-medium">{selectedCity.breakdown.quality}/30</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Accessibility</span><span className="font-medium">{selectedCity.breakdown.accessibility}/25</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Choice</span><span className="font-medium">{selectedCity.breakdown.choice}/25</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Variety</span><span className="font-medium">{selectedCity.breakdown.variety}/25</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Quality</span><span className="font-medium">{selectedCity.breakdown.quality}/25</span></div>
               </div>
               {(selectedCity.population || selectedCity.perCapita) && (
                 <div className="mt-2 pt-2 border-t border-gray-100 text-[10px] text-gray-400 space-y-0.5">
@@ -531,34 +470,34 @@ export default function VeganScoreMap() {
               <h2 className="text-xl font-bold text-gray-900">How City Ranks Work</h2>
               <button onClick={() => setShowInfo(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">Every city gets a score from 0 to 100 based on four dimensions:</p>
+            <p className="text-sm text-gray-600 mb-4">Every city gets a score from 0 to 100 across four dimensions (25 points each). Every place counts — a 100% vegan spot counts fully, a vegan-friendly spot counts as 0.35 of one.</p>
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
-                <h3 className="font-bold text-emerald-800 text-sm mb-1">📊 Accessibility (0-20 pts)</h3>
-                <p className="text-xs text-emerald-700">100% vegan places per 100,000 residents. Uses real population data for 1,200+ cities. A small town with high vegan-per-capita scores higher — measures how likely residents encounter vegan options daily.</p>
+                <h3 className="font-bold text-emerald-800 text-sm mb-1">📊 Accessibility (0-25 pts)</h3>
+                <p className="text-xs text-emerald-700">How easy is it to find a vegan option? Combines raw abundance with per-capita density. A small town with a handful of vegan spots can outscore a megacity where they&apos;re lost in the crowd.</p>
               </div>
               <div className="bg-teal-50 rounded-xl p-3">
-                <h3 className="font-bold text-teal-800 text-sm mb-1">🏪 Choice (0-20 pts)</h3>
-                <p className="text-xs text-teal-700">How many fully-vegan places does the city actually have? More options means more choice for visitors. Logarithmic scale so the first few places matter most.</p>
+                <h3 className="font-bold text-teal-800 text-sm mb-1">🏪 Choice (0-25 pts)</h3>
+                <p className="text-xs text-teal-700">Volume and purity of vegan options. More places means more choice, with a logarithmic curve that still separates the top cities. Fully-vegan-heavy cities earn a purity bonus.</p>
               </div>
               <div className="bg-blue-50 rounded-xl p-3">
-                <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-30 pts)</h3>
-                <p className="text-xs text-blue-700">Mix of 100% vegan restaurants, stores, stays, and events. Only fully vegan places count. A city with restaurants AND a vegan store AND a vegan hotel scores higher than one with only restaurants.</p>
+                <h3 className="font-bold text-blue-800 text-sm mb-1">🎨 Variety (0-25 pts)</h3>
+                <p className="text-xs text-blue-700">Depth across categories: restaurants, stores, stays, events, and orgs. Not just &ldquo;do they have one?&rdquo; — a city with 50 vegan stores scores higher than one with 1.</p>
               </div>
               <div className="bg-purple-50 rounded-xl p-3">
-                <h3 className="font-bold text-purple-800 text-sm mb-1">⭐ Quality (0-30 pts)</h3>
-                <p className="text-xs text-purple-700">Community ratings of fully vegan places. No reviews yet? This score starts at 0 — rate places to help your city climb the rankings!</p>
+                <h3 className="font-bold text-purple-800 text-sm mb-1">⭐ Quality (0-25 pts)</h3>
+                <p className="text-xs text-purple-700">Community ratings, Bayesian-smoothed so a single 5-star review can&apos;t game the system. Every city starts near ~7 pts; real reviews push it up toward 25. <strong>Rate places to help your city climb!</strong></p>
               </div>
             </div>
             <div className="bg-gray-50 rounded-xl p-3 mb-4">
               <h3 className="font-bold text-gray-800 text-sm mb-2">Grade Scale</h3>
               <div className="grid grid-cols-3 gap-2 text-xs">
-                <div><span className="font-bold text-emerald-500">A+</span> <span className="text-gray-400">90-100</span></div>
-                <div><span className="font-bold text-emerald-500">A</span> <span className="text-gray-400">80-89</span></div>
-                <div><span className="font-bold text-green-500">B</span> <span className="text-gray-400">65-79</span></div>
-                <div><span className="font-bold text-yellow-500">C</span> <span className="text-gray-400">50-64</span></div>
-                <div><span className="font-bold text-orange-500">D</span> <span className="text-gray-400">35-49</span></div>
-                <div><span className="font-bold text-red-500">F</span> <span className="text-gray-400">0-34</span></div>
+                <div><span className="font-bold text-emerald-500">A+</span> <span className="text-gray-400">88-100</span></div>
+                <div><span className="font-bold text-emerald-500">A</span> <span className="text-gray-400">78-87</span></div>
+                <div><span className="font-bold text-green-500">B</span> <span className="text-gray-400">62-77</span></div>
+                <div><span className="font-bold text-yellow-500">C</span> <span className="text-gray-400">45-61</span></div>
+                <div><span className="font-bold text-orange-500">D</span> <span className="text-gray-400">30-44</span></div>
+                <div><span className="font-bold text-red-500">F</span> <span className="text-gray-400">0-29</span></div>
               </div>
             </div>
             <div className="bg-emerald-50 rounded-xl p-3">

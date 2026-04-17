@@ -24,18 +24,18 @@ export function getGradeColor(grade: string): string {
 }
 
 export function getScoreBarColor(score: number): string {
-  if (score >= 80) return 'bg-emerald-500'
-  if (score >= 65) return 'bg-green-500'
-  if (score >= 50) return 'bg-yellow-500'
-  if (score >= 35) return 'bg-orange-500'
+  if (score >= 78) return 'bg-emerald-500'
+  if (score >= 62) return 'bg-green-500'
+  if (score >= 45) return 'bg-yellow-500'
+  if (score >= 30) return 'bg-orange-500'
   return 'bg-red-500'
 }
 
 export function computeGrade(score: number): string {
-  if (score >= 90) return 'A+'
-  if (score >= 80) return 'A'
-  if (score >= 65) return 'B'
-  if (score >= 50) return 'C'
-  if (score >= 35) return 'D'
+  if (score >= 88) return 'A+'
+  if (score >= 78) return 'A'
+  if (score >= 62) return 'B'
+  if (score >= 45) return 'C'
+  if (score >= 30) return 'D'
   return 'F'
 }

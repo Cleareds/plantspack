@@ -287,16 +287,16 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                         </div>
                       </td>
                       <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
-                        {city.breakdown?.accessibility ?? 0}<span className="text-on-surface-variant/40">/20</span>
+                        {city.breakdown?.accessibility ?? 0}<span className="text-on-surface-variant/40">/25</span>
                       </td>
                       <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
-                        {city.breakdown?.choice ?? 0}<span className="text-on-surface-variant/40">/20</span>
+                        {city.breakdown?.choice ?? 0}<span className="text-on-surface-variant/40">/25</span>
                       </td>
                       <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
-                        {city.breakdown?.variety ?? 0}<span className="text-on-surface-variant/40">/30</span>
+                        {city.breakdown?.variety ?? 0}<span className="text-on-surface-variant/40">/25</span>
                       </td>
                       <td className="px-3 py-2.5 text-xs text-on-surface-variant hidden lg:table-cell">
-                        {city.breakdown?.quality ?? 0}<span className="text-on-surface-variant/40">/30</span>
+                        {city.breakdown?.quality ?? 0}<span className="text-on-surface-variant/40">/25</span>
                       </td>
                       <td className="px-3 py-2.5 text-xs font-medium text-on-surface-variant">{city.placeCount}</td>
                     </tr>
@@ -350,10 +350,10 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                       </div>
                     </div>
                     <div className="flex gap-3 mt-2 ml-11 text-[10px] text-on-surface-variant">
-                      <span>Access {city.breakdown?.accessibility ?? 0}/20</span>
-                      <span>Choice {city.breakdown?.choice ?? 0}/20</span>
-                      <span>Variety {city.breakdown?.variety ?? 0}/30</span>
-                      <span>Quality {city.breakdown?.quality ?? 0}/30</span>
+                      <span>Access {city.breakdown?.accessibility ?? 0}/25</span>
+                      <span>Choice {city.breakdown?.choice ?? 0}/25</span>
+                      <span>Variety {city.breakdown?.variety ?? 0}/25</span>
+                      <span>Quality {city.breakdown?.quality ?? 0}/25</span>
                     </div>
                   </Link>
                 )
@@ -423,34 +423,34 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
               <h2 className="text-xl font-bold text-on-surface">How City Ranks Work</h2>
               <button onClick={() => setShowInfo(false)} className="text-on-surface-variant hover:text-on-surface"><X className="h-5 w-5" /></button>
             </div>
-            <p className="text-sm text-on-surface-variant mb-4">Every city gets a score from 0 to 100 based on four dimensions:</p>
+            <p className="text-sm text-on-surface-variant mb-4">Every city gets a score from 0 to 100 across four dimensions (25 points each). Every place counts — a 100% vegan spot counts fully, a vegan-friendly spot counts as 0.35 of one.</p>
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
-                <h3 className="font-bold text-emerald-800 text-sm mb-1">Accessibility (0-20 pts)</h3>
-                <p className="text-xs text-emerald-700">100% vegan places per 100,000 residents. Uses real population data for 1,200+ cities. A small town with high vegan-per-capita scores higher.</p>
+                <h3 className="font-bold text-emerald-800 text-sm mb-1">Accessibility (0-25 pts)</h3>
+                <p className="text-xs text-emerald-700">How easy is it to find a vegan option? Combines raw abundance with per-capita density. A small town with a handful of vegan spots can outscore a megacity where they&apos;re lost in the crowd.</p>
               </div>
               <div className="bg-teal-50 rounded-xl p-3">
-                <h3 className="font-bold text-teal-800 text-sm mb-1">Choice (0-20 pts)</h3>
-                <p className="text-xs text-teal-700">How many fully-vegan places does the city have? More options = more choice. Logarithmic scale so the first few places matter most.</p>
+                <h3 className="font-bold text-teal-800 text-sm mb-1">Choice (0-25 pts)</h3>
+                <p className="text-xs text-teal-700">Volume and purity of vegan options. More places means more choice, with a logarithmic curve that still separates the top cities. Fully-vegan-heavy cities earn a purity bonus.</p>
               </div>
               <div className="bg-blue-50 rounded-xl p-3">
-                <h3 className="font-bold text-blue-800 text-sm mb-1">Variety (0-30 pts)</h3>
-                <p className="text-xs text-blue-700">Mix of 100% vegan restaurants, stores, stays. Only fully vegan places count. A city with restaurants + stores + hotels scores higher.</p>
+                <h3 className="font-bold text-blue-800 text-sm mb-1">Variety (0-25 pts)</h3>
+                <p className="text-xs text-blue-700">Depth across categories: restaurants, stores, stays, events, and orgs. Not just &ldquo;do they have one?&rdquo; — a city with 50 vegan stores scores higher than one with 1.</p>
               </div>
               <div className="bg-purple-50 rounded-xl p-3">
-                <h3 className="font-bold text-purple-800 text-sm mb-1">Quality (0-30 pts)</h3>
-                <p className="text-xs text-purple-700">Community ratings of fully vegan places. No reviews yet? Score starts at 0 — rate places to help your city climb!</p>
+                <h3 className="font-bold text-purple-800 text-sm mb-1">Quality (0-25 pts)</h3>
+                <p className="text-xs text-purple-700">Community ratings, Bayesian-smoothed so a single 5-star review can&apos;t game the system. Every city starts near ~7 pts; real reviews push it up toward 25. <strong>Rate places to help your city climb!</strong></p>
               </div>
             </div>
             <div className="bg-surface-container-low rounded-xl p-3 mb-4">
               <h3 className="font-bold text-on-surface text-sm mb-2">Grade Scale</h3>
               <div className="grid grid-cols-3 gap-2 text-xs">
-                <div><span className="font-bold text-emerald-500">A+</span> <span className="text-on-surface-variant">90-100</span></div>
-                <div><span className="font-bold text-emerald-500">A</span> <span className="text-on-surface-variant">80-89</span></div>
-                <div><span className="font-bold text-green-500">B</span> <span className="text-on-surface-variant">65-79</span></div>
-                <div><span className="font-bold text-yellow-500">C</span> <span className="text-on-surface-variant">50-64</span></div>
-                <div><span className="font-bold text-orange-500">D</span> <span className="text-on-surface-variant">35-49</span></div>
-                <div><span className="font-bold text-red-500">F</span> <span className="text-on-surface-variant">0-34</span></div>
+                <div><span className="font-bold text-emerald-500">A+</span> <span className="text-on-surface-variant">88-100</span></div>
+                <div><span className="font-bold text-emerald-500">A</span> <span className="text-on-surface-variant">78-87</span></div>
+                <div><span className="font-bold text-green-500">B</span> <span className="text-on-surface-variant">62-77</span></div>
+                <div><span className="font-bold text-yellow-500">C</span> <span className="text-on-surface-variant">45-61</span></div>
+                <div><span className="font-bold text-orange-500">D</span> <span className="text-on-surface-variant">30-44</span></div>
+                <div><span className="font-bold text-red-500">F</span> <span className="text-on-surface-variant">0-29</span></div>
               </div>
             </div>
           </div>
