@@ -155,6 +155,12 @@ const nextConfig: NextConfig = {
         destination: '/support',
         permanent: true,
       },
+      {
+        // City renamed 2016: Dnipropetrovsk → Dnipro
+        source: '/vegan-places/ukraine/dnipropetrovsk',
+        destination: '/vegan-places/ukraine/dnipro',
+        permanent: true,
+      },
     ]
   },
 };
