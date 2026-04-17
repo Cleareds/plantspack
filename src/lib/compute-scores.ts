@@ -9,14 +9,24 @@ import type { CityScore } from '@/lib/score-utils'
 export async function computeAllScores(): Promise<{ scores: CityScore[]; totalPlaces: number }> {
   const supabase = createAdminClient()
 
-  const { data, error } = await supabase
-    .from('city_scores')
-    .select('city, country, score, grade, fv_count, place_count, per_capita, center_lat, center_lng, accessibility, choice, variety, quality')
-    .order('score', { ascending: false })
+  // Paginate around PostgREST's 1000-row cap.
+  const rows: any[] = []
+  const pageSize = 1000
+  let offset = 0
+  while (true) {
+    const { data, error } = await supabase
+      .from('city_scores')
+      .select('city, country, score, grade, fv_count, place_count, per_capita, center_lat, center_lng, accessibility, choice, variety, quality')
+      .order('score', { ascending: false })
+      .range(offset, offset + pageSize - 1)
+    if (error) throw error
+    if (!data || data.length === 0) break
+    rows.push(...data)
+    if (data.length < pageSize) break
+    offset += pageSize
+  }
 
-  if (error) throw error
-
-  const scores: CityScore[] = (data || []).map((r: any) => ({
+  const scores: CityScore[] = rows.map((r: any) => ({
     city: r.city,
     country: r.country,
     score: r.score,
