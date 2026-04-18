@@ -104,18 +104,38 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const post = await getRecipePost(id)
   if (!post) return { title: 'Recipe Not Found - PlantsPack' }
 
-  const title = post.title || post.content.split('\n')[0].substring(0, 80)
+  const rawTitle = post.title || post.content.split('\n')[0].substring(0, 80)
   const recipe = post.recipe_data
-  const description = recipe
-    ? `${(recipe.prep_time_min || 0) + (recipe.cook_time_min || 0)}min · ${recipe.servings || '?'} servings · ${recipe.difficulty || 'unknown'}`
-    : post.content.substring(0, 160)
+  const difficulty = recipe?.difficulty ? recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1) : null
+  const totalMin = recipe ? (recipe.prep_time_min || 0) + (recipe.cook_time_min || 0) : 0
+  const servings = recipe?.servings
+
+  const titleTail = recipe && totalMin > 0
+    ? ` — Vegan Recipe in ${totalMin} min | PlantsPack`
+    : ' — Vegan Recipe | PlantsPack'
+  const title = `${rawTitle}${titleTail}`
+
+  // Rich narrative description: blend content + stats + cuisine tags
+  const tags = (post.secondary_tags || []).filter((t: string) => t && t !== 'vegan').slice(0, 3).join(', ')
+  const contentPreview = (post.content || '').replace(/\n+/g, ' ').trim().substring(0, 110)
+  const statsParts: string[] = []
+  if (totalMin > 0) statsParts.push(`${totalMin} min`)
+  if (servings) statsParts.push(`${servings} servings`)
+  if (difficulty) statsParts.push(difficulty.toLowerCase())
+  const statsStr = statsParts.length ? ` (${statsParts.join(' · ')})` : ''
+  const tagsStr = tags ? ` Featuring ${tags}.` : ''
+  let description = `${rawTitle}${statsStr}. ${contentPreview}${tagsStr}`.trim()
+  if (description.length < 110 && contentPreview) {
+    description = `${rawTitle}${statsStr}. A vegan recipe with step-by-step instructions, ingredient list, and photos. ${contentPreview}${tagsStr}`
+  }
+  if (description.length > 160) description = description.slice(0, 157).replace(/\s+\S*$/, '') + '…'
 
   const image = post.images?.[0] || post.image_url
   return {
-    title: `${title} - Recipe | PlantsPack`,
+    title,
     description,
     alternates: { canonical: `https://plantspack.com/recipe/${post.slug || id}` },
-    openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
+    openGraph: { title: `${rawTitle} — Vegan Recipe`, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
   }
 }
 

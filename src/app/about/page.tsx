@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'About PlantsPack - Built for the Mission, Not the Markets',
-  description: 'PlantsPack is a community-funded vegan platform with 33,000+ places across 117 countries. No investors, no ads. 50% of profit goes to animal welfare.',
+  title: 'About PlantsPack — Built for the Mission, Not the Markets',
+  description: 'PlantsPack is a community-funded, ad-free vegan platform mapping 37,000+ plant-based places across 170+ countries. No investors — 50% of profit funds animal welfare.',
+  alternates: { canonical: 'https://plantspack.com/about' },
 }
 
 export default function AboutPage() {

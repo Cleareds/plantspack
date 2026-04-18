@@ -7,8 +7,9 @@ import HomeClient from '@/components/home/HomeClient'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'PlantsPack — Vegan Community Platform',
-  description: '33,000+ vegan places across 117 countries. See your city\'s vegan ranking, find restaurants, stores, stays, and sanctuaries. 580+ recipes. Free forever.',
+  title: 'PlantsPack — Vegan Places, Recipes & City Rankings Worldwide',
+  description: '37,000+ vegan restaurants, shops, and stays across 170+ countries. Compare 1,000+ cities by vegan-friendliness, browse 580+ recipes, and post reviews. Free, ad-free.',
+  alternates: { canonical: 'https://plantspack.com' },
 }
 
 async function getTopCities() {

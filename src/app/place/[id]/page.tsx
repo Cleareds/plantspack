@@ -96,17 +96,48 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     }
   }
 
-  const rating = place.average_rating > 0 ? `⭐ ${place.average_rating.toFixed(1)}` : ''
-  const description = place.description || `${place.name} - ${place.category} in ${place.address}`
+  const categoryLabel: Record<string, string> = {
+    eat: 'Vegan Restaurant', store: 'Vegan Store', hotel: 'Vegan-Friendly Stay',
+    event: 'Vegan Event', organisation: 'Vegan Organisation', other: 'Vegan-Friendly Place',
+  }
+  const cat = categoryLabel[place.category] || 'Vegan-Friendly Place'
+  const veganTag = (place as any).vegan_level === 'fully_vegan' ? 'Fully Vegan' : 'Vegan-Friendly'
+  const location = [place.city, place.country].filter(Boolean).join(', ')
+  const rating = place.average_rating > 0 ? ` · ⭐ ${place.average_rating.toFixed(1)}` : ''
+
+  const title = location
+    ? `${place.name} — ${veganTag} ${cat} in ${location}${rating} | PlantsPack`
+    : `${place.name} — ${veganTag} ${cat}${rating} | PlantsPack`
+
+  // Build a rich fallback description if the place has no description
+  const cuisines = (place as any).cuisine_types?.filter((c: string) => c && c !== 'vegan').slice(0, 3) || []
+  const cuisineStr = cuisines.length ? ` ${cuisines.join(', ')} cuisine.` : ''
+  const ratingText = place.review_count > 0
+    ? ` Rated ${place.average_rating.toFixed(1)}/5 from ${place.review_count} review${place.review_count === 1 ? '' : 's'}.`
+    : ''
+  const addressLine = place.address ? ` ${place.address}.` : ''
+  const fallbackDesc = `${place.name} is a ${veganTag.toLowerCase()} ${cat.toLowerCase()}${location ? ` in ${location}` : ''}.${cuisineStr}${addressLine}${ratingText}`.trim()
+
+  // Prefer real description if long enough; otherwise augment with fallback
+  const rawDesc = (place.description || '').trim()
+  let description: string
+  if (rawDesc.length >= 100) {
+    description = rawDesc.length > 160 ? rawDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : rawDesc
+  } else if (rawDesc.length > 0) {
+    const combined = `${rawDesc} ${fallbackDesc}`.trim()
+    description = combined.length > 160 ? combined.slice(0, 157).replace(/\s+\S*$/, '') + '…' : combined
+  } else {
+    description = fallbackDesc.length > 160 ? fallbackDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : fallbackDesc
+  }
 
   const image = (place as any).main_image_url || place.images?.[0]
 
   return {
-    title: `${place.name} ${rating} - PlantsPack`,
+    title,
     description,
     alternates: { canonical: `https://plantspack.com/place/${place.slug || id}` },
     openGraph: {
-      title: place.name,
+      title: `${place.name} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
       description,
       type: 'website',
       siteName: 'PlantsPack',

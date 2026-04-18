@@ -4,7 +4,7 @@ import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import PinCityButton from '@/components/places/PinCityButton'
 import FollowCityButton from '@/components/places/FollowCityButton'
-import { generateCityDescription } from '@/lib/vegan-scene-descriptions'
+import { generateCityDescription, generateCityMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
@@ -39,19 +39,39 @@ interface Place {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country, city } = await params
-  // Single query — cache() deduplicates with page render
   const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
 
-  const title = `Vegan Places in ${cityName} (${places.length}) | PlantsPack`
-  const description = `Discover ${places.length} vegan restaurants, stores, and stays in ${cityName}. Community-verified with ratings and reviews.`
+  const fv = places.filter((p: Place) => p.vegan_level === 'fully_vegan').length
+  const eat = places.filter((p: Place) => p.category === 'eat').length
+  const store = places.filter((p: Place) => p.category === 'store').length
+  const hotel = places.filter((p: Place) => p.category === 'hotel').length
+  const pet = places.filter((p: Place) => p.is_pet_friendly).length
+  const cuisineSet = new Set<string>()
+  for (const p of places) (p.cuisine_types || []).forEach((c: string) => {
+    if (c && c !== 'vegan' && c !== 'regional') cuisineSet.add(c.replace(/_/g, ' '))
+  })
+  const sampleNames = places.slice(0, 6).map((p: Place) => p.name)
+
+  const metaDesc = generateCityMetaDescription(cityName, countryName, {
+    total: places.length,
+    categories: { eat, store, hotel },
+    cuisines: Array.from(cuisineSet).slice(0, 6),
+    sampleNames,
+    fullyVegan: fv,
+    petFriendly: pet,
+  })
+
+  const title = fv > 0
+    ? `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots (${fv} Fully Vegan) | PlantsPack`
+    : `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots | PlantsPack`
 
   return {
-    title: `${title} | PlantsPack`,
-    description,
+    title,
+    description: metaDesc,
     alternates: { canonical: `https://plantspack.com/vegan-places/${country}/${city}` },
     openGraph: {
-      title,
-      description,
+      title: `Vegan Places in ${cityName}, ${countryName}`,
+      description: metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
     },

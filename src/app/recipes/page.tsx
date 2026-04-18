@@ -7,12 +7,12 @@ import RecipeFilters from '@/components/recipes/RecipeFilters'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Vegan Recipes — Easy, Delicious Plant-Based Cooking | PlantsPack',
-  description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step instructions, nutrition info, and photos. Filter by meal type, cuisine, and difficulty.',
+  title: 'Vegan Recipes — Plant-Based Cooking Made Easy | PlantsPack',
+  description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step instructions, nutrition data, prep times, and photos. Filter by meal, cuisine, and difficulty.',
   alternates: { canonical: 'https://plantspack.com/recipes' },
   openGraph: {
-    title: 'Vegan Recipes | PlantsPack',
-    description: 'Easy, delicious vegan recipes for breakfast, lunch, dinner, and desserts. Community-curated with nutrition data.',
+    title: 'Vegan Recipes — Plant-Based Cooking Made Easy | PlantsPack',
+    description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step, nutrition data, and photos — filter by meal, cuisine, and difficulty.',
     type: 'website',
     siteName: 'PlantsPack',
   },
