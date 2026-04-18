@@ -39,6 +39,7 @@ export async function GET(
         )
       `)
       .eq(column, id)
+      .is('archived_at', null)
       .single()
 
     if (error) {
@@ -51,19 +52,22 @@ export async function GET(
       throw error
     }
 
+    // Always use the resolved UUID (the URL param may be a slug).
+    const placeId = place.id
+
     // Get average rating
-    const { data: avgRating, error: ratingError } = await supabase
-      .rpc('get_place_average_rating', { p_place_id: id })
+    const { data: avgRating } = await supabase
+      .rpc('get_place_average_rating', { p_place_id: placeId })
 
     // Get rating distribution
-    const { data: distribution, error: distError } = await supabase
-      .rpc('get_place_rating_distribution', { p_place_id: id })
+    const { data: distribution } = await supabase
+      .rpc('get_place_rating_distribution', { p_place_id: placeId })
 
     // Get review count
-    const { count: reviewCount, error: countError } = await supabase
+    const { count: reviewCount } = await supabase
       .from('place_reviews')
       .select('*', { count: 'exact', head: true })
-      .eq('place_id', id)
+      .eq('place_id', placeId)
       .is('deleted_at', null)
 
     return NextResponse.json({
