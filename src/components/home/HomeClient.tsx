@@ -8,6 +8,7 @@ import SearchBar from '@/components/search/SearchBar'
 import CreatePostModal from "@/components/posts/CreatePostModal"
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import AddPlaceModal from "@/components/places/AddPlaceModal"
+import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
 import MyCities from './MyCities'
@@ -15,7 +16,10 @@ import MyCities from './MyCities'
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
   vegan_level: string; main_image_url: string | null; images: string[]
-  city: string; country: string; average_rating: number | null; distance?: number
+  city: string; country: string
+  average_rating: number | null
+  review_count: number | null
+  distance?: number
 }
 interface CityScoreData {
   city: string; country: string; score: number; grade: string; fvCount: number; placeCount: number
@@ -303,6 +307,12 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                             {place.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
                           </span>
                         </div>
+                        <RatingBadge
+                          rating={(place as any).average_rating}
+                          reviewCount={(place as any).review_count}
+                          size="xs"
+                          className="mb-1"
+                        />
                         <p className="text-xs text-on-surface-variant mb-2">
                           {CATEGORY_LABEL[place.category]} · {place.distance ? `${place.distance} km` : place.city}
                         </p>
@@ -327,6 +337,12 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                     <Link key={s.id} href={`/place/${s.slug || s.id}`} className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all">
                       {(s.main_image_url || s.images?.[0]) && <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />}
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
+                      <RatingBadge
+                        rating={(s as any).average_rating}
+                        reviewCount={(s as any).review_count}
+                        size="xs"
+                        className="mt-0.5"
+                      />
                       <p className="text-xs text-on-surface-variant">{s.distance ? `${s.distance} km away` : s.city}</p>
                     </Link>
                   ))}
@@ -343,6 +359,12 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                     <Link key={s.id} href={`/place/${s.slug || s.id}`} className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all">
                       {(s.main_image_url || s.images?.[0]) && <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />}
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
+                      <RatingBadge
+                        rating={(s as any).average_rating}
+                        reviewCount={(s as any).review_count}
+                        size="xs"
+                        className="mt-0.5"
+                      />
                       <p className="text-xs text-on-surface-variant">{s.distance ? `${s.distance} km away` : s.city}</p>
                     </Link>
                   ))}
