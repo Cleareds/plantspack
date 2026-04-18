@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
   if (lat && lng) {
     const { data } = await supabase
       .from('places')
-      .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating')
+      .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating, review_count')
       .gte('latitude', lat - 0.5).lte('latitude', lat + 0.5)
       .gte('longitude', lng - 1).lte('longitude', lng + 1)
       .limit(100)
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
   if (nearbyPlaces.length === 0 && city) {
     const { data } = await supabase
       .from('places')
-      .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating')
+      .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating, review_count')
       .ilike('city', city)
       .order('average_rating', { ascending: false, nullsFirst: false })
       .limit(20)

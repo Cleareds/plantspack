@@ -3,8 +3,9 @@
 import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { MapPin, Star, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight } from 'lucide-react'
 import CityMap from './CityMap'
+import RatingBadge from './RatingBadge'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -239,16 +240,12 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
                     </div>
 
                     {/* Rating */}
-                    {place.average_rating > 0 && (
-                      <div className="flex items-center gap-1 mt-1.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star key={i} className={`h-3 w-3 ${i < Math.round(place.average_rating) ? 'text-yellow-500 fill-yellow-500' : 'text-outline'}`} />
-                        ))}
-                        <span className="text-xs text-on-surface-variant ml-0.5">
-                          {place.average_rating.toFixed(1)} ({place.review_count} {place.review_count === 1 ? 'review' : 'reviews'})
-                        </span>
-                      </div>
-                    )}
+                    <RatingBadge
+                      rating={place.average_rating}
+                      reviewCount={place.review_count}
+                      size="xs"
+                      className="mt-1.5"
+                    />
 
                     {/* Description */}
                     {place.description && (

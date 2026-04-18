@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle } from 'lucide-react'
-import StarRating from '@/components/places/StarRating'
+import RatingBadge from '@/components/places/RatingBadge'
 import RatingDistribution from '@/components/places/RatingDistribution'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import PlaceReviews from '@/components/places/PlaceReviews'
@@ -239,14 +239,15 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 )}
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-on-surface mb-2">{place.name}</h1>
-              {place.average_rating > 0 && (
-                <div className="flex items-center gap-3 mb-3">
-                  <StarRating rating={place.average_rating} size="md" showValue />
-                  <span className="text-sm text-on-surface-variant">
-                    ({place.review_count} {place.review_count === 1 ? 'review' : 'reviews'})
-                  </span>
-                </div>
-              )}
+              <div className="mb-3">
+                <RatingBadge
+                  rating={place.average_rating}
+                  reviewCount={place.review_count}
+                  size="md"
+                  showEmpty
+                  emptyHref="#reviews"
+                />
+              </div>
               {place.tags && place.tags.length > 0 && (
                 <div className="mb-3">
                   <PlaceTagBadges tags={place.tags} size="sm" />
@@ -525,7 +526,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           </div>
 
           {/* Reviews */}
-          <div className="p-6">
+          <div id="reviews" className="p-6 scroll-mt-20">
             <PlaceReviews placeId={place.id} />
           </div>
         </div>

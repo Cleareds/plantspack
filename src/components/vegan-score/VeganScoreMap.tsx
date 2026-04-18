@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Search, Info, X, TrendingUp, ChevronRight, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
+import RatingBadge from '@/components/places/RatingBadge'
 
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -43,7 +44,8 @@ interface Place {
   latitude: number; longitude: number; vegan_level: string
   address: string; city: string; country: string
   main_image_url: string | null; images: string[]
-  average_rating: number | null; description: string | null; website: string | null
+  average_rating: number | null; review_count: number | null
+  description: string | null; website: string | null
 }
 
 interface CityScore {
@@ -119,7 +121,7 @@ export default function VeganScoreMap() {
           let offset = 0
           while (true) {
             const { data: batch } = await supabase.from('places')
-              .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, description, website')
+              .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, review_count, description, website')
               .range(offset, offset + 999)
             if (!batch || batch.length === 0) break
             all.push(...batch)
@@ -441,6 +443,12 @@ export default function VeganScoreMap() {
                               <Link href={`/place/${place.slug || place.id}`} className="font-semibold text-xs text-gray-900 hover:text-emerald-600 block truncate">
                                 {place.name}
                               </Link>
+                              <RatingBadge
+                                rating={place.average_rating}
+                                reviewCount={place.review_count}
+                                size="xs"
+                                className="mt-0.5"
+                              />
                               <p className="text-[10px] text-gray-500">{place.city}{place.country ? `, ${place.country}` : ''}</p>
                             </div>
                           </div>

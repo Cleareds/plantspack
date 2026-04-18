@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { Heart, PawPrint, Star } from 'lucide-react'
+import { Heart, PawPrint } from 'lucide-react'
 import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
+import RatingBadge from '@/components/places/RatingBadge'
 
 interface MapPlaceCardProps {
   place: PlaceWithDistance
@@ -75,23 +76,11 @@ export default function MapPlaceCard({ place, user, onToggleFavorite }: MapPlace
           )}
         </div>
 
-        {(place as any).average_rating != null && (place as any).average_rating > 0 && (
-          <div className="flex items-center gap-1">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`h-3 w-3 ${
-                  i < Math.round((place as any).average_rating)
-                    ? 'text-yellow-500 fill-yellow-500'
-                    : 'text-outline'
-                }`}
-              />
-            ))}
-            <span className="text-xs text-on-surface-variant ml-1">
-              {((place as any).average_rating as number).toFixed(1)}
-            </span>
-          </div>
-        )}
+        <RatingBadge
+          rating={(place as any).average_rating}
+          reviewCount={(place as any).review_count}
+          size="xs"
+        />
 
         <p className="text-xs text-on-surface-variant line-clamp-1">{place.address}</p>
         <p className="text-xs text-outline font-medium">

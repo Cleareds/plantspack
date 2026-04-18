@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { MapPin, Plus, Trash2, Globe, Phone, PawPrint, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import StarRating from '@/components/places/StarRating'
+import RatingBadge from '@/components/places/RatingBadge'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import AddPlaceModal from './AddPlaceModal'
 
@@ -203,14 +203,12 @@ export default function PackPlacesTab({ packId, userRole, userId, initialPlaces 
                   </div>
 
                   {/* Rating */}
-                  {place.average_rating > 0 && (
-                    <div className="flex items-center gap-2 mb-2">
-                      <StarRating rating={place.average_rating} size="sm" />
-                      <span className="text-xs text-on-surface-variant">
-                        ({place.review_count})
-                      </span>
-                    </div>
-                  )}
+                  <RatingBadge
+                    rating={place.average_rating}
+                    reviewCount={place.review_count}
+                    size="sm"
+                    className="mb-2"
+                  />
 
                   {/* Description */}
                   {place.description && (
