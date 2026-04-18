@@ -65,12 +65,20 @@ export default function StagingPage() {
   const [minScore, setMinScore] = useState(0)
   const [batchThreshold, setBatchThreshold] = useState(80)
 
-  // Fetch stats
-  useEffect(() => {
-    fetch('/api/admin/staging?tab=stats').then(r => r.json()).then(d => setStats(d.stats)).catch(() => {})
-  }, [processing])
+  const [refreshTick, setRefreshTick] = useState(0)
 
-  // Fetch rows when tab / page / filters change
+  // Fetch stats — refresh after each admin action so counts stay live.
+  useEffect(() => {
+    fetch('/api/admin/staging?tab=stats', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => setStats(d.stats))
+      .catch(() => {})
+  }, [refreshTick])
+
+  // Fetch rows when tab / page / filters change. NOTE we deliberately do NOT
+  // re-fetch on every `processing` toggle — the local `setRows` filter in
+  // act() already removes the acted row; a server refetch mid-triage would
+  // reset the cursor and briefly flash stale data.
   useEffect(() => {
     setLoading(true)
     const params = new URLSearchParams({
@@ -80,7 +88,7 @@ export default function StagingPage() {
     if (source) params.set('source', source)
     if (country) params.set('country', country)
     if (minScore > 0) params.set('minScore', String(minScore))
-    fetch(`/api/admin/staging?${params}`)
+    fetch(`/api/admin/staging?${params}`, { cache: 'no-store' })
       .then(r => r.json())
       .then(d => {
         setRows(d.rows ?? [])
@@ -89,7 +97,7 @@ export default function StagingPage() {
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [decision, page, source, country, minScore, processing])
+  }, [decision, page, source, country, minScore])
 
   const current = rows[cursor]
 
@@ -101,12 +109,22 @@ export default function StagingPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
+        cache: 'no-store',
       })
       const data = await res.json()
       if (res.ok) {
         setMessage(`${action} · ${current.name}${data.slug ? ` → /place/${data.slug}` : ''}`)
         // Remove the acted row from the local list so cursor advances naturally.
-        setRows(prev => prev.filter(r => r.id !== current.id))
+        setRows(prev => {
+          const idx = prev.findIndex(r => r.id === current.id)
+          const next = prev.filter(r => r.id !== current.id)
+          // Keep cursor pointing at the next row (same index) — if we just
+          // removed the last row, step back one.
+          if (idx >= 0 && idx >= next.length) setCursor(Math.max(0, next.length - 1))
+          return next
+        })
+        setTotal(t => Math.max(0, t - 1))
+        setRefreshTick(t => t + 1)   // trigger stats refresh
       } else {
         setMessage(`err: ${data.error}`)
       }
@@ -134,11 +152,25 @@ export default function StagingPage() {
         }),
       })
       const data = await res.json()
-      if (res.ok) setMessage(`Batch approved ${data.inserted}, failed ${data.failed}`)
-      else setMessage(`err: ${data.error}`)
+      if (res.ok) {
+        setMessage(`Batch approved ${data.inserted}, failed ${data.failed}`)
+        setRefreshTick(t => t + 1)
+        // Force a full list refetch since many rows were modified server-side.
+        setLoading(true)
+        const params = new URLSearchParams({ decision, page: String(page) })
+        if (source) params.set('source', source)
+        if (country) params.set('country', country)
+        if (minScore > 0) params.set('minScore', String(minScore))
+        const r = await fetch(`/api/admin/staging?${params}`, { cache: 'no-store' })
+        const d = await r.json()
+        setRows(d.rows ?? [])
+        setTotal(d.total ?? 0)
+        setCursor(0)
+        setLoading(false)
+      } else setMessage(`err: ${data.error}`)
     } catch (e: any) { setMessage(`err: ${e.message}`) }
     setProcessing(false)
-  }, [decision, batchThreshold, source, country])
+  }, [decision, batchThreshold, source, country, page, minScore])
 
   // Keyboard shortcuts — Gmail-style triage.
   useEffect(() => {

@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
 
+// Staging data changes on every admin action — never cache.
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function checkAdmin() {
   const supabaseUser = await createClient()
   const { data: { session } } = await supabaseUser.auth.getSession()

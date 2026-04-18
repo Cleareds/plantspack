@@ -3,6 +3,8 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
 import { detectCategory } from '@/lib/places/categorize'
 
+export const dynamic = 'force-dynamic'
+
 async function checkAdmin() {
   const supabaseUser = await createClient()
   const { data: { session } } = await supabaseUser.auth.getSession()
