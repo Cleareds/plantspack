@@ -38,13 +38,20 @@ type Review = {
 
 interface PlaceReviewsProps {
   placeId: string
+  initialReviews?: Review[]
+  initialHasMore?: boolean
 }
 
-export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [loading, setLoading] = useState(true)
+export default function PlaceReviews({
+  placeId,
+  initialReviews,
+  initialHasMore,
+}: PlaceReviewsProps) {
+  const hasInitial = Array.isArray(initialReviews)
+  const [reviews, setReviews] = useState<Review[]>(initialReviews || [])
+  const [loading, setLoading] = useState(!hasInitial)
   const [loadingMore, setLoadingMore] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(initialHasMore ?? true)
   const [page, setPage] = useState(0)
   const [newRating, setNewRating] = useState(0)
   const [newContent, setNewContent] = useState('')
@@ -286,10 +293,18 @@ export default function PlaceReviews({ placeId }: PlaceReviewsProps) {
   }
 
   useEffect(() => {
+    if (hasInitial) {
+      // Server already provided the first page. Still detect the user's own review.
+      if (user) {
+        const mine = (initialReviews || []).find(r => r.user_id === user.id)
+        setUserReview(mine || null)
+      }
+      return
+    }
     setPage(0)
     setHasMore(true)
     fetchReviews(0, false)
-  }, [fetchReviews])
+  }, [fetchReviews, hasInitial, initialReviews, user])
 
   return (
     <div className="space-y-6">

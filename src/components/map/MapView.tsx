@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Heart, PawPrint, Navigation } from 'lucide-react'
 import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
+import RatingBadge from '@/components/places/RatingBadge'
 
 // Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -180,14 +181,22 @@ export default function MapView({
                     />
                   )}
                   <div className="flex items-start justify-between mb-2">
-                    <Link
-                      href={`/place/${(place as any).slug || place.id}`}
-                      prefetch={false}
-                      className="font-semibold text-on-surface hover:text-primary transition-colors"
-                    >
-                      {place.name}
-                    </Link>
-                    <div className="flex items-center space-x-1">
+                    <div className="min-w-0">
+                      <Link
+                        href={`/place/${(place as any).slug || place.id}`}
+                        prefetch={false}
+                        className="font-semibold text-on-surface hover:text-primary transition-colors block"
+                      >
+                        {place.name}
+                      </Link>
+                      <RatingBadge
+                        rating={(place as any).average_rating}
+                        reviewCount={(place as any).review_count}
+                        size="xs"
+                        className="mt-0.5"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-1 flex-shrink-0">
                       {user && (
                         <button
                           onClick={() => onToggleFavorite(place.id)}
