@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Globe } from 'lucide-react'
-import { generateCountryDescription } from '@/lib/vegan-scene-descriptions'
+import { generateCountryDescription, generateCountryMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
 import { loadCityImages } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
@@ -38,14 +38,39 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { country } = await params
   const { cities, country: countryName } = await getCities(country)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
+  const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
+  const totalEat = cities.reduce((sum: number, c: any) => sum + (c.stats?.categories?.eat || 0), 0)
+  const totalStore = cities.reduce((sum: number, c: any) => sum + (c.stats?.categories?.store || 0), 0)
+  const totalHotel = cities.reduce((sum: number, c: any) => sum + (c.stats?.categories?.hotel || 0), 0)
+  const totalPet = cities.reduce((sum: number, c: any) => sum + (c.stats?.petFriendly || 0), 0)
+  const cuisineSet = new Set<string>()
+  const sampleSet = new Set<string>()
+  for (const c of cities) {
+    ;(c.stats?.cuisines || []).forEach((x: string) => cuisineSet.add(x))
+    ;(c.stats?.sampleNames || []).forEach((x: string) => sampleSet.add(x))
+  }
+
+  const metaDesc = generateCountryMetaDescription(countryName, {
+    total: totalPlaces,
+    categories: { eat: totalEat, store: totalStore, hotel: totalHotel },
+    cuisines: Array.from(cuisineSet).slice(0, 6),
+    sampleNames: Array.from(sampleSet).slice(0, 6),
+    fullyVegan: totalFv,
+    petFriendly: totalPet,
+    cityCount: cities.length,
+  })
+
+  const title = cities.length > 1
+    ? `Vegan Places in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
+    : `Vegan Places in ${countryName} — ${totalPlaces} Verified Spots | PlantsPack`
 
   return {
-    title: `Vegan Places in ${countryName} (${totalPlaces}) | PlantsPack`,
-    description: `Find ${totalPlaces} vegan restaurants, stores, and stays in ${countryName}. Browse by city with ratings and reviews.`,
+    title,
+    description: metaDesc,
     alternates: { canonical: `https://plantspack.com/vegan-places/${country}` },
     openGraph: {
       title: `Vegan Places in ${countryName}`,
-      description: `Discover ${totalPlaces} vegan-friendly places across ${cities.length} cities in ${countryName}.`,
+      description: metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
     },

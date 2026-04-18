@@ -225,6 +225,58 @@ export function generateCountryDescription(
   return parts.join(' ')
 }
 
+/**
+ * Short (~155 chars) meta description for <head>. Always unique per route
+ * because it bakes in the total/fv counts and one cuisine or sample.
+ */
+export function generateCountryMetaDescription(
+  countryName: string,
+  stats: PlaceStats,
+): string {
+  const { total, fullyVegan, cityCount, categories, cuisines } = stats
+  const fvPart = fullyVegan > 0 ? ` — ${fullyVegan} fully vegan` : ''
+  const cityPart = cityCount && cityCount > 1 ? ` across ${cityCount} cities` : ''
+  const restaurants = categories.eat || 0
+  const shops = categories.store || 0
+  const stays = categories.hotel || 0
+  const mix: string[] = []
+  if (restaurants) mix.push(`${restaurants} restaurants`)
+  if (shops) mix.push(`${shops} shops`)
+  if (stays) mix.push(`${stays} stays`)
+  const mixStr = mix.length ? mix.slice(0, 3).join(', ') : `${total} places`
+  const topCuisine = cuisines && cuisines.length ? cuisines.slice(0, 2).join(' and ') : ''
+  const cuisinePart = topCuisine ? `. Popular: ${topCuisine} cuisine.` : '.'
+  const base = `${mixStr} in ${countryName}${cityPart}${fvPart}${cuisinePart}`
+  // Cap at 160 chars
+  return base.length > 160 ? base.slice(0, 157).replace(/[.,\s]+$/, '') + '…' : base
+}
+
+export function generateCityMetaDescription(
+  cityName: string,
+  countryName: string,
+  stats: PlaceStats,
+): string {
+  const { total, fullyVegan, categories, cuisines, sampleNames } = stats
+  const fvPart = fullyVegan > 0 ? `, ${fullyVegan} fully vegan` : ''
+  const restaurants = categories.eat || 0
+  const shops = categories.store || 0
+  const stays = categories.hotel || 0
+  const head = total > 1
+    ? `${total} vegan and vegan-friendly places in ${cityName}, ${countryName}${fvPart}.`
+    : `Vegan places in ${cityName}, ${countryName}.`
+  const mix: string[] = []
+  if (restaurants) mix.push(`${restaurants} ${restaurants === 1 ? 'restaurant' : 'restaurants'}`)
+  if (shops) mix.push(`${shops} ${shops === 1 ? 'shop' : 'shops'}`)
+  if (stays) mix.push(`${stays} ${stays === 1 ? 'stay' : 'stays'}`)
+  const mixStr = mix.length > 1 ? ` Includes ${mix.slice(0, 3).join(', ')}.` : ''
+  const topCuisine = cuisines && cuisines.length ? ` ${cuisines.slice(0, 2).join(', ')} cuisine.` : ''
+  const sample = sampleNames && sampleNames.length
+    ? ` Try ${sampleNames.slice(0, 2).join(' or ')}.`
+    : ''
+  const base = `${head}${mixStr}${topCuisine}${sample}`
+  return base.length > 160 ? base.slice(0, 157).replace(/[.,\s]+$/, '') + '…' : base
+}
+
 export function generateCityDescription(
   cityName: string,
   countryName: string,
