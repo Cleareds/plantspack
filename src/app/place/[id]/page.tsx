@@ -10,6 +10,7 @@ import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
+import HashScroller from '@/components/ui/HashScroller'
 import AddToPackButton from '@/components/places/AddToPackButton'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
@@ -191,6 +192,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-surface-container-low">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeJsonLd) }} />
+      <HashScroller />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb — full on desktop, short on mobile */}
         <nav className="mb-6 text-sm text-on-surface-variant">
