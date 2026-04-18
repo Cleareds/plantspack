@@ -245,7 +245,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   reviewCount={place.review_count}
                   size="md"
                   showEmpty
-                  emptyHref="#reviews"
+                  href="#reviews"
                 />
               </div>
               {place.tags && place.tags.length > 0 && (
@@ -522,7 +522,32 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
           {/* Verify prompt */}
           <div className="px-6 pt-4">
-            <PlaceVerifyPrompt placeId={place.id} placeName={place.name} />
+            {(() => {
+              const isAdminVerified =
+                (place as any).verification_status === 'admin_verified' ||
+                (place as any).verification_status === 'community_verified' ||
+                (place as any).is_verified === true
+              const src: string = (place as any).source || ''
+              const isCommunityUnverified = !isAdminVerified && (
+                src.startsWith('vegguide-') || src.startsWith('osm') ||
+                src === 'openstreetmap' || src.startsWith('foursquare-discover')
+              )
+              const sourceLabel = src.startsWith('vegguide-')
+                ? 'imported from VegGuide.org community data (circa 2015)'
+                : src.startsWith('osm') || src === 'openstreetmap'
+                ? 'imported from OpenStreetMap'
+                : src.startsWith('foursquare-discover')
+                ? 'imported from Foursquare'
+                : 'community-sourced'
+              return (
+                <PlaceVerifyPrompt
+                  placeId={place.id}
+                  placeName={place.name}
+                  needsCommunityVerification={isCommunityUnverified}
+                  sourceLabel={sourceLabel}
+                />
+              )
+            })()}
           </div>
 
           {/* Reviews */}

@@ -80,6 +80,7 @@ export default function AdminLayout({
     { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
     { name: 'Events', href: '/admin/events', icon: Calendar },
     { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },
+    { name: 'Staging', href: '/admin/staging', icon: Shield },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
     { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
     { name: 'Business Claims', href: '/admin/claims', icon: Building2 },

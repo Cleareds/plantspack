@@ -100,3 +100,7 @@ scripts/osm-*.json
 scripts/db-backup-*.json
 scripts/cities-from-db.json
 osm-*.json
+
+# External data dumps (license-limited or large) and debug logs
+/data/
+/logs/

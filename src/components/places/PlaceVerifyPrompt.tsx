@@ -1,14 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, AlertTriangle, Clock, X, Leaf } from 'lucide-react'
+import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert } from 'lucide-react'
 
 interface PlaceVerifyPromptProps {
   placeId: string
   placeName: string
+  /** When true, show the stronger amber banner — place was imported from a
+   *  community source and has not been verified yet. Derived server-side from
+   *  verification_status + source. */
+  needsCommunityVerification?: boolean
+  /** Human-friendly source descriptor, e.g. "imported from VegGuide.org (2015)". */
+  sourceLabel?: string
 }
 
-export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPromptProps) {
+export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVerification, sourceLabel }: PlaceVerifyPromptProps) {
   const [dismissed, setDismissed] = useState(false)
   const [submitted, setSubmitted] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -65,10 +71,22 @@ export default function PlaceVerifyPrompt({ placeId, placeName }: PlaceVerifyPro
   }
 
   return (
-    <div className="bg-surface-container-lowest rounded-lg ghost-border p-3">
-      <div className="flex items-center justify-between mb-2">
-        <p className="text-xs font-medium text-on-surface">Is this info still correct?</p>
-        <button onClick={() => setDismissed(true)} className="text-on-surface-variant/40 hover:text-on-surface-variant">
+    <div className={`rounded-lg p-3 ${needsCommunityVerification ? 'bg-amber-50 border border-amber-200' : 'bg-surface-container-lowest ghost-border'}`}>
+      <div className="flex items-start justify-between mb-2 gap-2">
+        <div className="flex items-start gap-2 min-w-0">
+          {needsCommunityVerification && <ShieldAlert className="h-4 w-4 text-amber-700 flex-shrink-0 mt-0.5" />}
+          <div className="min-w-0">
+            <p className={`text-xs font-medium ${needsCommunityVerification ? 'text-amber-900' : 'text-on-surface'}`}>
+              {needsCommunityVerification ? 'Help us verify this listing' : 'Is this info still correct?'}
+            </p>
+            {needsCommunityVerification && (
+              <p className="text-[11px] text-amber-800/80 mt-0.5 leading-snug">
+                This listing is {sourceLabel ?? 'community-sourced'} and hasn\u2019t been verified yet. Please confirm it\u2019s still open and actually vegan / vegan-friendly.
+              </p>
+            )}
+          </div>
+        </div>
+        <button onClick={() => setDismissed(true)} className="text-on-surface-variant/40 hover:text-on-surface-variant flex-shrink-0">
           <X className="h-3.5 w-3.5" />
         </button>
       </div>

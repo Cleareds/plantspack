@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { revalidatePath } from 'next/cache'
 
 export async function POST(
   request: NextRequest,
@@ -17,14 +18,20 @@ export async function POST(
     const supabase = createAdminClient()
 
     if (type === 'confirmed') {
-      // Just update timestamp — user confirms place is correct
-      await supabase.from('places').update({ updated_at: new Date().toISOString() }).eq('id', id)
+      // User confirms → promote to community_verified so the amber "help
+      // verify" banner disappears on next page load.
+      await supabase.from('places').update({
+        verification_status: 'community_verified',
+        updated_at: new Date().toISOString(),
+      }).eq('id', id)
+      const { data } = await supabase.from('places').select('slug').eq('id', id).single()
+      if (data?.slug) revalidatePath(`/place/${data.slug}`)
       return NextResponse.json({ success: true })
     }
 
     const { data: place, error: fetchError } = await supabase
       .from('places')
-      .select('tags')
+      .select('tags, slug')
       .eq('id', id)
       .single()
 
@@ -48,6 +55,8 @@ export async function POST(
         return NextResponse.json({ error: 'Failed to save report' }, { status: 500 })
       }
     }
+
+    if (place.slug) revalidatePath(`/place/${place.slug}`)
 
     return NextResponse.json({ success: true })
   } catch {
