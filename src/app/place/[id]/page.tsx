@@ -6,6 +6,7 @@ import RatingBadge from '@/components/places/RatingBadge'
 import RatingDistribution from '@/components/places/RatingDistribution'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import PlaceReviews from '@/components/places/PlaceReviews'
+import { createAdminClient } from '@/lib/supabase-admin'
 import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
 import FavoriteButton from '@/components/social/FavoriteButton'
@@ -87,6 +88,28 @@ async function getPlace(id: string): Promise<PlaceData | null> {
   }
 }
 
+const REVIEWS_PER_PAGE = 20
+
+async function getInitialReviews(placeId: string) {
+  try {
+    const supabase = createAdminClient()
+    const { data } = await supabase
+      .from('place_reviews')
+      .select(`
+        *,
+        users (id, username, first_name, last_name, avatar_url)
+      `)
+      .eq('place_id', placeId)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+      .range(0, REVIEWS_PER_PAGE - 1)
+    return { reviews: data || [], hasMore: (data?.length || 0) === REVIEWS_PER_PAGE }
+  } catch (error) {
+    console.error('[Place page] initial reviews fetch failed:', error)
+    return { reviews: [], hasMore: true }
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const place = await getPlace(id)
@@ -160,6 +183,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   if (isUuid && place.slug) {
     redirect(`/place/${place.slug}`)
   }
+
+  // Fetch the first page of reviews server-side so it appears on first paint
+  // (good for SEO, layout stability, and #reviews anchor scrolling).
+  const { reviews: initialReviews, hasMore: reviewsHasMore } = await getInitialReviews(place.id)
 
   // JSON-LD for LocalBusiness
   const placeSchemaType = place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant'
@@ -554,7 +581,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
           {/* Reviews */}
           <div id="reviews" className="p-6 scroll-mt-20">
-            <PlaceReviews placeId={place.id} />
+            <PlaceReviews
+              placeId={place.id}
+              initialReviews={initialReviews as any}
+              initialHasMore={reviewsHasMore}
+            />
           </div>
         </div>
       </div>
