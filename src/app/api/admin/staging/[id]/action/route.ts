@@ -19,11 +19,15 @@ const ADMIN_USER_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
 
 /**
  * POST /api/admin/staging/[id]/action
- *   body: { action: 'approve' | 'reject' | 'escalate', note?: string }
+ *   body: {
+ *     action: 'approve' | 'approve_fully_vegan' | 'reject' | 'escalate',
+ *     note?: string,
+ *   }
  *
- * - approve → insert into `places`, link staging row via imported_place_id
- * - reject  → mark operator_action='rejected'
- * - escalate → mark operator_action='escalated' (stays pending)
+ * - approve             → insert into `places` as vegan_friendly (safe default)
+ * - approve_fully_vegan → insert into `places` as fully_vegan (admin explicitly claims 100%)
+ * - reject              → mark operator_action='rejected'
+ * - escalate            → mark operator_action='escalated' (stays pending)
  */
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const ctx = await checkAdmin()
@@ -31,8 +35,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { supabase, userId } = ctx
   const { id } = await params
   const body = await request.json().catch(() => ({}))
-  const action = body?.action as 'approve' | 'reject' | 'escalate' | undefined
-  if (!['approve', 'reject', 'escalate'].includes(action ?? '')) {
+  const action = body?.action as 'approve' | 'approve_fully_vegan' | 'reject' | 'escalate' | undefined
+  if (!['approve', 'approve_fully_vegan', 'reject', 'escalate'].includes(action ?? '')) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   }
 
@@ -55,14 +59,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ success: true, action })
   }
 
-  // approve → insert into places via the shared decideIntake index would be
-  // overkill for a single row; here we just build a safe row and insert.
+  // approve / approve_fully_vegan → insert into places.
   const cat = detectCategory({
     name: row.name,
     fsqCategoryNames: row.categories ?? [],
   })
 
-  const veganLevel = row.vegan_level === 'fully_vegan' ? 'fully_vegan' : 'vegan_friendly'
+  // CLAUDE.md: never mark fully_vegan without verification. Default to
+  // vegan_friendly regardless of classifier signal; only the explicit
+  // `approve_fully_vegan` action promotes to fully_vegan — that means the
+  // admin affirmatively claims 100% vegan.
+  const veganLevel: 'fully_vegan' | 'vegan_friendly' =
+    action === 'approve_fully_vegan' ? 'fully_vegan' : 'vegan_friendly'
 
   const placeRow = {
     name: String(row.name).slice(0, 200),
@@ -82,7 +90,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     foursquare_data: row.website_signal,
     category: cat.category,
     categorization_note: cat.note,
-    tags: ['staging-approved', row.source],
+    tags: ['staging-approved', row.source, ...(action === 'approve_fully_vegan' ? ['admin-claimed-fully-vegan'] : [])],
     is_verified: true,                       // admin-approved → verified
     verification_status: 'admin_verified',
     created_by: ADMIN_USER_ID,
@@ -105,5 +113,5 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { revalidatePath } = await import('next/cache')
   if (inserted?.slug) revalidatePath(`/place/${inserted.slug}`)
 
-  return NextResponse.json({ success: true, action: 'approve', place_id: inserted!.id, slug: inserted!.slug })
+  return NextResponse.json({ success: true, action, vegan_level: veganLevel, place_id: inserted!.id, slug: inserted!.slug })
 }

@@ -101,7 +101,7 @@ export default function StagingPage() {
 
   const current = rows[cursor]
 
-  const act = useCallback(async (action: 'approve' | 'reject' | 'escalate') => {
+  const act = useCallback(async (action: 'approve' | 'approve_fully_vegan' | 'reject' | 'escalate') => {
     if (!current) return
     setProcessing(true)
     try {
@@ -113,7 +113,8 @@ export default function StagingPage() {
       })
       const data = await res.json()
       if (res.ok) {
-        setMessage(`${action} · ${current.name}${data.slug ? ` → /place/${data.slug}` : ''}`)
+        const levelTag = data.vegan_level ? ` (${data.vegan_level})` : ''
+        setMessage(`${action}${levelTag} · ${current.name}${data.slug ? ` → /place/${data.slug}` : ''}`)
         // Remove the acted row from the local list so cursor advances naturally.
         setRows(prev => {
           const idx = prev.findIndex(r => r.id === current.id)
@@ -178,7 +179,9 @@ export default function StagingPage() {
       if (processing) return
       const target = e.target as HTMLElement
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName)) return
-      if (e.key === 'a' || e.key === 'A' || e.key === 'Enter') { e.preventDefault(); act('approve') }
+      // Shift+A / V = approve as 100% vegan
+      if ((e.key === 'A' && e.shiftKey) || e.key === 'v' || e.key === 'V') { e.preventDefault(); act('approve_fully_vegan') }
+      else if (e.key === 'a' || e.key === 'Enter') { e.preventDefault(); act('approve') }
       else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); act('reject') }
       else if (e.key === 'e' || e.key === 'E') { e.preventDefault(); act('escalate') }
       else if (e.key === 'ArrowRight' || e.key === 'j' || e.key === 'J') { setCursor(c => Math.min(c + 1, rows.length - 1)) }
@@ -346,8 +349,14 @@ export default function StagingPage() {
           {/* Action bar */}
           <div className="mt-4 flex gap-2 items-center">
             <button onClick={() => act('approve')} disabled={processing}
-              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50">
-              <CheckCircle className="h-4 w-4" /> Approve <kbd className="ml-1 text-[10px] bg-emerald-900 px-1 rounded">A</kbd>
+              className="flex items-center gap-1.5 px-4 py-2 bg-lime-600 hover:bg-lime-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              title="Approve as vegan-friendly (default, safe)">
+              <CheckCircle className="h-4 w-4" /> Approve vegan-friendly <kbd className="ml-1 text-[10px] bg-lime-900 px-1 rounded">A</kbd>
+            </button>
+            <button onClick={() => act('approve_fully_vegan')} disabled={processing}
+              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              title="Approve as 100% vegan — you confirm there are zero animal products on the menu">
+              <CheckCircle className="h-4 w-4" /> Approve as 100% vegan <kbd className="ml-1 text-[10px] bg-emerald-900 px-1 rounded">V</kbd>
             </button>
             <button onClick={() => act('reject')} disabled={processing}
               className="flex items-center gap-1.5 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm font-medium disabled:opacity-50">
