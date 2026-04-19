@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Heart, PawPrint, Navigation } from 'lucide-react'
 import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
 import RatingBadge from '@/components/places/RatingBadge'
+import MapLegend from './MapLegend'
 
 // Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -79,7 +80,7 @@ interface MapViewProps {
   onResetCenter: () => void
   onMapMove: () => void
   mapRef: MutableRefObject<any>
-  getCategoryIcon: ((category: string, veganLevel?: string | null) => any) | null
+  getCategoryIcon: ((category: string, veganLevel?: string | null, rating?: number | null, reviewCount?: number | null) => any) | null
   createClusterIcon: ((cluster: any) => any) | null
   leafletIcon: any
   user: { id: string } | null
@@ -107,6 +108,7 @@ export default function MapView({
 }: MapViewProps) {
   return (
     <div className="flex-1 relative min-h-0 w-full">
+      <MapLegend />
       <LeafletMapContainer
         ref={mapRef}
         center={mapCenter}
@@ -166,7 +168,32 @@ export default function MapView({
             <Marker
               key={place.id}
               position={[place.latitude, place.longitude]}
-              icon={getCategoryIcon ? getCategoryIcon(place.category, (place as any).vegan_level) : undefined}
+              icon={
+                getCategoryIcon
+                  ? getCategoryIcon(
+                      place.category,
+                      (place as any).vegan_level,
+                      (place as any).average_rating,
+                      (place as any).review_count,
+                    )
+                  : undefined
+              }
+              eventHandlers={{
+                // Desktop hover: open the popup without requiring click so the
+                // user can scan many places quickly (Reddit feedback: "would be
+                // nice to see details without having to click").
+                mouseover: (e) => {
+                  if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                    e.target.openPopup()
+                  }
+                },
+                mouseout: (e) => {
+                  // Leave the popup open for a beat so the user can move cursor into it.
+                  const popup = e.target.getPopup?.()
+                  const el = popup?.getElement?.()
+                  if (el && el.matches?.(':hover')) return
+                },
+              }}
             >
               <Popup>
                 <div className="p-2 min-w-[200px]">
