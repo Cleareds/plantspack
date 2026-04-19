@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, Info } from 'lucide-react'
-import { CATEGORY_CONFIG } from '@/lib/leaflet-config'
+import { CATEGORY_CONFIG } from '@/lib/place-categories'
 
 /**
  * Collapsible legend for the map, pinned bottom-left.

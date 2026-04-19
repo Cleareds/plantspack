@@ -1,4 +1,9 @@
 import L from 'leaflet'
+// Re-export for back-compat: existing callers import CATEGORY_CONFIG from here.
+// New non-map code should prefer `@/lib/place-categories` to avoid pulling in
+// Leaflet (which references `window` at module scope and breaks SSR).
+export { CATEGORY_CONFIG } from './place-categories'
+import { CATEGORY_CONFIG } from './place-categories'
 
 // Fix for default marker icons in Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -8,16 +13,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: '/leaflet/marker-icon.png',
   shadowUrl: '/leaflet/marker-shadow.png',
 })
-
-// Category marker configuration
-export const CATEGORY_CONFIG: Record<string, { color: string; emoji: string; label: string }> = {
-  eat: { color: '#22c55e', emoji: '🌿', label: 'Eat' },
-  hotel: { color: '#3b82f6', emoji: '🛏️', label: 'Stay' },
-  store: { color: '#a855f7', emoji: '🛍️', label: 'Store' },
-  organisation: { color: '#f97316', emoji: '🐾', label: 'Sanctuary' },
-  event: { color: '#ec4899', emoji: '🎉', label: 'Event' },
-  other: { color: '#6b7280', emoji: '📍', label: 'Other' },
-}
 
 // Rounded rating bucket (e.g. 4.3 → "4+", 4.7 → "5", < 3 → null).
 // Emits a tiny star-badge overlay on the marker when reviews exist.
