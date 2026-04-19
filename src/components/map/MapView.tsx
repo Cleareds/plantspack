@@ -1,6 +1,6 @@
 'use client'
 
-import { MutableRefObject } from 'react'
+import { MutableRefObject, memo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Heart, PawPrint, Navigation } from 'lucide-react'
@@ -89,7 +89,11 @@ interface MapViewProps {
   loading: boolean
 }
 
-export default function MapView({
+// Memoized so re-renders in MapContainer (e.g. search-bar typing) don't force
+// the entire marker cluster to rebuild. Shallow-equal on props is enough —
+// `places`, callbacks and icon factories are already stable upstream via
+// useMemo / useState / useCallback.
+function MapViewImpl({
   places,
   userLocation,
   mapCenter,
@@ -300,3 +304,6 @@ export default function MapView({
     </div>
   )
 }
+
+const MapView = memo(MapViewImpl)
+export default MapView

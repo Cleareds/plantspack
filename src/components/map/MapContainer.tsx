@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
@@ -160,6 +160,19 @@ export default function MapContainerComponent() {
     )
   }, [initialLocation])
 
+  // Stable references for the props we hand MapView so unrelated state
+  // (search bar typing, sidebar toggles) doesn't trigger a full cluster
+  // rebuild. The JSX previously built a new .filter() array on every render.
+  const mapViewPlaces = useMemo(() => {
+    const source = mapPlaces.length > 0 ? mapPlaces : filteredPlaces
+    if (!selectedSubcategory && !petFriendly) return source
+    return source.filter(p => {
+      if (selectedSubcategory && (p as any).subcategory !== selectedSubcategory) return false
+      if (petFriendly && !(p as any).is_pet_friendly) return false
+      return true
+    })
+  }, [mapPlaces, filteredPlaces, selectedSubcategory, petFriendly])
+
   // Map search selection
   const handleSearchSelect = useCallback((result: any) => {
     const lat = parseFloat(result.lat)
@@ -217,7 +230,10 @@ export default function MapContainerComponent() {
   }, [setCustomCenter, handleMapMove])
 
   // Toggle favorite
-  const toggleFavorite = async (placeId: string) => {
+  // Wrapped in useCallback so the memo'd <MapView> doesn't re-render (and the
+  // marker cluster doesn't rebuild) every time MapContainer renders for an
+  // unrelated reason like a search-bar keystroke.
+  const toggleFavorite = useCallback(async (placeId: string) => {
     if (!user) return
     try {
       // Check current favorites from filteredPlaces (allFiltered includes all)
@@ -241,10 +257,10 @@ export default function MapContainerComponent() {
     } catch (error) {
       console.error('Error toggling favorite:', error)
     }
-  }
+  }, [user, filteredPlaces, refetch])
 
   // Delete place
-  const handleDeletePlace = async (placeId: string) => {
+  const handleDeletePlace = useCallback(async (placeId: string) => {
     if (!user) return
     const place = filteredPlaces.find(p => p.id === placeId)
     if (!place || place.created_by !== user.id) {
@@ -264,7 +280,9 @@ export default function MapContainerComponent() {
       console.error('Error deleting place:', error)
       alert('Failed to delete place. Please try again.')
     }
-  }
+  }, [user, filteredPlaces, refetch])
+
+  const resetCustomCenter = useCallback(() => setCustomCenter(null), [setCustomCenter])
 
   // Handle place added from modal
   const handlePlaceAdded = useCallback((insertedPlace: any) => {
@@ -441,18 +459,18 @@ export default function MapContainerComponent() {
           )}
         </div>
 
-        {/* Map — show all viewport places, filtered by vegan/pet toggles */}
+        {/* Map — show all viewport places, filtered by vegan/pet toggles.
+            The filtered array is memoized so unrelated state changes (e.g.
+            typing in the search bar) don't give MapView a new `places`
+            reference, which would otherwise rebuild the whole marker cluster
+            and cause a visible blink. */}
         <MapView
-          places={(mapPlaces.length > 0 ? mapPlaces : filteredPlaces).filter(p => {
-            if (selectedSubcategory && (p as any).subcategory !== selectedSubcategory) return false
-            if (petFriendly && !(p as any).is_pet_friendly) return false
-            return true
-          })}
+          places={mapViewPlaces}
           userLocation={userLocation}
           mapCenter={mapCenter}
           customCenter={customCenter}
           onMapClick={handleMapClick}
-          onResetCenter={() => setCustomCenter(null)}
+          onResetCenter={resetCustomCenter}
           onMapMove={handleMapMove}
           mapRef={mapRef}
           getCategoryIcon={categoryIconFn}
