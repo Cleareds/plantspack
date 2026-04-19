@@ -112,20 +112,24 @@ export default function StagingPage() {
         cache: 'no-store',
       })
       const data = await res.json()
-      if (res.ok) {
-        const levelTag = data.vegan_level ? ` (${data.vegan_level})` : ''
-        setMessage(`${action}${levelTag} · ${current.name}${data.slug ? ` → /place/${data.slug}` : ''}`)
-        // Remove the acted row from the local list so cursor advances naturally.
+      // 409 = already triaged overnight or by another admin. Treat as "done"
+      // in the UI: drop the row from local state and move on.
+      if (res.ok || res.status === 409) {
+        if (res.ok) {
+          const levelTag = data.vegan_level ? ` (${data.vegan_level})` : ''
+          setMessage(`${action}${levelTag} · ${current.name}${data.slug ? ` → /place/${data.slug}` : ''}`)
+        } else {
+          setMessage(`already ${data.already ?? 'triaged'} · ${current.name} (skipped)`)
+        }
+        // Remove the row from the local list so cursor advances naturally.
         setRows(prev => {
           const idx = prev.findIndex(r => r.id === current.id)
           const next = prev.filter(r => r.id !== current.id)
-          // Keep cursor pointing at the next row (same index) — if we just
-          // removed the last row, step back one.
           if (idx >= 0 && idx >= next.length) setCursor(Math.max(0, next.length - 1))
           return next
         })
         setTotal(t => Math.max(0, t - 1))
-        setRefreshTick(t => t + 1)   // trigger stats refresh
+        setRefreshTick(t => t + 1)
       } else {
         setMessage(`err: ${data.error}`)
       }

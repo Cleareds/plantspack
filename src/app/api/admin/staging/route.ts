@@ -77,6 +77,11 @@ export async function GET(request: NextRequest) {
     .from('place_staging')
     .select('*', { count: 'exact' })
     .eq('decision', decision)
+    // Hide rows the operator already acted on (approved / rejected / escalated)
+    // OR that were auto-inserted overnight (imported_place_id not null).
+    // Otherwise the UI kept showing already-resolved rows.
+    .is('operator_action', null)
+    .is('imported_place_id', null)
     .order('quality_score', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: true })
     .range(offset, offset + limit - 1)

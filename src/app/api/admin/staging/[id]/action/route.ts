@@ -44,6 +44,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     .from('place_staging').select('*').eq('id', id).single()
   if (loadErr || !row) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
+  // Guard against double-triage: if the row was already acted on (manually or
+  // by the overnight auto-insert), bail out with 409 so the UI can show a
+  // clear "already handled" message instead of silently creating a duplicate
+  // place or erroring on a unique constraint.
+  if (row.operator_action || row.imported_place_id) {
+    return NextResponse.json({
+      error: 'Already triaged',
+      already: row.operator_action ?? 'imported',
+      imported_place_id: row.imported_place_id,
+      note: row.operator_note,
+    }, { status: 409 })
+  }
+
   const now = new Date().toISOString()
 
   if (action === 'reject' || action === 'escalate') {
