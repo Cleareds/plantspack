@@ -7,5 +7,27 @@ Disallow: /settings
 Disallow: /*/settings
 Disallow: /*/notifications
 Disallow: /*/subscription
+Disallow: /*/edit
+Disallow: /*?ref=
+Disallow: /*?utm_
+
+# Polite bots should slow down. Googlebot/Bingbot ignore this, which is fine.
+Crawl-delay: 10
+
+# Aggressive SEO crawlers — no SEO value to us, heavy resource cost.
+User-agent: AhrefsBot
+Crawl-delay: 30
+
+User-agent: SemrushBot
+Crawl-delay: 30
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
 
 Sitemap: https://plantspack.com/sitemap.xml

@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 
 /**
+ * Edge cache for crawler-heavy listing endpoints. Short TTL + long SWR so
+ * the first request regenerates in background while stale content is
+ * returned instantly. Big multiplier on Supabase request reduction when
+ * multiple SSR pages regenerate against the same endpoint.
+ */
+const CACHE_HEADERS = {
+  'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
+}
+
+/**
  * GET /api/places/directory — Directory data for SEO pages
  * ?level=countries — List countries with place counts
  * ?level=cities&country=germany — List cities in a country
@@ -81,7 +91,7 @@ export async function GET(request: NextRequest) {
         }))
         .sort((a, b) => b.count - a.count)
 
-      return NextResponse.json({ countries, total: data?.length || 0 })
+      return NextResponse.json({ countries, total: data?.length || 0 }, { headers: CACHE_HEADERS })
     }
 
     if (level === 'cities' && country) {
@@ -147,7 +157,7 @@ export async function GET(request: NextRequest) {
       // Get actual country name from DB (proper casing)
       const dbCountryName = data?.[0]?.country || fromSlugDisplay(country)
 
-      return NextResponse.json({ cities, country: dbCountryName })
+      return NextResponse.json({ cities, country: dbCountryName }, { headers: CACHE_HEADERS })
     }
 
     if (level === 'places' && country && !city) {
@@ -176,7 +186,7 @@ export async function GET(request: NextRequest) {
         places: data || [],
         country: dbCountry,
         total: data?.length || 0,
-      })
+      }, { headers: CACHE_HEADERS })
     }
 
     if (level === 'places' && country && city) {
@@ -228,7 +238,7 @@ export async function GET(request: NextRequest) {
         city: dbCity,
         country: dbCountry,
         total: data?.length || 0,
-      })
+      }, { headers: CACHE_HEADERS })
     }
 
     return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 })
