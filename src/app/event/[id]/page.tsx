@@ -6,6 +6,9 @@ import ImageSlider from '@/components/ui/ImageSlider'
 import InlineComments from '@/components/posts/InlineComments'
 import EventResponseButtons from '@/components/events/EventResponseButtons'
 
+// Community content — comments + responses update live.
+export const revalidate = 0
+
 type EventPost = {
   id: string
   title?: string | null
@@ -35,7 +38,7 @@ async function getEventPost(id: string): Promise<EventPost | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
-      next: { revalidate: 3600 },
+      cache: 'no-store',
     })
     if (!response.ok) return null
     const data = await response.json()

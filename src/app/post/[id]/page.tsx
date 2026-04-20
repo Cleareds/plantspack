@@ -4,6 +4,10 @@ import Link from 'next/link'
 import PostPageContent from '@/components/posts/PostPageContent'
 import { Tables } from '@/lib/supabase'
 
+// Community content — always fresh. Comment counts, likes and new replies
+// must reflect immediately. Vercel Pro handles the extra invocations fine.
+export const revalidate = 0
+
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {
     subscription_tier?: 'free' | 'medium' | 'premium'
@@ -26,7 +30,7 @@ async function getPost(id: string): Promise<Post | null> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     // The API handles both UUIDs and slugs
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
-      next: { revalidate: 3600 }
+      cache: 'no-store',
     })
     if (!response.ok) return null
     const data = await response.json()

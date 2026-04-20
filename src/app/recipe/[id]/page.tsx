@@ -6,6 +6,9 @@ import ImageSlider from '@/components/ui/ImageSlider'
 import RecipeActions from '@/components/recipes/RecipeActions'
 import RecipeReviews from '@/components/recipes/RecipeReviews'
 
+// Community content — ratings + reviews update live.
+export const revalidate = 0
+
 type RecipePost = {
   id: string
   title?: string | null
@@ -50,7 +53,7 @@ function SimilarRecipes({ postId }: { postId: string }) {
 async function SimilarRecipesClient({ postId }: { postId: string }) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const resp = await fetch(`${baseUrl}/api/recipes?limit=6&offset=0`, { next: { revalidate: 3600 } })
+    const resp = await fetch(`${baseUrl}/api/recipes?limit=6&offset=0`, { cache: 'no-store' })
     if (!resp.ok) return <p className="text-sm text-on-surface-variant">No recipes found</p>
     const data = await resp.json()
     const similar = (data.recipes || []).filter((r: any) => r.id !== postId).slice(0, 3)
@@ -88,7 +91,7 @@ async function getRecipePost(id: string): Promise<RecipePost | null> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     // The API handles both UUIDs and slugs
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
-      next: { revalidate: 3600 },
+      cache: 'no-store',
     })
     if (!response.ok) return null
     const data = await response.json()

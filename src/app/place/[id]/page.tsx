@@ -1,6 +1,11 @@
 import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
+
+// Community content — reviews, favorites, verify status need to update
+// immediately. Vercel Pro absorbs the extra invocations.
+export const revalidate = 0
+
 import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle } from 'lucide-react'
 import RatingBadge from '@/components/places/RatingBadge'
 import RatingDistribution from '@/components/places/RatingDistribution'
@@ -64,10 +69,10 @@ async function getPlace(id: string): Promise<PlaceData | null> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     const [placeResponse, ownerResponse] = await Promise.all([
       fetch(`${baseUrl}/api/places/${id}`, {
-        next: { revalidate: 3600 }
+        cache: 'no-store'
       }),
       fetch(`${baseUrl}/api/places/${id}/owner`, {
-        next: { revalidate: 3600 }
+        cache: 'no-store'
       })
     ])
 
