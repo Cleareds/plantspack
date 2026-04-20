@@ -133,6 +133,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
       if (lat) params.set('lat', lat)
       if (lng) params.set('lng', lng)
       if (city) params.set('city', city)
+      if (country) params.set('country', country)
 
       try {
         const res = await fetch(`/api/home?${params}`)
