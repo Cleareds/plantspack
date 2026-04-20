@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
   const lat = parseFloat(searchParams.get('lat') || '0')
   const lng = parseFloat(searchParams.get('lng') || '0')
   const city = searchParams.get('city') || ''
+  const country = searchParams.get('country') || ''
 
   // Fetch city scores (all cities — server-side, cached)
   let allPlaces: any[] = []
@@ -106,12 +107,15 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Fallback: fetch places by city name when no coordinates
+  // Fallback: fetch places by city name when no coordinates.
+  // Filter by country too if provided — otherwise "Oxford" could match UK OR NZ.
   if (nearbyPlaces.length === 0 && city) {
-    const { data } = await supabase
+    let q = supabase
       .from('places')
       .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating, review_count')
       .ilike('city', city)
+    if (country) q = q.ilike('country', country)
+    const { data } = await q
       .order('average_rating', { ascending: false, nullsFirst: false })
       .limit(20)
 

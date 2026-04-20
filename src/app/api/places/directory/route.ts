@@ -183,23 +183,28 @@ export async function GET(request: NextRequest) {
       // Look up actual city name from directory view (handles hyphens, accents etc.).
       // CRITICAL: match country too — otherwise e.g. "oxford" returns Oxford NZ
       // on a /united-kingdom/oxford URL because both share a city_slug.
-      const { data: cityRow } = await supabase
+      // .single() fails and .maybeSingle() returns null when multiple view
+      // rows match — happens for casing/accent variants in the same country
+      // (e.g. "Paris"/"paris", "Montreal"/"Montréal"). Order by place_count
+      // and take the biggest row.
+      const { data: cityRows } = await supabase
         .from('directory_cities')
         .select('city, country')
         .eq('city_slug', city)
         .ilike('country', fromSlug(country))
+        .order('place_count', { ascending: false })
         .limit(1)
-        .single()
 
+      const cityRow = cityRows?.[0]
       const actualCity = cityRow?.city || fromSlug(city)
       const actualCountry = cityRow?.country || fromSlug(country)
 
-      // Get places in a specific city
+      // Use ilike to catch the casing/accent siblings in places rows.
       let query = supabase
         .from('places')
         .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
-        .eq('city', actualCity)
-        .eq('country', actualCountry)
+        .ilike('city', actualCity)
+        .ilike('country', actualCountry)
 
       if (category) {
         query = query.eq('category', category)

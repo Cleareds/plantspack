@@ -122,22 +122,32 @@ export const getCities = cache(async (countrySlug: string) => {
 export const getCityPlaces = async (countrySlug: string, citySlug: string) => {
   const supabase = createAdminClient()
 
-  // Look up actual city + country names from the slug-indexed view
-  const { data: cityRow } = await supabase
+  // Look up actual city + country names from the slug-indexed view.
+  // CRITICAL: filter by country too — otherwise cities that share a slug
+  // (e.g. Oxford UK vs Oxford NZ) resolve to whichever row sorts first.
+  // Use .limit(1).order(place_count) instead of .maybeSingle() — same-country
+  // casing/accent variants ("Paris"/"paris", "Montreal"/"Montréal") produce
+  // multiple rows for the same (country_slug, city_slug), and maybeSingle()
+  // returns null on multi-match, silently falling back to slug→title-case.
+  const { data: cityRows } = await supabase
     .from('directory_cities')
     .select('city, country')
     .eq('city_slug', citySlug)
-    .single()
+    .ilike('country', countrySlug.replace(/-/g, ' '))
+    .order('place_count', { ascending: false })
+    .limit(1)
 
-  // Fallback to slug-to-name conversion if not found
+  const cityRow = cityRows?.[0]
   const actualCity = cityRow?.city || citySlug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
   const actualCountry = cityRow?.country || countrySlug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
 
+  // Use ilike on both city + country to catch casing/accent variants in the
+  // underlying places rows (a city_slug can aggregate "Paris" AND "paris").
   const { data, error } = await supabase
     .from('places')
     .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, phone, opening_hours, google_place_id, latitude, longitude, city, country, vegan_level, cuisine_types')
-    .eq('country', actualCountry)
-    .eq('city', actualCity)
+    .ilike('country', actualCountry)
+    .ilike('city', actualCity)
     .order('name', { ascending: true })
     .limit(500)
 
