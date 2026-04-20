@@ -180,11 +180,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (level === 'places' && country && city) {
-      // Look up actual city name from directory view (handles hyphens, accents etc.)
+      // Look up actual city name from directory view (handles hyphens, accents etc.).
+      // CRITICAL: match country too — otherwise e.g. "oxford" returns Oxford NZ
+      // on a /united-kingdom/oxford URL because both share a city_slug.
       const { data: cityRow } = await supabase
         .from('directory_cities')
         .select('city, country')
         .eq('city_slug', city)
+        .ilike('country', fromSlug(country))
         .limit(1)
         .single()
 
