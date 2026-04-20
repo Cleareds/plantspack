@@ -81,7 +81,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
             </p>
             {needsCommunityVerification && (
               <p className="text-[11px] text-amber-800/80 mt-0.5 leading-snug">
-                This listing is {sourceLabel ?? 'community-sourced'} and hasn\u2019t been verified yet. Please confirm it\u2019s still open and actually vegan / vegan-friendly.
+                This listing is {sourceLabel ?? 'community-sourced'} and hasn’t been verified yet. Please confirm it’s still open and actually vegan / vegan-friendly.
               </p>
             )}
           </div>
