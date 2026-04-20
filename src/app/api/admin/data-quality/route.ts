@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
       .from('places')
       .select('id, name, slug, city, country, tags, website, updated_at', { count: 'exact' })
       .contains('tags', ['google_confirmed_closed'])
+      .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -39,6 +40,7 @@ export async function GET(request: NextRequest) {
       .from('places')
       .select('id, name, slug, city, country, tags, website, updated_at', { count: 'exact' })
       .contains('tags', ['google_temporarily_closed'])
+      .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -50,6 +52,7 @@ export async function GET(request: NextRequest) {
       .from('places')
       .select('id, name, slug, city, country, tags, website, updated_at', { count: 'exact' })
       .contains('tags', ['website_unreachable'])
+      .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -61,6 +64,7 @@ export async function GET(request: NextRequest) {
       .from('places')
       .select('id, name, slug, city, country, tags, website, updated_at', { count: 'exact' })
       .contains('tags', ['community_report:permanently_closed'])
+      .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -72,6 +76,7 @@ export async function GET(request: NextRequest) {
       .from('places')
       .select('id, name, slug, city, country, tags, website, opening_hours, updated_at', { count: 'exact' })
       .contains('tags', ['community_report:hours_wrong'])
+      .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -83,6 +88,7 @@ export async function GET(request: NextRequest) {
       .from('places')
       .select('id, name, slug, city, country, tags, vegan_level, website, updated_at', { count: 'exact' })
       .or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly}')
+      .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -144,23 +150,27 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ error: 'Invalid tab' }, { status: 400 })
 }
 
-// DELETE: Remove a flagged place + revalidate
+// DELETE: soft-archive a flagged place + revalidate
+// Per CLAUDE.md never hard-delete — we set archived_at so the row is
+// hidden from the public API (which filters `.is('archived_at', null)`)
+// but preserved for audit + future re-activation.
 export async function DELETE(request: NextRequest) {
   const supabase = await checkAdmin()
   if (!supabase) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { placeId } = await request.json()
+  const { placeId, reason } = await request.json()
   if (!placeId) return NextResponse.json({ error: 'Missing placeId' }, { status: 400 })
 
   // Get place info for cache revalidation
   const { data: place } = await supabase.from('places').select('slug, city, country').eq('id', placeId).single()
 
-  // Delete related records
-  await supabase.from('place_reviews').delete().eq('place_id', placeId)
-  await supabase.from('favorite_places').delete().eq('place_id', placeId)
-  await supabase.from('pack_places').delete().eq('place_id', placeId)
-  await supabase.from('place_corrections').delete().eq('place_id', placeId)
-  const { error } = await supabase.from('places').delete().eq('id', placeId)
+  const { error } = await supabase
+    .from('places')
+    .update({
+      archived_at: new Date().toISOString(),
+      archived_reason: reason || 'admin_removed',
+    })
+    .eq('id', placeId)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
