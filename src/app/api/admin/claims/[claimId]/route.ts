@@ -64,7 +64,7 @@ export async function PATCH(
         id,
         place_id,
         user_id,
-        proof_text,
+        proof_description,
         status,
         places!place_claim_requests_place_id_fkey (
           id,
