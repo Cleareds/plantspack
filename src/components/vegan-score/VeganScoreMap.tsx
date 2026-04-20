@@ -156,21 +156,72 @@ export default function VeganScoreMap() {
   }, [])
 
   const handleSearch = useCallback(async () => {
-    if (!searchQuery.trim()) return
-    // Try matching a ranked city first — instant, no geocoding needed
-    const match = cityScores.find(c =>
-      c.city.toLowerCase() === searchQuery.trim().toLowerCase() ||
-      searchQuery.toLowerCase().includes(c.city.toLowerCase()) ||
-      c.city.toLowerCase().includes(searchQuery.trim().toLowerCase())
-    )
-    if (match) {
-      setSelectedCity(match)
-      mapRef.current?.flyTo(match.center, 13, { duration: 1.5 })
+    const raw = searchQuery.trim()
+    if (!raw) return
+    const q = raw.toLowerCase()
+
+    // Parse a country hint out of queries like "Oxford, UK" / "Paris France".
+    // Known synonym map — extend as we see more.
+    const COUNTRY_SYNONYMS: Record<string, string[]> = {
+      'united kingdom': ['united kingdom', 'uk', 'england', 'scotland', 'wales', 'northern ireland', 'britain', 'great britain'],
+      'united states': ['united states', 'usa', 'us', 'america', 'u.s.', 'u.s.a.'],
+      'new zealand': ['new zealand', 'nz'],
+      'czechia': ['czechia', 'czech republic'],
+      'germany': ['germany', 'deutschland'],
+      'france': ['france'],
+      'netherlands': ['netherlands', 'holland', 'nederland'],
+      'spain': ['spain', 'españa'],
+      'italy': ['italy', 'italia'],
+      'japan': ['japan'],
+      'south korea': ['south korea', 'korea'],
+    }
+    let countryHint: string | null = null
+    for (const [canon, syns] of Object.entries(COUNTRY_SYNONYMS)) {
+      if (syns.some(s => q.includes(s))) { countryHint = canon; break }
+    }
+
+    // Strip the country part from the city query so "Oxford, UK" matches city
+    // "Oxford" not city "Oxford, UK".
+    const cityOnly = countryHint
+      ? q.replace(/,/g, ' ')
+         .split(/\s+/)
+         .filter(t => !COUNTRY_SYNONYMS[countryHint!].includes(t))
+         .join(' ')
+         .trim()
+      : q.replace(/,/g, ' ').trim()
+
+    // Score every candidate and pick the best one (not just the first `.find()`).
+    const scored = cityScores.map(c => {
+      const city = c.city.toLowerCase()
+      const country = c.country.toLowerCase()
+      let score = 0
+      // Country match trumps everything if a hint was parsed
+      if (countryHint) {
+        if (country === countryHint) score += 100
+        else score -= 50   // explicit mismatch heavily penalized
+      }
+      // Exact city match is strongest signal
+      if (city === cityOnly) score += 50
+      else if (city.startsWith(cityOnly + ' ') || cityOnly.startsWith(city + ' ')) score += 30
+      else if (city.includes(cityOnly) || cityOnly.includes(city)) score += 10
+      else score -= 100   // not a match at all
+      return { c, score }
+    }).filter(x => x.score > 0).sort((a, b) => b.score - a.score)
+
+    if (scored.length) {
+      const best = scored[0].c
+      setSelectedCity(best)
+      mapRef.current?.flyTo(best.center, 13, { duration: 1.5 })
       return
     }
-    // Fall back to geocoding for cities not in our rankings
+
+    // Fall back to Nominatim — already returns countries sensibly if the user
+    // included a country in the query.
     try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1`)
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1&accept-language=en&dedupe=1`,
+        { headers: { 'User-Agent': 'PlantsPack/1.0' } },
+      )
       const data = await res.json()
       if (data[0]) {
         mapRef.current?.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 12, { duration: 1.5 })
