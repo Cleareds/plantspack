@@ -172,7 +172,24 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function PlacePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const place = await getPlace(id)
+  let place = await getPlace(id)
+
+  // If not found by slug/id, check the slug-aliases table (historical slugs
+  // from the bug fixed in 20260420000000). 301-redirect to the canonical URL.
+  if (!place) {
+    try {
+      const { createAdminClient } = await import('@/lib/supabase-admin')
+      const admin = createAdminClient()
+      const { data: alias } = await admin
+        .from('place_slug_aliases')
+        .select('place_id, places!inner(slug)')
+        .eq('old_slug', id)
+        .limit(1)
+        .maybeSingle()
+      const aliasSlug = (alias as any)?.places?.slug
+      if (aliasSlug) redirect(`/place/${aliasSlug}`)
+    } catch {}
+  }
 
   if (!place) {
     notFound()
