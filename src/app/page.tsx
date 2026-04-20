@@ -4,7 +4,9 @@ import { join } from 'path'
 import { createAdminClient } from '@/lib/supabase-admin'
 import HomeClient from '@/components/home/HomeClient'
 
-export const revalidate = 3600
+// Short revalidate so new posts + pinned announcements appear quickly
+// in the community widget. Top-cities fetch below keeps its own 24h cache.
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'PlantsPack — Vegan Places, Recipes & City Rankings Worldwide',
@@ -38,6 +40,8 @@ async function getRecentPosts() {
     .eq('privacy', 'public')
     .is('deleted_at', null)
     .or(`user_id.neq.${ADMIN_ID},category.not.in.(recipe,event)`)
+    // Pinned posts (admin announcements) float to the top
+    .order('is_pinned', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(8)
   return data || []
