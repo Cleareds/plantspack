@@ -13,8 +13,7 @@ import BlockButton from '@/components/social/BlockButton'
 import MuteButton from '@/components/social/MuteButton'
 import ReportButton from '@/components/moderation/ReportButton'
 import TierBadge from '@/components/ui/TierBadge'
-import UserStatsCompact from '@/components/profile/UserStatsCompact'
-import ProfileBadges from '@/components/profile/ProfileBadges'
+import ProfileHero from '@/components/profile/ProfileHero'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -285,83 +284,30 @@ export default function UserProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6">
-      {/* Profile Header */}
-      <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-3 sm:p-6 mb-6">
-        <div className="flex items-start justify-between mb-4 flex-wrap sm:flex-nowrap">
-          <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0">
-              {profileUser.avatar_url ? (
-                <Image
-                  src={profileUser.avatar_url}
-                  alt={`${profileUser.username}'s avatar`}
-                  width={80}
-                  height={80}
-                  className="h-20 w-20 rounded-full object-cover"
-                />
-              ) : (
-                <div className="h-20 w-20 rounded-full bg-surface-container-low flex items-center justify-center">
-                  <span className="text-primary font-medium text-2xl">
-                    {profileUser.first_name?.[0] || profileUser.username[0].toUpperCase()}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div>
-              <div className="flex items-center space-x-3 mb-1">
-                <h1 className="text-2xl font-bold text-on-surface">
-                  {profileUser.first_name && profileUser.last_name
-                    ? `${profileUser.first_name} ${profileUser.last_name}`
-                    : profileUser.username}
-                </h1>
-                {(profileUser as any).subscription_tier && (profileUser as any).subscription_tier !== 'free' && (
-                  <TierBadge tier={(profileUser as any).subscription_tier as 'medium' | 'premium'} size="md" />
-                )}
-                {(profileUser as any).is_banned && (
-                  <div className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                    <Ban className="h-4 w-4" />
-                    <span>Banned</span>
-                  </div>
-                )}
-              </div>
-              <p className="text-outline">@{profileUser.username}</p>
-              {profileUser.bio && (
-                <p className="text-on-surface-variant mt-2">{profileUser.bio}</p>
-              )}
-            </div>
-          </div>
-          {currentUser && currentUser.id !== profileUser.id && (
-            <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+      <ProfileHero
+        user={profileUser}
+        mode="public"
+        actions={
+          currentUser && currentUser.id !== profileUser.id ? (
+            <>
               <FollowButton userId={profileUser.id} />
               <MuteButton userId={profileUser.id} />
               <BlockButton userId={profileUser.id} />
-              <ReportButton
-                reportedType="user"
-                reportedId={profileUser.id}
-                className="px-2 py-1"
-              />
-            </div>
-          )}
-          {currentUser && currentUser.id === profileUser.id && (
+              <ReportButton reportedType="user" reportedId={profileUser.id} className="px-2 py-1" />
+            </>
+          ) : null
+        }
+        callout={
+          currentUser && currentUser.id === profileUser.id ? (
             <Link
-              href="/profile/contributions"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-primary-container text-on-primary-container hover:opacity-90 transition-opacity mt-2 sm:mt-0"
+              href={`/profile/${profileUser.username}`}
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
             >
-              <Package className="h-4 w-4" />
-              Manage contributions
+              This is your public profile — Go to My Profile →
             </Link>
-          )}
-        </div>
-
-        {/* Badges */}
-        <div className="pt-3">
-          <ProfileBadges userId={profileUser.id} size="sm" />
-        </div>
-
-        {/* Compact Stats */}
-        <div className="pt-4 border-t border-outline-variant/15 flex justify-end">
-          <UserStatsCompact userId={profileUser.id} />
-        </div>
-      </div>
+          ) : null
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content - Posts */}

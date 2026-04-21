@@ -12,6 +12,7 @@ import StarRating from '@/components/places/StarRating'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
+import ProfileHero from '@/components/profile/ProfileHero'
 import { getUserSubscription, SUBSCRIPTION_TIERS } from '@/lib/stripe'
 import PostCard from '@/components/posts/PostCard'
 import OwnerBadge from '@/components/places/OwnerBadge'
@@ -344,81 +345,50 @@ export default function ProfilePage() {
 
         {/* Main Content */}
         <div className={isOwnProfile ? "lg:col-span-3" : "lg:col-span-4"}>
-          {/* Profile Header */}
-          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-3 mb-6">
-        <div className="flex items-start space-x-6 mb-4">
-          <div className="h-20 w-20 rounded-full bg-surface-container-low flex items-center justify-center overflow-hidden flex-shrink-0 avatar-container">
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={profile.username}
-                className="h-20 w-20 object-cover rounded-full"
-              />
-            ) : (
-              <User className="h-12 w-12 text-primary" />
-            )}
-          </div>
-
-          <div className="flex-1">
-            <div className="flex items-center space-x-3 mb-2">
-              <h1 className="text-2xl font-bold text-on-surface">
-                {profile.first_name && profile.last_name
-                  ? `${profile.first_name} ${profile.last_name}`
-                  : profile.username}
-              </h1>
-              {profile.subscription_tier && profile.subscription_tier !== 'free' && (
-                <div
-                  className="flex items-center space-x-1 px-1 sm:px-3 py-1 rounded-full text-sm font-medium"
-                  style={{
-                    color: SUBSCRIPTION_TIERS[profile.subscription_tier]?.badge.color,
-                    backgroundColor: SUBSCRIPTION_TIERS[profile.subscription_tier]?.badge.bgColor
-                  }}
+          <ProfileHero
+            user={profile}
+            mode={isOwnProfile ? 'owner' : 'public'}
+            actions={isOwnProfile ? (
+              <>
+                <Link
+                  href={`/profile/${profile.username}/edit`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors"
                 >
-                  <Crown className="h-4 w-4" />
-                  <span className={"hidden sm:inline"}>Supporter</span>
-                </div>
-              )}
-              {profile.is_banned && (
-                <div className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                  <Ban className="h-4 w-4" />
-                  <span>Banned</span>
-                </div>
-              )}
-            </div>
-            <p className="text-on-surface-variant mb-2">@{profile.username}</p>
-
-            {profile.bio && (
-              <p className="text-on-surface-variant mb-4">{profile.bio}</p>
-            )}
-
-            {/* Owner Badges */}
-            {ownedPlaces.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {ownedPlaces.map((ownedPlace) => (
-                  <OwnerBadge
-                    key={ownedPlace.place_id}
-                    placeName={ownedPlace.place_name}
-                    placeId={ownedPlace.place_id}
-                    size="sm"
-                  />
-                ))}
+                  ✏️ Edit profile
+                </Link>
+                <Link
+                  href="/profile/contributions"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-primary-container text-on-primary-container hover:opacity-90 transition-opacity"
+                >
+                  <Package className="h-4 w-4" />
+                  Manage contributions
+                </Link>
+              </>
+            ) : null}
+            callout={
+              <div className="flex flex-wrap items-center gap-3 text-sm text-on-surface-variant">
+                <span className="inline-flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5" />
+                  Joined {formatDate(profile.created_at)}
+                </span>
+                {ownedPlaces.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {ownedPlaces.slice(0, 3).map((op) => (
+                      <OwnerBadge
+                        key={op.place_id}
+                        placeName={op.place_name}
+                        placeId={op.place_id}
+                        size="sm"
+                      />
+                    ))}
+                    {ownedPlaces.length > 3 && (
+                      <span className="text-xs text-outline self-center">+{ownedPlaces.length - 3} more</span>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-
-            <div className="flex items-center space-x-4 text-sm text-outline">
-              <div className="flex items-center space-x-1">
-                <Calendar className="h-4 w-4" />
-                <span>Joined {formatDate(profile.created_at)}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Compact Stats */}
-        <div className="pt-4 border-t border-outline-variant/15 flex justify-end">
-          <UserStatsCompact userId={profile.id} />
-        </div>
-      </div>
+            }
+          />
 
           {/* Profile Content Tabs */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
