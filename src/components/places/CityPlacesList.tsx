@@ -90,7 +90,7 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
   const validCategory = activeCategory && categories.includes(activeCategory) ? activeCategory : null
   const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
 
-  const PAGE_SIZE = 50
+  const PAGE_SIZE = 30
   const currentPage = parseInt(searchParams?.get('page') || '1') || 1
 
   const filtered = basePlaces.filter(p => {

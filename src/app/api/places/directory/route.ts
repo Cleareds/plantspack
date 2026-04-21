@@ -26,7 +26,10 @@ export async function GET(request: NextRequest) {
     const city = searchParams.get('city')
     const category = searchParams.get('category')
     const sort = searchParams.get('sort') || 'count'
-    const limit = Math.min(parseInt(searchParams.get('limit') || '200'), 500)
+    // Accept an optional `limit` for callers that want a small slice (previews,
+    // sample grids). Default 200. Cap removed for city-places queries — we
+    // paginate server-side so large cities (Berlin has 1300+) return in full.
+    const requestedLimit = parseInt(searchParams.get('limit') || '200')
 
     if (level === 'countries') {
       // Get countries with place counts and stats for SEO descriptions
@@ -152,7 +155,7 @@ export async function GET(request: NextRequest) {
           },
         }))
         .sort((a, b) => b.count - a.count)
-        .slice(0, limit)
+        .slice(0, Math.min(requestedLimit, 500))
 
       // Get actual country name from DB (proper casing)
       const dbCountryName = data?.[0]?.country || fromSlugDisplay(country)
@@ -177,7 +180,9 @@ export async function GET(request: NextRequest) {
         query = query.order('name', { ascending: true })
       }
 
-      const { data, error } = await query.limit(limit)
+      // Country-level list — keep the caller's limit but cap at 500 to
+      // avoid bulk country dumps. City-level uses pagination above.
+      const { data, error } = await query.limit(Math.min(requestedLimit, 500))
       if (error) throw error
 
       const dbCountry = data?.[0]?.country || fromSlugDisplay(country)
@@ -209,35 +214,38 @@ export async function GET(request: NextRequest) {
       const actualCity = cityRow?.city || fromSlug(city)
       const actualCountry = cityRow?.country || fromSlug(country)
 
-      // Use ilike to catch the casing/accent siblings in places rows.
-      let query = supabase
-        .from('places')
-        .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
-        .ilike('city', actualCity)
-        .ilike('country', actualCountry)
-
-      if (category) {
-        query = query.eq('category', category)
+      // Paginate server-side through Supabase's 1000-row-per-request cap so
+      // large cities (Berlin 1300+) return in full. The cap-free `all`
+      // output is what the client paginates at 30 rows/page in the UI.
+      const selectCols = 'id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types'
+      const all: any[] = []
+      const BATCH = 1000
+      let from = 0
+      while (true) {
+        let q = supabase
+          .from('places')
+          .select(selectCols)
+          .ilike('city', actualCity)
+          .ilike('country', actualCountry)
+        if (category) q = q.eq('category', category)
+        if (sort === 'rating') q = q.order('average_rating', { ascending: false, nullsFirst: false })
+        else                    q = q.order('name',           { ascending: true })
+        const { data: batch, error } = await q.range(from, from + BATCH - 1)
+        if (error) throw error
+        if (!batch || batch.length === 0) break
+        all.push(...batch)
+        if (batch.length < BATCH) break
+        from += BATCH
       }
 
-      if (sort === 'rating') {
-        query = query.order('average_rating', { ascending: false, nullsFirst: false })
-      } else {
-        query = query.order('name', { ascending: true })
-      }
-
-      const { data, error } = await query.limit(limit)
-      if (error) throw error
-
-      // Use actual DB names for proper casing
-      const dbCity = data?.[0]?.city || fromSlugDisplay(city)
-      const dbCountry = data?.[0]?.country || fromSlugDisplay(country)
+      const dbCity = all[0]?.city || fromSlugDisplay(city)
+      const dbCountry = all[0]?.country || fromSlugDisplay(country)
 
       return NextResponse.json({
-        places: data || [],
+        places: all,
         city: dbCity,
         country: dbCountry,
-        total: data?.length || 0,
+        total: all.length,
       }, { headers: CACHE_HEADERS })
     }
 

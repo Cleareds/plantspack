@@ -114,7 +114,8 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
 async function fetchCityPlaces(country: string, city: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}&limit=500`, { next: { revalidate: 3600 } })
+    // City query paginates server-side so we always get ALL places, no cap.
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`, { next: { revalidate: 3600 } })
     if (!res.ok) return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
     return res.json()
   } catch {
