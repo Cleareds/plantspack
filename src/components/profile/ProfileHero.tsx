@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Ban, MapPin, Star, MessageSquare, Package, Users, UserPlus } from 'lucide-react'
+import { Ban, MapPin, Star, MessageSquare, Package, Users, UserPlus, Sparkles } from 'lucide-react'
 import TierBadge from '@/components/ui/TierBadge'
 import ProfileBadges from './ProfileBadges'
 import { supabase } from '@/lib/supabase'
@@ -26,6 +26,7 @@ interface ContribSummary {
   posts_published: number
   packs_created: number
   corrections_submitted: number
+  city_experiences_written: number
   badge_codes: string[]
 }
 
@@ -42,7 +43,7 @@ interface ProfileHeroProps {
   /** Optional callout rendered below the action row, e.g. "This is your public profile →" */
   callout?: ReactNode
   /** Click handlers on the stats strip, e.g. switch to tab */
-  onStatClick?: (stat: 'places' | 'reviews' | 'posts' | 'packs' | 'followers' | 'following') => void
+  onStatClick?: (stat: 'places' | 'reviews' | 'posts' | 'packs' | 'experiences' | 'followers' | 'following') => void
 }
 
 export default function ProfileHero({ user, mode, actions, callout, onStatClick }: ProfileHeroProps) {
@@ -70,13 +71,14 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
 
   const totalReviews = (contrib?.reviews_written ?? 0) + (contrib?.recipe_reviews_written ?? 0)
 
-  const stats: Array<{ key: 'places' | 'reviews' | 'posts' | 'packs' | 'followers' | 'following', count: number, label: string, icon: React.ComponentType<{ className?: string }> }> = [
-    { key: 'places',    count: contrib?.places_added ?? 0,   label: 'Places',   icon: MapPin },
-    { key: 'reviews',   count: totalReviews,                 label: 'Reviews',  icon: Star },
-    { key: 'posts',     count: contrib?.posts_published ?? 0, label: 'Posts',   icon: MessageSquare },
-    { key: 'packs',     count: contrib?.packs_created ?? 0,  label: 'Packs',    icon: Package },
-    { key: 'followers', count: follows?.followers_count ?? 0, label: 'Followers', icon: Users },
-    { key: 'following', count: follows?.following_count ?? 0, label: 'Following', icon: UserPlus },
+  const stats: Array<{ key: 'places' | 'reviews' | 'posts' | 'packs' | 'experiences' | 'followers' | 'following', count: number, label: string, icon: React.ComponentType<{ className?: string }> }> = [
+    { key: 'places',      count: contrib?.places_added ?? 0,             label: 'Places',      icon: MapPin },
+    { key: 'reviews',     count: totalReviews,                           label: 'Reviews',     icon: Star },
+    { key: 'experiences', count: contrib?.city_experiences_written ?? 0, label: 'Experiences', icon: Sparkles },
+    { key: 'posts',       count: contrib?.posts_published ?? 0,          label: 'Posts',       icon: MessageSquare },
+    { key: 'packs',       count: contrib?.packs_created ?? 0,            label: 'Packs',       icon: Package },
+    { key: 'followers',   count: follows?.followers_count ?? 0,          label: 'Followers',   icon: Users },
+    { key: 'following',   count: follows?.following_count ?? 0,          label: 'Following',   icon: UserPlus },
   ]
 
   return (

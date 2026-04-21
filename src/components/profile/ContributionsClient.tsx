@@ -4,10 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
-import { Loader2, ExternalLink, MapPin, Archive, RotateCcw, Star, MessageSquare, Package, AlertCircle, Wrench } from 'lucide-react'
+import { Loader2, ExternalLink, MapPin, Archive, RotateCcw, Star, MessageSquare, Package, AlertCircle, Wrench, Sparkles } from 'lucide-react'
 import BadgeChip, { BadgeCode } from './BadgeChip'
 
-type TabId = 'places' | 'reviews' | 'posts' | 'packs' | 'corrections' | 'archived'
+type TabId = 'places' | 'reviews' | 'experiences' | 'posts' | 'packs' | 'corrections' | 'archived'
 
 interface Summary {
   places_added: number
@@ -16,6 +16,7 @@ interface Summary {
   posts_published: number
   packs_created: number
   corrections_submitted: number
+  city_experiences_written: number
   badge_codes: string[]
 }
 
@@ -72,17 +73,30 @@ interface CorrectionRow {
   places: { name: string; slug: string } | null
 }
 
+interface ExperienceRow {
+  id: string
+  city: string
+  country: string
+  city_slug: string
+  country_slug: string
+  overall_rating: number
+  summary: string
+  tips: string[]
+  created_at: string
+}
+
 interface ContributionsClientProps {
   userId: string
 }
 
 const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'places',      label: 'Places',      icon: MapPin },
-  { id: 'reviews',     label: 'Reviews',     icon: Star },
-  { id: 'posts',       label: 'Posts',       icon: MessageSquare },
-  { id: 'packs',       label: 'Packs',       icon: Package },
-  { id: 'corrections', label: 'Corrections', icon: Wrench },
-  { id: 'archived',    label: 'Archived',    icon: Archive },
+  { id: 'places',      label: 'Places',       icon: MapPin },
+  { id: 'reviews',     label: 'Reviews',      icon: Star },
+  { id: 'experiences', label: 'Experiences',  icon: Sparkles },
+  { id: 'posts',       label: 'Posts',        icon: MessageSquare },
+  { id: 'packs',       label: 'Packs',        icon: Package },
+  { id: 'corrections', label: 'Corrections',  icon: Wrench },
+  { id: 'archived',    label: 'Archived',     icon: Archive },
 ]
 
 function timeAgo(iso: string): string {
@@ -106,6 +120,7 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
   const [posts, setPosts] = useState<PostRow[]>([])
   const [packs, setPacks] = useState<PackRow[]>([])
   const [corrections, setCorrections] = useState<CorrectionRow[]>([])
+  const [experiences, setExperiences] = useState<ExperienceRow[]>([])
   const [loading, setLoading] = useState(true)
   const [busyId, setBusyId] = useState<string | null>(null)
 
@@ -116,7 +131,7 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
 
   const loadAll = useCallback(async () => {
     setLoading(true)
-    const [p, a, r, po, pk, co] = await Promise.all([
+    const [p, a, r, po, pk, co, ex] = await Promise.all([
       supabase.from('places')
         .select('id, slug, name, city, country, category, main_image_url, images, created_at, archived_at')
         .eq('created_by', userId).is('archived_at', null)
@@ -142,6 +157,10 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
         .select('id, place_id, note, corrections, status, created_at, places:place_id (name, slug)')
         .eq('user_id', userId)
         .order('created_at', { ascending: false }).limit(50),
+      supabase.from('city_experiences')
+        .select('id, city, country, city_slug, country_slug, overall_rating, summary, tips, created_at')
+        .eq('user_id', userId).is('deleted_at', null)
+        .order('created_at', { ascending: false }).limit(50),
     ])
     setPlaces((p.data as PlaceRow[]) || [])
     setArchivedPlaces((a.data as PlaceRow[]) || [])
@@ -149,6 +168,7 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
     setPosts((po.data as PostRow[]) || [])
     setPacks((pk.data as PackRow[]) || [])
     setCorrections((co.data as unknown as CorrectionRow[]) || [])
+    setExperiences((ex.data as ExperienceRow[]) || [])
     setLoading(false)
   }, [userId])
 
@@ -204,9 +224,21 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
     } finally { setBusyId(null) }
   }
 
+  const deleteExperience = async (exp: ExperienceRow) => {
+    if (!confirm(`Delete your experience for ${exp.city}?`)) return
+    setBusyId(exp.id)
+    try {
+      const res = await fetch(`/api/cities/${exp.country_slug}/${exp.city_slug}/experiences`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('delete failed')
+      await loadAll()
+      await loadSummary()
+    } finally { setBusyId(null) }
+  }
+
   const tabCount = useMemo(() => ({
     places: summary?.places_added ?? 0,
     reviews: (summary?.reviews_written ?? 0) + (summary?.recipe_reviews_written ?? 0),
+    experiences: summary?.city_experiences_written ?? 0,
     posts: summary?.posts_published ?? 0,
     packs: summary?.packs_created ?? 0,
     corrections: summary?.corrections_submitted ?? 0,
@@ -228,7 +260,7 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
         )}
 
         <p className="text-sm text-on-surface-variant mt-3">
-          {summary?.places_added ?? 0} places · {(summary?.reviews_written ?? 0) + (summary?.recipe_reviews_written ?? 0)} reviews · {summary?.posts_published ?? 0} posts · {summary?.packs_created ?? 0} packs
+          {summary?.places_added ?? 0} places · {(summary?.reviews_written ?? 0) + (summary?.recipe_reviews_written ?? 0)} reviews · {summary?.city_experiences_written ?? 0} city experiences · {summary?.posts_published ?? 0} posts · {summary?.packs_created ?? 0} packs
         </p>
       </header>
 
@@ -328,6 +360,23 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
                   subtitle={pk.description ? pk.description.slice(0, 160) : ''}
                   meta={`Created ${timeAgo(pk.created_at)}`}
                   openHref={`/packs/${pk.slug}`}
+                />
+              ))
+          )}
+
+          {tab === 'experiences' && (experiences.length === 0
+            ? <EmptyState label="You haven't shared any vegan city experiences yet." cta={{ href: '/vegan-places', text: 'Browse cities' }} />
+            : experiences.map(e => (
+                <ContribCard
+                  key={e.id}
+                  thumb={null}
+                  title={`${e.city}, ${e.country}`}
+                  subtitle={e.summary.slice(0, 160) + (e.summary.length > 160 ? '…' : '')}
+                  meta={`★ ${e.overall_rating} · ${e.tips.length} tip${e.tips.length === 1 ? '' : 's'} · shared ${timeAgo(e.created_at)}`}
+                  openHref={`/vegan-places/${e.country_slug}/${e.city_slug}`}
+                  actions={[
+                    { label: 'Delete', onClick: () => deleteExperience(e), busy: busyId === e.id, kind: 'danger' },
+                  ]}
                 />
               ))
           )}

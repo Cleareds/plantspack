@@ -1,6 +1,6 @@
 'use client'
 
-export type BadgeCode = 'early_contributor' | 'reviewer' | 'curator' | 'local_hero'
+export type BadgeCode = 'early_contributor' | 'reviewer' | 'curator' | 'explorer' | 'local_hero'
 
 interface BadgeConfig {
   emoji: string
@@ -31,6 +31,13 @@ export const BADGE_CONFIG: Record<BadgeCode, BadgeConfig> = {
     tooltip: 'Curator — added 3+ places to the directory.',
     bg: 'bg-amber-100',
     fg: 'text-amber-900',
+  },
+  explorer: {
+    emoji: '🌍',
+    label: 'Explorer',
+    tooltip: 'Explorer — shared vegan experiences from 3+ cities.',
+    bg: 'bg-sky-100',
+    fg: 'text-sky-800',
   },
   local_hero: {
     emoji: '🦸',

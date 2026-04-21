@@ -8,6 +8,7 @@ import { generateCityDescription, generateCityMetaDescription } from '@/lib/vega
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
+import CityExperiencesSection from '@/components/city/CityExperiencesSection'
 
 export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
 
@@ -239,6 +240,15 @@ export default async function CityPage({ params }: PageProps) {
             <PinCityButton cityName={cityName} countryName={countryName} />
             <FollowCityButton cityName={cityName} countryName={countryName} currentScore={cityScore?.score} currentGrade={cityScore?.grade} />
           </div>
+        </div>
+
+        {/* Vegan experiences for this city */}
+        <div className="mb-8">
+          <CityExperiencesSection
+            countrySlug={country}
+            citySlug={city}
+            cityName={cityName}
+          />
         </div>
 
         {/* Places list with client-side category filter + map */}
