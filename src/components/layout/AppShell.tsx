@@ -23,6 +23,12 @@ function useGeolocation() {
       if (country) localStorage.setItem('user_country', country)
       localStorage.setItem('geo_resolved', '1')
       localStorage.setItem('geo_timestamp', String(Date.now()))
+      // Mirror to cookies so the next SSR hit of / can use them directly.
+      // Same-tab localStorage writes don't fire `storage` events, so we have
+      // to set the cookies explicitly here.
+      import('@/lib/location-cookies').then(({ setGeoLocationCookies }) => {
+        setGeoLocationCookies({ lat: String(lat), lng: String(lng), city: city ?? null, country: country ?? null })
+      })
       setShowBanner(false)
     }
 

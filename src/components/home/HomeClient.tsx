@@ -12,6 +12,7 @@ import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
 import MyCities from './MyCities'
+import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
 
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
@@ -87,24 +88,12 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
   const [locationLoading, setLocationLoading] = useState(!initialLocation)
 
   // Sync localStorage-driven location values to cookies so the next SSR hit
-  // (or a hard refresh) can render the home page with the right city upfront.
-  // Runs on mount and any time the backing localStorage changes.
+  // can render the home page with the right city upfront. This covers the
+  // first-ever visit and cross-tab changes; same-tab pin/unpin actions MUST
+  // update cookies directly via @/lib/location-cookies (see PinCityButton).
   useEffect(() => {
-    const maxAge = 60 * 60 * 24 * 30 // 30 days
-    const setCookie = (name: string, value: string | null) => {
-      if (!value) { document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax` ; return }
-      document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAge}; SameSite=Lax`
-    }
-    const syncOnce = () => {
-      setCookie('pp_pinned_city',    localStorage.getItem('pinned_city_name'))
-      setCookie('pp_pinned_country', localStorage.getItem('pinned_country_name'))
-      setCookie('pp_user_lat',       localStorage.getItem('user_lat'))
-      setCookie('pp_user_lng',       localStorage.getItem('user_lng'))
-      setCookie('pp_user_city',      localStorage.getItem('user_city'))
-      setCookie('pp_user_country',   localStorage.getItem('user_country'))
-    }
-    syncOnce()
-    const onStorage = () => syncOnce()
+    syncLocationCookiesFromLocalStorage()
+    const onStorage = () => syncLocationCookiesFromLocalStorage()
     window.addEventListener('storage', onStorage)
     return () => window.removeEventListener('storage', onStorage)
   }, [])
@@ -262,6 +251,10 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                     localStorage.removeItem('pinned_city_name')
                     localStorage.removeItem('pinned_country_name')
                     localStorage.removeItem('plantspack_home_cache')
+                    // Clear the pinned cookies too — otherwise SSR on reload
+                    // would still render the pinned city before the client
+                    // re-sync'd.
+                    clearPinnedLocationCookies()
                     window.location.reload()
                   }} className="text-on-surface-variant hover:text-primary hover:underline font-medium">
                     Use my location
