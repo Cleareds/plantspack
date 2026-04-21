@@ -1,11 +1,14 @@
 import { Metadata } from 'next'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase-admin'
 import HomeClient from '@/components/home/HomeClient'
 
-// Short revalidate so new posts + pinned announcements appear quickly
-// in the community widget. Top-cities fetch below keeps its own 24h cache.
+// Top cities + posts cache for 60s. The per-user location-aware content
+// is fetched per-request using `dynamic = 'force-dynamic'` semantics via
+// the cookies() call — the page becomes dynamic whenever location cookies
+// exist, so each pinned user gets their own server-rendered home.
 export const revalidate = 60
 
 export const metadata: Metadata = {
@@ -55,10 +58,52 @@ function getCityImages(): Record<string, string> {
   }
 }
 
+async function getInitialLocationData() {
+  // Pull location hints from cookies set by the client (HomeClient syncs them
+  // from localStorage on mount — pinned city takes priority over geolocation).
+  // If anything's there, SSR the nearby-places payload so pinned users don't
+  // see the search-bar flash on first paint.
+  try {
+    const c = await cookies()
+    const pinnedCity = c.get('pp_pinned_city')?.value
+    const pinnedCountry = c.get('pp_pinned_country')?.value
+    const geoLat = c.get('pp_user_lat')?.value
+    const geoLng = c.get('pp_user_lng')?.value
+    const geoCity = c.get('pp_user_city')?.value
+    const geoCountry = c.get('pp_user_country')?.value
+
+    const params = new URLSearchParams()
+    if (pinnedCity) {
+      params.set('city', pinnedCity)
+      if (pinnedCountry) params.set('country', pinnedCountry)
+    } else if (geoLat || geoCity) {
+      if (geoLat) params.set('lat', geoLat)
+      if (geoLng) params.set('lng', geoLng)
+      if (geoCity) params.set('city', geoCity)
+      if (geoCountry) params.set('country', geoCountry)
+    } else {
+      return null
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/home?${params.toString()}`, { cache: 'no-store' })
+    if (!res.ok) return null
+    const data = await res.json()
+    return {
+      data,
+      city: pinnedCity || geoCity || '',
+      country: pinnedCountry || geoCountry || '',
+    }
+  } catch {
+    return null
+  }
+}
+
 export default async function Home() {
-  const [topCities, recentPosts] = await Promise.all([
+  const [topCities, recentPosts, initialLocation] = await Promise.all([
     getTopCities(),
     getRecentPosts(),
+    getInitialLocationData(),
   ])
 
   const cityImages = getCityImages()
@@ -73,7 +118,12 @@ export default async function Home() {
     <>
       {/* SSR h1 for SEO crawlers that don't execute JS */}
       <h1 className="sr-only">PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide</h1>
-      <HomeClient topCities={topCities} recentPosts={normalizedPosts} cityImages={cityImages} />
+      <HomeClient
+        topCities={topCities}
+        recentPosts={normalizedPosts}
+        cityImages={cityImages}
+        initialLocation={initialLocation}
+      />
     </>
   )
 }

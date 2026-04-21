@@ -38,26 +38,38 @@ function getGradeColor(g: string) { return g.startsWith('A') ? 'text-emerald-500
 function getScoreBarColor(s: number) { return s >= 80 ? 'bg-emerald-500' : s >= 65 ? 'bg-green-500' : s >= 50 ? 'bg-yellow-500' : s >= 35 ? 'bg-orange-500' : 'bg-red-500' }
 function timeAgo(d: string) { const m = Math.floor((Date.now() - new Date(d).getTime()) / 60000); return m < 60 ? `${m}m` : m < 1440 ? `${Math.floor(m/60)}h` : m < 43200 ? `${Math.floor(m/1440)}d` : `${Math.floor(m/43200)}mo` }
 
+interface InitialLocation {
+  data: any
+  city: string
+  country: string
+}
+
 interface Props {
   topCities: CityScoreData[]
   recentPosts: CompactPost[]
   cityImages?: Record<string, string>
+  initialLocation?: InitialLocation | null
 }
 
-function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {} }: Props) {
+function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}, initialLocation }: Props) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false)
   const { user, profile } = useAuth()
 
-  const [nearbyPlaces, setNearbyPlaces] = useState<NearbyPlace[]>([])
-  const [nearbySanctuaries, setNearbySanctuaries] = useState<NearbyPlace[]>([])
-  const [nearbyStays, setNearbyStays] = useState<NearbyPlace[]>([])
-  const [cityScore, setCityScore] = useState<CityScoreData | null>(null)
-  const [userCity, setUserCity] = useState('')
-  const [userCountry, setUserCountry] = useState('')
-  const [cityImageUrl, setCityImageUrl] = useState<string | null>(null)
+  // Seed from server-rendered initialLocation (pinned or known city) so the
+  // first paint is already the right city — no search-bar flash.
+  const initData = initialLocation?.data
+  const [nearbyPlaces, setNearbyPlaces] = useState<NearbyPlace[]>(initData?.nearbyPlaces || [])
+  const [nearbySanctuaries, setNearbySanctuaries] = useState<NearbyPlace[]>(initData?.nearbySanctuaries || [])
+  const [nearbyStays, setNearbyStays] = useState<NearbyPlace[]>(initData?.nearbyStays || [])
+  const [cityScore, setCityScore] = useState<CityScoreData | null>(initData?.userCityScore || null)
+  const [userCity, setUserCity] = useState(initialLocation?.city || initData?.userCityScore?.city || '')
+  const [userCountry, setUserCountry] = useState(initialLocation?.country || initData?.userCityScore?.country || '')
+  const [cityImageUrl, setCityImageUrl] = useState<string | null>(
+    (initialLocation && serverCityImages[`${initData?.userCityScore?.city || initialLocation.city}|||${initData?.userCityScore?.country || initialLocation.country}`]) || null
+  )
   const [cityImageFailed, setCityImageFailed] = useState(false)
 
   useEffect(() => {
@@ -67,14 +79,55 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
     }
   }, [searchParams, user, router])
 
-  const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number } | null>(null)
+  const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number } | null>(initData?.stats || null)
 
-  // Load location-aware data with localStorage caching
-  const [locationLoading, setLocationLoading] = useState(true)
+  // Load location-aware data with localStorage caching.
+  // If server already rendered initialLocation, skip the initial loading
+  // state so the user never sees a flash.
+  const [locationLoading, setLocationLoading] = useState(!initialLocation)
+
+  // Sync localStorage-driven location values to cookies so the next SSR hit
+  // (or a hard refresh) can render the home page with the right city upfront.
+  // Runs on mount and any time the backing localStorage changes.
+  useEffect(() => {
+    const maxAge = 60 * 60 * 24 * 30 // 30 days
+    const setCookie = (name: string, value: string | null) => {
+      if (!value) { document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax` ; return }
+      document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAge}; SameSite=Lax`
+    }
+    const syncOnce = () => {
+      setCookie('pp_pinned_city',    localStorage.getItem('pinned_city_name'))
+      setCookie('pp_pinned_country', localStorage.getItem('pinned_country_name'))
+      setCookie('pp_user_lat',       localStorage.getItem('user_lat'))
+      setCookie('pp_user_lng',       localStorage.getItem('user_lng'))
+      setCookie('pp_user_city',      localStorage.getItem('user_city'))
+      setCookie('pp_user_country',   localStorage.getItem('user_country'))
+    }
+    syncOnce()
+    const onStorage = () => syncOnce()
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
 
   useEffect(() => {
     const CACHE_KEY = 'plantspack_home_cache'
     const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+    // Server already gave us a location-aware payload — skip the client
+    // refetch on mount. Storage events will still refresh if the user
+    // pins a new city or geo changes.
+    if (initialLocation) {
+      setLocationLoading(false)
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data: initialLocation.data,
+          city: initialLocation.city,
+          country: initialLocation.country,
+          ts: Date.now(),
+        }))
+      } catch {}
+      return
+    }
 
     function applyData(data: any, city: string, country: string) {
       setCityScore(data.userCityScore)
@@ -146,7 +199,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
       setLocationLoading(false)
     }
     load()
-  }, [])
+  }, [initialLocation])
 
   const { isFullyVeganOnly } = useVeganFilter()
   const [showCitySearch, setShowCitySearch] = useState(false)
