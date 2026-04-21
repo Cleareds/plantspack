@@ -384,243 +384,113 @@ export default function ProfilePage() {
             }
           />
 
-          {/* Profile Content Tabs */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Posts feed — category tabs removed (they duplicated /profile/contributions) */}
-        <div className="lg:col-span-2">
-          {!posts || posts.length === 0 ? (
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
-              <p>No posts yet.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {posts.map((post: any) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  onUpdate={loadProfileData}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+          {/* Social · Favorites · Packs widgets (3-column on desktop).
+              Posts are no longer shown here — see /profile/contributions
+              for the full managed list. */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Social widget */}
+            <ProfileFollowers userId={profile.id} />
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Following/Followers */}
-          <ProfileFollowers userId={profile.id} />
-
-          {/* My Events */}
-          {myEvents.length > 0 && (
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+            {/* Favorite Places widget */}
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border flex flex-col">
               <div className="p-4 border-b border-outline-variant/15">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-red-600" />
                   <h3 className="font-semibold text-on-surface">
-                    My Events ({myEvents.length})
+                    Favorite places ({favoritePlaces?.length || 0})
                   </h3>
                 </div>
               </div>
-              <div className="divide-y divide-outline-variant/15">
-                {myEvents.slice(0, 5).map((event: any) => {
-                  const ed = event.event_data
-                  const startDate = ed?.start_time ? new Date(ed.start_time) : null
-                  return (
-                    <Link key={event.id} href={`/event/${event.id}`} className="flex items-center gap-3 p-4 hover:bg-surface-container-low transition-colors">
-                      {startDate && (
-                        <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex flex-col items-center justify-center">
-                          <span className="text-[8px] font-bold text-primary uppercase leading-none">
-                            {startDate.toLocaleDateString(undefined, { month: 'short' })}
-                          </span>
-                          <span className="text-sm font-bold text-on-surface leading-none">
-                            {startDate.getDate()}
-                          </span>
+              {!favoritePlaces || favoritePlaces.length === 0 ? (
+                <div className="p-4 text-center text-outline text-sm">
+                  <p>No favorite places yet.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-outline-variant/15">
+                  {favoritePlaces.slice(0, 5).map((favorite) => {
+                    const place = favorite.places
+                    if (!place) return null
+                    const img = (place as any).main_image_url || (place as any).images?.[0]
+                    return (
+                      <Link key={favorite.id} href={`/place/${(place as any).slug || place.id}`}
+                        className="flex items-center gap-3 p-3 hover:bg-surface-container-low/50 transition-colors">
+                        {img ? (
+                          <img src={img} alt={place.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-xl flex-shrink-0">
+                            {place.category === 'eat' ? '🌿' : place.category === 'hotel' ? '🛏️' : place.category === 'store' ? '🛍️' : '📍'}
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-on-surface text-sm truncate">{place.name}</p>
+                          <p className="text-xs text-on-surface-variant truncate">
+                            {[(place as any).city, (place as any).country].filter(Boolean).join(', ')}
+                          </p>
                         </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-on-surface truncate">
-                          {event.title || event.content?.split('\n')[0]?.substring(0, 60)}
-                        </p>
-                        <div className="flex items-center gap-1 text-xs text-on-surface-variant">
-                          {event.response_status === 'going' ? (
-                            <><CalendarCheck className="h-3 w-3 text-green-600" /><span className="text-green-600">Going</span></>
-                          ) : (
-                            <><Star className="h-3 w-3 text-primary" /><span className="text-primary">Interested</span></>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-
-          {/* My Favorite Places */}
-          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
-            <div className="p-4 border-b border-outline-variant/15">
-              <div className="flex items-center space-x-2">
-                <Heart className="h-5 w-5 text-red-600" />
-                <h3 className="font-semibold text-on-surface">
-                  My Favorite Places ({favoritePlaces?.length || 0})
-                </h3>
-              </div>
-            </div>
-            
-            {!favoritePlaces || favoritePlaces.length === 0 ? (
-              <div className="p-4 text-center text-outline text-sm">
-                <p>No favorite places yet.</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-outline-variant/15">
-                {favoritePlaces.slice(0, 5).map((favorite) => {
-                  const place = favorite.places
-                  if (!place) return null
-                  const img = (place as any).main_image_url || (place as any).images?.[0]
-
-                  return (
-                    <Link key={favorite.id} href={`/place/${(place as any).slug || place.id}`}
-                      className="flex items-center gap-3 p-4 hover:bg-surface-container-low/50 transition-colors">
-                      {img ? (
-                        <img src={img} alt={place.name} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
-                      ) : (
-                        <div className="w-16 h-16 rounded-lg bg-surface-container-low flex items-center justify-center text-xl flex-shrink-0">
-                          {place.category === 'eat' ? '🌿' : place.category === 'hotel' ? '🛏️' : place.category === 'store' ? '🛍️' : '📍'}
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-on-surface text-sm truncate">{place.name}</p>
-                        <p className="text-xs text-on-surface-variant">
-                          {[place.address, (place as any).city, (place as any).country].filter(Boolean).join(', ')}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          {(place as any).vegan_level === 'fully_vegan' ? (
-                            <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">100% Vegan</span>
-                          ) : (
-                            <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700">Vegan-Friendly</span>
-                          )}
-                          <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-surface-container-low text-on-surface-variant capitalize">{place.category}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  )
-                })}
-                {favoritePlaces.length > 5 && (
-                  <div className="p-4 text-center">
-                    <span className="text-sm text-outline">
-                      +{favoritePlaces.length - 5} more favorites
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
+                      </Link>
+                    )
+                  })}
+                  {favoritePlaces.length > 5 && (
+                    <div className="p-3 text-center">
+                      <span className="text-xs text-outline">+{favoritePlaces.length - 5} more</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-          {/* Packs link */}
-          <Link href="/packs" className="flex items-center gap-3 p-4 bg-surface-container-lowest rounded-lg editorial-shadow ghost-border hover:border-primary/20 transition-all">
-            <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>groups</span>
-            <span className="text-sm font-medium text-on-surface">Browse Packs</span>
-          </Link>
-
-          {/* My Packs */}
-          {userPacks.length > 0 && (
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
+            {/* Packs widget (merged created + joined) */}
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border flex flex-col">
               <div className="p-4 border-b border-outline-variant/15">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <Package className="h-5 w-5 text-primary" />
                     <h3 className="font-semibold text-on-surface">
-                      Packs ({userPacks.length})
+                      Packs ({(userPacks?.length || 0) + (joinedPacks?.length || 0)})
                     </h3>
                   </div>
-                  <Link href="/packs" className="text-sm text-primary hover:text-primary font-medium">
-                    View all
-                  </Link>
+                  <Link href="/packs" className="text-xs text-primary font-medium hover:underline">Browse</Link>
                 </div>
               </div>
-              <div className="divide-y divide-outline-variant/15">
-                {userPacks.slice(0, 5).map((pack: any) => (
-                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-surface-container-low transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-on-surface text-sm truncate">{pack.title}</h4>
-                          {!pack.is_published && (
-                            <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs">
-                              Private
-                            </span>
-                          )}
-                        </div>
-                        {pack.description && (
-                          <p className="text-xs text-outline line-clamp-2">{pack.description}</p>
+              {(userPacks?.length || 0) + (joinedPacks?.length || 0) === 0 ? (
+                <div className="p-4 text-center text-outline text-sm">
+                  <p>No packs yet.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-outline-variant/15">
+                  {[
+                    ...(userPacks || []).map((p: any) => ({ ...p, _role: 'creator' })),
+                    ...(joinedPacks || []).map((p: any) => ({ ...p, _role: 'member' })),
+                  ].slice(0, 5).map((pack: any) => (
+                    <Link key={`${pack._role}-${pack.id}`} href={`/packs/${pack.slug}`}
+                      className="block p-3 hover:bg-surface-container-low/50 transition-colors">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <h4 className="font-medium text-on-surface text-sm truncate">{pack.title}</h4>
+                        {pack._role === 'creator' && !pack.is_published && (
+                          <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-[10px]">Private</span>
                         )}
-                        <div className="flex items-center gap-3 mt-1 text-xs text-outline">
-                          <span>{pack.member_count || 0} members</span>
-                          <span>{pack.post_count || 0} posts</span>
-                        </div>
+                        {pack._role === 'member' && (
+                          <span className="bg-surface-container-low text-on-surface-variant px-1.5 py-0.5 rounded text-[10px]">Member</span>
+                        )}
                       </div>
-                    </div>
-                  </Link>
-                ))}
-                {userPacks.length > 5 && (
-                  <div className="p-4 text-center">
-                    <Link href="/packs" className="text-sm text-primary hover:text-primary font-medium">
-                      +{userPacks.length - 5} more packs
+                      {pack.description && (
+                        <p className="text-xs text-outline line-clamp-2">{pack.description}</p>
+                      )}
                     </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Joined Packs */}
-          {joinedPacks.length > 0 && (
-            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
-              <div className="p-4 border-b border-outline-variant/15">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Package className="h-5 w-5 text-blue-600" />
-                    <h3 className="font-semibold text-on-surface">
-                      Joined Packs ({joinedPacks.length})
-                    </h3>
-                  </div>
-                  <Link href="/packs" className="text-sm text-primary hover:text-primary font-medium">
-                    View all
-                  </Link>
-                </div>
-              </div>
-              <div className="divide-y divide-outline-variant/15">
-                {joinedPacks.slice(0, 5).map((pack: any) => (
-                  <Link key={pack.id} href={`/packs/${pack.slug}`} className="block p-4 hover:bg-surface-container-low transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h4 className="font-medium text-on-surface text-sm truncate">{pack.title}</h4>
-                          {pack.member_role && (
-                            <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs capitalize">
-                              {pack.member_role}
-                            </span>
-                          )}
-                        </div>
-                        {pack.description && (
-                          <p className="text-xs text-outline line-clamp-2">{pack.description}</p>
-                        )}
-                        <div className="flex items-center gap-3 mt-1 text-xs text-outline">
-                          <span>{pack.member_count || 0} members</span>
-                          <span>{pack.post_count || 0} posts</span>
-                        </div>
-                      </div>
+                  ))}
+                  {(userPacks.length + joinedPacks.length) > 5 && (
+                    <div className="p-3 text-center">
+                      <Link href="/packs" className="text-xs text-primary font-medium hover:underline">
+                        +{(userPacks.length + joinedPacks.length) - 5} more
+                      </Link>
                     </div>
-                  </Link>
-                ))}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
           </div>
         </div>
         </div>
       </div>
-    </div>
   )
 }
