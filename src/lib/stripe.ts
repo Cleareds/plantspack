@@ -1,17 +1,27 @@
 // Stripe Integration for Premium Subscriptions
+// NOTE: loadStripe() — the @stripe/stripe-js SDK loader — is imported
+// DYNAMICALLY below so it doesn't end up in the main JS bundle for pages
+// that never touch checkout (home, feed, map, directory, city pages, etc).
+// Components that import constants/types from this file (SUBSCRIPTION_TIERS,
+// UserSubscription) won't pull the SDK. Only the checkout/portal flow does.
 
-import { loadStripe } from '@stripe/stripe-js'
 import { supabase } from './supabase'
 
-// Initialize Stripe.
-// loadStripe() can reject in hostile environments — most commonly the
-// Facebook / Instagram / Messenger in-app browser, which aggressively
-// blocks third-party scripts, and with aggressive ad blockers that
-// block js.stripe.com entirely. We swallow the rejection into null
-// so callers get a clean `stripe === null` branch to handle.
-const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY).catch(() => null)
-  : Promise.resolve(null)
+let _stripePromise: Promise<any> | null = null
+function getStripePromise() {
+  if (_stripePromise) return _stripePromise
+  const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  if (!key) {
+    _stripePromise = Promise.resolve(null)
+    return _stripePromise
+  }
+  // Dynamic import so @stripe/stripe-js is a separate chunk.
+  _stripePromise = import('@stripe/stripe-js')
+    .then(({ loadStripe }) => loadStripe(key))
+    .catch(() => null)
+  return _stripePromise
+}
+
 
 /**
  * Best-effort detection of Meta / TikTok in-app browsers. Their WebViews
@@ -24,7 +34,7 @@ export function isInAppBrowser(): boolean {
   return /\b(FBAN|FBAV|FB_IAB|Instagram|Messenger|Line|WhatsApp|TikTok|LinkedInApp)\b/i.test(ua)
 }
 
-export { stripePromise }
+export { getStripePromise }
 
 export interface SubscriptionTier {
   id: 'free' | 'medium' | 'premium'
@@ -199,7 +209,7 @@ export async function redirectToCheckout(
   interval: 'month' | 'year' = 'month'
 ) {
   try {
-    const stripe = await stripePromise
+    const stripe = await getStripePromise()
     if (!stripe) {
       // Either the env var is missing (dev) or Stripe.js was blocked
       // by an ad blocker / in-app browser (prod). Tell the user which.

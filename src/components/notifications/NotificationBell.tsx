@@ -35,34 +35,33 @@ export default function NotificationBell() {
     }
   }
 
-  // Real-time subscription to new notifications
+  // Real-time subscription to new notifications.
+  // Depend on `user?.id` (stable string), not `user` (object reference that
+  // changes on auth rehydration + session refresh). The old code re-ran
+  // this effect 3× on mount — 3 concurrent realtime channels + 3 fetches.
+  const userId = user?.id
   useEffect(() => {
-    if (!user) return
+    if (!userId) return
 
     fetchNotifications()
 
-    // Subscribe to notification changes
     const channel = supabase
-      .channel('notifications')
+      .channel(`notifications-${userId}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'notifications',
-          filter: `user_id=eq.${user.id}`,
+          filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
-          // Add new notification to list
-          fetchNotifications()
-        }
+        () => fetchNotifications()
       )
       .subscribe()
 
-    return () => {
-      channel.unsubscribe()
-    }
-  }, [user])
+    return () => { channel.unsubscribe() }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
 
   // Close dropdown when clicking outside
   useEffect(() => {

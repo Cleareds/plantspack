@@ -24,15 +24,18 @@ export default function MyCities() {
   const [cities, setCities] = useState<FollowedCity[]>([])
   const [loading, setLoading] = useState(true)
 
+  // Depend on `user?.id` (stable string), not the full `user` object whose
+  // reference changes on every auth rehydration. Prevents duplicate fetches.
+  const userId = user?.id
   useEffect(() => {
-    if (!authReady || !user) { setLoading(false); return }
+    if (!authReady || !userId) { setLoading(false); return }
 
     fetch('/api/cities/followed', { credentials: 'include' })
       .then(r => r.ok ? r.json() : { cities: [] })
       .then(data => setCities(data.cities || []))
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [user, authReady])
+  }, [userId, authReady])
 
   // Exclude the pinned city (already shown in hero)
   const pinnedCity = typeof window !== 'undefined' ? localStorage.getItem('pinned_city_name') : null

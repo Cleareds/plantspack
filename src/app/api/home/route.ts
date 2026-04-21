@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 
-export const revalidate = 3600 // cache for 5 minutes
+/**
+ * Home-page location-aware payload.
+ *
+ * PERFORMANCE NOTE (2026-04-21):
+ * Previous implementation fetched ALL 37K+ places in 37 paginated Supabase
+ * round-trips every single request, then computed city scores in JavaScript.
+ * This pushed home SSR to ~7 seconds.
+ *
+ * We now read from pre-computed materialized views (`city_scores`,
+ * `directory_countries`, `directory_cities`) — ~3 lightweight round-trips
+ * total. Target: < 400 ms total.
+ *
+ * The MVs are refreshed by the existing `refresh_directory_views()` cron
+ * and on mutations, so the data is current to within a day worst-case.
+ */
+export const revalidate = 300 // 5 minutes edge cache for bg queries
 
 export async function GET(request: NextRequest) {
   const supabase = createAdminClient()
@@ -11,72 +26,59 @@ export async function GET(request: NextRequest) {
   const city = searchParams.get('city') || ''
   const country = searchParams.get('country') || ''
 
-  // Fetch city scores (all cities — server-side, cached)
-  let allPlaces: any[] = []
-  let offset = 0
-  while (true) {
-    const { data } = await supabase
-      .from('places')
-      .select('city, country, vegan_level, category, average_rating')
-      .range(offset, offset + 999)
-    if (!data || data.length === 0) break
-    allPlaces.push(...data)
-    offset += 1000
-    if (data.length < 1000) break
+  // Three independent queries — run in parallel.
+  const [topCitiesPromise, countryAggPromise, cityCountPromise] = await Promise.all([
+    // Top 8 cities by score — full row from city_scores so we can return it
+    // directly (no in-JS computation).
+    supabase
+      .from('city_scores')
+      .select('city, country, score, grade, fv_count, place_count, per_capita, center_lat, center_lng')
+      .order('score', { ascending: false })
+      .limit(8),
+    // Platform stats aggregate — 177 rows, aggregates summed in JS.
+    supabase
+      .from('directory_countries')
+      .select('country, place_count, eat_count, store_count, hotel_count, fully_vegan_count'),
+    // Total cities with places — from directory_cities.
+    supabase
+      .from('directory_cities')
+      .select('*', { count: 'exact', head: true }),
+  ])
+
+  const topCitiesRaw = topCitiesPromise.data || []
+  const countryRows = countryAggPromise.data || []
+  const totalCities = cityCountPromise.count || 0
+
+  const topCities = topCitiesRaw.map((r: any) => ({
+    city: r.city,
+    country: r.country,
+    score: r.score,
+    grade: r.grade,
+    fvCount: r.fv_count,
+    placeCount: r.place_count,
+    perCapita: r.per_capita ?? undefined,
+    center: (r.center_lat != null && r.center_lng != null) ? [Number(r.center_lat), Number(r.center_lng)] : undefined,
+  }))
+
+  // Aggregate platform stats from the 177 country rows (fast in JS).
+  let totalPlaces = 0, fullyVeganCount = 0, restaurants = 0, stores = 0, stays = 0
+  for (const r of countryRows as any[]) {
+    totalPlaces += r.place_count || 0
+    fullyVeganCount += r.fully_vegan_count || 0
+    restaurants += r.eat_count || 0
+    stores += r.store_count || 0
+    stays += r.hotel_count || 0
   }
 
-  // Load population data
-  let populations: Record<string, number> = {}
-  try {
-    const fs = await import('fs')
-    const path = await import('path')
-    const filePath = path.join(process.cwd(), 'public/data/city-populations.json')
-    populations = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-  } catch {}
+  // Sanctuaries (category='organisation') isn't broken out in directory_countries.
+  // Count it with a single lightweight aggregate query.
+  const { count: sanctuaries } = await supabase
+    .from('places')
+    .select('id', { count: 'exact', head: true })
+    .eq('category', 'organisation')
+    .is('archived_at', null)
 
-  // Calculate city scores
-  const byCity: Record<string, any[]> = {}
-  for (const p of allPlaces) {
-    if (!p.city) continue
-    const key = `${p.city}|||${p.country}`
-    if (!byCity[key]) byCity[key] = []
-    byCity[key].push(p)
-  }
-
-  const cityScores = Object.entries(byCity)
-    .map(([key, ps]) => {
-      const [cityName, country] = key.split('|||')
-      const fv = ps.filter(p => p.vegan_level === 'fully_vegan')
-      const fvCount = fv.length
-      const pop = populations[key]
-
-      let accessibility = 0
-      let perCapita: number | undefined
-      if (pop && pop > 0) {
-        perCapita = (fvCount / pop) * 100000
-        accessibility = Math.min(20, perCapita * 4)
-      } else {
-        accessibility = Math.min(20, fvCount >= 3 ? 10 : fvCount * 4)
-      }
-      const choice = Math.min(20, fvCount > 0 ? 7 * Math.log2(fvCount + 1) : 0)
-      const fvCats = new Set(fv.map(p => p.category))
-      const variety = Math.min(30,
-        (fvCats.has('eat') ? 12 : 0) + (fvCats.has('store') ? 8 : 0) +
-        (fvCats.has('hotel') ? 6 : 0) + (fvCats.has('event') ? 4 : 0)
-      )
-      const ratedFv = fv.filter(p => p.average_rating && p.average_rating > 0)
-      const avgRating = ratedFv.length > 0 ? ratedFv.reduce((s: number, p: any) => s + p.average_rating, 0) / ratedFv.length : 0
-      const reviewCoverage = ratedFv.length / Math.max(1, fvCount)
-      const quality = Math.min(30, (avgRating / 5) * 20 + reviewCoverage * 10)
-
-      const score = Math.round(Math.min(100, accessibility + choice + variety + quality))
-      const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 65 ? 'B' : score >= 50 ? 'C' : score >= 35 ? 'D' : 'F'
-
-      return { city: cityName, country, score, grade, fvCount, placeCount: ps.length, perCapita }
-    })
-    .sort((a, b) => b.score - a.score)
-
-  // Get nearby places if location provided
+  // Nearby places — only hit the `places` table if we have a location hint.
   let nearbyPlaces: any[] = []
   let nearbySanctuaries: any[] = []
   let nearbyStays: any[] = []
@@ -88,78 +90,98 @@ export async function GET(request: NextRequest) {
       .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating, review_count')
       .gte('latitude', lat - 0.5).lte('latitude', lat + 0.5)
       .gte('longitude', lng - 1).lte('longitude', lng + 1)
+      .is('archived_at', null)
       .limit(100)
 
     if (data) {
-      const withDist = data.map(p => ({
+      const withDist = data.map((p: any) => ({
         ...p,
-        distance: Math.round(haversine(lat, lng, p.latitude, p.longitude) * 10) / 10
+        distance: Math.round(haversine(lat, lng, p.latitude, p.longitude) * 10) / 10,
       })).sort((a, b) => a.distance - b.distance)
 
-      nearbyPlaces = withDist.filter(p => p.category === 'eat').slice(0, 6)
+      nearbyPlaces      = withDist.filter(p => p.category === 'eat').slice(0, 6)
       nearbySanctuaries = withDist.filter(p => p.category === 'organisation').slice(0, 3)
-      nearbyStays = withDist.filter(p => p.category === 'hotel').slice(0, 3)
+      nearbyStays       = withDist.filter(p => p.category === 'hotel').slice(0, 3)
 
-      // Find user city score
       if (withDist[0]) {
-        userCityScore = cityScores.find(c => c.city === withDist[0].city) || null
+        userCityScore = topCities.find(c => c.city === withDist[0].city) || await fetchCityScore(supabase, withDist[0].city, withDist[0].country)
       }
     }
   }
 
-  // Fallback: fetch places by city name when no coordinates.
-  // Filter by country too if provided — otherwise "Oxford" could match UK OR NZ.
+  // Fallback: by city name when no coordinates.
   if (nearbyPlaces.length === 0 && city) {
     let q = supabase
       .from('places')
       .select('id, name, slug, category, vegan_level, main_image_url, images, latitude, longitude, city, country, average_rating, review_count')
       .ilike('city', city)
+      .is('archived_at', null)
     if (country) q = q.ilike('country', country)
     const { data } = await q
       .order('average_rating', { ascending: false, nullsFirst: false })
       .limit(20)
 
     if (data && data.length > 0) {
-      nearbyPlaces = data.filter(p => p.category === 'eat').slice(0, 6)
-      nearbySanctuaries = data.filter(p => p.category === 'organisation').slice(0, 3)
-      nearbyStays = data.filter(p => p.category === 'hotel').slice(0, 3)
+      nearbyPlaces      = data.filter((p: any) => p.category === 'eat').slice(0, 6)
+      nearbySanctuaries = data.filter((p: any) => p.category === 'organisation').slice(0, 3)
+      nearbyStays       = data.filter((p: any) => p.category === 'hotel').slice(0, 3)
     }
   }
 
-  // Match city score by name
+  // Resolve the user's city score from city_scores (single indexed lookup) if
+  // we still don't have it.
   if (!userCityScore && city) {
-    userCityScore = cityScores.find(c => c.city.toLowerCase() === city.toLowerCase()) || null
-  }
-
-  // Platform stats
-  const cats: Record<string, number> = {}
-  const countries = new Set<string>()
-  let fullyVeganCount = 0
-  for (const p of allPlaces) {
-    cats[p.category] = (cats[p.category] || 0) + 1
-    if (p.country) countries.add(p.country)
-    if (p.vegan_level === 'fully_vegan') fullyVeganCount++
+    userCityScore = topCities.find(c => c.city.toLowerCase() === city.toLowerCase())
+      || await fetchCityScore(supabase, city, country)
   }
 
   return NextResponse.json({
-    topCities: cityScores.slice(0, 8),
+    topCities,
     userCityScore,
     nearbyPlaces,
     nearbySanctuaries,
     nearbyStays,
-    totalCities: cityScores.length,
-    totalPlaces: allPlaces.length,
+    totalCities,
+    totalPlaces,
     stats: {
-      totalPlaces: allPlaces.length,
+      totalPlaces,
       fullyVegan: fullyVeganCount,
-      restaurants: cats['eat'] || 0,
-      stores: cats['store'] || 0,
-      stays: cats['hotel'] || 0,
-      sanctuaries: cats['organisation'] || 0,
-      countries: countries.size,
-      cities: cityScores.length,
+      restaurants,
+      stores,
+      stays,
+      sanctuaries: sanctuaries || 0,
+      countries: countryRows.length,
+      cities: totalCities,
+    },
+  }, {
+    headers: {
+      // Short edge cache — we serve location-aware data per cookie, so SWR
+      // lets the CDN hand back cached shapes quickly while regenerating.
+      'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
     },
   })
+}
+
+async function fetchCityScore(supabase: any, city: string, country: string) {
+  if (!city) return null
+  let q = supabase
+    .from('city_scores')
+    .select('city, country, score, grade, fv_count, place_count, per_capita, center_lat, center_lng')
+    .ilike('city', city)
+  if (country) q = q.ilike('country', country)
+  const { data } = await q.limit(1)
+  const r = data?.[0]
+  if (!r) return null
+  return {
+    city: r.city,
+    country: r.country,
+    score: r.score,
+    grade: r.grade,
+    fvCount: r.fv_count,
+    placeCount: r.place_count,
+    perCapita: r.per_capita ?? undefined,
+    center: (r.center_lat != null && r.center_lng != null) ? [Number(r.center_lat), Number(r.center_lng)] : undefined,
+  }
 }
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
