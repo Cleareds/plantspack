@@ -83,8 +83,9 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
 
   return (
     <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-3 sm:p-6 mb-6">
-      {/* Identity row: avatar + name + actions */}
-      <div className="flex items-start justify-between mb-4 flex-wrap sm:flex-nowrap gap-3">
+      {/* Identity row: avatar + name. On mobile the actions move to their
+          own row below so the bio + avatar get full width. */}
+      <div className="flex items-start justify-between mb-4 gap-3">
         <div className="flex items-center space-x-4 min-w-0 flex-1">
           <div className="flex-shrink-0">
             {user.avatar_url ? (
@@ -120,8 +121,15 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
             {user.bio && <p className="text-on-surface-variant mt-2">{user.bio}</p>}
           </div>
         </div>
-        {actions && <div className="flex items-center flex-wrap gap-2 mt-1 sm:mt-0">{actions}</div>}
+        {actions && (
+          <div className="hidden sm:flex items-center flex-wrap gap-2">{actions}</div>
+        )}
       </div>
+
+      {/* Mobile-only actions row (below the identity block) */}
+      {actions && (
+        <div className="flex sm:hidden items-center flex-wrap gap-2 mb-3">{actions}</div>
+      )}
 
       {/* Contributor badges */}
       <ProfileBadges userId={user.id} size="sm" className="mt-1" />

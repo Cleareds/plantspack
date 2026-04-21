@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Star, Plus, Loader2, Sparkles } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Star, Plus, Sparkles } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import CityExperienceForm from './CityExperienceForm'
 import CityExperienceCard, { CityExperience } from './CityExperienceCard'
@@ -11,39 +12,26 @@ interface CityExperiencesSectionProps {
   countrySlug: string
   citySlug: string
   cityName: string
+  /** SSR-fetched initial experiences — avoids a client-side loading flash. */
+  initialExperiences: CityExperience[]
+  initialSummary: Summary
 }
 
-interface Summary {
+export interface Summary {
   experience_count: number
   avg_overall_rating: number | null
   avg_eating_out_rating: number | null
   avg_grocery_rating: number | null
 }
 
-export default function CityExperiencesSection({ countrySlug, citySlug, cityName }: CityExperiencesSectionProps) {
+export default function CityExperiencesSection({
+  countrySlug, citySlug, cityName, initialExperiences, initialSummary,
+}: CityExperiencesSectionProps) {
   const { user } = useAuth()
-  const [experiences, setExperiences] = useState<CityExperience[]>([])
-  const [summary, setSummary] = useState<Summary>({ experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null })
-  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  const experiences = initialExperiences
+  const summary = initialSummary
   const [showForm, setShowForm] = useState(false)
-
-  const load = useCallback(async () => {
-    setLoading(true)
-    try {
-      const res = await fetch(`/api/cities/${countrySlug}/${citySlug}/experiences`, { cache: 'no-store' })
-      const data = await res.json()
-      setExperiences(data.experiences || [])
-      if (data.summary) setSummary(data.summary)
-    } finally {
-      setLoading(false)
-    }
-    // NOTE: do NOT depend on `summary` here — setSummary would re-create
-    // this callback, re-trigger the useEffect below, fire another fetch,
-    // update summary, re-create again… an infinite fetch loop that we
-    // shipped at 05eabbc. Only depend on the route-defining slugs.
-  }, [countrySlug, citySlug])
-
-  useEffect(() => { load() }, [load])
 
   const mine = user ? experiences.find(e => e.user_id === user.id) : null
   const others = experiences.filter(e => !(user && e.user_id === user.id))
@@ -51,7 +39,12 @@ export default function CityExperiencesSection({ countrySlug, citySlug, cityName
   const handleDelete = async () => {
     if (!confirm('Delete your experience for this city?')) return
     await fetch(`/api/cities/${countrySlug}/${citySlug}/experiences`, { method: 'DELETE' })
-    await load()
+    router.refresh()
+  }
+
+  const handleSaved = () => {
+    setShowForm(false)
+    router.refresh()
   }
 
   return (
@@ -111,7 +104,7 @@ export default function CityExperiencesSection({ countrySlug, citySlug, cityName
             visited_period: mine.visited_period,
           } : undefined}
           onCancel={() => setShowForm(false)}
-          onSaved={async () => { setShowForm(false); await load() }}
+          onSaved={handleSaved}
         />
       )}
 
@@ -126,11 +119,7 @@ export default function CityExperiencesSection({ countrySlug, citySlug, cityName
       )}
 
       {/* Others */}
-      {loading ? (
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="w-5 h-5 animate-spin text-on-surface-variant" />
-        </div>
-      ) : others.length === 0 && !mine ? (
+      {others.length === 0 && !mine ? (
         <div className="bg-surface-container-low rounded-lg p-6 text-center">
           <p className="text-sm text-on-surface-variant">
             No vegan experiences yet for {cityName}.{' '}

@@ -133,11 +133,24 @@ async function getCityScore(cityName: string, countryName: string) {
   } catch { return null }
 }
 
+async function fetchCityExperiences(country: string, city: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const res = await fetch(`${baseUrl}/api/cities/${country}/${city}/experiences`, { cache: 'no-store' })
+    if (!res.ok) return { experiences: [], summary: { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
+    const data = await res.json()
+    return { experiences: data.experiences || [], summary: data.summary || { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
+  } catch {
+    return { experiences: [], summary: { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
+  }
+}
+
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
-  const [{ places, city: cityName, country: countryName }, cityScore] = await Promise.all([
+  const [{ places, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([
     fetchCityPlaces(country, city),
     getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),
+    fetchCityExperiences(country, city),
   ])
 
   // Build stats from fetched places for data-driven description
@@ -203,10 +216,10 @@ export default async function CityPage({ params }: PageProps) {
           </div>
           {cityScore?.breakdown && (
             <div className="flex gap-4 mb-3 text-[10px] text-on-surface-variant">
-              <span>Accessibility <strong>{cityScore.breakdown.accessibility}</strong>/20</span>
-              <span>Choice <strong>{cityScore.breakdown.choice}</strong>/20</span>
-              <span>Variety <strong>{cityScore.breakdown.variety}</strong>/30</span>
-              <span>Quality <strong>{cityScore.breakdown.quality}</strong>/30</span>
+              <span>Accessibility <strong>{cityScore.breakdown.accessibility}</strong>/25</span>
+              <span>Choice <strong>{cityScore.breakdown.choice}</strong>/25</span>
+              <span>Variety <strong>{cityScore.breakdown.variety}</strong>/25</span>
+              <span>Quality <strong>{cityScore.breakdown.quality}</strong>/25</span>
             </div>
           )}
           {cityScore && (
@@ -243,12 +256,15 @@ export default async function CityPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Vegan experiences for this city */}
+        {/* Vegan experiences for this city — SSR-fed so there's no loading
+            flash + delete/edit flow uses router.refresh() for re-render. */}
         <div className="mb-8">
           <CityExperiencesSection
             countrySlug={country}
             citySlug={city}
             cityName={cityName}
+            initialExperiences={cityExperiences.experiences}
+            initialSummary={cityExperiences.summary}
           />
         </div>
 
