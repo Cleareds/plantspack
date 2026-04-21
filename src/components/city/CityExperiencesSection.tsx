@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Star, Plus, Sparkles } from 'lucide-react'
+import { Star, Plus, Sparkles, CheckCircle2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import CityExperienceForm from './CityExperienceForm'
 import CityExperienceCard, { CityExperience } from './CityExperienceCard'
@@ -24,6 +24,11 @@ export interface Summary {
   avg_grocery_rating: number | null
 }
 
+// sessionStorage key → a toast to show ONCE after reload. Lets us do a
+// full-page reload for reliable re-render while still greeting the user
+// with a success message on the new page.
+const TOAST_KEY = 'pp_experience_toast'
+
 export default function CityExperiencesSection({
   countrySlug, citySlug, cityName, initialExperiences, initialSummary,
 }: CityExperiencesSectionProps) {
@@ -32,23 +37,66 @@ export default function CityExperiencesSection({
   const experiences = initialExperiences
   const summary = initialSummary
   const [showForm, setShowForm] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
+
+  // Surface any pending toast from a just-completed action.
+  useEffect(() => {
+    try {
+      const pending = sessionStorage.getItem(TOAST_KEY)
+      if (pending) {
+        setToast(pending)
+        sessionStorage.removeItem(TOAST_KEY)
+        const t = setTimeout(() => setToast(null), 4000)
+        return () => clearTimeout(t)
+      }
+    } catch {}
+  }, [])
 
   const mine = user ? experiences.find(e => e.user_id === user.id) : null
   const others = experiences.filter(e => !(user && e.user_id === user.id))
 
-  const handleDelete = async () => {
-    if (!confirm('Delete your experience for this city?')) return
-    await fetch(`/api/cities/${countrySlug}/${citySlug}/experiences`, { method: 'DELETE' })
-    router.refresh()
+  // Full reload is the simplest way to guarantee every part of the page —
+  // stats strip, aggregate rating, card list, contributions badge — picks
+  // up the new state. router.refresh() alone was flaky (the view didn't
+  // always update until a manual reload).
+  const reloadWithToast = (msg: string) => {
+    try { sessionStorage.setItem(TOAST_KEY, msg) } catch {}
+    window.location.reload()
   }
 
-  const handleSaved = () => {
+  const handleDelete = async () => {
+    if (!confirm('Delete your experience for this city?')) return
+    const res = await fetch(`/api/cities/${countrySlug}/${citySlug}/experiences`, { method: 'DELETE' })
+    if (!res.ok) {
+      setToast('Could not delete. Please try again.')
+      setTimeout(() => setToast(null), 4000)
+      return
+    }
+    reloadWithToast('Your experience was deleted.')
+  }
+
+  const handleSaved = (updated: boolean) => {
     setShowForm(false)
+    reloadWithToast(updated ? 'Your experience was updated. Thanks for keeping it fresh!' : 'Thanks for sharing your experience!')
+    // router.refresh() is now redundant with the full reload but kept as a
+    // no-op safety in case reload is blocked by a browser setting.
     router.refresh()
   }
 
   return (
     <section className="space-y-4">
+      {/* Success / error toast — rendered inline (not floating) so it
+          lives above the fold without extra UI chrome. */}
+      {toast && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg p-3 flex items-start gap-2" role="status" aria-live="polite">
+          <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-600 mt-0.5" />
+          <p className="text-sm font-medium flex-1">{toast}</p>
+          <button onClick={() => setToast(null)} className="text-emerald-700 hover:text-emerald-900 text-xs font-semibold">
+            Dismiss
+          </button>
+        </div>
+      )}
+
       <header className="flex items-end justify-between flex-wrap gap-2">
         <div>
           <h2 className="text-xl sm:text-2xl font-semibold text-on-surface flex items-center gap-2">

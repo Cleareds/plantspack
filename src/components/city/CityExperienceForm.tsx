@@ -19,7 +19,7 @@ interface CityExperienceFormProps {
   citySlug: string
   cityName: string
   initial?: Partial<CityExperienceDraft>
-  onSaved?: () => void
+  onSaved?: (wasUpdate: boolean) => void
   onCancel?: () => void
 }
 
@@ -68,7 +68,7 @@ export default function CityExperienceForm({
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.message || data?.error || 'Save failed')
-      onSaved?.()
+      onSaved?.(Boolean(data?.updated))
     } catch (e: any) {
       setError(e?.message || 'Save failed')
     } finally {
