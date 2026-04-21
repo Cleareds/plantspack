@@ -4,7 +4,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
 import VeganToggle from '@/components/ui/VeganToggle'
 
 const navItems = [
@@ -17,18 +16,6 @@ const navItems = [
   { href: '/events', label: 'Events', icon: 'event' },
   { href: '/packs', label: 'Packs / Trips', icon: 'groups' },
 ]
-
-function SidebarMenuItem({ href, icon, label }: { href: string; icon: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:bg-surface-container-low/50 transition-colors"
-    >
-      <span className="material-symbols-outlined text-base">{icon}</span>
-      {label}
-    </Link>
-  )
-}
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -98,32 +85,22 @@ export default function Sidebar() {
         </Link>
 
         {user && username && (
-          <div className="pt-4 border-t border-outline-variant/15 space-y-1">
-            <Link href={`/profile/${username}`} className="flex items-center gap-3 px-2 py-1 rounded-lg hover:bg-surface-container-low/50 transition-colors">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
-                  {profile?.first_name?.[0] || username[0].toUpperCase()}
-                </div>
-              )}
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-on-surface truncate">{profile?.first_name || username}</p>
-                <p className="text-xs text-on-surface-variant truncate">@{username}</p>
+          <Link
+            href={`/profile/${username}`}
+            className="flex items-center gap-3 pt-4 border-t border-outline-variant/15 px-2 py-1 rounded-lg hover:bg-surface-container-low/50 transition-colors"
+          >
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
+                {profile?.first_name?.[0] || username[0].toUpperCase()}
               </div>
-            </Link>
-            <SidebarMenuItem href={`/profile/${username}`} icon="account_circle" label="My profile" />
-            <SidebarMenuItem href="/profile/contributions" icon="stars" label="My contributions" />
-            <SidebarMenuItem href={`/profile/${username}/settings`} icon="settings" label="Settings" />
-            <SidebarMenuItem href={`/profile/${username}/subscription`} icon="credit_card" label="Subscription" />
-            <button
-              onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:bg-surface-container-low/50 transition-colors w-full text-left"
-            >
-              <span className="material-symbols-outlined text-base">logout</span>
-              Log out
-            </button>
-          </div>
+            )}
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-on-surface truncate">{profile?.first_name || username}</p>
+              <p className="text-xs text-on-surface-variant">View Profile</p>
+            </div>
+          </Link>
         )}
       </div>
     </aside>

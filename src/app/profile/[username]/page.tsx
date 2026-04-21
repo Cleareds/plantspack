@@ -334,11 +334,17 @@ export default function ProfilePage() {
 
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4">
-      <div className="grid grid-cols-1 gap-6">
-        {/* Main Content (desktop Sidebar in layout already provides Profile
-            nav links, so we no longer need the in-page ProfileSidebar) */}
-        <div>
+    <div className="max-w-7xl mx-auto py-8 px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar - only show for own profile */}
+        {isOwnProfile && (
+          <div className="lg:col-span-1 space-y-6">
+            <ProfileSidebar username={username} />
+          </div>
+        )}
+
+        {/* Main content */}
+        <div className={isOwnProfile ? 'lg:col-span-3' : 'lg:col-span-4'}>
           <ProfileHero
             user={profile}
             mode={isOwnProfile ? 'owner' : 'public'}
