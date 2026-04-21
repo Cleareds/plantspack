@@ -59,7 +59,7 @@ interface PackRow {
   title: string
   slug: string
   description: string | null
-  cover_image_url: string | null
+  banner_url: string | null
   created_at: string
 }
 
@@ -150,7 +150,7 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
         .not('category', 'in', '(recipe,event)')
         .order('created_at', { ascending: false }).limit(50),
       supabase.from('packs')
-        .select('id, title, slug, description, cover_image_url, created_at')
+        .select('id, title, slug, description, banner_url, created_at')
         .eq('creator_id', userId)
         .order('created_at', { ascending: false }).limit(50),
       supabase.from('place_corrections')
@@ -355,7 +355,7 @@ export default function ContributionsClient({ userId }: ContributionsClientProps
             : packs.map(pk => (
                 <ContribCard
                   key={pk.id}
-                  thumb={pk.cover_image_url}
+                  thumb={pk.banner_url}
                   title={pk.title}
                   subtitle={pk.description ? pk.description.slice(0, 160) : ''}
                   meta={`Created ${timeAgo(pk.created_at)}`}

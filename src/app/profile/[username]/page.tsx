@@ -334,17 +334,11 @@ export default function ProfilePage() {
 
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar - only show for own profile */}
-        {isOwnProfile && (
-          <div className="lg:col-span-1 space-y-6">
-            <ProfileSidebar username={username} />
-          </div>
-        )}
-
-        {/* Main Content */}
-        <div className={isOwnProfile ? "lg:col-span-3" : "lg:col-span-4"}>
+    <div className="max-w-5xl mx-auto py-8 px-4">
+      <div className="grid grid-cols-1 gap-6">
+        {/* Main Content (desktop Sidebar in layout already provides Profile
+            nav links, so we no longer need the in-page ProfileSidebar) */}
+        <div>
           <ProfileHero
             user={profile}
             mode={isOwnProfile ? 'owner' : 'public'}
@@ -577,89 +571,6 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* My Added Places */}
-          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
-            <div className="p-4 border-b border-outline-variant/15">
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold text-on-surface">
-                  My Added Places ({addedPlaces?.length || 0})
-                </h3>
-              </div>
-            </div>
-            
-            {!addedPlaces || addedPlaces.length === 0 ? (
-              <div className="p-4 text-center text-outline text-sm">
-                <p>No places added yet.</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-outline-variant/15">
-                {addedPlaces.slice(0, 5).map((place) => (
-                  <div key={place.id} className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <Link
-                            href={`/place/${(place as any).slug || place.id}`}
-                            className="font-medium text-on-surface text-sm truncate hover:text-primary transition-colors"
-                          >
-                            {place.name}
-                          </Link>
-                          {place.is_pet_friendly && (
-                            <PawPrint className="h-4 w-4 text-orange-500 flex-shrink-0" />
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className="bg-surface-container-low text-on-surface px-2 py-0.5 rounded text-xs capitalize">
-                            {place.category}
-                          </span>
-                          {place.is_pet_friendly && (
-                            <span className="bg-orange-100 text-orange-800 px-2 py-0.5 rounded text-xs flex items-center space-x-1">
-                              <PawPrint className="h-3 w-3" />
-                              <span>Pet Friendly</span>
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-on-surface-variant mb-2">{place.address}</p>
-                        {place.description && (
-                          <p className="text-xs text-outline line-clamp-2">{place.description}</p>
-                        )}
-                      </div>
-                      <a
-                        href={generateGoogleMapsUrl(place.address, place.name)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-3 flex-shrink-0 p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-                        title="Open in Google Maps"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </div>
-                    {place.website && (
-                      <div className="mt-2 pt-2 border-t border-outline-variant/15">
-                        <a
-                          href={place.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-600 hover:text-blue-800 flex items-center space-x-1"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                          <span>Visit Website</span>
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {addedPlaces.length > 5 && (
-                  <div className="p-4 text-center">
-                    <span className="text-sm text-outline">
-                      +{addedPlaces.length - 5} more places
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
 
           {/* My Favorite Places */}
           <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border">
