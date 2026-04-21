@@ -1,5 +1,13 @@
 'use client'
 
+// Leaflet + marker-cluster CSS — kept at module scope here (and in the three
+// other *Map* components) so the stylesheet ships ONLY with routes that
+// actually render a map. Previously imported in src/app/layout.tsx → every
+// route shipped ~60-80 KB gz of unused CSS.
+import 'leaflet/dist/leaflet.css'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
+
 import { MutableRefObject, memo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'

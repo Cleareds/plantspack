@@ -4,7 +4,23 @@
 
 import * as Sentry from "@sentry/nextjs";
 
-Sentry.init({
+// Defer Sentry.init off the critical rendering path so it doesn't add its
+// ~15-30 ms of main-thread work while the browser is painting LCP.
+// Errors raised before init is complete are still captured because the
+// Next.js Sentry shim installs window.onerror / unhandledrejection handlers
+// at import time — they just buffer until init runs.
+function deferredInit() {
+  Sentry.init(initOptions)
+}
+if (typeof window !== 'undefined') {
+  if (typeof (window as any).requestIdleCallback !== 'undefined') {
+    ;(window as any).requestIdleCallback(deferredInit, { timeout: 3000 })
+  } else {
+    setTimeout(deferredInit, 1500)
+  }
+}
+
+const initOptions = {
   dsn: "https://75f5c58e2777ced9c1613bcf3d1aa463@o4510374990118912.ingest.de.sentry.io/4510374991364176",
 
   // Sample 10% of transactions in production to reduce costs
@@ -45,10 +61,10 @@ Sentry.init({
   ],
 
   // Filter sensitive data before sending
-  beforeSend(event, hint) {
+  beforeSend(event: any, hint: any) {
     // Remove sensitive data from breadcrumbs
     if (event.breadcrumbs) {
-      event.breadcrumbs = event.breadcrumbs.map(breadcrumb => {
+      event.breadcrumbs = event.breadcrumbs.map((breadcrumb: any) => {
         if (breadcrumb.data) {
           const sanitized = { ...breadcrumb.data }
           delete sanitized.password
@@ -71,6 +87,6 @@ Sentry.init({
 
     return event
   },
-});
+}
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

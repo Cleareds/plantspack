@@ -1,5 +1,10 @@
 'use client'
 
+// Leaflet + marker-cluster CSS scoped to /vegan-score route.
+import 'leaflet/dist/leaflet.css'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
+
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'

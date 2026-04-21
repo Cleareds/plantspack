@@ -35,15 +35,24 @@ export default function NotificationBell() {
     }
   }
 
-  // Real-time subscription to new notifications.
-  // Depend on `user?.id` (stable string), not `user` (object reference that
-  // changes on auth rehydration + session refresh). The old code re-ran
-  // this effect 3× on mount — 3 concurrent realtime channels + 3 fetches.
+  // Initial notifications fetch on mount. Depend on `user?.id` (stable
+  // primitive), not `user` (object ref changes on auth rehydration).
   const userId = user?.id
   useEffect(() => {
     if (!userId) return
-
     fetchNotifications()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId])
+
+  // Realtime WS deferred until the user OPENS the bell for the first time.
+  // Opening a Supabase realtime channel on every mount for every logged-in
+  // visitor costs a WebSocket handshake + persistent connection. Most users
+  // never look at notifications on a given page load — zero WS overhead
+  // when the bell is never opened.
+  const realtimeStartedRef = useRef(false)
+  useEffect(() => {
+    if (!userId || !isOpen || realtimeStartedRef.current) return
+    realtimeStartedRef.current = true
 
     const channel = supabase
       .channel(`notifications-${userId}`)
@@ -61,7 +70,7 @@ export default function NotificationBell() {
 
     return () => { channel.unsubscribe() }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId])
+  }, [userId, isOpen])
 
   // Close dropdown when clicking outside
   useEffect(() => {

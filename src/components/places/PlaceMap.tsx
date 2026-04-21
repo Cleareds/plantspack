@@ -1,5 +1,9 @@
 'use client'
 
+// Leaflet CSS here so routes that include this component (place/[id]) get the
+// stylesheet via their own route chunk — not via the global app bundle.
+import 'leaflet/dist/leaflet.css'
+
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import type { Icon } from 'leaflet'

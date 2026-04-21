@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { MapPin } from 'lucide-react'
-import AddPlaceModal from './AddPlaceModal'
+const AddPlaceModal = dynamic(() => import('./AddPlaceModal'), { ssr: false })
 
 interface AddPlaceButtonProps {
   cityName: string

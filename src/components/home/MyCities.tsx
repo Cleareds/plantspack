@@ -44,7 +44,34 @@ export default function MyCities() {
     !(c.city === pinnedCity && c.country === pinnedCountry)
   )
 
-  if (!user || loading || displayCities.length === 0) return null
+  // Skeleton while auth + fetch resolves — prevents CLS. Only reserve the
+  // space if there's a user + authReady (non-logged-in visitors see nothing).
+  if (!user || loading) {
+    if (!user) return null
+    return (
+      <div className="mt-6" aria-busy="true">
+        <div className="flex items-center gap-2 mb-3">
+          <MapPin className="h-4 w-4 text-primary" />
+          <h2 className="font-semibold text-on-surface">My Cities</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {[0, 1].map(i => (
+            <div
+              key={i}
+              className="bg-surface-container-lowest rounded-xl ghost-border p-3 animate-pulse"
+              style={{ minHeight: '108px' }}
+            >
+              <div className="h-4 w-24 bg-surface-container-high rounded mb-2" />
+              <div className="h-3 w-32 bg-surface-container-low rounded mb-3" />
+              <div className="h-1.5 w-full bg-surface-container-low rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (displayCities.length === 0) return null
 
   return (
     <div className="mt-6">

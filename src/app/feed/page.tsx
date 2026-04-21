@@ -2,8 +2,12 @@
 
 import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import Feed from "@/components/posts/Feed"
-import CreatePostModal from "@/components/posts/CreatePostModal"
+// Dynamic-imported so the modal's transitive deps (uploaders, link preview,
+// mention autocomplete) don't ship with the feed bundle until the user
+// actually clicks "Create Post".
+const CreatePostModal = dynamic(() => import('@/components/posts/CreatePostModal'), { ssr: false })
 import CategoryTabs from "@/components/posts/CategoryTabs"
 import { useAuth } from "@/lib/auth"
 import type { PostCategory } from '@/lib/database.types'

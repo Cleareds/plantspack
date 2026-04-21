@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { Plus } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import Link from 'next/link'
-import AddPlaceModal from './AddPlaceModal'
+const AddPlaceModal = dynamic(() => import('./AddPlaceModal'), { ssr: false })
 
 interface GlobalAddPlaceButtonProps {
   className?: string

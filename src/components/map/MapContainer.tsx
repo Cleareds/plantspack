@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { supabase, Tables } from '@/lib/supabase'
 import { Plus, Menu, CheckCircle } from 'lucide-react'
 import { geocodingService } from '@/lib/geocoding'
-import AddPlaceModal from '../places/AddPlaceModal'
+const AddPlaceModal = dynamic(() => import('../places/AddPlaceModal'), { ssr: false })
 import { usePageState } from '@/hooks/usePageState'
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces'
 import MapView from './MapView'

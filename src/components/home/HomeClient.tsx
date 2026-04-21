@@ -1,13 +1,18 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useLayoutEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { MapPin, Plus, TrendingUp, Star, Heart, MessageCircle, Share2 } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
-import CreatePostModal from "@/components/posts/CreatePostModal"
+// Heavy modals — only loaded when the user opens them. Previously these were
+// statically imported and pulled ImageUploader, VideoUploader, LinkPreview,
+// MentionAutocomplete, LocationPicker, AddressSearch, geocodingService into
+// the home bundle whether the user ever clicked "Create Post" / "Add Place" or not.
+const CreatePostModal = dynamic(() => import('@/components/posts/CreatePostModal'), { ssr: false })
+const AddPlaceModal   = dynamic(() => import('@/components/places/AddPlaceModal'),  { ssr: false })
 import { useVeganFilter } from '@/lib/vegan-filter-context'
-import AddPlaceModal from "@/components/places/AddPlaceModal"
 import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
@@ -79,6 +84,34 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
       router.replace('/', { scroll: false })
     }
   }, [searchParams, user, router])
+
+  // Hero hydration fix: if SSR didn't have cookies (private tab, cleared
+  // cookies, or a user whose pin predates the cookie-sync fix), seed
+  // userCity from localStorage BEFORE the first paint via useLayoutEffect.
+  // This eliminates the "Hello, Anton! / Search cities..." flash for users
+  // who have a pinned city — they see their city immediately.
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+    if (userCity) return
+    try {
+      const pinnedCity = localStorage.getItem('pinned_city_name')
+      const pinnedCountry = localStorage.getItem('pinned_country_name')
+      if (pinnedCity) {
+        setUserCity(pinnedCity)
+        if (pinnedCountry) setUserCountry(pinnedCountry)
+        return
+      }
+      const geoCity = localStorage.getItem('user_city')
+      const geoCountry = localStorage.getItem('user_country')
+      if (geoCity) {
+        setUserCity(geoCity)
+        if (geoCountry) setUserCountry(geoCountry)
+      }
+    } catch {}
+    // Run once on mount — after initial paint setUserCity will never be
+    // unset, so no further work needed here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number } | null>(initData?.stats || null)
 
@@ -263,14 +296,17 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
               </div>
             )}
 
-            {/* User contribution counter */}
-            {user && stats && userContributions !== null && (
+            {/* Platform-wide mapped count. The per-user "You've contributed N"
+                line was removed — `places.created_by` counts auto-imports
+                against the admin user (37K+), which is misleading and the
+                metric isn't meaningful for other users yet. Revisit when we
+                track genuine user-contributed places separately. */}
+            {user && stats && (
               <p className="text-xs text-on-surface-variant">
                 Together we&apos;ve mapped <strong className="text-on-surface">{stats.totalPlaces.toLocaleString()}</strong> places.
-                {userContributions > 0
-                  ? <> You&apos;ve contributed <strong className="text-on-surface">{userContributions}</strong>!</>
-                  : <> <button onClick={() => setIsAddPlaceOpen(true)} className="text-primary hover:underline font-medium">Add your first place!</button></>
-                }
+                {userContributions !== null && userContributions === 0 && (
+                  <> <button onClick={() => setIsAddPlaceOpen(true)} className="text-primary hover:underline font-medium">Add your first place!</button></>
+                )}
               </p>
             )}
 

@@ -1,5 +1,8 @@
 'use client'
 
+// Leaflet CSS — scoped to the city-directory route via this component.
+import 'leaflet/dist/leaflet.css'
+
 import { useEffect, useRef, useState } from 'react'
 
 interface CityMapProps {
