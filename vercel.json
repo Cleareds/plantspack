@@ -22,10 +22,6 @@
     {
       "path": "/api/cron/refresh-scores",
       "schedule": "17 3 * * *"
-    },
-    {
-      "path": "/api/cron/warm",
-      "schedule": "*/2 * * * *"
     }
   ]
 }
