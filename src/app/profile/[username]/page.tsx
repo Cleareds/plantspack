@@ -386,138 +386,23 @@ export default function ProfilePage() {
 
           {/* Profile Content Tabs */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Posts with Category Tabs */}
+        {/* Posts feed — category tabs removed (they duplicated /profile/contributions) */}
         <div className="lg:col-span-2">
-          {/* Tab navigation */}
-          {(() => {
-            const recipePosts = posts?.filter((p: any) => p.category === 'recipe') || []
-            const placePosts = posts?.filter((p: any) => p.category === 'place') || []
-            const eventPosts = posts?.filter((p: any) => p.category === 'event') || []
-
-            const tabs = [
-              { key: 'all', label: 'All', count: posts?.length || 0 },
-              { key: 'recipe', label: 'Recipes', count: recipePosts.length },
-              { key: 'place', label: 'Places', count: placePosts.length },
-              { key: 'event', label: 'Events', count: eventPosts.length },
-              { key: 'reviews', label: 'Reviews', count: userReviews.length },
-            ]
-
-            const filteredPosts = profileTab === 'all'
-              ? posts
-              : profileTab === 'reviews'
-              ? []
-              : posts?.filter((p: any) => p.category === profileTab) || []
-
-            return (
-              <>
-                <div className="flex gap-4 mb-4 border-b border-outline-variant/15 overflow-x-auto">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setProfileTab(tab.key)}
-                      className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
-                        profileTab === tab.key
-                          ? 'border-primary text-primary'
-                          : 'border-transparent text-outline hover:text-on-surface-variant'
-                      }`}
-                    >
-                      {tab.label} ({tab.count})
-                    </button>
-                  ))}
-                </div>
-
-                {profileTab === 'reviews' ? (
-                  userReviews.length === 0 ? (
-                    <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
-                      <p>No reviews yet.</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {userReviews.map((review: any) => {
-                        const isPlace = review.review_type === 'place'
-                        const linkedName = isPlace
-                          ? review.places?.name
-                          : review.posts?.title
-                        const linkedHref = isPlace
-                          ? `/place/${review.places?.slug || review.place_id}`
-                          : `/recipe/${review.posts?.slug || review.post_id}`
-
-                        return (
-                          <div
-                            key={`${review.review_type}-${review.id}`}
-                            className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-4"
-                          >
-                            <div className="flex items-center gap-2 mb-2">
-                              <span
-                                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                                  isPlace
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-purple-100 text-purple-800'
-                                }`}
-                              >
-                                {isPlace ? 'Place review' : 'Recipe review'}
-                              </span>
-                              <StarRating rating={review.rating} size="sm" />
-                            </div>
-
-                            {linkedName && (
-                              <Link
-                                href={linkedHref}
-                                className="text-sm font-medium text-primary hover:underline mb-1 inline-block"
-                              >
-                                {linkedName}
-                              </Link>
-                            )}
-
-                            {review.content && (
-                              <p className="text-sm text-on-surface-variant line-clamp-2 mt-1">
-                                {review.content}
-                              </p>
-                            )}
-
-                            {review.images && review.images.length > 0 && (
-                              <div className="flex gap-2 mt-2 overflow-x-auto">
-                                {review.images.slice(0, 4).map((img: string, i: number) => (
-                                  <img
-                                    key={i}
-                                    src={img}
-                                    alt={`Review image ${i + 1}`}
-                                    className="h-16 w-16 rounded-md object-cover flex-shrink-0"
-                                  />
-                                ))}
-                              </div>
-                            )}
-
-                            <p className="text-xs text-outline mt-2">
-                              {new Date(review.created_at).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </p>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )
-                ) : !filteredPosts || filteredPosts.length === 0 ? (
-                  <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
-                    <p>No {profileTab === 'all' ? 'posts' : profileTab === 'recipe' ? 'recipes' : profileTab === 'place' ? 'places' : 'events'} yet.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredPosts.map((post: any) => (
-                      <PostCard
-                        key={post.id}
-                        post={post}
-                        onUpdate={loadProfileData}
-                      />
-                    ))}
-                  </div>
-                )}
-              </>
-            )
-          })()}
+          {!posts || posts.length === 0 ? (
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 text-center text-outline">
+              <p>No posts yet.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {posts.map((post: any) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onUpdate={loadProfileData}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
