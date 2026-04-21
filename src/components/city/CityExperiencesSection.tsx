@@ -33,11 +33,15 @@ export default function CityExperiencesSection({ countrySlug, citySlug, cityName
       const res = await fetch(`/api/cities/${countrySlug}/${citySlug}/experiences`, { cache: 'no-store' })
       const data = await res.json()
       setExperiences(data.experiences || [])
-      setSummary(data.summary || summary)
+      if (data.summary) setSummary(data.summary)
     } finally {
       setLoading(false)
     }
-  }, [countrySlug, citySlug, summary])
+    // NOTE: do NOT depend on `summary` here — setSummary would re-create
+    // this callback, re-trigger the useEffect below, fire another fetch,
+    // update summary, re-create again… an infinite fetch loop that we
+    // shipped at 05eabbc. Only depend on the route-defining slugs.
+  }, [countrySlug, citySlug])
 
   useEffect(() => { load() }, [load])
 
