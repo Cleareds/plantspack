@@ -47,7 +47,19 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'platform-lookaside.fbsbx.com',
       },
+      // Common CDNs hosting place imagery scraped from restaurant/hotel websites.
+      // Without these entries Next/Image can't optimize → we serve raw bytes
+      // (no WebP, no resize, no lazy-hints) which hurts place-page LCP.
+      { protocol: 'https', hostname: '**.wp.com' },
+      { protocol: 'https', hostname: '**.cloudfront.net' },
+      { protocol: 'https', hostname: '**.wixstatic.com' },
+      { protocol: 'https', hostname: '**.squarespace-cdn.com' },
+      { protocol: 'https', hostname: '**.shopifycdn.com' },
+      { protocol: 'https', hostname: '**.unsplash.com' },
     ],
+    // Use AVIF + WebP where the browser supports it. Roughly halves image
+    // bytes vs raw JPEG for typical restaurant hero photos.
+    formats: ['image/avif', 'image/webp'],
   },
 
   // Exclude mobileapp folder from Next.js compilation
