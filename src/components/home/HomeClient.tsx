@@ -71,8 +71,22 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
   const [nearbySanctuaries, setNearbySanctuaries] = useState<NearbyPlace[]>(initData?.nearbySanctuaries || [])
   const [nearbyStays, setNearbyStays] = useState<NearbyPlace[]>(initData?.nearbyStays || [])
   const [cityScore, setCityScore] = useState<CityScoreData | null>(initData?.userCityScore || null)
-  const [userCity, setUserCity] = useState(initialLocation?.city || initData?.userCityScore?.city || '')
-  const [userCountry, setUserCountry] = useState(initialLocation?.country || initData?.userCityScore?.country || '')
+  // Fall back to nearbyPlaces[0] when SSR gave us nearby results but the
+  // user's closest city isn't in the city-scores view (e.g. tiny villages
+  // below the ≥5-places threshold). Without this, userCity stays empty and
+  // the search-bar branch shows permanently even though we know the city.
+  const [userCity, setUserCity] = useState(
+    initialLocation?.city
+    || initData?.userCityScore?.city
+    || initData?.nearbyPlaces?.[0]?.city
+    || ''
+  )
+  const [userCountry, setUserCountry] = useState(
+    initialLocation?.country
+    || initData?.userCityScore?.country
+    || initData?.nearbyPlaces?.[0]?.country
+    || ''
+  )
   const [cityImageUrl, setCityImageUrl] = useState<string | null>(
     (initialLocation && serverCityImages[`${initData?.userCityScore?.city || initialLocation.city}|||${initData?.userCityScore?.country || initialLocation.country}`]) || null
   )
@@ -106,10 +120,21 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
       if (geoCity) {
         setUserCity(geoCity)
         if (geoCountry) setUserCountry(geoCountry)
+        return
+      }
+      // Last resort: if SSR fetched nearby places via lat/lng but the user
+      // has no city in localStorage (e.g. never re-geocoded), fall back to
+      // the nearest place's city. Caches it to localStorage so subsequent
+      // visits don't need the SSR round-trip.
+      const fallbackCity = initData?.nearbyPlaces?.[0]?.city
+      const fallbackCountry = initData?.nearbyPlaces?.[0]?.country
+      if (fallbackCity) {
+        setUserCity(fallbackCity)
+        setUserCountry(fallbackCountry || '')
+        localStorage.setItem('user_city', fallbackCity)
+        if (fallbackCountry) localStorage.setItem('user_country', fallbackCountry)
       }
     } catch {}
-    // Run once on mount — after initial paint setUserCity will never be
-    // unset, so no further work needed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
