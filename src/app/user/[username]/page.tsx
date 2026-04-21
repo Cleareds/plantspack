@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { Tables } from '@/lib/supabase'
 import PostCard from '@/components/posts/PostCard'
-import { Loader2, MapPin, Users, UserPlus, Ban } from 'lucide-react'
+import { Loader2, MapPin, Users, UserPlus, Ban, Package } from 'lucide-react'
 import StarRating from '@/components/places/StarRating'
 import FollowButton from '@/components/social/FollowButton'
 import BlockButton from '@/components/social/BlockButton'
@@ -14,6 +14,7 @@ import MuteButton from '@/components/social/MuteButton'
 import ReportButton from '@/components/moderation/ReportButton'
 import TierBadge from '@/components/ui/TierBadge'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
+import ProfileBadges from '@/components/profile/ProfileBadges'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -340,6 +341,20 @@ export default function UserProfilePage() {
               />
             </div>
           )}
+          {currentUser && currentUser.id === profileUser.id && (
+            <Link
+              href="/profile/contributions"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-primary-container text-on-primary-container hover:opacity-90 transition-opacity mt-2 sm:mt-0"
+            >
+              <Package className="h-4 w-4" />
+              Manage contributions
+            </Link>
+          )}
+        </div>
+
+        {/* Badges */}
+        <div className="pt-3">
+          <ProfileBadges userId={profileUser.id} size="sm" />
         </div>
 
         {/* Compact Stats */}

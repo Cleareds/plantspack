@@ -85,19 +85,28 @@ export default function Sidebar() {
         </Link>
 
         {user && username && (
-          <Link href={`/profile/${username}`} className="flex items-center gap-3 pt-4 border-t border-outline-variant/15">
-            {profile?.avatar_url ? (
-              <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
-                {profile?.first_name?.[0] || username[0].toUpperCase()}
+          <div className="pt-4 border-t border-outline-variant/15 space-y-2">
+            <Link href={`/profile/${username}`} className="flex items-center gap-3">
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
+                  {profile?.first_name?.[0] || username[0].toUpperCase()}
+                </div>
+              )}
+              <div>
+                <p className="text-sm font-bold text-on-surface">{profile?.first_name || username}</p>
+                <p className="text-xs text-on-surface-variant">View Profile</p>
               </div>
-            )}
-            <div>
-              <p className="text-sm font-bold text-on-surface">{profile?.first_name || username}</p>
-              <p className="text-xs text-on-surface-variant">View Profile</p>
-            </div>
-          </Link>
+            </Link>
+            <Link
+              href="/profile/contributions"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-on-surface-variant hover:bg-surface-container-low/50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">stars</span>
+              My Contributions
+            </Link>
+          </div>
         )}
       </div>
     </aside>

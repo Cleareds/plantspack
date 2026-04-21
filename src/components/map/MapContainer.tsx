@@ -420,8 +420,10 @@ export default function MapContainerComponent() {
           )}
         </div>
 
-        {/* Add place button overlay — below sidebar toggle on mobile, top-right on desktop */}
-        <div className="absolute top-[4.25rem] right-3 z-20 lg:top-3 lg:right-3 lg:z-30">
+        {/* Add place button overlay — below sidebar toggle on mobile, top-right on desktop.
+            On desktop the Discovery Panel takes up 20rem on the right, so offset to sit
+            just inside the map area. */}
+        <div className="absolute top-[4.25rem] right-3 z-20 lg:top-3 lg:right-[21rem] lg:z-30">
           {user ? (
             <button
               onClick={() => setShowAddForm(true)}
