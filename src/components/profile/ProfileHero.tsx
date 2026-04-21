@@ -103,7 +103,7 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
               </div>
             )}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center space-x-3 mb-1 flex-wrap">
               <h1 className="text-2xl font-bold text-on-surface truncate">{displayName}</h1>
               {user.subscription_tier && user.subscription_tier !== 'free' && (

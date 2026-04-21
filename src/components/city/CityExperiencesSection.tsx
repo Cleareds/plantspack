@@ -144,9 +144,42 @@ export default function CityExperiencesSection({ countrySlug, citySlug, cityName
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {others.map(e => <CityExperienceCard key={e.id} experience={e} />)}
-        </div>
+        <>
+          <div className="space-y-3">
+            {others.map(e => <CityExperienceCard key={e.id} experience={e} />)}
+          </div>
+
+          {/* Bottom CTA — when visitors have read through the list, remind
+              them they can add theirs. Hidden if user already wrote one or
+              the form is open. */}
+          {!mine && !showForm && (
+            <div className="bg-primary-container/50 border border-primary/20 rounded-lg p-5 text-center mt-4">
+              <p className="text-sm font-medium text-on-surface mb-1">
+                Been to {cityName}?
+              </p>
+              <p className="text-xs text-on-surface-variant mb-3">
+                Share what it&apos;s like being vegan here. Help the next traveler plan their trip.
+              </p>
+              {user ? (
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary-btn text-sm font-semibold hover:opacity-90"
+                >
+                  <Plus className="w-4 h-4" />
+                  Share your experience
+                </button>
+              ) : (
+                <Link
+                  href={`/auth?redirect=/vegan-places/${countrySlug}/${citySlug}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary-btn text-sm font-semibold hover:opacity-90"
+                >
+                  <Plus className="w-4 h-4" />
+                  Sign in to share
+                </Link>
+              )}
+            </div>
+          )}
+        </>
       )}
     </section>
   )
