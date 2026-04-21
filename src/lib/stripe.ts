@@ -3,10 +3,26 @@
 import { loadStripe } from '@stripe/stripe-js'
 import { supabase } from './supabase'
 
-// Initialize Stripe
-const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
-  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+// Initialize Stripe.
+// loadStripe() can reject in hostile environments — most commonly the
+// Facebook / Instagram / Messenger in-app browser, which aggressively
+// blocks third-party scripts, and with aggressive ad blockers that
+// block js.stripe.com entirely. We swallow the rejection into null
+// so callers get a clean `stripe === null` branch to handle.
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY).catch(() => null)
   : Promise.resolve(null)
+
+/**
+ * Best-effort detection of Meta / TikTok in-app browsers. Their WebViews
+ * sandbox external scripts, causing Stripe.js (and many other SDKs) to
+ * fail to load. We use this to show a clearer "open in browser" CTA.
+ */
+export function isInAppBrowser(): boolean {
+  if (typeof navigator === 'undefined') return false
+  const ua = navigator.userAgent || ''
+  return /\b(FBAN|FBAV|FB_IAB|Instagram|Messenger|Line|WhatsApp|TikTok|LinkedInApp)\b/i.test(ua)
+}
 
 export { stripePromise }
 
@@ -185,7 +201,16 @@ export async function redirectToCheckout(
   try {
     const stripe = await stripePromise
     if (!stripe) {
-      throw new Error('Stripe is not properly configured. Please check your environment variables.')
+      // Either the env var is missing (dev) or Stripe.js was blocked
+      // by an ad blocker / in-app browser (prod). Tell the user which.
+      if (isInAppBrowser()) {
+        throw new Error(
+          'Stripe checkout isn’t supported inside the Facebook / Instagram / TikTok in-app browser. Please tap the menu (⋯) and choose "Open in browser" to continue.'
+        )
+      }
+      throw new Error(
+        'Couldn’t load the payment provider. If you’re using an ad blocker, please allow js.stripe.com and try again.'
+      )
     }
 
     const result = await createCheckoutSession(

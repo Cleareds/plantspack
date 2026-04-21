@@ -16,6 +16,34 @@ Sentry.init({
   // Disable sending PII to comply with privacy regulations
   sendDefaultPii: false,
 
+  // Noise we can't fix — third-party / in-app-browser issues, browser
+  // extensions, and known-benign framework quirks. Keeping these out
+  // of Sentry so real bugs don't get buried.
+  ignoreErrors: [
+    // Meta in-app browser (Facebook / Instagram / Messenger) — fires
+    // when the WebView is backgrounded while their analytics bridge is
+    // active. Not our code, not actionable.
+    'enableButtonsClickedMetaDataLogging',
+    'Java object is gone',
+    // Meta / TikTok / etc. tracking SDKs that get blocked by ad
+    // blockers or aggressive privacy settings.
+    /^Meta(Pixel|Analytics)/,
+    'fbq is not defined',
+    'gtag is not defined',
+    // Stripe.js blocked by ad blocker or an in-app browser sandbox.
+    // We already handle this with a user-facing message — no need to
+    // alert on every occurrence.
+    'Failed to load Stripe.js',
+    'Failed to load resource: net::ERR_BLOCKED_BY_CLIENT',
+    // Browser extensions injecting into our window.
+    /extension:\/\//i,
+    'ResizeObserver loop limit exceeded',
+    'ResizeObserver loop completed with undelivered notifications',
+    // Next.js known benign — router aborts during navigation.
+    'NEXT_REDIRECT',
+    'NEXT_NOT_FOUND',
+  ],
+
   // Filter sensitive data before sending
   beforeSend(event, hint) {
     // Remove sensitive data from breadcrumbs
