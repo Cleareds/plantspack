@@ -135,9 +135,31 @@ export async function GET(request: NextRequest) {
       || await fetchCityScore(supabase, city, country)
   }
 
+  // When the user's city has < 5 places (the scoring threshold), city_scores
+  // is empty but directory_cities still has the count. Fetch it so the home
+  // UI can show "N place(s) so far — add M more to unlock" instead of the
+  // misleading "be the first to add a place" fallback. One indexed lookup.
+  let userCityPlaceCount: number | null = null
+  if (!userCityScore) {
+    // Prefer the city we actually resolved from nearbyPlaces over the query
+    // param, since the city param may be stale.
+    const resolvedCity = nearbyPlaces[0]?.city || city
+    const resolvedCountry = nearbyPlaces[0]?.country || country
+    if (resolvedCity) {
+      let q = supabase
+        .from('directory_cities')
+        .select('place_count')
+        .ilike('city', resolvedCity)
+      if (resolvedCountry) q = q.ilike('country', resolvedCountry)
+      const { data: dc } = await q.limit(1)
+      if (dc && dc[0]) userCityPlaceCount = (dc[0] as any).place_count
+    }
+  }
+
   return NextResponse.json({
     topCities,
     userCityScore,
+    userCityPlaceCount,
     nearbyPlaces,
     nearbySanctuaries,
     nearbyStays,

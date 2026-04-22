@@ -71,6 +71,11 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
   const [nearbySanctuaries, setNearbySanctuaries] = useState<NearbyPlace[]>(initData?.nearbySanctuaries || [])
   const [nearbyStays, setNearbyStays] = useState<NearbyPlace[]>(initData?.nearbyStays || [])
   const [cityScore, setCityScore] = useState<CityScoreData | null>(initData?.userCityScore || null)
+  // Count of places in the user's city when it's below the scoring threshold
+  // (≥5 places to appear in city_scores). Lets the UI say "Aubel has 1 place
+  // so far — add 4 more to unlock its vegan score" instead of the misleading
+  // "be the first to add a place" fallback.
+  const [cityPlaceCount, setCityPlaceCount] = useState<number | null>(initData?.userCityPlaceCount ?? null)
   // Fall back to nearbyPlaces[0] when SSR gave us nearby results but the
   // user's closest city isn't in the city-scores view (e.g. tiny villages
   // below the ≥5-places threshold). Without this, userCity stays empty and
@@ -183,6 +188,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
 
     function applyData(data: any, city: string, country: string) {
       setCityScore(data.userCityScore)
+      setCityPlaceCount(data.userCityPlaceCount ?? null)
       if (data.stats) setStats(data.stats)
       setNearbyPlaces(data.nearbyPlaces || [])
       setNearbySanctuaries(data.nearbySanctuaries || [])
@@ -394,7 +400,11 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                       </p>
                     </>
                   ) : (
-                    <p className="text-sm text-on-surface-variant mb-3">No vegan score yet for {userCity} — be the first to add a place!</p>
+                    <p className="text-sm text-on-surface-variant mb-3">
+                      {cityPlaceCount && cityPlaceCount > 0
+                        ? `${userCity} has ${cityPlaceCount} vegan ${cityPlaceCount === 1 ? 'place' : 'places'} so far — add ${5 - cityPlaceCount} more to unlock its vegan score.`
+                        : `No vegan places in ${userCity} yet — be the first to add one!`}
+                    </p>
                   )}
                   <div className="flex gap-2">
                     <button onClick={() => setIsAddPlaceOpen(true)}

@@ -10,6 +10,7 @@ import { MessageCircle, Send, Pencil, Trash2, Reply, X } from 'lucide-react'
 import FollowButton from '../social/FollowButton'
 import ReportButton from '../moderation/ReportButton'
 import CommentReactions from '../reactions/CommentReactions'
+import LinkifiedText from '../ui/LinkifiedText'
 
 type Comment = Tables<'comments'> & {
   users: Tables<'users'>
@@ -440,7 +441,9 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
               </div>
             </div>
           ) : (
-            <p className="text-on-surface-variant text-sm mb-2">{comment.content}</p>
+            <p className="text-on-surface-variant text-sm mb-2 whitespace-pre-wrap">
+              <LinkifiedText text={comment.content} />
+            </p>
           )}
 
           {/* Delete confirmation */}

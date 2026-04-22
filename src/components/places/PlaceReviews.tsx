@@ -13,6 +13,7 @@ import ReviewReactions from '../reactions/ReviewReactions'
 import StarRating from './StarRating'
 import ImageUploader from '../ui/ImageUploader'
 import VideoUploader from '../ui/VideoUploader'
+import LinkifiedText from '../ui/LinkifiedText'
 
 type Review = {
   id: string
@@ -591,7 +592,9 @@ export default function PlaceReviews({
                         <StarRating rating={review.rating} size="sm" />
                       </div>
 
-                      <p className="text-on-surface-variant text-sm mb-3 whitespace-pre-wrap">{review.content}</p>
+                      <p className="text-on-surface-variant text-sm mb-3 whitespace-pre-wrap">
+                        <LinkifiedText text={review.content} />
+                      </p>
 
                       {/* Review images */}
                       {review.images && review.images.length > 0 && (
