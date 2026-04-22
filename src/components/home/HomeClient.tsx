@@ -99,6 +99,10 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
     }
   }, [searchParams, user, router])
 
+  // Mirror "is this city pinned?" into state so JSX render doesn't touch
+  // localStorage (which breaks SSR with "localStorage is not defined").
+  const [isPinned, setIsPinned] = useState(false)
+
   // Hero hydration fix: if SSR didn't have cookies (private tab, cleared
   // cookies, or a user whose pin predates the cookie-sync fix), seed
   // userCity from localStorage BEFORE the first paint via useLayoutEffect.
@@ -106,6 +110,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
   // who have a pinned city — they see their city immediately.
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return
+    setIsPinned(!!localStorage.getItem('pinned_city_name'))
     if (userCity) return
     try {
       const pinnedCity = localStorage.getItem('pinned_city_name')
@@ -296,14 +301,14 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
               <div className="flex flex-wrap items-center gap-3 text-xs">
                 <span className="text-on-surface-variant flex items-center gap-1">
                   <MapPin className="h-3 w-3" /> {userCity}, {userCountry}
-                  {localStorage.getItem('pinned_city_name') && (
+                  {isPinned && (
                     <span className="text-primary font-medium ml-1">(pinned)</span>
                   )}
                 </span>
                 <button onClick={() => setShowCitySearch(true)} className="text-primary hover:underline font-medium">
                   Choose a different city
                 </button>
-                {localStorage.getItem('pinned_city_name') && (
+                {isPinned && (
                   <button onClick={() => {
                     localStorage.removeItem('pinned_city')
                     localStorage.removeItem('pinned_city_name')
@@ -313,6 +318,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                     // would still render the pinned city before the client
                     // re-sync'd.
                     clearPinnedLocationCookies()
+                    setIsPinned(false)
                     window.location.reload()
                   }} className="text-on-surface-variant hover:text-primary hover:underline font-medium">
                     Use my location
