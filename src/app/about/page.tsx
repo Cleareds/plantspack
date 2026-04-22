@@ -196,7 +196,7 @@ export default function AboutPage() {
           <h2 className="text-xl font-bold text-on-surface mb-4">Stay Connected</h2>
           <div className="space-y-3 text-on-surface-variant">
             <p>
-              Follow <Link href="/user/admin" className="text-primary hover:underline font-semibold">@admin</Link> for updates.
+              Follow <Link href="/profile/admin" className="text-primary hover:underline font-semibold">@admin</Link> for updates.
               <span className="mx-2">&middot;</span>
               <Link href="/contact" className="text-primary hover:underline font-semibold">Contact us</Link>
               <span className="mx-2">&middot;</span>

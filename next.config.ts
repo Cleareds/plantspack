@@ -179,6 +179,19 @@ const nextConfig: NextConfig = {
         destination: '/vegan-places/ukraine/dnipro',
         permanent: true,
       },
+      // Consolidate public profile URLs on /profile/ — we had both /user/X and
+      // /profile/X serving the same content which Google treated as duplicates
+      // (contributing to the "duplicate without user-selected canonical" GSC bucket).
+      {
+        source: '/user/:username',
+        destination: '/profile/:username',
+        permanent: true,
+      },
+      {
+        source: '/user/:username/:path*',
+        destination: '/profile/:username/:path*',
+        permanent: true,
+      },
     ]
   },
 };

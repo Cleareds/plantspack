@@ -234,7 +234,7 @@ export default function PostsManagement() {
                   <React.Fragment key={post.id}>
                   <tr className={post.deleted_at ? 'bg-red-50' : 'hover:bg-surface-container-low'}>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <a href={`/user/${post.users?.username}`} target="_blank" className="text-sm font-medium text-primary hover:underline">
+                      <a href={`/profile/${post.users?.username}`} target="_blank" className="text-sm font-medium text-primary hover:underline">
                         @{post.users?.username || 'unknown'}
                       </a>
                     </td>
@@ -337,7 +337,7 @@ export default function PostsManagement() {
                               <ul className="text-xs text-on-surface-variant space-y-0.5">
                                 {post.post_reactions.map((r: any) => (
                                   <li key={r.id}>
-                                    <a href={`/user/${r.users?.username}`} target="_blank" className="text-primary hover:underline">@{r.users?.username || 'unknown'}</a>
+                                    <a href={`/profile/${r.users?.username}`} target="_blank" className="text-primary hover:underline">@{r.users?.username || 'unknown'}</a>
                                     <span className="text-outline ml-1">({r.reaction_type})</span>
                                   </li>
                                 ))}
@@ -354,7 +354,7 @@ export default function PostsManagement() {
                               <p>Privacy: {post.privacy}</p>
                               <p>Comments: {post.comments?.length || 0}</p>
                               {post.is_pinned && <p className="text-primary font-medium">Pinned post</p>}
-                              <p>Author: <a href={`/user/${post.users?.username}`} target="_blank" className="text-primary hover:underline">@{post.users?.username}</a></p>
+                              <p>Author: <a href={`/profile/${post.users?.username}`} target="_blank" className="text-primary hover:underline">@{post.users?.username}</a></p>
                             </div>
                             <div className="flex gap-2 mt-2">
                               <a

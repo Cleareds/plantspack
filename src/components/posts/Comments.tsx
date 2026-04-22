@@ -347,7 +347,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
             {embedded ? (
               <>
                 <Link
-                  href={`/user/${comment.users?.username || 'unknown'}`}
+                  href={`/profile/${comment.users?.username || 'unknown'}`}
                   className="font-medium text-on-surface hover:text-primary transition-colors"
                 >
                   {comment.users?.first_name
@@ -356,7 +356,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
                   }
                 </Link>
                 <Link
-                  href={`/user/${comment.users?.username || 'unknown'}`}
+                  href={`/profile/${comment.users?.username || 'unknown'}`}
                   className="text-outline hover:text-primary transition-colors"
                 >
                   @{comment.users?.username || 'unknown'}

@@ -28,11 +28,15 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
     return {
       title: `${displayName} (@${user.username}) - PlantsPack`,
       description: user.bio || `${displayName}'s profile on PlantsPack, the vegan community platform.`,
+      alternates: {
+        canonical: `https://plantspack.com/profile/${user.username}`,
+      },
       openGraph: {
         title: `${displayName} (@${user.username})`,
         description: user.bio || `${displayName}'s profile on PlantsPack.`,
         type: 'profile',
         siteName: 'PlantsPack',
+        url: `https://plantspack.com/profile/${user.username}`,
       },
     }
   } catch {

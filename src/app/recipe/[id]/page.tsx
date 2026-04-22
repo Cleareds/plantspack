@@ -297,7 +297,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             )}
 
             <div className="pt-4 border-t border-outline-variant/15">
-              <Link href={`/user/${post.users.username}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <Link href={`/profile/${post.users.username}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 {post.users.avatar_url ? (
                   <img src={post.users.avatar_url} alt={displayName} className="h-10 w-10 rounded-full object-cover" />
                 ) : (

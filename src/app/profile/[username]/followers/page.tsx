@@ -8,6 +8,9 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   return {
     title: `Followers · @${username} — PlantsPack`,
     description: `People who follow @${username} on PlantsPack.`,
+    alternates: {
+      canonical: `https://plantspack.com/profile/${username}/followers`,
+    },
   }
 }
 

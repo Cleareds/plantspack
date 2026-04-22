@@ -530,7 +530,7 @@ export default function PlaceReviews({
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <Link
-                            href={`/user/${review.users?.username || 'unknown'}`}
+                            href={`/profile/${review.users?.username || 'unknown'}`}
                             className="font-medium text-on-surface hover:text-primary transition-colors"
                           >
                             {review.users?.first_name
@@ -539,7 +539,7 @@ export default function PlaceReviews({
                             }
                           </Link>
                           <Link
-                            href={`/user/${review.users?.username || 'unknown'}`}
+                            href={`/profile/${review.users?.username || 'unknown'}`}
                             className="text-outline hover:text-primary transition-colors"
                           >
                             @{review.users?.username || 'unknown'}

@@ -153,7 +153,7 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
               return (
                 <Link
                   key={key}
-                  href={`/user/${user.username}/${key}`}
+                  href={`/profile/${user.username}/${key}`}
                   className="block"
                 >
                   {inner}

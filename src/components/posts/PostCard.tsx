@@ -286,7 +286,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
         <div className="flex items-center space-x-2 text-outline text-sm mb-3">
           <Repeat2 className="h-4 w-4" />
           <span>
-            <Link href={`/user/${post.users.username}`} className="hover:text-primary transition-colors">
+            <Link href={`/profile/${post.users.username}`} className="hover:text-primary transition-colors">
               {post.users.first_name 
                 ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
                 : post.users.username
@@ -302,7 +302,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3 items-start">
             <div className="flex items-center space-x-3">
-              <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+              <Link href={`/profile/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
                   <img
                     src={post.users.avatar_url}
@@ -319,7 +319,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
               </Link>
               <div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                  <Link href={`/profile/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <h3 className="font-headline font-bold text-on-surface hover:text-primary transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
                         ? `${post.users.first_name} ${post.users.last_name}`
@@ -339,7 +339,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                   </Link>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                  <Link href={`/profile/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <span className="font-label text-xs font-bold text-outline hover:text-primary transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
                   {(post as any).location_city && (
@@ -449,7 +449,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
         <div className="rounded-xl p-3 bg-surface-container-low">
           {/* Parent post header */}
           <div className="flex items-center space-x-3 mb-3">
-            <Link href={`/user/${post.parent_post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+            <Link href={`/profile/${post.parent_post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
               {post.parent_post.users.avatar_url ? (
                 <img
                   src={post.parent_post.users.avatar_url}
@@ -466,7 +466,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
             </Link>
             <div>
               <div className="flex items-center space-x-2">
-                <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                <Link href={`/profile/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
                   <h4 className="font-headline font-bold text-on-surface text-sm hover:text-primary transition-colors cursor-pointer">
                     {post.parent_post.users.first_name && post.parent_post.users.last_name
                       ? `${post.parent_post.users.first_name} ${post.parent_post.users.last_name}`
@@ -485,7 +485,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                   {formatDistanceToNow(new Date(post.parent_post.created_at), { addSuffix: true }).replace(/^about\s/, "")}
                 </Link>
               </div>
-              <Link href={`/user/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
+              <Link href={`/profile/${post.parent_post.users.username}`} onClick={(e) => e.stopPropagation()}>
                 <span className="font-label text-xs font-bold text-outline hover:text-primary transition-colors cursor-pointer">@{post.parent_post.users.username}</span>
               </Link>
             </div>
@@ -517,7 +517,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
           {/* Header for original posts */}
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center space-x-1">
-              <Link href={`/user/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+              <Link href={`/profile/${post.users.username}`} className="flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 {post.users.avatar_url ? (
                   <img
                     src={post.users.avatar_url}
@@ -534,7 +534,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
               </Link>
               <div>
                 <div className="flex items-center space-x-1 sm:space-x-2">
-                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                  <Link href={`/profile/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <h3 className="font-headline font-bold text-on-surface hover:text-primary transition-colors cursor-pointer">
                       {post.users.first_name && post.users.last_name
                         ? `${post.users.first_name} ${post.users.last_name}`
@@ -554,7 +554,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                   </Link>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/user/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
+                  <Link href={`/profile/${post.users.username}`} onClick={(e) => e.stopPropagation()}>
                     <span className="font-label text-xs font-bold text-outline hover:text-primary transition-colors cursor-pointer">@{post.users.username}</span>
                   </Link>
                   {(post as any).location_city && (

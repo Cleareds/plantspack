@@ -109,7 +109,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
             <div className="flex items-center gap-2 text-sm text-on-surface-variant mb-4">
               <span>Created by</span>
               <Link
-                href={`/user/${pack.users.username}`}
+                href={`/profile/${pack.users.username}`}
                 className="font-medium text-primary hover:text-primary flex items-center gap-1"
               >
                 @{pack.users.username}

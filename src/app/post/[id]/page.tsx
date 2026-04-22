@@ -92,6 +92,20 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     redirect(`/recipe/${(post as any).slug || id}`)
   }
 
+  // Event posts live at /event/[slug] — keep URLs canonical to avoid
+  // duplicate content flagged by GSC (posts indexed at both /post/X and
+  // /event/X when category='event').
+  if (post.category === 'event' && (post as any).slug) {
+    redirect(`/event/${(post as any).slug}`)
+  }
+
+  // UUID → slug redirect: if the URL uses the UUID and a slug exists, move
+  // to the slug URL. Prevents GSC "duplicate without canonical" on UUID URLs.
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  if (isUuid && (post as any).slug) {
+    redirect(`/post/${(post as any).slug}`)
+  }
+
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

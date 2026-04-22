@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: `${title} - Event | PlantsPack`,
     description,
-    alternates: { canonical: `https://plantspack.com/event/${id}` },
+    alternates: { canonical: `https://plantspack.com/event/${post.slug || id}` },
     openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
   }
 }
@@ -73,6 +73,13 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   const { id } = await params
   const post = await getEventPost(id)
   if (!post) notFound()
+
+  // UUID → slug redirect for canonical URLs in GSC.
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  if (isUuid && post.slug) {
+    const { redirect } = await import('next/navigation')
+    redirect(`/event/${post.slug}`)
+  }
 
   const images = post.images?.length ? post.images : post.image_url ? [post.image_url] : []
   const event = post.event_data
@@ -194,7 +201,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
             {/* Author card */}
             <div className="pt-4 border-t border-outline-variant/15">
-              <Link href={`/user/${post.users.username}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <Link href={`/profile/${post.users.username}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 {post.users.avatar_url ? (
                   <img src={post.users.avatar_url} alt={displayName} className="h-10 w-10 rounded-full object-cover" />
                 ) : (

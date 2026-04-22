@@ -143,7 +143,7 @@ export default function PackMembersTab({ packId, userRole }: { packId: string; u
           return (
             <div key={member.id} className="flex items-center gap-3 p-3 bg-surface-container-lowest rounded-lg ghost-border">
               {/* Avatar */}
-              <Link href={`/user/${member.users.username}`}>
+              <Link href={`/profile/${member.users.username}`}>
                 {member.users.avatar_url ? (
                   <img src={member.users.avatar_url} alt={displayName} className="w-10 h-10 rounded-full object-cover" />
                 ) : (
@@ -155,7 +155,7 @@ export default function PackMembersTab({ packId, userRole }: { packId: string; u
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <Link href={`/user/${member.users.username}`} className="font-medium text-sm text-on-surface hover:text-primary transition-colors">
+                <Link href={`/profile/${member.users.username}`} className="font-medium text-sm text-on-surface hover:text-primary transition-colors">
                   {displayName}
                 </Link>
                 <div className="flex items-center gap-1.5">

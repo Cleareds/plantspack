@@ -91,7 +91,7 @@ export default function FollowList({ username, direction }: FollowListProps) {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-4">
-        <Link href={`/user/${username}`} className="hover:text-primary">← {displayUser?.display}</Link>
+        <Link href={`/profile/${username}`} className="hover:text-primary">← {displayUser?.display}</Link>
       </nav>
 
       <header className="mb-6">
@@ -116,7 +116,7 @@ export default function FollowList({ username, direction }: FollowListProps) {
               : `@${u.username}`
             return (
               <li key={u.id} className="flex items-center gap-3 p-4">
-                <Link href={`/user/${u.username}`} className="flex-shrink-0">
+                <Link href={`/profile/${u.username}`} className="flex-shrink-0">
                   {u.avatar_url ? (
                     <Image
                       src={u.avatar_url}
@@ -132,7 +132,7 @@ export default function FollowList({ username, direction }: FollowListProps) {
                   )}
                 </Link>
                 <div className="flex-1 min-w-0">
-                  <Link href={`/user/${u.username}`} className="block hover:text-primary">
+                  <Link href={`/profile/${u.username}`} className="block hover:text-primary">
                     <p className="font-medium text-on-surface truncate flex items-center gap-1.5">
                       {name}
                       {u.subscription_tier && u.subscription_tier !== 'free' && (

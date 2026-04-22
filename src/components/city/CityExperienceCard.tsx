@@ -47,7 +47,7 @@ export default function CityExperienceCard({ experience, isAuthor, onEdit, onDel
     <article className="bg-white rounded-lg ghost-border p-4 sm:p-5 space-y-4">
       {/* Author row */}
       <div className="flex items-start gap-3">
-        <Link href={u ? `/user/${u.username}` : '#'} className="flex-shrink-0">
+        <Link href={u ? `/profile/${u.username}` : '#'} className="flex-shrink-0">
           {u?.avatar_url ? (
             <Image src={u.avatar_url} alt={displayName} width={44} height={44} className="w-11 h-11 rounded-full object-cover" />
           ) : (
@@ -58,7 +58,7 @@ export default function CityExperienceCard({ experience, isAuthor, onEdit, onDel
         </Link>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <Link href={u ? `/user/${u.username}` : '#'} className="font-semibold text-on-surface text-sm hover:text-primary truncate">
+            <Link href={u ? `/profile/${u.username}` : '#'} className="font-semibold text-on-surface text-sm hover:text-primary truncate">
               {displayName}
             </Link>
             {u?.subscription_tier && u.subscription_tier !== 'free' && (

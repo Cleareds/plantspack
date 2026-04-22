@@ -261,7 +261,7 @@ export function parseTextWithHashtagsAndMentions(text: string): TextSegment[] {
       segments.push({
         type: 'mention',
         content: match[2],
-        href: `/user/${username.toLowerCase()}`
+        href: `/profile/${username.toLowerCase()}`
       })
     } else if (match[3]) {
       // URL

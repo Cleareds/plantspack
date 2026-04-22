@@ -51,7 +51,7 @@ export default function LinkifiedText({ text, className = '' }: LinkifiedTextPro
         segments.push(
           <Link
             key={`mention-${segmentIndex++}`}
-            href={`/user/${username.toLowerCase()}`}
+            href={`/profile/${username.toLowerCase()}`}
             onClick={(e) => e.stopPropagation()}
             className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
           >

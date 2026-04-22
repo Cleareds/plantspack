@@ -170,7 +170,7 @@ export default function ProfileFollowers({ userId }: ProfileFollowersProps) {
         <div className="divide-y divide-outline-variant/15 max-h-80 overflow-y-auto">
           {activeList.map((person) => (
             <div key={person.id} className="p-4 flex items-center justify-between">
-              <Link href={`/user/${person.username}`} className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-surface-container-low -m-2 p-2 rounded-md transition-colors">
+              <Link href={`/profile/${person.username}`} className="flex items-center space-x-3 flex-1 min-w-0 hover:bg-surface-container-low -m-2 p-2 rounded-md transition-colors">
                 <div className="flex-shrink-0 avatar-container">
                   {person.avatar_url ? (
                     <img

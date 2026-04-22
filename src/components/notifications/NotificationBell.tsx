@@ -139,7 +139,7 @@ export default function NotificationBell() {
       return `/post/${notification.entity_id}`
     }
     if (notification.type === 'follow' && notification.actor) {
-      return `/user/${notification.actor.username}`
+      return `/profile/${notification.actor.username}`
     }
     return '#'
   }
