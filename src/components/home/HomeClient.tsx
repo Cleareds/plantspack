@@ -342,19 +342,40 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
             )}
 
             {/* City Score Hero */}
-            {(cityScore || userCity) && (
+            {(cityScore || userCity) && (() => {
+              const heroCity = userCity || cityScore?.city || ''
+              const heroCountry = userCountry || cityScore?.country || ''
+              // Only build the link if we actually have both city + country —
+              // without them the /vegan-places/[country]/[city] route 404s.
+              const heroHref = heroCity && heroCountry
+                ? `/vegan-places/${heroCountry.toLowerCase().replace(/\s+/g, '-')}/${heroCity.toLowerCase().replace(/\s+/g, '-')}`
+                : null
+              return (
               <div className="bg-surface-container-lowest rounded-2xl editorial-shadow overflow-hidden">
                 {cityImageUrl && !cityImageFailed && (
-                  <div className="relative h-32 overflow-hidden">
-                    <img src={cityImageUrl} alt={userCity} className="w-full h-full object-cover" onError={() => setCityImageFailed(true)} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
-                  </div>
+                  heroHref ? (
+                    <Link href={heroHref} className="block relative h-32 overflow-hidden group" aria-label={`Explore vegan places in ${heroCity}`}>
+                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover transition-transform group-hover:scale-[1.02]" onError={() => setCityImageFailed(true)} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
+                    </Link>
+                  ) : (
+                    <div className="relative h-32 overflow-hidden">
+                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover" onError={() => setCityImageFailed(true)} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
+                    </div>
+                  )
                 )}
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2 text-sm text-on-surface-variant">
                       <MapPin className="h-4 w-4" />
-                      <span>{userCity || cityScore?.city}{(userCountry || cityScore?.country) ? `, ${userCountry || cityScore?.country}` : ''}</span>
+                      {heroHref ? (
+                        <Link href={heroHref} className="hover:text-primary transition-colors">
+                          {heroCity}{heroCountry ? `, ${heroCountry}` : ''}
+                        </Link>
+                      ) : (
+                        <span>{heroCity}{heroCountry ? `, ${heroCountry}` : ''}</span>
+                      )}
                     </div>
                     {cityScore && <span className={`text-3xl font-black ${getGradeColor(cityScore.grade)}`}>{cityScore.grade}</span>}
                   </div>
@@ -386,7 +407,8 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                   </div>
                 </div>
               </div>
-            )}
+              )
+            })()}
 
             {/* Nearby Places */}
             {/* My followed cities */}

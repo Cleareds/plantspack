@@ -25,6 +25,11 @@ export default function ProfileSettingsPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [savingNotifications, setSavingNotifications] = useState(false)
   const [newsletterOptIn, setNewsletterOptIn] = useState(false)
+  // Track whether we've resolved the server-side value yet. Without this,
+  // the toggle renders UNCHECKED by default and a user who opted in at
+  // signup could click it thinking it's stuck off — which flips it to off
+  // for real via the PATCH. See commit fixing settings-page race.
+  const [newsletterLoaded, setNewsletterLoaded] = useState(false)
   const [savingNewsletter, setSavingNewsletter] = useState(false)
   const [newsletterMessage, setNewsletterMessage] = useState('')
   const [resendingEmail, setResendingEmail] = useState(false)
@@ -126,6 +131,7 @@ export default function ProfileSettingsPage() {
         .eq('id', user.id)
         .single()
       if (!error && data) setNewsletterOptIn(!!data.newsletter_opt_in)
+      setNewsletterLoaded(true)
     }
     fetchNewsletterPref()
   }, [user])
@@ -502,16 +508,20 @@ export default function ProfileSettingsPage() {
                       New vegan places near you plus top-rated spots worldwide. Sent periodically; unsubscribe anytime.
                     </p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={newsletterOptIn}
-                      onChange={(e) => handleToggleNewsletter(e.target.checked)}
-                      disabled={savingNewsletter}
-                    />
-                    <div className="w-11 h-6 bg-surface-container peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                  </label>
+                  {newsletterLoaded ? (
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={newsletterOptIn}
+                        onChange={(e) => handleToggleNewsletter(e.target.checked)}
+                        disabled={savingNewsletter}
+                      />
+                      <div className="w-11 h-6 bg-surface-container peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  ) : (
+                    <div className="w-11 h-6 rounded-full bg-surface-container animate-pulse" aria-label="Loading newsletter preference" />
+                  )}
                 </div>
 
                 {newsletterMessage && (
