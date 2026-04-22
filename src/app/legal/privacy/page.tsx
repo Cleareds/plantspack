@@ -56,12 +56,34 @@ export default function PrivacyPolicy() {
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Provide Services:</strong> Create and maintain your account, enable posting and social features</li>
               <li><strong>Personalize Experience:</strong> Show relevant content and connections based on your interests</li>
-              <li><strong>Communication:</strong> Send important updates, notifications, and respond to inquiries</li>
+              <li><strong>Communication:</strong> Send transactional emails (account confirmations, notifications you've enabled, password resets) and respond to inquiries</li>
               <li><strong>Security:</strong> Protect against fraud, abuse, and unauthorized access</li>
               <li><strong>Moderation:</strong> Enforce Community Guidelines and Terms of Service</li>
               <li><strong>Analytics:</strong> Understand how users interact with PlantsPack to improve our services</li>
               <li><strong>Legal Compliance:</strong> Comply with legal obligations and respond to lawful requests</li>
             </ul>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">3.1 Marketing Communications (Optional)</h3>
+            <p className="text-on-surface-variant mb-4">
+              If you opt in — either by ticking the newsletter checkbox at signup or by enabling the
+              preference in your account settings — we may send you a periodic newsletter covering
+              new vegan places, top-rated spots, and platform updates. We send these emails on the
+              basis of your <strong>explicit consent</strong> under GDPR Article 6(1)(a).
+            </p>
+            <p className="text-on-surface-variant mb-4">
+              You can withdraw consent at any time by (a) toggling the newsletter preference off in
+              your account settings, (b) clicking the unsubscribe link included in every newsletter,
+              or (c) emailing hello@cleareds.com. Withdrawal takes effect immediately and does not
+              affect transactional emails you receive for account activity (confirmations, notifications
+              you've enabled, password resets, claim responses) — those continue regardless of your
+              newsletter preference because they are necessary for operating your account.
+            </p>
+            <p className="text-on-surface-variant mb-4">
+              We never pre-tick the newsletter checkbox, never bundle it into Terms acceptance, and
+              never share your email address with third-party marketers. We keep a record of when
+              and how you consented (required for GDPR audit) and preserve unsubscribe history
+              indefinitely so we can prove we respected your choice.
+            </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">4. Legal Basis for Processing (GDPR)</h2>
             <p className="text-on-surface-variant mb-4">

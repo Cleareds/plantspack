@@ -123,7 +123,26 @@ export default function TermsOfService() {
               to understand how we collect, use, and protect your personal information.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">10. Disclaimers and Limitations of Liability</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">10. Communications</h2>
+            <p className="text-on-surface-variant mb-4">
+              <strong>Transactional emails.</strong> We send you transactional emails as a necessary
+              part of operating your account — account confirmations, password resets, claim-request
+              responses, and notifications you've explicitly enabled (likes, comments, follows,
+              mentions). These are not marketing and cannot be opted out of without disabling the
+              underlying feature or closing your account.
+            </p>
+            <p className="text-on-surface-variant mb-4">
+              <strong>Marketing emails (newsletter).</strong> We only send marketing emails to users
+              who explicitly opt in — either by ticking the newsletter checkbox at signup (never
+              pre-ticked, never bundled into Terms acceptance) or by enabling the preference in
+              account settings. Every marketing email includes a one-click unsubscribe link that
+              works without login, plus the standard RFC 8058 <code>List-Unsubscribe</code> header
+              so mail clients can honour it automatically. You can also toggle the preference off
+              from account settings at any time. Withdrawal is immediate and does not affect
+              transactional emails.
+            </p>
+
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">11. Disclaimers and Limitations of Liability</h2>
             <p className="text-on-surface-variant mb-4">
               <strong>Service Availability:</strong> PlantsPack is provided "as is" without warranties of any kind.
               We do not guarantee uninterrupted or error-free service.
@@ -142,40 +161,40 @@ export default function TermsOfService() {
               the platform.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">11. Indemnification</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">12. Indemnification</h2>
             <p className="text-on-surface-variant mb-4">
               You agree to indemnify and hold PlantsPack harmless from any claims, damages, or expenses arising
               from your use of the platform, your content, or your violation of these Terms.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">12. Changes to Terms</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">13. Changes to Terms</h2>
             <p className="text-on-surface-variant mb-4">
               We reserve the right to modify these Terms at any time. We will notify users of significant changes
               via email or platform notification. Continued use of PlantsPack after changes constitutes acceptance
               of the modified Terms.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">13. Termination</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Termination</h2>
             <p className="text-on-surface-variant mb-4">
               Either party may terminate this agreement at any time. You may delete your account through your
               account settings. We may suspend or terminate your account for violations of these Terms. Upon
               termination, your right to use PlantsPack ceases immediately.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Governing Law</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Governing Law</h2>
             <p className="text-on-surface-variant mb-4">
               These Terms shall be governed by and construed in accordance with the laws of Belgium. PlantsPack
               is operated by Cleareds, a company registered in Belgium.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Dispute Resolution</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">16. Dispute Resolution</h2>
             <p className="text-on-surface-variant mb-4">
               Any disputes arising from these Terms or your use of PlantsPack shall be resolved through good
               faith negotiation. If negotiation fails, disputes may be resolved through binding arbitration or
               court proceedings as permitted by law.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">16. Contact Information</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">17. Contact Information</h2>
             <p className="text-on-surface-variant mb-4">
               If you have questions about these Terms of Service, please contact us:
             </p>

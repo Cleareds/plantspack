@@ -10,6 +10,7 @@ interface CookiePreferences {
   necessary: boolean
   analytics: boolean
   preferences: boolean
+  marketing: boolean
 }
 
 export default function CookieConsent() {
@@ -18,7 +19,8 @@ export default function CookieConsent() {
   const [preferences, setPreferences] = useState<CookiePreferences>({
     necessary: true, // Always true
     analytics: false,
-    preferences: false
+    preferences: false,
+    marketing: false,
   })
 
   useEffect(() => {
@@ -29,7 +31,14 @@ export default function CookieConsent() {
       setTimeout(() => setShowBanner(true), 1000)
     } else {
       const savedPreferences = JSON.parse(consent)
-      setPreferences(savedPreferences)
+      // Default any newly-added categories to false so pre-existing consents
+      // aren't silently upgraded when we add new cookie categories.
+      setPreferences({
+        necessary: true,
+        analytics: !!savedPreferences.analytics,
+        preferences: !!savedPreferences.preferences,
+        marketing: !!savedPreferences.marketing,
+      })
     }
   }, [])
 
@@ -47,7 +56,8 @@ export default function CookieConsent() {
     saveConsent({
       necessary: true,
       analytics: true,
-      preferences: true
+      preferences: true,
+      marketing: true,
     })
   }
 
@@ -55,7 +65,8 @@ export default function CookieConsent() {
     saveConsent({
       necessary: true,
       analytics: false,
-      preferences: false
+      preferences: false,
+      marketing: false,
     })
   }
 
@@ -184,6 +195,27 @@ export default function CookieConsent() {
                   <p className="text-sm text-on-surface-variant ml-6">
                     These cookies remember your preferences and choices (such as language, region, or theme)
                     to provide a more personalized experience.
+                  </p>
+                </div>
+              </div>
+
+              {/* Marketing Cookies */}
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <input
+                      type="checkbox"
+                      checked={preferences.marketing}
+                      onChange={(e) => setPreferences({ ...preferences, marketing: e.target.checked })}
+                      className="h-4 w-4 text-primary rounded border-outline-variant"
+                    />
+                    <h3 className="font-semibold text-on-surface">Marketing Cookies</h3>
+                  </div>
+                  <p className="text-sm text-on-surface-variant ml-6">
+                    These cookies help us measure how effective our marketing is — for example, whether
+                    newsletter clicks lead to sign-ups or whether ads we run on other sites bring
+                    people here. Separate from the newsletter itself, which you opt in to at signup
+                    or in your account settings.
                   </p>
                 </div>
               </div>

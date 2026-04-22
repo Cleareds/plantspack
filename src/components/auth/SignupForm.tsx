@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2 } from 'lucide-react'
 
@@ -16,6 +17,10 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
+  // GDPR Planet49 (2019): marketing opt-in checkbox must NOT be pre-ticked.
+  // We default to false and require an affirmative tick from the user.
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -108,6 +113,12 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         return
       }
 
+      if (!agreedToTerms) {
+        setError('You must agree to the Terms of Service and Privacy Policy to create an account.')
+        setLoading(false)
+        return
+      }
+
       // Call server-side signup API with validation
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -120,6 +131,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           username,
           firstName,
           lastName,
+          newsletter_opt_in: newsletterOptIn,
         }),
       })
 
@@ -303,6 +315,41 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
                 required
               />
             </div>
+          </div>
+
+          <div className="space-y-3 pt-1">
+            <label className="flex items-start gap-2 text-sm text-on-surface-variant cursor-pointer">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-outline-variant/40 text-primary focus:ring-primary"
+                required
+              />
+              <span>
+                I agree to the{' '}
+                <Link href="/legal/terms" target="_blank" className="text-primary hover:underline">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/legal/privacy" target="_blank" className="text-primary hover:underline">
+                  Privacy Policy
+                </Link>
+                .
+              </span>
+            </label>
+            <label className="flex items-start gap-2 text-sm text-on-surface-variant cursor-pointer">
+              <input
+                type="checkbox"
+                checked={newsletterOptIn}
+                onChange={(e) => setNewsletterOptIn(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-outline-variant/40 text-primary focus:ring-primary"
+              />
+              <span>
+                Email me the PlantsPack newsletter — new vegan places near me plus top spots worldwide.
+                Optional; unsubscribe anytime.
+              </span>
+            </label>
           </div>
 
           <button

@@ -9,7 +9,9 @@ import { createAdminClient } from '@/lib/supabase-admin'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password, username, firstName, lastName } = body
+    const { email, password, username, firstName, lastName, newsletter_opt_in } = body
+    // Coerce to strict boolean — we must never interpret undefined as "yes".
+    const newsletterOptIn = newsletter_opt_in === true
 
     // Server-side validation
     if (!email || !password || !username) {
@@ -94,6 +96,9 @@ export async function POST(request: NextRequest) {
           username,
           first_name: firstName || '',
           last_name: lastName || '',
+          // Stashed in auth.users.raw_user_meta_data so downstream profile
+          // creation (after email confirmation) can honour the opt-in.
+          newsletter_opt_in: newsletterOptIn,
         },
       },
     })
@@ -134,6 +139,9 @@ export async function POST(request: NextRequest) {
           first_name: firstName || '',
           last_name: lastName || '',
           bio: '',
+          newsletter_opt_in: newsletterOptIn,
+          newsletter_opted_in_at: newsletterOptIn ? new Date().toISOString() : null,
+          newsletter_source: newsletterOptIn ? 'signup' : null,
         })
         .select()
         .single()

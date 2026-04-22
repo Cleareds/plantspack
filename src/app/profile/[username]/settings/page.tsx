@@ -4,7 +4,8 @@ import { useAuth } from '@/lib/auth'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
-import { Bell, Lock, Globe, Trash2, Ban, VolumeX, User, Download, Shield, Settings } from 'lucide-react'
+import Link from 'next/link'
+import { Bell, Lock, Globe, Trash2, Ban, VolumeX, User, Download, Shield, Settings, Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function ProfileSettingsPage() {
@@ -23,6 +24,9 @@ export default function ProfileSettingsPage() {
   const [exporting, setExporting] = useState(false)
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [savingNotifications, setSavingNotifications] = useState(false)
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false)
+  const [savingNewsletter, setSavingNewsletter] = useState(false)
+  const [newsletterMessage, setNewsletterMessage] = useState('')
   const [resendingEmail, setResendingEmail] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -111,6 +115,45 @@ export default function ProfileSettingsPage() {
 
     fetchMutedUsers()
   }, [user])
+
+  // Fetch current newsletter opt-in state from the users row
+  useEffect(() => {
+    const fetchNewsletterPref = async () => {
+      if (!user) return
+      const { data, error } = await supabase
+        .from('users')
+        .select('newsletter_opt_in')
+        .eq('id', user.id)
+        .single()
+      if (!error && data) setNewsletterOptIn(!!data.newsletter_opt_in)
+    }
+    fetchNewsletterPref()
+  }, [user])
+
+  const handleToggleNewsletter = async (enabled: boolean) => {
+    if (!user) return
+    setSavingNewsletter(true)
+    setNewsletterMessage('')
+    try {
+      const response = await fetch('/api/users/me/newsletter', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newsletter_opt_in: enabled }),
+      })
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to update newsletter preference')
+      }
+      setNewsletterOptIn(enabled)
+      setNewsletterMessage(enabled ? 'Subscribed — you\'ll get the next newsletter.' : 'Unsubscribed.')
+      setTimeout(() => setNewsletterMessage(''), 4000)
+    } catch (err) {
+      console.error('Newsletter toggle failed:', err)
+      alert(err instanceof Error ? err.message : 'Failed to update newsletter preference')
+    } finally {
+      setSavingNewsletter(false)
+    }
+  }
 
   // Fetch notification preferences
   useEffect(() => {
@@ -441,6 +484,47 @@ export default function ProfileSettingsPage() {
                     Advanced notification settings
                   </a>
                 </div>
+              </div>
+            </div>
+
+            {/* Email Preferences (marketing) */}
+            <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
+              <div className="flex items-center space-x-3 mb-4">
+                <Mail className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-on-surface">Email Preferences</h2>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 pr-4">
+                    <p className="font-medium text-on-surface">Newsletter</p>
+                    <p className="text-sm text-outline">
+                      New vegan places near you plus top-rated spots worldwide. Sent periodically; unsubscribe anytime.
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={newsletterOptIn}
+                      onChange={(e) => handleToggleNewsletter(e.target.checked)}
+                      disabled={savingNewsletter}
+                    />
+                    <div className="w-11 h-6 bg-surface-container peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+
+                {newsletterMessage && (
+                  <p className="text-sm text-primary">{newsletterMessage}</p>
+                )}
+
+                <p className="text-xs text-outline pt-3 border-t border-outline-variant/15">
+                  Transactional emails (likes, comments, follows, mentions, claim responses, password resets) are managed in{' '}
+                  <Link href={`/profile/${username}/notifications`} className="text-primary hover:underline">
+                    Notification settings
+                  </Link>{' '}
+                  and are separate from the newsletter.
+                </p>
               </div>
             </div>
 

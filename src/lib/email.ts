@@ -1,4 +1,7 @@
 import { Resend } from 'resend'
+import { createAdminClient } from '@/lib/supabase-admin'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://plantspack.com'
 
 // Lazy-init so missing RESEND_API_KEY at build time doesn't crash module load
 // (Next.js "Collecting page data" evaluates server modules without runtime env).
@@ -21,9 +24,15 @@ export interface SendEmailOptions {
   subject: string
   html: string
   text?: string
+  /**
+   * Per-send RFC 2369 / RFC 8058 headers — primarily List-Unsubscribe and
+   * List-Unsubscribe-Post. Required by Gmail/Outlook bulk-sender rules and
+   * by PECR/CAN-SPAM for marketing mail. Transactional sends can omit.
+   */
+  headers?: Record<string, string>
 }
 
-export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
+export async function sendEmail({ to, subject, html, text, headers }: SendEmailOptions) {
   try {
     const { data, error } = await getResend().emails.send({
       from: FROM_EMAIL,
@@ -31,6 +40,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
       subject,
       html,
       text: text || html.replace(/<[^>]*>/g, ''), // Strip HTML for text version
+      ...(headers ? { headers } : {}),
     })
 
     if (error) {
@@ -492,4 +502,129 @@ export async function sendClaimRejectedEmail(
   `
 
   return sendEmail({ to, subject, html })
+}
+
+/**
+ * Append the required marketing footer to a newsletter HTML body. Every
+ * marketing email MUST render a visible unsubscribe link (CAN-SPAM) in
+ * addition to the List-Unsubscribe header (Gmail/Outlook bulk rules).
+ */
+export function renderNewsletterFooter(unsubscribeUrl: string, emailAddress: string): string {
+  return `
+      <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          You're receiving this because you opted in to the PlantsPack newsletter
+          (${emailAddress}).
+        </p>
+        <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
+          <a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a>
+          &nbsp;·&nbsp;
+          <a href="https://plantspack.com" style="color: #6b7280;">plantspack.com</a>
+        </p>
+        <p style="font-size: 11px; color: #9ca3af; margin: 10px 0 0 0;">
+          Cleareds · Belgium · hello@cleareds.com
+        </p>
+      </div>`
+}
+
+export interface SendNewsletterOptions {
+  userId: string
+  campaign: string
+  subject: string
+  bodyHtml: string
+}
+
+/**
+ * Send a marketing newsletter to a single user.
+ *
+ * Guards (defence-in-depth on top of the main send-loop's filter):
+ *   1. Skips if user.newsletter_opt_in = false (never spam)
+ *   2. Skips if newsletter_sends already has a row for (user_id, campaign)
+ *      — prevents double-sends on retry (UNIQUE constraint also enforces this)
+ *
+ * Headers:
+ *   - List-Unsubscribe      (RFC 2369) — mail clients surface a native button
+ *   - List-Unsubscribe-Post (RFC 8058) — Gmail one-click requires POST support
+ */
+export async function sendNewsletterEmail({
+  userId,
+  campaign,
+  subject,
+  bodyHtml,
+}: SendNewsletterOptions) {
+  const admin = createAdminClient()
+
+  const { data: userRow, error: userErr } = await admin
+    .from('users')
+    .select('email, newsletter_opt_in, marketing_email_token')
+    .eq('id', userId)
+    .single()
+
+  if (userErr || !userRow) {
+    return { success: false, skipped: true, reason: 'user-not-found' as const }
+  }
+  if (!userRow.newsletter_opt_in) {
+    return { success: false, skipped: true, reason: 'opted-out' as const }
+  }
+  if (!userRow.marketing_email_token) {
+    console.warn(`[newsletter] user ${userId} has no marketing_email_token — skipping`)
+    return { success: false, skipped: true, reason: 'no-token' as const }
+  }
+
+  const { data: existing } = await admin
+    .from('newsletter_sends')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('campaign', campaign)
+    .maybeSingle()
+
+  if (existing) {
+    return { success: false, skipped: true, reason: 'already-sent' as const }
+  }
+
+  const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?u=${encodeURIComponent(userRow.marketing_email_token)}`
+  const footer = renderNewsletterFooter(unsubscribeUrl, userRow.email || '')
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5;">
+      <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      ${EMAIL_HEADER}
+      <div style="padding: 40px 30px;">
+        ${bodyHtml}
+      </div>
+      ${footer}
+      </div>
+    </body>
+    </html>
+  `
+
+  const result = await sendEmail({
+    to: userRow.email!,
+    subject,
+    html,
+    headers: {
+      'List-Unsubscribe': `<${unsubscribeUrl}>, <mailto:hello@cleareds.com?subject=unsubscribe>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
+  })
+
+  if (result.success) {
+    const { error: logErr } = await admin.from('newsletter_sends').insert({
+      user_id: userId,
+      campaign,
+      email_to: userRow.email,
+      resend_message_id: result.id || null,
+    })
+    if (logErr) {
+      console.error('[newsletter] log insert failed:', logErr)
+    }
+  }
+
+  return result
 }

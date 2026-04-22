@@ -85,6 +85,11 @@ export async function POST() {
     const finalFirstName = firstName || nameParts[0] || ''
     const finalLastName = lastName || nameParts.slice(1).join(' ') || ''
 
+    // Newsletter consent only carries over from our own signup form — NEVER
+    // infer consent from an OAuth provider, as the user did not see our opt-in.
+    const newsletterOptIn = userMetadata.newsletter_opt_in === true
+    const nowIso = new Date().toISOString()
+
     const { data: newProfile, error: createError } = await adminClient
       .from('users')
       .insert({
@@ -95,6 +100,9 @@ export async function POST() {
         last_name: finalLastName,
         avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
         bio: '',
+        newsletter_opt_in: newsletterOptIn,
+        newsletter_opted_in_at: newsletterOptIn ? nowIso : null,
+        newsletter_source: newsletterOptIn ? 'signup' : null,
       })
       .select()
       .single()
@@ -142,6 +150,9 @@ export async function POST() {
                 last_name: finalLastName,
                 avatar_url: userMetadata.avatar_url || userMetadata.picture || null,
                 bio: '',
+                newsletter_opt_in: newsletterOptIn,
+                newsletter_opted_in_at: newsletterOptIn ? nowIso : null,
+                newsletter_source: newsletterOptIn ? 'signup' : null,
               })
               .select()
               .single()
