@@ -44,6 +44,47 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   }
 }
 
-export default function ProfileLayout({ children }: { children: React.ReactNode }) {
-  return children
+export default async function ProfileLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ username: string }>
+}) {
+  const { username } = await params
+  // Person JSON-LD — fetched same way as metadata. Minor signal to Google
+  // that this is a real profile, not a thin/spam page. No scary claims —
+  // just name + profile URL.
+  let personJsonLd: Record<string, unknown> | null = null
+  try {
+    const { data: u } = await supabase
+      .from('users')
+      .select('username, first_name, last_name, bio, avatar_url')
+      .eq('username', username)
+      .eq('is_banned', false)
+      .single()
+    if (u) {
+      const displayName = u.first_name
+        ? `${u.first_name} ${u.last_name || ''}`.trim()
+        : u.username
+      personJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: displayName,
+        alternateName: u.username,
+        url: `https://plantspack.com/profile/${u.username}`,
+        ...(u.avatar_url ? { image: u.avatar_url } : {}),
+        ...(u.bio ? { description: u.bio } : {}),
+      }
+    }
+  } catch {}
+
+  return (
+    <>
+      {personJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+      )}
+      {children}
+    </>
+  )
 }

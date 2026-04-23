@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import PostPageContent from '@/components/posts/PostPageContent'
 import { Tables } from '@/lib/supabase'
+import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 // Community content — always fresh. Comment counts, likes and new replies
 // must reflect immediately. Vercel Pro handles the extra invocations fine.
@@ -106,8 +107,42 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     redirect(`/post/${(post as any).slug}`)
   }
 
+  const authorName = post.users?.first_name
+    ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
+    : post.users?.username || 'PlantsPack User'
+  const postUrl = `https://plantspack.com/post/${post.slug || id}`
+  const postImage = post.images?.[0] || post.image_url
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SocialMediaPosting',
+    headline: post.title || post.content.slice(0, 100),
+    datePublished: post.created_at,
+    dateModified: post.updated_at || post.created_at,
+    url: postUrl,
+    mainEntityOfPage: postUrl,
+    author: {
+      '@type': 'Person',
+      name: authorName,
+      url: `https://plantspack.com/profile/${post.users?.username || 'unknown'}`,
+    },
+    ...(postImage ? { image: postImage } : {}),
+    articleBody: post.content,
+    publisher: {
+      '@type': 'Organization',
+      name: 'PlantsPack',
+      logo: { '@type': 'ImageObject', url: 'https://plantspack.com/plantspack-logo-real.svg' },
+    },
+  }
+  const breadcrumbJsonLd = buildBreadcrumbs([
+    HOME_CRUMB,
+    { name: 'Feed', url: 'https://plantspack.com/feed' },
+    { name: post.title || 'Post', url: postUrl },
+  ])
+
   return (
     <div className="min-h-screen bg-surface">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">

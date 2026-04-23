@@ -212,6 +212,28 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   // (good for SEO, layout stability, and #reviews anchor scrolling).
   const { reviews: initialReviews, hasMore: reviewsHasMore } = await getInitialReviews(place.id)
 
+  // "More places in {city}" — SSR internal links from each place page to
+  // 6 siblings in the same city. Densifies the internal-link graph so
+  // Google distributes PageRank deeper into the place corpus, addressing
+  // the "Discovered but not indexed" bucket.
+  let morePlacesInCity: any[] = []
+  if (place.city && place.country) {
+    const { createAdminClient } = await import('@/lib/supabase-admin')
+    const admin = createAdminClient()
+    const { data: siblings } = await admin
+      .from('places')
+      .select('id, slug, name, category, vegan_level, main_image_url, images, average_rating, review_count')
+      .eq('city', place.city)
+      .eq('country', place.country)
+      .is('archived_at', null)
+      .not('slug', 'is', null)
+      .neq('id', place.id)
+      .order('average_rating', { ascending: false, nullsFirst: false })
+      .order('review_count', { ascending: false })
+      .limit(6)
+    morePlacesInCity = siblings || []
+  }
+
   // JSON-LD for LocalBusiness
   const placeSchemaType = place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant'
   const placeJsonLd = {
@@ -628,6 +650,45 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               initialHasMore={reviewsHasMore}
             />
           </div>
+
+          {/* More places in this city — SSR internal links to sibling places.
+              Purpose is SEO (crawl graph density) as much as UX. */}
+          {morePlacesInCity.length > 0 && (
+            <div className="p-6 border-t border-outline-variant/10">
+              <h2 className="text-lg font-semibold text-on-surface mb-4">
+                More vegan places in {place.city}
+              </h2>
+              <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {morePlacesInCity.map((sp: any) => {
+                  const img = sp.main_image_url || sp.images?.[0] || null
+                  return (
+                    <li key={sp.id} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
+                      <Link href={`/place/${sp.slug}`} className="block">
+                        {img && (
+                          <img src={img} alt={sp.name} className="w-full h-24 object-cover" loading="lazy" />
+                        )}
+                        <div className="p-3">
+                          <p className="font-medium text-sm text-on-surface truncate">{sp.name}</p>
+                          <p className="text-[11px] text-on-surface-variant mt-0.5">
+                            {sp.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
+                            {sp.average_rating ? ` · ★ ${Number(sp.average_rating).toFixed(1)}` : ''}
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+              <p className="text-xs text-on-surface-variant mt-3">
+                <Link
+                  href={`/vegan-places/${slugifyCityOrCountry(place.country || '')}/${slugifyCityOrCountry(place.city || '')}`}
+                  className="text-primary hover:underline"
+                >
+                  All vegan places in {place.city} →
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
