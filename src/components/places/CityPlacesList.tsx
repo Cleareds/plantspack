@@ -305,7 +305,7 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
               <div>
                 <p className="font-medium text-on-surface">Not finding a place?</p>
                 <p className="text-sm text-on-surface-variant">
-                  Help the vegan community in {cityName}  grow — add a place we&apos;re missing.
+                  Help the vegan community in {cityName}{' '}grow — add a place we&apos;re missing.
                 </p>
               </div>
               <AddPlaceButton
