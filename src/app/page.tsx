@@ -4,9 +4,22 @@ import { readFileSync } from 'fs'
 import { join } from 'path'
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
 import PlaceImage from '@/components/places/PlaceImage'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+
+export interface FollowedCity {
+  city: string
+  country: string
+  currentScore: number
+  currentGrade: string
+  delta: number | null
+  nextGrade: string | null
+  pointsToNext: number | null
+  placeCount: number
+  fvCount: number
+}
 
 // Top cities + posts cache for 60s. The per-user location-aware content
 // is fetched per-request using `dynamic = 'force-dynamic'` semantics via
@@ -53,6 +66,76 @@ async function getFeaturedPlaces() {
     .order('average_rating', { ascending: false })
     .limit(12)
   return data || []
+}
+
+/**
+ * Fetch the logged-in user's followed cities with live scores + deltas,
+ * server-side. Replaces the old /api/cities/followed round-trip from the
+ * client MyCities component — now the cards render in the initial HTML,
+ * removing the skeleton flash and a whole JS-waterfall roundtrip for
+ * signed-in users.
+ *
+ * Returns [] for non-logged-in users (the MyCities section only matters
+ * when there's a session anyway).
+ */
+async function getFollowedCities(): Promise<FollowedCity[]> {
+  try {
+    const supabase = await createServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const { data: followed } = await supabase
+      .from('user_followed_cities')
+      .select('city, country, last_seen_score')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+
+    if (!followed || followed.length === 0) return []
+
+    const admin = createAdminClient()
+    const { data: scores } = await admin
+      .from('city_scores')
+      .select('city, country, score, grade, place_count, fv_count')
+      .in('city', followed.map((f: any) => f.city))
+      .in('country', followed.map((f: any) => f.country))
+
+    const scoreMap: Record<string, any> = {}
+    for (const s of (scores || [])) scoreMap[`${s.city}|||${s.country}`] = s
+
+    const gradeThresholds = [
+      { grade: 'A+', min: 88 },
+      { grade: 'A', min: 78 },
+      { grade: 'B', min: 62 },
+      { grade: 'C', min: 45 },
+      { grade: 'D', min: 30 },
+    ]
+
+    return followed.map((f: any): FollowedCity => {
+      const s = scoreMap[`${f.city}|||${f.country}`]
+      const currentScore = s?.score ?? 0
+      const currentGrade = s?.grade ?? 'F'
+      const delta = f.last_seen_score != null ? currentScore - f.last_seen_score : null
+      let nextGrade: string | null = null
+      let pointsToNext: number | null = null
+      for (const t of gradeThresholds) {
+        if (currentScore < t.min) { nextGrade = t.grade; pointsToNext = t.min - currentScore }
+      }
+      return {
+        city: f.city,
+        country: f.country,
+        currentScore,
+        currentGrade,
+        delta,
+        nextGrade,
+        pointsToNext,
+        placeCount: s?.place_count ?? 0,
+        fvCount: s?.fv_count ?? 0,
+      }
+    })
+  } catch (err) {
+    console.error('[page] getFollowedCities error:', err)
+    return []
+  }
 }
 
 async function getRecentPosts() {
@@ -126,11 +209,12 @@ async function getInitialLocationData() {
 }
 
 export default async function Home() {
-  const [topCities, recentPosts, initialLocation, featuredPlaces] = await Promise.all([
+  const [topCities, recentPosts, initialLocation, featuredPlaces, followedCities] = await Promise.all([
     getTopCities(),
     getRecentPosts(),
     getInitialLocationData(),
     getFeaturedPlaces(),
+    getFollowedCities(),
   ])
 
   const cityImages = getCityImages()
@@ -141,6 +225,14 @@ export default async function Home() {
     users: Array.isArray(p.users) ? p.users[0] : p.users,
   }))
 
+  // Filter out the currently pinned city — it's already in the hero banner.
+  const c = await cookies()
+  const pinnedCity = c.get('pp_pinned_city')?.value
+  const pinnedCountry = c.get('pp_pinned_country')?.value
+  const displayedFollowedCities = followedCities.filter(
+    fc => !(fc.city === pinnedCity && fc.country === pinnedCountry),
+  )
+
   return (
     <>
       {/* SSR h1 for SEO crawlers that don't execute JS */}
@@ -150,6 +242,7 @@ export default async function Home() {
         recentPosts={normalizedPosts}
         cityImages={cityImages}
         initialLocation={initialLocation}
+        followedCities={displayedFollowedCities}
       />
 
       {/* Featured Places — SSR plain-HTML links, visible to Googlebot without JS.

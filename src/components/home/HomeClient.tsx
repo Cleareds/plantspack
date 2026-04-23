@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { MapPin, Plus, TrendingUp, Star, Heart, MessageCircle, Share2 } from 'lucide-react'
+import { MapPin, Plus, TrendingUp, TrendingDown, Star, Heart, MessageCircle, Share2 } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 // Heavy modals — only loaded when the user opens them. Previously these were
 // statically imported and pulled ImageUploader, VideoUploader, LinkPreview,
@@ -16,7 +16,7 @@ import { useVeganFilter } from '@/lib/vegan-filter-context'
 import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
-import MyCities from './MyCities'
+// getGradeColor + getScoreBarColor are defined locally below.
 import PlaceImage from '@/components/places/PlaceImage'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
 
@@ -51,14 +51,27 @@ interface InitialLocation {
   country: string
 }
 
+export interface FollowedCitySummary {
+  city: string
+  country: string
+  currentScore: number
+  currentGrade: string
+  delta: number | null
+  nextGrade: string | null
+  pointsToNext: number | null
+  placeCount: number
+  fvCount: number
+}
+
 interface Props {
   topCities: CityScoreData[]
   recentPosts: CompactPost[]
   cityImages?: Record<string, string>
   initialLocation?: InitialLocation | null
+  followedCities?: FollowedCitySummary[]
 }
 
-function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}, initialLocation }: Props) {
+function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}, initialLocation, followedCities = [] }: Props) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
@@ -421,9 +434,72 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
               )
             })()}
 
-            {/* Nearby Places */}
-            {/* My followed cities */}
-            <MyCities />
+            {/* My Cities — SSR'd from page.tsx so the cards render in the
+                initial HTML, no loading flash. Empty for anon users. */}
+            {followedCities.length > 0 && (
+              <div className="mt-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <h2 className="font-semibold text-on-surface">My Cities</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {followedCities.map(c => {
+                    const countrySlug = c.country.toLowerCase().replace(/\s+/g, '-')
+                    const citySlug = c.city.toLowerCase().replace(/\s+/g, '-')
+                    return (
+                      <Link
+                        key={`${c.city}-${c.country}`}
+                        href={`/vegan-places/${countrySlug}/${citySlug}`}
+                        className="bg-surface-container-lowest rounded-xl ghost-border p-3 hover:bg-primary/[0.03] transition-colors group"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="min-w-0">
+                            <p className="font-medium text-sm text-on-surface truncate group-hover:text-primary transition-colors">
+                              {c.city}
+                            </p>
+                            <p className="text-[11px] text-on-surface-variant">
+                              {c.country} · {c.placeCount} places
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            <span className={`text-lg font-black ${getGradeColor(c.currentGrade)}`}>
+                              {c.currentGrade}
+                            </span>
+                            {c.delta !== null && c.delta !== 0 && (
+                              <span className={`text-[10px] font-bold flex items-center gap-0.5 ${
+                                c.delta > 0 ? 'text-emerald-600' : 'text-red-500'
+                              }`}>
+                                {c.delta > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                                {c.delta > 0 ? '+' : ''}{c.delta}
+                              </span>
+                            )}
+                            {c.delta === null && (
+                              <span className="text-[9px] font-medium text-primary bg-primary/10 px-1.5 py-0.5 rounded">NEW</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="flex-1 h-1.5 bg-surface-container-low rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${getScoreBarColor(c.currentScore)} transition-all`}
+                              style={{ width: `${c.currentScore}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] font-medium text-on-surface-variant w-8 text-right">
+                            {c.currentScore}
+                          </span>
+                        </div>
+                        {c.pointsToNext && c.nextGrade && (
+                          <p className="text-[10px] text-on-surface-variant">
+                            {c.pointsToNext} pts to reach {c.nextGrade}
+                          </p>
+                        )}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
 
             {filteredNearby.length > 0 && (
               <section>
