@@ -38,11 +38,11 @@ Before running the CLI, you must have:
 
 Follow in order:
 
-1. **WebFetch the primary URL.** If it's a Facebook or Google Maps URL, skip straight to step 2 (they block scrapers).
-2. **WebSearch for the real website + address + vegan status.** Query like `"<name>" <city> vegan` and `"<name>" address postcode`.
-3. **Cross-check the vegan level.** At least one explicit "100% vegan" / "plant-based only" / equivalent statement is required before you pick `fully_vegan`. Otherwise default to `vegan_friendly`. This matches the project's NEVER-mark-fully-vegan-unless-verified rule in CLAUDE.md.
+1. **WebFetch the primary URL.** Pull address, phone, hours, menu / concept text. If it's a Facebook or Google Maps URL, skip straight to step 2 (they block scrapers).
+2. **WebSearch for the real website + address + vegan status.** Query like `"<name>" <city> vegan` and `"<name>" address postcode`. Cross-reference press / Yelp / BostonChefs / TripAdvisor for facts the site doesn't advertise (owner name, opening year, industry recognition).
+3. **Cross-check the vegan level rigorously.** At least one explicit "100% vegan" / "plant-based only" / "fully vegan" / equivalent statement is required before `fully_vegan`. Otherwise default to `vegan_friendly`. Watch for hedge language: "plant-centered", "plant-forward", or "food liked by vegans, vegetarians, and carnivores alike" all mean `vegan_friendly`, not fully_vegan — even when press articles call them "the best vegan restaurant" (classic marketing vs reality gap). Matches the NEVER-mark-fully-vegan-unless-verified rule in CLAUDE.md.
 4. **Pick the category.** When in doubt between `eat` and `hotel` (e.g. B&B with a café), pick by *primary* business. The Miggi → hotel (guesthouse). A café with rooms → eat.
-5. **Build a JSON payload** matching the schema above. Skip optional fields you don't have — the CLI fills them where it can.
+5. **Build a JSON payload** matching the schema above. Include as many of the researched fields as you found — the CLI fills only the missing pieces.
 6. **Run the CLI**:
 
    ```bash
@@ -50,24 +50,70 @@ Follow in order:
    {
      "name": "…",
      "city": "…",
-     "country": "United Kingdom",
-     "category": "hotel",
-     "vegan_level": "fully_vegan",
+     "country": "United States",
+     "category": "eat",
+     "vegan_level": "vegan_friendly",
      "website": "https://…",
      "address": "…",
+     "phone": "+1 617-420-4070",
+     "opening_hours": "Mon-Fri 11:00-21:00; Sat 10:00-21:00; Sun 10:00-16:00",
+     "cuisine_types": ["plant-based", "cafe", "modern-american"],
      "description": "…",
-     "country_code": "gb",
-     "tags": ["user_recommended", "county:Cornwall"]
+     "country_code": "us",
+     "tags": ["user_recommended", "plant-forward", "organic"]
    }
    EOF
    ```
 
    The CLI will:
-   - Geocode the address via Nominatim (exact + city-fallback).
-   - Scrape a hero image from the website (og:image → twitter:image → first non-logo `<img>` with hero-ish alt/src; handles Wix lazy-loading via `data-src` and `srcset`).
-   - Insert with `verification_status='approved'` + `is_verified=true` unless `--pending` was passed.
+   - **Geocode** via Nominatim (exact address + city-fallback).
+   - **Scrape hero image — multi-pass and size-ranked**:
+     - Tries homepage + `/menu`, `/menus`, `/gallery`, `/about`, `/about-us`, `/food`, `/press`, `/location`.
+     - Two user-agents (desktop Safari + Googlebot) — sites sometimes gate on one or the other.
+     - Parses `og:image` (ignoring empty content), `twitter:image`, `<img src>`, `data-src`, `data-original`, `data-lazy-src`, `srcset`, `<source srcset>`.
+     - Filters out logos, favicons, SVGs, icons, emoji, placeholders.
+     - **Fetches top 30 candidates, measures pixel dimensions via sharp, and returns the biggest raster that isn't a logo.** Skips images <600px wide or with extreme aspect ratios (>6:1 either way).
+   - **Downloads + re-hosts** the chosen image to Supabase `place-images` bucket as `{place_id}.jpg` (normalised JPEG q=88, max 1600×1600, immutable cache). Sets `main_image_url` to the Supabase public URL so the UI never depends on the origin CDN staying up.
+   - **Inserts** with `verification_status='approved'` + `is_verified=true` unless `--pending` was passed.
 
-7. **Report to user**: the public `/place/<slug>` URL, plus flag anything that came back empty (hero image, coords, address). Ask them for a direct URL to patch the gap, or say "nothing more to add" and move on.
+7. **If the CLI reports "no hero image found"** — which happens on JS-rendered / SPA sites (Framer, early-load React, empty `og:image` tags — e.g. baladi.be), fall back to **chrome-devtools MCP**:
+
+   ```
+   a. mcp__chrome-devtools__new_page or navigate_page → open the website.
+   b. Wait ~4 seconds for JS to render + images to load.
+   c. mcp__chrome-devtools__evaluate_script — run this snippet to pull
+      the biggest fully-rendered images + CSS background images:
+
+      async () => {
+        await new Promise(r => setTimeout(r, 4000));
+        const imgs = Array.from(document.querySelectorAll('img'))
+          .map(i => ({ src: i.currentSrc || i.src, w: i.naturalWidth, h: i.naturalHeight, alt: i.alt || '' }))
+          .filter(i => i.src && i.src.indexOf('http') === 0 && i.w >= 600 && i.h >= 400
+                       && !/logo|favicon|sprite|icon|avatar|emoji|\.svg(\?|$)/i.test(i.src));
+        imgs.sort((a, b) => b.w * b.h - a.w * a.h);
+        const bgs = [];
+        document.querySelectorAll('header,section,main,div').forEach(el => {
+          const bg = getComputedStyle(el).backgroundImage || '';
+          const m = bg.match(/url\(["']?([^"')]+)["']?\)/);
+          if (m && m[1].indexOf('http') === 0 && !/logo|favicon|icon|\.svg(\?|$)/i.test(m[1])) bgs.push(m[1]);
+        });
+        return { topImgs: imgs.slice(0, 6), bgs: bgs.slice(0, 6) };
+      }
+
+   d. Pick the best candidate. Prefer real <img>s with natural dimensions
+      over CSS backgrounds. Prefer URLs containing /wp-content/uploads/,
+      /cdn.../, /images/ over /assets/ paths (the latter are usually icons).
+   e. Re-host via the helper:
+
+      npx tsx scripts/attach-place-image.ts --slug <slug> --url <image-url>
+
+      It downloads, normalises, uploads to place-images bucket, and updates
+      places.main_image_url.
+   ```
+
+   If chrome-devtools also comes up empty (pure scroll-triggered lazy-load, or site 403s real browsers), note in the report and move on — the user can upload manually via the admin UI.
+
+8. **Report to user**: the public `/place/<slug>` URL, source of the image (CLI-scraped / chrome-devtools / no-image), and flag anything empty (coords, hours, description). Offer to patch with a direct URL or move on.
 
 ## Flags
 
