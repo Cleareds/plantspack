@@ -48,13 +48,24 @@ export async function GET(request: NextRequest) {
         )
       `, { count: 'exact' })
 
-    // Show unpublished packs only if the creator is viewing their own packs
+    // Show unpublished packs only if the creator is viewing their own packs.
+    // Trips (categories containing 'Trip') are always private to the creator —
+    // they must never appear in public listings, even if accidentally published.
     if (creatorId && userId && creatorId === userId) {
+      // Creator viewing own packs — return everything they created, trips + packs,
+      // published or not. Used by the "My Trips" / "My Packs" sections on /packs.
       query = query.eq('creator_id', creatorId)
     } else if (creatorId) {
-      query = query.eq('creator_id', creatorId).eq('is_published', true)
+      // Anyone viewing someone else's packs — only published, trips excluded.
+      query = query
+        .eq('creator_id', creatorId)
+        .eq('is_published', true)
+        .not('categories', 'cs', '{Trip}')
     } else {
-      query = query.eq('is_published', true)
+      // Global public list — only published packs, trips excluded.
+      query = query
+        .eq('is_published', true)
+        .not('categories', 'cs', '{Trip}')
     }
 
     // Apply filters — map slug values to display names for categories array matching

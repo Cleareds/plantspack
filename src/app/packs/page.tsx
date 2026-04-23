@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth'
 import { PackWithStats, PackCategory } from '@/types/packs'
 import PackCard from '@/components/packs/PackCard'
 import Link from 'next/link'
-import { Plus, Search } from 'lucide-react'
+import { Plus, Search, Lock } from 'lucide-react'
 import { usePageState } from '@/hooks/usePageState'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 
@@ -70,7 +70,11 @@ export default function PacksPage() {
     }
     try {
       setMyPacksLoading(true)
-      const response = await fetch(`/api/packs?creator_id=${user.id}&limit=50`)
+      // credentials: 'include' is required for the API to see the auth
+      // cookie and return unpublished rows (trips) alongside published packs.
+      const response = await fetch(`/api/packs?creator_id=${user.id}&limit=50`, {
+        credentials: 'include',
+      })
       const data = await response.json()
       if (response.ok) {
         setMyPacks(data.packs)
@@ -81,6 +85,15 @@ export default function PacksPage() {
       setMyPacksLoading(false)
     }
   }
+
+  // Split "my packs" into the private trips bucket vs. the public packs bucket.
+  // Trips are packs created from the "Add to Pack" flow on a place page with
+  // categories: ['Trip'] — they're typically unpublished and private to the
+  // creator. Everything else is a regular pack.
+  const isTrip = (pack: PackWithStats) =>
+    Array.isArray(pack.categories) && pack.categories.some(c => c === 'Trip' as any)
+  const myTrips = myPacks.filter(isTrip)
+  const myOwnPacks = myPacks.filter(p => !isTrip(p))
 
   useEffect(() => {
     fetchPacks()
@@ -117,14 +130,34 @@ export default function PacksPage() {
           )}
         </div>
 
-        {/* My Packs */}
-        {user && !myPacksLoading && myPacks.length > 0 && (
+        {/* My Trips — private, only the creator sees them. Trips come from the
+            "Add to Pack" flow on place pages (categories: ['Trip']) and are
+            usually unpublished. Rendered above packs since they're the more
+            personal/in-progress content. */}
+        {user && !myPacksLoading && myTrips.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Lock className="h-4 w-4 text-on-surface-variant" />
+              <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">My Trips</h2>
+              <span className="text-xs text-on-surface-variant">(only you can see these)</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myTrips.map((pack) => (
+                <PackCard key={pack.id} pack={pack} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* My Packs — the user's own public/published packs, always visible
+            to them (both when published and still in draft). */}
+        {user && !myPacksLoading && myOwnPacks.length > 0 && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">My Packs</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {myPacks.map((pack) => (
+              {myOwnPacks.map((pack) => (
                 <PackCard key={pack.id} pack={pack} />
               ))}
             </div>
