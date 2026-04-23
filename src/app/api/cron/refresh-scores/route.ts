@@ -22,6 +22,30 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // Piggy-backing on the daily cron: archive any place whose
+  // scheduled_archive_at has passed. Avoids a separate cron slot.
+  let scheduledArchived = 0
+  try {
+    const nowIso = new Date().toISOString()
+    const { data: archived, error: archErr } = await supabase
+      .from('places')
+      .update({ archived_at: nowIso, archived_reason: 'scheduled-closure' })
+      .is('archived_at', null)
+      .lte('scheduled_archive_at', nowIso)
+      .not('scheduled_archive_at', 'is', null)
+      .select('id, slug')
+    if (archErr) {
+      console.error('[cron] scheduled-archive error:', archErr.message)
+    } else {
+      scheduledArchived = archived?.length || 0
+      if (scheduledArchived > 0) {
+        console.log(`[cron] archived ${scheduledArchived} scheduled places:`, (archived || []).map((r: any) => r.slug).join(', '))
+      }
+    }
+  } catch (e: any) {
+    console.error('[cron] scheduled-archive exception:', e?.message)
+  }
+
   revalidatePath('/city-ranks')
   revalidatePath('/')
 
@@ -29,5 +53,6 @@ export async function GET(request: Request) {
     success: true,
     durationMs: Date.now() - started,
     refreshedAt: new Date().toISOString(),
+    scheduledArchived,
   })
 }
