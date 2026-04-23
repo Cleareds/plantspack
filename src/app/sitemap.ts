@@ -4,12 +4,12 @@ import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
 const SITE_URL = 'https://plantspack.com'
 
-// Force runtime execution. Default sitemap.ts behaviour is static (build-time),
-// which on Vercel does NOT have SUPABASE_SERVICE_ROLE_KEY available — the
-// module-level createClient() call ended up with empty strings and every
-// query returned an empty array, producing empty-urlset sitemaps in prod.
+// Force runtime execution. Default sitemap.ts behaviour is static (build-time);
+// DO NOT also set `revalidate` — `dynamic: 'force-dynamic'` + `revalidate`
+// together confuses Next.js and the dynamic directive is silently dropped,
+// reverting to static with stale (or missing) data. We rely on the CDN
+// Cache-Control response header set at the response-wrapper layer.
 export const dynamic = 'force-dynamic'
-export const revalidate = 3600 // still allow the CDN to cache for 1 hour
 
 // Lazy-init inside the function so env vars are read at request time.
 function getSupabase(): SupabaseClient {
