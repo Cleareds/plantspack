@@ -5,6 +5,12 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     },
+    "src/app/sitemap.ts": {
+      "maxDuration": 60
+    },
+    "src/app/sitemap-index.xml/route.ts": {
+      "maxDuration": 10
+    },
     "src/app/api/cron/backup/route.ts": {
       "maxDuration": 60
     },

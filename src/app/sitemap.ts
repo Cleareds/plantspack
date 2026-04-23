@@ -54,19 +54,45 @@ export async function generateSitemaps() {
 }
 
 async function fetchAll<T>(sb: SupabaseClient, table: string, select: string, filters?: (q: any) => any): Promise<T[]> {
-  const all: T[] = []
-  let offset = 0
-  const batchSize = 1000
-  while (true) {
-    let query = sb.from(table).select(select).range(offset, offset + batchSize - 1)
-    if (filters) query = filters(query)
-    const { data } = await query
-    if (!data || data.length === 0) break
-    all.push(...(data as T[]))
-    if (data.length < batchSize) break
-    offset += batchSize
+  // Get the total count first so we can fire all pages in parallel.
+  // Sequential 1000-row pagination through 37K rows takes ~11s on Vercel;
+  // 10-way parallel fetching drops it to ~1-2s.
+  let countQuery = sb.from(table).select('id', { count: 'exact', head: true })
+  if (filters) countQuery = filters(countQuery)
+  const { count, error: countErr } = await countQuery
+  if (countErr) {
+    console.error(`[sitemap] count failed for ${table}:`, countErr.message)
+    return []
   }
-  return all
+  const total = count ?? 0
+  if (total === 0) return []
+
+  const batchSize = 1000
+  const pages = Math.ceil(total / batchSize)
+  const concurrency = 10
+  const all: T[] = new Array(total)
+
+  for (let start = 0; start < pages; start += concurrency) {
+    const batch = Array.from({ length: Math.min(concurrency, pages - start) }, (_, i) => start + i)
+    const results = await Promise.all(
+      batch.map(async (pageIdx) => {
+        const from = pageIdx * batchSize
+        const to = Math.min(from + batchSize - 1, total - 1)
+        let q = sb.from(table).select(select).range(from, to)
+        if (filters) q = filters(q)
+        const { data, error } = await q
+        if (error) {
+          console.error(`[sitemap] page fetch failed for ${table} range ${from}-${to}:`, error.message)
+          return { from, rows: [] as T[] }
+        }
+        return { from, rows: (data || []) as T[] }
+      }),
+    )
+    for (const { from, rows } of results) {
+      for (let i = 0; i < rows.length; i++) all[from + i] = rows[i]
+    }
+  }
+  return all.filter(Boolean)
 }
 
 interface PlaceRow {
