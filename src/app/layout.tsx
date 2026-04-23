@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Manrope } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
@@ -26,16 +26,18 @@ const manrope = Manrope({
   weight: ['400', '500', '600', '700'],
 });
 
+// Next.js 15 moved viewport out of metadata -- it's now its own export.
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export const metadata: Metadata = {
   title: "PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide",
   description: "33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.",
   metadataBase: new URL('https://www.plantspack.com'),
   manifest: '/manifest.json',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   robots: {
     index: true,
     follow: true,
