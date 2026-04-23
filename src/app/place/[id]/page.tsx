@@ -18,6 +18,7 @@ import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
 import HashScroller from '@/components/ui/HashScroller'
 import AddToPackButton from '@/components/places/AddToPackButton'
+import PlaceImage from '@/components/places/PlaceImage'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
@@ -183,6 +184,13 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   // If not found by slug/id, check the slug-aliases table (historical slugs
   // from the bug fixed in 20260420000000). 301-redirect to the canonical URL.
+  //
+  // IMPORTANT: redirect() works by throwing NEXT_REDIRECT. If we put the
+  // redirect() call inside try/catch, the catch SWALLOWS it and the page
+  // falls through to notFound() → 404. We saw this in GSC: 20+ alias
+  // URLs all returning 4xx. Fix: compute the alias OUTSIDE the catch,
+  // then call redirect() at top level where it can throw cleanly.
+  let aliasSlug: string | null = null
   if (!place) {
     try {
       const { createAdminClient } = await import('@/lib/supabase-admin')
@@ -193,10 +201,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         .eq('old_slug', id)
         .limit(1)
         .maybeSingle()
-      const aliasSlug = (alias as any)?.places?.slug
-      if (aliasSlug) redirect(`/place/${aliasSlug}`)
+      aliasSlug = (alias as any)?.places?.slug || null
     } catch {}
   }
+  if (aliasSlug) redirect(`/place/${aliasSlug}`)
 
   if (!place) {
     notFound()
@@ -664,9 +672,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   return (
                     <li key={sp.id} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
                       <Link href={`/place/${sp.slug}`} className="block">
-                        {img && (
-                          <img src={img} alt={sp.name} className="w-full h-24 object-cover" loading="lazy" />
-                        )}
+                        <PlaceImage
+                          src={img}
+                          alt={sp.name}
+                          category={sp.category}
+                          className="w-full h-24 object-cover"
+                        />
                         <div className="p-3">
                           <p className="font-medium text-sm text-on-surface truncate">{sp.name}</p>
                           <p className="text-[11px] text-on-surface-variant mt-0.5">

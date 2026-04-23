@@ -5,6 +5,7 @@ import { join } from 'path'
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase-admin'
 import HomeClient from '@/components/home/HomeClient'
+import PlaceImage from '@/components/places/PlaceImage'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
 // Top cities + posts cache for 60s. The per-user location-aware content
@@ -165,14 +166,12 @@ export default async function Home() {
               return (
                 <li key={p.slug} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
                   <Link href={`/place/${p.slug}`} className="block">
-                    {image && (
-                      <img
-                        src={image}
-                        alt={p.name}
-                        className="w-full h-28 object-cover"
-                        loading="lazy"
-                      />
-                    )}
+                    <PlaceImage
+                      src={image}
+                      alt={p.name}
+                      category={p.category}
+                      className="w-full h-28 object-cover"
+                    />
                     <div className="p-3">
                       <p className="font-medium text-sm text-on-surface truncate">{p.name}</p>
                       <p className="text-xs text-on-surface-variant truncate mt-0.5">

@@ -17,6 +17,7 @@ import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
 import MyCities from './MyCities'
+import PlaceImage from '@/components/places/PlaceImage'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
 
 interface NearbyPlace {
@@ -433,15 +434,14 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {filteredNearby.map(place => (
                     <div key={place.id} className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
-                      {(place.main_image_url || place.images?.[0]) ? (
-                        <Link href={`/place/${place.slug || place.id}`}>
-                          <img src={place.main_image_url || place.images[0]} alt={place.name} className="w-full h-28 object-cover" />
-                        </Link>
-                      ) : (
-                        <Link href={`/place/${place.slug || place.id}`} className="flex items-center justify-center h-28 bg-surface-container-low text-3xl">
-                          {CATEGORY_EMOJI[place.category] || '📍'}
-                        </Link>
-                      )}
+                      <Link href={`/place/${place.slug || place.id}`}>
+                        <PlaceImage
+                          src={place.main_image_url || place.images?.[0]}
+                          alt={place.name}
+                          category={place.category}
+                          className="w-full h-28 object-cover"
+                        />
+                      </Link>
                       <div className="p-3">
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <Link href={`/place/${place.slug || place.id}`} className="font-medium text-sm text-on-surface hover:text-primary truncate">
@@ -481,7 +481,12 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {filteredSanctuaries.map(s => (
                     <Link key={s.id} href={`/place/${s.slug || s.id}`} className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all">
-                      {(s.main_image_url || s.images?.[0]) && <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />}
+                      <PlaceImage
+                        src={s.main_image_url || s.images?.[0]}
+                        alt={s.name}
+                        category={s.category}
+                        className="w-full h-24 rounded-lg object-cover mb-2"
+                      />
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
                       <RatingBadge
                         rating={(s as any).average_rating}
@@ -503,7 +508,12 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {filteredStays.map(s => (
                     <Link key={s.id} href={`/place/${s.slug || s.id}`} className="p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all">
-                      {(s.main_image_url || s.images?.[0]) && <img src={s.main_image_url || s.images[0]} alt="" className="w-full h-24 rounded-lg object-cover mb-2" />}
+                      <PlaceImage
+                        src={s.main_image_url || s.images?.[0]}
+                        alt={s.name}
+                        category={s.category}
+                        className="w-full h-24 rounded-lg object-cover mb-2"
+                      />
                       <p className="font-medium text-sm text-on-surface truncate">{s.name}</p>
                       <RatingBadge
                         rating={(s as any).average_rating}

@@ -6,6 +6,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight } from 'lucide-react'
 import CityMap from './CityMap'
 import RatingBadge from './RatingBadge'
+import PlaceImage from './PlaceImage'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -194,18 +195,12 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
                   className="group flex gap-4 p-4"
                 >
                   <div className="relative flex-shrink-0">
-                    {thumbnail ? (
-                      <img
-                        src={thumbnail}
-                        alt={place.name}
-                        className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 md:w-32 md:h-24 rounded-lg bg-surface-container-low flex items-center justify-center">
-                        <MapPin className="h-6 w-6 text-outline" />
-                      </div>
-                    )}
+                    <PlaceImage
+                      src={thumbnail}
+                      alt={place.name}
+                      category={place.category}
+                      className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover"
+                    />
                     {/* Overlay badges */}
                     <div className="absolute top-1 left-1 flex flex-col gap-0.5">
                       {place.vegan_level === 'fully_vegan' && (
