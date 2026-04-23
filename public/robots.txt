@@ -30,9 +30,12 @@ Disallow: /
 User-agent: PetalBot
 Disallow: /
 
-Sitemap: https://plantspack.com/sitemap.xml
-# Index above points to these segments, but we also declare them directly
-# so Google discovers each one even if the index ever breaks.
+# The sitemap index lists the three tiered segments below. Next.js
+# reserves /sitemap.xml for its own use but doesn't populate it when
+# generateSitemaps() is used, so we publish the index under a different
+# path. Each segment is also declared directly as a belt-and-braces
+# fallback.
+Sitemap: https://plantspack.com/sitemap-index.xml
 Sitemap: https://plantspack.com/sitemap/priority.xml
 Sitemap: https://plantspack.com/sitemap/content.xml
 Sitemap: https://plantspack.com/sitemap/thin.xml

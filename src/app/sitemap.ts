@@ -1,13 +1,25 @@
 import { MetadataRoute } from 'next'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
 const SITE_URL = 'https://plantspack.com'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-)
+// Force runtime execution. Default sitemap.ts behaviour is static (build-time),
+// which on Vercel does NOT have SUPABASE_SERVICE_ROLE_KEY available — the
+// module-level createClient() call ended up with empty strings and every
+// query returned an empty array, producing empty-urlset sitemaps in prod.
+export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // still allow the CDN to cache for 1 hour
+
+// Lazy-init inside the function so env vars are read at request time.
+function getSupabase(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !key) {
+    throw new Error('[sitemap] Missing Supabase env vars at request time')
+  }
+  return createClient(url, key)
+}
 
 /**
  * Why tier the sitemap:
@@ -41,12 +53,12 @@ export async function generateSitemaps() {
   ]
 }
 
-async function fetchAll<T>(table: string, select: string, filters?: (q: any) => any): Promise<T[]> {
+async function fetchAll<T>(sb: SupabaseClient, table: string, select: string, filters?: (q: any) => any): Promise<T[]> {
   const all: T[] = []
   let offset = 0
   const batchSize = 1000
   while (true) {
-    let query = supabase.from(table).select(select).range(offset, offset + batchSize - 1)
+    let query = sb.from(table).select(select).range(offset, offset + batchSize - 1)
     if (filters) query = filters(query)
     const { data } = await query
     if (!data || data.length === 0) break
@@ -91,25 +103,31 @@ function placeTier(p: PlaceRow): SegmentId {
 }
 
 export default async function sitemap({ id }: { id: SegmentId }): Promise<MetadataRoute.Sitemap> {
+  const sb = getSupabase()
   // Fetch all places once; bucket them by tier. Faster than 3 separate
   // queries with complex filters — most fields are cheap.
   const [places, posts, packs] = await Promise.all([
     fetchAll<PlaceRow>(
+      sb,
       'places',
       'slug, city, country, description, images, main_image_url, review_count, vegan_level, opening_hours, updated_at, created_at',
       q => q.is('archived_at', null),
     ),
     fetchAll<any>(
+      sb,
       'posts',
       'slug, category, created_at, updated_at',
       q => q.eq('privacy', 'public').is('deleted_at', null).in('category', ['recipe', 'event']),
     ),
     fetchAll<any>(
+      sb,
       'packs',
       'slug, updated_at, created_at',
       q => q.eq('is_published', true),
     ),
   ])
+
+  console.log(`[sitemap ${id}] fetched: places=${places.length}, posts=${posts.length}, packs=${packs.length}`)
 
   // Pre-bucket places by tier (single pass).
   const byTier: Record<SegmentId, PlaceRow[]> = { priority: [], content: [], thin: [] }
