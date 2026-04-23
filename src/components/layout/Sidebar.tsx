@@ -15,6 +15,7 @@ const navItems = [
   { href: '/feed', label: 'Feed', icon: 'forum' },
   { href: '/events', label: 'Events', icon: 'event' },
   { href: '/packs', label: 'Packs / Trips', icon: 'groups' },
+  { href: '/blog', label: 'Blog', icon: 'article' },
 ]
 
 export default function Sidebar() {

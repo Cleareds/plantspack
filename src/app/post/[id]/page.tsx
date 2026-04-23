@@ -100,6 +100,13 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     redirect(`/event/${(post as any).slug}`)
   }
 
+  // Long-form articles live at /blog/[slug] with a different template +
+  // Article JSON-LD. Bounce any /post/{slug} request for an article to the
+  // canonical blog URL.
+  if ((post.category as string) === 'article' && (post as any).slug) {
+    redirect(`/blog/${(post as any).slug}`)
+  }
+
   // UUID → slug redirect: if the URL uses the UUID and a slug exists, move
   // to the slug URL. Prevents GSC "duplicate without canonical" on UUID URLs.
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)

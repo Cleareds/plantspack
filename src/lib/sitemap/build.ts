@@ -158,7 +158,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       sb,
       'posts',
       'slug, category, created_at, updated_at',
-      (q) => q.eq('privacy', 'public').is('deleted_at', null).in('category', ['recipe', 'event']),
+      (q) => q.eq('privacy', 'public').is('deleted_at', null).in('category', ['recipe', 'event', 'article']),
     ),
     fetchAll<any>(
       sb,
@@ -187,10 +187,22 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: `${SITE_URL}/events`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/packs`, changeFreq: 'daily', priority: 0.8 },
       { url: `${SITE_URL}/city-ranks`, changeFreq: 'daily', priority: 0.9 },
+      { url: `${SITE_URL}/blog`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/support`, changeFreq: 'monthly', priority: 0.5 },
       { url: `${SITE_URL}/about`, changeFreq: 'monthly', priority: 0.5 },
       { url: `${SITE_URL}/contact`, changeFreq: 'yearly', priority: 0.3 },
     )
+
+    // Blog articles — high-priority evergreen content, sitemap-priority tier.
+    for (const post of posts) {
+      if (post.category !== 'article' || !post.slug) continue
+      entries.push({
+        url: `${SITE_URL}/blog/${post.slug}`,
+        lastModified: post.updated_at || post.created_at,
+        changeFreq: 'weekly',
+        priority: 0.9,
+      })
+    }
 
     const countries = new Set<string>()
     const cityCountry = new Set<string>()
@@ -223,6 +235,8 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
   } else if (id === 'content') {
     for (const post of posts) {
       if (!post.slug) continue
+      // Articles are already in the priority tier; skip here to avoid dupes.
+      if (post.category === 'article') continue
       const prefix = post.category === 'recipe' ? 'recipe' : 'event'
       entries.push({
         url: `${SITE_URL}/${prefix}/${post.slug}`,
