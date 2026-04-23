@@ -31,3 +31,8 @@ User-agent: PetalBot
 Disallow: /
 
 Sitemap: https://plantspack.com/sitemap.xml
+# Index above points to these segments, but we also declare them directly
+# so Google discovers each one even if the index ever breaks.
+Sitemap: https://plantspack.com/sitemap/priority.xml
+Sitemap: https://plantspack.com/sitemap/content.xml
+Sitemap: https://plantspack.com/sitemap/thin.xml
