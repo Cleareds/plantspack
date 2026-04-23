@@ -64,7 +64,11 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
   const activeCategory = searchParams?.get('category') || null
   const activeSubcategory = searchParams?.get('sub') || null
   const petOnly = searchParams?.get('pet') === '1'
-  const sortBy = (searchParams?.get('sort') as 'name' | 'rating' | 'vegan') || 'name'
+  // Default: fully-vegan places first, then by rating, then by name. A Lemmy
+  // reviewer rightly pointed out that alphabetical default put Bojangles (a
+  // chicken chain that shouldn't be here anyway) at the top. Now vegan-first
+  // is the baseline; alphabetical stays available as a toggle.
+  const sortBy = (searchParams?.get('sort') as 'name' | 'rating' | 'vegan') || 'vegan'
 
   // Update URL params — alphabetical order for consistency
   const setFilter = useCallback((updates: Record<string, string | null>) => {
@@ -106,7 +110,9 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
     if (sortBy === 'vegan') {
       if (a.vegan_level === 'fully_vegan' && b.vegan_level !== 'fully_vegan') return -1
       if (b.vegan_level === 'fully_vegan' && a.vegan_level !== 'fully_vegan') return 1
-      return (b.average_rating || 0) - (a.average_rating || 0)
+      const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0)
+      if (ratingDiff !== 0) return ratingDiff
+      return a.name.localeCompare(b.name)
     }
     return a.name.localeCompare(b.name)
   })
@@ -163,8 +169,9 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
 
         {/* Sort */}
         <div className="w-px h-8 bg-outline-variant/30 self-center" />
-        {(['name', 'rating', 'vegan'] as const).map(mode => (
-          <button key={mode} onClick={() => setFilter({ sort: mode === 'name' ? null : mode })}
+        {(['vegan', 'rating', 'name'] as const).map(mode => (
+          // 'vegan' is the default now — clicking it clears the query param.
+          <button key={mode} onClick={() => setFilter({ sort: mode === 'vegan' ? null : mode })}
             className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
               sortBy === mode ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:bg-surface-container'
             }`}>

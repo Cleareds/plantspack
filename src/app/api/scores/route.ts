@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 import { computeAllScores } from '@/lib/compute-scores'
 
-// Scores change slowly (new places trickle in). Daily ISR regen,
-// plus a 10-minute edge cache with 24h stale-while-revalidate so
-// Vercel's CDN absorbs most of the traffic instead of us recomputing.
-export const revalidate = 86400
+// Cap drift between this endpoint and /api/home (which reads city_scores
+// fresh) at 1 hour — a Lemmy reviewer hit a 24h drift that showed F/29
+// here vs D/33 on the home hero after the sub-grade migration refreshed
+// the MV. city_scores query is ~30ms indexed, so tighter cache is cheap.
+export const revalidate = 3600
 
 export async function GET() {
   const { scores, totalPlaces } = await computeAllScores()
@@ -16,7 +17,8 @@ export async function GET() {
     generatedAt: new Date().toISOString(),
   }, {
     headers: {
-      'Cache-Control': 's-maxage=600, stale-while-revalidate=86400',
+      // Edge cache: 10 min served-as-fresh, 1h stale-while-revalidate.
+      'Cache-Control': 's-maxage=600, stale-while-revalidate=3600',
     },
   })
 }

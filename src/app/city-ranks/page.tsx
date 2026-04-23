@@ -3,7 +3,8 @@ import { computeAllScores } from '@/lib/compute-scores'
 import { loadCityImages } from '@/lib/city-images'
 import CityRanksTable from '@/components/vegan-score/CityRanksTable'
 
-export const revalidate = 86400
+// 1h cache keeps drift with /api/home capped. MV read is cheap (~30ms).
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'City Ranks — Most Vegan-Friendly Cities | PlantsPack',

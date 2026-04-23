@@ -2,6 +2,19 @@
 
 This file documents the CLI tools and access that Claude Code has for this project.
 
+## 📥 Task queueing: "Next task:" pattern
+
+When the user writes `Next task: <description>` anywhere in a message (case-sensitive on "Next task:"), treat it as a request to queue `<description>` as a new high-priority task at the top of the todo list — **even if they also include other content in the same message**.
+
+Behavior:
+1. Invoke the `next-task` skill (`.claude/skills/next-task/SKILL.md`) once per `Next task:` occurrence.
+2. The skill calls `TaskCreate` and pushes every other pending task behind the new one via `addBlocks`.
+3. If a task is currently `in_progress`, **do not interrupt it**. Finish it, then pick up the newly queued item.
+4. Briefly acknowledge in the response: `Queued: <subject>. Will start <now | after current task>.`
+5. If the message contains other non-"Next task" content, address that content normally *after* queuing.
+
+This pattern lets the user interleave priorities without us losing track.
+
 ## 🚫 ABSOLUTE RULE: Never Delete Data
 
 **NEVER delete any data from the database (places, posts, users, recipes, reviews, or any other records) unless the user explicitly confirms by saying "Yes delete."**
@@ -200,11 +213,11 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 ## Data Quality Rules
 
 **Places:**
-- No chain restaurants or supermarkets (McDonald's, Subway, Starbucks, Aldi, Lidl, etc.)
+- **Chain policy (Platonic-form-is-vegan test)** — A chain restaurant belongs on PlantsPack if the Platonic form of what it sells is plant-based (açaí, bowl, salad, smoothie, coffee, sushi, Mexican bowl) OR it's a travel-staple with an explicit vegan menu (Leon, Itsu, Dean & David, Tortilla, Busaba, Wasabi, Yo! Sushi, Caffe Nero). It does NOT belong if the Platonic form of the dish is animal-centric (pizza, burger, steakhouse, fried chicken, seafood, diner/comfort food), even when a vegan option exists. Supermarkets and stores are always kept regardless of chain status. Places added by non-admin contributors are always kept regardless of chain status.
 - Russian places are excluded from the platform
 - Admin-imported places show "PlantsPack Team" attribution (username check: 'admin')
 - Minimum 5 places for a city to appear in City Ranks
-- All `fully_vegan` places should be verified (scan website for non-vegan menu items)
+- All `fully_vegan` places should be verified (scan website for non-vegan menu items and run the `is <place> 100% vegan?` WebSearch per the add-place skill)
 - Opening hours must be sorted Monday→Sunday
 - Non-Latin city names must be translated to English
 

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 async function getTopCities() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 86400 } })
+    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
     if (!res.ok) return []
     const data = await res.json()
     return data.scores?.slice(0, 8) || []

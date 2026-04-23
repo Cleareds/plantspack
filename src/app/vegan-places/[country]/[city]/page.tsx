@@ -127,7 +127,7 @@ async function fetchCityPlaces(country: string, city: string) {
 async function getCityScore(cityName: string, countryName: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 86400 } })
+    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
     if (!res.ok) return null
     const data = await res.json()
     return data.scores?.find((s: any) => s.city === cityName && s.country === countryName) || null
