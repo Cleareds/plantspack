@@ -1,9 +1,11 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase-admin'
 import HomeClient from '@/components/home/HomeClient'
+import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
 // Top cities + posts cache for 60s. The per-user location-aware content
 // is fetched per-request using `dynamic = 'force-dynamic'` semantics via
@@ -27,6 +29,29 @@ async function getTopCities() {
   } catch {
     return []
   }
+}
+
+/**
+ * Featured Places — 12 top-rated places with full content. Rendered SSR as
+ * plain <Link> elements right below HomeClient so Googlebot sees direct
+ * internal links from the homepage to deep /place/[slug] pages without
+ * executing JS. Shrinks crawl-depth from 4 clicks → 2 clicks for these
+ * pages, which addresses the "Discovered but not indexed" bucket in GSC.
+ */
+async function getFeaturedPlaces() {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('places')
+    .select('slug, name, city, country, average_rating, review_count, main_image_url, images, category, vegan_level')
+    .is('archived_at', null)
+    .not('slug', 'is', null)
+    .not('description', 'is', null)
+    .gte('review_count', 1)
+    .gte('average_rating', 4.0)
+    .order('review_count', { ascending: false })
+    .order('average_rating', { ascending: false })
+    .limit(12)
+  return data || []
 }
 
 async function getRecentPosts() {
@@ -100,10 +125,11 @@ async function getInitialLocationData() {
 }
 
 export default async function Home() {
-  const [topCities, recentPosts, initialLocation] = await Promise.all([
+  const [topCities, recentPosts, initialLocation, featuredPlaces] = await Promise.all([
     getTopCities(),
     getRecentPosts(),
     getInitialLocationData(),
+    getFeaturedPlaces(),
   ])
 
   const cityImages = getCityImages()
@@ -124,6 +150,61 @@ export default async function Home() {
         cityImages={cityImages}
         initialLocation={initialLocation}
       />
+
+      {/* Featured Places — SSR plain-HTML links, visible to Googlebot without JS.
+          Purpose is purely to shorten the click-depth from home → place pages
+          (previously 4 clicks via country → city → list → place). */}
+      {featuredPlaces.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 py-10 border-t border-outline-variant/10">
+          <h2 className="text-xl font-semibold text-on-surface mb-4">Featured vegan places</h2>
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {featuredPlaces.map((p: any) => {
+              const countrySlug = p.country ? slugifyCityOrCountry(p.country) : ''
+              const citySlug = p.city ? slugifyCityOrCountry(p.city) : ''
+              const image = p.main_image_url || p.images?.[0] || null
+              return (
+                <li key={p.slug} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
+                  <Link href={`/place/${p.slug}`} className="block">
+                    {image && (
+                      <img
+                        src={image}
+                        alt={p.name}
+                        className="w-full h-28 object-cover"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="p-3">
+                      <p className="font-medium text-sm text-on-surface truncate">{p.name}</p>
+                      <p className="text-xs text-on-surface-variant truncate mt-0.5">
+                        {p.city && citySlug && countrySlug ? (
+                          <Link
+                            href={`/vegan-places/${countrySlug}/${citySlug}`}
+                            className="hover:text-primary"
+                          >
+                            {p.city}
+                          </Link>
+                        ) : (
+                          p.city
+                        )}
+                        {p.country ? `, ${p.country}` : ''}
+                      </p>
+                      <p className="text-[11px] text-on-surface-variant mt-0.5">
+                        {p.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
+                        {p.average_rating ? ` · ★ ${Number(p.average_rating).toFixed(1)}` : ''}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+          <p className="text-xs text-on-surface-variant mt-4">
+            <Link href="/vegan-places" className="text-primary hover:underline">
+              Browse all vegan places →
+            </Link>
+          </p>
+        </section>
+      )}
     </>
   )
 }
