@@ -5,6 +5,7 @@ import { Clock, ChefHat, Users, BarChart3 } from 'lucide-react'
 import ImageSlider from '@/components/ui/ImageSlider'
 import RecipeActions from '@/components/recipes/RecipeActions'
 import RecipeReviews from '@/components/recipes/RecipeReviews'
+import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 // Community content — ratings + reviews update live.
 export const revalidate = 0
@@ -178,6 +179,13 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
         recipeCategory: 'Vegan',
         recipeCuisine: 'Vegan',
       }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(
+        buildBreadcrumbs([
+          HOME_CRUMB,
+          { name: 'Recipes', url: 'https://plantspack.com/recipes' },
+          { name: recipeTitle, url: `https://plantspack.com/recipe/${post.slug || post.id}` },
+        ])
+      ) }} />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>

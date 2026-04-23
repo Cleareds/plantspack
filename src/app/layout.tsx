@@ -84,15 +84,32 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'PlantsPack',
-              url: 'https://plantspack.com',
-              logo: 'https://plantspack.com/plantspack-logo-real.svg',
-              description: 'Community-funded vegan platform with 33,000+ places across 117 countries, city vegan rankings, and 580+ recipes. Free forever, no ads.',
-              sameAs: [
-                'https://x.com/plantspackX',
-                'https://www.instagram.com/plants.pack/',
-                'https://www.facebook.com/profile.php?id=61583784658664',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  '@id': 'https://plantspack.com/#organization',
+                  name: 'PlantsPack',
+                  url: 'https://plantspack.com',
+                  logo: 'https://plantspack.com/plantspack-logo-real.svg',
+                  description: 'Community-funded vegan platform with 33,000+ places across 117 countries, city vegan rankings, and 580+ recipes. Free forever, no ads.',
+                  sameAs: [
+                    'https://x.com/plantspackX',
+                    'https://www.instagram.com/plants.pack/',
+                    'https://www.facebook.com/profile.php?id=61583784658664',
+                  ],
+                },
+                // WebSite ties all pages to the brand identity and lets
+                // Google build rich site-name + hierarchy in SERPs. We're
+                // intentionally NOT including SearchAction — we don't have a
+                // dedicated /search results page (yet); adding it would lie
+                // to Google and degrade trust. Add later if we build one.
+                {
+                  '@type': 'WebSite',
+                  '@id': 'https://plantspack.com/#website',
+                  url: 'https://plantspack.com',
+                  name: 'PlantsPack',
+                  publisher: { '@id': 'https://plantspack.com/#organization' },
+                },
               ],
             }),
           }}

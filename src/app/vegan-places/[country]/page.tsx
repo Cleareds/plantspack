@@ -8,6 +8,7 @@ import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CountryCityGrid from '@/components/places/CountryCityGrid'
+import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 export const revalidate = 3600
 
@@ -114,6 +115,18 @@ export default async function CountryPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbs([
+              HOME_CRUMB,
+              { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
+              { name: countryName, url: `https://plantspack.com/vegan-places/${country}` },
+            ]),
+          ),
+        }}
+      />
       <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">

@@ -18,6 +18,8 @@ import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
 import HashScroller from '@/components/ui/HashScroller'
 import AddToPackButton from '@/components/places/AddToPackButton'
+import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { formatDistanceToNow } from 'date-fns'
@@ -231,6 +233,22 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     } : {}),
   }
 
+  // Breadcrumbs — Home > Vegan Places > Country > City > Place. Matches the
+  // visual breadcrumb nav below; gives Google rich-result hierarchy in SERPs.
+  const countrySlug = slugifyCityOrCountry(place.country)
+  const citySlug = slugifyCityOrCountry(place.city)
+  const breadcrumbJsonLd = buildBreadcrumbs([
+    HOME_CRUMB,
+    { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
+    ...(place.country && countrySlug
+      ? [{ name: place.country, url: `https://plantspack.com/vegan-places/${countrySlug}` }]
+      : []),
+    ...(place.city && citySlug && countrySlug
+      ? [{ name: place.city, url: `https://plantspack.com/vegan-places/${countrySlug}/${citySlug}` }]
+      : []),
+    { name: place.name, url: `https://plantspack.com/place/${place.slug || place.id}` },
+  ])
+
   const categoryLabels: Record<string, string> = {
     restaurant: 'Restaurant',
     event: 'Event',
@@ -241,6 +259,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-surface-container-low">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <HashScroller />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb — full on desktop, short on mobile */}

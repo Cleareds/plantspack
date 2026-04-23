@@ -5,6 +5,7 @@ import { MapPin, Ticket, ExternalLink } from 'lucide-react'
 import ImageSlider from '@/components/ui/ImageSlider'
 import InlineComments from '@/components/posts/InlineComments'
 import EventResponseButtons from '@/components/events/EventResponseButtons'
+import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 // Community content — comments + responses update live.
 export const revalidate = 0
@@ -106,6 +107,13 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           ...(images[0] ? { image: images[0] } : {}),
         }) }} />
       )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(
+        buildBreadcrumbs([
+          HOME_CRUMB,
+          { name: 'Events', url: 'https://plantspack.com/events' },
+          { name: eventTitle, url: `https://plantspack.com/event/${post.slug || post.id}` },
+        ])
+      ) }} />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>

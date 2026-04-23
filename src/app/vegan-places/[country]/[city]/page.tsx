@@ -9,6 +9,7 @@ import { FilteredTotal } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
+import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
 
@@ -188,6 +189,19 @@ export default async function CityPage({ params }: PageProps) {
           }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbs([
+              HOME_CRUMB,
+              { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
+              { name: countryName, url: `https://plantspack.com/vegan-places/${country}` },
+              { name: cityName, url: `https://plantspack.com/vegan-places/${country}/${city}` },
+            ]),
+          ),
+        }}
+      />
 
       <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Breadcrumbs — mobile: Country > City, desktop: full path */}
