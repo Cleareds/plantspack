@@ -66,7 +66,8 @@ interface PlaceRow {
   main_image_url: string | null
   review_count: number | null
   vegan_level: string | null
-  opening_hours: string | null
+  // Can be a raw TEXT string OR a JSONB object like {Mon: "10-22", ...}.
+  opening_hours: string | Record<string, string> | null
   updated_at: string | null
   created_at: string | null
 }
@@ -76,7 +77,11 @@ function placeTier(p: PlaceRow): SegmentId {
   const hasImage = !!(p.main_image_url || (p.images && p.images.length > 0))
   const hasReview = (p.review_count || 0) > 0
   const isFullyVegan = p.vegan_level === 'fully_vegan'
-  const hasHours = !!(p.opening_hours && p.opening_hours.trim().length > 0)
+  const hasHours =
+    !!p.opening_hours &&
+    (typeof p.opening_hours === 'string'
+      ? p.opening_hours.trim().length > 0
+      : Object.keys(p.opening_hours).length > 0)
 
   // priority: strong signals — rich content AND trust signal
   if (hasDescription && hasImage && (hasReview || isFullyVegan)) return 'priority'
