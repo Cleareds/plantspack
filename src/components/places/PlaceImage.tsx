@@ -51,9 +51,22 @@ function Placeholder({ category, className }: { category?: string | null; classN
   )
 }
 
+// Extra defense: reject obviously-invalid src values up-front so we don't
+// even issue a bad request. The DB occasionally contains JSON-escaped
+// URLs (`https:\/\/...`), relative paths (`./foo`, `/foo`), data: URIs,
+// or HTML entity-encoded URLs — none of which render but all of which
+// trigger a broken-image icon flash before the onError handler fires.
+function isBrowserUsableUrl(src: string): boolean {
+  if (!src) return false
+  // Only absolute http(s), no whitespace, no backslash (JSON-escape leftover).
+  return /^https?:\/\/[^\s<>"'\\]+$/i.test(src)
+}
+
 export default function PlaceImage({ src, alt, category, className, loading = 'lazy', style }: Props) {
   const [failed, setFailed] = useState(false)
-  if (!src || failed) return <Placeholder category={category} className={className} />
+  if (!src || failed || !isBrowserUsableUrl(src)) {
+    return <Placeholder category={category} className={className} />
+  }
   return (
     <img
       src={src}
