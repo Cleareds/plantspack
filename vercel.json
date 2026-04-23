@@ -5,7 +5,13 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     },
-    "src/app/sitemap.ts": {
+    "src/app/sitemap/priority.xml/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/sitemap/content.xml/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/sitemap/thin.xml/route.ts": {
       "maxDuration": 60
     },
     "src/app/sitemap-index.xml/route.ts": {
