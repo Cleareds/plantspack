@@ -84,6 +84,35 @@ interface PlaceRow {
   created_at: string | null
 }
 
+// Google's image sitemap spec only accepts absolute http(s) URLs. Extra
+// defense on top of the DB cleanup: filter anything that's not a clean
+// absolute URL so one bad row can't poison the whole sitemap.
+function isValidImageUrl(u: string | null | undefined): u is string {
+  return typeof u === 'string' && /^https?:\/\/[^\s<>"'\\]+$/i.test(u)
+}
+
+function collectImageUrls(p: PlaceRow): string[] {
+  const seen = new Set<string>()
+  const out: string[] = []
+  if (isValidImageUrl(p.main_image_url)) {
+    seen.add(p.main_image_url)
+    out.push(p.main_image_url)
+  }
+  if (Array.isArray(p.images)) {
+    for (const u of p.images) {
+      if (isValidImageUrl(u) && !seen.has(u)) {
+        seen.add(u)
+        out.push(u)
+        // Cap per page — Google processes up to 1000 but there's no benefit
+        // past a handful for a directory page, and smaller sitemaps re-crawl
+        // faster.
+        if (out.length >= 5) break
+      }
+    }
+  }
+  return out
+}
+
 function placeTier(p: PlaceRow): SegmentId {
   const hasDescription = !!(p.description && p.description.trim().length > 40)
   const hasImage = !!(p.main_image_url || (p.images && p.images.length > 0))
@@ -174,13 +203,17 @@ export default async function sitemap({ id }: { id: SegmentId }): Promise<Metada
       entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, changeFrequency: 'daily', priority: 0.9 })
     }
 
-    // Priority-tier places.
+    // Priority-tier places — include image URLs so Google discovers them
+    // as part of the image index. MetadataRoute.Sitemap's `images` field
+    // emits <image:image> children on each <url> entry.
     for (const p of byTier.priority) {
+      const imageUrls = collectImageUrls(p)
       entries.push({
         url: `${SITE_URL}/place/${p.slug}`,
         lastModified: p.updated_at || p.created_at || undefined,
         changeFrequency: 'weekly',
         priority: 0.8,
+        ...(imageUrls.length > 0 ? { images: imageUrls } : {}),
       })
     }
   }
@@ -209,13 +242,16 @@ export default async function sitemap({ id }: { id: SegmentId }): Promise<Metada
       })
     }
 
-    // Content-tier places.
+    // Content-tier places — include images where present (even if there's
+    // only one, it's a legit Google-indexable image).
     for (const p of byTier.content) {
+      const imageUrls = collectImageUrls(p)
       entries.push({
         url: `${SITE_URL}/place/${p.slug}`,
         lastModified: p.updated_at || p.created_at || undefined,
         changeFrequency: 'weekly',
         priority: 0.6,
+        ...(imageUrls.length > 0 ? { images: imageUrls } : {}),
       })
     }
   }
