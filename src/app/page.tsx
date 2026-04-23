@@ -155,7 +155,7 @@ export default async function Home() {
           Purpose is purely to shorten the click-depth from home → place pages
           (previously 4 clicks via country → city → list → place). */}
       {featuredPlaces.length > 0 && (
-        <section className="max-w-5xl mx-auto px-4 py-10 border-t border-outline-variant/10">
+        <section className="max-w-6xl mx-auto px-4 md:px-8 py-10 border-t border-outline-variant/10">
           <h2 className="text-xl font-semibold text-on-surface mb-4">Featured vegan places</h2>
           <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {featuredPlaces.map((p: any) => {
