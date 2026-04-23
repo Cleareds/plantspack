@@ -167,18 +167,27 @@ async function main() {
   console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : '*** LIVE (writing to DB + storage) ***'}`)
   if (LIMIT !== Infinity) console.log(`Limit: first ${LIMIT} rows`)
 
-  const { data, error } = await sb
-    .from('places')
-    .select('id, slug, name, website')
-    .is('archived_at', null)
-    .is('main_image_url', null)
-    .not('website', 'is', null)
-
-  if (error) {
-    console.error('Query failed:', error)
-    process.exit(1)
+  // Paginate — Supabase caps each query at 1000 rows.
+  const candidatesAll: Array<{ id: string; slug: string | null; name: string; website: string | null }> = []
+  let offset = 0
+  while (true) {
+    const { data, error } = await sb
+      .from('places')
+      .select('id, slug, name, website')
+      .is('archived_at', null)
+      .is('main_image_url', null)
+      .not('website', 'is', null)
+      .range(offset, offset + 999)
+    if (error) {
+      console.error('Query failed:', error)
+      process.exit(1)
+    }
+    if (!data || data.length === 0) break
+    candidatesAll.push(...(data as any[]))
+    if (data.length < 1000) break
+    offset += 1000
   }
-  const candidates = (data || []).slice(0, LIMIT)
+  const candidates = candidatesAll.slice(0, LIMIT)
   console.log(`Candidates: ${candidates.length}`)
 
   let htmlOk = 0
