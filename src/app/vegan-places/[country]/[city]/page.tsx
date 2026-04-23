@@ -284,7 +284,7 @@ export default async function CityPage({ params }: PageProps) {
 
         {/* Places list with client-side category filter + map */}
         {places.length > 0 ? (
-          <CityPlacesList places={places} />
+          <CityPlacesList places={places} cityName={cityName} countryName={countryName} />
         ) : (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🌱</div>

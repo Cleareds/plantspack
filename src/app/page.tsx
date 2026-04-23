@@ -102,11 +102,16 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
     const scoreMap: Record<string, any> = {}
     for (const s of (scores || [])) scoreMap[`${s.city}|||${s.country}`] = s
 
+    // Keep in sync with GRADE_THRESHOLDS in src/lib/score-utils.ts + the
+    // CASE in supabase/migrations/20260423210000_subgrades.sql.
     const gradeThresholds = [
       { grade: 'A+', min: 88 },
       { grade: 'A', min: 78 },
+      { grade: 'B+', min: 70 },
       { grade: 'B', min: 62 },
+      { grade: 'C+', min: 54 },
       { grade: 'C', min: 45 },
+      { grade: 'D+', min: 37 },
       { grade: 'D', min: 30 },
     ]
 

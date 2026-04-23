@@ -7,7 +7,9 @@ import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, Chevro
 import CityMap from './CityMap'
 import RatingBadge from './RatingBadge'
 import PlaceImage from './PlaceImage'
+import AddPlaceButton from './AddPlaceButton'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
+import { Plus } from 'lucide-react'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -52,7 +54,7 @@ interface Place {
   cuisine_types: string[] | null
 }
 
-export default function CityPlacesList({ places }: { places: Place[] }) {
+export default function CityPlacesList({ places, cityName, countryName }: { places: Place[]; cityName?: string; countryName?: string }) {
   const { isFullyVeganOnly } = useVeganFilter()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -291,6 +293,30 @@ export default function CityPlacesList({ places }: { places: Place[] }) {
 
           {filtered.length === 0 && (
             <p className="text-center text-on-surface-variant py-8">No places found in this category.</p>
+          )}
+
+          {/* Bottom "Add a place" card — only on the last page so scrolling
+              to the end of the list surfaces the add-CTA where the user
+              already is (no scroll-back required). Skipped when we don't
+              have city/country, and on filtered views to avoid a confusing
+              "Add a place in Berlin" offer while inside a category filter. */}
+          {cityName && countryName && filtered.length > 0 && currentPage >= totalPages && !validCategory && !validSubcategory && !petOnly && (
+            <div className="bg-primary/5 border border-dashed border-primary/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="font-medium text-on-surface">Not finding a place?</p>
+                <p className="text-sm text-on-surface-variant">
+                  Help the vegan community in {cityName} grow — add a place we&apos;re missing.
+                </p>
+              </div>
+              <AddPlaceButton
+                cityName={cityName}
+                countryName={countryName}
+                className="flex-shrink-0 inline-flex items-center gap-2 silk-gradient hover:opacity-90 text-on-primary-btn px-5 py-2.5 rounded-lg font-medium text-sm transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Add a place in {cityName}
+              </AddPlaceButton>
+            </div>
           )}
 
           {/* Pagination */}

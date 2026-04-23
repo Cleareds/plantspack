@@ -410,7 +410,19 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
                       </div>
                       <p className="text-xs text-on-surface-variant mb-3">
                         {cityScore.fvCount} fully-vegan · {cityScore.placeCount} total places
-                        {cityScore.score < 65 && ` · Add places to reach ${cityScore.score < 35 ? 'D' : cityScore.score < 50 ? 'C' : 'B'}!`}
+                        {cityScore.score < 78 && (() => {
+                          // Next grade up — aligned with GRADE_THRESHOLDS in
+                          // src/lib/score-utils.ts so the hint matches the grade.
+                          const s = cityScore.score
+                          if (s < 30) return ' · Add places to reach D!'
+                          if (s < 37) return ' · Add places to reach D+!'
+                          if (s < 45) return ' · Add places to reach C!'
+                          if (s < 54) return ' · Add places to reach C+!'
+                          if (s < 62) return ' · Add places to reach B!'
+                          if (s < 70) return ' · Add places to reach B+!'
+                          if (s < 78) return ' · Add places to reach A!'
+                          return ''
+                        })()}
                       </p>
                     </>
                   ) : (

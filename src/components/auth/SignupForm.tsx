@@ -252,26 +252,26 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                First Name
+                First Name <span className="text-outline font-normal">(optional)</span>
               </label>
               <input
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                placeholder="First name"
+                placeholder="Optional"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-on-surface-variant mb-1">
-                Last Name
+                Last Name <span className="text-outline font-normal">(optional)</span>
               </label>
               <input
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-                placeholder="Last name"
+                placeholder="Optional"
               />
             </div>
           </div>
