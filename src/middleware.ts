@@ -1,11 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-// Chain restaurants and supermarkets are banned per project rules (CLAUDE.md).
-// Any /place/{chain}-* URL refers to a row that was deliberately removed —
-// return 410 Gone so Google drops it quickly (404s get retried for weeks).
-const CHAIN_PLACE_PATTERN = /^\/place\/(chipotle|subway|starbucks|aldi|lidl|mcdonald|burger-king|kfc|dominos|pizza-hut|walmart|costco|tesco|sainsburys|asda|waitrose|morrisons|carrefour|auchan|edeka|rewe|kaufland|penny|netto|dm|rossmann|greggs|pret|nandos|wagamama|five-guys|taco-bell|wendys|dunkin|tim-hortons|cafe-leonardo)-/i
-
 // Recipe pages removed for source violations (Minimalist Baker et al. per
 // content policy). Listed explicitly because they are one-off deletions.
 const GONE_RECIPES = new Set([
@@ -29,7 +24,7 @@ export async function middleware(request: NextRequest) {
   // Serve 410 before auth logic runs — cheaper, and we don't need session
   // state for a gone page.
   const pathname = request.nextUrl.pathname
-  if (CHAIN_PLACE_PATTERN.test(pathname) || GONE_RECIPES.has(pathname)) {
+  if (GONE_RECIPES.has(pathname)) {
     return goneResponse()
   }
 
