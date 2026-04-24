@@ -16,6 +16,7 @@ interface Article {
   image_url: string | null
   images: string[] | null
   category: string
+  privacy: string
   created_at: string
   updated_at: string | null
   users: {
@@ -35,11 +36,10 @@ async function getArticle(idOrSlug: string): Promise<Article | null> {
   const { data } = await sb
     .from('posts')
     .select(`
-      id, slug, title, content, image_url, images, category, created_at, updated_at,
+      id, slug, title, content, image_url, images, category, privacy, created_at, updated_at,
       users!inner(id, username, first_name, last_name, avatar_url, bio)
     `)
     .eq(column, idOrSlug)
-    .eq('privacy', 'public')
     .is('deleted_at', null)
     .maybeSingle()
   if (!data) return null
@@ -158,6 +158,11 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
       )}
 
       <article className="max-w-3xl mx-auto px-4 md:px-6 py-10">
+        {article.privacy !== 'public' && (
+          <div className="mb-6 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-sm font-medium">
+            Draft — not published. Change privacy to "public" to make it live.
+          </div>
+        )}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           <span className="text-outline">/</span>
