@@ -280,20 +280,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Not authorized to delete this place' }, { status: 403 })
     }
 
-    // Delete linked posts first (FK constraint)
-    await admin.from('posts').delete().eq('place_id', id)
-
-    // Delete from pack_places
-    await admin.from('pack_places').delete().eq('place_id', id)
-
-    // Delete place reviews
-    await admin.from('place_reviews').delete().eq('place_id', id)
-
-    // Delete favorite_places
-    await admin.from('favorite_places').delete().eq('place_id', id)
-
-    // Delete the place
-    const { error } = await admin.from('places').delete().eq('id', id)
+    // Soft-delete: set archived_at instead of hard DELETE.
+    // Hard DELETE fails on FK constraints (pack_places, staging, trips, etc.)
+    // and violates the never-delete-data policy. Matches admin/places route.
+    const { error } = await admin
+      .from('places')
+      .update({ archived_at: new Date().toISOString() })
+      .eq('id', id)
     if (error) throw error
 
     // Revalidate cached pages — both UUID and slug paths
