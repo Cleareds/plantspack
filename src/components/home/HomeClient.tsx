@@ -294,17 +294,62 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-6">
         <div className="xl:flex xl:gap-6">
           <div className="flex-1 min-w-0 space-y-6">
-            {/* Value prop + search */}
+            {/* Value prop */}
             {user ? (
               <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">
                 Hello, {profile?.first_name || profile?.username || 'Friend'}!
               </h1>
             ) : (
-              <div>
-                <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight mb-1">
-                  {stats ? `${stats.totalPlaces.toLocaleString()} vegan places across ${stats.countries} countries` : 'Discover vegan places worldwide'}
-                </h1>
-                <p className="text-sm text-on-surface-variant">Free, no ads, community-driven.</p>
+              <div className="space-y-4">
+                <div>
+                  <h1 className="text-3xl font-headline font-bold text-on-surface tracking-tight leading-tight mb-2">
+                    The world&apos;s vegan places, ranked by the community
+                  </h1>
+                  <p className="text-sm text-on-surface-variant">Free, ad-free, no paid listings - ever.</p>
+                </div>
+
+                {stats && (
+                  <div className="flex gap-6">
+                    <div>
+                      <p className="text-xl font-black text-primary">{stats.totalPlaces.toLocaleString()}+</p>
+                      <p className="text-[11px] text-on-surface-variant">vegan places</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-black text-primary">{stats.countries}+</p>
+                      <p className="text-[11px] text-on-surface-variant">countries</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-black text-primary">{stats.cities.toLocaleString()}+</p>
+                      <p className="text-[11px] text-on-surface-variant">cities ranked</p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-2">
+                  {['No ads', 'No chains', 'Community-verified', 'City vegan rankings'].map(t => (
+                    <span key={t} className="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-medium border border-emerald-100/80">
+                      ✓ {t}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  {([
+                    { icon: '🔍', title: 'Discover', desc: 'Find vegan places near you or in any city' },
+                    { icon: '⭐', title: 'Rate', desc: 'Review places and help other vegans decide' },
+                    { icon: '🏆', title: 'Rank cities', desc: 'Your reviews push your city up global rankings' },
+                  ]).map(s => (
+                    <div key={s.title} className="bg-surface-container-lowest rounded-xl ghost-border p-3 text-center">
+                      <div className="text-lg mb-1">{s.icon}</div>
+                      <p className="text-xs font-semibold text-on-surface">{s.title}</p>
+                      <p className="text-[10px] text-on-surface-variant mt-0.5 leading-relaxed">{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <Link href="/auth" className="inline-flex items-center gap-2 px-5 py-2.5 silk-gradient text-on-primary-btn rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
+                  Join for free →
+                </Link>
               </div>
             )}
 
