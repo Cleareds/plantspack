@@ -78,7 +78,7 @@ For lists > 10 items, inform the user of estimated time (geocoding = ~2s/item, i
 
 ## Enrichment for existing places
 
-To enrich **existing** places (already in DB) that have websites but no images:
+**Step 1 — OG image + website description** (for places with websites):
 
 ```bash
 # All places with website but no image
@@ -87,6 +87,21 @@ npx tsx scripts/fetch-og-images.ts --limit 1000
 # Specific source tag (e.g. the OSM import batch)
 npx tsx scripts/fetch-og-images.ts --source osm-import-2026-04 --limit 5000
 ```
+
+**Step 2 — AI descriptions via Claude Haiku** (for places still without descriptions after step 1):
+
+```bash
+# Dry run to preview prompt
+npx tsx scripts/generate-descriptions.ts --dry-run --limit 5
+
+# Generate for specific source batch (~$0.07/1,000 places)
+npx tsx scripts/generate-descriptions.ts --source=osm-import-2026-04 --limit=5000
+
+# Generate for all places without descriptions
+npx tsx scripts/generate-descriptions.ts --limit=10000
+```
+
+Haiku generates 2-3 sentence descriptions based on name, type, location, cuisine, and tags. Cost: ~$0.07/1k places. Run this after `fetch-og-images.ts` so website-sourced descriptions take priority.
 
 ## Data quality checks
 
