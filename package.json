@@ -43,6 +43,7 @@
     "date-fns": "^4.1.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
+    "marked": "^18.0.2",
     "next": "^16.1.1",
     "nodemailer": "^7.0.6",
     "openai": "^6.34.0",

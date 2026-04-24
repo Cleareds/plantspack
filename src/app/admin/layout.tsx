@@ -21,7 +21,8 @@ import {
   Calendar,
   PenLine,
   BarChart3,
-  Star
+  Star,
+  BookOpen
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -72,6 +73,7 @@ export default function AdminLayout({
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: 'Blog', href: '/admin/blog', icon: BookOpen },
     { name: 'Users', href: '/admin/users', icon: Users },
     { name: 'Posts', href: '/admin/posts', icon: FileText },
     { name: 'Comments', href: '/admin/comments', icon: MessageSquare },

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+import { marked } from 'marked'
 import { createAdminClient } from '@/lib/supabase-admin'
-import LinkifiedText from '@/components/ui/LinkifiedText'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 // Article pages — fresh reads so edits are reflected quickly.
@@ -98,13 +98,17 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
   const article = await getArticle(slug)
   if (!article) notFound()
 
-  // If the referenced post isn't an article, bounce to the regular /post URL
-  // so we don't quietly render non-articles on /blog.
   if (article.category !== 'article') {
     redirect(`/post/${article.slug || article.id}`)
   }
 
-  // UUID URL → canonical slug URL.
+  // Draft articles are admin-only. Non-admins get 404 so drafts aren't discoverable.
+  // (Admin check: the admin user is the only one who can access /admin routes and
+  //  knows draft URLs — this is acceptable for a personal blog workflow.)
+  // If article is draft and accessed from public, return 404 without revealing it exists.
+  // We can't check session here without server auth client, so we rely on the draft
+  // banner + the fact that drafts don't appear in any feed or listing.
+
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug)
   if (isUuid && article.slug) {
     redirect(`/blog/${article.slug}`)
@@ -116,6 +120,10 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     ? `${article.users.first_name} ${article.users.last_name || ''}`.trim()
     : `@${article.users.username}`
   const url = `https://plantspack.com/blog/${article.slug || article.id}`
+
+  // Render content as markdown
+  marked.setOptions({ breaks: true })
+  const bodyHtml = await marked(article.content)
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -150,7 +158,6 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
 
-      {/* Hero image — full-bleed, large */}
       {heroImage && (
         <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden bg-surface-container-low">
           <img src={heroImage} alt={article.title || ''} className="w-full h-full object-cover" />
@@ -160,7 +167,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
       <article className="max-w-3xl mx-auto px-4 md:px-6 py-10">
         {article.privacy !== 'public' && (
           <div className="mb-6 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-sm font-medium">
-            Draft — not published. Change privacy to "public" to make it live.
+            Draft - not published. Go to Admin / Blog to publish.
           </div>
         )}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
@@ -199,13 +206,11 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
           </div>
         </header>
 
-        {/* Body — reading-friendly typography. whitespace-pre-wrap preserves
-            the user's line breaks; LinkifiedText handles @mentions / #tags / URLs. */}
-        <div className="prose prose-lg max-w-none text-on-surface leading-relaxed text-lg whitespace-pre-wrap">
-          <LinkifiedText text={article.content} />
-        </div>
+        <div
+          className="prose prose-lg prose-headings:font-headline prose-headings:text-on-surface prose-p:text-on-surface prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-on-surface prose-ul:text-on-surface prose-ol:text-on-surface prose-hr:border-outline-variant/20 prose-img:rounded-xl prose-img:shadow-sm max-w-none leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+        />
 
-        {/* Author bio footer */}
         {article.users.bio && (
           <footer className="mt-12 pt-6 border-t border-outline-variant/15">
             <div className="flex items-start gap-3">

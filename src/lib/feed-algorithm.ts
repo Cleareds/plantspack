@@ -97,6 +97,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
         )
       `)
       .eq('privacy', 'public') // Only public posts for main feed
+      .neq('category', 'article') // Articles belong on /blog, not in the social feed
       .eq('users.is_banned', false) // Exclude banned users
       .is('deleted_at', null) // Exclude soft-deleted posts
       .or('user_id.neq.d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c,category.not.in.(recipe,event)') // Exclude admin imported recipes/events, keep manual posts

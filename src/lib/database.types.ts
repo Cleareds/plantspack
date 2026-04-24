@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type PostCategory = 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general' | 'hotel' | 'organisation'
+export type PostCategory = 'recipe' | 'place' | 'event' | 'lifestyle' | 'activism' | 'question' | 'product' | 'general' | 'hotel' | 'organisation' | 'article'
 
 export interface CategoryInfo {
   slug: PostCategory

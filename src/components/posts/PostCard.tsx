@@ -649,8 +649,35 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
             </div>
           </div>
 
-          {/* Category Badge & Secondary Tags */}
-          {post.category && post.category !== 'general' && (
+          {/* Article posts: compact card linking to /blog/[slug] */}
+          {post.category === 'article' && (() => {
+            const heroImg = (post as any).image_url || post.images?.[0] || null
+            const articleTitle = (post as any).title || post.content.slice(0, 80)
+            const articleExcerpt = post.content.replace(/#+\s[^\n]+\n?/g, '').replace(/!\[[^\]]*\]\([^)]+\)/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').replace(/\s+/g, ' ').trim()
+            const excerptText = articleExcerpt.length > 220 ? articleExcerpt.slice(0, 217) + '...' : articleExcerpt
+            const href = `/blog/${(post as any).slug || post.id}`
+            return (
+              <Link href={href} className="group block mb-4 rounded-xl overflow-hidden bg-surface-container-low hover:bg-surface-container transition-colors border border-outline-variant/10">
+                {heroImg && (
+                  <div className="aspect-[16/7] overflow-hidden">
+                    <img src={heroImg} alt={articleTitle} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                  </div>
+                )}
+                <div className="p-4">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary mb-2">
+                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>article</span>
+                    Article
+                  </span>
+                  <h3 className="font-headline font-bold text-base text-on-surface mb-1 group-hover:text-primary transition-colors line-clamp-2">{articleTitle}</h3>
+                  <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">{excerptText}</p>
+                  <span className="inline-block mt-2 text-xs font-medium text-primary">Read article →</span>
+                </div>
+              </Link>
+            )
+          })()}
+
+          {/* Category Badge & Secondary Tags (non-article) */}
+          {post.category && post.category !== 'general' && post.category !== 'article' && (
             <div className="flex flex-wrap items-center gap-1.5 mb-3">
               {(() => {
                 const config = CATEGORY_CONFIG[post.category] || CATEGORY_CONFIG.general
@@ -669,8 +696,8 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
             </div>
           )}
 
-          {/* Content */}
-          <div className="mb-4">
+          {/* Content (non-article posts only) */}
+          {post.category !== 'article' && <div className="mb-4">
             <LinkifiedText
               text={post.content}
               className="text-on-surface whitespace-pre-wrap"
@@ -902,7 +929,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                 </div>
               </Link>
             )}
-          </div>
+          </div>}
         </div>
       )}
 
