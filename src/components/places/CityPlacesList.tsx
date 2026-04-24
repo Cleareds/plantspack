@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
-import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight, Map } from 'lucide-react'
 import CityMap from './CityMap'
 import RatingBadge from './RatingBadge'
 import PlaceImage from './PlaceImage'
@@ -194,6 +194,7 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
               ? `https://www.google.com/maps/place/?q=place_id:${place.google_place_id}`
               : `https://www.google.com/maps/search/${encodeURIComponent(place.name + ' ' + place.address)}`
             const appleMapsUrl = `http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.address)}&ll=${place.latitude},${place.longitude}`
+            const osmUrl = `https://www.openstreetmap.org/?mlat=${place.latitude}&mlon=${place.longitude}&zoom=17`
             const cuisines = (place.cuisine_types || []).filter(c => c && c !== 'vegan' && c !== 'regional').slice(0, 3)
 
             return (
@@ -291,6 +292,9 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
                     </a>
                     <a href={appleMapsUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="Apple Maps">
                       <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                    <a href={osmUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="OpenStreetMap">
+                      <Map className="h-3.5 w-3.5" />
                     </a>
                   </div>
                 </div>

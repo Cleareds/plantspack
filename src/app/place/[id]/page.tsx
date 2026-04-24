@@ -459,6 +459,16 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                       <ExternalLink className="h-3 w-3" />
                       Apple Maps
                     </a>
+                    <span className="text-outline">•</span>
+                    <a
+                      href={`https://www.openstreetmap.org/?mlat=${place.latitude}&mlon=${place.longitude}&zoom=17`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      OpenStreetMap
+                    </a>
                   </div>
                 </div>
               </div>
