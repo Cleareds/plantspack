@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
@@ -153,6 +154,8 @@ export default async function CityPage({ params }: PageProps) {
     getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),
     fetchCityExperiences(country, city),
   ])
+
+  if (places.length === 0) notFound()
 
   // Build stats from fetched places for data-driven description
   const cityStats = {
