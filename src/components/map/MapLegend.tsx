@@ -50,6 +50,10 @@ export default function MapLegend() {
               <span className="text-on-surface">White ring = 100% vegan</span>
             </div>
             <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full border-[2.5px] border-teal-500 bg-emerald-500" />
+              <span className="text-on-surface">Teal ring = mostly vegan</span>
+            </div>
+            <div className="flex items-center gap-2">
               <span className="w-6 h-6 rounded-full border-[2.5px] border-amber-400 bg-emerald-500" />
               <span className="text-on-surface">Amber ring = vegan-friendly</span>
             </div>

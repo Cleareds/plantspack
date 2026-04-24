@@ -15,6 +15,7 @@ import { Heart, PawPrint, Navigation } from 'lucide-react'
 import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
 import RatingBadge from '@/components/places/RatingBadge'
 import MapLegend from './MapLegend'
+import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
 
 // Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -277,14 +278,9 @@ function MapViewImpl({
                   <div className="space-y-1 text-sm text-on-surface-variant">
                     <div className="flex items-center space-x-1">
                       <span className="capitalize">{place.category}</span>
-                      {(place as any).vegan_level === 'fully_vegan' && (
-                        <span className="bg-green-100 text-green-800 px-1.5 py-0.5 rounded text-xs font-medium">
-                          100% Vegan
-                        </span>
-                      )}
-                      {(place as any).vegan_level && (place as any).vegan_level !== 'fully_vegan' && (
-                        <span className="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded text-xs font-medium">
-                          Vegan-Friendly
+                      {(place as any).vegan_level && (
+                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${VEGAN_LEVEL_INLINE_CLASS[(place as any).vegan_level] ?? 'bg-amber-100 text-amber-700'}`}>
+                          {VEGAN_LEVEL_LABEL[(place as any).vegan_level] ?? 'Vegan-Friendly'}
                         </span>
                       )}
                       {place.is_pet_friendly && (

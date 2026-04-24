@@ -8,6 +8,7 @@ import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
 import PlaceImage from '@/components/places/PlaceImage'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
 export interface FollowedCity {
   city: string
@@ -286,7 +287,7 @@ export default async function Home() {
                         {p.country ? `, ${p.country}` : ''}
                       </p>
                       <p className="text-[11px] text-on-surface-variant mt-0.5">
-                        {p.vegan_level === 'fully_vegan' ? '100% Vegan' : 'Vegan-Friendly'}
+                        {VEGAN_LEVEL_LABEL[p.vegan_level ?? ''] ?? 'Vegan-Friendly'}
                         {p.average_rating ? ` · ★ ${Number(p.average_rating).toFixed(1)}` : ''}
                       </p>
                     </div>
