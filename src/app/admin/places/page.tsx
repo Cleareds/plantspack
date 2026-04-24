@@ -48,9 +48,8 @@ export default function PlacesManagement() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterCategory, setFilterCategory] = useState<string>('all')
   const [filterVeganLevel, setFilterVeganLevel] = useState<string>('all')
-  const [filterUserInput, setFilterUserInput] = useState('')
-  const [filterUserId, setFilterUserId] = useState<string | null>(null)
-  const [filterUserNotFound, setFilterUserNotFound] = useState(false)
+  const [filterUserId, setFilterUserId] = useState<string>('all')
+  const [contributors, setContributors] = useState<{ id: string; username: string; count: number }[]>([])
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [createForm, setCreateForm] = useState({
     name: '',
@@ -66,6 +65,31 @@ export default function PlacesManagement() {
   const [ownerUsername, setOwnerUsername] = useState('')
   const [assigningOwner, setAssigningOwner] = useState(false)
 
+  // Load contributor list once on mount
+  useEffect(() => {
+    supabase
+      .from('places')
+      .select('created_by, users!inner(id, username)')
+      .is('archived_at', null)
+      .not('created_by', 'is', null)
+      .limit(5000)
+      .then(({ data }) => {
+        if (!data) return
+        const counts: Record<string, { username: string; count: number }> = {}
+        for (const row of data as any[]) {
+          const u = Array.isArray(row.users) ? row.users[0] : row.users
+          if (!u?.username || u.username === 'admin') continue
+          if (!counts[row.created_by]) counts[row.created_by] = { username: u.username, count: 0 }
+          counts[row.created_by].count++
+        }
+        setContributors(
+          Object.entries(counts)
+            .map(([id, { username, count }]) => ({ id, username, count }))
+            .sort((a, b) => b.count - a.count)
+        )
+      })
+  }, [])
+
   const loadPlaces = useCallback(async () => {
     setLoading(true)
     try {
@@ -79,7 +103,7 @@ export default function PlacesManagement() {
       }
       if (filterCategory !== 'all') query = query.eq('category', filterCategory)
       if (filterVeganLevel !== 'all') query = query.eq('vegan_level', filterVeganLevel)
-      if (filterUserId) query = query.eq('created_by', filterUserId)
+      if (filterUserId !== 'all') query = query.eq('created_by', filterUserId)
 
       const from = (currentPage - 1) * PLACES_PER_PAGE
       const to = from + PLACES_PER_PAGE - 1
@@ -96,24 +120,6 @@ export default function PlacesManagement() {
       setLoading(false)
     }
   }, [currentPage, searchQuery, filterCategory, filterVeganLevel, filterUserId])
-
-  const resolveUserFilter = useCallback(async (username: string) => {
-    if (!username.trim()) {
-      setFilterUserId(null)
-      setFilterUserNotFound(false)
-      setCurrentPage(1)
-      return
-    }
-    const { data } = await supabase.from('users').select('id').eq('username', username.trim()).maybeSingle()
-    if (data) {
-      setFilterUserId(data.id)
-      setFilterUserNotFound(false)
-    } else {
-      setFilterUserId(null)
-      setFilterUserNotFound(true)
-    }
-    setCurrentPage(1)
-  }, [])
 
   useEffect(() => {
     loadPlaces()
@@ -342,33 +348,19 @@ export default function PlacesManagement() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-on-surface-variant mb-1">Filter by user (username)</label>
-          <div className="flex gap-2 max-w-sm">
-            <input
-              type="text"
-              placeholder="e.g. johnvegan"
-              value={filterUserInput}
-              onChange={(e) => setFilterUserInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && resolveUserFilter(filterUserInput)}
-              className={`flex-1 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent ${filterUserNotFound ? 'border-red-400' : 'border-outline-variant'}`}
-            />
-            <button
-              onClick={() => resolveUserFilter(filterUserInput)}
-              className="px-3 py-2 bg-primary text-on-primary-btn rounded-lg text-sm font-medium hover:opacity-90"
-            >
-              Filter
-            </button>
-            {filterUserId && (
-              <button
-                onClick={() => { setFilterUserId(null); setFilterUserInput(''); setFilterUserNotFound(false); setCurrentPage(1) }}
-                className="px-2 py-2 text-outline hover:text-on-surface"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-          {filterUserNotFound && <p className="text-xs text-red-500 mt-1">User not found</p>}
-          {filterUserId && <p className="text-xs text-primary mt-1">Showing places by @{filterUserInput}</p>}
+          <label className="block text-sm font-medium text-on-surface-variant mb-1">
+            Added by user {contributors.length > 0 && <span className="text-outline font-normal">({contributors.length} contributors)</span>}
+          </label>
+          <select
+            value={filterUserId}
+            onChange={(e) => { setFilterUserId(e.target.value); setCurrentPage(1) }}
+            className="w-full max-w-xs px-3 py-2 border border-outline-variant rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+          >
+            <option value="all">All users</option>
+            {contributors.map(u => (
+              <option key={u.id} value={u.id}>@{u.username} ({u.count})</option>
+            ))}
+          </select>
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t">
@@ -441,7 +433,11 @@ export default function PlacesManagement() {
                 <div className="text-xs text-outline">
                   <button
                     className="hover:text-primary transition-colors"
-                    onClick={() => { setFilterUserInput(place.users?.username || ''); resolveUserFilter(place.users?.username || '') }}
+                    onClick={() => {
+                      const c = contributors.find(u => u.username === place.users?.username)
+                      if (c) { setFilterUserId(c.id); setCurrentPage(1) }
+                    }}
+                    title="Filter by this user"
                   >
                     @{place.users?.username || 'unknown'}
                   </button>

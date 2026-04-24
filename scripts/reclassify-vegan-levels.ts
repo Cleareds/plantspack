@@ -63,9 +63,12 @@ async function classifyPlace(place: any): Promise<VeganLevel | null> {
       temperature: 0,
       messages: [{ role: 'user', content: CLASSIFY_PROMPT(place) }],
     });
-    const raw = resp.choices[0]?.message?.content?.trim().toLowerCase().replace(/[^a-z_]/g, '');
-    if (!raw || !VALID_LEVELS.includes(raw as VeganLevel)) return null;
-    return raw as VeganLevel;
+    const text = resp.choices[0]?.message?.content?.trim().toLowerCase() ?? '';
+    // Scan for any valid level substring in the response (handles extra words)
+    for (const level of VALID_LEVELS) {
+      if (text.includes(level)) return level;
+    }
+    return null;
   } catch (e: any) {
     if (e?.status === 429) { await sleep(5000); return classifyPlace(place); }
     return null;
