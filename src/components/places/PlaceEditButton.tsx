@@ -33,6 +33,7 @@ export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
   const [showEdit, setShowEdit] = useState(false)
   const [showSuggest, setShowSuggest] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [deleted, setDeleted] = useState(false)
 
   if (!user) return null
 
@@ -52,7 +53,8 @@ export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
     try {
       const response = await fetch(`/api/places/${place.id}`, { method: 'DELETE' })
       if (response.ok) {
-        router.push('/vegan-places')
+        setDeleted(true)
+        setTimeout(() => router.push('/vegan-places'), 1500)
       } else {
         const data = await response.json()
         alert(data.error || 'Failed to delete place')
@@ -88,10 +90,10 @@ export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 ghost-border hover:bg-red-50 rounded-xl transition-colors disabled:opacity-50"
+          className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium ghost-border rounded-xl transition-colors disabled:opacity-50 ${deleted ? 'text-emerald-600 bg-emerald-50' : 'text-red-600 hover:bg-red-50'}`}
         >
           <Trash2 className="h-4 w-4" />
-          <span>{deleting ? 'Deleting...' : 'Delete'}</span>
+          <span>{deleted ? 'Deleted ✓' : deleting ? 'Deleting...' : 'Delete'}</span>
         </button>
       )}
 
