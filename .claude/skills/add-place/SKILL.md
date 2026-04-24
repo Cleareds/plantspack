@@ -47,6 +47,7 @@ Follow in order:
    - **Default to `vegan_friendly`** only if neither direction has strong evidence, or if community sources disagree. Upgrading a row later is cheap (`UPDATE places SET vegan_level='fully_vegan' WHERE slug=...`); having a meat-serving place indexed as "fully vegan" is a trust-breaking data-quality bug.
 4. **Pick the category.** When in doubt between `eat` and `hotel` (e.g. B&B with a café), pick by *primary* business. The Miggi → hotel (guesthouse). A café with rooms → eat.
 5. **Build a JSON payload** matching the schema above. Include as many of the researched fields as you found — the CLI fills only the missing pieces.
+5a. **OSM cross-reference (automatic)**: The CLI (`scripts/add-place.ts`) will automatically query OpenStreetMap Overpass for any node within ~55m of the geocoded coordinates. If a match is found, it merges `phone`, `opening_hours`, `website`, and `cuisine_types` from OSM into the payload (without overwriting values you've already provided), and sets `source_id` to the OSM node ID. No extra action required from you — just confirm the merge in the CLI output.
 6. **Run the CLI**:
 
    ```bash

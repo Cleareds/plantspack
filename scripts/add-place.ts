@@ -30,6 +30,7 @@
 import { createClient } from '@supabase/supabase-js'
 import * as dotenv from 'dotenv'
 import * as readline from 'readline'
+import { osmLookupByCoords, mergeOsmData } from './lib/place-pipeline'
 
 dotenv.config({ path: '.env.local' })
 
@@ -283,6 +284,24 @@ async function main() {
       } else {
         console.log(`  ✗ geocode failed for "${q}" and "${input.city}"`)
       }
+    }
+  }
+
+  // OSM cross-reference: find matching node, merge phone/hours/website/cuisine.
+  if (latitude != null && longitude != null && !input.source_id?.startsWith('osm-')) {
+    const osmEl = await osmLookupByCoords(latitude, longitude, input.name)
+    if (osmEl) {
+      const osmId = `osm-${osmEl.type}-${osmEl.id}`
+      const merged = mergeOsmData(
+        { phone: input.phone, website: input.website, opening_hours: input.opening_hours as any, cuisine_types: input.cuisine_types as any } as any,
+        osmEl.tags,
+        osmId,
+      )
+      if (merged.phone && !input.phone) { input.phone = merged.phone as string; console.log(`  OSM merged phone: ${input.phone}`) }
+      if (merged.website && !input.website) { input.website = merged.website as string; console.log(`  OSM merged website: ${input.website}`) }
+      if (merged.opening_hours && !input.opening_hours) { input.opening_hours = merged.opening_hours as any; console.log(`  OSM merged opening_hours`) }
+      if (!input.source_id) { input.source_id = osmId; console.log(`  OSM source_id: ${osmId}`) }
+      console.log(`  ✅ OSM match: ${osmEl.tags.name} (${osmId})`)
     }
   }
 

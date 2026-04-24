@@ -8,8 +8,6 @@ import "./globals.css";
 import ClientProviders from "@/components/providers/ClientProviders";
 import AppShell from "@/components/layout/AppShell";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -117,8 +115,6 @@ export default function RootLayout({
           }}
         />
         <GoogleAnalytics />
-        <Analytics />
-        <SpeedInsights />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>
