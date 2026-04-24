@@ -381,11 +381,18 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               <ImageSlider images={place.images} />
               {/* Vegan + Pet badges */}
               <div className="absolute top-8 left-8 flex gap-2 z-10">
-                {(place as any).vegan_level === 'fully_vegan' ? (
-                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-green-600 text-white shadow">100% Vegan</span>
-                ) : (place as any).vegan_level === 'vegan_friendly' ? (
+                {(place as any).vegan_level === 'fully_vegan' && (
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-emerald-600 text-white shadow">100% Vegan</span>
+                )}
+                {(place as any).vegan_level === 'mostly_vegan' && (
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-teal-600 text-white shadow">Mostly Vegan</span>
+                )}
+                {(place as any).vegan_level === 'vegan_friendly' && (
                   <span className="px-2 py-1 rounded-md text-xs font-bold bg-amber-500 text-white shadow">Vegan-Friendly</span>
-                ) : null}
+                )}
+                {(place as any).vegan_level === 'vegan_options' && (
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-stone-400 text-white shadow">Has Vegan Options</span>
+                )}
                 {place.is_pet_friendly && (
                   <span className="px-2 py-1 rounded-md text-xs font-bold bg-orange-500 text-white shadow">🐾 Pet-Friendly</span>
                 )}
@@ -397,11 +404,24 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           <div className="p-6 space-y-4 border-b border-outline-variant/15">
             {/* Vegan level + category badges */}
             <div className="flex flex-wrap gap-2">
-              {(place as any).vegan_level === 'fully_vegan' ? (
+              {(place as any).vegan_level === 'fully_vegan' && (
                 <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">🌿 100% Vegan</span>
-              ) : (place as any).vegan_level === 'vegan_friendly' ? (
+              )}
+              {(place as any).vegan_level === 'mostly_vegan' && (
+                <div>
+                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-700">🌿 Mostly Vegan</span>
+                  <p className="text-[11px] text-on-surface-variant mt-1 ml-0.5">Primarily vegan menu with a small number of non-vegan items.</p>
+                </div>
+              )}
+              {(place as any).vegan_level === 'vegan_friendly' && (
                 <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">🌿 Vegan-Friendly</span>
-              ) : null}
+              )}
+              {(place as any).vegan_level === 'vegan_options' && (
+                <div>
+                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-600">🌿 Has Vegan Options</span>
+                  <p className="text-[11px] text-on-surface-variant mt-1 ml-0.5">Some vegan items available — not a dedicated vegan place.</p>
+                </div>
+              )}
               {(place as any).subcategory && (
                 <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-surface-container-low text-on-surface-variant">
                   {(place as any).subcategory.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}

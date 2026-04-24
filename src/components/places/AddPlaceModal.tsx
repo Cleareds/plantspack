@@ -46,7 +46,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
     website: draft?.website || '',
     opening_hours: draft?.opening_hours || '',
     is_pet_friendly: draft?.is_pet_friendly || false,
-    vegan_level: (draft?.vegan_level || 'fully_vegan') as 'fully_vegan' | 'vegan_friendly',
+    vegan_level: (draft?.vegan_level || 'fully_vegan') as 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options',
     latitude: draft?.latitude || 0,
     longitude: draft?.longitude || 0,
     city: draft?.city || defaultCity || ('' as string | undefined),
@@ -390,30 +390,29 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-on-surface-variant mb-1">Vegan Level</label>
-            <div className="flex items-center gap-4">
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <input
-                  type="radio"
-                  name="add_modal_vegan_level"
-                  value="fully_vegan"
-                  checked={newPlace.vegan_level === 'fully_vegan'}
-                  onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: 'fully_vegan' }))}
-                  className="text-primary focus:ring-primary"
-                />
-                <span className="text-sm text-on-surface-variant">100% Vegan</span>
-              </label>
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <input
-                  type="radio"
-                  name="add_modal_vegan_level"
-                  value="vegan_friendly"
-                  checked={newPlace.vegan_level === 'vegan_friendly'}
-                  onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: 'vegan_friendly' }))}
-                  className="text-primary focus:ring-primary"
-                />
-                <span className="text-sm text-on-surface-variant">Vegan-Friendly</span>
-              </label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-2">Vegan Level</label>
+            <div className="space-y-2">
+              {([
+                { value: 'fully_vegan', label: '100% Vegan', desc: 'Everything on the menu is vegan — zero animal products' },
+                { value: 'mostly_vegan', label: 'Mostly Vegan', desc: 'Nearly all vegan, with a small number of non-vegan items' },
+                { value: 'vegan_friendly', label: 'Vegan-Friendly', desc: 'Non-vegan place with a solid vegan section or multiple dedicated dishes' },
+                { value: 'vegan_options', label: 'Has Vegan Options', desc: 'Some vegan items available, but not a vegan-focused place' },
+              ] as const).map(({ value, label, desc }) => (
+                <label key={value} className="flex items-start gap-2.5 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="add_modal_vegan_level"
+                    value={value}
+                    checked={newPlace.vegan_level === value}
+                    onChange={() => setNewPlace(prev => ({ ...prev, vegan_level: value }))}
+                    className="text-primary focus:ring-primary mt-0.5 flex-shrink-0"
+                  />
+                  <div>
+                    <span className="text-sm font-medium text-on-surface">{label}</span>
+                    <p className="text-xs text-on-surface-variant">{desc}</p>
+                  </div>
+                </label>
+              ))}
             </div>
           </div>
 

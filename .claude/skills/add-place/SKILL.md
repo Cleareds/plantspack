@@ -24,7 +24,7 @@ Before running the CLI, you must have:
 | `city` | Address on the page, footer, or a WebSearch for "<name> <broad location>". |
 | `country` | Same as city. |
 | `category` | One of `eat` / `hotel` / `store` / `organisation` / `event`. Infer from content: restaurant/café → `eat`; hotel/B&B/retreat/glamping → `hotel`; shop/market → `store`; sanctuary/charity → `organisation`; one-off festival/class → `event`. |
-| `vegan_level` | `fully_vegan` or `vegan_friendly`. Look for explicit claims: "100% vegan", "plant-based only", "vegan menu" → fully_vegan. "Vegan options available", "vegetarian café with vegan choices" → vegan_friendly. **If unclear after a WebFetch, do a WebSearch specifically for "<name> vegan" before defaulting.** Never guess fully_vegan unless you have direct evidence — misclassifying a vegan-friendly place as fully_vegan is a data-quality violation. |
+| `vegan_level` | One of four tiers — see the classification table below. **Always run the WebSearch in Step 3 before assigning.** |
 | `subcategory` | Optional but valuable: `cafe`, `restaurant`, `retreat`, `guesthouse`, `glamping`, `sanctuary`, `bakery`, `farm_shop`, etc. |
 | `address` | Full street address with postcode (UK) or ZIP (US/other). If missing from the site, do a WebSearch for "<name> <city> address postcode". |
 | `latitude` / `longitude` | The CLI will geocode from the address via Nominatim. Only set these if you have them already (e.g. a Google Maps URL — the `@lat,lng` in the URL is reliable). |
@@ -41,10 +41,19 @@ Follow in order:
 1. **WebFetch the primary URL.** Pull address, phone, hours, menu / concept text. If it's a Facebook or Google Maps URL, skip straight to step 2 (they block scrapers).
 2. **WebSearch for the real website + address.** Query like `"<name>" <city> address postcode` and cross-reference press / Yelp / BostonChefs / TripAdvisor for facts the site doesn't advertise (owner name, opening year, industry recognition).
 3. **Determine `vegan_level` — ALWAYS run this WebSearch:** `is <place name> 100% vegan?` (or include the city to disambiguate). This single query consistently surfaces community/press confirmation language that the restaurant's own "About" page often hedges around.
-   - **Positive evidence** that justifies `fully_vegan`: Yelp categorises them as "Vegan" (not "Vegetarian"), Boston Magazine / HappyCow / VegNews / Michelin Green Guide explicitly says "100% vegan" / "fully vegan" / "plant-based only", abillion / Vegan Society endorsement, multiple recent reviews confirming "everything is vegan". One strong signal is enough.
-   - **Negative evidence** that forces `vegan_friendly`: explicit statement on their own site that they serve meat/dairy, a menu page with animal-product dishes, reviews mentioning "ordered a burger" or "has chicken option".
-   - **Careful with hedge language**: phrases on an *own* "About" page like "our food is liked by vegans, vegetarians, and carnivores alike" can mean either (a) "we're all-vegan but meat-eaters love our food too" (very common praise) OR (b) "we serve all three types of food". Never rely on that phrasing alone — always cross-check via the WebSearch above. Lulu Green Boston is fully_vegan despite that line on their site; multiple press + Yelp confirm.
-   - **Default to `vegan_friendly`** only if neither direction has strong evidence, or if community sources disagree. Upgrading a row later is cheap (`UPDATE places SET vegan_level='fully_vegan' WHERE slug=...`); having a meat-serving place indexed as "fully vegan" is a trust-breaking data-quality bug.
+
+   **4-tier classification table:**
+
+   | Level | Assign when… | Example signals |
+   |---|---|---|
+   | `fully_vegan` | 100% vegan menu, zero animal products, the place's identity is vegan | Yelp category "Vegan", HappyCow/VegNews/Michelin confirm "100% vegan" or "plant-based only", menu shows no animal items |
+   | `mostly_vegan` | Place presents as vegan but a few non-vegan items visible on current menu (exceptions, not a section) | "Added salmon" or "now serves chicken" mentioned in reviews; a vegan restaurant with 1-2 non-vegan dishes |
+   | `vegan_friendly` | Non-vegan place with genuine vegan accommodation — 3+ dedicated vegan dishes or a real vegan section | Thai/Indian/Middle-Eastern with extensive vegan menu; health café that's ~50% vegan |
+   | `vegan_options` | Mainstream place with a few vegan items; not a vegan-focused business | Italian with pasta pomodoro; hotel "can accommodate vegans on request"; 1-2 vegan items on a conventional menu |
+
+   - **Positive evidence for `fully_vegan`**: Yelp "Vegan" category, VegNews/HappyCow/abillion endorsement, multiple reviews confirming everything is vegan. One strong signal is enough.
+   - **Careful with hedge language**: "our food is liked by vegans, vegetarians, and carnivores alike" can mean EITHER "we're all-vegan but welcome everyone" OR "we serve all diets". Never assign `fully_vegan` based on this alone — cross-check with the WebSearch above.
+   - **Default to `vegan_friendly`** if neither direction has strong evidence. Upgrading later is cheap; having a meat-serving place indexed as `fully_vegan` is a trust-breaking bug.
 4. **Pick the category.** When in doubt between `eat` and `hotel` (e.g. B&B with a café), pick by *primary* business. The Miggi → hotel (guesthouse). A café with rooms → eat.
 5. **Build a JSON payload** matching the schema above. Include as many of the researched fields as you found — the CLI fills only the missing pieces.
 5a. **OSM cross-reference (automatic)**: The CLI (`scripts/add-place.ts`) will automatically query OpenStreetMap Overpass for any node within ~55m of the geocoded coordinates. If a match is found, it merges `phone`, `opening_hours`, `website`, and `cuisine_types` from OSM into the payload (without overwriting values you've already provided), and sets `source_id` to the OSM node ID. No extra action required from you — just confirm the merge in the CLI output.

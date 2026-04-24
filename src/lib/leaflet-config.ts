@@ -4,6 +4,7 @@ import L from 'leaflet'
 // Leaflet (which references `window` at module scope and breaks SSR).
 export { CATEGORY_CONFIG } from './place-categories'
 import { CATEGORY_CONFIG } from './place-categories'
+import { VEGAN_LEVEL_BORDER_COLOR } from './vegan-level'
 
 // Fix for default marker icons in Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -30,10 +31,10 @@ function ratingBucket(rating?: number | null, reviewCount?: number | null): stri
 function makeCategoryIcon(
   color: string,
   emoji: string,
-  isFullyVegan: boolean,
+  borderColor: string,
   rating: string | null,
 ): L.DivIcon {
-  const border = isFullyVegan ? '2.5px solid #fff' : '2.5px solid #fbbf24'
+  const border = `2.5px solid ${borderColor}`
   // Star badge floats top-right. Amber for 4+, emerald for 5.
   const badgeBg = rating === '5' ? '#10b981' : '#f59e0b'
   const badge = rating
@@ -73,12 +74,12 @@ export function getCategoryIcon(
   rating?: number | null,
   reviewCount?: number | null,
 ): L.DivIcon {
-  const isFullyVegan = veganLevel === 'fully_vegan'
+  const borderColor = VEGAN_LEVEL_BORDER_COLOR[veganLevel ?? ''] ?? '#fbbf24'
   const bucket = ratingBucket(rating, reviewCount)
-  const key = `${category}-${isFullyVegan ? 'fv' : 'vf'}-${bucket ?? 'nr'}`
+  const key = `${category}-${veganLevel ?? 'none'}-${bucket ?? 'nr'}`
   if (!iconCache[key]) {
     const cfg = CATEGORY_CONFIG[category] || CATEGORY_CONFIG.other
-    iconCache[key] = makeCategoryIcon(cfg.color, cfg.emoji, isFullyVegan, bucket)
+    iconCache[key] = makeCategoryIcon(cfg.color, cfg.emoji, borderColor, bucket)
   }
   return iconCache[key]
 }

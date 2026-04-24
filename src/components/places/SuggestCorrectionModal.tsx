@@ -160,7 +160,9 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
                     className={`w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border ${isChanged ? 'ring-1 ring-primary/30' : ''}`}
                   >
                     <option value="fully_vegan">100% Vegan</option>
+                    <option value="mostly_vegan">Mostly Vegan</option>
                     <option value="vegan_friendly">Vegan-Friendly</option>
+                    <option value="vegan_options">Has Vegan Options</option>
                   </select>
                 ) : field === 'opening_hours' ? (
                   <textarea

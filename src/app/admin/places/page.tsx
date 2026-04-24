@@ -21,18 +21,21 @@ import {
 
 interface Place {
   id: string
+  slug: string | null
   name: string
   description: string | null
   address: string
+  city: string | null
+  country: string | null
   latitude: number
   longitude: number
   category: string
+  vegan_level: string | null
+  is_verified: boolean
   rating: number | null
-  user_id: string
+  created_by: string
   created_at: string
-  users: {
-    username: string
-  }
+  users: { username: string } | null
 }
 
 const PLACES_PER_PAGE = 20
@@ -44,6 +47,10 @@ export default function PlacesManagement() {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterCategory, setFilterCategory] = useState<string>('all')
+  const [filterVeganLevel, setFilterVeganLevel] = useState<string>('all')
+  const [filterUserInput, setFilterUserInput] = useState('')
+  const [filterUserId, setFilterUserId] = useState<string | null>(null)
+  const [filterUserNotFound, setFilterUserNotFound] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [createForm, setCreateForm] = useState({
     name: '',
@@ -64,32 +71,49 @@ export default function PlacesManagement() {
     try {
       let query = supabase
         .from('places')
-        .select('*, users(username)', { count: 'exact' })
+        .select('id, slug, name, description, address, city, country, category, vegan_level, is_verified, average_rating, created_by, created_at, users(username)', { count: 'exact' })
+        .is('archived_at', null)
 
       if (searchQuery) {
-        query = query.or(`name.ilike.%${searchQuery}%,address.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`)
+        query = query.or(`name.ilike.%${searchQuery}%,address.ilike.%${searchQuery}%,city.ilike.%${searchQuery}%`)
       }
-
-      if (filterCategory !== 'all') {
-        query = query.eq('category', filterCategory)
-      }
+      if (filterCategory !== 'all') query = query.eq('category', filterCategory)
+      if (filterVeganLevel !== 'all') query = query.eq('vegan_level', filterVeganLevel)
+      if (filterUserId) query = query.eq('created_by', filterUserId)
 
       const from = (currentPage - 1) * PLACES_PER_PAGE
       const to = from + PLACES_PER_PAGE - 1
       query = query.range(from, to).order('created_at', { ascending: false })
 
       const { data, error, count } = await query
-
       if (error) throw error
 
-      setPlaces(data as any || [])
+      setPlaces((data as any) || [])
       setTotalPlaces(count || 0)
     } catch (error) {
       console.error('Error loading places:', error)
     } finally {
       setLoading(false)
     }
-  }, [currentPage, searchQuery, filterCategory])
+  }, [currentPage, searchQuery, filterCategory, filterVeganLevel, filterUserId])
+
+  const resolveUserFilter = useCallback(async (username: string) => {
+    if (!username.trim()) {
+      setFilterUserId(null)
+      setFilterUserNotFound(false)
+      setCurrentPage(1)
+      return
+    }
+    const { data } = await supabase.from('users').select('id').eq('username', username.trim()).maybeSingle()
+    if (data) {
+      setFilterUserId(data.id)
+      setFilterUserNotFound(false)
+    } else {
+      setFilterUserId(null)
+      setFilterUserNotFound(true)
+    }
+    setCurrentPage(1)
+  }, [])
 
   useEffect(() => {
     loadPlaces()
@@ -270,46 +294,81 @@ export default function PlacesManagement() {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-on-surface-variant mb-1">
-              Search
-            </label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-outline" />
               <input
                 type="text"
-                placeholder="Search by name, address, or description..."
+                placeholder="Name, address, or city..."
                 value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value)
-                  setCurrentPage(1)
-                }}
+                onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1) }}
                 className="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-on-surface-variant mb-1">
-              Category
-            </label>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Vegan Level</label>
+            <select
+              value={filterVeganLevel}
+              onChange={(e) => { setFilterVeganLevel(e.target.value); setCurrentPage(1) }}
+              className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="all">All Levels</option>
+              <option value="fully_vegan">100% Vegan</option>
+              <option value="mostly_vegan">Mostly Vegan</option>
+              <option value="vegan_friendly">Vegan-Friendly</option>
+              <option value="vegan_options">Has Vegan Options</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
             <select
               value={filterCategory}
-              onChange={(e) => {
-                setFilterCategory(e.target.value)
-                setCurrentPage(1)
-              }}
+              onChange={(e) => { setFilterCategory(e.target.value); setCurrentPage(1) }}
               className="w-full px-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All Categories</option>
-              <option value="restaurant">Restaurant</option>
-              <option value="cafe">Cafe</option>
+              <option value="eat">Eat</option>
               <option value="store">Store</option>
-              <option value="market">Market</option>
-              <option value="other">Other</option>
+              <option value="hotel">Stay</option>
+              <option value="event">Event</option>
+              <option value="organisation">Organisation</option>
             </select>
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-on-surface-variant mb-1">Filter by user (username)</label>
+          <div className="flex gap-2 max-w-sm">
+            <input
+              type="text"
+              placeholder="e.g. johnvegan"
+              value={filterUserInput}
+              onChange={(e) => setFilterUserInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && resolveUserFilter(filterUserInput)}
+              className={`flex-1 px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent ${filterUserNotFound ? 'border-red-400' : 'border-outline-variant'}`}
+            />
+            <button
+              onClick={() => resolveUserFilter(filterUserInput)}
+              className="px-3 py-2 bg-primary text-on-primary-btn rounded-lg text-sm font-medium hover:opacity-90"
+            >
+              Filter
+            </button>
+            {filterUserId && (
+              <button
+                onClick={() => { setFilterUserId(null); setFilterUserInput(''); setFilterUserNotFound(false); setCurrentPage(1) }}
+                className="px-2 py-2 text-outline hover:text-on-surface"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          {filterUserNotFound && <p className="text-xs text-red-500 mt-1">User not found</p>}
+          {filterUserId && <p className="text-xs text-primary mt-1">Showing places by @{filterUserInput}</p>}
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t">
@@ -334,77 +393,91 @@ export default function PlacesManagement() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {places.map((place) => (
-            <div key={place.id} className="bg-white rounded-lg shadow p-6 space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-on-surface">{place.name}</h3>
-                  <p className="text-sm text-outline capitalize">{place.category}</p>
+            <div key={place.id} className="bg-white rounded-lg shadow p-4 space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold text-on-surface truncate">{place.name}</h3>
+                  <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                    <span className="text-xs text-outline capitalize bg-surface-container-low px-1.5 py-0.5 rounded">{place.category}</span>
+                    {place.vegan_level && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${
+                        place.vegan_level === 'fully_vegan'    ? 'bg-emerald-100 text-emerald-700' :
+                        place.vegan_level === 'mostly_vegan'   ? 'bg-teal-100 text-teal-700' :
+                        place.vegan_level === 'vegan_friendly' ? 'bg-amber-100 text-amber-700' :
+                        'bg-stone-100 text-stone-600'
+                      }`}>
+                        {{
+                          fully_vegan: '100% Vegan',
+                          mostly_vegan: 'Mostly Vegan',
+                          vegan_friendly: 'Vegan-Friendly',
+                          vegan_options: 'Has Options',
+                        }[place.vegan_level] ?? place.vegan_level}
+                      </span>
+                    )}
+                    {place.is_verified && (
+                      <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded">Verified</span>
+                    )}
+                  </div>
                 </div>
-                {place.rating && (
-                  <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded">
-                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                    <span className="text-sm font-medium text-yellow-900">
-                      {place.rating.toFixed(1)}
-                    </span>
+                {(place as any).average_rating > 0 && (
+                  <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded flex-shrink-0">
+                    <Star className="h-3.5 w-3.5 text-yellow-500 fill-current" />
+                    <span className="text-xs font-medium text-yellow-900">{((place as any).average_rating as number).toFixed(1)}</span>
                   </div>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-start text-sm text-on-surface-variant">
-                  <MapPin className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>{place.address}</span>
+              <div className="text-xs text-on-surface-variant space-y-0.5">
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="h-3 w-3 flex-shrink-0" />
+                  <span className="truncate">{[place.city, place.country].filter(Boolean).join(', ') || place.address}</span>
                 </div>
-
                 {place.description && (
-                  <p className="text-sm text-on-surface-variant line-clamp-2">
-                    {place.description}
-                  </p>
+                  <p className="line-clamp-2 pl-4.5 text-outline">{place.description}</p>
                 )}
               </div>
 
-              <div className="pt-3 border-t space-y-2">
-                <div className="flex items-center justify-between text-xs text-outline">
-                  <span>Added by {place.users?.username || 'Unknown'}</span>
+              <div className="pt-2 border-t flex items-center justify-between">
+                <div className="text-xs text-outline">
+                  <button
+                    className="hover:text-primary transition-colors"
+                    onClick={() => { setFilterUserInput(place.users?.username || ''); resolveUserFilter(place.users?.username || '') }}
+                  >
+                    @{place.users?.username || 'unknown'}
+                  </button>
+                  <span className="mx-1">·</span>
                   <span>{new Date(place.created_at).toLocaleDateString()}</span>
                 </div>
-
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-1">
                   <button
                     onClick={async () => {
-                      const newVal = !(place as any).is_verified;
-                      await supabase.from('places').update({ is_verified: newVal }).eq('id', place.id);
-                      setPlaces((prev: any) => prev.map((p: any) => p.id === place.id ? { ...p, is_verified: newVal } : p));
+                      const newVal = !place.is_verified
+                      await supabase.from('places').update({ is_verified: newVal }).eq('id', place.id)
+                      setPlaces(prev => prev.map(p => p.id === place.id ? { ...p, is_verified: newVal } : p))
                     }}
-                    className={`inline-flex items-center justify-center px-3 py-2 border rounded-md text-xs font-medium ${
-                      (place as any).is_verified
-                        ? 'border-primary text-primary bg-primary/10'
-                        : 'border-outline-variant text-on-surface-variant bg-white hover:bg-surface-container-low'
+                    className={`px-2 py-1 border rounded text-xs font-medium ${
+                      place.is_verified ? 'border-primary text-primary bg-primary/10' : 'border-outline-variant text-on-surface-variant hover:bg-surface-container-low'
                     }`}
                   >
-                    <BadgeCheck className="h-3 w-3 mr-1" />
-                    {(place as any).is_verified ? 'Verified' : 'Verify'}
+                    <BadgeCheck className="h-3 w-3" />
                   </button>
                   <button
-                    onClick={() => window.open(`/place/${(place as any).slug || place.id}`, '_blank')}
-                    className="inline-flex items-center justify-center px-3 py-2 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
+                    onClick={() => window.open(`/place/${place.slug || place.id}`, '_blank')}
+                    className="px-2 py-1 border border-outline-variant rounded text-xs text-on-surface-variant hover:bg-surface-container-low"
                   >
-                    <Eye className="h-3 w-3 mr-1" />
-                    View
+                    <Eye className="h-3 w-3" />
                   </button>
                   <button
                     onClick={() => setOwnerModal({ placeId: place.id, placeName: place.name })}
-                    className="inline-flex items-center justify-center px-3 py-2 border border-outline-variant rounded-md text-xs font-medium text-on-surface-variant bg-white hover:bg-surface-container-low"
+                    className="px-2 py-1 border border-outline-variant rounded text-xs text-on-surface-variant hover:bg-surface-container-low"
                   >
-                    <BadgeCheck className="h-3 w-3 mr-1" />
                     Owner
                   </button>
                   <button
                     onClick={() => handleDeletePlace(place.id, place.name)}
-                    className="inline-flex items-center justify-center px-3 py-2 border border-red-300 rounded-md text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100"
+                    className="px-2 py-1 border border-red-200 rounded text-xs text-red-600 hover:bg-red-50"
                   >
-                    <Trash2 className="h-3 w-3 mr-1" />
-                    Delete
+                    <Trash2 className="h-3 w-3" />
                   </button>
                 </div>
               </div>

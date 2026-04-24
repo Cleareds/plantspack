@@ -29,9 +29,17 @@ Output is a count of places imported + any notable issues.
 The pipeline in `scripts/import-osm-countries.ts` does all of this automatically:
 
 1. **Fetch from OSM Overpass** — widened filter:
-   - `diet:vegan=yes|only` (explicit vegan menu)
+   - `diet:vegan=yes|only` (explicit vegan menu) → imported as `fully_vegan` initially
    - `diet:vegetarian=only` (fully vegetarian — imported as `vegan_friendly`)
    - `cuisine=vegan` (explicit vegan cuisine tag)
+
+   **Note:** OSM tags are a starting signal, not final truth. If the enrich pass produces a description, the admin staging triage step should re-evaluate the tier. Use the 4-tier system:
+   | Level | When to assign |
+   |---|---|
+   | `fully_vegan` | Admin confirms zero animal products on menu (V key in staging) |
+   | `mostly_vegan` | 85%+ vegan but a few non-vegan items exist (M key in staging) |
+   | `vegan_friendly` | Genuine vegan section with 3+ dishes (A key in staging, safe default) |
+   | `vegan_options` | Just a few items, not a vegan-focused place (Shift+O in staging) |
 
 2. **Chain filter** — EXCLUDED_CHAINS set in `scripts/lib/place-pipeline.ts` removes animal-centric chains (McDonald's, Burger King, KFC, IKEA, Texas Longhorn, etc.) per Platonic-form-is-vegan policy. Coffee chains, smoothie bars, açaí places, and vegan-first brands are kept.
 

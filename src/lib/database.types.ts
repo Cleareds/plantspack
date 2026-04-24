@@ -289,7 +289,7 @@ export interface Database {
           main_image_url: string | null
           price_range: string | null
           cuisine_types: string[]
-          vegan_level: 'fully_vegan' | 'vegan_friendly' | 'vegan_options' | null
+          vegan_level: 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options' | null
           opening_hours: Record<string, string> | null
           average_rating: number
           review_count: number
@@ -317,7 +317,7 @@ export interface Database {
           main_image_url?: string | null
           price_range?: string | null
           cuisine_types?: string[]
-          vegan_level?: 'fully_vegan' | 'vegan_friendly' | 'vegan_options' | null
+          vegan_level?: 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options' | null
           opening_hours?: Record<string, string> | null
           average_rating?: number
           review_count?: number
@@ -345,7 +345,7 @@ export interface Database {
           main_image_url?: string | null
           price_range?: string | null
           cuisine_types?: string[]
-          vegan_level?: 'fully_vegan' | 'vegan_friendly' | 'vegan_options' | null
+          vegan_level?: 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options' | null
           opening_hours?: Record<string, string> | null
           average_rating?: number
           review_count?: number

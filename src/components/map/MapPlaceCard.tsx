@@ -31,7 +31,10 @@ export default function MapPlaceCard({ place, user, onToggleFavorite }: MapPlace
           />
           <div className="absolute top-1.5 left-1.5 flex gap-1">
             {(place as any).vegan_level === 'fully_vegan' && (
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-600 text-white">100% Vegan</span>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-600 text-white">100% Vegan</span>
+            )}
+            {(place as any).vegan_level === 'mostly_vegan' && (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-600 text-white">Mostly Vegan</span>
             )}
             {place.is_pet_friendly && (
               <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500 text-white flex items-center gap-0.5">

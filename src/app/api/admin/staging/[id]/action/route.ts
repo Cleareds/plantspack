@@ -35,8 +35,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { supabase, userId } = ctx
   const { id } = await params
   const body = await request.json().catch(() => ({}))
-  const action = body?.action as 'approve' | 'approve_fully_vegan' | 'reject' | 'escalate' | undefined
-  if (!['approve', 'approve_fully_vegan', 'reject', 'escalate'].includes(action ?? '')) {
+  const action = body?.action as 'approve' | 'approve_fully_vegan' | 'approve_mostly_vegan' | 'approve_vegan_options' | 'reject' | 'escalate' | undefined
+  if (!['approve', 'approve_fully_vegan', 'approve_mostly_vegan', 'approve_vegan_options', 'reject', 'escalate'].includes(action ?? '')) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   }
 
@@ -79,11 +79,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   })
 
   // CLAUDE.md: never mark fully_vegan without verification. Default to
-  // vegan_friendly regardless of classifier signal; only the explicit
-  // `approve_fully_vegan` action promotes to fully_vegan — that means the
-  // admin affirmatively claims 100% vegan.
-  const veganLevel: 'fully_vegan' | 'vegan_friendly' =
-    action === 'approve_fully_vegan' ? 'fully_vegan' : 'vegan_friendly'
+  // vegan_friendly regardless of classifier signal; admin must explicitly
+  // choose the tier.
+  const veganLevel =
+    action === 'approve_fully_vegan'   ? 'fully_vegan'   :
+    action === 'approve_mostly_vegan'  ? 'mostly_vegan'  :
+    action === 'approve_vegan_options' ? 'vegan_options' :
+    'vegan_friendly'
 
   const placeRow = {
     name: String(row.name).slice(0, 200),
@@ -103,7 +105,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     foursquare_data: row.website_signal,
     category: cat.category,
     categorization_note: cat.note,
-    tags: ['staging-approved', row.source, ...(action === 'approve_fully_vegan' ? ['admin-claimed-fully-vegan'] : [])],
+    tags: ['staging-approved', row.source, ...(veganLevel !== 'vegan_friendly' ? [`admin-claimed-${veganLevel}`] : [])],
     is_verified: true,                       // admin-approved → verified
     verification_status: 'admin_verified',
     created_by: ADMIN_USER_ID,

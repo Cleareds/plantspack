@@ -101,7 +101,7 @@ export default function StagingPage() {
 
   const current = rows[cursor]
 
-  const act = useCallback(async (action: 'approve' | 'approve_fully_vegan' | 'reject' | 'escalate') => {
+  const act = useCallback(async (action: 'approve' | 'approve_fully_vegan' | 'approve_mostly_vegan' | 'approve_vegan_options' | 'reject' | 'escalate') => {
     if (!current) return
     setProcessing(true)
     try {
@@ -183,20 +183,26 @@ export default function StagingPage() {
       if (processing) return
       const target = e.target as HTMLElement
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName)) return
-      // Shift+A / V = approve as 100% vegan
       if ((e.key === 'A' && e.shiftKey) || e.key === 'v' || e.key === 'V') { e.preventDefault(); act('approve_fully_vegan') }
+      else if (e.key === 'm' || e.key === 'M') { e.preventDefault(); act('approve_mostly_vegan') }
+      else if (e.key === 'o' && e.shiftKey) { e.preventDefault(); act('approve_vegan_options') }
       else if (e.key === 'a' || e.key === 'Enter') { e.preventDefault(); act('approve') }
       else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); act('reject') }
       else if (e.key === 'e' || e.key === 'E') { e.preventDefault(); act('escalate') }
       else if (e.key === 'ArrowRight' || e.key === 'j' || e.key === 'J') { setCursor(c => Math.min(c + 1, rows.length - 1)) }
       else if (e.key === 'ArrowLeft' || e.key === 'k' || e.key === 'K') { setCursor(c => Math.max(0, c - 1)) }
-      else if (e.key === 'o' || e.key === 'O') { if (current?.website) window.open(current.website, '_blank') }
+      else if (e.key === 'o') { if (current?.website) window.open(current.website, '_blank') }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [act, processing, rows.length, current])
 
-  const vegColor = (level: string | null) => level === 'fully_vegan' ? 'text-emerald-400' : level === 'vegan_friendly' ? 'text-lime-400' : level === 'vegetarian_reject' ? 'text-red-400' : 'text-gray-500'
+  const vegColor = (level: string | null) =>
+    level === 'fully_vegan'    ? 'text-emerald-400' :
+    level === 'mostly_vegan'   ? 'text-teal-400' :
+    level === 'vegan_friendly' ? 'text-lime-400' :
+    level === 'vegan_options'  ? 'text-stone-400' :
+    level === 'vegetarian_reject' ? 'text-red-400' : 'text-gray-500'
 
   return (
     <div>
@@ -351,23 +357,33 @@ export default function StagingPage() {
           </div>
 
           {/* Action bar */}
-          <div className="mt-4 flex gap-2 items-center">
-            <button onClick={() => act('approve')} disabled={processing}
-              className="flex items-center gap-1.5 px-4 py-2 bg-lime-600 hover:bg-lime-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
-              title="Approve as vegan-friendly (default, safe)">
-              <CheckCircle className="h-4 w-4" /> Approve vegan-friendly <kbd className="ml-1 text-[10px] bg-lime-900 px-1 rounded">A</kbd>
-            </button>
+          <div className="mt-4 flex flex-wrap gap-2 items-center">
             <button onClick={() => act('approve_fully_vegan')} disabled={processing}
-              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
-              title="Approve as 100% vegan — you confirm there are zero animal products on the menu">
-              <CheckCircle className="h-4 w-4" /> Approve as 100% vegan <kbd className="ml-1 text-[10px] bg-emerald-900 px-1 rounded">V</kbd>
+              className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              title="100% vegan — zero animal products confirmed">
+              <CheckCircle className="h-4 w-4" /> 100% Vegan <kbd className="ml-1 text-[10px] bg-emerald-900 px-1 rounded">V</kbd>
+            </button>
+            <button onClick={() => act('approve_mostly_vegan')} disabled={processing}
+              className="flex items-center gap-1.5 px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              title="Mostly vegan — 85%+ vegan menu, a few non-vegan items">
+              <CheckCircle className="h-4 w-4" /> Mostly Vegan <kbd className="ml-1 text-[10px] bg-teal-900 px-1 rounded">M</kbd>
+            </button>
+            <button onClick={() => act('approve')} disabled={processing}
+              className="flex items-center gap-1.5 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              title="Vegan-friendly (safe default)">
+              <CheckCircle className="h-4 w-4" /> Vegan-Friendly <kbd className="ml-1 text-[10px] bg-amber-900 px-1 rounded">A</kbd>
+            </button>
+            <button onClick={() => act('approve_vegan_options')} disabled={processing}
+              className="flex items-center gap-1.5 px-3 py-2 bg-stone-600 hover:bg-stone-700 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+              title="Has some vegan options — not a vegan-focused place">
+              <CheckCircle className="h-4 w-4" /> Has Options <kbd className="ml-1 text-[10px] bg-stone-800 px-1 rounded">⇧O</kbd>
             </button>
             <button onClick={() => act('reject')} disabled={processing}
-              className="flex items-center gap-1.5 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm font-medium disabled:opacity-50">
+              className="flex items-center gap-1.5 px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm font-medium disabled:opacity-50">
               <XCircle className="h-4 w-4" /> Reject <kbd className="ml-1 text-[10px] bg-red-900 px-1 rounded">R</kbd>
             </button>
             <button onClick={() => act('escalate')} disabled={processing}
-              className="flex items-center gap-1.5 px-4 py-2 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 rounded-lg text-sm font-medium disabled:opacity-50">
+              className="flex items-center gap-1.5 px-3 py-2 bg-amber-600/20 hover:bg-amber-600/30 text-amber-400 rounded-lg text-sm font-medium disabled:opacity-50">
               <AlertTriangle className="h-4 w-4" /> Escalate <kbd className="ml-1 text-[10px] bg-amber-900 px-1 rounded">E</kbd>
             </button>
             {current.website && (

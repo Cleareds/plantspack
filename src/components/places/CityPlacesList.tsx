@@ -10,6 +10,7 @@ import PlaceImage from './PlaceImage'
 import AddPlaceButton from './AddPlaceButton'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import { Plus } from 'lucide-react'
+import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS, veganLevelOrder } from '@/lib/vegan-level'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -26,10 +27,13 @@ const SUBCATEGORY_LABELS: Record<string, Record<string, string>> = {
   hotel: { hotel: 'Hotel', hostel: 'Hostel', bnb: 'B&B', retreat: 'Retreat', other_stay: 'Other' },
 }
 
-const VEGAN_LABELS: Record<string, string> = {
-  fully_vegan: '100% Vegan',
-  vegan_friendly: 'Vegan-Friendly',
-}
+const VEGAN_LEVEL_FILTERS = [
+  { value: null, label: 'All Levels' },
+  { value: 'fully_vegan', label: '100% Vegan' },
+  { value: 'mostly_vegan', label: 'Mostly Vegan' },
+  { value: 'vegan_friendly', label: 'Vegan-Friendly' },
+  { value: 'vegan_options', label: 'Has Options' },
+]
 
 interface Place {
   id: string
@@ -64,6 +68,7 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
   const activeCategory = searchParams?.get('category') || null
   const activeSubcategory = searchParams?.get('sub') || null
   const petOnly = searchParams?.get('pet') === '1'
+  const activeVeganLevel = searchParams?.get('vl') || null
   // Default: fully-vegan places first, then by rating, then by name. A Lemmy
   // reviewer rightly pointed out that alphabetical default put Bojangles (a
   // chicken chain that shouldn't be here anyway) at the top. Now vegan-first
@@ -104,12 +109,13 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
     if (validCategory && p.category !== validCategory) return false
     if (validSubcategory && p.subcategory !== validSubcategory) return false
     if (petOnly && !p.is_pet_friendly) return false
+    if (activeVeganLevel && p.vegan_level !== activeVeganLevel) return false
     return true
   }).sort((a, b) => {
     if (sortBy === 'rating') return (b.average_rating || 0) - (a.average_rating || 0)
     if (sortBy === 'vegan') {
-      if (a.vegan_level === 'fully_vegan' && b.vegan_level !== 'fully_vegan') return -1
-      if (b.vegan_level === 'fully_vegan' && a.vegan_level !== 'fully_vegan') return 1
+      const levelDiff = veganLevelOrder(b.vegan_level) - veganLevelOrder(a.vegan_level)
+      if (levelDiff !== 0) return levelDiff
       const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0)
       if (ratingDiff !== 0) return ratingDiff
       return a.name.localeCompare(b.name)
@@ -155,6 +161,23 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
                 </button>
               )
             })}
+          </>
+        )}
+
+        {/* Vegan level sub-filter — only when global toggle is OFF */}
+        {!isFullyVeganOnly && (
+          <>
+            <div className="w-px h-8 bg-outline-variant/30 self-center" />
+            {VEGAN_LEVEL_FILTERS.map(({ value, label }) => (
+              <button key={value ?? 'all'} onClick={() => setFilter({ vl: value })}
+                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                  activeVeganLevel === value
+                    ? 'bg-primary text-on-primary-btn'
+                    : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                }`}>
+                {label}
+              </button>
+            ))}
           </>
         )}
 
@@ -214,7 +237,10 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
                     {/* Overlay badges */}
                     <div className="absolute top-1 left-1 flex flex-col gap-0.5">
                       {place.vegan_level === 'fully_vegan' && (
-                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-green-600 text-white leading-none">VEGAN</span>
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-emerald-600 text-white leading-none">VEGAN</span>
+                      )}
+                      {place.vegan_level === 'mostly_vegan' && (
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-teal-600 text-white leading-none">MOSTLY</span>
                       )}
                       {place.is_pet_friendly && (
                         <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-orange-500 text-white leading-none">🐾</span>
@@ -233,8 +259,8 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
                         {CATEGORY_LABELS[place.category] || place.category}
                       </span>
                       {place.vegan_level && (
-                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${place.vegan_level === 'fully_vegan' ? 'bg-green-100 text-green-800' : 'bg-lime-100 text-lime-800'}`}>
-                          {VEGAN_LABELS[place.vegan_level] || place.vegan_level}
+                        <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${VEGAN_LEVEL_INLINE_CLASS[place.vegan_level] || 'bg-stone-100 text-stone-600'}`}>
+                          {VEGAN_LEVEL_LABEL[place.vegan_level] || place.vegan_level}
                         </span>
                       )}
                       {place.is_pet_friendly && (
