@@ -5,6 +5,7 @@ import { marked } from 'marked'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import BlogEngagement from '@/components/blog/BlogEngagement'
 
 // Article pages — fresh reads so edits are reflected quickly.
 export const revalidate = 0
@@ -261,6 +262,8 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
             </div>
           </footer>
         )}
+
+        <BlogEngagement postId={article.id} />
       </article>
     </div>
   )
