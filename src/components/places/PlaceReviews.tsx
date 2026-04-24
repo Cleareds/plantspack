@@ -408,7 +408,7 @@ export default function PlaceReviews({
                   <VideoUploader
                     onVideosChange={(urls) => { if (urls.length > 0) setVideoUrl(urls[0]) }}
                     maxVideos={1}
-                    maxVideoSizeMB={50}
+                    maxVideoSizeMB={100}
                   />
                 </div>
               )}

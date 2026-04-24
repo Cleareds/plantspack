@@ -15,7 +15,7 @@ interface VideoUploaderProps {
 export default function VideoUploader({ 
   onVideosChange, 
   maxVideos = 1,
-  maxVideoSizeMB = 64,
+  maxVideoSizeMB = 100,
   subscription 
 }: VideoUploaderProps) {
   const [videoUrls, setVideoUrls] = useState<string[]>([])

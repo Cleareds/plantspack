@@ -80,8 +80,8 @@ export default function ImageUploader({
 
   const validateFile = (file: File, existingImages: ImageFile[]): boolean => {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif']
-    const maxSizePerFile = 15 * 1024 * 1024 // 15MB per file (iPhone photos can be 8-12MB)
-    const maxTotalSize = 40 * 1024 * 1024 // 40MB total (pre-compression; compressed output is much smaller)
+    const maxSizePerFile = 25 * 1024 * 1024 // 25MB per file
+    const maxTotalSize = 100 * 1024 * 1024 // 100MB total
 
     if (!validTypes.includes(file.type)) {
       alert('Please upload only JPEG, PNG, or WebP images.')
@@ -90,7 +90,7 @@ export default function ImageUploader({
 
     if (file.size > maxSizePerFile) {
       console.error('❌ File too large:', file.size, 'bytes. Max:', maxSizePerFile, 'bytes')
-      alert('Each image must be smaller than 15MB.')
+      alert('Each image must be smaller than 25MB.')
       return false
     }
 
@@ -107,7 +107,7 @@ export default function ImageUploader({
     
     if (totalAfterAdding > maxTotalSize) {
       console.error('❌ Total size would exceed limit:', totalAfterAdding, 'bytes. Max:', maxTotalSize, 'bytes')
-      alert('Total size of all images cannot exceed 40MB.')
+      alert('Total size of all images cannot exceed 100MB.')
       return false
     }
 

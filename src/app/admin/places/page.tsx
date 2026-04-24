@@ -67,27 +67,10 @@ export default function PlacesManagement() {
 
   // Load contributor list once on mount
   useEffect(() => {
-    supabase
-      .from('places')
-      .select('created_by, users!inner(id, username)')
-      .is('archived_at', null)
-      .not('created_by', 'is', null)
-      .limit(5000)
-      .then(({ data }) => {
-        if (!data) return
-        const counts: Record<string, { username: string; count: number }> = {}
-        for (const row of data as any[]) {
-          const u = Array.isArray(row.users) ? row.users[0] : row.users
-          if (!u?.username || u.username === 'admin') continue
-          if (!counts[row.created_by]) counts[row.created_by] = { username: u.username, count: 0 }
-          counts[row.created_by].count++
-        }
-        setContributors(
-          Object.entries(counts)
-            .map(([id, { username, count }]) => ({ id, username, count }))
-            .sort((a, b) => b.count - a.count)
-        )
-      })
+    fetch('/api/admin/contributors')
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setContributors(data) })
+      .catch(() => {})
   }, [])
 
   const loadPlaces = useCallback(async () => {

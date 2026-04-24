@@ -12,7 +12,7 @@ const navItems = [
   { href: '/vegan-places', label: 'Vegan Places', icon: 'location_on' },
   { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
   { href: '/city-ranks', label: 'City Ranks', icon: 'leaderboard' },
-  { href: '/feed', label: 'Feed', icon: 'forum' },
+  { href: '/feed', label: 'Community Feed', icon: 'forum' },
   { href: '/events', label: 'Events', icon: 'event' },
   { href: '/packs', label: 'Packs / Trips', icon: 'groups' },
   { href: '/blog', label: 'Blog', icon: 'article' },
