@@ -88,7 +88,7 @@ npx tsx scripts/fetch-og-images.ts --limit 1000
 npx tsx scripts/fetch-og-images.ts --source osm-import-2026-04 --limit 5000
 ```
 
-**Step 2 — AI descriptions via Claude Haiku** (for places still without descriptions after step 1):
+**Step 2 — AI descriptions via OpenAI gpt-4o-mini** (for places still without descriptions after step 1):
 
 ```bash
 # Dry run to preview prompt
@@ -101,7 +101,7 @@ npx tsx scripts/generate-descriptions.ts --source=osm-import-2026-04 --limit=500
 npx tsx scripts/generate-descriptions.ts --limit=10000
 ```
 
-Haiku generates 2-3 sentence descriptions based on name, type, location, cuisine, and tags. Cost: ~$0.07/1k places. Run this after `fetch-og-images.ts` so website-sourced descriptions take priority.
+gpt-4o-mini generates 2-3 sentence descriptions based on name, type, location, cuisine, and tags. Cost: ~$0.008/1k places. Requires `OPENAI_API_KEY` in `.env.local`. Run after `fetch-og-images.ts` so website-sourced descriptions take priority.
 
 ## Data quality checks
 

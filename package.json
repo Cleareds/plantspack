@@ -33,7 +33,6 @@
     "test:clean": "bash scripts/clean-test-artifacts.sh"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.91.0",
     "@sentry/nextjs": "^10.25.0",
     "@stripe/stripe-js": "^7.7.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
@@ -46,6 +45,7 @@
     "lucide-react": "^0.525.0",
     "next": "^16.1.1",
     "nodemailer": "^7.0.6",
+    "openai": "^6.34.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-leaflet": "^5.0.0",

@@ -1,14 +1,14 @@
 /**
- * Generate 2-3 sentence descriptions for places that have none using Claude Haiku.
- * Cheap (~$0.35 per 5k places), fast, and consistent.
+ * Generate 2-3 sentence descriptions for places that have none using OpenAI gpt-4o-mini.
+ * Cheap (~$0.04 per 5k places), fast, and consistent.
  *
  * Usage:
- *   npx tsx scripts/generate-descriptions.ts [--source osm-import-2026-04] [--limit 500] [--dry-run]
+ *   npx tsx scripts/generate-descriptions.ts [--source=osm-import-2026-04] [--limit=500] [--dry-run]
  *
- * Cost estimate: ~$0.07 per 1,000 places at Haiku rates.
+ * Cost estimate: ~$0.008 per 1,000 places at gpt-4o-mini rates.
  */
 import { config } from 'dotenv'; config({ path: '.env.local' });
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 import { sleep } from './lib/place-pipeline';
 
@@ -18,7 +18,7 @@ const sb = createClient(
   { auth: { autoRefreshToken: false, persistSession: false } }
 );
 
-const ai = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 function buildPrompt(p: {
   name: string;
@@ -48,16 +48,16 @@ ${tags ? `Notable for: ${tags}` : ''}`;
 
 async function generateDescription(place: any): Promise<string | null> {
   try {
-    const msg = await ai.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+    const resp = await ai.chat.completions.create({
+      model: 'gpt-4o-mini',
       max_tokens: 150,
       messages: [{ role: 'user', content: buildPrompt(place) }],
     });
-    const text = (msg.content[0] as any)?.text?.trim();
+    const text = resp.choices[0]?.message?.content?.trim();
     if (!text || text.length < 20) return null;
     return text.slice(0, 400);
   } catch (e: any) {
-    if (e?.status === 529 || e?.status === 429) {
+    if (e?.status === 429) {
       await sleep(10000);
       return null;
     }
@@ -71,15 +71,14 @@ async function main() {
   const limit = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] || '2000');
   const sourceFilter = args.find(a => a.startsWith('--source='))?.split('=')[1];
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY not set in .env.local');
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('OPENAI_API_KEY not set in .env.local');
     process.exit(1);
   }
 
-  console.log(`🤖 Generating descriptions via Claude Haiku${dryRun ? ' [DRY RUN]' : ''}${sourceFilter ? ` [source: ${sourceFilter}]` : ''}`);
+  console.log(`🤖 Generating descriptions via gpt-4o-mini${dryRun ? ' [DRY RUN]' : ''}${sourceFilter ? ` [source: ${sourceFilter}]` : ''}`);
   console.log(`Limit: ${limit}`);
 
-  // Load places without descriptions, paginated
   const places: any[] = [];
   let offset = 0;
   while (places.length < limit) {
@@ -105,7 +104,7 @@ async function main() {
   }
 
   let generated = 0, failed = 0;
-  const CONCURRENCY = 5; // parallel Haiku calls
+  const CONCURRENCY = 10;
 
   for (let i = 0; i < places.length; i += CONCURRENCY) {
     const batch = places.slice(i, i + CONCURRENCY);
@@ -127,12 +126,11 @@ async function main() {
       process.stdout.write(`  ${Math.min(i + CONCURRENCY, places.length)}/${places.length} | generated: ${generated} | failed: ${failed}\r`);
     }
 
-    // Light rate-limit buffer between batches
-    if (i + CONCURRENCY < places.length) await sleep(200);
+    if (i + CONCURRENCY < places.length) await sleep(100);
   }
 
   console.log(`\n✅ Done: ${generated} descriptions generated, ${failed} failed`);
-  console.log(`Estimated cost: ~$${(generated * 0.00007).toFixed(3)}`);
+  console.log(`Estimated cost: ~$${(generated * 0.000008).toFixed(4)}`);
 }
 
 main().catch(console.error);
