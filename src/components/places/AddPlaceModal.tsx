@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { X, Search, Image as ImageIcon } from 'lucide-react'
-import { track } from '@vercel/analytics'
+import { track } from '@/lib/analytics'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { geocodingService } from '@/lib/geocoding'

@@ -93,6 +93,14 @@ export function trackEvent(
   }
 }
 
+/** Drop-in replacement for Vercel Analytics track(). Routes to GA4. */
+export function track(eventName: string, properties?: Record<string, string | number | boolean>): void {
+  if (!isAnalyticsAvailable()) return
+  try {
+    window.gtag?.('event', eventName, properties)
+  } catch {}
+}
+
 /**
  * Track user timing for performance monitoring
  * @param name - Timing variable name

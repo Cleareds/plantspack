@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { track } from '@vercel/analytics'
+import { track } from '@/lib/analytics'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
