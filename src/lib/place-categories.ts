@@ -11,5 +11,6 @@ export const CATEGORY_CONFIG: Record<string, { color: string; emoji: string; lab
   store: { color: '#a855f7', emoji: '🛍️', label: 'Store' },
   organisation: { color: '#f97316', emoji: '🐾', label: 'Sanctuary' },
   event: { color: '#ec4899', emoji: '🎉', label: 'Event' },
+  community: { color: '#0ea5e9', emoji: '🤝', label: 'Community' },
   other: { color: '#6b7280', emoji: '📍', label: 'Other' },
 }
