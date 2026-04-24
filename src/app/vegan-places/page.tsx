@@ -6,6 +6,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { loadCityImages, getCountryThumbnail } from '@/lib/city-images'
 import FilteredCount, { FilteredTotal, FilteredLabel } from '@/components/ui/FilteredCount'
 import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
+import RecentlyAddedSection from '@/components/ui/RecentlyAddedSection'
 
 export const revalidate = 3600
 
@@ -44,17 +45,33 @@ function getContinent(countryName: string): string {
 
 async function getRecentlyAdded() {
   const supabase = createAdminClient()
-  // Show user-added and web-researched places, not bulk imports
   const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-  const { data, count } = await supabase
+  const base = supabase
     .from('places')
     .select('id, name, slug, city, country, category, main_image_url, vegan_level', { count: 'exact' })
     .gte('created_at', oneMonthAgo)
     .in('source', ['user', 'user_submission', 'web_research'])
     .not('main_image_url', 'is', null)
     .order('created_at', { ascending: false })
-    .limit(6)
-  return { places: data || [], count: count || 0 }
+
+  // Fetch both all-places (for display cards + total count) and fully-vegan count in parallel
+  const [allResult, fvResult] = await Promise.all([
+    base.limit(12),
+    supabase
+      .from('places')
+      .select('id', { count: 'exact', head: true })
+      .gte('created_at', oneMonthAgo)
+      .in('source', ['user', 'user_submission', 'web_research'])
+      .eq('vegan_level', 'fully_vegan'),
+  ])
+
+  const places = allResult.data || []
+  return {
+    places,
+    count: allResult.count || 0,
+    fullyVeganCount: fvResult.count || 0,
+    fullyVeganPlaces: places.filter((p: any) => p.vegan_level === 'fully_vegan'),
+  }
 }
 
 // Get top city per country for thumbnails
@@ -74,13 +91,14 @@ async function getTopCityPerCountry(): Promise<Record<string, string>> {
 }
 
 export default async function VeganPlacesPage() {
-  const [{ countries, total }, cityImages, { places: recentPlaces, count: recentCount }, topCityMap] = await Promise.all([
+  const [{ countries, total }, cityImages, recentData, topCityMap] = await Promise.all([
     getCountries(),
     loadCityImages(),
     getRecentlyAdded(),
     getTopCityPerCountry(),
   ])
 
+  const { places: recentPlaces, count: recentCount, fullyVeganCount: recentFvCount, fullyVeganPlaces: recentFvPlaces } = recentData
   const totalFv = countries.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0)
 
   // Group by continent
@@ -157,25 +175,14 @@ export default async function VeganPlacesPage() {
           </section>
         )}
 
-        {/* Recently Added */}
-        {recentCount > 0 && recentPlaces.length > 0 && (
-          <section className="mb-10">
-            <h2 className="text-lg font-bold text-on-surface mb-4">{recentCount} new places this week</h2>
-            <div className="flex gap-3 overflow-x-auto pb-2">
-              {recentPlaces.map((place: any) => (
-                <Link key={place.id} href={`/place/${place.slug || place.id}`} prefetch={false}
-                  className="flex-shrink-0 w-48 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 overflow-hidden transition-all">
-                  {place.main_image_url && (
-                    <img src={place.main_image_url} alt={place.name} className="w-full h-24 object-cover" />
-                  )}
-                  <div className="p-2.5">
-                    <p className="text-xs font-medium text-on-surface truncate">{place.name}</p>
-                    <p className="text-[10px] text-on-surface-variant">{place.city}, {place.country}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
+        {/* Recently Added — client component so the count + cards respond to the vegan toggle */}
+        {recentCount > 0 && (
+          <RecentlyAddedSection
+            allPlaces={recentPlaces}
+            allCount={recentCount}
+            fullyVeganPlaces={recentFvPlaces}
+            fullyVeganCount={recentFvCount}
+          />
         )}
 
         {/* Continents */}

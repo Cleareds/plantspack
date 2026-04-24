@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { marked } from 'marked'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createClient } from '@/lib/supabase-server'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 // Article pages — fresh reads so edits are reflected quickly.
@@ -102,12 +103,18 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     redirect(`/post/${article.slug || article.id}`)
   }
 
-  // Draft articles are admin-only. Non-admins get 404 so drafts aren't discoverable.
-  // (Admin check: the admin user is the only one who can access /admin routes and
-  //  knows draft URLs — this is acceptable for a personal blog workflow.)
-  // If article is draft and accessed from public, return 404 without revealing it exists.
-  // We can't check session here without server auth client, so we rely on the draft
-  // banner + the fact that drafts don't appear in any feed or listing.
+  // Draft articles are admin-only — return 404 for everyone else.
+  if (article.privacy === 'draft') {
+    const serverClient = await createClient()
+    const { data: { user } } = await serverClient.auth.getUser()
+    if (user) {
+      const { data: profile } = await createAdminClient()
+        .from('users').select('role').eq('id', user.id).single()
+      if (profile?.role !== 'admin') notFound()
+    } else {
+      notFound()
+    }
+  }
 
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug)
   if (isUuid && article.slug) {
@@ -207,7 +214,27 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
         </header>
 
         <div
-          className="prose prose-lg prose-headings:font-headline prose-headings:text-on-surface prose-p:text-on-surface prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-on-surface prose-ul:text-on-surface prose-ol:text-on-surface prose-hr:border-outline-variant/20 prose-img:rounded-xl prose-img:shadow-sm max-w-none leading-relaxed"
+          className={[
+            'prose prose-lg max-w-none',
+            // headings
+            'prose-headings:font-headline prose-headings:font-bold prose-headings:text-on-surface prose-headings:tracking-tight',
+            'prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-outline-variant/15 prose-h2:pb-2',
+            'prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3',
+            // body text
+            'prose-p:text-on-surface prose-p:leading-relaxed prose-p:my-4',
+            // links
+            'prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-a:break-words',
+            // bold/em
+            'prose-strong:text-on-surface prose-strong:font-semibold',
+            // lists
+            'prose-ul:text-on-surface prose-ol:text-on-surface prose-li:my-1',
+            // hr
+            'prose-hr:border-outline-variant/20 prose-hr:my-10',
+            // images
+            'prose-img:rounded-2xl prose-img:shadow-md prose-img:my-8 prose-img:w-full',
+            // blockquote
+            'prose-blockquote:border-l-primary prose-blockquote:text-on-surface-variant prose-blockquote:not-italic',
+          ].join(' ')}
           dangerouslySetInnerHTML={{ __html: bodyHtml }}
         />
 

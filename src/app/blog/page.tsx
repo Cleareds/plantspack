@@ -58,7 +58,14 @@ function readingTime(text: string): number {
 }
 
 function excerpt(text: string, max = 240): string {
-  const clean = text.replace(/\s+/g, ' ').trim()
+  const clean = text
+    .replace(/^#{1,6}\s+/gm, '')        // strip heading markers
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, '') // strip images
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links → text
+    .replace(/[*_`~]/g, '')              // strip emphasis
+    .replace(/^[-*]\s+/gm, '')           // strip list markers
+    .replace(/^---+$/gm, '')             // strip hr
+    .replace(/\s+/g, ' ').trim()
   if (clean.length <= max) return clean
   const cut = clean.slice(0, max)
   const lastSpace = cut.lastIndexOf(' ')
