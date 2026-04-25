@@ -149,12 +149,22 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'johor bahru': 'Johor Bahru', 'johor bahru city': 'Johor Bahru',
   'kota kinabalu': 'Kota Kinabalu', 'kuching': 'Kuching',
   'shah alam': 'Shah Alam', 'petaling jaya': 'Petaling Jaya',
-  // UAE
+  // UAE — Arabic + district names
   'emirate of dubai': 'Dubai', 'dubai city': 'Dubai',
   'emirate of abu dhabi': 'Abu Dhabi', 'abu dhabi city': 'Abu Dhabi',
-  // Turkey
+  'دبي': 'Dubai', 'وادي الصفا 4': 'Dubai', 'وادي الصفا': 'Dubai',
+  'أبوظبي': 'Abu Dhabi', 'أبو ظبي': 'Abu Dhabi',
+  'الشارقة': 'Sharjah', 'عجمان': 'Ajman', 'رأس الخيمة': 'Ras Al Khaimah',
+  // Turkey — Istanbul districts + province names
   'i̇stanbul': 'Istanbul', 'istanbul (europe)': 'Istanbul',
-  'i̇zmir': 'Izmir', 'i̇zmir province': 'Izmir',
+  'beyoglu': 'Istanbul', 'beyoğlu': 'Istanbul',
+  'kadikoy': 'Istanbul', 'kadıköy': 'Istanbul',
+  'sisli': 'Istanbul', 'şişli': 'Istanbul',
+  'uskudar': 'Istanbul', 'üsküdar': 'Istanbul',
+  'besiktas': 'Istanbul', 'beşiktaş': 'Istanbul',
+  'fatih': 'Istanbul', 'bayrampasa': 'Istanbul',
+  'silivri': 'Istanbul',
+  'i̇zmir': 'Izmir', 'i̇zmir province': 'Izmir', 'izmir province': 'Izmir',
   'antalya province': 'Antalya', 'ankara province': 'Ankara',
   'muğla': 'Mugla', 'fethiye': 'Fethiye',
 };
