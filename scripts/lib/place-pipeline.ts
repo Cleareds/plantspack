@@ -124,6 +124,39 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'nunoa': 'Santiago', 'nuñoa': 'Santiago', 'providencia': 'Santiago',
   'las condes': 'Santiago',
   'ciudad satelite': 'Santa Cruz de la Sierra',
+  // Indonesia — Nominatim sometimes appends ", Bali" or returns districts
+  'denpasar, bali': 'Denpasar', 'denpasar selatan': 'Denpasar',
+  'kecamatan kuta': 'Kuta', 'kuta, bali': 'Kuta', 'kuta selatan': 'Kuta',
+  'seminyak': 'Seminyak', 'seminyak, bali': 'Seminyak',
+  'ubud, bali': 'Ubud', 'gianyar': 'Ubud',
+  'canggu, bali': 'Canggu',
+  'kota jakarta pusat': 'Jakarta', 'kota jakarta selatan': 'Jakarta',
+  'kota jakarta utara': 'Jakarta', 'kota jakarta barat': 'Jakarta',
+  'kota jakarta timur': 'Jakarta', 'jakarta pusat': 'Jakarta',
+  'daerah khusus ibukota jakarta': 'Jakarta',
+  'kota yogyakarta': 'Yogyakarta', 'yogyakarta city': 'Yogyakarta',
+  'kota surabaya': 'Surabaya', 'kota bandung': 'Bandung',
+  'kota medan': 'Medan', 'kota makassar': 'Makassar',
+  // Philippines — Nominatim returns "City of X" or "X City"
+  'city of manila': 'Manila', 'city of cebu': 'Cebu', 'cebu city': 'Cebu',
+  'city of davao': 'Davao', 'davao city': 'Davao',
+  'quezon city': 'Quezon City', 'makati': 'Manila', 'taguig': 'Manila',
+  'pasig': 'Manila', 'marikina': 'Manila', 'san juan': 'Manila',
+  'muntinlupa': 'Manila', 'balabag boracay': 'Boracay', 'boracay': 'Boracay',
+  'buho': 'El Nido',
+  // Malaysia
+  'george town': 'Penang', 'georgetown': 'Penang',
+  'johor bahru': 'Johor Bahru', 'johor bahru city': 'Johor Bahru',
+  'kota kinabalu': 'Kota Kinabalu', 'kuching': 'Kuching',
+  'shah alam': 'Shah Alam', 'petaling jaya': 'Petaling Jaya',
+  // UAE
+  'emirate of dubai': 'Dubai', 'dubai city': 'Dubai',
+  'emirate of abu dhabi': 'Abu Dhabi', 'abu dhabi city': 'Abu Dhabi',
+  // Turkey
+  'i̇stanbul': 'Istanbul', 'istanbul (europe)': 'Istanbul',
+  'i̇zmir': 'Izmir', 'i̇zmir province': 'Izmir',
+  'antalya province': 'Antalya', 'ankara province': 'Ankara',
+  'muğla': 'Mugla', 'fethiye': 'Fethiye',
 };
 
 export const COUNTRY_NAMES: Record<string, string> = {
