@@ -68,28 +68,99 @@ export const EXCLUDED_CHAINS = new Set([
 
 // Bilingual / administrative city name overrides
 export const CITY_OVERRIDES: Record<string, string> = {
+  // Belgium
   'bruxelles - brussel': 'Brussels', 'bruxelles': 'Brussels', 'brussel': 'Brussels',
   'liege': 'Liège', 'luik': 'Liège',
   'gent': 'Ghent', 'antwerpen': 'Antwerp', 'brugge': 'Bruges',
   'ixelles - elsene': 'Ixelles', 'saint-gilles - sint-gillis': 'Saint-Gilles',
   'schaerbeek - schaarbeek': 'Schaerbeek',
   'molenbeek-saint-jean - sint-jans-molenbeek': 'Molenbeek',
+  // Germany / Austria
   'köln': 'Cologne', 'münchen': 'Munich', 'nürnberg': 'Nuremberg', 'wien': 'Vienna',
+  // Netherlands
   'den haag': "The Hague", "'s-gravenhage": "The Hague",
+  // South Korea
+  '서울특별시': 'Seoul', '서울': 'Seoul',
+  '부산광역시': 'Busan', '부산': 'Busan',
+  '대구광역시': 'Daegu', '대구': 'Daegu',
+  '인천광역시': 'Incheon', '인천': 'Incheon',
+  '광주광역시': 'Gwangju', '광주': 'Gwangju',
+  '대전광역시': 'Daejeon', '대전': 'Daejeon',
+  '울산광역시': 'Ulsan', '울산': 'Ulsan',
+  '세종특별자치시': 'Sejong', '세종': 'Sejong',
+  '수원시': 'Suwon', '고양시': 'Goyang', '용인시': 'Yongin',
+  '창원시': 'Changwon', '성남시': 'Seongnam', '시흥시': 'Siheung',
+  '전주시': 'Jeonju', '제주시': 'Jeju', '제주특별자치도': 'Jeju',
+  '중앙리': 'Jeju',
+  // Vietnam
+  'thanh pho ho chi minh': 'Ho Chi Minh City', 'ho chi minh city': 'Ho Chi Minh City',
+  'thành phố hồ chí minh': 'Ho Chi Minh City',
+  'thu đuc': 'Ho Chi Minh City', 'thu duc': 'Ho Chi Minh City',
+  'thuan an': 'Ho Chi Minh City',
+  'thanh pho ha noi': 'Hanoi', 'ha noi': 'Hanoi', 'hà nội': 'Hanoi',
+  'thanh pho đa nang': 'Da Nang', 'đa nang': 'Da Nang', 'da nang': 'Da Nang',
+  'phuong sa pa': 'Sapa', 'sa pa': 'Sapa',
+  'phuong ngu hanh son': 'Da Nang',
+  'hoi an': 'Hoi An', 'hội an': 'Hoi An',
+  'can tho': 'Can Tho', 'cần thơ': 'Can Tho',
+  'nha trang': 'Nha Trang', 'vung tau': 'Vung Tau',
+  'da lat': 'Da Lat', 'đà lạt': 'Da Lat',
+  'hue': 'Hue', 'huế': 'Hue',
+  // Egypt
+  'القاهرة': 'Cairo', 'الإسكندرية': 'Alexandria', 'إسكندرية': 'Alexandria',
+  'الجيزة': 'Giza', 'الأقصر': 'Luxor', 'أسوان': 'Aswan',
+  'شرم الشيخ': 'Sharm El Sheikh', 'الغردقة': 'Hurghada',
+  // Morocco
+  'الرباط': 'Rabat', 'الدار البيضاء': 'Casablanca', 'مراكش': 'Marrakesh',
+  'فاس': 'Fes', 'طنجة': 'Tangier', 'أكادير': 'Agadir',
+  'fes medina': 'Fes',
+  // Kenya / Africa
+  'nairobi city': 'Nairobi',
+  'dar es salaaam': 'Dar es Salaam', 'dar es salaam': 'Dar es Salaam',
+  // Hong Kong
+  '尖沙咀 tsim sha tsui': 'Tsim Sha Tsui', 'tsim sha tsui': 'Tsim Sha Tsui',
+  // Latin America common district → city
+  'miraflores': 'Lima', 'barranco': 'Lima', 'yanahuara': 'Arequipa',
+  'nunoa': 'Santiago', 'nuñoa': 'Santiago', 'providencia': 'Santiago',
+  'las condes': 'Santiago',
+  'ciudad satelite': 'Santa Cruz de la Sierra',
 };
 
 export const COUNTRY_NAMES: Record<string, string> = {
+  // Europe
   BE: 'Belgium', NL: 'Netherlands', DE: 'Germany', GB: 'United Kingdom',
-  US: 'United States', SE: 'Sweden', FR: 'France', IT: 'Italy',
-  ES: 'Spain', PL: 'Poland', AT: 'Austria', CH: 'Switzerland',
-  DK: 'Denmark', NO: 'Norway', FI: 'Finland', PT: 'Portugal',
-  CZ: 'Czech Republic', HU: 'Hungary', RO: 'Romania', GR: 'Greece',
-  HR: 'Croatia', SK: 'Slovakia', SI: 'Slovenia', LT: 'Lithuania',
-  LV: 'Latvia', EE: 'Estonia', BG: 'Bulgaria', LU: 'Luxembourg',
-  AU: 'Australia', CA: 'Canada', NZ: 'New Zealand', IE: 'Ireland',
-  UA: 'Ukraine', IL: 'Israel', ZA: 'South Africa', IN: 'India',
-  JP: 'Japan', SG: 'Singapore', TH: 'Thailand', TW: 'Taiwan',
-  MX: 'Mexico', BR: 'Brazil', AR: 'Argentina', CO: 'Colombia',
+  SE: 'Sweden', FR: 'France', IT: 'Italy', ES: 'Spain', PL: 'Poland',
+  AT: 'Austria', CH: 'Switzerland', DK: 'Denmark', NO: 'Norway',
+  FI: 'Finland', PT: 'Portugal', CZ: 'Czech Republic', HU: 'Hungary',
+  RO: 'Romania', GR: 'Greece', HR: 'Croatia', SK: 'Slovakia',
+  SI: 'Slovenia', LT: 'Lithuania', LV: 'Latvia', EE: 'Estonia',
+  BG: 'Bulgaria', LU: 'Luxembourg', UA: 'Ukraine', IE: 'Ireland',
+  RS: 'Serbia', BA: 'Bosnia and Herzegovina', ME: 'Montenegro',
+  MK: 'North Macedonia', AL: 'Albania', MT: 'Malta', CY: 'Cyprus',
+  IS: 'Iceland',
+  // Americas
+  US: 'United States', CA: 'Canada', MX: 'Mexico', BR: 'Brazil',
+  AR: 'Argentina', CO: 'Colombia', CL: 'Chile', PE: 'Peru',
+  UY: 'Uruguay', BO: 'Bolivia', EC: 'Ecuador', CR: 'Costa Rica',
+  PA: 'Panama', GT: 'Guatemala', DO: 'Dominican Republic', CU: 'Cuba',
+  // Oceania
+  AU: 'Australia', NZ: 'New Zealand',
+  // East Asia
+  JP: 'Japan', TW: 'Taiwan', KR: 'South Korea', HK: 'Hong Kong', CN: 'China',
+  // SE Asia
+  TH: 'Thailand', VN: 'Vietnam', ID: 'Indonesia', PH: 'Philippines',
+  MY: 'Malaysia', SG: 'Singapore', KH: 'Cambodia', MM: 'Myanmar',
+  LA: 'Laos',
+  // South Asia
+  IN: 'India', LK: 'Sri Lanka', NP: 'Nepal', BD: 'Bangladesh', PK: 'Pakistan',
+  // Middle East / Central Asia
+  IL: 'Israel', AE: 'United Arab Emirates', TR: 'Turkey', LB: 'Lebanon',
+  JO: 'Jordan', KW: 'Kuwait', QA: 'Qatar', SA: 'Saudi Arabia',
+  // Africa
+  ZA: 'South Africa', NG: 'Nigeria', KE: 'Kenya', GH: 'Ghana',
+  TZ: 'Tanzania', RW: 'Rwanda', ET: 'Ethiopia', MA: 'Morocco',
+  EG: 'Egypt', UG: 'Uganda', ZW: 'Zimbabwe', SN: 'Senegal',
+  CI: 'Ivory Coast', CM: 'Cameroon', MU: 'Mauritius',
 };
 
 // ─── Text helpers ─────────────────────────────────────────────────────────────
