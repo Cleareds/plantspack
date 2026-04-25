@@ -264,7 +264,7 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
                         </span>
                       )}
                       {place.is_pet_friendly && (
-                        <span className="bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded text-xs flex items-center gap-0.5">
+                        <span className="bg-surface-container text-on-surface-variant px-1.5 py-0.5 rounded text-xs flex items-center gap-0.5">
                           <PawPrint className="h-3 w-3" /> Pets
                         </span>
                       )}
