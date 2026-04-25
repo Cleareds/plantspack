@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     const { data, count } = await supabase
       .from('places')
       .select('id, name, slug, city, country, tags, vegan_level, website, updated_at', { count: 'exact' })
-      .or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly}')
+      .or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly},tags.cs.{community_report:non_vegan_chain},tags.cs.{community_report:vegan_friendly_chain},tags.cs.{community_report:few_vegan_options}')
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
@@ -96,14 +96,25 @@ export async function GET(request: NextRequest) {
   }
 
   if (tab === 'corrections') {
+    // place_corrections has user_id but no named FK to users — fetch separately
     const { data, count } = await supabase
       .from('place_corrections')
-      .select('id, place_id, corrections, note, status, created_at, places(id, name, slug, city, country), users(id, username)', { count: 'exact' })
+      .select('id, place_id, user_id, corrections, note, status, created_at, places(id, name, slug, city, country)', { count: 'exact' })
       .eq('status', 'pending')
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
-    return NextResponse.json({ corrections: data || [], total: count || 0 })
+    if (!data || data.length === 0) return NextResponse.json({ corrections: [], total: count || 0 })
+
+    // Enrich with usernames
+    const userIds = [...new Set(data.map((r: any) => r.user_id).filter(Boolean))]
+    const { data: users } = userIds.length
+      ? await supabase.from('users').select('id, username').in('id', userIds)
+      : { data: [] }
+    const userMap = Object.fromEntries((users || []).map((u: any) => [u.id, u]))
+
+    const enriched = data.map((r: any) => ({ ...r, users: userMap[r.user_id] || null }))
+    return NextResponse.json({ corrections: enriched, total: count || 0 })
   }
 
   if (tab === 'stats') {
@@ -128,7 +139,7 @@ export async function GET(request: NextRequest) {
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:hours_wrong']),
       supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_not_found']),
-      supabase.from('places').select('id', { count: 'exact', head: true }).or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly}'),
+      supabase.from('places').select('id', { count: 'exact', head: true }).or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly},tags.cs.{community_report:non_vegan_chain},tags.cs.{community_report:vegan_friendly_chain},tags.cs.{community_report:few_vegan_options}'),
     ])
 
     return NextResponse.json({

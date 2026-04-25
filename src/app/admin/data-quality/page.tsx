@@ -128,18 +128,15 @@ export default function DataQualityPage() {
   const handleDismiss = async (placeId: string, tag: string) => {
     setProcessing(placeId)
     try {
-      // For not_vegan tab, remove both possible tags
+      // For not_vegan tab, clear all possible vegan-report tags on the place
       if (tab === 'not_vegan') {
-        await fetch('/api/admin/data-quality', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ placeId, removeTag: 'community_report:not_fully_vegan' }),
-        })
-        await fetch('/api/admin/data-quality', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ placeId, removeTag: 'community_report:not_vegan_friendly' }),
-        })
+        for (const t of ['community_report:not_fully_vegan', 'community_report:not_vegan_friendly', 'community_report:non_vegan_chain', 'community_report:vegan_friendly_chain', 'community_report:few_vegan_options']) {
+          await fetch('/api/admin/data-quality', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ placeId, removeTag: t }),
+          })
+        }
       } else {
         await fetch('/api/admin/data-quality', {
           method: 'PATCH',
@@ -363,7 +360,7 @@ export default function DataQualityPage() {
                           {p.vegan_level.replace('_', ' ')}
                         </span>
                       )}
-                      {tab === 'not_vegan' && (p.tags || []).filter(t => t.startsWith('community_report:not')).map(t => (
+                      {tab === 'not_vegan' && (p.tags || []).filter(t => t.startsWith('community_report:not') || t.startsWith('community_report:non_') || t.startsWith('community_report:vegan_') || t.startsWith('community_report:few_')).map(t => (
                         <span key={t} className="text-[10px] px-1.5 py-0.5 rounded-full bg-orange-900/50 text-orange-300 font-medium">
                           {t.replace('community_report:', '').replace(/_/g, ' ')}
                         </span>
