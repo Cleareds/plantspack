@@ -120,13 +120,8 @@ jobs:
           })();
           "
 
-      # --- Google Places step disabled 2026-04-18 ---
-      # Retired because (a) staying in the free-first posture until budget
-      # clears and (b) the --delete flag violated CLAUDE.md's "never delete
-      # without explicit user confirmation" rule. Closure signals now come
-      # from the website-HEAD scan above and community reports via
-      # /api/places/[id]/report. Admin reviews both in /admin/data-quality.
-      # To re-enable: un-comment below AND drop `--delete` (tag instead).
-      # - name: Check Google Places for closed businesses
-      #   if: env.GOOGLE_PLACES_API_KEY != ''
-      #   run: npx tsx scripts/check-google-closed.ts --limit 200 --flagged-first
+      # Tags places as google_confirmed_closed / google_temporarily_closed / google_not_found.
+      # Never deletes — admin reviews flagged places in /admin/data-quality.
+      - name: Check Google Places for closed businesses
+        if: env.GOOGLE_PLACES_API_KEY != ''
+        run: npx tsx scripts/check-google-closed.ts --limit 200 --flagged-first
