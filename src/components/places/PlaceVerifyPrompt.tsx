@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert } from 'lucide-react'
+import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store } from 'lucide-react'
 
 interface PlaceVerifyPromptProps {
   placeId: string
@@ -65,6 +65,9 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
           {submitted === 'permanently_closed' && 'Thanks for reporting. We\'ll review and remove it if confirmed.'}
           {submitted === 'not_fully_vegan' && 'Thanks! We\'ll review the vegan status of this place.'}
           {submitted === 'not_vegan_friendly' && 'Thanks! We\'ll review whether this place still has vegan options.'}
+          {submitted === 'non_vegan_chain' && 'Thanks! We\'ll review whether this chain belongs on PlantsPack.'}
+          {submitted === 'vegan_friendly_chain' && 'Thanks for confirming — we\'ll mark it as a vegan-friendly chain.'}
+          {submitted === 'few_vegan_options' && 'Thanks! We\'ll consider downgrading this to "has vegan options".'}
         </span>
       </div>
     )
@@ -110,6 +113,18 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
         <button onClick={() => handleReport('not_vegan_friendly')} disabled={submitting}
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-md transition-colors disabled:opacity-50">
           <Leaf className="h-3 w-3" /> Not vegan-friendly
+        </button>
+        <button onClick={() => handleReport('non_vegan_chain')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50">
+          <Link2 className="h-3 w-3" /> Non-vegan friendly chain
+        </button>
+        <button onClick={() => handleReport('vegan_friendly_chain')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-md transition-colors disabled:opacity-50">
+          <Store className="h-3 w-3" /> Vegan-friendly chain
+        </button>
+        <button onClick={() => handleReport('few_vegan_options')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-md transition-colors disabled:opacity-50">
+          <Leaf className="h-3 w-3" /> Few vegan options only
         </button>
       </div>
       <p className="text-[10px] text-on-surface-variant/50 mt-2">Your feedback helps keep our data accurate</p>
