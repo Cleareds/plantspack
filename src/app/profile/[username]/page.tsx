@@ -9,6 +9,7 @@ import { savePageState, loadPageState } from '@/lib/page-state-storage'
 import Link from 'next/link'
 import { User, Calendar, MapPin, Heart, ExternalLink, PawPrint, Crown, Ban, Package, Star, CalendarCheck } from 'lucide-react'
 import StarRating from '@/components/places/StarRating'
+import FollowButton from '@/components/social/FollowButton'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
@@ -364,7 +365,9 @@ export default function ProfilePage() {
                   Manage contributions
                 </Link>
               </>
-            ) : null}
+            ) : (
+              <FollowButton userId={profile.id} />
+            )}
             callout={
               <div className="flex flex-wrap items-center gap-3 text-sm text-on-surface-variant">
                 <span className="inline-flex items-center gap-1">
