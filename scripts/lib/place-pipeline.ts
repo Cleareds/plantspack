@@ -167,6 +167,15 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'i̇zmir': 'Izmir', 'i̇zmir province': 'Izmir', 'izmir province': 'Izmir',
   'antalya province': 'Antalya', 'ankara province': 'Ankara',
   'muğla': 'Mugla', 'fethiye': 'Fethiye',
+  // China — Nominatim returns district names (区) and city suffixes (市)
+  '上海市': 'Shanghai', '北京市': 'Beijing', '昆明市': 'Kunming',
+  '龙岩市': 'Longyan', '大理市': 'Dali', '姑苏区': 'Suzhou',
+  '昌平区': 'Beijing', '东城区': 'Beijing', '朝阳区': 'Beijing',
+  '龙华区': 'Shenzhen', '福田区': 'Shenzhen', '南山区': 'Shenzhen',
+  '浦东新区': 'Shanghai', '静安区': 'Shanghai', '徐汇区': 'Shanghai',
+  '海淀区': 'Beijing', '西城区': 'Beijing', '丰台区': 'Beijing',
+  // Lebanon
+  'بيروت': 'Beirut', 'صيدا': 'Sidon', 'طرابلس': 'Tripoli',
   // India — city name normalization
   'bangalore': 'Bengaluru',
   'ernakulam': 'Kochi',
