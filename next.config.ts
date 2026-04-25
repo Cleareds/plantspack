@@ -173,15 +173,7 @@ const nextConfig: NextConfig = {
         destination: '/support',
         permanent: true,
       },
-      {
-        // City renamed 2016: Dnipropetrovsk → Dnipro
-        source: '/vegan-places/ukraine/dnipropetrovsk',
-        destination: '/vegan-places/ukraine/dnipro',
-        permanent: true,
-      },
-      // Consolidate public profile URLs on /profile/ — we had both /user/X and
-      // /profile/X serving the same content which Google treated as duplicates
-      // (contributing to the "duplicate without user-selected canonical" GSC bucket).
+      // Consolidate public profile URLs on /profile/
       {
         source: '/user/:username',
         destination: '/profile/:username',
@@ -192,6 +184,80 @@ const nextConfig: NextConfig = {
         destination: '/profile/:username/:path*',
         permanent: true,
       },
+
+      // ── City name canonicalisation redirects ──────────────────────────────
+      // Local-language → English city names. Added 2026-04 when we standardised
+      // all city names to English in the DB.
+
+      // Italy
+      { source: '/vegan-places/italy/roma', destination: '/vegan-places/italy/rome', permanent: true },
+      { source: '/vegan-places/italy/milano', destination: '/vegan-places/italy/milan', permanent: true },
+      { source: '/vegan-places/italy/firenze', destination: '/vegan-places/italy/florence', permanent: true },
+      { source: '/vegan-places/italy/venezia', destination: '/vegan-places/italy/venice', permanent: true },
+      { source: '/vegan-places/italy/napoli', destination: '/vegan-places/italy/naples', permanent: true },
+      { source: '/vegan-places/italy/torino', destination: '/vegan-places/italy/turin', permanent: true },
+
+      // Austria
+      { source: '/vegan-places/austria/wien', destination: '/vegan-places/austria/vienna', permanent: true },
+
+      // Germany
+      { source: '/vegan-places/germany/munchen', destination: '/vegan-places/germany/munich', permanent: true },
+      { source: '/vegan-places/germany/m%C3%BCnchen', destination: '/vegan-places/germany/munich', permanent: true },
+      { source: '/vegan-places/germany/koln', destination: '/vegan-places/germany/cologne', permanent: true },
+      { source: '/vegan-places/germany/k%C3%B6ln', destination: '/vegan-places/germany/cologne', permanent: true },
+
+      // Spain
+      { source: '/vegan-places/spain/sevilla', destination: '/vegan-places/spain/seville', permanent: true },
+
+      // Portugal
+      { source: '/vegan-places/portugal/lisboa', destination: '/vegan-places/portugal/lisbon', permanent: true },
+
+      // Netherlands
+      { source: '/vegan-places/netherlands/den-haag', destination: '/vegan-places/netherlands/the-hague', permanent: true },
+
+      // Belgium
+      { source: '/vegan-places/belgium/antwerpen', destination: '/vegan-places/belgium/antwerp', permanent: true },
+      { source: '/vegan-places/belgium/gent', destination: '/vegan-places/belgium/ghent', permanent: true },
+      { source: '/vegan-places/belgium/brugge', destination: '/vegan-places/belgium/bruges', permanent: true },
+      { source: '/vegan-places/belgium/liege', destination: '/vegan-places/belgium/li%C3%A8ge', permanent: true },
+
+      // Switzerland
+      { source: '/vegan-places/switzerland/luzern', destination: '/vegan-places/switzerland/lucerne', permanent: true },
+      { source: '/vegan-places/switzerland/z%C3%BCrich', destination: '/vegan-places/switzerland/zurich', permanent: true },
+      { source: '/vegan-places/switzerland/gen%C3%A8ve', destination: '/vegan-places/switzerland/geneva', permanent: true },
+
+      // Czech Republic
+      { source: '/vegan-places/czech-republic/praha', destination: '/vegan-places/czech-republic/prague', permanent: true },
+
+      // Poland
+      { source: '/vegan-places/poland/warszawa', destination: '/vegan-places/poland/warsaw', permanent: true },
+      { source: '/vegan-places/poland/wroc%C5%82aw', destination: '/vegan-places/poland/wroclaw', permanent: true },
+      { source: '/vegan-places/poland/bia%C5%82ystok', destination: '/vegan-places/poland/bialystok', permanent: true },
+
+      // Romania
+      { source: '/vegan-places/romania/bucure%C8%99ti', destination: '/vegan-places/romania/bucharest', permanent: true },
+      { source: '/vegan-places/romania/constan%C8%9Ba', destination: '/vegan-places/romania/constanta', permanent: true },
+
+      // Turkey
+      { source: '/vegan-places/turkey/%C4%B0zmir', destination: '/vegan-places/turkey/izmir', permanent: true },
+      { source: '/vegan-places/turkey/kad%C4%B1k%C3%B6y', destination: '/vegan-places/turkey/istanbul', permanent: true },
+      { source: '/vegan-places/turkey/ka%C5%9F', destination: '/vegan-places/turkey/kas', permanent: true },
+
+      // Israel
+      { source: '/vegan-places/israel/tel-aviv', destination: '/vegan-places/israel/tel-aviv', permanent: false }, // same slug, no-op
+      { source: '/vegan-places/israel/beer-sheva', destination: '/vegan-places/israel/beersheba', permanent: true },
+
+      // Ukraine
+      { source: '/vegan-places/ukraine/dnipropetrovsk', destination: '/vegan-places/ukraine/dnipro', permanent: true },
+
+      // Vietnam
+      { source: '/vegan-places/vietnam/h%C3%A0-n%E1%BB%99i', destination: '/vegan-places/vietnam/hanoi', permanent: true },
+      { source: '/vegan-places/vietnam/h%E1%BB%99i-an-ward', destination: '/vegan-places/vietnam/hoi-an', permanent: true },
+      { source: '/vegan-places/vietnam/hu%E1%BA%BF', destination: '/vegan-places/vietnam/hue', permanent: true },
+      { source: '/vegan-places/vietnam/h%E1%BA%A3i-ph%C3%B2ng', destination: '/vegan-places/vietnam/hai-phong', permanent: true },
+      { source: '/vegan-places/vietnam/ph%C3%BA-qu%E1%BB%91c', destination: '/vegan-places/vietnam/phu-quoc', permanent: true },
+      { source: '/vegan-places/vietnam/bu%C3%B4n-ma-thu%E1%BB%99t', destination: '/vegan-places/vietnam/buon-ma-thuot', permanent: true },
+      { source: '/vegan-places/vietnam/ph%C6%B0%E1%BB%9Dng-m%C5%A9i-n%C3%A9', destination: '/vegan-places/vietnam/mui-ne', permanent: true },
     ]
   },
 };
