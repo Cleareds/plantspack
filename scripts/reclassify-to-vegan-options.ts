@@ -52,7 +52,16 @@ vegan_options
 
 If in doubt → vegan_friendly`.trim();
 
+// Pre-filter: if the name or description strongly signals vegetarian/vegan identity, skip the API call
+const VEGAN_IDENTITY_RE = /\b(vegan|vegetarian|veggie|plant[- ]based|herbivore|tofu shop|vegane|végétal)\b/i
+
+function isClearlyVeganFriendly(place: any): boolean {
+  const haystack = `${place.name} ${place.description ?? ''}`
+  return VEGAN_IDENTITY_RE.test(haystack)
+}
+
 async function classify(place: any): Promise<'vegan_friendly' | 'vegan_options' | null> {
+  if (isClearlyVeganFriendly(place)) return 'vegan_friendly'
   try {
     const resp = await ai.chat.completions.create({
       model: 'gpt-4o-mini',
