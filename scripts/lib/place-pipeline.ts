@@ -167,6 +167,20 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'i̇zmir': 'Izmir', 'i̇zmir province': 'Izmir', 'izmir province': 'Izmir',
   'antalya province': 'Antalya', 'ankara province': 'Ankara',
   'muğla': 'Mugla', 'fethiye': 'Fethiye',
+  // India — city name normalization
+  'bangalore': 'Bengaluru',
+  'ernakulam': 'Kochi',
+  // Japan — Nominatim returns ward names (区) for Tokyo and city suffixes (市)
+  '京都市': 'Kyoto', '大阪市': 'Osaka', '札幌市': 'Sapporo', '名古屋市': 'Nagoya',
+  '福岡市': 'Fukuoka', '仙台市': 'Sendai', '横浜市': 'Yokohama', '神戸市': 'Kobe',
+  '広島市': 'Hiroshima', '浦安市': 'Urayasu',
+  // Tokyo wards → Tokyo
+  '千代田区': 'Tokyo', '中央区': 'Tokyo', '港区': 'Tokyo', '新宿区': 'Tokyo',
+  '文京区': 'Tokyo', '台東区': 'Tokyo', '墨田区': 'Tokyo', '江東区': 'Tokyo',
+  '品川区': 'Tokyo', '目黒区': 'Tokyo', '大田区': 'Tokyo', '世田谷区': 'Tokyo',
+  '渋谷区': 'Tokyo', '中野区': 'Tokyo', '杉並区': 'Tokyo', '豊島区': 'Tokyo',
+  '荒川区': 'Tokyo', '板橋区': 'Tokyo', '練馬区': 'Tokyo',
+  '足立区': 'Tokyo', '葛飾区': 'Tokyo', '江戸川区': 'Tokyo',
 };
 
 export const COUNTRY_NAMES: Record<string, string> = {

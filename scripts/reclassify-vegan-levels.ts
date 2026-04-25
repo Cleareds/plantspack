@@ -33,7 +33,7 @@ const args = process.argv.slice(2);
 const DRY_RUN = args.includes('--dry-run');
 const LIMIT = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] ?? '0') || 0;
 const SOURCE_FILTER = args.find(a => a.startsWith('--source='))?.split('=')[1];
-const CONCURRENCY = 10;
+const CONCURRENCY = 3;
 const CSV_PATH = '/tmp/reclassify-preview.csv';
 
 const CLASSIFY_PROMPT = (p: { name: string; category: string; description: string | null; tags: string[] | null; current: string }) => `
@@ -79,21 +79,31 @@ async function main() {
   console.log(`Mode: ${DRY_RUN ? 'DRY RUN (no DB writes)' : 'LIVE'}`);
   if (DRY_RUN) console.log(`Preview CSV: ${CSV_PATH}`);
 
-  // Fetch places — fully_vegan first (highest-risk), then others
-  let query = sb
-    .from('places')
-    .select('id, slug, name, category, description, vegan_level, tags, source')
-    .is('archived_at', null)
-    .not('vegan_level', 'is', null)
-    .order('vegan_level', { ascending: true }) // fully_vegan sorts first alphabetically
-    .order('name');
-
-  if (SOURCE_FILTER) query = query.eq('source', SOURCE_FILTER);
-  if (LIMIT > 0) query = query.limit(LIMIT);
-  else query = query.limit(100000);
-
-  const { data: places, error } = await query;
-  if (error) { console.error('Fetch failed:', error.message); process.exit(1); }
+  // Paginate through all places — Supabase REST API caps at 1000 rows per request
+  const PAGE = 1000;
+  const places: any[] = [];
+  let offset = 0;
+  while (true) {
+    let query = sb
+      .from('places')
+      .select('id, slug, name, category, description, vegan_level, tags, source')
+      .is('archived_at', null)
+      .not('vegan_level', 'is', null)
+      .order('vegan_level', { ascending: true })
+      .order('id')
+      .range(offset, offset + PAGE - 1);
+    if (SOURCE_FILTER) query = query.eq('source', SOURCE_FILTER);
+    if (LIMIT > 0) query = query.limit(Math.min(PAGE, LIMIT - places.length));
+    const { data, error } = await query;
+    if (error) { console.error('Fetch failed:', error.message); process.exit(1); }
+    if (!data || data.length === 0) break;
+    places.push(...data);
+    process.stdout.write(`\rFetched ${places.length} places...`);
+    if (data.length < PAGE) break;
+    if (LIMIT > 0 && places.length >= LIMIT) break;
+    offset += PAGE;
+  }
+  console.log(`\rFetched ${places.length} places total.`);
 
   // Skip places with no description (insufficient signal)
   const withData = (places || []).filter(p => p.description && p.description.length > 20);
@@ -147,7 +157,7 @@ async function main() {
 
     const pct = Math.round(((b + 1) / batches.length) * 100);
     process.stdout.write(`\r${(b + 1) * CONCURRENCY}/${withData.length} (${pct}%) — changed: ${changed}, unchanged: ${unchanged}, failed: ${failed}`);
-    if (b < batches.length - 1) await sleep(100);
+    if (b < batches.length - 1) await sleep(500);
   }
 
   if (csv) csv.end();

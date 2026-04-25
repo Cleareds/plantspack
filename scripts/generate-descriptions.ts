@@ -48,17 +48,16 @@ ${tags ? `Notable for: ${tags}` : ''}`;
 
 async function generateDescription(place: any): Promise<string | null> {
   try {
-    const resp = await ai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 150,
-      messages: [{ role: 'user', content: buildPrompt(place) }],
-    });
+    const resp = await ai.chat.completions.create(
+      { model: 'gpt-4o-mini', max_tokens: 150, messages: [{ role: 'user', content: buildPrompt(place) }] },
+      { timeout: 20000 },
+    );
     const text = resp.choices[0]?.message?.content?.trim();
     if (!text || text.length < 20) return null;
     return text.slice(0, 400);
   } catch (e: any) {
     if (e?.status === 429) {
-      await sleep(10000);
+      await sleep(15000);
       return null;
     }
     return null;

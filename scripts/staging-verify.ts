@@ -48,26 +48,19 @@ interface StagingRow {
   chain_filtered: boolean
 }
 
-async function loadPendingRows(lim: number): Promise<StagingRow[]> {
-  const PAGE = 1000
-  let off = 0
-  const out: StagingRow[] = []
-  const cap = lim > 0 ? lim : Infinity
-  while (out.length < cap) {
-    const take = Math.min(PAGE, cap - out.length)
-    const { data, error } = await supabase
-      .from('place_staging')
-      .select('id, source, source_id, name, latitude, longitude, city, country, website, phone, categories, date_refreshed, required_fields_ok, freshness_ok, chain_filtered')
-      .eq('decision', 'pending')
-      .order('created_at', { ascending: true })
-      .range(off, off + take - 1)
-    if (error) throw error
-    if (!data || data.length === 0) break
-    out.push(...(data as StagingRow[]))
-    off += data.length
-    if (data.length < take) break
-  }
-  return out
+/** Load the NEXT batch of pending rows.
+ *  Intentionally no ORDER BY and no offset — as rows get their `decision`
+ *  flipped off `pending`, they drop out of this filter, so repeatedly calling
+ *  this with LIMIT-N streams through the whole pool safely without sorting
+ *  141K rows (which triggers a statement timeout on Supabase free tier). */
+async function loadPendingBatch(batchSize: number): Promise<StagingRow[]> {
+  const { data, error } = await supabase
+    .from('place_staging')
+    .select('id, source, source_id, name, latitude, longitude, city, country, website, phone, categories, date_refreshed, required_fields_ok, freshness_ok, chain_filtered')
+    .eq('decision', 'pending')
+    .limit(batchSize)
+  if (error) throw error
+  return (data as StagingRow[]) ?? []
 }
 
 async function processOne(row: StagingRow) {
@@ -116,10 +109,7 @@ async function processOne(row: StagingRow) {
 }
 
 async function main() {
-  console.log(`Mode: ${commit ? 'COMMIT' : 'DRY-RUN'}${limit ? ` (limit ${limit})` : ''} · concurrency=${concurrency}`)
-  const rows = await loadPendingRows(limit)
-  console.log(`Loaded ${rows.length} pending staging rows\n`)
-  if (rows.length === 0) { console.log('Nothing to do.'); return }
+  console.log(`Mode: ${commit ? 'COMMIT' : 'DRY-RUN'}${limit ? ` (hard limit ${limit})` : ''} · concurrency=${concurrency}`)
 
   const stats = {
     auto_import: 0, needs_review: 0, reject: 0,
@@ -129,54 +119,76 @@ async function main() {
   const sample: any[] = []
   const startTs = Date.now()
 
-  let idx = 0
-  async function worker(workerId: number) {
-    while (true) {
-      const i = idx++
-      if (i >= rows.length) return
-      const row = rows[i]
-      try {
-        const result = await processOne(row)
-        stats[result.score.decision]++
-        stats.vegan_levels[result.vegan.level] = (stats.vegan_levels[result.vegan.level] ?? 0) + 1
-        if (result.update.website_ok) stats.website_ok++; else stats.website_fail++
+  // Stream-style: load a batch, process it, repeat. As rows are updated off
+  // `decision='pending'` they drop out of the next batch query automatically.
+  const BATCH = 200
+  const HARD_CAP = limit > 0 ? limit : Infinity
+  let processed = 0
+  let lastLogged = 0
 
-        if (sample.length < 30) sample.push({
-          name: row.name, city: row.city, score: result.score.score,
-          decision: result.score.decision, vegan: result.vegan.level,
-          vegan_conf: result.vegan.confidence, reason: result.score.reason,
-          website: row.website,
-        })
+  while (processed < HARD_CAP) {
+    const take = Math.min(BATCH, HARD_CAP - processed)
+    let rows: StagingRow[]
+    try {
+      rows = await loadPendingBatch(take)
+    } catch (e: any) {
+      console.error(`loadPendingBatch error: ${e.message} — retrying in 10s`)
+      await new Promise(r => setTimeout(r, 10000))
+      continue
+    }
+    if (rows.length === 0) break
 
-        if (commit) {
-          const { error } = await supabase.from('place_staging').update(result.update).eq('id', row.id)
-          if (error) console.error(`  update err ${row.id}: ${error.message}`)
-        }
-      } catch (e: any) {
-        stats.website_fail++
-        if (commit) {
-          await supabase.from('place_staging').update({
-            website_ok: false,
-            website_checked_at: new Date().toISOString(),
-            decision: 'reject',
-            decision_reason: `verify_error:${e?.message ?? 'unknown'}`.slice(0, 200),
-            updated_at: new Date().toISOString(),
-          }).eq('id', row.id)
+    // Process this batch with bounded concurrency.
+    let idx = 0
+    async function worker() {
+      while (true) {
+        const i = idx++
+        if (i >= rows.length) return
+        const row = rows[i]
+        try {
+          const result = await processOne(row)
+          stats[result.score.decision]++
+          stats.vegan_levels[result.vegan.level] = (stats.vegan_levels[result.vegan.level] ?? 0) + 1
+          if (result.update.website_ok) stats.website_ok++; else stats.website_fail++
+
+          if (sample.length < 30) sample.push({
+            name: row.name, city: row.city, score: result.score.score,
+            decision: result.score.decision, vegan: result.vegan.level,
+            vegan_conf: result.vegan.confidence, reason: result.score.reason,
+            website: row.website,
+          })
+
+          if (commit) {
+            const { error } = await supabase.from('place_staging').update(result.update).eq('id', row.id)
+            if (error) console.error(`  update err ${row.id}: ${error.message}`)
+          }
+        } catch (e: any) {
+          stats.website_fail++
+          if (commit) {
+            await supabase.from('place_staging').update({
+              website_ok: false,
+              website_checked_at: new Date().toISOString(),
+              decision: 'reject',
+              decision_reason: `verify_error:${e?.message ?? 'unknown'}`.slice(0, 200),
+              updated_at: new Date().toISOString(),
+            }).eq('id', row.id)
+          }
         }
       }
+    }
+    await Promise.all(Array.from({ length: concurrency }, () => worker()))
 
-      if ((i + 1) % 100 === 0) {
-        const elapsed = (Date.now() - startTs) / 1000
-        const rate = (i + 1) / elapsed
-        const eta = (rows.length - (i + 1)) / rate
-        console.log(`  ${i + 1}/${rows.length}  rate=${rate.toFixed(1)}/s  ETA=${Math.round(eta / 60)}min  auto=${stats.auto_import} review=${stats.needs_review} reject=${stats.reject}`)
-      }
+    processed += rows.length
+    if (processed - lastLogged >= 500) {
+      const elapsed = (Date.now() - startTs) / 1000
+      const rate = processed / elapsed
+      console.log(`  processed=${processed}  rate=${rate.toFixed(1)}/s  auto=${stats.auto_import} review=${stats.needs_review} reject=${stats.reject}`)
+      lastLogged = processed
     }
   }
 
-  await Promise.all(Array.from({ length: concurrency }, (_, id) => worker(id)))
-
   console.log('\n=== STAGING-VERIFY RESULT ===')
+  console.log(`Total processed: ${processed}`)
   console.log(`Decision: auto_import=${stats.auto_import} needs_review=${stats.needs_review} reject=${stats.reject}`)
   console.log(`Vegan level:`, stats.vegan_levels)
   console.log(`Website: ok=${stats.website_ok} fail=${stats.website_fail}`)

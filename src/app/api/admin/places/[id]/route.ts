@@ -36,7 +36,7 @@ export async function DELETE(
 
     const { error } = await adminClient
       .from('places')
-      .delete()
+      .update({ archived_at: new Date().toISOString() })
       .eq('id', id)
 
     if (error) throw error

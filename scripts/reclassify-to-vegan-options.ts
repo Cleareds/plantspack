@@ -63,12 +63,10 @@ function isClearlyVeganFriendly(place: any): boolean {
 async function classify(place: any): Promise<'vegan_friendly' | 'vegan_options' | null> {
   if (isClearlyVeganFriendly(place)) return 'vegan_friendly'
   try {
-    const resp = await ai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      max_tokens: 10,
-      temperature: 0,
-      messages: [{ role: 'user', content: PROMPT(place) }],
-    });
+    const resp = await ai.chat.completions.create(
+      { model: 'gpt-4o-mini', max_tokens: 10, temperature: 0, messages: [{ role: 'user', content: PROMPT(place) }] },
+      { timeout: 20000 },
+    );
     const text = resp.choices[0]?.message?.content?.trim().toLowerCase() ?? '';
     if (text.includes('vegan_options')) return 'vegan_options';
     if (text.includes('vegan_friendly')) return 'vegan_friendly';
