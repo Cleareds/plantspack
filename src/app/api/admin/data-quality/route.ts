@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     const { data, count } = await supabase
       .from('places')
       .select('id, name, slug, city, country, tags, vegan_level, website, updated_at', { count: 'exact' })
-      .or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly},tags.cs.{community_report:non_vegan_chain},tags.cs.{community_report:vegan_friendly_chain},tags.cs.{community_report:few_vegan_options}')
+      .or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly},tags.cs.{community_report:non_vegan_chain},tags.cs.{community_report:vegan_friendly_chain},tags.cs.{community_report:few_vegan_options},tags.cs.{community_report:actually_fully_vegan}')
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:hours_wrong']),
       supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
       supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_not_found']),
-      supabase.from('places').select('id', { count: 'exact', head: true }).or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly},tags.cs.{community_report:non_vegan_chain},tags.cs.{community_report:vegan_friendly_chain},tags.cs.{community_report:few_vegan_options}'),
+      supabase.from('places').select('id', { count: 'exact', head: true }).or('tags.cs.{community_report:not_fully_vegan},tags.cs.{community_report:not_vegan_friendly},tags.cs.{community_report:non_vegan_chain},tags.cs.{community_report:vegan_friendly_chain},tags.cs.{community_report:few_vegan_options},tags.cs.{community_report:actually_fully_vegan}'),
     ])
 
     return NextResponse.json({

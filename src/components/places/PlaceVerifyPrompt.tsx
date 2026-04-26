@@ -68,6 +68,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
           {submitted === 'non_vegan_chain' && 'Thanks! We\'ll review whether this chain belongs on PlantsPack.'}
           {submitted === 'vegan_friendly_chain' && 'Thanks for confirming — we\'ll mark it as a vegan-friendly chain.'}
           {submitted === 'few_vegan_options' && 'Thanks! We\'ll consider downgrading this to "has vegan options".'}
+          {submitted === 'actually_fully_vegan' && 'Thanks! We\'ll review and upgrade this to 100% vegan if confirmed.'}
         </span>
       </div>
     )
@@ -109,6 +110,10 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
         <button onClick={() => handleReport('not_fully_vegan')} disabled={submitting}
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-md transition-colors disabled:opacity-50">
           <Leaf className="h-3 w-3" /> Not 100% vegan
+        </button>
+        <button onClick={() => handleReport('actually_fully_vegan')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors disabled:opacity-50">
+          <CheckCircle className="h-3 w-3" /> Actually 100% vegan
         </button>
         <button onClick={() => handleReport('not_vegan_friendly')} disabled={submitting}
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-md transition-colors disabled:opacity-50">
