@@ -106,6 +106,7 @@ export default function DataQualityPage() {
   const [total, setTotal] = useState(0)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [bulkProcessing, setBulkProcessing] = useState(false)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   const fetchStats = useCallback(async () => {
     setStatsLoading(true)
@@ -178,39 +179,54 @@ export default function DataQualityPage() {
     setProcessing(null)
   }, [tab, removePlace])
 
-  // Confirm a vegan-status action — updates vegan_level + clears report tags
+  // Confirm a vegan-status action — optimistic: remove from list immediately, fire request in background
   const handleVeganConfirm = useCallback(async (
     placeId: string,
     action: ReturnType<typeof getVeganAction>
   ) => {
     if (!action) return
+    setActionError(null)
     setProcessing(placeId)
 
-    if (action.action === 'archive_chain') {
-      const res = await fetch('/api/admin/data-quality', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ placeId, reason: 'non_vegan_chain' }),
-      })
-      if (res.ok) removePlace(placeId)
-      setProcessing(null)
-      return
+    // Optimistically remove from list right away
+    removePlace(placeId)
+
+    try {
+      if (action.action === 'archive_chain') {
+        const res = await fetch('/api/admin/data-quality', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placeId, reason: 'non_vegan_chain' }),
+        })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          console.error('Archive chain failed:', res.status, body)
+          setActionError(`Archive failed (${res.status})`)
+        }
+      } else {
+        const levelMap: Record<string, string> = {
+          upgrade_fully_vegan: 'fully_vegan',
+          downgrade_mostly_vegan: 'mostly_vegan',
+          downgrade_vegan_options: 'vegan_options',
+          set_vegan_options: 'vegan_options',
+        }
+        const setVeganLevel = levelMap[action.action]
+        const res = await fetch('/api/admin/data-quality', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placeId, setVeganLevel, clearVeganReportTags: true }),
+        })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          console.error('Vegan confirm PATCH failed:', res.status, body)
+          setActionError(`Update failed (${res.status}): ${body?.error ?? 'unknown'}`)
+        }
+      }
+    } catch (err) {
+      console.error('Vegan confirm network error:', err)
+      setActionError('Network error — change may not have saved')
     }
 
-    const levelMap: Record<string, string> = {
-      upgrade_fully_vegan: 'fully_vegan',
-      downgrade_mostly_vegan: 'mostly_vegan',
-      downgrade_vegan_options: 'vegan_options',
-      set_vegan_options: 'vegan_options',
-    }
-    const setVeganLevel = levelMap[action.action]
-
-    const res = await fetch('/api/admin/data-quality', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ placeId, setVeganLevel, clearVeganReportTags: true }),
-    })
-    if (res.ok) removePlace(placeId)
     setProcessing(null)
   }, [removePlace])
 
@@ -353,6 +369,14 @@ export default function DataQualityPage() {
             <p className="text-[11px] text-gray-400">Website Down</p>
             <p className="text-xl font-bold text-gray-400">{stats.unreachable}</p>
           </div>
+        </div>
+      )}
+
+      {/* Action error banner */}
+      {actionError && (
+        <div className="mb-4 flex items-center justify-between bg-red-900/40 border border-red-700/50 rounded-lg px-4 py-2.5 text-sm text-red-300">
+          <span>{actionError}</span>
+          <button onClick={() => setActionError(null)} className="ml-3 text-red-400 hover:text-red-200">×</button>
         </div>
       )}
 
