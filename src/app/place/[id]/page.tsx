@@ -655,12 +655,16 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           {/* Verify prompt */}
           <div className="px-6 pt-4">
             {(() => {
+              const verificationStatus: string = (place as any).verification_status ?? ''
               const isAdminVerified =
-                (place as any).verification_status === 'admin_verified' ||
-                (place as any).verification_status === 'community_verified' ||
+                verificationStatus === 'admin_verified' ||
+                verificationStatus === 'community_verified' ||
                 (place as any).is_verified === true
+              // scraping_verified = our scripts checked it; suppress the amber banner
+              // but still show the regular gray prompt so humans can confirm or deny
+              const isScrapingVerified = verificationStatus === 'scraping_verified'
               const src: string = (place as any).source || ''
-              const isCommunityUnverified = !isAdminVerified && (
+              const isCommunityUnverified = !isAdminVerified && !isScrapingVerified && (
                 src.startsWith('vegguide-') || src.startsWith('osm') ||
                 src === 'openstreetmap' || src.startsWith('foursquare-discover')
               )

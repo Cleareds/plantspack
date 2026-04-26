@@ -9,7 +9,7 @@
  * Claude searches the web and returns a verdict with evidence.
  *
  * Results:
- * - Confirmed 100% vegan → set verification_status = 'community_verified', clear not_fully_vegan tag
+ * - Confirmed 100% vegan → set verification_status = 'scraping_verified', clear not_fully_vegan tag
  * - Not 100% vegan → keep/add community_report:not_fully_vegan tag + log evidence
  * - Closed → add google_confirmed_closed
  * - Uncertain → no change, log as uncertain
@@ -184,7 +184,7 @@ async function main() {
           confirmed++;
           // Remove any not_fully_vegan flags, mark as community_verified
           newTags = newTags.filter(t => t !== 'community_report:not_fully_vegan');
-          updates.verification_status = 'community_verified';
+          updates.verification_status = 'scraping_verified';
           updates.tags = newTags;
         } else if (result.verdict === 'not_fully_vegan') {
           notVegan++;
