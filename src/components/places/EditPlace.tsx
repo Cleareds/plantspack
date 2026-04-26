@@ -19,6 +19,7 @@ interface EditPlaceProps {
     images: string[]
     main_image_url?: string | null
     tags?: string[]
+    vegan_level?: string
   }
   isOpen: boolean
   onClose: () => void
@@ -43,6 +44,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
     }
     return ''
   })
+  const [veganLevel, setVeganLevel] = useState(place.vegan_level || 'vegan_friendly')
   const [isPetFriendly, setIsPetFriendly] = useState(place.is_pet_friendly)
   const [existingImages, setExistingImages] = useState<string[]>(place.images || [])
   const [newImages, setNewImages] = useState<string[]>([])
@@ -134,6 +136,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
           ...(selectedGeo ? { latitude: selectedGeo.lat, longitude: selectedGeo.lng } : {}),
           description: description.trim() || null,
           category,
+          vegan_level: veganLevel,
           website: website.trim() || null,
           phone: phone.trim() || null,
           opening_hours: openingHours.trim() || null,
@@ -233,6 +236,21 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                 <option value="event">Event</option>
                 <option value="organisation">Organisation</option>
                 <option value="other">Other</option>
+              </select>
+            </div>
+
+            {/* Vegan Level */}
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Vegan Level</label>
+              <select
+                value={veganLevel}
+                onChange={(e) => setVeganLevel(e.target.value)}
+                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+              >
+                <option value="fully_vegan">100% Vegan - zero animal products</option>
+                <option value="mostly_vegan">Mostly Vegan - predominantly vegan with a few animal items</option>
+                <option value="vegan_friendly">Vegan-Friendly - genuine vegan options, also serves non-vegan</option>
+                <option value="vegan_options">Has Vegan Options - mainstream place with some vegan choices</option>
               </select>
             </div>
 

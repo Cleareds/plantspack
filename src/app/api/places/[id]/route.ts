@@ -151,7 +151,7 @@ export async function PUT(
     const allowedFields = [
       'name', 'description', 'category', 'address', 'latitude', 'longitude',
       'website', 'phone', 'is_pet_friendly', 'images', 'main_image_url', 'tags',
-      'opening_hours', 'event_time', 'city', 'country'
+      'opening_hours', 'event_time', 'city', 'country', 'vegan_level'
     ]
 
     for (const field of allowedFields) {
