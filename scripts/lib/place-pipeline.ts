@@ -208,6 +208,69 @@ export const CITY_OVERRIDES: Record<string, string> = {
   '渋谷区': 'Tokyo', '中野区': 'Tokyo', '杉並区': 'Tokyo', '豊島区': 'Tokyo',
   '荒川区': 'Tokyo', '板橋区': 'Tokyo', '練馬区': 'Tokyo',
   '足立区': 'Tokyo', '葛飾区': 'Tokyo', '江戸川区': 'Tokyo',
+  // Taiwan — Nominatim returns Traditional Chinese city/county names
+  '臺北市': 'Taipei', '台北市': 'Taipei',
+  '新北市': 'New Taipei', '新北市': 'New Taipei',
+  '臺中市': 'Taichung', '台中市': 'Taichung',
+  '臺南市': 'Tainan', '台南市': 'Tainan',
+  '高雄市': 'Kaohsiung',
+  '桃園市': 'Taoyuan',
+  '新竹市': 'Hsinchu', '新竹縣': 'Hsinchu',
+  '基隆市': 'Keelung',
+  '嘉義市': 'Chiayi', '嘉義縣': 'Chiayi',
+  '彰化縣': 'Changhua',
+  '宜蘭縣': 'Yilan',
+  '花蓮縣': 'Hualien',
+  '屏東縣': 'Pingtung',
+  '苗栗縣': 'Miaoli',
+  '南投縣': 'Nantou',
+  '雲林縣': 'Yunlin',
+  '澎湖縣': 'Penghu',
+  '金門縣': 'Kinmen',
+  '連江縣': 'Matsu',
+  '臺東縣': 'Taitung', '台東縣': 'Taitung',
+  // Hong Kong — Nominatim returns Chinese district names
+  '中西區': 'Hong Kong', '灣仔區': 'Hong Kong', '東區': 'Hong Kong',
+  '南區': 'Hong Kong', '油尖旺區': 'Kowloon', '深水埗區': 'Kowloon',
+  '九龍城區': 'Kowloon', '黃大仙區': 'Kowloon', '觀塘區': 'Kowloon',
+  '荃灣區': 'Tsuen Wan', '屯門區': 'Tuen Mun', '元朗區': 'Yuen Long',
+  '北區': 'Sheung Shui', '大埔區': 'Tai Po', '沙田區': 'Sha Tin',
+  '西貢區': 'Sai Kung', '葵青區': 'Kwai Chung', '離島區': 'Lantau Island',
+  '香港島': 'Hong Kong', '九龍': 'Kowloon', '新界': 'New Territories',
+  // Armenia — Nominatim returns Armenian script
+  'երևան': 'Yerevan', 'gyumri': 'Gyumri', 'vanadzor': 'Vanadzor',
+  // Georgia — Nominatim returns Georgian script
+  'თბილისი': 'Tbilisi', 'ბათუმი': 'Batumi', 'ქუთაისი': 'Kutaisi',
+  // Azerbaijan — Nominatim uses Latin with diacritics
+  'bakı': 'Baku', 'gəncə': 'Ganja', 'sumqayıt': 'Sumqayit',
+  // Oman — Arabic
+  'مسقط': 'Muscat', 'صلالة': 'Salalah', 'مطرح': 'Matrah',
+  // Saudi Arabia — Arabic city names
+  'خميس مشيط': 'Khamis Mushait', 'kamis mushaitq': 'Khamis Mushait',
+  'ينبع': 'Yanbu', 'مكة': 'Mecca', 'مكة المكرمة': 'Mecca',
+  'المدينة المنورة': 'Medina', 'الرياض': 'Riyadh', 'الدمام': 'Dammam',
+  'جدة': 'Jeddah', 'الطائف': 'Taif', 'أبها': 'Abha',
+  // Ukraine — Nominatim returns Ukrainian Cyrillic names
+  'київ': 'Kyiv', 'місто київ': 'Kyiv', 'київська міська рада': 'Kyiv',
+  'харків': 'Kharkiv', 'харківська міська рада': 'Kharkiv',
+  'одеса': 'Odesa', 'дніпро': 'Dnipro', 'львів': 'Lviv',
+  'запоріжжя': 'Zaporizhzhia', 'кривий ріг': 'Kryvyi Rih',
+  'миколаїв': 'Mykolaiv', 'вінниця': 'Vinnytsia', 'херсон': 'Kherson',
+  'полтава': 'Poltava', 'чернігів': 'Chernihiv', 'черкаси': 'Cherkasy',
+  'суми': 'Sumy', 'хмельницький': 'Khmelnytskyi', 'житомир': 'Zhytomyr',
+  'рівне': 'Rivne', 'луцьк': 'Lutsk', 'ужгород': 'Uzhhorod',
+  'івано-франківськ': 'Ivano-Frankivsk', 'тернопіль': 'Ternopil',
+  'чернівці': 'Chernivtsi', 'одеська міська рада': 'Odesa',
+  // Serbia — Nominatim returns Cyrillic and administrative district names
+  'београд': 'Belgrade', 'градска општина стари град': 'Belgrade',
+  'градска општина врачар': 'Belgrade', 'градска општина палилула': 'Belgrade',
+  'градска општина нови београд': 'Belgrade', 'градска општина савски венац': 'Belgrade',
+  'нови сад': 'Novi Sad', 'ниш': 'Nis', 'крагујевац': 'Kragujevac',
+  'суботица': 'Subotica', 'зрењанин': 'Zrenjanin', 'пирот': 'Pirot',
+  'ваљево': 'Valjevo', 'шабац': 'Sabac', 'смедерево': 'Smederevo',
+  'кикинда': 'Kikinda', 'лесковац': 'Leskovac', 'врање': 'Vranje',
+  'општини куршумлија': 'Kursumlija', 'општини сокобања': 'Sokobanja',
+  'београд (врачар)': 'Belgrade',
 };
 
 export const COUNTRY_NAMES: Record<string, string> = {
@@ -237,9 +300,11 @@ export const COUNTRY_NAMES: Record<string, string> = {
   LA: 'Laos',
   // South Asia
   IN: 'India', LK: 'Sri Lanka', NP: 'Nepal', BD: 'Bangladesh', PK: 'Pakistan',
+  // Caucasus
+  AM: 'Armenia', GE: 'Georgia', AZ: 'Azerbaijan',
   // Middle East / Central Asia
   IL: 'Israel', AE: 'United Arab Emirates', TR: 'Turkey', LB: 'Lebanon',
-  JO: 'Jordan', KW: 'Kuwait', QA: 'Qatar', SA: 'Saudi Arabia',
+  JO: 'Jordan', KW: 'Kuwait', QA: 'Qatar', SA: 'Saudi Arabia', OM: 'Oman',
   // Africa
   ZA: 'South Africa', NG: 'Nigeria', KE: 'Kenya', GH: 'Ghana',
   TZ: 'Tanzania', RW: 'Rwanda', ET: 'Ethiopia', MA: 'Morocco',
