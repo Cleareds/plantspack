@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   Loader2, ExternalLink, Trash2, XCircle, AlertTriangle,
   Clock, Globe, WifiOff, Users, CheckCircle, BarChart3, Leaf,
-  ArrowUpCircle, ArrowDownCircle, Store, RefreshCw
+  ArrowUpCircle, ArrowDownCircle, Store, RefreshCw, Square, CheckSquare
 } from 'lucide-react'
 
 interface FlaggedPlace {
@@ -104,6 +104,8 @@ export default function DataQualityPage() {
   const [processing, setProcessing] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [bulkProcessing, setBulkProcessing] = useState(false)
 
   const fetchStats = useCallback(async () => {
     setStatsLoading(true)
@@ -117,7 +119,7 @@ export default function DataQualityPage() {
 
   useEffect(() => { fetchStats() }, [fetchStats])
 
-  useEffect(() => { setPage(1) }, [tab])
+  useEffect(() => { setPage(1); setSelectedIds(new Set()) }, [tab])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -138,6 +140,7 @@ export default function DataQualityPage() {
   const removePlace = useCallback((placeId: string) => {
     setPlaces(prev => prev.filter(p => p.id !== placeId))
     setTotal(prev => Math.max(0, prev - 1))
+    setSelectedIds(prev => { const n = new Set(prev); n.delete(placeId); return n })
     fetchStats()
   }, [fetchStats])
 
@@ -211,6 +214,71 @@ export default function DataQualityPage() {
     setProcessing(null)
   }, [removePlace])
 
+  const getTagForTab = (): string => {
+    switch (tab) {
+      case 'closed': return 'google_confirmed_closed'
+      case 'temp_closed': return 'google_temporarily_closed'
+      case 'reported_closed': return 'community_report:permanently_closed'
+      case 'reported_hours': return 'community_report:hours_wrong'
+      case 'unreachable': return 'website_unreachable'
+      default: return ''
+    }
+  }
+
+  const toggleSelect = useCallback((id: string) => {
+    setSelectedIds(prev => {
+      const n = new Set(prev)
+      n.has(id) ? n.delete(id) : n.add(id)
+      return n
+    })
+  }, [])
+
+  const toggleSelectAll = useCallback(() => {
+    setSelectedIds(prev => prev.size === places.length ? new Set() : new Set(places.map(p => p.id)))
+  }, [places])
+
+  const handleBulkArchive = useCallback(async () => {
+    if (selectedIds.size === 0) return
+    const isClosedTab = tab === 'closed' || tab === 'temp_closed' || tab === 'reported_closed'
+    const label = isClosedTab ? 'Confirm all selected as closed?' : `Archive ${selectedIds.size} places?`
+    if (!confirm(label)) return
+    setBulkProcessing(true)
+    const res = await fetch('/api/admin/data-quality', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        placeIds: [...selectedIds],
+        action: 'archive',
+        reason: isClosedTab ? 'confirmed_closed' : 'admin_removed',
+      }),
+    })
+    if (res.ok) {
+      setPlaces(prev => prev.filter(p => !selectedIds.has(p.id)))
+      setTotal(prev => Math.max(0, prev - selectedIds.size))
+      setSelectedIds(new Set())
+      fetchStats()
+    }
+    setBulkProcessing(false)
+  }, [selectedIds, tab, fetchStats])
+
+  const handleBulkDismiss = useCallback(async () => {
+    if (selectedIds.size === 0) return
+    const removeTag = getTagForTab()
+    setBulkProcessing(true)
+    const res = await fetch('/api/admin/data-quality', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ placeIds: [...selectedIds], action: 'dismiss', removeTag }),
+    })
+    if (res.ok) {
+      setPlaces(prev => prev.filter(p => !selectedIds.has(p.id)))
+      setTotal(prev => Math.max(0, prev - selectedIds.size))
+      setSelectedIds(new Set())
+      fetchStats()
+    }
+    setBulkProcessing(false)
+  }, [selectedIds, tab, fetchStats])
+
   const handleCorrection = useCallback(async (id: string, action: 'approve' | 'reject') => {
     setProcessing(id)
     const res = await fetch('/api/admin/corrections', {
@@ -225,17 +293,6 @@ export default function DataQualityPage() {
     }
     setProcessing(null)
   }, [fetchStats])
-
-  const getTagForTab = (): string => {
-    switch (tab) {
-      case 'closed': return 'google_confirmed_closed'
-      case 'temp_closed': return 'google_temporarily_closed'
-      case 'reported_closed': return 'community_report:permanently_closed'
-      case 'reported_hours': return 'community_report:hours_wrong'
-      case 'unreachable': return 'website_unreachable'
-      default: return ''
-    }
-  }
 
   const getStatForTab = (tabId: TabId): number => {
     if (!stats) return 0
@@ -382,6 +439,20 @@ export default function DataQualityPage() {
             <p className="text-gray-400">No places with this flag</p>
           </div>
         ) : (
+          <>
+            {/* Select-all control */}
+            <div className="flex items-center gap-3 mb-2 px-1">
+              <button onClick={toggleSelectAll}
+                className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors">
+                {selectedIds.size === places.length
+                  ? <CheckSquare className="h-4 w-4 text-emerald-400" />
+                  : <Square className="h-4 w-4" />}
+                {selectedIds.size === places.length ? 'Deselect all' : `Select all (${places.length})`}
+              </button>
+              {selectedIds.size > 0 && (
+                <span className="text-xs text-gray-500">{selectedIds.size} selected</span>
+              )}
+            </div>
           <div className="space-y-2">
             {places.map(p => {
               const googleCheckDate = (p.tags || []).find(t => t.startsWith('google_checked:'))?.split(':')[1]
@@ -394,8 +465,14 @@ export default function DataQualityPage() {
               const dismissLabel = isClosedTab ? 'Still Open' : tab === 'reported_hours' ? 'Acknowledged' : 'Dismiss'
 
               return (
-                <div key={p.id} className="bg-gray-800 rounded-xl p-4">
-                  <div className="flex items-start gap-4">
+                <div key={p.id} className={`bg-gray-800 rounded-xl p-4 ${selectedIds.has(p.id) ? 'ring-1 ring-emerald-600/50' : ''}`}>
+                  <div className="flex items-start gap-3">
+                    {/* Checkbox */}
+                    <button onClick={() => toggleSelect(p.id)} className="mt-0.5 flex-shrink-0 text-gray-500 hover:text-emerald-400 transition-colors">
+                      {selectedIds.has(p.id)
+                        ? <CheckSquare className="h-4 w-4 text-emerald-400" />
+                        : <Square className="h-4 w-4" />}
+                    </button>
                     {/* Info */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -480,7 +557,35 @@ export default function DataQualityPage() {
               )
             })}
           </div>
+          </>
         )
+      )}
+
+      {/* Sticky bulk action bar */}
+      {selectedIds.size > 0 && tab !== 'corrections' && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-gray-900 border border-gray-700 rounded-2xl px-5 py-3 shadow-2xl">
+          <span className="text-sm text-gray-300 font-medium">{selectedIds.size} selected</span>
+          <div className="w-px h-4 bg-gray-700" />
+          {tab !== 'not_vegan' && (
+            <button onClick={handleBulkArchive} disabled={bulkProcessing}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium disabled:opacity-50">
+              {bulkProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              {tab === 'closed' || tab === 'temp_closed' || tab === 'reported_closed'
+                ? `Confirm Closed (${selectedIds.size})`
+                : `Archive (${selectedIds.size})`}
+            </button>
+          )}
+          {tab !== 'not_vegan' && (
+            <button onClick={handleBulkDismiss} disabled={bulkProcessing}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg text-sm font-medium disabled:opacity-50">
+              {tab === 'reported_hours' ? 'Acknowledged' : tab === 'closed' || tab === 'temp_closed' || tab === 'reported_closed' ? 'Still Open' : 'Dismiss'} ({selectedIds.size})
+            </button>
+          )}
+          <button onClick={() => setSelectedIds(new Set())} disabled={bulkProcessing}
+            className="text-gray-500 hover:text-gray-300 text-xs">
+            Cancel
+          </button>
+        </div>
       )}
 
       {/* Pagination */}

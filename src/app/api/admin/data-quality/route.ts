@@ -191,6 +191,67 @@ export async function DELETE(request: NextRequest) {
   return NextResponse.json({ success: true })
 }
 
+// PUT: bulk archive or dismiss a list of places
+export async function PUT(request: NextRequest) {
+  const supabase = await checkAdmin()
+  if (!supabase) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const body = await request.json()
+  const { placeIds, action, removeTag, reason } = body
+  if (!Array.isArray(placeIds) || placeIds.length === 0)
+    return NextResponse.json({ error: 'Missing placeIds' }, { status: 400 })
+
+  const { revalidatePath } = await import('next/cache')
+
+  if (action === 'archive') {
+    const { data: places } = await supabase
+      .from('places')
+      .select('slug, city, country')
+      .in('id', placeIds)
+
+    const { error } = await supabase
+      .from('places')
+      .update({ archived_at: new Date().toISOString(), archived_reason: reason || 'admin_removed' })
+      .in('id', placeIds)
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    const pathsToRevalidate = new Set<string>(['/vegan-places', '/city-ranks'])
+    for (const place of places || []) {
+      if (place.slug) pathsToRevalidate.add(`/place/${place.slug}`)
+      if (place.country) {
+        const cs = place.country.toLowerCase().replace(/\s+/g, '-')
+        pathsToRevalidate.add(`/vegan-places/${cs}`)
+        if (place.city) pathsToRevalidate.add(`/vegan-places/${cs}/${place.city.toLowerCase().replace(/\s+/g, '-')}`)
+      }
+    }
+    for (const path of pathsToRevalidate) revalidatePath(path)
+
+    return NextResponse.json({ success: true, archived: placeIds.length })
+  }
+
+  if (action === 'dismiss' && removeTag) {
+    const { data: places } = await supabase
+      .from('places')
+      .select('id, tags')
+      .in('id', placeIds)
+
+    const updates = (places || []).map((p: any) => ({
+      id: p.id,
+      tags: (p.tags || []).filter((t: string) => t !== removeTag),
+      updated_at: new Date().toISOString(),
+    }))
+
+    for (const u of updates) {
+      await supabase.from('places').update({ tags: u.tags, updated_at: u.updated_at }).eq('id', u.id)
+    }
+
+    return NextResponse.json({ success: true, dismissed: placeIds.length })
+  }
+
+  return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+}
+
 // PATCH: remove a tag and/or update vegan_level
 export async function PATCH(request: NextRequest) {
   const supabase = await checkAdmin()
