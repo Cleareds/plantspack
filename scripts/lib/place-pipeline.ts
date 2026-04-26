@@ -167,6 +167,24 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'i̇zmir': 'Izmir', 'i̇zmir province': 'Izmir', 'izmir province': 'Izmir',
   'antalya province': 'Antalya', 'ankara province': 'Ankara',
   'muğla': 'Mugla', 'fethiye': 'Fethiye',
+  // Israel — Nominatim returns Hebrew city names
+  'תל אביב-יפו': 'Tel Aviv', 'תל אביב': 'Tel Aviv',
+  'ירושלים | القدس': 'Jerusalem', 'ירושלים': 'Jerusalem',
+  'חיפה': 'Haifa', 'רחובות': 'Rehovot', 'נתניה': 'Netanya',
+  'יוקנעם עילית': 'Yokneam', 'ערד': 'Arad', 'באר שבע': 'Beer Sheva',
+  'אילת': 'Eilat', 'רמת גן': 'Ramat Gan', 'פתח תקווה': 'Petah Tikva',
+  // Jordan — Arabic city names
+  'البتراء': 'Petra', 'عمان': 'Amman', 'اربد': 'Irbid', 'إربد': 'Irbid',
+  'منطقة وادي السير': 'Amman', 'قرية وادي رم': 'Wadi Rum',
+  'العقبة': 'Aqaba', 'الزرقاء': 'Zarqa',
+  // Morocco — Nominatim returns trilingual names (French + Tifinagh + Arabic)
+  'marrakech ⵎⵕⵕⴰⴽⵯⵛ مراكش': 'Marrakech', 'essaouira الصويرة': 'Essaouira',
+  'rabat ⵔⴱⴰⵟ الرباط': 'Rabat', 'casablanca الدار البيضاء ⴰⵏⴼⴰ': 'Casablanca',
+  'fès فاس': 'Fez', 'meknès مكناس': 'Meknes', 'agadir ⴰⴳⴰⴷⵉⵔ': 'Agadir',
+  'tanger ⵜⴰⵏⵊⴰ طنجة': 'Tangier',
+  // Egypt — Nominatim returns Arabic for Alexandria and some districts
+  'الإسكندرية': 'Alexandria', 'سلام': 'Cairo', 'الجونة': 'El Gouna',
+  'خليج نبق': 'Nabq', 'الغردقة': 'Hurghada', 'القاهرة': 'Cairo',
   // China — Nominatim returns district names (区) and city suffixes (市)
   '上海市': 'Shanghai', '北京市': 'Beijing', '昆明市': 'Kunming',
   '龙岩市': 'Longyan', '大理市': 'Dali', '姑苏区': 'Suzhou',
