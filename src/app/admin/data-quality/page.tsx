@@ -91,6 +91,11 @@ function getVeganAction(p: FlaggedPlace): {
       return { label: 'Downgrade to Mostly Vegan', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_mostly_vegan' }
     return { label: 'Downgrade to Has Options', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_vegan_options' }
   }
+  if (tags.includes('google_review_flag')) {
+    if (p.vegan_level === 'fully_vegan')
+      return { label: 'Downgrade to Mostly Vegan', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_mostly_vegan' }
+    return { label: 'Downgrade to Vegan-Friendly', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_vegan_options' }
+  }
   return null
 }
 

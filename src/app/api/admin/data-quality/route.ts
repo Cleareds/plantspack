@@ -19,6 +19,7 @@ const VEGAN_REPORT_TAGS = [
   'community_report:vegan_friendly_chain',
   'community_report:few_vegan_options',
   'community_report:actually_fully_vegan',
+  'google_review_flag',
 ]
 
 export async function GET(request: NextRequest) {
