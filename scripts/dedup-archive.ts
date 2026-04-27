@@ -98,10 +98,18 @@ function cityKey(city: string | null): string {
 // Load all active places
 // -------------------------------------------------------------------
 async function loadPlaces(): Promise<Place[]> {
+  // Use cursor-based pagination (id-ordered) instead of OFFSET-based ranges.
+  // Reason: OFFSET-based pagination is unstable when other workers insert/
+  // archive rows during the load — a row can appear in two consecutive page
+  // fetches. The dedup grouping then sees the same DB row twice and treats
+  // it as a self-duplicate, archiving a unique place with archived_reason
+  // pointing to itself. Cursor pagination by id strictly excludes already-
+  // seen ids and is robust to concurrent writes.
   const all: Place[] = [];
-  let from = 0;
+  const seen = new Set<string>();
+  let lastId = '';
   while (true) {
-    const { data, error } = await sb.from('places')
+    let q = sb.from('places')
       .select([
         'id', 'name', 'slug', 'city', 'latitude', 'longitude',
         'source', 'source_id', 'description', 'main_image_url', 'images',
@@ -112,12 +120,21 @@ async function loadPlaces(): Promise<Place[]> {
       ].join(', '))
       .is('archived_at', null)
       .not('latitude', 'is', null)
-      .range(from, from + 999);
+      .order('id')
+      .limit(1000);
+    if (lastId) q = q.gt('id', lastId);
+    const { data, error } = await q;
     if (error) { console.error('DB error:', error.message); process.exit(1); }
     if (!data?.length) break;
-    all.push(...(data as Place[]));
+    for (const row of data as Place[]) {
+      // Belt-and-suspenders: still dedupe by id in case the DB returns the
+      // same row twice for any reason.
+      if (seen.has(row.id)) continue;
+      seen.add(row.id);
+      all.push(row);
+    }
     if (data.length < 1000) break;
-    from += 1000;
+    lastId = (data[data.length - 1] as Place).id;
     process.stdout.write(`\r  loading... ${all.length}`);
   }
   return all;
@@ -212,6 +229,13 @@ async function main() {
         // Safety: skip if loser has reviews
         if ((loser.review_count ?? 0) > 0) {
           console.log(`  SKIP (has reviews): ${loser.slug}`);
+          skipped++;
+          continue;
+        }
+        // Critical safety: never archive a row pointing to itself as winner.
+        // If we ever see this, something is wrong with the grouping.
+        if (loser.id === g.winner.id) {
+          console.log(`  SKIP (self-ref bug): ${loser.slug}`);
           skipped++;
           continue;
         }
