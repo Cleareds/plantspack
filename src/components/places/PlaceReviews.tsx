@@ -195,15 +195,15 @@ export default function PlaceReviews({
     try {
       const { data: rateLimitData, error: rateLimitError } = await supabase
         .rpc('check_rate_limit', {
-          p_user_id: user.id,
-          p_action_type: 'review',
-          p_max_actions: 30,
-          p_window_minutes: 5
+          p_identifier: user.id,
+          p_action: 'review',
+          p_max_requests: 30,
+          p_window_seconds: 300
         })
 
       if (rateLimitError) {
         console.error('Rate limit check error:', rateLimitError)
-      } else if (rateLimitData === false) {
+      } else if (rateLimitData && !rateLimitData.allowed) {
         setNewContent(reviewContent)
         setNewRating(reviewRating)
         setImageUrls(reviewImages)

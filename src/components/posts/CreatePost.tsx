@@ -279,7 +279,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     }, [])
 
     const handleImagesChange = (urls: string[]) => {
-        setImageUrls(urls)
+        setImageUrls(prev => {
+            const combined = [...prev, ...urls]
+            return combined.filter((u, i) => combined.indexOf(u) === i) // dedupe
+        })
     }
 
     const removeAllImages = () => {
@@ -888,20 +891,18 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                        onChange={(e) => setProductData(prev => ({...prev, brand: e.target.value}))}
                                        placeholder="Brand name"
                                        className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
-                                <div className="flex gap-2">
-                                    <input type="text" value={productData.price_range || ''}
-                                           onChange={(e) => setProductData(prev => ({
-                                               ...prev,
-                                               price_range: e.target.value
-                                           }))} placeholder="Price range (e.g. $5-10)"
-                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
-                                    <input type="text" value={productData.where_to_buy || ''}
-                                           onChange={(e) => setProductData(prev => ({
-                                               ...prev,
-                                               where_to_buy: e.target.value
-                                           }))} placeholder="Where to buy"
-                                           className="flex-1 p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
-                                </div>
+                                <input type="text" value={productData.price_range || ''}
+                                       onChange={(e) => setProductData(prev => ({
+                                           ...prev,
+                                           price_range: e.target.value
+                                       }))} placeholder="Price range (e.g. $5-10)"
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
+                                <input type="text" value={productData.where_to_buy || ''}
+                                       onChange={(e) => setProductData(prev => ({
+                                           ...prev,
+                                           where_to_buy: e.target.value
+                                       }))} placeholder="Where to buy"
+                                       className="w-full p-2 bg-surface-container-lowest rounded text-sm border-0 ghost-border focus:ring-1 focus:ring-primary/40 focus:outline-none"/>
                             </div>
                         )}
 
