@@ -54,6 +54,11 @@ if [ "$(date +%u)" = "7" ]; then
   echo "[$(date)] Sunday dedup sweep..." >> $LOG
   npx tsx scripts/dedup-archive.ts --apply >> /tmp/overnight-dedup.log 2>&1
   echo "[$(date)] Dedup done." >> $LOG
+
+  # Weekly broken-image audit (Sundays only — slow, ~30-60 min for 24K places)
+  echo "[$(date)] Weekly broken-image scan..." >> $LOG
+  npx tsx scripts/detect-broken-images.ts --apply >> /tmp/broken-images-weekly.log 2>&1 || true
+  echo "[$(date)] Broken-image scan done." >> $LOG
 fi
 
 echo "=== $(date) all jobs complete ===" >> $LOG
