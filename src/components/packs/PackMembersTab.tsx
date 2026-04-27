@@ -25,7 +25,7 @@ const ROLE_CONFIG = {
   member: { label: 'Member', icon: User, color: 'text-on-surface-variant bg-surface-container-low' },
 }
 
-export default function PackMembersTab({ packId, userRole }: { packId: string; userRole: string | null }) {
+export default function PackMembersTab({ packId, userRole, onUpdate }: { packId: string; userRole: string | null; onUpdate?: () => void }) {
   const { user } = useAuth()
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
@@ -98,6 +98,7 @@ export default function PackMembersTab({ packId, userRole }: { packId: string; u
       const resp = await fetch(`/api/packs/${packId}/members?userId=${userId}`, { method: 'DELETE' })
       if (resp.ok) {
         setMembers(prev => prev.filter(m => m.user_id !== userId))
+        onUpdate?.()
       } else {
         const data = await resp.json()
         alert(data.error || 'Failed to remove member')

@@ -46,9 +46,10 @@ interface PackPlacesTabProps {
   userRole: 'admin' | 'moderator' | 'member' | null
   userId: string | null
   initialPlaces?: PackPlace[]
+  onUpdate?: () => void
 }
 
-export default function PackPlacesTab({ packId, userRole, userId, initialPlaces }: PackPlacesTabProps) {
+export default function PackPlacesTab({ packId, userRole, userId, initialPlaces, onUpdate }: PackPlacesTabProps) {
   const [places, setPlaces] = useState<PackPlace[]>(initialPlaces || [])
   const [loading, setLoading] = useState(!initialPlaces)
   const [showAddModal, setShowAddModal] = useState(false)
@@ -88,6 +89,7 @@ export default function PackPlacesTab({ packId, userRole, userId, initialPlaces 
 
       if (response.ok) {
         setPlaces(prev => prev.filter(p => p.id !== packPlaceId))
+        onUpdate?.()
       } else {
         const error = await response.json()
         alert(error.error || 'Failed to remove place')
@@ -292,6 +294,7 @@ export default function PackPlacesTab({ packId, userRole, userId, initialPlaces 
           onPlaceAdded={() => {
             fetchPlaces()
             setShowAddModal(false)
+            onUpdate?.()
           }}
         />
       )}

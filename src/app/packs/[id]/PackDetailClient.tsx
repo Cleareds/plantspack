@@ -318,12 +318,13 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
               userRole={pack.user_role}
               userId={user?.id || null}
               initialPlaces={initialPlaces}
+              onUpdate={fetchPack}
             />
           </div>
         )}
 
         {activeTab === 'members' && (
-          <PackMembersTab packId={pack.id} userRole={pack.user_role} />
+          <PackMembersTab packId={pack.id} userRole={pack.user_role} onUpdate={fetchPack} />
         )}
       </div>
     </div>
