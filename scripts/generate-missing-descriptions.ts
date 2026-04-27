@@ -100,7 +100,7 @@ async function main() {
   let from = 0;
   while (true) {
     const { data, error } = await sb.from('places')
-      .select('id, name, city, country, category, cuisine_types, vegan_level, tags')
+      .select('id, name, city, country, category, cuisine_types, vegan_level, tags, description')
       .is('archived_at', null)
       .or('description.is.null,description.eq.')
       .order('id')
@@ -142,8 +142,13 @@ async function main() {
         failed++;
         continue;
       }
+      // Tag as AI-generated so reclassify falls through to websearch for classification
+      const existingTags: string[] = place.tags || [];
+      const newTags = existingTags.includes('ai_generated_description')
+        ? existingTags
+        : [...existingTags, 'ai_generated_description'];
       const { error } = await sb.from('places')
-        .update({ description: result.value, updated_at: new Date().toISOString() })
+        .update({ description: result.value, tags: newTags, updated_at: new Date().toISOString() })
         .eq('id', place.id);
       if (error) {
         process.stdout.write('x');
