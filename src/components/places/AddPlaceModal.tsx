@@ -212,7 +212,12 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
       console.error('Error adding place:', error)
       const msg = error?.message || error?.code || 'Unknown error'
       if (msg.includes('row-level security') || msg.includes('RLS') || msg.includes('policy')) {
-        setSubmitError('Permission denied. Please make sure you are logged in and try again.')
+        // RLS rejection is most often the per-user rate limit (5/day for new
+        // contributors, 20/day at trust_score >= 5). Show a friendlier hint
+        // rather than the generic auth message.
+        setSubmitError(
+          "Couldn't add this place — you may have hit today's submission limit (5/day for new contributors). Try again tomorrow, or reach out if this looks wrong."
+        )
       } else if (msg.includes('duplicate') || msg.includes('unique')) {
         setSubmitError('A place with this name already exists in this location.')
       } else {
