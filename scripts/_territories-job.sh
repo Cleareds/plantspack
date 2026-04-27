@@ -40,8 +40,20 @@ npx tsx scripts/generate-missing-descriptions.ts >> /tmp/overnight-descriptions2
 echo "[$(date)] Descriptions done." >> $LOG
 
 # 5. Reclassify with fresh descriptions
+# TODO: scope to recently-imported places (add --since flag to script) — currently
+# re-processes all ~37K places nightly which costs ~$0.30 extra. The midnight
+# job already covered the existing corpus.
 echo "[$(date)] Reclassifying all places..." >> $LOG
 npx tsx scripts/reclassify-vegan-levels.ts >> /tmp/overnight-reclassify2.log 2>&1
 echo "[$(date)] Reclassification done." >> $LOG
+
+# 6. Weekly dedup sweep (Sundays) — catches any duplicates introduced by
+# the territories + new-countries imports. Runs after enrichment so the
+# winner-selection scoring sees the freshest data.
+if [ "$(date +%u)" = "7" ]; then
+  echo "[$(date)] Sunday dedup sweep..." >> $LOG
+  npx tsx scripts/dedup-archive.ts --apply >> /tmp/overnight-dedup.log 2>&1
+  echo "[$(date)] Dedup done." >> $LOG
+fi
 
 echo "=== $(date) all jobs complete ===" >> $LOG
