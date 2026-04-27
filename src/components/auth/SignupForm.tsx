@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
 import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2 } from 'lucide-react'
@@ -26,8 +26,15 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   const [success, setSuccess] = useState('')
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle')
   const [usernameError, setUsernameError] = useState('')
+  const successRef = useRef<HTMLDivElement>(null)
 
   const { signUp, signInWithGoogle, signInWithFacebook} = useAuth()
+
+  useEffect(() => {
+    if (success && successRef.current) {
+      successRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [success])
 
   // Debounced username availability check
   const checkUsernameAvailability = useCallback(async (username: string) => {
@@ -185,7 +192,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         )}
 
         {success && (
-          <div className="mb-4 p-3 bg-surface-container-low border border-primary/15 text-primary rounded">
+          <div ref={successRef} className="mb-4 p-3 bg-surface-container-low border border-primary/15 text-primary rounded">
             {success}
           </div>
         )}
