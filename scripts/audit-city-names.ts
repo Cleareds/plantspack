@@ -154,6 +154,8 @@ const KNOWN_ALIASES: Record<string, string> = {
   '大阪市中央区北久宝寺町４-２-２ 久宝ビル１F': 'Osaka',
   // 'west' is not a city — likely a data error; keep West (Title Case) over west
   'west': 'West',
+  // Diacritic form → ASCII (project policy: no special characters in city names)
+  'Ürümqi': 'Urumqi',
   // Lowercase or stripped variants found in live data
   'dhaka': 'Dhaka',
   'San Andres Cholula': 'San Andrés Cholula',
