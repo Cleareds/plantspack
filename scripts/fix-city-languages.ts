@@ -238,6 +238,9 @@ const BY_NORM: Record<string, string> = {
   [normKey('広島市')]: 'Hiroshima',
   [normKey('神山町')]: 'Kamiyama',
 
+  // Chinese+Uyghur combined form
+  [normKey('乌鲁木齐市 ئۈرۈمچى')]: 'Urumqi',
+
   // Chinese (additional)
   [normKey('成都市')]: 'Chengdu',
   [normKey('成都')]: 'Chengdu',
@@ -253,6 +256,9 @@ const BY_NORM: Record<string, string> = {
   [normKey('南投縣')]: 'Nantou',
   [normKey('嘉義縣')]: 'Chiayi',
   [normKey('宜蘭縣')]: 'Yilan',
+
+  // Kurdish (Sorani) — different from Arabic سلیمانی
+  [normKey('سلێمانی')]: 'Sulaymaniyah',
 
   // Arabic (additional)
   [normKey('نخلة جميرا')]: 'Dubai',       // Palm Jumeirah
@@ -301,15 +307,240 @@ const BY_NORM: Record<string, string> = {
 
   // UAE
   [normKey('Kalba')]: 'Kalba',
+
+  // Latin-extended city names that should be ASCII (per project policy):
+  // strip diacritics for consistent English display
+  [normKey('Wrocław')]: 'Wroclaw',
+  [normKey('Łódź')]: 'Lodz',
+  [normKey('Kraków')]: 'Krakow',
+  [normKey('Gdańsk')]: 'Gdansk',
+  [normKey('Poznań')]: 'Poznan',
+  [normKey('Szczecin')]: 'Szczecin',  // already ASCII
+
+  // Greek cities and suburbs
+  [normKey('Αθηνα')]: 'Athens',
+  [normKey('Δημος Αθηναιων')]: 'Athens',
+  [normKey('Δημοτικη Ενοτητα Θεσαλονικης')]: 'Thessaloniki',
+  [normKey('Θεσσαλονικη')]: 'Thessaloniki',
+  [normKey('Χαλανδρι')]: 'Chalandri',
+  [normKey('Μαρουσι')]: 'Maroussi',
+  [normKey('Γλυφαδα')]: 'Glyfada',
+  [normKey('Αγιος Δημητριος')]: 'Agios Dimitrios',
+  [normKey('Δημος Πειραιως')]: 'Piraeus',
+  [normKey('Πειραιας')]: 'Piraeus',
+  [normKey('Δημοτικη Ενοτητα Ταυρου')]: 'Tavros',
+  [normKey('Αγια Παρασκευη')]: 'Agia Paraskevi',
+  [normKey('Δημοτικη Ενοτητα Μελισσιων')]: 'Melissia',
+  [normKey('Νεα Ερυθραια')]: 'Nea Erythrea',
+  [normKey('Δημοτικη Ενοτητα Πατρεων')]: 'Patras',
+  [normKey('Δημος Καλλιθεας')]: 'Kallithea',
+  [normKey('Ζωγραφου')]: 'Zografou',
+  [normKey('Δημοτικη Ενοτητα Αγιας')]: 'Agia',
+  [normKey('Αιδηψος')]: 'Aidipsos',
+  [normKey('Δημοτικη Ενοτητα Λαγανα')]: 'Laganas',
+  [normKey('Χαλκιδα')]: 'Chalkida',
+  [normKey('Ιλιον')]: 'Ilion',
+  [normKey('Δημοτικη Ενοτητα Λυκοβρυσεως')]: 'Lykovrysi',
+  [normKey('Αιγαλεω')]: 'Egaleo',
+  [normKey('Δημοτικη Ενοτητα Ναυπακτου')]: 'Nafpaktos',
+  [normKey('Νεα Ζωη')]: 'Nea Zoi',
+  [normKey('Δημοτικη Ενοτητα Βαρης')]: 'Vari',
+  [normKey('Γαλατσι')]: 'Galatsi',
+  [normKey('Ανοιξη')]: 'Anoixi',
+  [normKey('Δημοτικη Ενοτητα Χολαργου')]: 'Cholargos',
+  [normKey('Δημοτικη Ενοτητα Μηλεων')]: 'Milies',
+  [normKey('Αφιωνας')]: 'Afionas',
+  [normKey('Δημοτικη Ενοτητα Σπαρτιατων')]: 'Sparti',
+  [normKey('Δημοτικη Ενοτητα Αγιου Ιωαννου Ρεντη')]: 'Agios Ioannis Rentis',
+  [normKey('Δημοτικη Ενοτητα Ιτεας')]: 'Itea',
+  [normKey('Δημοτικη Ενοτητα Λαυρεωτικης')]: 'Lavrio',
+  [normKey('Σεριφος')]: 'Serifos',
+  [normKey('Δημοτικη Ενοτητα Ερισου')]: 'Erissos',
+  [normKey('Καστρακι')]: 'Kastraki',
+  [normKey('Δημοτικη Ενοτητα Νεας Φιλαδελφειας')]: 'Nea Filadelfia',
+  [normKey('Εξανθεια')]: 'Exanthia',
+  [normKey('Αλιστρατη')]: 'Alistrati',
+  [normKey('Λακκα')]: 'Lakka',
+  [normKey('Αμαρυνθος')]: 'Amarynthos',
+  [normKey('Δημοτικη Ενοτητα Ραφηνας')]: 'Rafina',
+  [normKey('Δημοτικη Ενοτητα Αρχαιας Ολυμπιας')]: 'Ancient Olympia',
+  [normKey('Δημοτικη Ενοτητα Συκεων')]: 'Sykies',
+  [normKey('Κρηστωνη')]: 'Krestoni',
+  [normKey('Κουμπελης')]: 'Koumpelis',
+  [normKey('Δημοτικη Ενοτητα Αχαρνων')]: 'Acharnes',
+  [normKey('Ηρακλειο')]: 'Heraklion',
+  [normKey('Ταλαντα')]: 'Atalanti',
+  [normKey('Ιουλιδα')]: 'Ioulis',
+  [normKey('Παλαιο Φαληρο')]: 'Palaio Faliro',
+  [normKey('Δημοτικη Ενοτητα Ασινης')]: 'Asini',
+  [normKey('Αγιος Στεφανος')]: 'Agios Stefanos',
+  [normKey('Κουρνας')]: 'Kournas',
+  [normKey('Δημοτικη Ενοτητα Νεας Χαλκηδονας')]: 'Nea Chalkidona',
+  [normKey('Δημοτικη Ενοτητα Σπατων - Λουτσας')]: 'Spata',
+  [normKey('Δημοτικη Ενοτητα Πυλαιας')]: 'Pylaia',
+  [normKey('Δημοτικη Ενοτητα Ζαγορας')]: 'Zagora',
+  [normKey('Δημοτικη Ενοτητα Ροδου')]: 'Rhodes',
+  [normKey('Δημοτικη Ενοτητα Κυπαρισσιας')]: 'Kyparissia',
+  [normKey('Παλαιοκαστριτσα')]: 'Paleokastritsa',
+  [normKey('Πλατυ')]: 'Plati',
+  [normKey('Δημοτικη Ενοτητα Ανατολικης Μανης')]: 'Mani',
+  [normKey('Δημοτικη Ενοτητα Πυλαιας')]: 'Pylaia',
+  [normKey('Δημοτικη Ενοτητα Βουλας')]: 'Voula',
+  [normKey('Δημος Καλαματας')]: 'Kalamata',
+  [normKey('Δημοτικη Ενοτητα Κορινθιων')]: 'Corinth',
+  [normKey('Δημοτικη Ενοτητα Αργυρουπολης')]: 'Argyroupoli',
+  [normKey('Δημοτικη Ενοτητα Νεου Ψυχικου')]: 'Neo Psychiko',
+  [normKey('Δημοτικη Ενοτητα Νικαιας')]: 'Nikaia',
+  [normKey('Νικαια')]: 'Nikaia',
+  [normKey('Δημοτικη Ενοτητα Λαρισαιων')]: 'Larissa',
+  [normKey('Ιωαννινα')]: 'Ioannina',
+  [normKey('Δημοτικη Ενοτητα Ανθηδωνος')]: 'Anthidon',
+  [normKey('Δημοτικη Ενοτητα Κρυονεριου')]: 'Kryoneri',
+  [normKey('Βριλησσια')]: 'Vrilissia',
+  [normKey('Δημος Καλαμαριας')]: 'Kalamaria',
+  [normKey('Καισαριανη')]: 'Kaisariani',
+  [normKey('Δημοτικη Ενοτητα Κραννωνος')]: 'Krannona',
+  [normKey('Αγια Ελενη')]: 'Agia Eleni',
+  [normKey('Νεα Σμυρνη')]: 'Nea Smyrni',
+  [normKey('Κερκυρα')]: 'Corfu',
+  [normKey('Αγιος Νεκταριος')]: 'Agios Nektarios',
+  [normKey('Δημοτικη Ενοτητα Επιδαυρου')]: 'Epidavros',
+  [normKey('Ηλιουπολη')]: 'Ilioupoli',
+  [normKey('Αγιος Ιωαννης')]: 'Agios Ioannis',
+  [normKey('Αλιμος')]: 'Alimos',
+  [normKey('Μεσαρια')]: 'Mesaria',
+  [normKey('Σκαλα')]: 'Skala',
+  [normKey('Δημοτικη Ενοτητα Ζακυνθιων')]: 'Zakynthos',
+  [normKey('Λιβαδι')]: 'Livadi',
+  [normKey('Πλακιας')]: 'Plakias',
+  [normKey('Δημος Κατερινης')]: 'Katerini',
+  [normKey('Δημοτικη Ενοτητα Ναυπλιεων')]: 'Nafplio',
+  [normKey('Δημοτικη Ενοτητα Λαμιεων')]: 'Lamia',
+  [normKey('Δημοτικη Ενοτητα Λευκτρου')]: 'Leuktra',
+  [normKey('Δημοτικη Ενοτητα Πευκης')]: 'Pefki',
+  [normKey('Δημοτικη Ενοτητα Καρυας')]: 'Karia',
+  [normKey('Αχαραβη')]: 'Acharavi',
+  [normKey('Δημοτικη Ενοτητα Βουλιαγμενης')]: 'Vouliagmeni',
+  [normKey('Δημοτικη Ενοτητα Καλυβιων Θορικου')]: 'Kalyvia Thorikou',
+  [normKey('Δημος Βολου')]: 'Volos',
+  [normKey('Κηφισια')]: 'Kifisia',
+
+  // Bulgarian (Cyrillic)
+  [normKey('София')]: 'Sofia',
+  [normKey('Банкя')]: 'Bankya',
+  [normKey('Плевен')]: 'Pleven',
+  [normKey('Асеновград')]: 'Asenovgrad',
+  [normKey('Лешница')]: 'Leshnitsa',
+  [normKey('Враца')]: 'Vratsa',
+
+  // North Macedonian (Cyrillic)
+  [normKey('Поленица')]: 'Polenica',
+  [normKey('Ресен')]: 'Resen',
+
+  // Mongolian
+  [normKey('Эрдэнэт')]: 'Erdenet',
+
+  // Ukrainian
+  [normKey('Киів')]: 'Kyiv',
+
+  // Korean (additional)
+  [normKey('서귀포시')]: 'Seogwipo',
+  [normKey('대구광역시')]: 'Daegu',
+
+  // Chinese (additional)
+  [normKey('珠海市')]: 'Zhuhai',
+  [normKey('嘉手納町')]: 'Kadena',
+
+  // Traditional Chinese (Taiwan, additional)
+  [normKey('臺東縣')]: 'Taitung',
+
+  // Japanese address used as city name → map to city
+  [normKey('大阪市中央区北久宝寺町４-２-２ 久宝ビル１F')]: 'Osaka',
+
+  // Khmer (additional)
+  [normKey('ក្រុងសៀមរាប')]: 'Siem Reap',
+  [normKey('ខណ្ឌដូនពេញ')]: 'Phnom Penh',
+  [normKey('ភូមិសុវណ្ណសាគរ')]: 'Phnom Penh',
+  [normKey('សង្កាត់ស្វាយប៉ោ')]: 'Phnom Penh',
+
+  // Burmese (additional)
+  [normKey('လယ်ယား')]: 'Leiwe',
+  [normKey('ကျောက်တံတား')]: 'Yangon',
+  [normKey('ရွှေနီကုန်း')]: 'Mandalay',
+
+  // Nepali (additional)
+  [normKey('ड्रागनाग')]: 'Khumbu',
+
+  // Bengali (additional)
+  [normKey('ফটিকছড়ি')]: 'Fatikchhari',
+
+  // Arabic (additional)
+  [normKey('الروية')]: 'Al Ruwaiya',
+  [normKey('هەولێر')]: 'Erbil',
+  [normKey('جيزه')]: 'Giza',
+
+  // Thai (additional)
+  [normKey('คลองม่วง')]: 'Krabi',
+
+  // Japanese (additional)
+  [normKey('墨田区')]: 'Tokyo',
+
+  // Vietnamese (additional)
+  [normKey('Châu Đốc')]: 'Chau Doc',
+  [normKey('Bắc Sơn')]: 'Bac Son',
+
+  // Hawaiian (ʻokina character)
+  [normKey('Haleʻiwa')]: 'Haleiwa',
+
+  // Abkhazian (Cyrillic)
+  [normKey('Гагра')]: 'Gagra',
+
+  // Greek (Cyprus + additional)
+  [normKey('Διμυλια')]: 'Dimylia',
+  [normKey('Δημοτικη Ενοτητα Λεωνιδιου')]: 'Leonidio',
+  [normKey('Βυρωνας')]: 'Vyronas',
+  [normKey('Δημος Παφου')]: 'Paphos',
+  [normKey('Πυλα')]: 'Pyla',
+  [normKey('Λεμεσος')]: 'Limassol',
+
+  // Bulgarian (additional)
+  [normKey('Орешак')]: 'Oresak',
+  [normKey('Анево')]: 'Anevo',
+  [normKey('Хисаря')]: 'Hisarya',
+  [normKey('Сливен')]: 'Sliven',
+
+  // Vietnamese with heavy diacritics → ASCII transliterations
+  [normKey('Thuận An')]: 'Thuan An',
+  [normKey('Cần Thơ')]: 'Can Tho',
+  [normKey('Phan Rang – Tháp Chàm')]: 'Phan Rang',
+  [normKey('Tả Van')]: 'Ta Van',
+  [normKey('Điện Biên Phủ')]: 'Dien Bien Phu',
+  [normKey('Bến Tre')]: 'Ben Tre',
+  [normKey('Thuận Nam')]: 'Thuan Nam',
+  [normKey('Ba Bể Commune')]: 'Ba Be',
+  [normKey('Đồng Văn Commune')]: 'Dong Van',
+  [normKey('Phường Xuân Hương - Đà Lạt')]: 'Da Lat',
+  [normKey('Phường La Gi')]: 'La Gi',
+  [normKey('A Lưới 2 Commune')]: 'A Luoi',
 };
 
 // Exact-string overrides for mojibake/garbled encodings that normKey can't help with
 const EXACT: Record<string, string> = {
-  'WrocÅ‚aw': 'Wrocław',
+  'WrocÅ‚aw': 'Wroclaw',
   'æ¡‚æž—': 'Guilin',
   'æ¡‚æž— ': 'Guilin',
   '香港 Hong Kong': 'Hong Kong',
   "乌鲁木齐市 ئۈرۈمچى": 'Urumqi',
+  // Special chars / apostrophes — all Unicode apostrophe variants
+  "Be'er-Sheva": 'Beersheba',     // U+0027 apostrophe
+  "Be’er-Sheva": 'Beersheba', // U+2019 right single quotation mark
+  "Beʼer-Sheva": 'Beersheba', // U+02BC modifier letter apostrophe
+  "Be׳er-Sheva": 'Beersheba',     // U+05F3 Hebrew geresh
+  "Be‘er-Sheva": 'Beersheba', // U+2018 left single quotation mark
+  'Salzburg – Aigen': 'Salzburg',  // em-dash
+  'Salzburg – Aigen': 'Salzburg',
+  'Cкoпje': 'Skopje',
+  'Kalba كلباء': 'Kalba',
 };
 
 function hasNonLatin(s: string): boolean {
@@ -339,9 +570,10 @@ async function main() {
   const unmatched: Array<{ city: string; count: number }> = [];
 
   for (const [city, count] of map) {
-    // Check exact overrides first
-    if (EXACT[city]) {
-      toRename.push({ from: city, to: EXACT[city], count });
+    // Check exact overrides first — also try normalizing fancy apostrophes/quotes
+    const cityNormApos = city.replace(/[''׳ʻʼ]/g, "'");
+    if (EXACT[city] || EXACT[cityNormApos]) {
+      toRename.push({ from: city, to: EXACT[city] ?? EXACT[cityNormApos], count });
       continue;
     }
     if (!hasNonLatin(city)) continue;
