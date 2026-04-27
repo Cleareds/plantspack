@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 // Force Node.js runtime (required for Stripe SDK)
 export const runtime = 'nodejs'
@@ -42,15 +44,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Derive userId from authenticated session — never trust client-supplied userId
+    const cookieStore = await cookies()
+    const authClient = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
+    )
+    const { data: { session: authSession } } = await authClient.auth.getSession()
+    if (!authSession) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const userId = authSession.user.id
+
     const body = await request.json()
     console.log('Request body:', body)
-    
-    const { tierId, userId, successUrl, cancelUrl, interval = 'month' } = body
 
-    if (!tierId || !userId) {
-      console.error('Missing required parameters:', { tierId, userId })
+    const { tierId, successUrl, cancelUrl, interval = 'month' } = body
+
+    if (!tierId) {
+      console.error('Missing required parameters:', { tierId })
       return NextResponse.json(
-        { error: 'Missing required parameters: tierId and userId are required' },
+        { error: 'Missing required parameter: tierId' },
         { status: 400 }
       )
     }

@@ -94,14 +94,46 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Short cache for public API routes (ISR handles server-side freshness)
+        // Public-read API routes (place/city/content data) — safe to cache briefly
+        source: '/api/places/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
+      },
+      {
+        source: '/api/cities/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
+      },
+      {
+        source: '/api/scores',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=60, stale-while-revalidate=300' }],
+      },
+      {
+        source: '/api/stats',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=60, stale-while-revalidate=300' }],
+      },
+      {
+        source: '/api/supporters',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=60, stale-while-revalidate=300' }],
+      },
+      {
+        source: '/api/posts/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
+      },
+      {
+        source: '/api/hashtags/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
+      },
+      {
+        source: '/api/recipes/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
+      },
+      {
+        source: '/api/health',
+        headers: [{ key: 'Cache-Control', value: 'no-store' }],
+      },
+      {
+        // Default: all other /api/* routes are private/user-specific — never cache publicly
         source: '/api/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=10, stale-while-revalidate=59',
-          },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'private, no-store, no-cache, must-revalidate' }],
       },
       {
         // No cache for auth/mutation API routes

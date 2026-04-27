@@ -79,10 +79,11 @@ export async function GET() {
       }
     })
 
+    // Fire-and-forget: update last_seen without blocking the response
     for (const f of followed) {
       const score = scoreMap[`${f.city}|||${f.country}`]
       if (score && (f.last_seen_score !== score.score || f.last_seen_grade !== score.grade)) {
-        await admin.from('user_followed_cities').update({
+        void admin.from('user_followed_cities').update({
           last_seen_score: score.score,
           last_seen_grade: score.grade,
           last_visited_at: new Date().toISOString(),
