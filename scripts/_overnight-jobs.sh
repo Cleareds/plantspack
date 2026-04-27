@@ -34,4 +34,11 @@ echo "[$(date)] Recomputing review counts..." >> /tmp/overnight-main.log
 npx tsx scripts/recompute-place-stats.ts >> /tmp/overnight-recompute.log 2>&1 || true
 echo "[$(date)] Recompute done." >> /tmp/overnight-main.log
 
+# 6. Daily quality snapshot — eyeball-friendly summary of place counts,
+#    classification distribution, coverage gaps, dedup health, reports queue.
+echo "[$(date)] Generating quality report..." >> /tmp/overnight-main.log
+DATE=$(date +%Y-%m-%d)
+npx tsx scripts/data-quality-report.ts > /tmp/quality-${DATE}.log 2>&1 || true
+echo "[$(date)] Quality report at /tmp/quality-${DATE}.log" >> /tmp/overnight-main.log
+
 echo "=== $(date) overnight jobs complete ===" >> /tmp/overnight-main.log
