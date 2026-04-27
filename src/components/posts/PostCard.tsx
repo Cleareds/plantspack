@@ -875,7 +875,17 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                 <div className="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
                   {post.product_data.brand && <span className="font-medium">{post.product_data.brand}</span>}
                   {post.product_data.price_range && <span>{post.product_data.price_range}</span>}
-                  {post.product_data.where_to_buy && <span>Buy at: {post.product_data.where_to_buy}</span>}
+                  {post.product_data.where_to_buy && (
+                    <a
+                      href={post.product_data.where_to_buy.startsWith('http') ? post.product_data.where_to_buy : `https://${post.product_data.where_to_buy}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      Buy at: {post.product_data.where_to_buy}
+                    </a>
+                  )}
                 </div>
               </div>
             )}
