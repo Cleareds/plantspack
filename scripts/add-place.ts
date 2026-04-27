@@ -105,6 +105,7 @@ async function nominatim(query: string, countryCode = 'gb'): Promise<{ lat: numb
 }
 
 async function scrapeHeroImage(url: string): Promise<string | null> {
+  try {
   // Multi-pass: try the homepage + common hero/gallery paths with multiple
   // user agents (some sites gate on Googlebot, others on real browsers).
   // Collect every plausible candidate, then size-rank by fetching headers

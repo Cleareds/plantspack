@@ -79,7 +79,13 @@ async function main() {
   if (upErr) { console.error(`upload fail: ${upErr.message}`); process.exit(1) }
 
   const publicUrl = sb.storage.from('place-images').getPublicUrl(key).data.publicUrl
-  const { error: updErr } = await sb.from('places').update({ main_image_url: publicUrl }).eq('id', p.id)
+  // Fetch existing images array so we can prepend without wiping other photos
+  const { data: existing } = await sb.from('places').select('images').eq('id', p.id).single()
+  const images: string[] = existing?.images || []
+  if (!images.includes(publicUrl)) images.unshift(publicUrl)
+  const { error: updErr } = await sb.from('places')
+    .update({ main_image_url: publicUrl, images })
+    .eq('id', p.id)
   if (updErr) { console.error(`db update fail: ${updErr.message}`); process.exit(1) }
 
   console.log(`✓ stored + wired: ${publicUrl}`)
