@@ -23,4 +23,15 @@ echo "[$(date)] Starting 4-tier reclassification..." >> /tmp/overnight-main.log
 npx tsx scripts/reclassify-vegan-levels.ts >> /tmp/overnight-reclassify.log 2>&1
 echo "[$(date)] Reclassification done." >> /tmp/overnight-main.log
 
+# 4. Async content moderation — flags problematic reviews/places into the
+#    admin reports queue. Non-blocking, runs against last 24h of submissions.
+echo "[$(date)] Running content moderation..." >> /tmp/overnight-main.log
+npx tsx scripts/moderate-content.ts >> /tmp/overnight-moderation.log 2>&1 || true
+echo "[$(date)] Moderation done." >> /tmp/overnight-main.log
+
+# 5. Recompute denormalized review_count / average_rating drift from place_reviews
+echo "[$(date)] Recomputing review counts..." >> /tmp/overnight-main.log
+npx tsx scripts/recompute-place-stats.ts >> /tmp/overnight-recompute.log 2>&1 || true
+echo "[$(date)] Recompute done." >> /tmp/overnight-main.log
+
 echo "=== $(date) overnight jobs complete ===" >> /tmp/overnight-main.log

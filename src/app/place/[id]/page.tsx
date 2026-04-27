@@ -14,6 +14,7 @@ import PlaceReviews from '@/components/places/PlaceReviews'
 import { createAdminClient } from '@/lib/supabase-admin'
 import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
+import ReportButton from '@/components/reports/ReportButton'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
 import HashScroller from '@/components/ui/HashScroller'
@@ -693,6 +694,9 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               initialReviews={initialReviews as any}
               initialHasMore={reviewsHasMore}
             />
+            <div className="mt-4 pt-4 border-t border-outline-variant/10 flex justify-end">
+              <ReportButton targetType="place" targetId={place.id} />
+            </div>
           </div>
 
           {/* More places in this city — SSR internal links to sibling places.
