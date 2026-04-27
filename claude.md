@@ -254,3 +254,29 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 - Reference code by file:line instead of showing full blocks
 - Assume user can check files themselves when needed
 - Skip excessive confirmations and explanations
+
+## Session Handoff Notes (2026-04-26)
+
+### Review findings to address early
+
+1. `src/app/api/stripe/create-checkout-session/route.ts`
+   The checkout route currently trusts `userId` from the request body and uses the service-role client without confirming the caller owns that account. Fix by deriving the acting user from the authenticated server session and rejecting mismatches.
+
+2. `next.config.ts`
+   The global `/api/:path*` header sets `Cache-Control: public`, which is unsafe as a default because authenticated endpoints like notifications return user-specific data. Default private/authenticated API routes to `no-store` and opt into caching only on explicitly public endpoints.
+
+3. `src/app/api/cities/followed/route.ts`
+   `GET /api/cities/followed` performs writes to `user_followed_cities`. Remove side effects from GET and move the `last_seen_*` update to an explicit mutation or async follow-up path.
+
+4. `package.json` and `README.md`
+   Tooling/docs drift exists: the repo is on Next 16 but `npm run lint` still uses `next lint`, which currently fails. Align linting with ESLint CLI, keep `eslint-config-next` in sync with the framework version, and refresh the root docs to match the actual stack.
+
+### Place pipeline reuse note
+
+Yes, the existing add-place pipeline can be reused for new regions, including Oahu.
+
+- Preferred normalized geography for new entries: `city: Oahu`, `country: United States`
+- Human-readable region/context: `Oahu, Hawaii, United States`
+- Original-language user input such as `Гаваї, Сполучені Штати Америки` should be normalized to English before insert, per project rules
+- Use the existing manual-add flow in `scripts/add-place.ts` plus the verification workflow in `docs/place-pipeline.md`
+- For Oahu specifically, watch for district/neighborhood ambiguity (`Honolulu`, `Waikiki`, `North Shore`, etc.) and keep slugs/city naming consistent before batch import
