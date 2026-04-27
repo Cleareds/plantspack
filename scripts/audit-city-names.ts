@@ -36,11 +36,14 @@ const DO_EXPORT = args.includes('--export') || args.includes('--csv');
 const FORCE = args.includes('--force');
 const CSV_PATH = '/tmp/city-audit.csv';
 
-// Normalise to a grouping key: NFC → strip diacritics → lowercase → collapse spaces
+// Normalise to a grouping key: NFD → strip combining marks → lowercase → collapse spaces.
+// Strips Latin combining diacritics (U+0300–U+036F) AND Arabic harakat/hamza combining
+// marks (U+064B–U+065F) so that الإسكندرية with precomposed U+0625 and the decomposed
+// U+0627+U+0655 form produce the same key and are treated as duplicates.
 function normKey(city: string): string {
   return city
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[̀-ًͯ-ٟ]/g, '')
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim();
