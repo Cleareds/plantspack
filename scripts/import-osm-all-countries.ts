@@ -62,15 +62,31 @@ const BBOX_SPLITS: Record<string, [number, number, number, number][]> = {
     [-44,113,-26,131],[-44,131,-26,154],
     [-26,113,-10,131],[-26,131,-10,154],
   ],
+  KZ: [
+    [40,50,52,72],[40,72,52,88],
+    [52,50,56,72],[52,72,56,88],
+  ],
+  CD: [
+    [-12,12,0,27],[0,12,5,27],
+    [-12,27,-4,31],[0,27,5,31],
+  ],
+  IR: [
+    [25,44,36,56],[25,56,36,64],
+    [36,44,40,56],[36,56,40,64],
+  ],
+  AO: [
+    [-18,12,-8,19],[-18,19,-8,24],
+    [-8,12,-4,19],[-8,19,-4,24],
+  ],
 };
 
 // Continent groupings for --only filter
 const CONTINENTS: Record<string, string[]> = {
   europe: ['BE','NL','DE','GB','SE','FR','IT','ES','PL','AT','CH','DK','NO','FI','PT','CZ','HU','RO','GR','HR','SK','SI','LT','LV','EE','BG','LU','UA','IE','RS','BA','ME','MK','AL','MT','CY','IS'],
-  americas: ['US','CA','MX','BR','AR','CO','CL','PE','UY','BO','EC','CR','PA','GT','DO','CU'],
-  asia: ['JP','TW','KR','HK','CN','TH','VN','ID','PH','MY','SG','KH','MM','LA','IN','LK','NP','BD','PK','AM','GE','AZ','IL','AE','TR','LB','JO','KW','QA','SA','OM'],
-  oceania: ['AU','NZ'],
-  africa: ['ZA','NG','KE','GH','TZ','RW','ET','MA','EG','UG','ZW','SN','CI','CM','MU'],
+  americas: ['US','CA','MX','BR','AR','CO','CL','PE','UY','BO','EC','CR','PA','GT','DO','CU','HN','NI','SV','BZ','JM','TT','BB','HT','BS','GY','SR','PY','VE'],
+  asia: ['JP','TW','KR','HK','CN','MN','TH','VN','ID','PH','MY','SG','KH','MM','LA','BN','TL','IN','LK','NP','BD','PK','MV','BT','AM','GE','AZ','IL','AE','TR','LB','JO','KW','QA','SA','OM','BH','PS','IQ','IR','KZ','UZ','KG','TJ'],
+  oceania: ['AU','NZ','FJ','PG','SB','VU','WS','TO','PW','FM'],
+  africa: ['ZA','NG','KE','GH','TZ','RW','ET','MA','EG','UG','ZW','SN','CI','CM','MU','MZ','ZM','MW','NA','BW','MG','AO','CD','TN','DZ','LY','SD','SS','SO','DJ','ER','MR','ML','NE','BF','TD','CF','GN','GW','SL','LR','TG','BJ','GM','CV','ST','GQ','GA','CG','BI','KM','LS','SZ'],
 };
 
 interface Checkpoint {

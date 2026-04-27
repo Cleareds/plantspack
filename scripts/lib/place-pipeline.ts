@@ -290,26 +290,47 @@ export const COUNTRY_NAMES: Record<string, string> = {
   AR: 'Argentina', CO: 'Colombia', CL: 'Chile', PE: 'Peru',
   UY: 'Uruguay', BO: 'Bolivia', EC: 'Ecuador', CR: 'Costa Rica',
   PA: 'Panama', GT: 'Guatemala', DO: 'Dominican Republic', CU: 'Cuba',
+  HN: 'Honduras', NI: 'Nicaragua', SV: 'El Salvador', BZ: 'Belize',
+  JM: 'Jamaica', TT: 'Trinidad and Tobago', BB: 'Barbados', HT: 'Haiti',
+  BS: 'Bahamas', GY: 'Guyana', SR: 'Suriname', PY: 'Paraguay', VE: 'Venezuela',
   // Oceania
   AU: 'Australia', NZ: 'New Zealand',
+  FJ: 'Fiji', PG: 'Papua New Guinea', SB: 'Solomon Islands', VU: 'Vanuatu',
+  WS: 'Samoa', TO: 'Tonga', PW: 'Palau', FM: 'Micronesia',
   // East Asia
   JP: 'Japan', TW: 'Taiwan', KR: 'South Korea', HK: 'Hong Kong', CN: 'China',
+  MN: 'Mongolia',
   // SE Asia
   TH: 'Thailand', VN: 'Vietnam', ID: 'Indonesia', PH: 'Philippines',
   MY: 'Malaysia', SG: 'Singapore', KH: 'Cambodia', MM: 'Myanmar',
-  LA: 'Laos',
+  LA: 'Laos', BN: 'Brunei', TL: 'Timor-Leste',
   // South Asia
   IN: 'India', LK: 'Sri Lanka', NP: 'Nepal', BD: 'Bangladesh', PK: 'Pakistan',
+  MV: 'Maldives', BT: 'Bhutan',
   // Caucasus
   AM: 'Armenia', GE: 'Georgia', AZ: 'Azerbaijan',
-  // Middle East / Central Asia
+  // Middle East
   IL: 'Israel', AE: 'United Arab Emirates', TR: 'Turkey', LB: 'Lebanon',
   JO: 'Jordan', KW: 'Kuwait', QA: 'Qatar', SA: 'Saudi Arabia', OM: 'Oman',
+  BH: 'Bahrain', PS: 'Palestine', IQ: 'Iraq', IR: 'Iran',
+  // Central Asia
+  KZ: 'Kazakhstan', UZ: 'Uzbekistan', KG: 'Kyrgyzstan', TJ: 'Tajikistan',
   // Africa
   ZA: 'South Africa', NG: 'Nigeria', KE: 'Kenya', GH: 'Ghana',
   TZ: 'Tanzania', RW: 'Rwanda', ET: 'Ethiopia', MA: 'Morocco',
   EG: 'Egypt', UG: 'Uganda', ZW: 'Zimbabwe', SN: 'Senegal',
   CI: 'Ivory Coast', CM: 'Cameroon', MU: 'Mauritius',
+  MZ: 'Mozambique', ZM: 'Zambia', MW: 'Malawi', NA: 'Namibia',
+  BW: 'Botswana', MG: 'Madagascar', AO: 'Angola', CD: 'DR Congo',
+  TN: 'Tunisia', DZ: 'Algeria', LY: 'Libya',
+  SD: 'Sudan', SS: 'South Sudan', SO: 'Somalia', DJ: 'Djibouti',
+  ER: 'Eritrea', MR: 'Mauritania', ML: 'Mali', NE: 'Niger',
+  BF: 'Burkina Faso', TD: 'Chad', CF: 'Central African Republic',
+  GN: 'Guinea', GW: 'Guinea-Bissau', SL: 'Sierra Leone', LR: 'Liberia',
+  TG: 'Togo', BJ: 'Benin', GM: 'Gambia', CV: 'Cape Verde',
+  ST: 'São Tomé and Príncipe', GQ: 'Equatorial Guinea', GA: 'Gabon',
+  CG: 'Republic of the Congo', BI: 'Burundi', KM: 'Comoros',
+  LS: 'Lesotho', SZ: 'Eswatini',
 };
 
 // ─── Text helpers ─────────────────────────────────────────────────────────────
