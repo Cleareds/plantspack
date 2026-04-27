@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Vote, Send, CheckCircle, Lock } from 'lucide-react'
 
 type ColumnKey = 'now' | 'next' | 'later'
-type StatusKey = 'in-development' | 'ongoing' | 'planned' | 'exploring'
+type StatusKey = 'shipped' | 'in-development' | 'ongoing' | 'planned' | 'exploring'
 
 interface RoadmapFeature {
   id: string
@@ -20,11 +20,35 @@ interface RoadmapFeature {
 const ROADMAP_FEATURES: RoadmapFeature[] = [
   // Now — Shipped / In Progress
   {
+    id: 'packs',
+    label: 'Packs',
+    description: 'Save and organise places into personal collections - your vegan favourites, bucket lists, and city guides',
+    status: 'shipped',
+    quarter: 'Q1 2026',
+    column: 'now',
+  },
+  {
+    id: 'trips',
+    label: 'Trips & Check-ins',
+    description: 'Log places you\'ve visited, track your vegan travels, and build a personal history of discoveries',
+    status: 'shipped',
+    quarter: 'Q1 2026',
+    column: 'now',
+  },
+  {
+    id: 'social-feed',
+    label: 'Community & Social Feed',
+    description: 'Follow other plant-based travellers, share posts, comment, and discover places through your community',
+    status: 'shipped',
+    quarter: 'Q1 2026',
+    column: 'now',
+  },
+  {
     id: 'mobile-app',
     label: 'iOS & Android App',
     description: 'Native mobile applications for iPhone, iPad, and Android devices',
     status: 'in-development',
-    quarter: 'Q1 2026',
+    quarter: 'Q2 2026',
     column: 'now',
   },
   {
@@ -130,6 +154,12 @@ const ROADMAP_FEATURES: RoadmapFeature[] = [
 ]
 
 const STATUS_CONFIG: Record<StatusKey, { label: string; bg: string; text: string; dot: string }> = {
+  'shipped': {
+    label: 'Shipped',
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-700',
+    dot: 'bg-emerald-500',
+  },
   'in-development': {
     label: 'In Development',
     bg: 'bg-blue-50',
