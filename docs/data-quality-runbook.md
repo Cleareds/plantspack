@@ -152,3 +152,45 @@ Stable external IDs go on dedicated columns so they survive a source re-tag:
 - [ ] `--commit` only after review
 - [ ] Add a project memory note summarizing what was imported and any surprises
 - [ ] Post-import: glance at the admin **Suspected Wrong Category** and **Pending Verify** tabs to see what needs human review
+
+---
+
+## Scheduled jobs
+
+Two crontab entries cover everything. Anything not in this section is either ad-hoc or retired.
+
+### Daily 08:00 CEST — `scripts/_daily-maintenance.sh`
+
+Cheap stuff that genuinely needs to run every day. No OpenAI heavy work.
+
+1. `moderate-content.ts` — flags problematic reviews/places into the admin queue (last 24h).
+2. `recompute-place-stats.ts` — fixes drift in `review_count` / `average_rating`.
+3. `data-quality-report.ts` — eyeball-friendly snapshot at `/tmp/quality-YYYY-MM-DD.log`.
+
+Logs: `/tmp/daily-maintenance.log`, `/tmp/daily-*.log`.
+
+### Sunday 09:00 CEST — `scripts/_weekly-enrichment.sh`
+
+Heavier pass that catches up on whatever was inserted during the week. Aborts cleanly on OpenAI quota walls (25 consecutive 429s = abort).
+
+1. `bulk-verify-vegan-fast.ts` — checkpointed; verifies fully_vegan rows we have not yet classified.
+2. `generate-missing-descriptions.ts` — fills empty descriptions.
+3. `reclassify-vegan-levels.ts --since=8d` — only re-scores recently-imported rows, not the whole 54K corpus.
+4. `dedup-archive.ts --apply` — archives weaker copies of duplicate places.
+5. `detect-broken-images.ts --apply` — broken-image audit.
+6. `data-quality-report.ts` — end-of-week snapshot.
+
+Logs: `/tmp/weekly-enrichment.log`, `/tmp/weekly-*.log`.
+
+### Manual / ad-hoc (not on cron)
+
+- `import-osm-all-countries.ts` — canonical OSM scraper. Without `--resume` it re-scrapes every country and the dedup logic skips ones we already have, so it doubles as a delta scraper. Chain filtering, Russia exclusion, and post-insert image+desc enrichment are baked in. Slow (~hours).
+- `import-osm-territories.ts` — done; only re-run if you add a new territory.
+- `enrich-from-osm-tags.ts` — backfills missing image/description from Wikidata + Wikipedia for places with parseable `osm:node/...` source_id. Free, slow due to Overpass rate-limit.
+- `reclassify-by-name-patterns.ts` — deterministic promotion of `vegan_friendly` rows by name regex. Each change is reversibly tagged.
+- `dedup-trigram.ts` — trigram-similarity dupe finder for what `dedup-archive` misses. Read-only; outputs CSV for manual review.
+
+### Retired
+
+- The old `_overnight-jobs.sh` (00:00) and `_territories-job.sh` (04:00) entries — pulled from cron 2026-04-28. Files kept on disk for ad-hoc use.
+- The 47 `apply-websearch-chunk*.ts` scripts — one-shot work from the websearch verification rollout. Do not re-run.
