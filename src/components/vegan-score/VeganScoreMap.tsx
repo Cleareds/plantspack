@@ -534,7 +534,7 @@ export default function VeganScoreMap() {
               <h2 className="text-xl font-bold text-gray-900">How City Ranks Work</h2>
               <button onClick={() => setShowInfo(false)} className="text-gray-400 hover:text-gray-600"><X className="h-5 w-5" /></button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">Every city gets a score from 0 to 100 across four dimensions (25 points each). Every place counts — a 100% vegan spot counts fully, a vegan-friendly spot counts as 0.35 of one.</p>
+            <p className="text-sm text-gray-600 mb-4">Every city gets a score from 0 to 100 across four dimensions (25 points each). Places contribute by tier: <strong>100% Vegan</strong> counts as 1.0, <strong>Mostly Vegan</strong> as 0.70, <strong>Vegan-Friendly</strong> as 0.35, <strong>Has Vegan Options</strong> as 0.10. So a city with one fully-vegan restaurant outweighs a city with three places that just happen to have a vegan dish.</p>
             <div className="space-y-3 mb-5">
               <div className="bg-emerald-50 rounded-xl p-3">
                 <h3 className="font-bold text-emerald-800 text-sm mb-1">📊 Accessibility (0-25 pts)</h3>
@@ -558,11 +558,18 @@ export default function VeganScoreMap() {
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div><span className="font-bold text-emerald-500">A+</span> <span className="text-gray-400">88-100</span></div>
                 <div><span className="font-bold text-emerald-500">A</span> <span className="text-gray-400">78-87</span></div>
-                <div><span className="font-bold text-green-500">B</span> <span className="text-gray-400">62-77</span></div>
-                <div><span className="font-bold text-yellow-500">C</span> <span className="text-gray-400">45-61</span></div>
-                <div><span className="font-bold text-orange-500">D</span> <span className="text-gray-400">30-44</span></div>
+                <div><span className="font-bold text-green-500">B+</span> <span className="text-gray-400">70-77</span></div>
+                <div><span className="font-bold text-green-500">B</span> <span className="text-gray-400">62-69</span></div>
+                <div><span className="font-bold text-yellow-500">C+</span> <span className="text-gray-400">54-61</span></div>
+                <div><span className="font-bold text-yellow-500">C</span> <span className="text-gray-400">45-53</span></div>
+                <div><span className="font-bold text-orange-500">D+</span> <span className="text-gray-400">37-44</span></div>
+                <div><span className="font-bold text-orange-500">D</span> <span className="text-gray-400">30-36</span></div>
                 <div><span className="font-bold text-red-500">F</span> <span className="text-gray-400">0-29</span></div>
               </div>
+            </div>
+            <div className="bg-amber-50 rounded-xl p-3 mb-4 border border-amber-200">
+              <h3 className="font-bold text-amber-900 text-sm mb-1">What a low grade actually means</h3>
+              <p className="text-xs text-amber-800">A D or F grade often means &ldquo;we don&apos;t have enough data here yet,&rdquo; not &ldquo;this city is bad for vegans.&rdquo; Coverage is strongest in Europe and large US/Asian cities, and sparser elsewhere. Adding missing places and rating ones you&apos;ve been to is the fastest way to make the ranking accurate for your city.</p>
             </div>
             <div className="bg-emerald-50 rounded-xl p-3">
               <h3 className="font-bold text-emerald-800 text-sm mb-1">🚀 Improve Your City&apos;s Score</h3>
