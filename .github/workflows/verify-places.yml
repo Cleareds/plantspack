@@ -13,7 +13,8 @@ jobs:
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-      GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+      # GOOGLE_PLACES_API_KEY removed 2026-04-28 - paid Google Places API
+      # caused unbounded billing. Use website-HEAD checks below instead.
 
     steps:
       - uses: actions/checkout@v4
@@ -120,8 +121,6 @@ jobs:
           })();
           "
 
-      # Tags places as google_confirmed_closed / google_temporarily_closed / google_not_found.
-      # Never deletes — admin reviews flagged places in /admin/data-quality.
-      - name: Check Google Places for closed businesses
-        if: env.GOOGLE_PLACES_API_KEY != ''
-        run: npx tsx scripts/check-google-closed.ts --limit 200 --flagged-first
+      # Google Places API step removed 2026-04-28 - paid API caused unbounded
+      # billing. The free website-HEAD/GET check above is the closure detector
+      # going forward. Re-enable only with a hard GCP budget cap in place.

@@ -28,6 +28,7 @@ interface Supporter {
   first_name: string | null
   avatar_url: string | null
   subscription_tier: string
+  donor_source: string | null
 }
 
 interface Stats {
@@ -294,35 +295,50 @@ function SupportContent() {
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-4">
-              {supporters.map((supporter) => (
-                <Link
-                  key={supporter.username}
-                  href={`/profile/${supporter.username}`}
-                  className="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-surface-container-low transition-colors group"
-                >
-                  <div className="relative">
-                    {supporter.avatar_url ? (
-                      <img
-                        src={supporter.avatar_url}
-                        alt={supporter.first_name || supporter.username}
-                        className="h-14 w-14 rounded-full object-cover ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all"
-                      />
-                    ) : (
-                      <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                        <span className="text-primary font-bold text-lg">
-                          {(supporter.first_name || supporter.username)[0].toUpperCase()}
-                        </span>
+              {supporters.map((supporter) => {
+                // Different icon per donor source. Stripe monthly = heart
+                // (recurring care). Buy Me a Coffee one-time = coffee cup
+                // (one-shot generosity). Future donor sources can extend this.
+                const isBmcDonor = supporter.donor_source?.startsWith('bmc')
+                const badgeBg = isBmcDonor ? 'bg-amber-500' : 'bg-primary'
+                const badgeRingHover = isBmcDonor ? 'group-hover:ring-amber-500/40' : 'group-hover:ring-primary/40'
+                const badgeRing = isBmcDonor ? 'ring-amber-500/20' : 'ring-primary/20'
+                const badgeTitle = isBmcDonor ? 'Buy Me a Coffee supporter' : 'Monthly supporter'
+                return (
+                  <Link
+                    key={supporter.username}
+                    href={`/profile/${supporter.username}`}
+                    className="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-surface-container-low transition-colors group"
+                    title={badgeTitle}
+                  >
+                    <div className="relative">
+                      {supporter.avatar_url ? (
+                        <img
+                          src={supporter.avatar_url}
+                          alt={supporter.first_name || supporter.username}
+                          className={`h-14 w-14 rounded-full object-cover ring-2 ${badgeRing} ${badgeRingHover} transition-all`}
+                        />
+                      ) : (
+                        <div className={`h-14 w-14 rounded-full ${isBmcDonor ? 'bg-amber-500/10' : 'bg-primary/10'} flex items-center justify-center ring-2 ${badgeRing} ${badgeRingHover} transition-all`}>
+                          <span className={`${isBmcDonor ? 'text-amber-700' : 'text-primary'} font-bold text-lg`}>
+                            {(supporter.first_name || supporter.username)[0].toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                      <div className={`absolute -bottom-1 -right-1 ${badgeBg} rounded-full p-0.5`} title={badgeTitle}>
+                        {isBmcDonor ? (
+                          <Coffee className="h-3 w-3 text-white" />
+                        ) : (
+                          <Heart className="h-3 w-3 text-white fill-white" />
+                        )}
                       </div>
-                    )}
-                    <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-0.5">
-                      <Heart className="h-3 w-3 text-white fill-white" />
                     </div>
-                  </div>
-                  <span className="text-xs text-on-surface-variant font-medium">
-                    {supporter.first_name || supporter.username}
-                  </span>
-                </Link>
-              ))}
+                    <span className="text-xs text-on-surface-variant font-medium">
+                      {supporter.first_name || supporter.username}
+                    </span>
+                  </Link>
+                )
+              })}
             </div>
           </div>
         )}

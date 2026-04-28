@@ -119,20 +119,15 @@ jobs:
             const { count: possiblyClosed } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['possibly_closed']);
             const { count: reportedClosed } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:permanently_closed']);
             const { count: reportedHours } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['community_report:hours_wrong']);
-            // Google Places checks
-            const { count: googleClosed } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_confirmed_closed']);
-            const { count: googleTempClosed } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_temporarily_closed']);
-            const { count: googleNotFound } = await supabase.from('places').select('id', { count: 'exact', head: true }).contains('tags', ['google_not_found']);
+            // Google Places API integration removed 2026-04-28 due to
+            // unbounded billing. Tags from prior runs (google_confirmed_*,
+            // google_not_found) remain in the DB but no new ones are added.
 
             console.log('\n--- Flagged Places ---');
             console.log('Website unreachable:', unreachable);
             console.log('Possibly closed (auto-detected):', possiblyClosed);
             console.log('Reported closed (by users):', reportedClosed);
             console.log('Reported hours wrong (by users):', reportedHours);
-            console.log('\n--- Google Places Verification ---');
-            console.log('Google confirmed closed:', googleClosed);
-            console.log('Google temporarily closed:', googleTempClosed);
-            console.log('Google not found:', googleNotFound);
 
             // Show reported closed places with names
             if (reportedClosed > 0) {
