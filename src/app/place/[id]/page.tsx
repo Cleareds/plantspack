@@ -14,6 +14,7 @@ import PlaceReviews from '@/components/places/PlaceReviews'
 import { createAdminClient } from '@/lib/supabase-admin'
 import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
+import VerificationFooter from '@/components/places/VerificationFooter'
 import ReportButton from '@/components/reports/ReportButton'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
@@ -685,6 +686,19 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 />
               )
             })()}
+          </div>
+
+          {/* Verification footer */}
+          <div className="px-6 pt-2">
+            <VerificationFooter
+              verificationLevel={(place as any).verification_level}
+              verificationMethod={(place as any).verification_method}
+              lastVerifiedAt={(place as any).last_verified_at}
+              isVerified={(place as any).is_verified}
+              tags={(place as any).tags}
+              placeId={place.id}
+              placeSlug={(place as any).slug}
+            />
           </div>
 
           {/* Reviews */}
