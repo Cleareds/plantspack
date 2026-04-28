@@ -67,8 +67,8 @@ export default function PackCard({ pack }: PackCardProps) {
               Private
             </div>
           )}
-          {/* Verified badge on image */}
-          {pack.is_published && pack.creator_id === ADMIN_ID && (
+          {/* Verified badge on image - admin-owned OR admin-verified */}
+          {pack.is_published && (pack.creator_id === ADMIN_ID || (pack as any).is_verified === true) && (
             <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-1 shadow-sm flex items-center gap-1" title="Checked by PlantsPack founders">
               <BadgeCheck className="h-3.5 w-3.5 text-orange-500" />
               <span className="text-xs font-semibold text-orange-600">Verified</span>

@@ -18,7 +18,11 @@ interface PackHeaderProps {
 export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
   const { user } = useAuth()
   const [isJoining, setIsJoining] = useState(false)
+  // Verified badge: shown for admin-owned packs OR packs explicitly verified
+  // by an admin (pack.is_verified). Allows community-curated packs to earn
+  // the badge without transferring ownership.
   const isAdminPack = pack.creator_id === ADMIN_ID
+  const isVerifiedPack = isAdminPack || (pack as any).is_verified === true
 
   const handleJoin = async () => {
     setIsJoining(true)
@@ -91,7 +95,7 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
               <h1 className="text-3xl font-bold text-on-surface">
                 {pack.title}
               </h1>
-              {isAdminPack && (
+              {isVerifiedPack && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-600" title="Checked by PlantsPack founders">
                   <BadgeCheck className="h-3.5 w-3.5" /> Verified
                 </span>

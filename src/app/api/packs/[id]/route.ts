@@ -37,6 +37,7 @@ export async function GET(
         category,
         categories,
         is_published,
+        is_verified,
         view_count,
         created_at,
         updated_at,
