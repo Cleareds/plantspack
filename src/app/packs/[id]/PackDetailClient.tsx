@@ -8,10 +8,12 @@ import PostCard from '@/components/posts/PostCard'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import PackPlacesTab from '@/components/packs/PackPlacesTab'
 import PackMembersTab from '@/components/packs/PackMembersTab'
+import AddArticleToPackModal from '@/components/packs/AddArticleToPackModal'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { CheckCircle, AlertCircle } from 'lucide-react'
+import { CheckCircle, AlertCircle, FileText, Plus, ExternalLink } from 'lucide-react'
 
-type TabType = 'posts' | 'recipes' | 'places' | 'events' | 'members'
+type TabType = 'posts' | 'recipes' | 'places' | 'events' | 'articles' | 'members'
 
 interface PackDetailClientProps {
   id: string
@@ -31,6 +33,7 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
   const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'places')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [showAddArticle, setShowAddArticle] = useState(false)
 
   const fetchPack = async () => {
     try {
@@ -121,10 +124,13 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
   const recipePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'recipe'), [posts])
   const placePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'place' || (p.posts as any)?.place_id), [posts])
   const eventPosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'event'), [posts])
+  const articlePosts = useMemo(() => posts.filter(p => (p.posts as any)?.category === 'article'), [posts])
   const generalPosts = useMemo(() => posts.filter(p => {
     const cat = (p.posts as any)?.category
-    return cat !== 'recipe' && cat !== 'place' && cat !== 'event' && !(p.posts as any)?.place_id
+    return cat !== 'recipe' && cat !== 'place' && cat !== 'event' && cat !== 'article' && !(p.posts as any)?.place_id
   }), [posts])
+
+  const canManage = pack?.user_role === 'admin' || pack?.user_role === 'moderator'
 
   if (loading) {
     return (
@@ -191,6 +197,9 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
             {([
               { key: 'places' as TabType, label: 'Places', count: (pack.places_count || 0) + placePosts.length },
               ...(recipePosts.length > 0 ? [{ key: 'recipes' as TabType, label: 'Recipes', count: recipePosts.length }] : []),
+              // Articles tab is always visible to managers (so they can add the first one)
+              // and visible to everyone else only when there's at least one to show.
+              ...((articlePosts.length > 0 || canManage) ? [{ key: 'articles' as TabType, label: 'Articles', count: articlePosts.length }] : []),
               ...(generalPosts.length > 0 ? [{ key: 'posts' as TabType, label: 'Posts', count: generalPosts.length }] : []),
               ...(eventPosts.length > 0 ? [{ key: 'events' as TabType, label: 'Events', count: eventPosts.length }] : []),
               { key: 'members' as TabType, label: 'Members', count: pack.member_count },
@@ -273,6 +282,94 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
           </div>
         )}
 
+        {activeTab === 'articles' && (
+          <div className="mb-6">
+            {canManage && (
+              <div className="mb-4 flex justify-end">
+                <button
+                  onClick={() => setShowAddArticle(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-on-primary text-sm font-medium hover:opacity-90"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add article
+                </button>
+              </div>
+            )}
+
+            {articlePosts.length > 0 ? (
+              <ul className="space-y-4">
+                {articlePosts.map((packPost) => {
+                  const article = packPost.posts as any
+                  const heroImage = article?.image_url || article?.images?.[0] || null
+                  const href = `/blog/${article?.slug || article?.id}`
+                  const cleaned = (article?.content || '')
+                    .replace(/^#{1,6}\s+/gm, '')
+                    .replace(/!\[[^\]]*\]\([^)]+\)/g, '')
+                    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+                    .replace(/<[^>]+>/g, '')
+                    .replace(/[*_`~]/g, '')
+                    .replace(/\s+/g, ' ').trim()
+                  const summary = cleaned.length > 220 ? cleaned.slice(0, 219) + '...' : cleaned
+                  return (
+                    <li key={packPost.id} className="bg-surface-container-lowest rounded-2xl ghost-border overflow-hidden">
+                      <Link href={href} className="flex flex-col sm:flex-row gap-0 hover:bg-surface-container/30 transition-colors">
+                        {heroImage && (
+                          <div className="sm:w-56 aspect-[16/10] sm:aspect-auto bg-surface-container-low flex-shrink-0 overflow-hidden">
+                            <img src={heroImage} alt={article?.title || ''} className="w-full h-full object-cover" loading="lazy" />
+                          </div>
+                        )}
+                        <div className="flex-1 p-5">
+                          <h3 className="font-headline font-bold text-lg text-on-surface group-hover:text-primary mb-2 line-clamp-2">
+                            {article?.title || 'Untitled article'}
+                          </h3>
+                          <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                            {summary}
+                          </p>
+                          <span className="inline-flex items-center gap-1 text-xs text-primary mt-3">
+                            Read article <ExternalLink className="h-3 w-3" />
+                          </span>
+                        </div>
+                      </Link>
+                      {canManage && (
+                        <div className="px-5 pb-3 -mt-1 flex justify-end">
+                          <button
+                            onClick={async () => {
+                              if (!confirm(`Remove "${article?.title || 'this article'}" from the pack?`)) return
+                              const res = await fetch(`/api/packs/${id}/posts/${article.id}`, { method: 'DELETE' })
+                              if (res.ok) {
+                                setSuccessMessage('Article removed from pack')
+                                setTimeout(() => setSuccessMessage(''), 3000)
+                                fetchPosts()
+                              } else {
+                                const data = await res.json().catch(() => ({}))
+                                setErrorMessage(data?.error || 'Failed to remove article')
+                                setTimeout(() => setErrorMessage(''), 5000)
+                              }
+                            }}
+                            className="text-xs text-on-surface-variant hover:text-error"
+                          >
+                            Remove from pack
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-12 text-center">
+                <FileText className="h-10 w-10 mx-auto text-outline mb-3" />
+                <h3 className="text-lg font-medium text-on-surface mb-2">No articles yet</h3>
+                <p className="text-on-surface-variant text-sm">
+                  {canManage
+                    ? 'Click "Add article" above to attach a published blog article to this pack.'
+                    : 'Pack admins can curate blog articles relevant to this pack here.'}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === 'events' && (
           <div className="mb-6">
             {eventPosts.length > 0 ? (
@@ -327,6 +424,20 @@ export default function PackDetailClient({ id, initialPack, initialPlaces, initi
           <PackMembersTab packId={pack.id} userRole={pack.user_role} onUpdate={fetchPack} />
         )}
       </div>
+
+      {showAddArticle && (
+        <AddArticleToPackModal
+          packId={id}
+          alreadyAttachedIds={articlePosts.map(p => (p.posts as any)?.id).filter(Boolean)}
+          onClose={() => setShowAddArticle(false)}
+          onArticleAdded={() => {
+            setSuccessMessage('Article added to pack')
+            setTimeout(() => setSuccessMessage(''), 3000)
+            fetchPosts()
+            setShowAddArticle(false)
+          }}
+        />
+      )}
     </div>
   )
 }
