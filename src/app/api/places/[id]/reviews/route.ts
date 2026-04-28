@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
+
+async function revalidatePlacePage(placeId: string) {
+  try {
+    const admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { data } = await admin
+      .from('places')
+      .select('slug, id')
+      .eq(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(placeId) ? 'id' : 'slug', placeId)
+      .maybeSingle()
+    if (data?.slug) revalidatePath(`/place/${data.slug}`)
+    if (data?.id) revalidatePath(`/place/${data.id}`)
+  } catch {}
+}
 
 // Create Supabase client
 const getSupabase = () => createClient(
@@ -157,6 +174,8 @@ export async function POST(
       review = data
     }
 
+    await revalidatePlacePage(id)
+
     return NextResponse.json(
       { review, updated: isUpdate },
       { status: isUpdate ? 200 : 201 }
@@ -209,6 +228,8 @@ export async function DELETE(
       .eq('user_id', session.user.id)
 
     if (error) throw error
+
+    await revalidatePlacePage(id)
 
     return NextResponse.json({ success: true })
   } catch (error: any) {

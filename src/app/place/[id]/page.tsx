@@ -2,9 +2,11 @@ import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
-// Community content — reviews, favorites, verify status need to update
-// immediately. Vercel Pro absorbs the extra invocations.
-export const revalidate = 0
+// SEO: place pages must be cacheable so Google spends crawl budget on them.
+// `revalidate = 0` (no-store) caused 51K pages to land in "Discovered – not
+// indexed". Mutation paths (reviews POST/DELETE, favorites, verify, edit)
+// call revalidatePath('/place/<slug>') so user actions still feel instant.
+export const revalidate = 3600
 
 import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle } from 'lucide-react'
 import RatingBadge from '@/components/places/RatingBadge'
@@ -25,6 +27,7 @@ import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
+import { pickOgImage } from '@/lib/places/og-image'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
 
@@ -164,7 +167,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     description = fallbackDesc.length > 160 ? fallbackDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : fallbackDesc
   }
 
-  const image = (place as any).main_image_url || place.images?.[0]
+  // Skip illustrations/sketches/decorative assets; fall back to site default
+  // (set in root layout) when no real photo is available.
+  const image = pickOgImage((place as any).main_image_url, ...(place.images ?? []))
 
   return {
     title,
@@ -212,9 +217,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     notFound()
   }
 
-  // Redirect UUID URLs to slug URLs for SEO and cleaner URLs
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
-  if (isUuid && place.slug) {
+  // Redirect any non-canonical URL (UUID, old slug, or anything that doesn't
+  // match the place's current slug) to the canonical slug URL. This prevents
+  // canonical drift — previously the URL could be /place/<old-slug> while the
+  // <link rel=canonical> pointed at /place/<new-slug>, which Google reads as
+  // a duplicate and refuses to index.
+  if (place.slug && id !== place.slug) {
     redirect(`/place/${place.slug}`)
   }
 
