@@ -39,6 +39,14 @@ const args = process.argv.slice(2);
 const DRY_RUN = args.includes('--dry-run');
 const LIMIT = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] ?? '0') || 0;
 const LEVEL = args.find(a => a.startsWith('--level='))?.split('=')[1] ?? 'fully_vegan';
+// --re-check-flagged: re-run only the places already tagged google_review_flag
+// using stricter thresholds. If a place no longer flags under the new rules,
+// the tag gets dismissed. If it still flags, the tag stays as a real signal.
+const RE_CHECK_FLAGGED = args.includes('--re-check-flagged');
+// --strict bumps thresholds and skips places that already have a stronger
+// vegan signal (websearch_confirmed_vegan from Tier 2 web-search). Auto-on
+// when --re-check-flagged is set.
+const STRICT = args.includes('--strict') || RE_CHECK_FLAGGED;
 const CONCURRENCY = 4;
 const CSV_PATH = '/tmp/google-verify.csv';
 const SLEEP_MS = 250;
@@ -140,6 +148,17 @@ async function verifyPlace(place: any): Promise<VerifyResult> {
     tagsToAdd: [], outcome: 'not_found',
   };
 
+  // Pre-API short-circuit: in strict mode, places already confirmed by Tier 2
+  // web-search trump Google review-text scanning. Skip the API call entirely
+  // so we don't spend Google credits on places we've already verified more
+  // rigorously elsewhere. Marks them clean so re-check mode dismisses the
+  // stale google_review_flag.
+  const placeTags: string[] = (place as any).tags || [];
+  if (STRICT && placeTags.includes('websearch_confirmed_vegan')) {
+    result.outcome = 'clean';
+    return result;
+  }
+
   // Step 1: Find on Google
   const found = await findPlace(place.name, place.city || '', place.country || '');
   if (!found) return result;
@@ -178,36 +197,60 @@ async function verifyPlace(place: any): Promise<VerifyResult> {
     return result;
   }
 
-  // Step 6: Non-vegan evidence — editorial summary (single mention sufficient)
+  // Step 6: Non-vegan evidence — editorial summary (single mention sufficient
+  // in default mode, requires review corroboration in strict mode)
   const summary: string = details.editorial_summary?.overview || '';
   const summaryEvidence = findNonVeganEvidence(summary);
-  if (summaryEvidence) {
-    result.tagsToAdd.push('google_review_flag');
-    result.nonVeganSnippet = `[editorial] ${summaryEvidence}`;
-    result.outcome = 'review_flagged';
-    return result;
-  }
 
-  // Step 7: Reviews — require ≥2 separate reviews with non-vegan mentions to flag
+  // Step 7: Reviews — strict mode raises threshold from 2 to 3
+  const REVIEW_THRESHOLD = STRICT ? 3 : 2;
   const reviews: any[] = details.reviews || [];
   const reviewEvidence: string[] = [];
   for (const review of reviews) {
     const evidence = findNonVeganEvidence(review.text || '');
     if (evidence) reviewEvidence.push(evidence);
   }
-  if (reviewEvidence.length >= 2) {
-    result.tagsToAdd.push('google_review_flag');
-    result.nonVeganSnippet = `[${reviewEvidence.length} reviews] ${reviewEvidence[0]}`;
-    result.outcome = 'review_flagged';
-    return result;
+
+  if (STRICT) {
+    // Strict mode: flag only when BOTH editorial summary AND >=3 reviews agree.
+    // This kills the high-false-positive single-summary-mention path.
+    if (summaryEvidence && reviewEvidence.length >= REVIEW_THRESHOLD) {
+      result.tagsToAdd.push('google_review_flag');
+      result.nonVeganSnippet = `[strict: editorial+${reviewEvidence.length} reviews] ${summaryEvidence}`;
+      result.outcome = 'review_flagged';
+      return result;
+    }
+    // Or flag when many reviews agree even without editorial backing
+    if (reviewEvidence.length >= 5) {
+      result.tagsToAdd.push('google_review_flag');
+      result.nonVeganSnippet = `[strict: ${reviewEvidence.length} reviews] ${reviewEvidence[0]}`;
+      result.outcome = 'review_flagged';
+      return result;
+    }
+  } else {
+    if (summaryEvidence) {
+      result.tagsToAdd.push('google_review_flag');
+      result.nonVeganSnippet = `[editorial] ${summaryEvidence}`;
+      result.outcome = 'review_flagged';
+      return result;
+    }
+    if (reviewEvidence.length >= REVIEW_THRESHOLD) {
+      result.tagsToAdd.push('google_review_flag');
+      result.nonVeganSnippet = `[${reviewEvidence.length} reviews] ${reviewEvidence[0]}`;
+      result.outcome = 'review_flagged';
+      return result;
+    }
   }
 
   result.outcome = result.tagsToAdd.length > 0 ? 'closed' : 'clean';
   return result;
 }
 
-async function applyTags(placeId: string, newTags: string[], currentTags: string[]) {
-  const merged = [...new Set([...currentTags, ...newTags])];
+async function applyTags(placeId: string, newTags: string[], currentTags: string[], removeTags: string[] = []) {
+  let merged = [...new Set([...currentTags, ...newTags])];
+  if (removeTags.length > 0) {
+    merged = merged.filter(t => !removeTags.includes(t));
+  }
   const { error } = await sb.from('places')
     .update({ tags: merged, updated_at: new Date().toISOString() })
     .eq('id', placeId);
@@ -224,10 +267,13 @@ async function main() {
   while (true) {
     let q = sb.from('places')
       .select('id, name, city, country, tags, vegan_level, verification_status')
-      .eq('vegan_level', LEVEL)
       .is('archived_at', null)
       .order('id')
       .range(offset, offset + PAGE - 1);
+    // --re-check-flagged: scope to existing google_review_flag rows regardless
+    // of vegan_level (some have been demoted since the flag was first added).
+    if (RE_CHECK_FLAGGED) q = q.contains('tags', ['google_review_flag']);
+    else q = q.eq('vegan_level', LEVEL);
     if (LIMIT > 0) q = q.limit(Math.min(PAGE, LIMIT - places.length));
     const { data, error } = await q;
     if (error) { console.error(error.message); process.exit(1); }
@@ -237,7 +283,8 @@ async function main() {
     if (data.length < PAGE || (LIMIT > 0 && places.length >= LIMIT)) break;
     offset += PAGE;
   }
-  console.log(`\n${places.length} ${LEVEL} places to verify.`);
+  console.log(`\n${places.length} places to verify${RE_CHECK_FLAGGED ? ' (re-checking google_review_flag rows with strict rules)' : ` (level=${LEVEL})`}.`);
+  if (STRICT) console.log('Strict mode: skipping places with websearch_confirmed_vegan; review threshold raised to 3 + editorial corroboration; or 5+ reviews alone.');
 
   writeFileSync(CSV_PATH, 'id,name,city,outcome,business_status,google_name,name_mismatch,vegan_confirmed,snippet,tags_added\n');
 
@@ -272,7 +319,15 @@ async function main() {
       if (result.tagsToAdd.length > 0) {
         const icon = result.outcome === 'vegan_confirmed' ? '✓' : result.outcome === 'closed' ? '✗' : '⚠';
         console.log(`  [${icon}] ${place.name} (${place.city}) → ${tagsAdded}${result.nonVeganSnippet ? ` | ${result.nonVeganSnippet.slice(0, 80)}` : ''}`);
-        if (!DRY_RUN) await applyTags(place.id, result.tagsToAdd, place.tags || []);
+        if (!DRY_RUN) {
+          // In re-check mode: if this place came in with google_review_flag but
+          // is no longer flagged under stricter rules, REMOVE the stale tag.
+          const removeTags: string[] = [];
+          if (RE_CHECK_FLAGGED && !result.tagsToAdd.includes('google_review_flag')) {
+            removeTags.push('google_review_flag');
+          }
+          await applyTags(place.id, result.tagsToAdd, place.tags || [], removeTags);
+        }
       }
     }
 
