@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Globe, FileText, Eye, Loader2, ExternalLink, CheckCircle, XCircle } from 'lucide-react'
+import { Globe, FileText, Eye, Loader2, ExternalLink, CheckCircle, XCircle, Pencil } from 'lucide-react'
 import Link from 'next/link'
 
 interface Article {
@@ -111,6 +111,10 @@ export default function AdminBlog() {
                       <a href={blogUrl} target="_blank" className="p-1.5 text-outline hover:text-on-surface-variant hover:bg-surface-container rounded" title="Preview">
                         <Eye className="h-4 w-4" />
                       </a>
+                      <Link href={`/admin/blog/${a.id}`} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant rounded-lg text-xs font-medium hover:bg-surface-container-high transition-colors" title="Edit">
+                        <Pencil className="h-3.5 w-3.5" />
+                        Edit
+                      </Link>
                       {isPublished ? (
                         <button
                           onClick={() => setPrivacy(a.id, 'draft')}
