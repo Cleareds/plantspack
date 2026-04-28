@@ -50,6 +50,7 @@ export async function GET(
           id,
           user_id,
           content,
+          image_url,
           images,
           image_urls,
           video_urls,
