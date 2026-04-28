@@ -1,9 +1,16 @@
 #!/bin/bash
-# Overnight automation — runs at midnight UTC when OpenAI RPD resets.
-# Full pipeline: verify → generate descriptions → reclassify
+# Overnight automation - runs at midnight UTC when OpenAI RPD resets.
+# Full pipeline: verify -> generate descriptions -> reclassify
 # Logs to /tmp/overnight-*.log
 
-set -e
+set -eo pipefail
+
+# Cron has a stripped PATH and does not source ~/.zshrc, so npx/node from nvm
+# are invisible. Pin the active node version explicitly.
+export PATH="/Users/antonkravchuk/.nvm/versions/node/v21.5.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+
+trap 'echo "[$(date)] FAIL line $LINENO (exit $?)" >> /tmp/overnight-main.log' ERR
+
 cd /Users/antonkravchuk/sidep/Cleareds/plantspack
 
 echo "=== $(date) overnight jobs starting ===" >> /tmp/overnight-main.log

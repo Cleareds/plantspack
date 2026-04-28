@@ -42,7 +42,15 @@ const DRY_RUN = args.includes('--dry-run');
 const LIMIT = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] ?? '0') || 0;
 const SOURCE_FILTER = args.find(a => a.startsWith('--source='))?.split('=')[1];
 const TIER_FILTER = args.find(a => a.startsWith('--tier='))?.split('=')[1];
+// --since=<ISO 8601 timestamp> restricts processing to places created at or after the cutoff.
+// Used by the territories cron to avoid re-scoring the entire 54K-row corpus nightly.
+const SINCE_FILTER = args.find(a => a.startsWith('--since='))?.split('=')[1];
 const CSV_PATH = '/tmp/reclassify-preview.csv';
+
+if (SINCE_FILTER && Number.isNaN(Date.parse(SINCE_FILTER))) {
+  console.error(`Invalid --since value: ${SINCE_FILTER} (expected ISO 8601)`);
+  process.exit(1);
+}
 
 // Tier 1: description-based, high concurrency
 const T1_CONCURRENCY = 10;
@@ -203,7 +211,7 @@ async function processTier(
 }
 
 async function main() {
-  console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'LIVE'}${LIMIT ? ` | Limit: ${LIMIT}` : ''}${TIER_FILTER ? ` | Tier: ${TIER_FILTER}` : ''}`);
+  console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'LIVE'}${LIMIT ? ` | Limit: ${LIMIT}` : ''}${TIER_FILTER ? ` | Tier: ${TIER_FILTER}` : ''}${SINCE_FILTER ? ` | Since: ${SINCE_FILTER}` : ''}`);
 
   // Fetch all active places
   const all: any[] = [];
@@ -217,6 +225,7 @@ async function main() {
       .order('id')
       .range(offset, offset + 999);
     if (SOURCE_FILTER) q = q.eq('source', SOURCE_FILTER);
+    if (SINCE_FILTER) q = q.gte('created_at', SINCE_FILTER);
     const { data, error } = await q;
     if (error) { console.error('Fetch error:', error.message); process.exit(1); }
     if (!data?.length) break;

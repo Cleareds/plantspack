@@ -1,12 +1,23 @@
 #!/bin/bash
-# Territories + new-countries import — runs at 06:00 CEST (04:00 UTC).
+# Territories + new-countries import - runs at 06:00 CEST (04:00 UTC).
 # Waits for the all-countries import to finish, then imports territories,
 # runs the new-countries second pass, and finally re-runs the full enrichment
-# pipeline (verify → descriptions → reclassify) to cover all new additions.
+# pipeline (verify -> descriptions -> reclassify) to cover all new additions.
+
+set -eo pipefail
+
+# Cron's PATH excludes nvm. Pin the active node version explicitly so npx works.
+export PATH="/Users/antonkravchuk/.nvm/versions/node/v21.5.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 
 cd /Users/antonkravchuk/sidep/Cleareds/plantspack
 
 LOG=/tmp/overnight-territories.log
+
+trap 'echo "[$(date)] FAIL line $LINENO (exit $?)" >> $LOG' ERR
+
+# Stamp the run start so a prior territories cycle leaves a clear "since" cutoff
+# for the reclassify pass below (only re-score places imported by THIS run).
+SINCE_STAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 echo "=== $(date) territories/new-countries job starting ===" >> $LOG
 
@@ -39,12 +50,11 @@ echo "[$(date)] Generating missing descriptions..." >> $LOG
 npx tsx scripts/generate-missing-descriptions.ts >> /tmp/overnight-descriptions2.log 2>&1
 echo "[$(date)] Descriptions done." >> $LOG
 
-# 5. Reclassify with fresh descriptions
-# TODO: scope to recently-imported places (add --since flag to script) — currently
-# re-processes all ~37K places nightly which costs ~$0.30 extra. The midnight
-# job already covered the existing corpus.
-echo "[$(date)] Reclassifying all places..." >> $LOG
-npx tsx scripts/reclassify-vegan-levels.ts >> /tmp/overnight-reclassify2.log 2>&1
+# 5. Reclassify with fresh descriptions - scoped to places imported in this run.
+# The midnight job already covered the existing corpus, so re-running over all
+# ~54K places nightly is wasted spend. --since limits to created_at >= cutoff.
+echo "[$(date)] Reclassifying places imported since $SINCE_STAMP..." >> $LOG
+npx tsx scripts/reclassify-vegan-levels.ts --since="$SINCE_STAMP" >> /tmp/overnight-reclassify2.log 2>&1
 echo "[$(date)] Reclassification done." >> $LOG
 
 # 6. Weekly dedup sweep (Sundays) — catches any duplicates introduced by

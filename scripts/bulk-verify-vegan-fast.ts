@@ -41,6 +41,15 @@ const SLOW_BATCH_SLEEP_MS = 5000;
 
 const MAX_RETRIES = 3;
 
+// Quota-wall guard: if we see this many 429s back-to-back with no successes in
+// between, the daily quota is gone and further calls just burn retries. Abort
+// the run so the cron exits cleanly instead of spending another hour on retries.
+const QUOTA_ABORT_THRESHOLD = 25;
+let consecutiveQuotaErrors = 0;
+class QuotaExhaustedError extends Error {
+  constructor() { super(`OpenAI quota exhausted (${QUOTA_ABORT_THRESHOLD} consecutive 429s); aborting run.`); }
+}
+
 const isDryRun = process.argv.includes('--dry-run');
 const limitIdx = process.argv.indexOf('--limit');
 const limit = limitIdx !== -1 ? parseInt(process.argv[limitIdx + 1]) : undefined;
@@ -171,10 +180,19 @@ async function processBatch(
     const place = batch[i];
     if (result.status === 'rejected') {
       process.stdout.write('!');
-      console.error(`\n  ERR ${place.name}: ${result.reason?.message || result.reason}`);
+      const msg = result.reason?.message || String(result.reason);
+      console.error(`\n  ERR ${place.name}: ${msg}`);
       stats.errors++;
+      if (result.reason?.status === 429 || /429/.test(msg) || /quota/i.test(msg)) {
+        consecutiveQuotaErrors++;
+        if (consecutiveQuotaErrors >= QUOTA_ABORT_THRESHOLD) {
+          saveCheckpoint(checkpoint);
+          throw new QuotaExhaustedError();
+        }
+      }
       continue;
     }
+    consecutiveQuotaErrors = 0;
     const entry = result.value;
     checkpoint.set(entry.id, entry);
     if (!isDryRun) await applyVerdict(entry);
@@ -261,8 +279,16 @@ async function main() {
 
   const stats = { confirmed: 0, flagged: 0, closed: 0, uncertain: 0, errors: 0 };
 
-  await runTier('TIER 1 — gpt-4o-mini (desc)', withDesc, classifyFast, checkpoint, stats, FAST_CONCURRENCY, FAST_BATCH_SLEEP_MS);
-  await runTier('TIER 2 — gpt-4o-mini-search (web)', noDesc, classifySlow, checkpoint, stats, SLOW_CONCURRENCY, SLOW_BATCH_SLEEP_MS);
+  try {
+    await runTier('TIER 1 — gpt-4o-mini (desc)', withDesc, classifyFast, checkpoint, stats, FAST_CONCURRENCY, FAST_BATCH_SLEEP_MS);
+    await runTier('TIER 2 — gpt-4o-mini-search (web)', noDesc, classifySlow, checkpoint, stats, SLOW_CONCURRENCY, SLOW_BATCH_SLEEP_MS);
+  } catch (e) {
+    if (e instanceof QuotaExhaustedError) {
+      console.log(`\n\nABORTED: ${e.message}`);
+    } else {
+      throw e;
+    }
+  }
 
   console.log(`\n\nDone`);
   console.log(`  ✓ confirmed: ${stats.confirmed}`);
