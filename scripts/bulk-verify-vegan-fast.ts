@@ -55,6 +55,13 @@ class QuotaExhaustedError extends Error {
 const isDryRun = process.argv.includes('--dry-run');
 const limitIdx = process.argv.indexOf('--limit');
 const limit = limitIdx !== -1 ? parseInt(process.argv[limitIdx + 1]) : undefined;
+// --tier1-only skips the expensive web-search verification (gpt-4o-mini-search-preview at ~$0.005/call).
+// Use when you want a cheap pass on description-having places without committing to the slow Tier 2 spend.
+const tier1Only = process.argv.includes('--tier1-only');
+// --include-flagged also picks up places tagged `websearch_review_flag` and forces them through Tier 2
+// (web-search), since their description-based classification is what flagged them in the first place.
+// Web-search is the new signal that can either confirm the flag or absolve the place.
+const includeFlagged = process.argv.includes('--include-flagged');
 
 type Verdict = 'fully_vegan' | 'not_fully_vegan' | 'closed' | 'uncertain';
 interface CheckpointEntry {
@@ -153,14 +160,19 @@ UNCERTAIN - cannot find reliable information`;
 async function applyVerdict(entry: CheckpointEntry) {
   const { data: place } = await sb.from('places').select('id, tags').eq('id', entry.id).single();
   if (!place) return;
-  const tags: string[] = [...(place.tags || [])];
+  let tags: string[] = [...(place.tags || [])];
   const updates: Record<string, any> = { updated_at: new Date().toISOString() };
   if (entry.verdict === 'fully_vegan') {
     if (!tags.includes('websearch_confirmed_vegan')) tags.push('websearch_confirmed_vegan');
+    // Web-search confirms - drop any prior review_flag, this row is now cleared.
+    tags = tags.filter(t => t !== 'websearch_review_flag');
     updates.tags = tags;
     updates.verification_status = 'scraping_verified';
   } else if (entry.verdict === 'not_fully_vegan') {
     if (!tags.includes('websearch_review_flag')) tags.push('websearch_review_flag');
+    // If this row was previously confirmed and is now flagged, the new
+    // signal supersedes the old one. Drop the stale confirmation tag.
+    tags = tags.filter(t => t !== 'websearch_confirmed_vegan');
     updates.tags = tags;
   } else if (entry.verdict === 'closed') {
     if (!tags.includes('websearch_confirmed_closed')) tags.push('websearch_confirmed_closed');
@@ -211,10 +223,12 @@ async function fetchUnverified() {
   const allPlaces: any[] = [];
   const PAGE = 1000;
   let from = 0;
+  // Untagged rows: never verified
   while (true) {
     const { data, error } = await sb.from('places')
       .select('id, name, city, country, description')
       .eq('vegan_level', 'fully_vegan')
+      .is('archived_at', null)
       .not('tags', 'cs', '{websearch_confirmed_vegan}')
       .not('tags', 'cs', '{websearch_review_flag}')
       .not('tags', 'cs', '{websearch_confirmed_closed}')
@@ -222,9 +236,27 @@ async function fetchUnverified() {
       .range(from, from + PAGE - 1);
     if (error) { console.error('DB error:', error.message); process.exit(1); }
     if (!data?.length) break;
-    allPlaces.push(...data);
+    for (const r of data) allPlaces.push({ ...r, _forceTier2: false });
     if (data.length < PAGE) break;
     from += PAGE;
+  }
+  // Flagged rows: re-verify with web-search if --include-flagged
+  if (includeFlagged) {
+    let from2 = 0;
+    while (true) {
+      const { data, error } = await sb.from('places')
+        .select('id, name, city, country, description')
+        .eq('vegan_level', 'fully_vegan')
+        .is('archived_at', null)
+        .contains('tags', ['websearch_review_flag'])
+        .order('id')
+        .range(from2, from2 + PAGE - 1);
+      if (error) { console.error('DB error (flagged):', error.message); break; }
+      if (!data?.length) break;
+      for (const r of data) allPlaces.push({ ...r, _forceTier2: true });
+      if (data.length < PAGE) break;
+      from2 += PAGE;
+    }
   }
   return allPlaces;
 }
@@ -272,18 +304,23 @@ async function main() {
   console.log(`Places to verify: ${toProcess.length}`);
   if (toProcess.length === 0) { console.log('Nothing to do.'); return; }
 
-  // Split into tiers
-  const withDesc = toProcess.filter(p => p.description && p.description.trim().length >= 30);
-  const noDesc = toProcess.filter(p => !p.description || p.description.trim().length < 30);
+  // Split into tiers. Force-Tier2 rows (e.g. previously flagged ones being
+  // re-verified with web-search) skip Tier 1 even if they have a description.
+  const withDesc = toProcess.filter(p => !p._forceTier2 && p.description && p.description.trim().length >= 30);
+  const noDesc = toProcess.filter(p => p._forceTier2 || !p.description || p.description.trim().length < 30);
 
   console.log(`  Tier 1 (description-based, fast): ${withDesc.length}`);
-  console.log(`  Tier 2 (web search, slow): ${noDesc.length}`);
+  console.log(`  Tier 2 (web search, slow): ${noDesc.length}${includeFlagged ? ` (incl. forced re-verifications of flagged rows)` : ''}`);
 
   const stats = { confirmed: 0, flagged: 0, closed: 0, uncertain: 0, errors: 0 };
 
   try {
     await runTier('TIER 1 — gpt-4o-mini (desc)', withDesc, classifyFast, checkpoint, stats, FAST_CONCURRENCY, FAST_BATCH_SLEEP_MS);
-    await runTier('TIER 2 — gpt-4o-mini-search (web)', noDesc, classifySlow, checkpoint, stats, SLOW_CONCURRENCY, SLOW_BATCH_SLEEP_MS);
+    if (tier1Only) {
+      console.log(`\n--tier1-only set; skipping Tier 2 web-search (${noDesc.length} no-description rows left for a future run).`);
+    } else {
+      await runTier('TIER 2 — gpt-4o-mini-search (web)', noDesc, classifySlow, checkpoint, stats, SLOW_CONCURRENCY, SLOW_BATCH_SLEEP_MS);
+    }
   } catch (e) {
     if (e instanceof QuotaExhaustedError) {
       console.log(`\n\nABORTED: ${e.message}`);
