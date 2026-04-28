@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { MapPin, Plus, TrendingUp, TrendingDown, Star, Heart, MessageCircle, Share2 } from 'lucide-react'
+import { MapPin, Plus, TrendingUp, TrendingDown, Star, Heart, MessageCircle, Share2, Pin, BookOpen } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 // Heavy modals — only loaded when the user opens them. Previously these were
 // statically imported and pulled ImageUploader, VideoUploader, LinkPreview,
@@ -34,6 +34,7 @@ interface CityScoreData {
 interface CompactPost {
   id: string; title: string | null; content: string; category: string
   images: string[]; image_url: string | null; created_at: string; slug: string | null
+  is_pinned: boolean | null
   users: { username: string; first_name: string | null; avatar_url: string | null }
   post_reactions: { id: string }[]; comments: { id: string }[]
 }
@@ -764,7 +765,12 @@ function PostList({ posts }: { posts: CompactPost[] }) {
       {posts.map(post => {
         const content = post.title || post.content || ''
         const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
-        const postUrl = post.category === 'recipe' && post.slug ? `/recipe/${post.slug}` : `/post/${post.id}`
+        const isArticle = post.category === 'article'
+        const postUrl = isArticle && post.slug
+          ? `/blog/${post.slug}`
+          : post.category === 'recipe' && post.slug
+          ? `/recipe/${post.slug}`
+          : `/post/${post.id}`
         const u = post.users as any
         const likes = post.post_reactions?.length || 0
         const comments = post.comments?.length || 0
@@ -775,7 +781,17 @@ function PostList({ posts }: { posts: CompactPost[] }) {
             <div className="flex gap-2.5">
               {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-1">
+                <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                  {post.is_pinned && (
+                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
+                      <Pin className="h-2.5 w-2.5" /> Pinned
+                    </span>
+                  )}
+                  {isArticle && (
+                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-primary/10 text-primary">
+                      <BookOpen className="h-2.5 w-2.5" /> Blog
+                    </span>
+                  )}
                   {u?.avatar_url ? (
                     <img src={u.avatar_url} alt="" className="w-4 h-4 rounded-full object-cover" />
                   ) : (
