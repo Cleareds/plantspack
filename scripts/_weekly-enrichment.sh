@@ -39,7 +39,17 @@ npx tsx scripts/dedup-archive.ts --apply >> /tmp/weekly-dedup.log 2>&1 || echo "
 echo "[$(date)] Broken-image scan..." >> $LOG
 npx tsx scripts/detect-broken-images.ts --apply >> /tmp/weekly-broken-images.log 2>&1 || echo "[$(date)] broken-image scan exited non-zero" >> $LOG
 
-# 6. End-of-week quality report
+# 6. Refresh materialized directory views after the week's bulk mutations
+#    (verify, reclassify, dedup-archive) so /vegan-places counts stay fresh.
+echo "[$(date)] Refresh directory views..." >> $LOG
+npx tsx -e "
+import { config } from 'dotenv'; config({ path: '.env.local' });
+import { createClient } from '@supabase/supabase-js';
+const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
+(async () => { const { error } = await sb.rpc('refresh_directory_views'); if (error) { console.error(error.message); process.exit(1); } console.log('refreshed'); })();
+" >> /tmp/weekly-refresh-views.log 2>&1 || echo "[$(date)] view refresh failed (non-fatal)" >> $LOG
+
+# 7. End-of-week quality report
 DATE=$(date +%Y-%m-%d)
 npx tsx scripts/data-quality-report.ts > /tmp/quality-${DATE}-weekly.log 2>&1 || true
 
