@@ -43,6 +43,7 @@ interface Stats {
   pendingCorrections: number
   googleNotFound: number
   reportedNotVegan: number
+  unverifiedFullyVegan: number
 }
 
 const TABS = [
@@ -51,6 +52,7 @@ const TABS = [
   { id: 'reported_closed', label: 'Reported Closed', icon: Users, color: 'text-orange-400', statKey: 'reportedClosed' },
   { id: 'reported_hours', label: 'Wrong Hours', icon: AlertTriangle, color: 'text-yellow-400', statKey: 'reportedHours' },
   { id: 'not_vegan', label: 'Vegan Status', icon: Leaf, color: 'text-teal-400', statKey: 'reportedNotVegan' },
+  { id: 'unverified_fv', label: 'Unverified 100% Vegan', icon: Leaf, color: 'text-teal-400', statKey: 'unverifiedFullyVegan' },
   { id: 'unreachable', label: 'Website Down', icon: WifiOff, color: 'text-gray-400', statKey: 'unreachable' },
   { id: 'corrections', label: 'Corrections', icon: CheckCircle, color: 'text-emerald-400', statKey: 'pendingCorrections' },
 ] as const
@@ -161,6 +163,37 @@ export default function DataQualityPage() {
     })
     if (res.ok) removePlace(placeId)
     setProcessing(null)
+  }, [removePlace])
+
+  // Run AI verifier on a single place. Tier 1 (description) first, escalates
+  // to Tier 2 (web-search) if uncertain. Updates tags + verification_status
+  // server-side, then removes from this list since the place will no longer
+  // be untagged.
+  const handleVerifyVegan = useCallback(async (placeId: string) => {
+    setProcessing(placeId)
+    try {
+      const res = await fetch('/api/admin/data-quality', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ placeIds: [placeId], action: 'verify_vegan' }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setActionError(data?.error || 'Verification failed')
+      } else {
+        const r = data?.results?.[0]
+        if (r?.verdict === 'uncertain') {
+          // Stays on the list - no tag was applied. Surface a small toast.
+          setActionError(`Verifier returned uncertain (tier=${r.tier}). Try Chrome DevTools or skip for now.`)
+        } else {
+          removePlace(placeId)
+        }
+      }
+    } catch (e: any) {
+      setActionError(e?.message || 'Verification failed')
+    } finally {
+      setProcessing(null)
+    }
   }, [removePlace])
 
   // Dismiss a flag — removes the tag(s) without changing the place data
@@ -563,6 +596,15 @@ export default function DataQualityPage() {
                           className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50 ${veganAction.color}`}>
                           {processing === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : veganAction.icon}
                           {veganAction.label}
+                        </button>
+                      )}
+                      {/* Verify Now (auto-classify via AI) - only on the unverified-100%-vegan tab */}
+                      {tab === 'unverified_fv' && (
+                        <button onClick={() => handleVerifyVegan(p.id)}
+                          disabled={processing === p.id}
+                          className="flex items-center gap-1 px-2.5 py-1.5 bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 rounded-lg text-xs font-medium disabled:opacity-50">
+                          {processing === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Leaf className="h-3.5 w-3.5" />}
+                          Verify now
                         </button>
                       )}
                       {/* Confirm Closed / Archive */}

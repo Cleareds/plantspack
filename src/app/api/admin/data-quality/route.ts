@@ -1,6 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
+import OpenAI from 'openai'
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 25000, maxRetries: 1 })
+
+function parseVerdict(text: string): 'fully_vegan' | 'not_fully_vegan' | 'closed' | 'uncertain' {
+  const first = text.split('\n')[0].toUpperCase()
+  if (first.includes('FULLY_VEGAN') && !first.includes('NOT')) return 'fully_vegan'
+  if (first.includes('NOT_FULLY_VEGAN')) return 'not_fully_vegan'
+  if (first.includes('CLOSED')) return 'closed'
+  return 'uncertain'
+}
+
+/**
+ * Verify a single place's vegan status. Tier 1 (gpt-4o-mini, description) first
+ * for places with a usable description; escalate to Tier 2 (web-search) if Tier 1
+ * comes back uncertain or no description. Returns the verdict + which tier was used.
+ * Cost: ~$0.0001 (Tier 1 only) to ~$0.012 (Tier 1 uncertain → Tier 2).
+ */
+async function verifyVeganStatus(p: { name: string; description: string | null; city: string | null; country: string | null }): Promise<{ verdict: string; tier: 'tier1' | 'tier2' | 'error'; evidence: string }> {
+  const location = [p.city, p.country].filter(Boolean).join(', ')
+  const hasDesc = p.description && p.description.trim().length >= 30
+
+  if (hasDesc) {
+    const prompt = `Classify this place into one vegan category based only on the information provided.
+
+Name: ${p.name}${location ? ` (${location})` : ''}
+Description: ${(p.description || '').slice(0, 500)}
+
+Rules:
+- FULLY_VEGAN: description clearly states 100% vegan / plant-based only / no animal products
+- NOT_FULLY_VEGAN: description mentions dairy, eggs, honey, meat, fish, or vegetarian options alongside vegan
+- CLOSED: description or name indicates permanently closed
+- UNCERTAIN: not enough information to decide confidently
+
+Reply with exactly one of: FULLY_VEGAN / NOT_FULLY_VEGAN / CLOSED / UNCERTAIN
+Then a one-sentence reason on the next line.`
+    try {
+      const r = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 80,
+        temperature: 0,
+      })
+      const text = r.choices[0]?.message?.content?.trim() ?? ''
+      const v = parseVerdict(text)
+      if (v !== 'uncertain') {
+        return { verdict: v, tier: 'tier1', evidence: text.split('\n').slice(1).join(' ').slice(0, 200) }
+      }
+    } catch (e: any) {
+      return { verdict: 'uncertain', tier: 'error', evidence: e?.message?.slice(0, 200) || 'tier1-error' }
+    }
+  }
+
+  // Escalate to Tier 2 web-search
+  const prompt = `Is "${p.name}"${location ? ` in ${location}` : ''} a 100% fully vegan establishment (no animal products of any kind on the menu)?
+
+Search for this specific place and check:
+1. Is it confirmed 100% vegan (no meat, dairy, eggs, honey)?
+2. Is it still open, or permanently closed?
+
+Reply with exactly one of these verdicts on the first line, then a one-sentence reason:
+FULLY_VEGAN - confirmed 100% vegan, currently open
+NOT_FULLY_VEGAN - serves or sells animal products (even dairy/eggs)
+CLOSED - permanently closed
+UNCERTAIN - cannot find reliable information`
+  try {
+    const r = await openai.chat.completions.create({
+      model: 'gpt-4o-mini-search-preview',
+      messages: [{ role: 'user', content: prompt }],
+    })
+    const text = r.choices[0]?.message?.content?.trim() ?? ''
+    return { verdict: parseVerdict(text), tier: 'tier2', evidence: text.split('\n').slice(1).join(' ').slice(0, 300) }
+  } catch (e: any) {
+    return { verdict: 'uncertain', tier: 'error', evidence: e?.message?.slice(0, 200) || 'tier2-error' }
+  }
+}
 
 async function checkAdmin() {
   const supabaseUser = await createClient()
@@ -98,6 +174,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ places: data || [], total: count || 0 })
   }
 
+  if (tab === 'unverified_fv') {
+    // 100% vegan places with no websearch verification tag yet. The long tail
+    // after today's bulk verification - mostly small/local places where web
+    // search couldn't find enough info to make a call.
+    const { data, count } = await supabase
+      .from('places')
+      .select('id, name, slug, city, country, tags, vegan_level, website, updated_at, description', { count: 'exact' })
+      .eq('vegan_level', 'fully_vegan')
+      .is('archived_at', null)
+      .not('tags', 'cs', '{websearch_confirmed_vegan}')
+      .not('tags', 'cs', '{websearch_review_flag}')
+      .not('tags', 'cs', '{websearch_confirmed_closed}')
+      .order('updated_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+    return NextResponse.json({ places: data || [], total: count || 0 })
+  }
+
   if (tab === 'corrections') {
     const { data, count } = await supabase
       .from('place_corrections')
@@ -130,6 +223,7 @@ export async function GET(request: NextRequest) {
       { count: pendingCorrections },
       { count: googleNotFound },
       { count: reportedNotVegan },
+      { count: unverifiedFullyVegan },
     ] = await Promise.all([
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_confirmed_closed']),
@@ -141,6 +235,11 @@ export async function GET(request: NextRequest) {
       supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_not_found']),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).or(veganReportOr),
+      supabase.from('places').select('id', { count: 'exact', head: true })
+        .eq('vegan_level', 'fully_vegan').is('archived_at', null)
+        .not('tags', 'cs', '{websearch_confirmed_vegan}')
+        .not('tags', 'cs', '{websearch_review_flag}')
+        .not('tags', 'cs', '{websearch_confirmed_closed}'),
     ])
 
     return NextResponse.json({
@@ -155,6 +254,7 @@ export async function GET(request: NextRequest) {
         pendingCorrections: pendingCorrections || 0,
         googleNotFound: googleNotFound || 0,
         reportedNotVegan: reportedNotVegan || 0,
+        unverifiedFullyVegan: unverifiedFullyVegan || 0,
       }
     })
   }
@@ -203,6 +303,40 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Missing placeIds' }, { status: 400 })
 
   const { revalidatePath } = await import('next/cache')
+
+  if (action === 'verify_vegan') {
+    // Run the verifier on each placeId. Tier 1 if description present, else
+    // Tier 2 web-search. Updates tags + verification_status accordingly.
+    // Cost guard: cap at 50 places per request to keep individual API calls bounded.
+    if (placeIds.length > 50) return NextResponse.json({ error: 'Max 50 places per verify request' }, { status: 400 })
+    const { data: places } = await supabase
+      .from('places')
+      .select('id, name, description, city, country, tags')
+      .in('id', placeIds)
+    const results: Array<{ id: string; verdict: string; tier: string }> = []
+    for (const p of places || []) {
+      const r = await verifyVeganStatus(p as any)
+      // Apply tag updates per verdict (mirrors bulk-verify-vegan-fast behaviour)
+      let tags = [...((p as any).tags || [])]
+      const updates: Record<string, any> = { updated_at: new Date().toISOString() }
+      if (r.verdict === 'fully_vegan') {
+        if (!tags.includes('websearch_confirmed_vegan')) tags.push('websearch_confirmed_vegan')
+        tags = tags.filter((t: string) => t !== 'websearch_review_flag')
+        updates.tags = tags
+        updates.verification_status = 'scraping_verified'
+      } else if (r.verdict === 'not_fully_vegan') {
+        if (!tags.includes('websearch_review_flag')) tags.push('websearch_review_flag')
+        tags = tags.filter((t: string) => t !== 'websearch_confirmed_vegan')
+        updates.tags = tags
+      } else if (r.verdict === 'closed') {
+        if (!tags.includes('websearch_confirmed_closed')) tags.push('websearch_confirmed_closed')
+        updates.tags = tags
+      }
+      if (updates.tags) await supabase.from('places').update(updates).eq('id', (p as any).id)
+      results.push({ id: (p as any).id, verdict: r.verdict, tier: r.tier })
+    }
+    return NextResponse.json({ success: true, results })
+  }
 
   if (action === 'archive') {
     const { data: places } = await supabase
