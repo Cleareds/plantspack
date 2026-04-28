@@ -45,20 +45,28 @@ const TIER_FILTER = args.find(a => a.startsWith('--tier='))?.split('=')[1];
 // --since=<ISO 8601 timestamp> restricts processing to places created at or after the cutoff.
 // Used by the territories cron to avoid re-scoring the entire 54K-row corpus nightly.
 const SINCE_FILTER = args.find(a => a.startsWith('--since='))?.split('=')[1];
+// --level=<vegan_level> restricts processing to one tier. Useful for spending
+// only on the noisy `vegan_friendly` dump bucket instead of the whole corpus.
+const LEVEL_FILTER = args.find(a => a.startsWith('--level='))?.split('=')[1];
 const CSV_PATH = '/tmp/reclassify-preview.csv';
 
 if (SINCE_FILTER && Number.isNaN(Date.parse(SINCE_FILTER))) {
   console.error(`Invalid --since value: ${SINCE_FILTER} (expected ISO 8601)`);
   process.exit(1);
 }
+if (LEVEL_FILTER && !VALID_LEVELS.includes(LEVEL_FILTER as any)) {
+  console.error(`Invalid --level value: ${LEVEL_FILTER}. Expected one of: ${VALID_LEVELS.join(', ')}`);
+  process.exit(1);
+}
 
-// Tier 1: description-based, high concurrency
-const T1_CONCURRENCY = 10;
-const T1_SLEEP_MS = 300;
+// Tier 1: description-based. Tier 2-friendly concurrency (RPM cap on
+// gpt-4o-mini at usage tier 2 is ~5,000, so we can crank).
+const T1_CONCURRENCY = 50;
+const T1_SLEEP_MS = 100;
 
-// Tier 2: web search, low concurrency (~5 RPM limit)
-const T2_CONCURRENCY = 3;
-const T2_SLEEP_MS = 5000;
+// Tier 2: web search. RPM is ~30-50 on usage tier 2, vs 5 on tier 1.
+const T2_CONCURRENCY = 10;
+const T2_SLEEP_MS = 1500;
 
 const LEVEL_DESCRIPTIONS = `
 - fully_vegan: 100% vegan — the entire menu/offering has zero animal products. The place's identity IS vegan.
@@ -211,7 +219,7 @@ async function processTier(
 }
 
 async function main() {
-  console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'LIVE'}${LIMIT ? ` | Limit: ${LIMIT}` : ''}${TIER_FILTER ? ` | Tier: ${TIER_FILTER}` : ''}${SINCE_FILTER ? ` | Since: ${SINCE_FILTER}` : ''}`);
+  console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'LIVE'}${LIMIT ? ` | Limit: ${LIMIT}` : ''}${TIER_FILTER ? ` | Tier: ${TIER_FILTER}` : ''}${SINCE_FILTER ? ` | Since: ${SINCE_FILTER}` : ''}${LEVEL_FILTER ? ` | Level: ${LEVEL_FILTER}` : ''}`);
 
   // Fetch all active places
   const all: any[] = [];
@@ -226,6 +234,7 @@ async function main() {
       .range(offset, offset + 999);
     if (SOURCE_FILTER) q = q.eq('source', SOURCE_FILTER);
     if (SINCE_FILTER) q = q.gte('created_at', SINCE_FILTER);
+    if (LEVEL_FILTER) q = q.eq('vegan_level', LEVEL_FILTER);
     const { data, error } = await q;
     if (error) { console.error('Fetch error:', error.message); process.exit(1); }
     if (!data?.length) break;

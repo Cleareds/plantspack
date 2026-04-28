@@ -31,13 +31,15 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 20000, 
 
 const CHECKPOINT_FILE = '/tmp/vegan-verify-checkpoint.json';
 
-// Tier 1: description-based, high concurrency
-const FAST_CONCURRENCY = 15;
-const FAST_BATCH_SLEEP_MS = 500;
+// Tier 1: description-based. OpenAI usage tier 2 lifts gpt-4o-mini RPM
+// from 500 to 5,000 so we can crank.
+const FAST_CONCURRENCY = 50;
+const FAST_BATCH_SLEEP_MS = 100;
 
-// Tier 2: web-search, low concurrency
-const SLOW_CONCURRENCY = 3;
-const SLOW_BATCH_SLEEP_MS = 5000;
+// Tier 2: web-search. usage tier 2 lifts the search-preview RPM from ~5 to
+// ~30-50, enough to run jobs in minutes instead of hours.
+const SLOW_CONCURRENCY = 10;
+const SLOW_BATCH_SLEEP_MS = 1500;
 
 const MAX_RETRIES = 3;
 
