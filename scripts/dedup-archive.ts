@@ -87,11 +87,29 @@ function score(p: Place): number {
 }
 
 function nameKey(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, '');
+  // Strip diacritics first (NFD + combining marks + latin-extended fallbacks)
+  // so "Café" and "Cafe", "Çiğköfte" and "Cigkofte" collapse to the same key.
+  // Without this, OSM cross-imports stay split across diacritic variants.
+  return name
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd').replace(/ø/g, 'o').replace(/ł/g, 'l')
+    .replace(/ß/g, 'ss').replace(/ı/g, 'i').replace(/æ/g, 'ae')
+    .replace(/œ/g, 'oe').replace(/þ/g, 'th')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
 }
 
 function cityKey(city: string | null): string {
-  return (city ?? '').toLowerCase().replace(/\s/g, '').substring(0, 12);
+  // Diacritic-strip so "Köln"/"Koln" and "München"/"Munich" don't bucket
+  // separately. We keep the 12-char prefix to stay tolerant of "Cologne"
+  // vs "Köln" variants - a 110m lat/lng bucket is a tight enough secondary
+  // gate to avoid cross-city false positives.
+  return (city ?? '')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd').replace(/ø/g, 'o').replace(/ł/g, 'l')
+    .replace(/ß/g, 'ss').replace(/ı/g, 'i').replace(/æ/g, 'ae')
+    .replace(/œ/g, 'oe').replace(/þ/g, 'th')
+    .toLowerCase().replace(/\s/g, '').substring(0, 12);
 }
 
 // -------------------------------------------------------------------
