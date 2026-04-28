@@ -39,6 +39,14 @@ export default function AdminBlog() {
   async function setPrivacy(id: string, privacy: string) {
     setActioning(id)
     await supabase.from('posts').update({ privacy }).eq('id', id)
+    // Bust the /blog index ISR cache so the publish/unpublish lands immediately
+    // instead of waiting up to an hour for the cache to expire. The article
+    // detail page is revalidate=0 so it doesn't need this; the index does.
+    fetch('/api/revalidate', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ path: '/blog' }),
+    }).catch(() => {})
     await loadArticles()
     setActioning(null)
   }
