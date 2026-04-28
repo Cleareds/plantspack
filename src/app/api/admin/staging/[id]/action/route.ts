@@ -126,7 +126,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (linkErr) return NextResponse.json({ error: `link staging: ${linkErr.message}` }, { status: 500 })
 
   const { revalidatePath } = await import('next/cache')
+  const { slugifyCityOrCountry } = await import('@/lib/places/slugify')
   if (inserted?.slug) revalidatePath(`/place/${inserted.slug}`)
+  const countrySlug = slugifyCityOrCountry(row.country)
+  const citySlug = slugifyCityOrCountry(row.city)
+  if (countrySlug && citySlug) {
+    revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
+    revalidatePath(`/vegan-places/${countrySlug}`)
+  }
 
   return NextResponse.json({ success: true, action, vegan_level: veganLevel, place_id: inserted!.id, slug: inserted!.slug })
 }

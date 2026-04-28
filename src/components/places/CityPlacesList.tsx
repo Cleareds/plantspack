@@ -10,6 +10,7 @@ import PlaceImage from './PlaceImage'
 import AddPlaceButton from './AddPlaceButton'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import { Plus } from 'lucide-react'
+import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS, veganLevelOrder } from '@/lib/vegan-level'
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -278,10 +279,13 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
                       className="mt-1.5"
                     />
 
-                    {/* Description */}
-                    {place.description && (
-                      <p className="text-xs text-on-surface-variant mt-1.5 line-clamp-2">{place.description}</p>
-                    )}
+                    {/* Description (sanitized to drop scraped HTML/boilerplate) */}
+                    {(() => {
+                      const desc = sanitizeDescription(place.description)
+                      return desc ? (
+                        <p className="text-xs text-on-surface-variant mt-1.5 line-clamp-2">{desc}</p>
+                      ) : null
+                    })()}
 
                     {/* Cuisine tags */}
                     {cuisines.length > 0 && (

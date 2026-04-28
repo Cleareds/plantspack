@@ -28,6 +28,7 @@ import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
+import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
 
@@ -156,7 +157,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const fallbackDesc = `${place.name} is a ${veganTag.toLowerCase()} ${cat.toLowerCase()}${location ? ` in ${location}` : ''}.${cuisineStr}${addressLine}${ratingText}`.trim()
 
   // Prefer real description if long enough; otherwise augment with fallback
-  const rawDesc = (place.description || '').trim()
+  const rawDesc = (sanitizeDescription(place.description) || '').trim()
   let description: string
   if (rawDesc.length >= 100) {
     description = rawDesc.length > 160 ? rawDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : rawDesc
@@ -444,12 +445,15 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               )}
             </div>
 
-            {place.description && (
-              <div>
-                <h2 className="text-lg font-semibold text-on-surface mb-2">About</h2>
-                <p className="text-on-surface-variant whitespace-pre-wrap">{place.description}</p>
-              </div>
-            )}
+            {(() => {
+              const cleanDesc = sanitizeDescription(place.description)
+              return cleanDesc ? (
+                <div>
+                  <h2 className="text-lg font-semibold text-on-surface mb-2">About</h2>
+                  <p className="text-on-surface-variant whitespace-pre-wrap">{cleanDesc}</p>
+                </div>
+              ) : null
+            })()}
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">

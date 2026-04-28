@@ -12,7 +12,11 @@ import CityPlacesList from '@/components/places/CityPlacesList'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
-export const dynamic = 'force-dynamic' // Always fetch fresh data — no stale ISR cache
+// SEO: city pages must be cacheable so Google spends crawl budget on them.
+// `force-dynamic` (no-store) means thousands of city pages are uncrawlable.
+// Mutation paths (place add/edit/delete) call revalidatePath() so new places
+// appear immediately.
+export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
