@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { PackWithStats } from '@/types/packs'
 import Link from 'next/link'
-import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, BadgeCheck } from 'lucide-react'
+import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, BadgeCheck, MapPin } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 
@@ -119,18 +119,28 @@ export default function PackHeader({ pack, onJoin, onLeave }: PackHeaderProps) {
               </Link>
             </div>
 
-            {/* Stats */}
+            {/* Stats. Places lead because they're the bulk of pack content; posts
+                are hidden when zero so the header doesn't show empty stats. */}
             <div className="flex items-center gap-6 text-sm text-on-surface-variant">
+              {(pack.places_count ?? 0) > 0 && (
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-5 w-5" />
+                  <span className="font-medium text-on-surface">{pack.places_count}</span>
+                  <span>{pack.places_count === 1 ? 'place' : 'places'}</span>
+                </div>
+              )}
               <div className="flex items-center gap-1">
                 <Users className="h-5 w-5" />
                 <span className="font-medium text-on-surface">{pack.member_count}</span>
-                <span>members</span>
+                <span>{pack.member_count === 1 ? 'member' : 'members'}</span>
               </div>
-              <div className="flex items-center gap-1">
-                <FileText className="h-5 w-5" />
-                <span className="font-medium text-on-surface">{pack.post_count}</span>
-                <span>posts</span>
-              </div>
+              {(pack.post_count ?? 0) > 0 && (
+                <div className="flex items-center gap-1">
+                  <FileText className="h-5 w-5" />
+                  <span className="font-medium text-on-surface">{pack.post_count}</span>
+                  <span>{pack.post_count === 1 ? 'post' : 'posts'}</span>
+                </div>
+              )}
             </div>
 
             {/* Social Links */}
