@@ -79,24 +79,31 @@ const VEGAN_LEVEL_COLOR: Record<string, string> = {
 /** Returns the primary confirm action for a vegan-report place, or null. */
 function getVeganAction(p: FlaggedPlace): {
   label: string; icon: React.ReactNode; color: string
-  action: 'upgrade_fully_vegan' | 'downgrade_mostly_vegan' | 'downgrade_vegan_options' | 'archive_chain' | 'set_vegan_options'
+  action: 'upgrade_fully_vegan' | 'downgrade_mostly_vegan' | 'downgrade_vegan_options' | 'archive_chain' | 'set_vegan_options' | 'dismiss_flag'
 } | null {
   const tags = p.tags || []
   if (tags.includes('community_report:actually_fully_vegan'))
     return { label: 'Upgrade to 100% Vegan', icon: <ArrowUpCircle className="h-3.5 w-3.5" />, color: 'bg-emerald-600 hover:bg-emerald-700 text-white', action: 'upgrade_fully_vegan' }
   if (tags.includes('community_report:non_vegan_chain'))
     return { label: 'Archive Chain', icon: <Trash2 className="h-3.5 w-3.5" />, color: 'bg-red-600/30 hover:bg-red-600/50 text-red-300', action: 'archive_chain' }
-  if (tags.includes('community_report:few_vegan_options') || tags.includes('community_report:not_vegan_friendly'))
+  if (tags.includes('community_report:few_vegan_options') || tags.includes('community_report:not_vegan_friendly')) {
+    if (p.vegan_level === 'vegan_options')
+      return { label: 'Dismiss flag', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-stone-700 hover:bg-stone-600 text-stone-200', action: 'dismiss_flag' }
     return { label: 'Set: Has Vegan Options', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-stone-700 hover:bg-stone-600 text-stone-200', action: 'set_vegan_options' }
+  }
   if (tags.includes('community_report:not_fully_vegan')) {
     if (p.vegan_level === 'fully_vegan')
       return { label: 'Downgrade to Mostly Vegan', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_mostly_vegan' }
+    if (p.vegan_level === 'vegan_options')
+      return { label: 'Dismiss flag', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-stone-700 hover:bg-stone-600 text-stone-200', action: 'dismiss_flag' }
     return { label: 'Downgrade to Has Options', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_vegan_options' }
   }
   if (tags.includes('google_review_flag')) {
     if (p.vegan_level === 'fully_vegan')
       return { label: 'Downgrade to Mostly Vegan', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_mostly_vegan' }
-    return { label: 'Downgrade to Vegan-Friendly', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_vegan_options' }
+    if (p.vegan_level === 'vegan_options')
+      return { label: 'Dismiss flag', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-stone-700 hover:bg-stone-600 text-stone-200', action: 'dismiss_flag' }
+    return { label: 'Downgrade to Has Options', icon: <ArrowDownCircle className="h-3.5 w-3.5" />, color: 'bg-amber-700/50 hover:bg-amber-700/80 text-amber-200', action: 'downgrade_vegan_options' }
   }
   return null
 }
@@ -242,11 +249,12 @@ export default function DataQualityPage() {
           setActionError(`Archive failed (${res.status})`)
         }
       } else {
-        const levelMap: Record<string, string> = {
+        const levelMap: Record<string, string | undefined> = {
           upgrade_fully_vegan: 'fully_vegan',
           downgrade_mostly_vegan: 'mostly_vegan',
           downgrade_vegan_options: 'vegan_options',
           set_vegan_options: 'vegan_options',
+          dismiss_flag: undefined,
         }
         const setVeganLevel = levelMap[action.action]
         const res = await fetch('/api/admin/data-quality', {
