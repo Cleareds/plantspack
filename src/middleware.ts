@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { stripDiacritics } from '@/lib/slug'
 
 // Recipe pages removed for source violations (Minimalist Baker et al. per
 // content policy). Listed explicitly because they are one-off deletions.
@@ -11,7 +12,7 @@ const GONE_RECIPES = new Set([
 ])
 
 function goneResponse() {
-  return new NextResponse('Gone — this content has been permanently removed.', {
+  return new NextResponse('Gone - this content has been permanently removed.', {
     status: 410,
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
@@ -20,12 +21,29 @@ function goneResponse() {
   })
 }
 
+const NON_ASCII = /[-￿]/
+const ASCII_ONLY = /^[ -~]+$/
+
 export async function middleware(request: NextRequest) {
-  // Serve 410 before auth logic runs — cheaper, and we don't need session
+  // Serve 410 before auth logic runs - cheaper, and we don't need session
   // state for a gone page.
   const pathname = request.nextUrl.pathname
   if (GONE_RECIPES.has(pathname)) {
     return goneResponse()
+  }
+
+  // City/country slugs are stored as ASCII (e.g. "dusseldorf"), but legacy
+  // links and external sites sometimes use the accented form
+  // ("/vegan-places/germany/dusseldorf" with u-umlaut, encoded as %C3%BC).
+  // Redirect any path containing non-ASCII chars to its canonical ASCII
+  // form so those URLs resolve instead of 404ing.
+  if (NON_ASCII.test(pathname)) {
+    const canonical = stripDiacritics(pathname).toLowerCase()
+    if (canonical !== pathname && ASCII_ONLY.test(canonical)) {
+      const url = request.nextUrl.clone()
+      url.pathname = canonical
+      return NextResponse.redirect(url, 301)
+    }
   }
 
   let response = NextResponse.next({
