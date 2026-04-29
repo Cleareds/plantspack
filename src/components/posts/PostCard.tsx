@@ -13,6 +13,7 @@ import EditPost from './EditPost'
 import ImageSlider from '../ui/ImageSlider'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import LinkifiedText from '../ui/LinkifiedText'
+import ExpandablePostContent from './ExpandablePostContent'
 import SignUpModal from '../guest/SignUpModal'
 import TierBadge from '../ui/TierBadge'
 import Link from 'next/link'
@@ -698,7 +699,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
 
           {/* Content (non-article posts only) */}
           {post.category !== 'article' && <div className="mb-4">
-            <LinkifiedText
+            <ExpandablePostContent
               text={post.content}
               className="text-on-surface whitespace-pre-wrap"
             />
