@@ -26,28 +26,24 @@ export async function GET(request: NextRequest) {
   const city = searchParams.get('city') || ''
   const country = searchParams.get('country') || ''
 
-  // Three independent queries — run in parallel.
-  const [topCitiesPromise, countryAggPromise, cityCountPromise] = await Promise.all([
-    // Top 8 cities by score — full row from city_scores so we can return it
-    // directly (no in-JS computation).
+  // Two queries in parallel: top-8 cities + 1-row platform_stats MV that
+  // holds all the hero counters (replaces the previous trio of
+  // directory_countries scan + directory_cities head count + sanctuaries
+  // count). MV is refreshed by refresh_directory_views().
+  const [topCitiesPromise, statsPromise] = await Promise.all([
     supabase
       .from('city_scores')
       .select('city, country, score, grade, fv_count, place_count, per_capita, center_lat, center_lng')
       .order('score', { ascending: false })
       .limit(8),
-    // Platform stats aggregate — 177 rows, aggregates summed in JS.
     supabase
-      .from('directory_countries')
-      .select('country, place_count, eat_count, store_count, hotel_count, fully_vegan_count'),
-    // Total cities with places — from directory_cities.
-    supabase
-      .from('directory_cities')
-      .select('*', { count: 'exact', head: true }),
+      .from('platform_stats')
+      .select('total_places, fully_vegan, restaurants, stores, stays, sanctuaries, countries, cities')
+      .single(),
   ])
 
   const topCitiesRaw = topCitiesPromise.data || []
-  const countryRows = countryAggPromise.data || []
-  const totalCities = cityCountPromise.count || 0
+  const statsRow = statsPromise.data as any | null
 
   const topCities = topCitiesRaw.map((r: any) => ({
     city: r.city,
@@ -60,23 +56,14 @@ export async function GET(request: NextRequest) {
     center: (r.center_lat != null && r.center_lng != null) ? [Number(r.center_lat), Number(r.center_lng)] : undefined,
   }))
 
-  // Aggregate platform stats from the 177 country rows (fast in JS).
-  let totalPlaces = 0, fullyVeganCount = 0, restaurants = 0, stores = 0, stays = 0
-  for (const r of countryRows as any[]) {
-    totalPlaces += r.place_count || 0
-    fullyVeganCount += r.fully_vegan_count || 0
-    restaurants += r.eat_count || 0
-    stores += r.store_count || 0
-    stays += r.hotel_count || 0
-  }
-
-  // Sanctuaries (category='organisation') isn't broken out in directory_countries.
-  // Count it with a single lightweight aggregate query.
-  const { count: sanctuaries } = await supabase
-    .from('places')
-    .select('id', { count: 'exact', head: true })
-    .eq('category', 'organisation')
-    .is('archived_at', null)
+  const totalPlaces = statsRow?.total_places ?? 0
+  const fullyVeganCount = statsRow?.fully_vegan ?? 0
+  const restaurants = statsRow?.restaurants ?? 0
+  const stores = statsRow?.stores ?? 0
+  const stays = statsRow?.stays ?? 0
+  const sanctuaries = statsRow?.sanctuaries ?? 0
+  const totalCountries = statsRow?.countries ?? 0
+  const totalCities = statsRow?.cities ?? 0
 
   // Nearby places — only hit the `places` table if we have a location hint.
   let nearbyPlaces: any[] = []
@@ -172,7 +159,7 @@ export async function GET(request: NextRequest) {
       stores,
       stays,
       sanctuaries: sanctuaries || 0,
-      countries: countryRows.length,
+      countries: totalCountries,
       cities: totalCities,
     },
   }, {

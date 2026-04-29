@@ -26,7 +26,10 @@ export interface FollowedCity {
 // is fetched per-request using `dynamic = 'force-dynamic'` semantics via
 // the cookies() call — the page becomes dynamic whenever location cookies
 // exist, so each pinned user gets their own server-rendered home.
-export const revalidate = 60
+// Aligned with /api/home edge cache (revalidate=300). Recent posts/reviews
+// can be up to 5min stale on the homepage; mutations elsewhere already call
+// revalidatePath('/') when they need an immediate refresh.
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'PlantsPack — Vegan Places, Recipes & City Rankings Worldwide',
@@ -148,8 +151,8 @@ async function getRecentPosts() {
     .select(`
       id, title, content, category, images, image_url, created_at, slug, is_pinned,
       users!inner(username, first_name, avatar_url),
-      post_reactions(id),
-      comments(id)
+      post_reactions(count),
+      comments(count)
     `)
     .eq('privacy', 'public')
     .is('deleted_at', null)
@@ -158,7 +161,14 @@ async function getRecentPosts() {
     .order('is_pinned', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
     .limit(8)
-  return data || []
+  // PostgREST returns aggregates as [{ count: N }]. Re-shape to the
+  // length-N array the client component expects so we can swap the
+  // payload without touching HomeClient.
+  return (data || []).map((p: any) => ({
+    ...p,
+    post_reactions: Array(p.post_reactions?.[0]?.count ?? 0).fill({ id: '' }),
+    comments: Array(p.comments?.[0]?.count ?? 0).fill({ id: '' }),
+  }))
 }
 
 /**
@@ -174,12 +184,15 @@ async function getRecentReviews() {
       id, user_id, place_id, rating, content, images, created_at,
       users!inner(username, first_name, avatar_url),
       place:place_id(name, slug, city, country, main_image_url, images, category, vegan_level),
-      place_review_reactions(id)
+      place_review_reactions(count)
     `)
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .limit(8)
-  return data || []
+  return (data || []).map((r: any) => ({
+    ...r,
+    place_review_reactions: Array(r.place_review_reactions?.[0]?.count ?? 0).fill({ id: '' }),
+  }))
 }
 
 function getCityImages(): Record<string, string> {

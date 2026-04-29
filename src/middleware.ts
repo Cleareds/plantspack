@@ -24,6 +24,41 @@ function goneResponse() {
 const NON_ASCII = /[-￿]/
 const ASCII_ONLY = /^[ -~]+$/
 
+// Paths that never need a logged-in user state to render. Skipping
+// supabase.auth.getUser() here removes one round-trip per request to the
+// Supabase auth server on the busiest part of the site (homepage, directory,
+// place pages, blog, marketing). Sessions still refresh as soon as the user
+// navigates to anything outside this set, because the refresh token is
+// long-lived.
+const PUBLIC_READONLY_PREFIXES = [
+  '/vegan-places',
+  '/place/',
+  '/city-ranks',
+  '/map',
+  '/blog',
+  '/recipe/',
+  '/about',
+  '/legal',
+  '/contact',
+  '/sitemap',
+  '/robots.txt',
+  '/manifest',
+  '/api/scores',
+  '/api/home',
+  '/api/places/directory',
+  '/api/cities/',
+  '/api/stats',
+  '/api/health',
+]
+
+function isPublicReadOnly(pathname: string): boolean {
+  if (pathname === '/') return true
+  for (const p of PUBLIC_READONLY_PREFIXES) {
+    if (pathname === p || pathname.startsWith(p)) return true
+  }
+  return false
+}
+
 export async function middleware(request: NextRequest) {
   // Serve 410 before auth logic runs - cheaper, and we don't need session
   // state for a gone page.
@@ -44,6 +79,12 @@ export async function middleware(request: NextRequest) {
       url.pathname = canonical
       return NextResponse.redirect(url, 301)
     }
+  }
+
+  // Skip the Supabase auth round-trip entirely for public read-only paths.
+  // The bulk of traffic (guests, bots, RSC prefetches) hits these.
+  if (isPublicReadOnly(pathname)) {
+    return NextResponse.next({ request: { headers: request.headers } })
   }
 
   let response = NextResponse.next({
