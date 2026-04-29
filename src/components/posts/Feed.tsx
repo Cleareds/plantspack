@@ -644,8 +644,9 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
             ) : (
                 <>
                     <div className="space-y-6">
-                        {/* Pinned post */}
-                        {pinnedPost && (
+                        {/* Pinned post — only on the "All" tab so it doesn't
+                            crowd out category-specific feeds. */}
+                        {pinnedPost && (!category || category === 'all') && (
                             <div className="relative">
                                 <div className="absolute -top-2 left-4 z-10 bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                                     <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>push_pin</span>
@@ -659,7 +660,15 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                             </div>
                         )}
                         {items
-                            .filter(it => !blockedUserIds.includes(it.data.user_id) && !mutedUserIds.includes(it.data.user_id) && !(it.type === 'post' && it.id === pinnedPost?.id))
+                            .filter(it => {
+                                if (blockedUserIds.includes(it.data.user_id)) return false
+                                if (mutedUserIds.includes(it.data.user_id)) return false
+                                // Strip the pinned post from the regular list only
+                                // when we're rendering the pinned banner above.
+                                const showingPinnedBanner = pinnedPost && (!category || category === 'all')
+                                if (showingPinnedBanner && it.type === 'post' && it.id === pinnedPost!.id) return false
+                                return true
+                            })
                             .map(it => {
                                 if (it.type === 'review') {
                                     return <ReviewFeedCard key={`review-${it.id}`} review={it.data} />
