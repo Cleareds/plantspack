@@ -1,6 +1,11 @@
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+
+// Mirror of COUNTRY_REDIRECTS in ../page.tsx.
+const COUNTRY_REDIRECTS: Record<string, string> = {
+  'macedonia': 'north-macedonia',
+}
 import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import PinCityButton from '@/components/places/PinCityButton'
@@ -153,6 +158,7 @@ async function fetchCityExperiences(country: string, city: string) {
 
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
+  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}/${city}`)
   const [{ places, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([
     fetchCityPlaces(country, city),
     getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),

@@ -1,6 +1,13 @@
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Globe } from 'lucide-react'
+
+// Country-name aliases for slugs that should redirect to the canonical name.
+// Add entries here when a country renames or when we consolidate variants.
+const COUNTRY_REDIRECTS: Record<string, string> = {
+  'macedonia': 'north-macedonia',
+}
 import { generateCountryDescription, generateCountryMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
 import { loadCityImages } from '@/lib/city-images'
@@ -37,6 +44,7 @@ async function fetchCountryPlaces(country: string) {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country } = await params
+  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}`)
   const { cities, country: countryName } = await getCities(country)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
   const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
@@ -80,6 +88,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
+  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}`)
   const [{ cities, country: countryName }, { places }, allScores, cityImages] = await Promise.all([
     getCities(country),
     fetchCountryPlaces(country),
