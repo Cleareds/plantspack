@@ -217,12 +217,18 @@ async function getInitialLocationData() {
       if (geoLng) params.set('lng', geoLng)
       if (geoCity) params.set('city', geoCity)
       if (geoCountry) params.set('country', geoCountry)
-    } else {
-      return null
     }
+    // Always call /api/home so the hero stats (places / countries / cities)
+    // land in the SSR HTML even for fresh visitors with no cookies set.
+    // Without params the endpoint skips the nearby-places query, so this
+    // is the same lightweight 3-query path that runs for any visitor.
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/home?${params.toString()}`, { cache: 'no-store' })
+    const hasParams = params.toString().length > 0
+    const url = hasParams ? `${baseUrl}/api/home?${params.toString()}` : `${baseUrl}/api/home`
+    // Personalised (location) responses must be fresh; the cookieless general
+    // payload (used for the hero stats) is fine to cache for 5 minutes.
+    const res = await fetch(url, hasParams ? { cache: 'no-store' } : { next: { revalidate: 300 } })
     if (!res.ok) return null
     const data = await res.json()
     return {
