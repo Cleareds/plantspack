@@ -79,18 +79,9 @@ export async function GET() {
       }
     })
 
-    // Fire-and-forget: update last_seen without blocking the response
-    for (const f of followed) {
-      const score = scoreMap[`${f.city}|||${f.country}`]
-      if (score && (f.last_seen_score !== score.score || f.last_seen_grade !== score.grade)) {
-        void admin.from('user_followed_cities').update({
-          last_seen_score: score.score,
-          last_seen_grade: score.grade,
-          last_visited_at: new Date().toISOString(),
-        }).eq('id', f.id)
-      }
-    }
-
+    // No side effects in GET. Marking a city as "seen" (resetting the
+    // delta baseline) is now an explicit POST /api/cities/followed/seen
+    // call from the city page render path.
     return NextResponse.json({ cities })
   } catch (error) {
     console.error('[Followed Cities] Error:', error)

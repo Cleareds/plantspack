@@ -313,12 +313,16 @@ export async function PUT(request: NextRequest) {
       .from('places')
       .select('id, name, description, city, country, tags')
       .in('id', placeIds)
+    // Verifier itself stays sequential (OpenAI cost guard + ordering),
+    // but DB writes are fired in parallel afterwards so the round-trip
+    // cost is ~1 RTT instead of 50.
     const results: Array<{ id: string; verdict: string; tier: string }> = []
+    const writes: any[] = []
+    const now = new Date().toISOString()
     for (const p of places || []) {
       const r = await verifyVeganStatus(p as any)
-      // Apply tag updates per verdict (mirrors bulk-verify-vegan-fast behaviour)
       let tags = [...((p as any).tags || [])]
-      const updates: Record<string, any> = { updated_at: new Date().toISOString() }
+      const updates: Record<string, any> = { updated_at: now }
       if (r.verdict === 'fully_vegan') {
         if (!tags.includes('websearch_confirmed_vegan')) tags.push('websearch_confirmed_vegan')
         tags = tags.filter((t: string) => t !== 'websearch_review_flag')
@@ -332,9 +336,10 @@ export async function PUT(request: NextRequest) {
         if (!tags.includes('websearch_confirmed_closed')) tags.push('websearch_confirmed_closed')
         updates.tags = tags
       }
-      if (updates.tags) await supabase.from('places').update(updates).eq('id', (p as any).id)
+      if (updates.tags) writes.push(supabase.from('places').update(updates).eq('id', (p as any).id))
       results.push({ id: (p as any).id, verdict: r.verdict, tier: r.tier })
     }
+    await Promise.all(writes)
     return NextResponse.json({ success: true, results })
   }
 
@@ -366,20 +371,14 @@ export async function PUT(request: NextRequest) {
   }
 
   if (action === 'dismiss' && removeTag) {
-    const { data: places } = await supabase
-      .from('places')
-      .select('id, tags')
-      .in('id', placeIds)
-
-    const updates = (places || []).map((p: any) => ({
-      id: p.id,
-      tags: (p.tags || []).filter((t: string) => t !== removeTag),
-      updated_at: new Date().toISOString(),
-    }))
-
-    for (const u of updates) {
-      await supabase.from('places').update({ tags: u.tags, updated_at: u.updated_at }).eq('id', u.id)
-    }
+    // Single-statement bulk dismiss via the bulk_remove_place_tag RPC.
+    // Replaces a per-place await loop with one round-trip (atomic too,
+    // so partial failures don't half-apply the dismiss).
+    const { error } = await supabase.rpc('bulk_remove_place_tag' as any, {
+      p_place_ids: placeIds,
+      p_tag: removeTag,
+    })
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ success: true, dismissed: placeIds.length })
   }

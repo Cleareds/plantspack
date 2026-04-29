@@ -325,7 +325,7 @@ export default async function Home() {
               const image = p.main_image_url || p.images?.[0] || null
               return (
                 <li key={p.slug} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
-                  <Link href={`/place/${p.slug}`} className="block">
+                  <Link href={`/place/${p.slug}`} prefetch={false} className="block">
                     <PlaceImage
                       src={image}
                       alt={p.name}

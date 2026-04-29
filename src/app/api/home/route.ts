@@ -25,6 +25,10 @@ export async function GET(request: NextRequest) {
   const lng = parseFloat(searchParams.get('lng') || '0')
   const city = searchParams.get('city') || ''
   const country = searchParams.get('country') || ''
+  // Cookieless calls (no location params) are identical for every guest,
+  // so the CDN can dedupe them. Personalised calls vary per user and
+  // shouldn't be shared.
+  const isCookieless = !lat && !lng && !city && !country
 
   // Two queries in parallel: top-8 cities + 1-row platform_stats MV that
   // holds all the hero counters (replaces the previous trio of
@@ -164,9 +168,12 @@ export async function GET(request: NextRequest) {
     },
   }, {
     headers: {
-      // Short edge cache — we serve location-aware data per cookie, so SWR
-      // lets the CDN hand back cached shapes quickly while regenerating.
-      'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
+      // Cookieless payload is identical for every guest — let the CDN
+      // dedupe concurrent fetches (5min fresh + 1h stale-while-revalidate).
+      // Personalised payload is per-user, no shared cache.
+      'Cache-Control': isCookieless
+        ? 'public, s-maxage=300, stale-while-revalidate=3600'
+        : 'private, s-maxage=60, stale-while-revalidate=300',
     },
   })
 }

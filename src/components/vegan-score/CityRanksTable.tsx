@@ -203,6 +203,7 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                 <Link
                   key={`pop-${city.city}-${city.country}`}
                   href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                  prefetch={false}
                   className="flex-shrink-0 w-36 bg-surface-container-lowest ghost-border rounded-xl overflow-hidden hover:border-primary/20 transition-all group"
                 >
                   {img ? (
@@ -266,6 +267,7 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                       <td className="px-3 py-2.5">
                         <Link
                           href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                          prefetch={false}
                           className={`text-sm font-medium hover:text-primary transition-colors ${isTop ? 'text-primary' : 'text-on-surface'}`}
                         >
                           {city.city}
@@ -322,6 +324,7 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                   <Link
                     key={`${city.city}-${city.country}`}
                     href={`/vegan-places/${getCountrySlug(city.country)}/${getCitySlug(city.city)}`}
+                    prefetch={false}
                     className={`block bg-surface-container-lowest rounded-xl ghost-border p-3 hover:bg-primary/[0.03] transition-colors ${isTop ? 'ring-1 ring-primary/20' : ''}`}
                   >
                     <div className="flex items-center gap-3">

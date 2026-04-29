@@ -586,7 +586,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {filteredNearby.map(place => (
                     <div key={place.id} className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
-                      <Link href={`/place/${place.slug || place.id}`}>
+                      <Link href={`/place/${place.slug || place.id}`} prefetch={false}>
                         <PlaceImage
                           src={place.main_image_url || place.images?.[0]}
                           alt={place.name}
@@ -596,7 +596,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                       </Link>
                       <div className="p-3">
                         <div className="flex items-start justify-between gap-2 mb-1">
-                          <Link href={`/place/${place.slug || place.id}`} className="font-medium text-sm text-on-surface hover:text-primary truncate">
+                          <Link href={`/place/${place.slug || place.id}`} prefetch={false} className="font-medium text-sm text-on-surface hover:text-primary truncate">
                             {place.name}
                           </Link>
                           <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full flex-shrink-0 ${
@@ -614,7 +614,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                         <p className="text-xs text-on-surface-variant mb-2">
                           {CATEGORY_LABEL[place.category]} · {place.distance ? `${place.distance} km` : place.city}
                         </p>
-                        <Link href={`/place/${place.slug || place.id}`}
+                        <Link href={`/place/${place.slug || place.id}`} prefetch={false}
                           className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-medium text-primary ghost-border rounded-md hover:bg-primary/5 transition-colors">
                           <Star className="h-3 w-3" /> Write a review
                         </Link>
@@ -708,6 +708,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                     const img = serverCityImages[`${city.city}|||${city.country}`]
                     return (
                       <Link key={city.city} href={`/vegan-places/${city.country.toLowerCase().replace(/\s+/g, '-')}/${city.city.toLowerCase().replace(/\s+/g, '-')}`}
+                        prefetch={false}
                         className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
                         {img && (
                           <div className="relative h-20 overflow-hidden">
@@ -803,7 +804,7 @@ function PostRow({ post }: { post: CompactPost }) {
   const thumb = post.images?.[0] || post.image_url
 
   return (
-    <Link href={postUrl} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
+    <Link href={postUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
         {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
@@ -855,7 +856,7 @@ function ReviewRow({ review }: { review: CompactReview }) {
   const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
 
   return (
-    <Link href={placeUrl} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border border-l-2 border-l-amber-300/70 hover:border-primary/15 transition-all">
+    <Link href={placeUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border border-l-2 border-l-amber-300/70 hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
         {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
