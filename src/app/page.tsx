@@ -34,16 +34,12 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://plantspack.com' },
 }
 
-async function getTopCities() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.scores?.slice(0, 8) || []
-  } catch {
-    return []
-  }
+// Top cities are also returned by /api/home (which we always call now), so
+// we no longer need a separate /api/scores round-trip from the homepage.
+// Kept the function as a thin shim returning what /api/home gave us, so the
+// rest of the page is unchanged.
+function getTopCitiesFromHome(initData: any): any[] {
+  return initData?.data?.topCities ?? []
 }
 
 /**
@@ -242,14 +238,14 @@ async function getInitialLocationData() {
 }
 
 export default async function Home() {
-  const [topCities, recentPosts, recentReviews, initialLocation, featuredPlaces, followedCities] = await Promise.all([
-    getTopCities(),
+  const [recentPosts, recentReviews, initialLocation, featuredPlaces, followedCities] = await Promise.all([
     getRecentPosts(),
     getRecentReviews(),
     getInitialLocationData(),
     getFeaturedPlaces(),
     getFollowedCities(),
   ])
+  const topCities = getTopCitiesFromHome(initialLocation)
 
   const cityImages = getCityImages()
 
