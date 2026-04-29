@@ -10,7 +10,7 @@ const COUNTRY_REDIRECTS: Record<string, string> = {
 }
 import { generateCountryDescription, generateCountryMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
-import { loadCityImages } from '@/lib/city-images'
+import { loadCityImages } from '@/lib/city-images-server'
 import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'

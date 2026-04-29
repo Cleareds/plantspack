@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { computeAllScores } from '@/lib/compute-scores'
-import { loadCityImages } from '@/lib/city-images'
+import { loadCityImages } from '@/lib/city-images-server'
 import CityRanksTable from '@/components/vegan-score/CityRanksTable'
 
 // 1h cache keeps drift with /api/home capped. MV read is cheap (~30ms).

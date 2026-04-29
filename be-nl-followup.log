@@ -1,0 +1,34 @@
+[dotenv@17.2.4] injecting env (30) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+🌿 PlantsPack Multi-Country OSM Import
+Countries: Belgium, Netherlands
+Source tag: osm-import-2026-04
+============================================================
+(node:66574) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+Loading existing DB places...
+  46814 existing places loaded (31517 slugs)
+
+============================================================
+🌍 Belgium (BE)
+  609 raw elements from OSM
+  New: 364, exists: 164, chains: 81, no name: 0, no coords: 0
+  317 need reverse geocoding
+  Geocoded 50/317...  Geocoded 100/317...  Geocoded 150/317...  Geocoded 200/317...  Geocoded 250/317...  Geocoded 300/317...  ✅ Geocoded 317         
+  ✅ Belgium: 52 imported, 312 errors
+
+  Waiting 8s before next country...
+
+============================================================
+🌍 Netherlands (NL)
+  1028 raw elements from OSM
+  New: 403, exists: 579, chains: 39, no name: 7, no coords: 0
+  102 need reverse geocoding
+  Geocoded 50/102...  Geocoded 100/102...  ✅ Geocoded 102         
+  ✅ Netherlands: 248 imported, 155 errors
+
+Refreshing directory views...
+✅ Views refreshed
+
+============================================================
+TOTAL: 300 imported, 467 errors

@@ -1,0 +1,633 @@
+{"id":"8ffcba96-07cd-44cf-bc01-f34d57938f5f","name":"Sobe","action":"archive","reason":"Not found in any London vegan directory; likely defunct or mistagged"}
+{"id":"a8ff4853-fdee-421e-a020-9e7e11be17db","name":"Oat Coffee","action":"demote_vegan_options","reason":"Coffee shop with vegan options, not fully vegan"}
+{"id":"9c6fe194-053e-4b4f-b7b3-5c110d76f9cd","name":"T. Rex Restaurant","action":"demote_vegan_options","reason":"Natural History Museum kids restaurant with vegan options; serves grills/pizza/etc"}
+{"id":"77ea448b-9caa-4662-883c-a18133427a11","name":"Roni's Bagel Bakery","action":"demote_vegan_options","reason":"Israeli bakery; reviewers note no/limited vegan options"}
+{"id":"a365c0d9-2c02-4ca1-ade3-588f0d716608","name":"Jam delish","action":"keep","reason":"100% vegan Caribbean restaurant Islington"}
+{"id":"3ad6461b-ccef-445d-9bec-e4ef4d62e367","name":"The Bagel Guys","action":"demote_vegan_options","reason":"NY-style bagel shop with vegan options, not fully vegan"}
+{"id":"7ac7439d-9560-491e-86ee-1c0317615a35","name":"Holy Carrot","action":"keep","reason":"100% vegan Michelin Guide Notting Hill"}
+{"id":"188a9bc1-ab0c-44f9-a751-28a37d94bfce","name":"Uncle Tibo's","action":"archive","reason":"Not found anywhere; possibly defunct or mistagged in OSM"}
+{"id":"771822e8-bdbc-4736-8f9c-3cae742bff75","name":"Sky Pavillion","action":"archive","reason":"Not found anywhere"}
+{"id":"828153e5-fd9b-49bb-a264-691fa7cda14c","name":"Global Cafe","action":"demote_vegan_options","reason":"Chigwell cafe serving hot dogs/chicken nuggets/chorizo with vegan options"}
+{"id":"7b156fcd-307d-4767-bac4-07c099fb7d87","name":"Vegan Burger Camden","action":"keep","reason":"Vegan burger spot at Camden Lock (VBurger/Neat); both 100% vegan"}
+{"id":"abd7f852-c97d-43f1-ac0d-e47069842d61","name":"Bandito Burger","action":"demote_vegan_options","reason":"Burger spot with vegan options, not 100% vegan"}
+{"id":"4c3c9b0c-a174-4d6a-a470-733caceb00c1","name":"The Constitution","action":"demote_vegan_options","reason":"Camden pub with vegan options; serves chicken, lamb on regular menu"}
+{"id":"30bd212d-ac03-43b2-af65-604babac1eff","name":"Terra Rossa","action":"demote_vegan_options","reason":"Italian restaurant chain with vegan menu; serves cheese/meat"}
+{"id":"c692f269-46ca-4e2f-baa0-3f98b9eaf1c6","name":"The Perry Hill","action":"demote_vegan_options","reason":"Forest Hill pub with vegan options, not fully vegan"}
+{"id":"2e26f634-c8cb-425e-9734-eb9cfb4789a0","name":"Our Cafe","action":"archive","reason":"Not found anywhere"}
+{"id":"d411e2e9-525c-453e-9d50-27ddad035d2d","name":"Ginger Jules","action":"demote_mostly_vegan","reason":"Vegetarian cafe in Gordon Square; soups/stews vegan, sandwiches vegetarian"}
+{"id":"7cb2d8cf-7e75-4603-aec5-128ab7a3dbac","name":"Saigon Food","action":"demote_vegan_options","reason":"Vietnamese restaurant with vegan options, not 100% vegan"}
+{"id":"87602fa7-b72a-4e62-91cd-78af2e774ff3","name":"VBelly","action":"keep","reason":"100% plant-based eatery in Tooting Market"}
+{"id":"077f9915-ceea-4fcb-9972-d2ff2854d477","name":"Optical Revolution","action":"archive","reason":"NOT a restaurant - it is an opticians clinic at 29 Winslade Way Catford. OSM tag was completely wrong"}
+{"id":"3470fa41-b65e-46df-a313-9f22abbb9b54","name":"The food map co","action":"keep","reason":"Vegan-Kosher pizzeria in Limehouse"}
+{"id":"daebede6-99d5-4931-b659-6cdb210cbd20","name":"The Humble Veg","action":"keep","reason":"Vegan takeaway in West Ealing"}
+{"id":"e3f0fbbc-77cc-472e-86e7-ef69489a53e5","name":"Young Vegans Pie & Mash","action":"archive","reason":"Confirmed closed summer 2020 (all sources)"}
+{"id":"d1df33ad-4172-46da-8fa4-1e71d6f1ec76","name":"Gusto","action":"demote_vegan_options","reason":"Italian restaurant with vegan options, not fully vegan"}
+{"id":"d398159e-2486-494a-afc3-b17f3e2bb1cb","name":"Ahimsa The Vegan Cafe","action":"keep","reason":"100% vegan cafe Pinner"}
+{"id":"0f1af42f-3186-454f-b7de-33806dcfc22c","name":"M'eat the Vegans","action":"keep","reason":"100% vegan multicuisine Camden"}
+{"id":"b9ad452d-584f-459a-b0b2-8650b5432a7d","name":"Mitthi Mumbai","action":"archive","reason":"Not found at Pinner Road location"}
+{"id":"359ce95a-cb3a-4dfe-b359-390e838cf77f","name":"Merkamo","action":"keep","reason":"100% vegan Ethiopian Spitalfields"}
+{"id":"4be476d2-2911-438d-ab37-a9be29fa322b","name":"Kingly Court","action":"archive","reason":"Kingly Court is a Soho food court with multiple venues, not a single restaurant"}
+{"id":"d0f8ad42-728b-4c29-9732-eec088712015","name":"Aydjn Organic","action":"archive","reason":"Not found anywhere"}
+{"id":"1fee808b-6f0c-4ac4-84eb-285e168f20b9","name":"Abla","action":"demote_vegan_options","reason":"Turkish restaurant, serves meat, vegan options only"}
+{"id":"6ea85058-013b-4b6e-9588-4efe7bceda6b","name":"ila Desserts Café","action":"demote_vegan_options","reason":"Desserts/waffle cafe with vegan options, not fully vegan"}
+{"id":"824ee31a-1233-48ef-afc4-735fcb81ec47","name":"Shimla Pinks","action":"demote_vegan_options","reason":"Indian restaurant with Tandoori Chicken etc; vegan options only"}
+{"id":"214c7d46-7025-4f2a-a524-dba7e639c586","name":"Maids of Honour","action":"demote_vegan_options","reason":"Traditional Kew bakery; vegan options in development"}
+{"id":"e1514a42-0cf6-42d5-9ab2-1e4a1c155776","name":"su","action":"keep","reason":"Su Vegan Buffet, 100% vegan Shepherds Bush"}
+{"id":"93b27ce3-bbb9-445a-aed7-c65121fc46fa","name":"Bloomsbury Coffee Co","action":"demote_vegan_options","reason":"Coffee house with vegan options, not fully vegan"}
+{"id":"1cd0d259-ce8b-43e4-9940-3637a191a7ff","name":"Cream Vegan Pastries Café","action":"keep","reason":"Cream Dream, 100% vegan Ukrainian pastry cafe Covent Garden"}
+{"id":"ab7cf19d-0036-4166-b57b-d9634def136e","name":"Oat","action":"archive","reason":"Could not specifically identify; possibly Oat Coffee Brick Lane already separately listed"}
+{"id":"b51465d2-8c5f-4df1-a5b6-b3b5869cd08a","name":"Venchi","action":"demote_vegan_options","reason":"Italian chocolate brand with vegan selection, not all-vegan"}
+{"id":"c9de10b3-8681-4d0c-9cd1-af69acf166a4","name":"The Station Pantry","action":"demote_vegan_options","reason":"Eurostar lounge cafe with vegan options"}
+{"id":"6cc7e093-c66d-4e4c-8add-01627b04d264","name":"Sushi and Bowls","action":"archive","reason":"Could not identify a specific London venue with this exact name"}
+{"id":"4337908a-1574-4548-bf06-6a51327349bf","name":"Falafel fellas","action":"demote_mostly_vegan","reason":"Vegetarian street food caravan, not 100% vegan"}
+{"id":"18aac32c-01b5-4f23-bebf-9058f895d690","name":"WAVE","action":"keep","reason":"100% vegan cafe Stoke Newington (We Are Vegan Everything)"}
+{"id":"8f5fa1a2-bdae-47b7-9efa-3a0083eb63a0","name":"Temple of Seitan","action":"keep","reason":"100% vegan chik'n shop chain"}
+{"id":"0db4955e-3c1d-49b0-91d9-0b078aa04103","name":"Highbury Natural","action":"archive","reason":"Not found anywhere"}
+{"id":"aa11502f-2bad-4bd1-bd3f-24241f7af283","name":"crepeaffair","action":"demote_vegan_options","reason":"Crepe chain with vegan options, not fully vegan"}
+{"id":"dcbb851c-4cc0-4a8a-9062-88a6ff52f081","name":"Chi Vegan Noodle Bar","action":"archive","reason":"CLOSED per Yelp Dec 2025"}
+{"id":"b3c263f1-7e50-4eac-b192-4c5ed05a5e53","name":"EN ROOT","action":"keep","reason":"100% vegan Indian-Caribbean fusion Clapham/Brixton"}
+{"id":"ecf788af-d0ad-42ee-8001-a39cdc27b11e","name":"La Gelatiera","action":"demote_vegan_options","reason":"Italian gelato with ~7 vegan flavors but also dairy gelato"}
+{"id":"2aa951f7-1be7-483c-9ca4-0ed59dd89f5a","name":"Chislehurst Caves","action":"archive","reason":"NOT a restaurant - tourist attraction (chalk caves) with a small cafe inside"}
+{"id":"ee3aaa13-146a-4a20-b509-e0c15a788d29","name":"Pockets","action":"keep","reason":"100% plant-based pita bar Hackney"}
+{"id":"9f4f2cbc-7db7-428f-a765-bb1c3da3fc9d","name":"King Cookdaily","action":"keep","reason":"100% vegan Asian-fusion Shoreditch"}
+{"id":"ef750cfc-7949-4989-8193-2cd1d5b3c414","name":"Hub Café","action":"demote_vegan_options","reason":"Royal Park cafe (Regents Park or Victoria Park) with vegan-friendly options, not 100% vegan"}
+{"id":"b32def61-f9ed-47cf-b8c0-fa56035b003f","name":"Locatelli's","action":"demote_vegan_options","reason":"Locanda Locatelli, high-end Italian restaurant with limited vegan options"}
+{"id":"53da6ad2-92a9-4cfc-9a4b-92cdd8127fe9","name":"Essential Cafe","action":"keep","reason":"Essential Vegan, 100% vegan Brazilian cafe Hackney Wick"}
+{"id":"19960b40-04a3-429e-9fa2-83de6fc78f0d","name":"Village Cream","action":"archive","reason":"Could not verify vegan status; sandwich shop with limited online presence"}
+{"id":"fa612311-74b4-4655-927b-cff02e307b84","name":"All that Falafel","action":"demote_vegan_options","reason":"Halal falafel/shawarma; serves halloumi (vegetarian dairy)"}
+{"id":"489d5d8d-2803-4b84-99ea-11a906d94f8d","name":"Crosstown","action":"demote_vegan_options","reason":"Doughnut chain - only Marylebone branch is fully vegan; other locations have non-vegan options"}
+{"id":"fffc0dc1-c814-492e-90b6-1ff1933183f8","name":"Neat","action":"keep","reason":"Neat Burger Bishopsgate, 100% vegan"}
+{"id":"309d8e7c-7c2f-4e36-ad75-06dd4e94103e","name":"Slice Guys","action":"demote_vegan_options","reason":"Pizza/wings chain with vegan options, not fully vegan"}
+{"id":"875e136e-0fed-48e5-8b84-1dff102839c6","name":"All Nations Vegan House","action":"keep","reason":"Caribbean vegan, fully vegan Stoke Newington"}
+{"id":"c30dd3f2-5968-4104-ba75-f68d5964af08","name":"Beza vegan food","action":"keep","reason":"100% vegan Ethiopian Elephant Park"}
+{"id":"3c28cb28-4ff0-47e9-9a44-9061bca0d130","name":"MealTime Malatang","action":"demote_vegan_options","reason":"Sichuan hotpot chain with vegan options/base, not fully vegan"}
+{"id":"7dde61fd-1b01-47ba-9809-d76ecbc69ec7","name":"Bean's Cafe","action":"keep","reason":"100% vegan brunch cafe Hackney Downs"}
+{"id":"f77dca9c-edbb-46ae-a99e-602e74142148","name":"Zionly Manna Vegan Rastarant","action":"keep","reason":"Caribbean Ital fully vegan Bermondsey"}
+{"id":"62289d09-31e4-4eee-8425-00eb905d3648","name":"The Hatch","action":"archive","reason":"Could not identify a specific London venue with this name"}
+{"id":"91abcbf7-fe51-4efa-8929-b9291d8891f6","name":"Sawasdee","action":"demote_vegan_options","reason":"Thai restaurant with vegan/vegetarian options"}
+{"id":"b8b5175b-61c9-441e-9ec5-f2a8968f8ee9","name":"Buns From Home","action":"demote_vegan_options","reason":"Bakery with regularly offered vegan cinnamon bun, but most other items not vegan"}
+{"id":"3709c49f-b920-4fcc-b8bc-96e8fc96d95d","name":"Sugo82","action":"demote_vegan_options","reason":"Italian pasta/fritti restaurant with limited vegan option"}
+{"id":"3789e923-8c9b-4442-aad6-9c58ea280696","name":"Dirty Vegan","action":"keep","reason":"100% vegan junk food restaurant Westfield London"}
+{"id":"740640bc-44a7-490a-9c8a-9aa34439201e","name":"Daebak","action":"demote_vegan_options","reason":"Korean restaurant with vegan options; serves Korean fried chicken etc"}
+{"id":"b30c780d-57fa-47a4-b4fe-5507a88332de","name":"Isra's Kitchen","action":"archive","reason":"Could not verify vegan claim; limited online info"}
+{"id":"6cb3be09-9749-4c5d-a857-8cd200affb3a","name":"Jupiter Burger","action":"demote_vegan_options","reason":"Smashburger spot; only one veggie option that can be made vegan on request"}
+{"id":"5c9d1313-4baf-4dc2-ae27-4fe911d7650a","name":"Waltham Forest Vegan Market","action":"keep","reason":"Monthly all-vegan farmers market Walthamstow"}
+{"id":"0ac244fe-1aa7-41d9-b801-061db1bf5c6d","name":"La Cesta","action":"demote_vegan_options","reason":"Italian Friedrichshain pizza/pasta with limited vegan options"}
+{"id":"6cfc0e42-3324-4c4e-8ac2-6ab5aaee08fa","name":"Donau101","action":"demote_vegan_options","reason":"British pie shop with butter pastry crusts; has one vegan pie option"}
+{"id":"15ed2caf-b109-4485-b0ad-13e2ba4c0ebc","name":"Adak","action":"demote_vegan_options","reason":"Turkish kebab/falafel restaurant"}
+{"id":"173438f9-399b-457d-baa9-1b8908caa8d2","name":"Albero","action":"demote_vegan_options","reason":"Italian bistro serving prosciutto pizza, vegan options available"}
+{"id":"e0e0086e-0304-4f80-9ed1-719d15c7d833","name":"Pho Quan Tuan","action":"archive","reason":"Could not identify a specific Berlin venue with this exact name"}
+{"id":"5e6e0969-5c1a-4d66-a5c0-3d7c57891459","name":"by Sultan's","action":"demote_vegan_options","reason":"Turkish kebab restaurant"}
+{"id":"859e5660-7ae8-4ab2-86db-13c8231cc299","name":"Ga Ya Ya","action":"keep","reason":"100% vegan Asian-fusion Berlin Mitte"}
+{"id":"9373b7a5-786f-4131-8e9e-0e3170b4d60e","name":"Döner Kebab","action":"demote_vegan_options","reason":"Generic Turkish kebab name; OSM tag almost certainly mislabeled"}
+{"id":"5390597e-c5f8-446b-9232-06c2fbd52d09","name":"Chungking Noodles","action":"demote_vegan_options","reason":"Sichuan restaurant with free-range meat noodles"}
+{"id":"ad1fa220-8f3e-41e3-82a8-dad25afe16f6","name":"Curry and Fritz","action":"demote_vegan_options","reason":"Currywurst stand also serving hamburgers and pizza"}
+{"id":"4bac578d-b84d-4735-9352-6f246eb5afcd","name":"Truman Cafe Edeka Schäfers","action":"demote_vegan_options","reason":"Cafe inside EDEKA supermarket; has vegan products but not fully vegan"}
+{"id":"bf332a77-6266-4c05-8f15-739681b22084","name":"Geheimwaffel","action":"demote_vegan_options","reason":"Waffle shop with vegan/gluten-free options, also serves regular waffles"}
+{"id":"b29f2380-cf07-47ba-b41d-942b20dc5dba","name":"Akito","action":"demote_vegan_options","reason":"Sushi bar with vegan options"}
+{"id":"87606dd6-a973-426f-8dd3-6ef9d9d3ea16","name":"Hoongy","action":"demote_vegan_options","reason":"Asian fusion (sushi/Thai/wok) with vegan options"}
+{"id":"3ad276e7-1f63-4600-9379-853ba07bc0b2","name":"Asia Imbiss","action":"demote_vegan_options","reason":"Generic 'Asian snack bar' name; OSM tag almost certainly mislabeled"}
+{"id":"25170a97-f76d-48f9-9067-0d9f68ec5e12","name":"East Side Burrito","action":"demote_vegan_options","reason":"Burrito shop with vegan options; also serves cheese/sour cream"}
+{"id":"1be7c588-67a7-4bde-bf46-4039908175c5","name":"MOM's vegan cooking","action":"keep","reason":"Name explicitly 'vegan cooking'"}
+{"id":"7612fe2c-df07-42c4-b717-e53d81399604","name":"QB Vegan","action":"keep","reason":"Name explicitly contains 'Vegan'"}
+{"id":"3e7c27e7-a538-47df-8813-5fce8e490ba2","name":"vegup","action":"keep","reason":"Name 'veg up' - vegan venture"}
+{"id":"7d41fbbd-aaaf-46dd-9882-666f52024e25","name":"Holi Cow","action":"keep","reason":"Berlin vegan diner brand"}
+{"id":"24048240-0664-434b-a4ea-b17c8c3adcaf","name":"Häagen-Dazs","action":"archive","reason":"Häagen-Dazs is a global ice cream chain dominated by dairy products, not a vegan venue"}
+{"id":"111ae337-20ce-43f8-8f79-c2abad065bee","name":"Nordsee","action":"archive","reason":"Nordsee is a German seafood/fish chain - the name literally means 'North Sea'"}
+{"id":"96320b6e-9f7a-4305-8c62-e52b7564b7b0","name":"PENNY","action":"archive","reason":"PENNY is a German discount supermarket chain, not a restaurant"}
+{"id":"2b0abfc9-4da2-426c-9691-cabea6bb05be","name":"Yilis Döner","action":"demote_vegan_options","reason":"Turkish kebab shop"}
+{"id":"57756fd4-d5ec-4c8d-8b7e-5a3763dc5f8e","name":"Schloss Döner","action":"demote_vegan_options","reason":"Turkish kebab shop"}
+{"id":"0ff5ba19-cfc2-4826-94a4-17fe5d0a0d15","name":"Gemüse Kebab Food Station","action":"demote_vegan_options","reason":"Vegetable kebab stand"}
+{"id":"9baf7116-7add-46cc-9b9f-e15ef549f631","name":"TAS Gemüse Kebap","action":"demote_vegan_options","reason":"Vegetable kebab stand"}
+{"id":"eae8da95-c304-478b-be46-daed46807bf7","name":"Asia Imbiss","action":"demote_vegan_options","reason":"Generic 'Asian snack bar' OSM tag, almost certainly mislabeled"}
+{"id":"20c55630-9e46-47c7-9e78-399fa26ea7dd","name":"China King Box","action":"demote_vegan_options","reason":"Chinese takeaway chain name"}
+{"id":"89b5514a-ed87-4fc4-a4ad-6536690aec09","name":"Indian Express","action":"demote_vegan_options","reason":"Indian restaurant chain"}
+{"id":"23ab9e19-37af-4d50-a516-bbc1807c9c66","name":"Garda Pizza","action":"demote_vegan_options","reason":"Pizza shop with vegan options most likely; not fully vegan"}
+{"id":"23a6db27-4265-4d66-bfeb-1c7b4306b7cc","name":"Smack Burger","action":"demote_vegan_options","reason":"Generic burger shop name"}
+{"id":"5baabd42-2dac-481c-aebc-96ef781fbe38","name":"Frittenwerk","action":"demote_vegan_options","reason":"Loaded fries chain with mostly non-vegan toppings"}
+{"id":"b69280f7-c4c8-452d-a303-bb6a37f77bc9","name":"Vietnam Today","action":"demote_vegan_options","reason":"Vietnamese restaurant"}
+{"id":"2d3d7207-d67c-4cf9-a3a7-d3a2dd34784c","name":"The Eight","action":"demote_vegan_options","reason":"Asian restaurant with vegan options most likely; not fully vegan"}
+{"id":"af37d127-888b-43c0-8337-9e5f1d79b6c9","name":"Humbaba","action":"keep","reason":"Falafel Humbaba; vegan/vegetarian Mediterranean focus, all sauces vegan"}
+{"id":"46064007-201c-4452-a7ee-cc371e63a382","name":"Taquito Mío","action":"demote_vegan_options","reason":"Mexican street food with al pastor pork tacos and vegetarian options"}
+{"id":"12909eff-38fc-462b-93de-0bbbba9a8e66","name":"Cinnamon Waffel","action":"demote_vegan_options","reason":"Waffle shop with vegan and non-vegan options"}
+{"id":"03cf8de0-434c-4ef9-97cc-e66cc04c2336","name":"U-Back","action":"archive","reason":"Not found anywhere"}
+{"id":"01c29916-6dbc-498d-a6c2-3ead8a4a12c7","name":"Annamaria","action":"archive","reason":"Not found anywhere"}
+{"id":"61db0c31-50b0-4d8d-978d-ab5d22a5c8f2","name":"Element Five","action":"keep","reason":"100% vegan Cantonese tapas Kreuzberg"}
+{"id":"03f5f543-6f75-44d5-b732-a510a8e6f9ed","name":"Kult Eis","action":"demote_vegan_options","reason":"Ice cream shop with milk-based and sorbets/vegan options"}
+{"id":"b43ab599-37a3-4d6a-aaa8-12ab033817dc","name":"Kaffee Container","action":"archive","reason":"Could not identify a specific Berlin venue"}
+{"id":"17020790-73a2-4994-8b10-23e63e9eedf4","name":"Fresh Go","action":"archive","reason":"Not found"}
+{"id":"176afaba-09df-4ab3-add7-a3c9e9fac50d","name":"Giardino Verde","action":"demote_vegan_options","reason":"Italian restaurant in Gärten der Welt with vegetarian options"}
+{"id":"10e7460b-5eda-4a87-aef2-41774b3cd878","name":"Barlys","action":"archive","reason":"Not found anywhere"}
+{"id":"07a35b54-2d8d-455c-a642-f4384f34fc14","name":"Sfera","action":"keep","reason":"100% vegan Czech cafe Neukölln"}
+{"id":"a39e12e6-8086-4e98-a37e-1d6e0d693b06","name":"Dar4","action":"demote_vegan_options","reason":"Sudanese restaurant with falafel/halloumi; vegan options not 100% vegan"}
+{"id":"8407e290-5e89-4f15-9e52-c368e1bcc67c","name":"Baffel's","action":"demote_vegan_options","reason":"Bagel/waffle cafe Mitte, no clear vegan-only claim"}
+{"id":"4af5b259-7e44-4bea-8990-886b4fa9df60","name":"Anka","action":"demote_vegan_options","reason":"Anka Restaurant Turkish - explicit 'Fisch-Fleisch-Vegan' menu"}
+{"id":"7ed87701-f872-494e-9642-41eb3a2a5c1d","name":"Bakery Cult Coffee","action":"demote_vegan_options","reason":"Vegan/vegetarian friendly bakery, not confirmed 100% vegan"}
+{"id":"b4aff1c9-0f6e-43d6-9f2f-273e31ad9600","name":"Bergamotto","action":"demote_vegan_options","reason":"Italian Friedenau restaurant with vegetarian/vegan options"}
+{"id":"3e6c59ed-9633-439c-9216-8ab789103b7e","name":"Metropol Cafe & Bistro","action":"demote_vegan_options","reason":"Fast food cafe Pankow, no specific vegan focus"}
+{"id":"e32d2a7f-0196-40dc-be37-ad4ea0da674d","name":"Inflagranti","action":"archive","reason":"Cucina Inflagranti vegetarian pizza - listed as closed/closed temporarily"}
+{"id":"90013e40-aeac-496d-932d-fc12979ad111","name":"Kimchi Heim","action":"demote_vegan_options","reason":"Korean family restaurant with vegetarian/vegan options; serves Pork Bulgogi"}
+{"id":"6fd4addb-2048-4dfe-be56-3e49f6b4c6f2","name":"Burger Brothers","action":"demote_vegan_options","reason":"Generic burger shop name"}
+{"id":"d3623336-c765-433e-8f27-b9dc512efe58","name":"BurgerSteig","action":"demote_vegan_options","reason":"Generic burger shop name"}
+{"id":"5eb2ff44-5269-4ee3-9f4e-80aeac1031f7","name":"Burger Vision","action":"demote_vegan_options","reason":"Generic burger shop name"}
+{"id":"67a6dc6b-7e0b-484c-b1cf-34cb1f22c9dc","name":"Asia Food & Sushi Bar","action":"demote_vegan_options","reason":"Generic Asian/sushi name"}
+{"id":"eb0e039c-3af6-4dc1-a73b-e417b3724615","name":"Dewi's Kebaphaus","action":"demote_vegan_options","reason":"Turkish kebab house"}
+{"id":"6b79318a-10c9-4541-9d3c-430a79c712b3","name":"King Schawarma","action":"demote_vegan_options","reason":"Shawarma shop"}
+{"id":"d3fceef4-dcdc-41e3-9923-d76c5643ceb3","name":"Kebap House","action":"demote_vegan_options","reason":"Generic kebab shop name"}
+{"id":"f66a9ce9-cd5c-4678-b17d-0353bcd1de05","name":"Parkimbiss bei Murat","action":"demote_vegan_options","reason":"German park snack stand, traditional Turkish"}
+{"id":"5d1377fc-d2cc-482e-a18f-72a39570b156","name":"Eissalon Kiez & Kugel","action":"demote_vegan_options","reason":"Ice cream parlour with dairy and vegan options"}
+{"id":"ca273952-5da8-4240-ac89-ecf3c96f6a55","name":"Eislabor","action":"demote_vegan_options","reason":"Ice cream lab with dairy and vegan flavours"}
+{"id":"6ee26bfe-6b92-4816-ab09-96801b18d5fa","name":"Dolce Freddo","action":"demote_vegan_options","reason":"Italian gelato shop, mostly dairy"}
+{"id":"fb60ed4a-1033-4ae0-81ed-351c1a1971b4","name":"Eis Azzura","action":"demote_vegan_options","reason":"Italian ice cream shop, mostly dairy"}
+{"id":"0e25fdbe-030c-4129-9525-35e696c5a6ad","name":"NaturEis","action":"demote_vegan_options","reason":"Natural ice cream shop, dairy-based"}
+{"id":"3e1db138-2ddf-4896-8372-47a02ea46347","name":"Alphi's Eis","action":"demote_vegan_options","reason":"Ice cream shop, mostly dairy"}
+{"id":"7441cc2c-701c-49c1-91e9-19ac960b2258","name":"Blumen Eiscafé","action":"demote_vegan_options","reason":"Ice cream cafe with dairy"}
+{"id":"9e89454d-11a2-4da2-aa6e-0677528dd9d9","name":"Faldon Eismanufaktur","action":"demote_vegan_options","reason":"Ice cream manufacture, dairy-based"}
+{"id":"cd032525-6e19-46f8-a270-88d2558fcb37","name":"Phò Tò","action":"demote_vegan_options","reason":"Vietnamese pho shop"}
+{"id":"6f92003e-958d-4f93-a4f9-e9a61edd6b1e","name":"Saigon Dragon","action":"demote_vegan_options","reason":"Vietnamese restaurant"}
+{"id":"b76b1d15-fa9c-4477-a511-589a056fc794","name":"VND – Viet Next Door","action":"demote_vegan_options","reason":"Vietnamese restaurant"}
+{"id":"5a6652bc-db5f-4d09-9132-196183970543","name":"Mert","action":"demote_vegan_options","reason":"Generic Turkish name, likely kebab/restaurant"}
+{"id":"d52120d9-c78a-4f21-8f0d-b1a0778d8724","name":"Kaplan","action":"demote_vegan_options","reason":"Generic Turkish name"}
+{"id":"26a9e3fa-5138-4624-a61f-80ccb3555979","name":"Roj Cafe Bar","action":"demote_vegan_options","reason":"Generic Turkish/Kurdish cafe"}
+{"id":"bace6968-41be-45e9-b4c2-059180844665","name":"Café Jasmino","action":"demote_vegan_options","reason":"Generic cafe name"}
+{"id":"785aa401-b5d4-478a-acd7-df09d4e7a60e","name":"Café Dreifünf","action":"demote_vegan_options","reason":"Generic cafe name"}
+{"id":"e2bce3ba-fed4-4cc1-ad25-cd783b6566a3","name":"Paris Café","action":"demote_vegan_options","reason":"Generic French cafe name"}
+{"id":"e7ec9efb-6e8b-4e26-8b66-ba66ecc27e57","name":"Humboldt-Café","action":"demote_vegan_options","reason":"University cafe with vegan options not 100% vegan"}
+{"id":"6cd5bcc9-c482-4268-a148-0b6d870392c7","name":"Grillo","action":"demote_vegan_options","reason":"Name suggests grill (meat) restaurant"}
+{"id":"dd2dd912-85c3-4983-bec3-595cdc3afdb1","name":"Alnatura Café-Bar","action":"demote_vegan_options","reason":"Cafe inside Alnatura organic supermarket; vegan options not 100% vegan"}
+{"id":"f6d1ff99-222b-4dcd-87ae-080d6ba10e83","name":"beets&roots","action":"demote_vegan_options","reason":"Healthy bowl chain with vegan and meat options"}
+{"id":"056f3a88-309d-4e76-953a-a28f7127a30c","name":"Green Scoop","action":"keep","reason":"Vegan ice cream brand name"}
+{"id":"aecbe17c-b776-47cb-9415-14df4f5165dc","name":"Chay35","action":"keep","reason":"'Chay' = vegetarian/vegan in Vietnamese; almost certainly vegan"}
+{"id":"7919c2bd-a60f-40a9-a57d-98a6b26990c7","name":"Khan Döner","action":"demote_vegan_options","reason":"Turkish kebab shop"}
+{"id":"763b780d-c059-4530-9ed2-b27ec77b4d63","name":"Gemüse Kebap & Friends","action":"demote_vegan_options","reason":"Vegetable kebab shop"}
+{"id":"7897ea52-bbde-44d6-9bd0-b1dbe1e1eb7c","name":"Amore Milano","action":"demote_vegan_options","reason":"Italian restaurant name, mostly meat/cheese"}
+{"id":"67ab9063-3607-49a6-a672-802c7ef1da67","name":"principessa","action":"demote_vegan_options","reason":"Italian restaurant"}
+{"id":"fd722261-d206-4501-8b48-78307f13dce9","name":"Japan Plaza","action":"demote_vegan_options","reason":"Japanese restaurant chain"}
+{"id":"42d0f0d3-4d15-4b22-ad77-8048fbe30405","name":"Sama Beirut","action":"demote_vegan_options","reason":"Lebanese restaurant"}
+{"id":"46aab839-ec2e-45ad-b204-bdf15229d722","name":"Aylin Aksu Hair & Beauty","action":"archive","reason":"NOT a restaurant - hair and beauty salon"}
+{"id":"9747d1ad-9d2c-42d1-98fc-2365bd20ac2c","name":"Haroun","action":"demote_vegan_options","reason":"Generic name, likely Lebanese/Arab"}
+{"id":"a726a5b2-d487-471e-801d-dd22cb422624","name":"Tiger Club","action":"demote_vegan_options","reason":"Generic Asian restaurant"}
+{"id":"c47357f4-769f-41c9-bdb3-76035964d382","name":"Comcha","action":"demote_vegan_options","reason":"Generic restaurant name"}
+{"id":"ba92be55-122f-4009-a5c4-4802a6e5eaef","name":"bundes burger","action":"demote_vegan_options","reason":"Burger shop"}
+{"id":"aa7dc23b-f084-45d2-b13b-ba3588939323","name":"Ha Pho","action":"demote_vegan_options","reason":"Vietnamese pho restaurant"}
+{"id":"11dd55b1-4310-42c8-9a88-626973ae2352","name":"Timurs Hütte","action":"demote_vegan_options","reason":"Generic restaurant name"}
+{"id":"c3ddb792-72fd-41c2-b52b-e96992c162e1","name":"Final Bistro","action":"demote_vegan_options","reason":"Generic bistro name"}
+{"id":"c369644f-c6c8-4e3e-be85-74dc937f06f2","name":"Mehas","action":"demote_vegan_options","reason":"Generic name"}
+{"id":"4473474e-ee58-4360-9c0b-5fd13162d194","name":"Phó Bowl","action":"demote_vegan_options","reason":"Vietnamese pho restaurant"}
+{"id":"cf66db17-2537-4a15-bcb1-2e501d8aa6bc","name":"Tra My","action":"demote_vegan_options","reason":"Vietnamese restaurant"}
+{"id":"6ec1db0e-2159-4991-b5f8-592e843664da","name":"AVCI Bistro","action":"demote_vegan_options","reason":"Turkish bistro"}
+{"id":"ea017ebd-a1ae-44eb-adac-66d23cb1ce99","name":"AVCI Bistro","action":"demote_vegan_options","reason":"Turkish bistro (duplicate)"}
+{"id":"d3dd63bb-a887-426b-9711-7c30d9f7a3b8","name":"Nelke Falafel","action":"demote_vegan_options","reason":"Falafel shop, may have non-vegan items"}
+{"id":"6ecafe68-4091-4d74-8931-9c6e2c0da665","name":"Kult-Eis","action":"demote_vegan_options","reason":"Ice cream shop with milk-based and vegan options (duplicate of Kult Eis)"}
+{"id":"21d74dc9-5d61-4b67-b352-5fd586a7d826","name":"Alaska","action":"demote_vegan_options","reason":"Generic restaurant name"}
+{"id":"e29fafdd-662b-4889-9013-7d19dc1228db","name":"La petite veganerie","action":"keep","reason":"Name explicitly contains 'veganerie' (French vegan)"}
+{"id":"acb6cc1f-24ae-42f0-8a49-f334067a4ee2","name":"India Spice House","action":"demote_vegan_options","reason":"Indian restaurant"}
+{"id":"9aa59991-4b77-45d8-9ec4-9768d6dae6b2","name":"Berlin Çiğköfte","action":"keep","reason":"Çiğköfte is traditionally a vegan/vegetarian Turkish dish; standalone Çiğköfte shops are usually fully vegetarian/vegan"}
+{"id":"e98e95f7-1bf7-47d2-b1da-2aa521ae9a9f","name":"Habiba","action":"demote_vegan_options","reason":"Lebanese/Arab restaurant"}
+{"id":"dca3e936-0d5b-4f2f-b56e-b4e9e7ab7cd0","name":"Windburger","action":"demote_vegan_options","reason":"Generic burger shop"}
+{"id":"85d523ca-c0f0-4684-8b7e-1f70cde21ee3","name":"Eismieze","action":"demote_vegan_options","reason":"Ice cream shop with dairy"}
+{"id":"ea3cc76e-f4b8-426c-aacc-04d981c2f62d","name":"fior di margherita","action":"demote_vegan_options","reason":"Italian pizzeria"}
+{"id":"c2163581-a64c-4e93-a127-dda5d002e526","name":"Il Buon Gelato Marcon","action":"demote_vegan_options","reason":"Italian gelato shop"}
+{"id":"250a0262-3ab6-41c4-842f-6e04a4e3cbd3","name":"Kavlak Eismanufaktur","action":"demote_vegan_options","reason":"Ice cream manufacturer with dairy"}
+{"id":"ed6d65b2-cdcc-4243-9b57-122e2214747f","name":"Çiğköftem","action":"keep","reason":"Çiğköfte is traditionally vegan/vegetarian; standalone shops typically all-vegetarian"}
+{"id":"2c770905-e844-492a-bc76-207beb515f6c","name":"Kamala-Vegan","action":"keep","reason":"Name explicitly contains 'Vegan'"}
+{"id":"eef7a66a-1ab4-45ed-8c98-7663a3d7d19d","name":"La Esperanza","action":"demote_vegan_options","reason":"Generic Spanish/Mexican restaurant"}
+{"id":"3b6745c6-29de-4451-9f59-a80312c0981e","name":"Frau Behrens Torten","action":"demote_vegan_options","reason":"German cake shop with butter/cream"}
+{"id":"bdd862bf-0ceb-400e-ab7f-4bd00e78d627","name":"Asia Gourmet","action":"demote_vegan_options","reason":"Generic Asian restaurant"}
+{"id":"f3629b4f-9f56-4657-aae8-42977ff7a7d3","name":"Sùsù Vegan Food","action":"keep","reason":"Name explicitly contains 'Vegan Food'"}
+{"id":"4235c430-886c-435a-bfae-be9dd1a2e099","name":"Pilz Imbiss","action":"demote_vegan_options","reason":"German for 'mushroom snack' but unclear if all-vegan"}
+{"id":"50ebc536-09d1-49a0-be9a-aa9ecf8403db","name":"Italienisches Eis Da Dalt","action":"demote_vegan_options","reason":"Italian ice cream shop, dairy-based"}
+{"id":"63078ce6-7ba7-4d99-a419-53bcb6fe9a1e","name":"Akko","action":"demote_vegan_options","reason":"Generic name, likely Israeli/Mediterranean restaurant"}
+{"id":"4eba1aea-bc61-4284-9b29-786bcf14f598","name":"Burger Provinz","action":"demote_vegan_options","reason":"Burger restaurant"}
+{"id":"c56b5fc8-500d-4506-9222-7cf853b10e7a","name":"Wilhelms Burger","action":"demote_vegan_options","reason":"Burger restaurant"}
+{"id":"1debb183-07a8-4f52-8558-f9fdeee79031","name":"Vegan Vibes","action":"keep","reason":"Name explicitly contains 'Vegan'"}
+{"id":"55552380-2567-43ba-8a2f-a9a2949c4c77","name":"immergrün","action":"demote_vegan_options","reason":"German salad/wrap chain with vegan options, not all-vegan"}
+{"id":"46a41aab-ad18-4661-8033-ba40cd22d867","name":"Pommesfreunde","action":"demote_vegan_options","reason":"German fries shop"}
+{"id":"fe5e7558-4c07-4027-923d-9be588528ddf","name":"Giannis Eis","action":"demote_vegan_options","reason":"Italian ice cream shop, mostly dairy"}
+{"id":"6510ddf2-f9b6-45f1-b297-08e36a4ce5e7","name":"Daizu","action":"demote_vegan_options","reason":"Japanese restaurant; daizu = soy bean but unclear if all-vegan"}
+{"id":"5c8335d3-3356-4db2-ac85-4f64a4e5467c","name":"IIMORI VEGAN","action":"keep","reason":"Name explicitly contains 'VEGAN'"}
+{"id":"3ecd770b-902e-4478-8838-92cf87356e2c","name":"Erdbeere","action":"demote_vegan_options","reason":"Generic 'strawberry' name, unclear focus"}
+{"id":"4e98f07a-b760-4207-9371-6739707621ef","name":"Heinse Kebap","action":"demote_vegan_options","reason":"Turkish kebab shop"}
+{"id":"bc11aa55-bd08-45b6-918d-497033651e31","name":"Falafel Al Amin","action":"demote_vegan_options","reason":"Falafel shop, mixed menu likely"}
+{"id":"3d57c66c-da86-4e36-a071-1ef79a3ab175","name":"ServiceStore DB","action":"archive","reason":"NOT a restaurant - Deutsche Bahn (German rail) convenience kiosk in train stations"}
+{"id":"f82bd44a-de57-4321-9c31-2791bb02b134","name":"Chickpeas","action":"keep","reason":"Strong vegan-suggestive name (legume-based brand)"}
+{"id":"50e3264b-2f0d-40fd-ba34-996b0c51b15e","name":"Bistro Kristall M&M","action":"demote_vegan_options","reason":"Generic bistro name"}
+{"id":"ea9bf08d-9412-411e-bf4e-56e93dc129dc","name":"Lalibela","action":"keep","reason":"Ethiopian restaurant; Ethiopian fasting cuisine is essentially vegan and most Ethiopian restaurants serve a fully vegan menu option"}
+{"id":"1441d278-ce70-457d-a73a-1dcbe632f948","name":"Scooby Doo","action":"demote_vegan_options","reason":"Scoopy Doo - homemade ice cream cafe with dairy"}
+{"id":"48b7184c-241b-444e-97d7-9286f3ba3f40","name":"The Noodle Town Mitte","action":"demote_vegan_options","reason":"Chinese hand-pulled noodles with vegan options, also serves meat"}
+{"id":"4e3cdcc3-aa50-4ae0-8e38-1760c4d9f484","name":"Kantini","action":"archive","reason":"Bikini Berlin food court, not a single restaurant; covers 13 cuisines including currywurst/boulette"}
+{"id":"56b09d22-880a-4740-b176-82e6504fcc9c","name":"MODU","action":"demote_vegan_options","reason":"Authentic Korean cuisine, mixed menu"}
+{"id":"5dcfd6eb-a123-4358-b1df-c7f780beb338","name":"Kantine Universal","action":"demote_vegan_options","reason":"Universal Music corporate canteen with vegan options, not all-vegan"}
+{"id":"61e8d291-e894-4efa-8d17-7171c78d3bf2","name":"Si Remy","action":"demote_vegan_options","reason":"Healthy food culture with Green Chicken Bowl etc, mixed menu"}
+{"id":"719af86e-6b74-4129-8f49-b7f8fd1e36f8","name":"Emira","action":"keep","reason":"Emira Vegan Sushi - 100% vegan Prenzlauer Berg"}
+{"id":"8d277fa6-fec8-4930-802c-937514e54e7c","name":"Dal Tokki","action":"keep","reason":"100% vegan Korean Wedding"}
+{"id":"c8bcc9ff-a6e9-4efd-ac20-91b5cd051ba1","name":"Ein Moment","action":"demote_vegan_options","reason":"Cafe with bastilla/pastries/croissants, no vegan-only claim"}
+{"id":"e48ef4dc-a1b4-4e4a-a831-61e279ce4438","name":"Frolis","action":"keep","reason":"Healthy vegan bakery (Carrer Aragó); possibly closed but maintains vegan focus"}
+{"id":"1018f3d2-37ad-46f2-9e80-aa59cb6b14c3","name":"La Capritxeria","action":"keep","reason":"100% plant-based gluten-free sweets shop"}
+{"id":"1571fdb3-ac77-4b25-81bf-8cae6a1d1611","name":"La Perra Verde","action":"keep","reason":"100% vegan tapas Gràcia"}
+{"id":"3248385b-a434-4cb9-aa10-0d387cc2df40","name":"La Petita Vegana","action":"keep","reason":"Name explicitly contains 'Vegana'"}
+{"id":"ba1e7b7c-7be6-4fe2-97c8-2a0d9921ee6f","name":"Gopal","action":"demote_mostly_vegan","reason":"Hare Krishna restaurant - mostly vegan/vegetarian (lacto)"}
+{"id":"4199839b-35dc-4337-b7c7-8649ad4b00b7","name":"PASTAn","action":"keep","reason":"100% vegan Italian/pasta restaurant"}
+{"id":"92e3544c-55ee-4bd9-83b4-2e8c5519b86b","name":"Tonka","action":"keep","reason":"100% vegan pastisseria Gràcia"}
+{"id":"6df0bdbe-c343-43b5-988d-f6e4a43f6986","name":"Santoni","action":"keep","reason":"100% vegan cafe/bakery Sant Antoni"}
+{"id":"7a5db052-a785-4aab-8597-733da0967993","name":"Tokuyamatcha Onigirazubar","action":"demote_vegan_options","reason":"Japanese rice ball sandwich shop with vegan options, not all-vegan"}
+{"id":"fd46f303-1298-444a-90a0-f445e2aac949","name":"KebabishQ","action":"demote_vegan_options","reason":"Kebab shop - generic"}
+{"id":"49d21c5f-13b3-4d71-ad0e-8bb1225cb51d","name":"Sunday C&C Eatery","action":"keep","reason":"100% vegan plant-based eatery NoHo Bowery Market"}
+{"id":"6b3e3b77-7d16-429f-bc1a-5b88eff8c1e8","name":"Blossom Du Jour","action":"archive","reason":"9th Ave location confirmed closed per Yelp March 2026; brand still exists elsewhere"}
+{"id":"730228ae-799b-4904-9277-4b173cb33c53","name":"Nom Wah Nolita","action":"demote_vegan_options","reason":"Chinese dim sum with several vegan items but not all-vegan"}
+{"id":"5f8bb011-16f6-4eb1-9309-44b1a6b603d5","name":"Jajaja Mexicana","action":"keep","reason":"100% vegan plant-based Mexican chain"}
+{"id":"3ab59f19-3e91-4ce1-9883-bdfdbe27b3fc","name":"Vegan QuickBites by Next Stop Vegan","action":"keep","reason":"Name explicitly 'Vegan'"}
+{"id":"ae74590f-9344-42d1-b497-eede3e0d8799","name":"Vegan Deli","action":"keep","reason":"Name explicitly 'Vegan'"}
+{"id":"14f99466-fa50-4b4b-88af-2b44efca31b7","name":"Next Stop Vegan","action":"keep","reason":"Name explicitly 'Vegan'"}
+{"id":"96149025-62ea-4bb0-ae6b-8a05507c19d6","name":"Beatnic","action":"keep","reason":"100% vegan chain (rebranded from By Chloe)"}
+{"id":"6ee73751-d0c3-43f0-918c-182b2b120be8","name":"Apna Pind","action":"demote_vegan_options","reason":"Indian restaurant in Queens with vegetarian/vegan options, not all-vegan"}
+{"id":"358af672-086b-4c3f-a64b-97324181cfe6","name":"Beatnic","action":"keep","reason":"100% vegan chain (duplicate)"}
+{"id":"3d163e5f-bec9-4975-8a08-34fa8b62e81d","name":"Moss Vegan Bistro","action":"keep","reason":"Name explicitly 'Vegan'"}
+{"id":"4a8b0faa-4e42-4403-adf7-8729ecae1032","name":"India Sweets & Spices","action":"demote_mostly_vegan","reason":"Indian vegetarian/vegan grocery+restaurant; most food vegan and labeled but vegetarian items also present"}
+{"id":"892e17ed-75e7-4551-8e7e-510f97e6ccfa","name":"Veggie Grill","action":"keep","reason":"100% vegan chain"}
+{"id":"d362e30b-7fc2-469e-b964-83ba578928a7","name":"Veggie Grill","action":"keep","reason":"100% vegan chain (second location)"}
+{"id":"c358c372-f836-4997-b3c5-1ada0510136a","name":"Dave's Gourmet Korean Food","action":"archive","reason":"Storefront Wilton Pl confirmed closed per Yelp 2026; founder still at farmers market only"}
+{"id":"b67aa12f-cef3-49c0-8d66-e5aba0fd24f6","name":"Cena Vegan","action":"keep","reason":"Name explicitly 'Vegan'"}
+{"id":"f91990b6-3ac2-4fd2-a6d3-248ff60cf76f","name":"Cali Saga","action":"keep","reason":"Vegan-vegetarian Culver City"}
+{"id":"fa65c07f-1284-45c4-8f9b-31e376b9dd34","name":"Glowing Plant-Based Eatery","action":"keep","reason":"Name explicitly 'Plant-Based'"}
+{"id":"44e39cb2-65a1-4035-bc07-a9f20f3d639d","name":"Buddhist Vegetarian Restaurant","action":"demote_mostly_vegan","reason":"Buddhist vegetarian (素食) - typically vegan in practice but can include dairy/egg"}
+{"id":"0bedf83c-0048-4b45-b31f-5f0ceab8fdc5","name":"Vegetarian Buffet","action":"demote_mostly_vegan","reason":"Generic vegetarian buffet, may include dairy/egg"}
+{"id":"4d88c4bf-f382-4061-ab21-d5acebb713d1","name":"連成素食店","action":"demote_mostly_vegan","reason":"素食 = Buddhist vegetarian"}
+{"id":"90598697-911c-4783-a24f-040d78dcf832","name":"均合素食點心坊","action":"demote_mostly_vegan","reason":"素食點心 = Buddhist vegetarian dim sum"}
+{"id":"0628387b-7243-4969-b2c5-404aabeee1a9","name":"宜品素食","action":"demote_mostly_vegan","reason":"素食 = Buddhist vegetarian"}
+{"id":"e3df426f-563f-4677-9b52-5c9697695e14","name":"Yipin vegetarian food","action":"demote_mostly_vegan","reason":"Vegetarian food (same as 宜品素食 entry above)"}
+{"id":"78c3f65b-ec99-4aca-b09c-0918becfa706","name":"家和素食","action":"demote_mostly_vegan","reason":"素食 = Buddhist vegetarian"}
+{"id":"848b7e29-f28d-4e9e-87f4-a762e37a415f","name":"Sun and Moon Vegetarian Food Shop","action":"demote_mostly_vegan","reason":"Vegetarian food shop"}
+{"id":"2989f08b-62e8-40d6-b4c2-a83be69690b3","name":"ancient Buddha vegetarian food","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"e1c42034-cf1f-4a71-844e-2f16782834d1","name":"Loving Hut","action":"keep","reason":"100% vegan international chain"}
+{"id":"304409fb-9f2b-48f8-a85d-f8b5c2fce578","name":"小麟素食","action":"demote_mostly_vegan","reason":"素食 = Buddhist vegetarian"}
+{"id":"400d3f78-9f65-4046-9329-5f585439c5d4","name":"JSP 呷尚寶","action":"demote_vegan_options","reason":"Taiwanese chain, not specifically vegan"}
+{"id":"4ddaa46c-9c19-4da8-9c5d-7ed5b96a4f46","name":"修圓素食","action":"demote_mostly_vegan","reason":"素食 = Buddhist vegetarian"}
+{"id":"6795aa54-f467-4ee2-b54e-50bd0a77336d","name":"全真素食","action":"keep","reason":"全真素 = pure/true vegetarian, traditionally fully vegan"}
+{"id":"e0409744-b0d9-4984-b57d-a370654286e2","name":"料理王健康素食自助餐","action":"demote_mostly_vegan","reason":"Health vegetarian buffet (素食)"}
+{"id":"2e5aa1bc-7f5b-4a4e-99d1-3cd52fffe7d3","name":"霸氣風味套餐","action":"demote_vegan_options","reason":"Generic 'flavor set menu' name"}
+{"id":"8a17183d-97bb-41a5-abcc-2729eae63176","name":"食光的好味","action":"demote_vegan_options","reason":"Generic restaurant name"}
+{"id":"4a047da7-8bd7-4aa9-8205-8a192e50f9a4","name":"素食天地","action":"demote_mostly_vegan","reason":"素食 = Buddhist vegetarian"}
+{"id":"d2a0ac4a-6a38-4794-a026-0be945f32aed","name":"Yummy Vegan House","action":"keep","reason":"Name explicitly contains 'Vegan'"}
+{"id":"0be96bbf-b9f7-4162-86b2-f6067e4490bc","name":"古佛素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"c61f0543-b2fd-4e42-b966-9a075504b73a","name":"FRESH新鮮烘焙坊","action":"demote_vegan_options","reason":"Fresh bakery, no specific vegan claim"}
+{"id":"ee7c0ffd-959e-460f-b2a1-0e239cff7327","name":"聯安健康廚房","action":"demote_vegan_options","reason":"'Healthy kitchen' name, not specifically vegan"}
+{"id":"370e10be-47c1-491f-907f-308b529ab05f","name":"人人素食麵館","action":"demote_mostly_vegan","reason":"素食 noodle restaurant"}
+{"id":"4324cad8-b990-4de4-8a98-3a43a5ac1192","name":"Mianto 艾果豐","action":"keep","reason":"Confirmed 100% vegan since 2014 (no egg/dairy/honey/alcohol)"}
+{"id":"2fcf2d39-fd35-4f58-b701-78db9f57fc4d","name":"Loving Hut Vegetarian","action":"keep","reason":"100% vegan international chain"}
+{"id":"a1ba2bf2-b0e9-4e3a-92c9-77be76c10943","name":"Loving Hut","action":"keep","reason":"100% vegan international chain"}
+{"id":"8f83f121-80be-4e5c-b418-019caf4112b3","name":"Health陽光花園素食主義","action":"demote_mostly_vegan","reason":"Buddhist vegetarian (素食)"}
+{"id":"fa461333-c505-4216-b4f8-cb4e3338f922","name":"如來素食樂園","action":"demote_mostly_vegan","reason":"Buddha 素食 paradise - Buddhist vegetarian"}
+{"id":"52780e9a-e49e-4e18-8148-9a9f16a25efa","name":"Delicious food","action":"archive","reason":"Generic placeholder name, cannot verify"}
+{"id":"c90ba2bd-b6bf-46db-8d9b-8b254bd06f79","name":"日月蔬食坊","action":"demote_mostly_vegan","reason":"蔬食 = plant food/vegetarian"}
+{"id":"8f263341-5d58-43b9-8e4c-8a32eccbea86","name":"上頂皇家素食水煎包","action":"demote_mostly_vegan","reason":"素食 buns, Buddhist vegetarian"}
+{"id":"bb646f15-dc81-4569-9712-bf7ebda99cd7","name":"十方素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian (素食)"}
+{"id":"ddf16e5b-0e1f-4bb1-aef4-16b112ffe717","name":"鴨川食堂蔬素食","action":"demote_mostly_vegan","reason":"Vegetarian/plant restaurant"}
+{"id":"5cb8030f-acbc-453d-b3e1-e85f31a04de6","name":"Bluesomeone's Vegan Café","action":"keep","reason":"Confirmed 100% vegan (no meat/eggs/dairy/honey)"}
+{"id":"54b08be1-b3c0-4ac0-b552-815ac2184b25","name":"Quisine","action":"keep","reason":"Confirmed 蔬食餐酒館 vegan/vegetarian bistro Taichung"}
+{"id":"c57229de-1803-4e0c-9fca-af99430bd85c","name":"天慈素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"c13494e2-edd0-46dc-a23f-d402fb44d342","name":"蔬食 自助餐","action":"demote_mostly_vegan","reason":"Plant food buffet"}
+{"id":"3a682fe0-314e-461c-9f9e-e4cd63bea097","name":"天慈素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian (duplicate)"}
+{"id":"56e54663-c680-44f9-ab24-10bf1af78111","name":"Zhongxing Vegetarian","action":"demote_mostly_vegan","reason":"Vegetarian"}
+{"id":"5ea13918-0df8-4151-8293-505e8de61d22","name":"井町","action":"demote_vegan_options","reason":"Generic Japanese-sounding name"}
+{"id":"4b01b243-ff88-47bc-bc39-3852cbaef0e9","name":"素芬芳素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"aef4c912-4dab-48eb-bf84-7e5ec2152534","name":"素食","action":"demote_mostly_vegan","reason":"Generic 素食 (vegetarian) name"}
+{"id":"fd40c96e-e0ff-471b-a10b-f5b79e9c663f","name":"素食","action":"demote_mostly_vegan","reason":"Generic 素食 (vegetarian) name (duplicate)"}
+{"id":"783a3b97-1ef0-4b3d-be41-59274972be7f","name":"佛有緣素食店","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"f591203d-73a7-4058-97e2-8945a9d0f36a","name":"香椿素食麵","action":"demote_mostly_vegan","reason":"素食 noodle restaurant"}
+{"id":"64f21140-fc56-4d68-9588-6e7bb453e491","name":"寶源素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"b6c08c66-173b-4e5d-bdf4-46bac740468a","name":"初一素蔬食餐廳","action":"demote_mostly_vegan","reason":"素 蔬食 vegetarian restaurant"}
+{"id":"0fd55006-6cf1-4ac5-b9f0-ae3365cc396c","name":"德運素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"c1d841fa-f2d0-4475-84f3-671acf12252a","name":"如來素食","action":"demote_mostly_vegan","reason":"Buddha vegetarian"}
+{"id":"74be07d0-612c-497c-998c-69a8105c4739","name":"天慈素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian (duplicate)"}
+{"id":"42ef0ed9-5f22-41a7-876d-e789c1ccf115","name":"東海素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"0939c420-cf32-41ca-8d89-b9a63e59e0ff","name":"Daci vegetarian food","action":"demote_mostly_vegan","reason":"Vegetarian food"}
+{"id":"a6314ad7-54d5-405f-afac-705819daa361","name":"洪氏素食","action":"demote_mostly_vegan","reason":"Hong family vegetarian"}
+{"id":"22dc9063-0f91-48db-9947-9ba5d90d44e0","name":"蓮喜心","action":"demote_vegan_options","reason":"Lotus joyful heart - generic name, no clear vegan claim"}
+{"id":"3cd6253a-ead3-4f1c-85f0-5252ef8d0582","name":"御品齋素食自助餐","action":"demote_mostly_vegan","reason":"Buddhist vegetarian buffet (素食 + 齋 = vegetarian/Buddhist hall)"}
+{"id":"ff15f575-1bc1-454a-8ede-d873fb742ab2","name":"Tianci vegetarian food","action":"demote_mostly_vegan","reason":"Vegetarian food"}
+{"id":"4785f9ca-42dd-47cc-bea4-445feead76d3","name":"柳川素食麵","action":"demote_mostly_vegan","reason":"素食 noodle"}
+{"id":"f579157b-1a99-4571-8b05-abea9bf64a78","name":"東東素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"394299d3-fa7f-49be-9173-0bbe3d654a3d","name":"大慈素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"75dfa46d-a6a8-4d5b-8b2e-0450549b5cef","name":"忠義素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"c5730719-16aa-4c6d-8d66-7a90ab3545f9","name":"merit forest","action":"keep","reason":"功德林 / Gong De Lin - 100% meat free Buddhist Beijing chain Michelin Bib Gourmand"}
+{"id":"eb51715a-c4df-4846-b5f8-4df7a48d85b3","name":"If you are a vegetarian","action":"demote_mostly_vegan","reason":"Generic vegetarian name"}
+{"id":"983fcca3-d643-496f-9cc2-9ef8cfb7e50f","name":"苗祖咖啡","action":"demote_vegan_options","reason":"Coffee shop, no vegan claim"}
+{"id":"42aadb98-5174-49da-a69d-33becaf6c967","name":"清和园素食餐厅","action":"demote_mostly_vegan","reason":"Buddhist vegetarian (素食)"}
+{"id":"d235d473-1431-475d-987f-2728672098e7","name":"卡贝拉咖啡","action":"demote_vegan_options","reason":"Coffee shop, no vegan claim"}
+{"id":"c8debd61-e305-4e8b-9b95-4494f304071c","name":"素满香全民食养自助","action":"demote_mostly_vegan","reason":"素 (vegetarian) buffet"}
+{"id":"ca0c9821-bbd9-4934-bac9-ff44998aa69a","name":"庆春朴门","action":"demote_vegan_options","reason":"Generic restaurant name, unclear vegan claim"}
+{"id":"8c39e2e0-6486-417f-97c1-56167ee3e4b8","name":"如是心素食","action":"demote_mostly_vegan","reason":"Buddhist vegetarian"}
+{"id":"6cab780c-1ee7-4aad-b91f-eb976db3046c","name":"素虎净素","action":"keep","reason":"素虎 (Su Hu/Vege Tiger) confirmed 100% vegan + 净素 = pure vegan"}
+{"id":"3fa81922-02d6-42a5-b3bf-fb7c8727d9de","name":"Vegspot","action":"keep","reason":"Confirmed vegan restaurant Sanlitun Beijing"}
+{"id":"c0b52fa2-c7cd-4fcb-a782-952484aa5be5","name":"正隆斋","action":"demote_mostly_vegan","reason":"斋 = Buddhist hall, traditionally vegetarian"}
+{"id":"9a810c0d-04ed-4839-8841-4f73b9988a96","name":"素虎蔬食","action":"keep","reason":"素虎 (Su Hu/Vege Tiger) confirmed 100% vegan chain"}
+{"id":"ad9952a8-1646-47f9-8b73-c2545ee191d1","name":"Yisui Tang Xinxin Baozi Shop","action":"demote_mostly_vegan","reason":"Baozi shop, can be vegetarian/vegan"}
+{"id":"531b20f2-9854-4126-93a4-1d3a92799f05","name":"沃野Oii小食堂","action":"demote_vegan_options","reason":"Small kitchen, no clear vegan claim"}
+{"id":"b221a24d-0647-4bcb-9080-5d565d0a26c2","name":"Suhujingsu","action":"keep","reason":"素虎净素 transliteration - Su Hu pure vegan"}
+{"id":"3b930d17-6682-4201-95b7-b2fdf6093f56","name":"Yisui Tang Xinxin Baozi Shop","action":"demote_mostly_vegan","reason":"Baozi shop (duplicate)"}
+{"id":"e88ce9e5-1a38-4bc9-8ea7-3f37ed703c2d","name":"悦牍轩生活馆","action":"demote_vegan_options","reason":"Lifestyle store (生活馆), not specifically a restaurant"}
+{"id":"738827e0-ffd0-4bb1-a892-0c86c60603c8","name":"Vege-Tiger Vegan Buffet","action":"keep","reason":"素虎 (Su Hu/Vege Tiger) confirmed 100% vegan chain"}
+{"id":"49a37133-f522-48a4-b8db-1f2005fa81f0","name":"素虎","action":"keep","reason":"素虎 (Su Hu/Vege Tiger) confirmed 100% vegan chain"}
+{"id":"5cb60345-ddad-4270-bdc1-745c9f82d295","name":"素虎蔬食料理","action":"keep","reason":"素虎 (Su Hu/Vege Tiger) confirmed 100% vegan"}
+{"id":"e55a2031-d591-4d59-8c85-7fe63ef6adeb","name":"Vegetarian Tiger Vegetarian Cuisine","action":"keep","reason":"素虎 (Su Hu/Vege Tiger) confirmed 100% vegan despite 'vegetarian' in English name"}
+{"id":"9f526816-2173-401a-b936-15e748accdec","name":"功德林","action":"keep","reason":"Gong De Lin - 100% meat free Buddhist since 1922, Michelin Bib Gourmand"}
+{"id":"6f519a08-d129-4a5d-9889-502878e4f804","name":"一穗堂放心包子铺","action":"demote_mostly_vegan","reason":"Yisui Tang baozi shop"}
+{"id":"3d97d3ef-2f6a-4d11-b0b0-403392b669ee","name":"Vegan","action":"keep","reason":"Name is literally 'Vegan'"}
+{"id":"54a23f85-046f-4e04-8a21-c09d3e7d4cb4","name":"一穗堂放心包子铺","action":"demote_mostly_vegan","reason":"Yisui Tang baozi shop (duplicate)"}
+{"id":"ee9e7ef8-3b22-4540-90f0-ab85374bf033","name":"悦食小筑蔬食茶空间","action":"demote_mostly_vegan","reason":"蔬食 plant food tea space"}
+{"id":"d501bef2-044c-4280-b260-bf014a1d7665","name":"Lá Vegan","city":"Hamburg","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"e9a8754c-03ed-4370-8e87-d30737f3eaff","name":"GO Cafeteria","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"adc4a3c1-9d4b-4427-adca-a7d7d2f7ab7e","name":"Mert Grill","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"13b87f84-2c87-4428-9f33-c8c2de437130","name":"My Kebap's","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"9dc8d5be-7388-4952-81aa-1bbcd16ae83b","name":"Café Näscherei","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"a11f377e-7edd-43df-8521-e8230a6a4351","name":"Balat Imbiss","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"2f9b5a5a-4dab-489b-a69c-e0f7600ebcbc","name":"Vincent Vegan","city":"Hamburg","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"0dfcfc76-8d8c-4f20-8386-9375d99bdca3","name":"Manos Vegan Cake","city":"Hamburg","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"5255b147-1c73-4456-a989-3470364f1400","name":"burgerme","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"cfb22c5f-5956-4b45-8c80-1fe4c5020bff","name":"Sushi Supply","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"bae987c7-88fd-48ad-9c5a-06d39ac17cde","name":"Çiğköftem","city":"Hamburg","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"11f688df-4951-46d5-bc4d-1ecfdbdf66f4","name":"Oehlers Eispatisserie","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"5f159e6b-75d1-43c4-9b6f-8a7925f35684","name":"Pasteleria Cristal","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"dc6a1352-0a2b-4061-bdca-805136ea6bef","name":"Asia Imbiss Kim","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"1672d062-eacb-4287-af61-4a6551cb5336","name":"Eisige Liebe","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"80e3c98c-3ef5-455c-9b40-8aab8bc929e1","name":"Eisige Liebe","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"643dfd56-1fac-40f9-8ba9-19476ab31312","name":"Café Bom Dia","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"42b50d46-666e-4692-b803-0e6740138c5a","name":"Buns Streetfood","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"4951b05a-9c23-4f70-844b-270c91b36fb4","name":"Eiscafe Kaifu","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"69ac0d9c-abdc-4fc6-9b67-bdbe92d5e7fd","name":"Pizza Al Taglio","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"c9d97b12-3539-4a65-939f-1bd677a850d2","name":"Copacabana Coffee","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"7e2f3a7d-e4b2-461b-ad49-b2352de659d6","name":"Eppendorfer Hähnchengrill","city":"Hamburg","action":"archive","reason":"Name contains animal-product reference (chicken/liver loaf/butcher etc.)"}
+{"id":"108cc788-4217-441a-8a3d-ac843d3ab18c","name":"Lissi's Leberkäserei","city":"Hamburg","action":"archive","reason":"Name contains animal-product reference (chicken/liver loaf/butcher etc.)"}
+{"id":"0e657eb2-650b-4e35-9a97-26e6a16ebf9b","name":"Eispiraten","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"5bf1b743-6e8b-464c-b3da-fcbda52d981f","name":"Elbdöner","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"d5323909-6c59-473d-9357-4513636e3bf1","name":"Eis Pauli","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"d8b72162-7b1c-4665-9982-3b2962e9dd03","name":"Döner Point","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"cb6f249e-c233-4d65-a743-8c65b60918c4","name":"The Salli's Kebab","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"f788e0dd-8d7c-4bec-9d60-42304ff0cfe5","name":"Eis Livotto","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"af113f7b-2664-42d4-af40-cac2f37421af","name":"Eisbande","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"ff0371b5-c827-49ff-8cd9-959319d2be9a","name":"Eis & innig","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"fc41c046-3a96-4c4f-8245-1d4302472a04","name":"Asia Box Express","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"402db990-5cdc-442b-a851-e36442c0c38e","name":"SoulKebab","city":"Hamburg","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"11a1e569-3549-4d7b-9e0e-02938c8648a5","name":"Berliner Kebab","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"e24327e7-a671-47d7-b829-f86bf1160cca","name":"Eis Oase","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"65f36e6a-7ef1-47d3-9ac1-92b75072c699","name":"Diyar & Urfa Kebab","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"d4881be3-b6e2-4a3e-9b81-7fdb65baaf68","name":"Bäcker Traum & Cafeteria","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"bfb3acb6-b72a-4962-85c9-91dab3fd4f99","name":"Eis an der Kö","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"63907adb-7aec-4378-a655-3a135acb1d85","name":"Lana Döner Bistro","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"6b23f017-7e71-44b8-8248-c4d79701f555","name":"Saigon Vegan","city":"Leipzig","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"b59075f8-3bf7-4ce5-86dd-30882fba363b","name":"Brakers Eisdiele","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"0ed43f37-fa5b-4e27-b129-2cc11eabc69f","name":"Asia Snack Bistro","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"5fc331e4-37cf-45dc-8a78-8fc407efe68a","name":"Bozova Kebab Haus","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"939b2e17-0b47-4cea-b9ad-6a48b3a0df8b","name":"LuiLui Eisladen","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"1288515f-5034-4aa1-bebd-7cc82db50d22","name":"Eis-Zapfen","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"33176a8c-5748-457d-8ac8-571e21edef32","name":"Berliner Kebap","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"b7d17c5a-07b6-4a62-8d9b-6926f7b95dbf","name":"Il buon gelato","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"613453ff-8e25-4529-92f0-d7f349e785ed","name":"Varto.döner","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"ca4b660d-d4ad-462b-861a-943925416909","name":"Bistro \"\"Zu Spät\"\"","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"50c0b284-f465-455c-9079-9d11f263eab8","name":"Softeisladen","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"59984f27-839f-4944-ba79-c3584a6f7fb9","name":"Akiko Sushi","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"dcaf816d-d7c1-4f1b-96fe-c7036d04db1b","name":"Asia Imbiss","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"8b0800ff-075c-4af7-92d3-3ba3764d6196","name":"Indian Streetfood","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"f0962396-918a-45f9-90b7-2b1264f6a77d","name":"Al Bascha Bistro","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"b852dc6f-08fd-4916-b5c4-5dfd83fad2ec","name":"eis fichte MCL","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"f7950a59-8052-4a89-8b79-c59ed9c092ea","name":"Falafel","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"320f3947-9ba7-4f5f-9ff2-a73ac354cdfb","name":"Café Moh","city":"Leipzig","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"50dfea89-3f70-49c3-8442-0926e4971fd6","name":"Vegan Express","city":"Leipzig","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"6c3beead-f18b-4e58-963c-fc8905dac3b7","name":"Vegan Eck","city":"Munich","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"65b252d6-d728-4ed2-83cb-65e2d50e8d5f","name":"Pommesfreunde","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"f51730c8-d976-42e8-8c03-6ab75e692133","name":"Eiscafé Gelati","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"003a8c38-2ed8-491a-9a17-f15a7a6cd224","name":"Café überm Marienplatz","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"a1b9c659-cf29-4e91-ac92-3c51f9b01682","name":"Eiscafé Florenz","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"2a9fc3a0-1b62-4c30-94dd-84138a5cca6c","name":"Morgenland Falafel House","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"67ba5f28-3fe6-40d2-ae0e-42cfb7a1bbdb","name":"Eiscafé Riviera","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"a07629d4-1133-4dec-93f7-09c9c44a3b20","name":"Nordsee","city":"Munich","action":"archive","reason":"Name contains animal-product reference (chicken/liver loaf/butcher etc.)"}
+{"id":"b6f6993f-ac77-4903-a565-d0d83c6a5766","name":"Sushi Bistro","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"fd309c83-08e8-4d73-8c72-ea31a1d3d4cd","name":"Böcklin Coffee","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"4aa3cb52-3184-4af9-a9ad-96030ee5ed4a","name":"Caf‘e Distel","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"0a89dee4-faf4-4ddd-afbd-c44feb87e54b","name":"Bel Gelato","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"be0bdf0d-080f-408e-abba-8ceb6ba54248","name":"Gelateria Espresso","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"c874898e-a8b1-41be-91c2-25a288eb23e5","name":"Gelateria Adria","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"cf8dffa8-d75e-4b70-9b71-1c6045532278","name":"Meyerbeer Coffee","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"e27b19fd-f63c-450a-8165-90525a920bf8","name":"Il Gelato Italiano","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"5ae2b4e6-1fe2-4cfa-a6ef-be1e8c9bd608","name":"Canteen Grill","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"95235b24-7c55-447c-a528-0942d52dc478","name":"Furi's Döner","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"8da816c0-d4bb-4ada-be9e-65eca63a6bda","name":"Äthiopischer Imbiss","city":"Munich","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"ecd0f4b0-51fa-4202-ad46-18d0bf8e647b","name":"Bếp Chay Vegan Restaurant","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"69a2094e-b5de-4428-97bd-8630d795d3ee","name":"Saigon Chay Vegan House","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"07d19b5d-d2a8-428c-9d9a-f236b55d8d41","name":"Rau Củ Nâm Vegan","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"607c91cc-c4f5-4d7d-b244-ff97a2af6396","name":"Phuc Quang Chay Vegan restaurant","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"97c0ff62-f287-47ca-8056-ac89a99bb064","name":"An Vegan","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"95f08084-485d-4f2f-932f-4ec03bfd69f0","name":"Soha plant-based","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"e48ff8bd-134b-40e4-97f5-1e5fdc09edc9","name":"Quán Chay Xanh Vegan","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"bbff6ff0-1164-476f-a7b3-dc678e157e50","name":"Roots Plant-based Cafe","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"e6886d65-a0fa-4749-922b-98b35f95d3a1","name":"Filthy Vegan","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"9a0ed8eb-d571-4f23-9c1f-281373fb6225","name":"Bon’s Vegan Bistro","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"171ff1ee-a051-4865-9098-04e0acc005e1","name":"Pho Chay Vegan/Vegetarian Restaurant","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"dec731dc-e246-41ef-8d94-61a03f6d5d22","name":"Nhà Hàng Vegan Kitchen","city":"Thu Duc","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"ed12f8cb-e989-4261-b44c-c78cdff8fe43","name":"Vegan Vogue","city":"Bengaluru","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"2a8d529c-78be-47b4-beb1-bfde35bc12f5","name":"A-Dong Asia-Imbiss","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"02ad0565-075b-4bb8-a313-bb071defcc8e","name":"Café Pistazie","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"93581370-c275-44af-a827-9565b1f6193b","name":"Thai Food","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"1ba3d2d3-f601-4dfa-a64a-8fd0671d8fac","name":"Noodle Fan","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"b6f1b554-fdfa-46a4-9952-8a0b8fd359b2","name":"Eiscafe Tre Cime","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"d491a4c6-9de1-43d7-a4d2-50c8fb52e9a2","name":"Mc Kebab","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"af086582-1175-4571-b62f-b5df8e7cd650","name":"Café Soleil","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"742682d9-3a7d-4ed3-b72f-7d622f3a45be","name":"Eis Panciera","city":"Cologne","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"826ff358-cd28-405a-80f1-f9ebb17166d7","name":"Çiğköftem","city":"Cologne","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"4b9a7eca-f126-4ad8-a060-2128ff3216b6","name":"Çiğköftem","city":"Cologne","action":"keep","reason":"Name explicitly indicates vegan"}
+{"id":"387857ef-39a3-42bf-bb62-d873d1c88110","name":"Snack 'n Coffee","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"86e2e039-84e9-4cc0-ab88-72bc340bc949","name":"Indian Curry","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"61b525f8-29cb-447d-ba99-e04538fe22cd","name":"Rashcook Falafel","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"d4baf1f8-646e-460d-bd33-a6cc8e609205","name":"Antipodean Gelato","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"068815bd-1b7f-4a95-901a-c3c39e0615fa","name":"Indian Curry","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"4517dd62-3df6-491b-a76d-324e027c79b2","name":"Frau Lang's Imbiss","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"2ddba6f8-01d2-4a09-9d45-13a92923202b","name":"Asia Bistro","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"084aacc4-09c2-4a6f-97fa-20ae7c5bf350","name":"Nordsee","city":"Frankfurt am Main","action":"archive","reason":"Name contains animal-product reference (chicken/liver loaf/butcher etc.)"}
+{"id":"25bccf3e-7d1b-4924-9a71-00da11bd4724","name":"Thai Wok","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"c0887356-8d38-464a-b7b3-53e279dc02cb","name":"Pizzeria Schlaflos","city":"Frankfurt am Main","action":"demote_vegan_options","reason":"Name pattern matches non-vegan category (kebab/eis/pizza/sushi/burger/cafe/etc.)"}
+{"id":"183c4444-3084-419a-afbc-08bdc40b46c5","name":"Tekin","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"7f38a429-7ef0-444f-9a77-34cee2d247b1","name":"Verlan Cafe","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"2cda32f4-a52f-4701-99fb-9a53b0742d30","name":"Futur III","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d27116ce-3fbc-4920-8d39-c00a75991494","name":"blanco","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"20ac0a7d-8b37-47c1-84d7-1b1b3a07c9cf","name":"Zuckerschnute","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"08ccc529-7c43-4a21-b74d-1c447c808c31","name":"bok","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"07c600c8-ee74-408c-ad91-9d68fcaabbaa","name":"CKT'S","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"88f3fada-b063-47b2-8634-0de6ea5e9f79","name":"sour kitchen","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"b7d65500-d0cd-4435-ae21-31be4f4118e6","name":"Salli’s","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"c4700934-5dba-4f7d-94f8-cb949d95304e","name":"La Famille","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b635a978-6c0d-4286-b12b-e707db5d469a","name":"Sira","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"a8e10a62-3b5d-432d-bcb7-351c6fdf775a","name":"Las Heras 747","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"e6c72c2a-a7d5-43da-b1d8-78b655b4fbee","name":"Sahha","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d595df1b-da8e-40bf-af94-d55b0faa0ad1","name":"Tadim Urfa","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"503e8765-1e62-4928-b6ce-434b3bcfaa59","name":"Röllchen","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"1e9a3bd8-97e1-4b18-8b8b-2dc6087cff34","name":"CKT's","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"f13a72ea-eb01-4651-8aaf-dd6a1ab9757f","name":"Gourmet Station","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d2479692-76db-4dde-af9b-57addc7ecf47","name":"USUMI","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"5441aead-6b18-4a04-9f53-ebcfb62a42b0","name":"Viet Roots","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"3c74c5b8-af1a-4898-83a5-0114d7ce482c","name":"Cam On","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"f7690551-8d1d-4228-99c0-d0b008d72744","name":"Peperoni","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d8f7579d-3e6b-46be-8994-c9408fface13","name":"Burrito Company","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"4364084b-ae99-402f-a256-39878ad92db3","name":"Instant Market","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"83f37d6a-3a50-4cfe-b0a4-a16986dca22c","name":"Dong Xuan Quan","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"1c2d3055-3a0e-4421-a42f-0f17af4af734","name":"Einfachgut Hansen","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"4677fc32-f2d9-40b4-bf99-737e9f0a997f","name":"Gustav H.","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"4c111e88-4332-4987-92f6-3e526c70adbe","name":"Olive Tree","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"541cd8fa-a63b-48ff-bc7f-fcef433ed3d9","name":"Mein Eis","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"3f3c3360-798b-4ae4-ac89-0ca8c43fc72f","name":"Tamarind","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"eacb62fa-8541-4351-9986-97a7cbc7e480","name":"Likken","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"eda84e1b-9690-4f89-a756-1c028a927218","name":"Oscars","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"93e133cb-a90f-4e5a-9ac5-b2248cfca940","name":"Basasak","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"a0f0b44e-e3c3-4b43-ae3b-b0ecfaf95e05","name":"Kito","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"debe7944-f4ee-4f9b-a5ea-01c03213f2c1","name":"Bamboo Streetfood","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"3157df0e-d4e5-4679-b224-8e05a8718449","name":"Rockwurst","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"798d2d14-159b-4471-a1fc-c4020394664e","name":"Karli Speis","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"9df99f24-209e-4231-9e47-f9797387051f","name":"LuiLui","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"dbf46421-5f02-4d7b-9932-010eb5a7afbd","name":"HN Bubble Tea","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"9f5d952b-af74-4226-9f2b-d89e9137f267","name":"Taksim","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"57f43647-75e7-4db9-8301-56e0378caff2","name":"Am Kanal","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"a74f4516-37aa-478a-9f6c-1de2096476f5","name":"Kumpir","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"cb4beccc-39df-4270-9f3a-2ab63a27856e","name":"Quan Xanh","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"4e2cd4d4-063c-4dc7-a48c-32cc25dba81d","name":"ChopstiX","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"e4cfd162-1eaa-40a6-b2fb-30f185ebb573","name":"Quan Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"8b221c56-5b24-4a5b-a533-dceedd31562a","name":"Alnor","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"e4ee9eb5-ea09-44f3-9204-dc81b9a250e7","name":"Tre Colori","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"0bab8d82-7e7d-443e-8ff9-e153b9fdfbbb","name":"Rio Filmcafé","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"28fcc6a6-37bb-437a-90b6-695bd6587b8a","name":"Twinfin","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"7c10b9db-6545-42eb-a6b2-f0e6d01977fa","name":"The Rolling Dackel","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b0841b68-b657-40d5-91fb-8fff0d8bb68e","name":"herr.ye","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"35eadc54-9397-41fa-a027-f3fe9f30fab6","name":"Mr. Box Tea","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"40f1901f-743e-4961-b34a-d69fbb4dbd11","name":"Komitee","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"4c5fb725-0258-47a1-b124-262e918097df","name":"robetti","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b48b4c8d-36a1-49ea-a5b5-2d5f42ea21b7","name":"Mango 1","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"0be24d92-6b07-40ee-903a-1484cae4f92d","name":"Höflinger","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"564d2016-028a-4594-a2d3-d625aeb0e939","name":"Morgenland Baklawa House","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"f441ee75-9fb5-4941-8db2-b4eb8ed8badf","name":"Hantang Malatang","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b82aae0f-0b2b-47a8-b1f8-68269981c787","name":"BMW Mini Kantine","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"5edec903-03c6-4cee-9b9a-a503cee740ec","name":"Brez'n Eck","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"75845ac2-65a7-43b0-85f8-3d16b8acb335","name":"Tanuki Banh Mi Streetfood","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"ce30e723-606a-4497-8dc5-318d88333b95","name":"Lezizel","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"669b6635-c373-479d-ac32-3ab5cbcc44c3","name":"Rischart","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"8630c374-6f58-40e1-9122-8018ffb9e1fc","name":"Haiky","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"373d12f8-7b46-4ead-aa93-2be57856000b","name":"Tikka n Talk","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"a692cf69-c30a-40ee-9e9f-a717263515b4","name":"Fast Food Caravan","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d8eb6f81-a63b-42bb-bf6f-30003d0f5295","name":"Caffè Leone","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"df516f3f-6186-4124-b919-65d799df15f0","name":"Shoya","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"e3523859-7ef4-4a5d-919c-1c1d202d1b29","name":"Kantine Lauchstädter Straße","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"69903b32-1248-41e6-b23e-21e3d4f3dd45","name":"Wiener","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"177f4625-f3c3-46ed-8600-8e07d6dfb04d","name":"not Guilty pleasure","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"ea9c4c2a-1f0b-475a-aeb9-86e9ba614bd7","name":"Via Veneto","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"259880d9-aea3-4b04-bd56-9473af13cef2","name":"Etisch","action":"keep","reason":"Vegan-named German venue"}
+{"id":"b7d9ca74-da35-4684-b95e-dc75a58226fc","name":"Patisserie Sießl","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"7b83143b-875b-41a8-8df4-7df6ba20f041","name":"Daily Matcha","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"cedafda4-968b-459b-8706-6d789b2a5f75","name":"Baoz! Bar","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"e817f815-5528-4b73-9afb-e843b6b34e7c","name":"Tikka N Talk","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"f393feb5-4496-4013-a790-fe0bb410938c","name":"Rischart","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"c329f518-12ce-484d-b384-3e6b68edf4e2","name":"Bánh Mì Chay XANH","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"43936ef1-64c0-4c1c-a91d-a1bf7ca4a74a","name":"Bún Riêu Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"89dc85fe-6791-4cc5-b49a-6e9ac4c61813","name":"Bếp Chay Đế Thính","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"a6cb01b4-71ea-420c-a062-7644addfa6e5","name":"Hủ Tiếu Chay Cây Đề","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"930bb1e2-ebfb-4b1a-a01e-f4a76b15e995","name":"Ẩm Thực Chay Diệu Cát Tường","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"65f75cc2-9965-4ddc-9f04-f811b4b1d078","name":"Nhà Hàng Âu Lạc - Healthy World","action":"demote_mostly_vegan","reason":"Thu Duc fallback: Vietnamese vegetarian (chay) tradition typically vegan in practice"}
+{"id":"18b81e1a-5297-4785-84fe-28ae2719c832","name":"GenChay","action":"demote_mostly_vegan","reason":"Thu Duc fallback: Vietnamese vegetarian (chay) tradition typically vegan in practice"}
+{"id":"9d3de27a-33ca-423c-8989-76600adf1300","name":"Nhà Hàng Kashew Cheese Deli","action":"demote_mostly_vegan","reason":"Thu Duc fallback: Vietnamese vegetarian (chay) tradition typically vegan in practice"}
+{"id":"8f2bba07-6317-42eb-adbb-6aee83d37e95","name":"Nhà Hàng Chay Diệu Hạnh","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"09419e62-633b-4ca1-9aa5-9d060e13d8dc","name":"Vườn Chay Giác Duyên","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"92c80b67-0ba0-48dc-9e31-70f5566ff655","name":"Nhà Hàng Bếp Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"825e683b-8329-47b7-a0ce-4b7eb344b4d1","name":"Chay Lười Giàu Đam","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"6ebd1214-3a78-4361-9886-47414f117a47","name":"Quán An Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"0340600e-c490-4455-bb43-a7043b6a4e75","name":"Cơm Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"b45d3a6e-de8e-4b17-a4eb-6db4c447f19c","name":"Trạm Chạm Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"e33d672a-9f3c-4dca-8652-721a1ff82be9","name":"Chay Lam","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"bb5a2f94-24f9-4a47-9308-a564233b289b","name":"Tiệm Mì Chay Chan Chan","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"7c887b28-327f-470d-b50f-06e4139f23d3","name":"Quán Chay Nấm Hân","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"c95c3e9c-08cc-4379-b973-2314f722b7b3","name":"GBomb Cuisine","action":"demote_mostly_vegan","reason":"Thu Duc fallback: Vietnamese vegetarian (chay) tradition typically vegan in practice"}
+{"id":"b1cfd3d9-c74b-4487-97d2-7208a316bead","name":"Quán Chay Lam","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"33df7130-4e90-4ebb-b338-4e6aca89988c","name":"iVegan Supershop","action":"keep","reason":"Known vegan Indian brand"}
+{"id":"ef781a04-b3fc-4ffd-acf2-5ebeea163568","name":"Nhà Hàng Phúc Quang Chay","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"6193b539-6615-46c5-a3bd-7ccd3de79b91","name":"Bếp Chay An Xanh","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"eaf0f327-bb2c-4e18-8358-b82b4bf4d9ea","name":"Lẩu Rau Nấm Chay Mê Rau","action":"demote_mostly_vegan","reason":"Vietnamese \"chay\" = Buddhist vegetarian/vegan (often fully vegan in practice but can include eggs/dairy)"}
+{"id":"67b34d2a-fc92-4f16-aa37-ccd972429294","name":"Parota Point","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"d5ab1202-875f-4997-a87f-bcc525f901de","name":"Hotel Mayura Sagar","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"1a1194ad-3b31-49f0-aab8-55e652e1dc4d","name":"Red fort restaurant","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"7a88ed7c-3c89-4cb4-b45f-f5170705682a","name":"Temple of Seitan","action":"keep","reason":"Known vegan Indian brand"}
+{"id":"7031c0c7-b44a-440b-9815-e05128c20fec","name":"Udupi Veg","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"df683a66-89e7-4216-8305-8de9553b15f1","name":"Punjabi Dhaba","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"b4edd71e-4d38-4c70-922a-0c6195d50107","name":"Shri Lakshmi Vaibhava","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"d7b5f40a-9fa8-4016-a3ed-9ea10d30f2c3","name":"Sri Ganesh Fruit Juice Center","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"7287e283-5607-4315-a5af-9041c22a084f","name":"Udupi Gokarna","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"1295fbd8-3009-43af-a986-e3daeb954665","name":"Pai Vihar","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"8d294055-7e40-4a98-b837-1b528c0c0433","name":"Sri Udupi Food Hub","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"d52c9334-4112-49d1-95d4-d9547c7580d2","name":"Lassi Corner","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"f0bd5cfe-802a-47fd-aaba-a8aa71c52ef1","name":"Namma Madurai","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"6dc1f0aa-6dcf-404a-9655-6d33b67c8167","name":"UpSouth","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"95101e7d-2c14-4bde-96f4-e997d6d5faaa","name":"Mishra Pedha","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"62030a25-5407-4b1e-a987-aeab3a0782f6","name":"Udupi Upahar","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"2cd6cdcd-a7d7-481d-9793-9b749b640dbb","name":"True Cakes","action":"demote_mostly_vegan","reason":"Bengaluru fallback: Indian vegetarian restaurants typically use dairy/ghee"}
+{"id":"78565e13-bdb1-43ba-b23a-9488857cd013","name":"Laxmi Sagar Deluxe","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"c52a95df-0e4b-4e79-8481-3569fc1f2f04","name":"Raghavendra Upahara","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"80d21995-388c-43a8-b45d-40bade9b268f","name":"Kota Kachori","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"d4873601-3d32-4389-b12e-59ecf3d22b37","name":"Pranav Upahara","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"72631b33-e948-4e42-93e5-a23e7c0be6f8","name":"Basaveshwar Khanavali","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"aeb16712-7839-48b4-b3ab-2804ca511ad6","name":"Nammura Tindi","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"da4057a8-c6e5-4dd9-b0c0-78e59348fa04","name":"Ogara","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"5195255f-f743-43ed-aa10-ec2c84022b42","name":"Sri Bhageshwar Dhaba","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"eac99f2b-f370-4a41-a1e3-600ccacf6e58","name":"Sukh Sagar","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"33943d7d-23ca-4a35-9db2-9592350a0b33","name":"Sangam","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"b4890e69-e0a7-4ac6-95b5-38a7f7459a6b","name":"Mint Masala","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"8d8ab1f7-ad60-4219-8bb1-84deba90b58f","name":"Sri Vishnu Palace","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"292546b0-f094-40fa-83c9-cde392e7a2ee","name":"SLV Swadisth","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"aba85e73-9882-4f76-ae56-595acd129e9c","name":"Palm Grove","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"85ede85a-cb18-481e-9331-388d9726ed3e","name":"Thirupathi Bhimas","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"65400293-388d-4811-abca-cf4c724fd4d1","name":"Udupi Park","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"4a2cbbad-c58a-4d41-aa63-e3214ee6ca69","name":"Venkatam Cafe","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"2c6ca1b4-73ae-4226-8642-ad0c21135044","name":"Upahara Darshini","action":"demote_mostly_vegan","reason":"Hindu vegetarian Indian restaurant (uses dairy/ghee, not strictly vegan)"}
+{"id":"6d709c3d-c5ab-489c-88ed-bcebffd7ae56","name":"PhilCafé","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"149188b1-eb88-4a43-8321-cb3ee9304e13","name":"epi","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"57e00477-34f8-4958-9711-e11a90b9efc7","name":"Lúa by Danny","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"03943b8d-8cda-4966-b914-5088fc22898a","name":"little green kitchen","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"6ec5fa60-2e94-405e-b9f6-870c6ecb44be","name":"Sawaddee Köln","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"9f7464db-ce3f-4962-9d64-569109d26037","name":"Koko Cologne","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"2d400fae-f457-4dbd-b1e7-f72526eadeab","name":"Lumos","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"2f48d0df-1e8a-4653-ad0c-68cec76688f2","name":"Wiener Feinbäcker Heberer","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"d2a53727-9195-42ad-92a2-c609ba7bd628","name":"Veganland Cigköfte","action":"keep","reason":"Vegan-named German venue"}
+{"id":"5d0456a5-289a-4381-8a28-08984182a3ae","name":"Bäckerei Wiens","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"36558b76-a91f-4aae-b744-a969ae479109","name":"Mai Minh","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"bdeb6aa0-3e15-4f62-af50-ae16e986a7d8","name":"Die Oase","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"f3eb168a-ab47-4665-ad02-561e665f8a8e","name":"Melita","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"36abe845-64c8-4e10-9000-353c40aa731f","name":"Kamps","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"cd9b5395-014c-4e00-ae61-557318856e03","name":"La Vecchia Trattoria","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"3c046b18-2eab-44e5-b6e0-468344020c7a","name":"Veganland","action":"keep","reason":"Vegan-named German venue"}
+{"id":"045477a1-0b85-4414-ae4a-bfaa790b2af2","name":"Veganland Cigkofte","action":"keep","reason":"Vegan-named German venue"}
+{"id":"24011513-753b-40e2-a153-94e4f690f9c7","name":"pennycakes","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"ee86674a-54ac-4ed3-bbde-5286632c427d","name":"PanAmore","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"32fd550c-d128-4dd9-8103-bbec2de14c4a","name":"Die Maultasche","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"cb1b8563-2d75-49b4-9a9b-9fb4bbe54510","name":"vevi","action":"keep","reason":"Vegan-named German venue"}
+{"id":"303b8ead-6eaa-49de-9b18-250535ce8333","name":"Tiroler Stübchen","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"8c0bdf07-a81b-4622-a089-19f80bd85def","name":"finefine","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"7e07cbc3-b4ee-4aca-b655-aca5ba74eb25","name":"Veganland Cigkofte","action":"keep","reason":"Vegan-named German venue"}
+{"id":"5cad2357-aba1-4b48-aa72-1a280c1ef5c4","name":"Veganland Cigköfte","action":"keep","reason":"Vegan-named German venue"}
+{"id":"bb27b5ae-3884-40cd-affe-6ccb8cc3707b","name":"Cream & Sorbet","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b9665782-984f-4b11-802e-784792f70694","name":"Meyer","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"3172e046-8d8c-4d2f-919c-cd81873ab682","name":"scoom","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d7921c9d-720d-4892-a272-6a310b50e7e3","name":"Meyer","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"a86f1757-a7d1-429e-8022-fd1813382cd4","name":"Traffic Snack","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"04ea350e-b82c-46a5-b4d8-db760f150e67","name":"Ditsch","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"287a8c24-8052-437f-99b1-9b48398b6fc3","name":"Takumi","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"c89fa9fe-aa64-4580-8a0b-da95d23e2046","name":"Mano","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"f283adb8-0e2b-4ed2-bd6c-d3842de23026","name":"Natoo","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"d2c8d699-87b2-4d58-b664-9406e3430010","name":"Izu","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"cd6800a3-48eb-4e57-a5ed-979617082a48","name":"Sonnenblume","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"a9d66ef2-b5b9-4245-beb0-74dc68d8acd1","name":"Asia Thai Food","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"e6e31c1d-f798-45c6-a31a-73c6c28e4714","name":"Mr. Clou","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b3295650-9823-4e96-b472-49b3f5cae08c","name":"Bambus Haus","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"c0099dde-68df-4910-958e-29130f51da10","name":"Bestworscht in Town","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"4b76ebc7-be90-4aac-b929-311dd439eb1e","name":"Sunbap","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"eb95d22c-1f56-4dc7-987e-346154540f79","name":"District Bánh Mì","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"268d647b-c399-4f62-8b2f-d244623442c4","name":"Lieblingsnachbar","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b48e8030-5b1e-49ae-b3a3-3961e9d8f7ab","name":"Sweet Churros","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"259666d9-652a-44c3-a33e-1e65f7d69ca8","name":"Ramen Jun Red","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"f21fa75f-5bb6-4d04-9a15-9dea9125f8e7","name":"Asia Street Cooking","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}
+{"id":"5f8209e0-c288-4fe6-a94e-9f5c970eed87","name":"Eat Doori","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"5e546efe-fff5-4e02-b892-c282d99125b1","name":"Al Terrazzino","action":"demote_vegan_options","reason":"German city fallback: generic non-vegan-named restaurant"}
+{"id":"b50681c6-fae3-474f-b550-77ec7b2ecf39","name":"Eschenheimer Turm","action":"demote_vegan_options","reason":"Standard German bakery/cafe/restaurant pattern"}

@@ -1,0 +1,7 @@
+city,web_suspicion,db_score,id,name,country,source,website,top_hits
+"London","6","7","bed201bd-223a-4332-bb53-c66413a1d66e","where the pancakes are","United Kingdom","osm-import-2026-04","https://www.wherethepancakesare.com/","bacon:7,chicken:6,beef:2,salmon:2,pork:1"
+"London","3","7","b2c7f7ff-ed4d-4bf1-8719-0108df678de7","The Three Compasses","United Kingdom","openstreetmap","https://www.3compasses.com/","chicken:2,lamb:1,pork:1"
+"Berlin","6","3","e61c8170-76cd-429a-878e-08483ec70a8d","Ma'loa","Germany","osm_validated_batch3_retry","https://maloa.com/","tuna:8,chicken:6,lachs:4,thunfisch:3,salmon:2,shrimp:1"
+"Berlin","4","3","4ce6d116-c141-47df-b6ae-a1f50d26116e","Papa No","Germany","osm_validated_batch3","http://www.papa-no.de/","chicken:5,lachs:3,fisch:2"
+"Barcelona","5","3","f5453430-3700-41d0-b99f-e165bb26eb58","Las Muns","Spain","osm_validated_batch3","https://lasmuns.com/","pollo:5,jamón:4,ternera:4,atún:2"
+"New York","4","8","d2c4495e-84d5-4b0a-b202-87d74aba4362","Natural Blend","United States","openstreetmap","http://naturalblendcafe.com/","chicken:5,fish:2,salmon:1"

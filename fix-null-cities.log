@@ -1,0 +1,7 @@
+[dotenv@17.2.4] injecting env (30) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+(node:94101) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Geocoding 173 null-city places...
+  ✅ Steinecke (Germany) → Dessau
+  ✅ Bridge House Char Bistro (United Kingdom) → Tullamore
+  ✅ Rudy's Can't Fail Cafe (United States) → Emeryville
