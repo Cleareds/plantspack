@@ -700,6 +700,17 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               tags={(place as any).tags}
               placeId={place.id}
               placeSlug={(place as any).slug}
+              place={{
+                id: place.id,
+                name: place.name,
+                address: place.address,
+                description: place.description,
+                category: place.category,
+                website: place.website,
+                phone: place.phone,
+                opening_hours: place.opening_hours as any,
+                vegan_level: (place as any).vegan_level,
+              }}
             />
           </div>
 

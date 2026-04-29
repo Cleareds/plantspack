@@ -12,8 +12,9 @@
  */
 'use client'
 
-import Link from 'next/link'
+import { useState } from 'react'
 import { BadgeCheck, Sparkles, Database, AlertCircle, ChevronRight } from 'lucide-react'
+import SuggestCorrectionModal from './SuggestCorrectionModal'
 
 interface VerificationFooterProps {
   verificationLevel: number | null | undefined
@@ -23,6 +24,18 @@ interface VerificationFooterProps {
   tags: string[] | null | undefined
   placeId: string
   placeSlug: string | null | undefined
+  /** Full place subset needed for the SuggestCorrectionModal pre-fill. */
+  place: {
+    id: string
+    name: string
+    address: string
+    description: string | null
+    category: string
+    website: string | null
+    phone: string | null
+    opening_hours?: string | Record<string, string> | null
+    vegan_level?: string
+  }
 }
 
 type CommunityState = 'confirmed' | 'suggested' | 'not_yet'
@@ -63,16 +76,14 @@ export default function VerificationFooter({
   tags,
   placeId,
   placeSlug,
+  place,
 }: VerificationFooterProps) {
+  const [modalOpen, setModalOpen] = useState(false)
   const community = communityState(isVerified, tags)
   const level = verificationLevel ?? 0
   const showAILine = level >= 2 && community !== 'confirmed' // when community-confirmed, AI line is redundant noise
   const showSourcedLine = level === 1 && community !== 'confirmed' // L1-only places get the sourced label
   const showHonestNote = level === 0 // basically never (every place is at least L1) but here for completeness
-
-  // The "Suggest correction" link points at the existing place verify prompt
-  // anchor on the place page, which already has a connected modal.
-  const suggestHref = `/place/${placeSlug || placeId}#verify`
 
   return (
     <div className="mt-6 px-6 py-4 rounded-xl bg-surface-container-low/50 ghost-border text-xs space-y-2">
@@ -130,11 +141,25 @@ export default function VerificationFooter({
       {community === 'not_yet' && (
         <div className="flex items-center justify-between gap-2 text-on-surface-variant">
           <span>Community: not yet confirmed.</span>
-          <Link href={suggestHref} className="inline-flex items-center gap-0.5 text-primary font-medium hover:underline">
-            Suggest correction <ChevronRight className="h-3 w-3" />
-          </Link>
         </div>
       )}
+
+      {/* Suggest correction is always available, regardless of state. */}
+      <div className="pt-1">
+        <button
+          type="button"
+          onClick={() => setModalOpen(true)}
+          className="inline-flex items-center gap-0.5 text-primary font-medium hover:underline"
+        >
+          Suggest correction <ChevronRight className="h-3 w-3" />
+        </button>
+      </div>
+
+      <SuggestCorrectionModal
+        place={place}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </div>
   )
 }

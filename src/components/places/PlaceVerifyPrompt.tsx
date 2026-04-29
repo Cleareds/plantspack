@@ -15,15 +15,23 @@ interface PlaceVerifyPromptProps {
 }
 
 export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVerification, sourceLabel }: PlaceVerifyPromptProps) {
+  // Read the prior-submission flag once on mount via lazy initializer. Reading
+  // it inside render (as we used to) caused the thank-you panel below to be
+  // hidden the moment we set sessionStorage on submit — the next render would
+  // see the flag and return null before reaching the `submitted` branch.
+  const key = `verified_${placeId}`
+  const [previouslySubmitted] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return !!sessionStorage.getItem(key)
+  })
   const [dismissed, setDismissed] = useState(false)
   const [submitted, setSubmitted] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
   if (dismissed) return null
-
-  // Only show if user hasn't verified this place in this session
-  const key = `verified_${placeId}`
-  if (typeof window !== 'undefined' && sessionStorage.getItem(key)) return null
+  // Hide the form if a prior session already submitted, but only when there's
+  // no live thank-you message to show this render.
+  if (previouslySubmitted && !submitted) return null
 
   const handleConfirm = async () => {
     setSubmitting(true)
