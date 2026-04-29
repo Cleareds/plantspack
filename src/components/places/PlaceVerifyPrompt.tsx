@@ -60,23 +60,16 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
   }
 
   if (submitted) {
+    const isConfirm = submitted === 'confirmed'
     return (
       <div className={`rounded-lg p-3 text-xs flex items-center gap-2 ${
-        submitted === 'confirmed'
-          ? 'bg-emerald-50 text-emerald-700'
-          : 'bg-amber-50 text-amber-700'
+        isConfirm ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
       }`}>
         <CheckCircle className="h-4 w-4 flex-shrink-0" />
         <span>
-          {submitted === 'confirmed' && 'Thanks for confirming this place is still open!'}
-          {submitted === 'hours_wrong' && 'Thanks! We\'ve flagged the opening hours for review.'}
-          {submitted === 'permanently_closed' && 'Thanks for reporting. We\'ll review and remove it if confirmed.'}
-          {submitted === 'not_fully_vegan' && 'Thanks! We\'ll review the vegan status of this place.'}
-          {submitted === 'not_vegan_friendly' && 'Thanks! We\'ll review whether this place still has vegan options.'}
-          {submitted === 'non_vegan_chain' && 'Thanks! We\'ll review whether this chain belongs on PlantsPack.'}
-          {submitted === 'vegan_friendly_chain' && 'Thanks for confirming — we\'ll mark it as a vegan-friendly chain.'}
-          {submitted === 'few_vegan_options' && 'Thanks! We\'ll consider downgrading this to "has vegan options".'}
-          {submitted === 'actually_fully_vegan' && 'Thanks! We\'ll review and upgrade this to 100% vegan if confirmed.'}
+          {isConfirm
+            ? 'Thanks for your contribution! We\'ve recorded your confirmation.'
+            : 'Thanks for your contribution! We\'ll review this and update the listing.'}
         </span>
       </div>
     )
