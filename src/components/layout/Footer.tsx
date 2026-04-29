@@ -111,7 +111,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:hello@cleareds.com"
+                  href="mailto:hello@plantspack.com"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1"
                 >
                   <Mail className="h-3 w-3" />

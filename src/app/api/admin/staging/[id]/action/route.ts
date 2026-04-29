@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
 import { detectCategory } from '@/lib/places/categorize'
+import { normalizeCity } from '@/lib/normalize-city'
 
 export const dynamic = 'force-dynamic'
 
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const placeRow = {
     name: String(row.name).slice(0, 200),
     address: row.address || row.city || row.country || 'Unknown',
-    city: row.city,
+    city: normalizeCity(row.city, row.country) || row.city,
     country: row.country,
     latitude: row.latitude,
     longitude: row.longitude,

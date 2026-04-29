@@ -17,7 +17,7 @@ function getResend(): Resend {
 
 // Verified domain
 const FROM_EMAIL = 'Plantspack <hello@plantspack.com>'
-const SUPPORT_EMAIL = 'hello@cleareds.com'
+const SUPPORT_EMAIL = 'hello@plantspack.com'
 
 export interface SendEmailOptions {
   to: string
@@ -522,7 +522,7 @@ export function renderNewsletterFooter(unsubscribeUrl: string, emailAddress: str
           <a href="https://plantspack.com" style="color: #6b7280;">plantspack.com</a>
         </p>
         <p style="font-size: 11px; color: #9ca3af; margin: 10px 0 0 0;">
-          Cleareds · Belgium · hello@cleareds.com
+          Cleareds · Belgium · hello@plantspack.com
         </p>
       </div>`
 }
@@ -609,7 +609,7 @@ export async function sendNewsletterEmail({
     subject,
     html,
     headers: {
-      'List-Unsubscribe': `<${unsubscribeUrl}>, <mailto:hello@cleareds.com?subject=unsubscribe>`,
+      'List-Unsubscribe': `<${unsubscribeUrl}>, <mailto:hello@plantspack.com?subject=unsubscribe>`,
       'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
     },
   })

@@ -199,7 +199,7 @@ export default function TermsOfService() {
               If you have questions about these Terms of Service, please contact us:
             </p>
             <ul className="list-none text-on-surface-variant mb-4 space-y-2">
-              <li><strong>Email:</strong> hello@cleareds.com</li>
+              <li><strong>Email:</strong> hello@plantspack.com</li>
               <li><strong>Contact Form:</strong>{' '}
                 <Link href="/contact" className="text-primary hover:text-primary-container underline">
                   Contact Us

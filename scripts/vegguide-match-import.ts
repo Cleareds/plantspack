@@ -31,6 +31,7 @@
 
 import { readFileSync, writeFileSync } from 'fs'
 import { createClient } from '@supabase/supabase-js'
+import { normalizeCity } from './lib/normalize-city'
 import * as dotenv from 'dotenv'
 
 dotenv.config({ path: '.env.local' })
@@ -276,7 +277,7 @@ async function main() {
         name: String(v.name).slice(0, 200),
         description: v.short_description || null,
         address: addr,
-        city: v.city || null,
+        city: normalizeCity(v.city, v.__country),
         country: v.__country,
         latitude: v.latitude,
         longitude: v.longitude,

@@ -21,8 +21,8 @@ export default function NewsletterSubscribedPage({
             <p className="text-on-surface-variant mb-6">
               We couldn't complete your subscription. The link may be malformed or expired. You can
               opt in from your account settings instead, or email{' '}
-              <a href="mailto:hello@cleareds.com" className="text-primary hover:underline">
-                hello@cleareds.com
+              <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">
+                hello@plantspack.com
               </a>
               .
             </p>

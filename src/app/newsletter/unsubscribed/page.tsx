@@ -21,8 +21,8 @@ export default function NewsletterUnsubscribedPage({
             <p className="text-on-surface-variant mb-6">
               We couldn't process your unsubscribe request. The link may be malformed or expired.
               Please try again or email{' '}
-              <a href="mailto:hello@cleareds.com" className="text-primary hover:underline">
-                hello@cleareds.com
+              <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">
+                hello@plantspack.com
               </a>{' '}
               and we'll remove you manually.
             </p>

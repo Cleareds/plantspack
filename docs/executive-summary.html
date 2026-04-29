@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PlantsPack - Executive Summary</title>
+<style>
+  :root {
+    --green: #2f7a3a;
+    --green-dark: #1f5527;
+    --bg: #f6f7f5;
+    --paper: #ffffff;
+    --ink: #1a1f1c;
+    --muted: #5f6b62;
+    --line: #e3e7e1;
+    --accent: #f3a712;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .deck { max-width: 880px; margin: 0 auto; padding: 32px 16px 64px; }
+  .page {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 48px 56px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02), 0 12px 32px -20px rgba(0,0,0,0.08);
+    page-break-after: always;
+  }
+  .page:last-child { page-break-after: auto; }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.01em; }
+  h2 { font-size: 24px; margin: 0 0 16px; letter-spacing: -0.01em; }
+  h3 { font-size: 15px; margin: 0 0 6px; color: var(--green-dark); }
+  p { margin: 0 0 12px; color: var(--ink); }
+  .lede { font-size: 18px; color: var(--muted); }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    background: #fbfcfa;
+  }
+  .stat .num {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--green-dark);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat .label { font-size: 12px; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  .pill {
+    display: inline-block;
+    background: #eaf4ec;
+    color: var(--green-dark);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 4px 4px 0;
+  }
+  .pill.warn { background: #fdf3df; color: #8a5a04; }
+  .footer-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 12px;
+  }
+  .cta {
+    background: linear-gradient(135deg, #eaf4ec 0%, #f7efd9 100%);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-top: 16px;
+  }
+  .cta h3 { color: var(--ink); font-size: 17px; margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .nav a { color: var(--green-dark); text-decoration: none; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; }
+  .nav a:hover { background: #eaf4ec; }
+  .small { font-size: 13px; color: var(--muted); }
+  @media print {
+    body { background: white; }
+    .deck { padding: 0; max-width: none; }
+    .page { box-shadow: none; border: none; border-radius: 0; padding: 28mm 22mm; margin: 0; }
+    .nav { display: none; }
+  }
+  @media (max-width: 640px) {
+    .page { padding: 28px 22px; }
+    h1 { font-size: 28px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <nav class="nav">
+    <a href="#p1">1. Overview</a>
+    <a href="#p2">2. Audience</a>
+    <a href="#p3">3. For business owners</a>
+    <a href="#p4">4. For marketers &amp; creators</a>
+    <a href="#p5">5. What we ask</a>
+  </nav>
+
+  <!-- PAGE 1 -->
+  <section class="page" id="p1">
+    <div class="eyebrow">Executive summary - April 2026</div>
+    <h1>PlantsPack</h1>
+    <p class="lede">A vegan-first discovery platform for restaurants, cafes, stores and stays. Built around a manually-verified core of fully vegan venues, surrounded by vegan-friendly options imported from open data.</p>
+
+    <div class="grid grid-3" style="margin-top: 28px;">
+      <div class="card stat"><div class="num">~10.9K</div><div class="label">Manually verified fully-vegan places</div></div>
+      <div class="card stat"><div class="num">~57K</div><div class="label">Total places (incl. vegan-friendly)</div></div>
+      <div class="card stat"><div class="num">70 / ~500</div><div class="label">Countries / cities covered</div></div>
+    </div>
+
+    <h2 style="margin-top: 32px;">What it is, honestly</h2>
+    <p>PlantsPack is a map and feed centred on vegan venues. Roughly 11,000 venues are tagged <strong>fully vegan</strong> after a manual check (we look for non-vegan items on the menu and run a verification search before applying the label). Another ~37,000 are tagged <strong>vegan-friendly</strong> - they offer vegan options but also serve animal products. The rest carry source-inherited labels (<code>vegan_options</code>, <code>mostly_vegan</code>) we have not independently verified yet. We do not pretend every listing is checked.</p>
+    <p>Users browse cities, save trips, follow places, and post reviews. The platform is early-stage: tens of users today, daily development, no paid acquisition.</p>
+
+    <h2>Why it exists</h2>
+    <p>Existing directories mix vegan and non-vegan results in the same map pin and hide animal products in "vegetarian-friendly" tags. PlantsPack separates the two: fully-vegan venues carry a distinct verified badge, vegan-friendly venues are clearly labelled as such, and the filter UI lets users restrict to fully vegan with one tap.</p>
+
+    <div class="footer-row">
+      <span>plantspack.com</span><span>1 / 5</span>
+    </div>
+  </section>
+
+  <!-- PAGE 2 -->
+  <section class="page" id="p2">
+    <div class="eyebrow">02 - Audience &amp; current state</div>
+    <h2>Who is on the platform today</h2>
+    <p class="small">Honest snapshot. The data is broad; the user base is small.</p>
+
+    <div class="grid grid-2" style="margin-top: 16px;">
+      <div class="card">
+        <h3>Users</h3>
+        <p>Approximately 44 registered users at the end of April 2026, plus a small number of unauthenticated visitors. Skewed toward early-adopter vegans the founder has reached directly through Reddit, word of mouth, and Indie Hackers. We do not yet have meaningful audience analytics by country or city.</p>
+        <div>
+          <span class="pill warn">~44 users</span>
+          <span class="pill warn">Pre-traction</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Stage</h3>
+        <p>Founder-led, bootstrapped, daily active development. Place data and content depth outpace user count by design - the product is useful for SEO and direct discovery before any user signs in.</p>
+        <div>
+          <span class="pill">Daily shipping</span>
+          <span class="pill">No paid acquisition</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 28px;">What we believe makes the audience valuable</h2>
+    <p class="small">These are hypotheses based on the niche, not proven with our own data yet.</p>
+    <ul>
+      <li><strong>High intent (assumed).</strong> Users who reach a vegan-only directory typically arrive looking for somewhere to eat or stay.</li>
+      <li><strong>Loyal niche.</strong> Vegan communities tend to share recommendations actively - we have seen this anecdotally in Reddit threads, not yet measured on platform.</li>
+      <li><strong>Underserved by ads.</strong> Most food/travel marketing assumes omnivore defaults; vegan brands have few concentrated channels.</li>
+      <li><strong>Globally distributed.</strong> Place data spans 70 countries and ~500 cities; user distribution is currently unknown and almost certainly far narrower.</li>
+    </ul>
+
+    <div class="footer-row"><span>plantspack.com</span><span>2 / 5</span></div>
+  </section>
+
+  <!-- PAGE 3 -->
+  <section class="page" id="p3">
+    <div class="eyebrow">03 - For business owners</div>
+    <h2>If you run a vegan or vegan-friendly venue</h2>
+    <p>Your place may already be on PlantsPack. We import from open data sources (OpenStreetMap, VegGuide, Foursquare) and then manually verify a subset - currently the ~10,900 venues tagged <em>fully vegan</em>. The remaining listings carry source-inherited labels that we have not independently checked. Listings are free; claiming is free.</p>
+
+    <div class="grid grid-2" style="margin-top: 12px;">
+      <div class="card">
+        <h3>What you get, free</h3>
+        <ul>
+          <li>A discoverable profile with map, hours, photos, tags and reviews</li>
+          <li>The "fully vegan" verified badge - applied after we manually check the menu and run a verification search</li>
+          <li>Inclusion in city pages that we keep SEO-indexable</li>
+          <li>Honest labelling: vegan-friendly venues are tagged as such, not promoted as fully vegan</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What you can do today</h3>
+        <ul>
+          <li>Email us to request edits to hours, photos, description, vegan level</li>
+          <li>Flag a wrong listing for removal or correction</li>
+          <li>Share your PlantsPack link with customers</li>
+        </ul>
+        <p class="small" style="margin-top: 10px;"><strong>Not yet shipped:</strong> self-serve venue claiming, owner dashboard, owner replies to reviews. These are on the roadmap; until then, edits go through us by email and are typically actioned within a few days.</p>
+      </div>
+    </div>
+
+    <div class="cta">
+      <h3>Why this is worth 5 minutes</h3>
+      <p class="small" style="margin: 0;">A correct, fully-vegan-labelled listing on a directory that does not mix vegan and non-vegan results is more useful to a vegan customer than the same listing on a generic map. We make no claim about absolute conversion, traffic, or revenue uplift - we are too early to promise numbers we cannot back up.</p>
+    </div>
+
+    <div class="footer-row"><span>plantspack.com</span><span>3 / 5</span></div>
+  </section>
+
+  <!-- PAGE 4 -->
+  <section class="page" id="p4">
+    <div class="eyebrow">04 - For marketers, agencies &amp; creators</div>
+    <h2>An aligned channel - small today, niche-pure</h2>
+    <p>If your brand is vegan, plant-based, cruelty-free, or sustainable lifestyle, PlantsPack is an aligned channel. Today the audience is small (tens of users, modest organic traffic), so we will not pretend to offer reach. What we offer is alignment: every place we feature in editorial content is vegan or clearly labelled vegan-friendly, and our content standards are stricter than mixed directories.</p>
+
+    <table>
+      <thead>
+        <tr><th>Fit</th><th>Why it works here</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vegan food &amp; CPG brands</td><td>Discovery context: users are actively choosing what to eat</td></tr>
+        <tr><td>Vegan / cruelty-free beauty &amp; lifestyle</td><td>Audience self-selects on ethical filters</td></tr>
+        <tr><td>Sustainable hotels, B&amp;Bs, retreats</td><td>City and trip pages capture travel intent</td></tr>
+        <tr><td>Vegan creators &amp; nutritionists</td><td>Articles + recipes section, attribution and backlinks included</td></tr>
+        <tr><td>NGOs and animal-welfare orgs</td><td>Aligned audience, content collaboration over paid</td></tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 28px;">Ways to work with us today</h2>
+    <ul>
+      <li><strong>Content collaborations.</strong> Co-authored city guides, "best of" lists, recipe drops with full attribution and a backlink.</li>
+      <li><strong>Curated city pages.</strong> If your brand has a presence in a specific city, we can highlight it within an editorial city guide.</li>
+    </ul>
+    <h3 style="margin-top: 18px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px;">Planned, not yet available</h3>
+    <ul>
+      <li>Newsletter mentions (waiting on a consent-based newsletter; not shipped).</li>
+      <li>Affiliate or referral programmes (no infrastructure for this yet).</li>
+      <li>Sponsored placement with reach guarantees (we cannot back reach numbers at this stage).</li>
+    </ul>
+    <p class="small">No display ads, no remarketing pixels, no data sales. The audience is here because the platform is clean - we will not break that.</p>
+
+    <div class="footer-row"><span>plantspack.com</span><span>4 / 5</span></div>
+  </section>
+
+  <!-- PAGE 5 -->
+  <section class="page" id="p5">
+    <div class="eyebrow">05 - Recommended next actions</div>
+    <h2>If you are a venue owner</h2>
+    <ul>
+      <li>Search PlantsPack for your venue and confirm the listing is correct.</li>
+      <li>Claim it, add 2-3 photos and current hours.</li>
+      <li>Share the link once on Instagram or Google Business - takes one minute, compounds for months.</li>
+    </ul>
+
+    <h2 style="margin-top: 24px;">If you are a marketer or agency</h2>
+    <ul>
+      <li>Tell us your campaign goal (awareness, traffic, signups) and target city or country.</li>
+      <li>We will reply with a one-page proposal: format, reach estimate, cost (often zero for content collabs), timeline.</li>
+      <li>Most first collaborations are content-led, not paid - low risk on both sides.</li>
+    </ul>
+
+    <h2 style="margin-top: 24px;">If you are a creator or NGO</h2>
+    <ul>
+      <li>Pitch a city guide, recipe series, or article. We credit and link out.</li>
+      <li>Keep full ownership of your content; we cross-post with attribution.</li>
+    </ul>
+
+    <div class="cta">
+      <h3>Get in touch</h3>
+      <p style="margin: 0;">Email: <strong>hello@plantspack.com</strong> &middot; Web: <strong>plantspack.com</strong></p>
+      <p class="small" style="margin: 6px 0 0;">One-line subject works best: "Venue claim - [name]" or "Collab - [brand], [city]".</p>
+    </div>
+
+    <div class="footer-row"><span>plantspack.com</span><span>5 / 5</span></div>
+  </section>
+
+</div>
+</body>
+</html>

@@ -49,6 +49,7 @@ async function getRecentlyAdded() {
   const base = supabase
     .from('places')
     .select('id, name, slug, city, country, category, main_image_url, vegan_level', { count: 'exact' })
+    .is('archived_at', null)
     .gte('created_at', oneMonthAgo)
     .in('source', ['user', 'user_submission', 'web_research'])
     .not('main_image_url', 'is', null)
@@ -60,6 +61,7 @@ async function getRecentlyAdded() {
     supabase
       .from('places')
       .select('id', { count: 'exact', head: true })
+      .is('archived_at', null)
       .gte('created_at', oneMonthAgo)
       .in('source', ['user', 'user_submission', 'web_research'])
       .eq('vegan_level', 'fully_vegan'),

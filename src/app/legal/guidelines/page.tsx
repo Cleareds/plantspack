@@ -153,7 +153,7 @@ export default function CommunityGuidelines() {
               If you believe a moderation decision was made in error:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
-              <li>Contact us at hello@cleareds.com</li>
+              <li>Contact us at hello@plantspack.com</li>
               <li>Include relevant details and context</li>
               <li>Be respectful in your appeal</li>
               <li>We will review and respond within 7 business days</li>
@@ -173,7 +173,7 @@ export default function CommunityGuidelines() {
               If you have questions about these Community Guidelines, please contact us:
             </p>
             <ul className="list-none text-on-surface-variant mb-4 space-y-2">
-              <li><strong>Email:</strong> hello@cleareds.com</li>
+              <li><strong>Email:</strong> hello@plantspack.com</li>
               <li><strong>Contact Form:</strong>{' '}
                 <Link href="/contact" className="text-primary hover:text-primary-container underline">
                   Contact Us

@@ -509,8 +509,8 @@ export default function RoadmapPage() {
 
           <p className="mt-4 text-sm text-on-surface-variant">
             Your suggestion will be sent to{' '}
-            <a href="mailto:hello@cleareds.com" className="text-primary hover:text-primary-container font-semibold">
-              hello@cleareds.com
+            <a href="mailto:hello@plantspack.com" className="text-primary hover:text-primary-container font-semibold">
+              hello@plantspack.com
             </a>
           </p>
         </div>

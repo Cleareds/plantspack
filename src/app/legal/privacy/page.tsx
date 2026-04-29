@@ -73,7 +73,7 @@ export default function PrivacyPolicy() {
             <p className="text-on-surface-variant mb-4">
               You can withdraw consent at any time by (a) toggling the newsletter preference off in
               your account settings, (b) clicking the unsubscribe link included in every newsletter,
-              or (c) emailing hello@cleareds.com. Withdrawal takes effect immediately and does not
+              or (c) emailing hello@plantspack.com. Withdrawal takes effect immediately and does not
               affect transactional emails you receive for account activity (confirmations, notifications
               you've enabled, password resets, claim responses) — those continue regardless of your
               newsletter preference because they are necessary for operating your account.
@@ -135,7 +135,7 @@ export default function PrivacyPolicy() {
               <li><strong>Complaint:</strong> Lodge a complaint with your data protection authority</li>
             </ul>
             <p className="text-on-surface-variant mb-4">
-              To exercise these rights, contact us at hello@cleareds.com or through your account settings.
+              To exercise these rights, contact us at hello@plantspack.com or through your account settings.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">8. Data Security</h2>
@@ -209,7 +209,7 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="list-none text-on-surface-variant mb-4 space-y-2">
               <li><strong>Data Controller:</strong> Cleareds (Belgium)</li>
-              <li><strong>Email:</strong> hello@cleareds.com</li>
+              <li><strong>Email:</strong> hello@plantspack.com</li>
               <li><strong>Contact Form:</strong>{' '}
                 <Link href="/contact" className="text-primary hover:text-primary-container underline">
                   Contact Us

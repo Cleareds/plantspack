@@ -192,10 +192,10 @@ export default function CookiePolicyPage() {
               <p className="text-on-surface-variant">
                 <strong>Email:</strong>{' '}
                 <a
-                  href="mailto:hello@cleareds.com"
+                  href="mailto:hello@plantspack.com"
                   className="text-primary hover:text-primary-container transition-colors"
                 >
-                  hello@cleareds.com
+                  hello@plantspack.com
                 </a>
               </p>
               <p className="text-on-surface-variant mt-2">

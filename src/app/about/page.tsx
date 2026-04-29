@@ -200,7 +200,7 @@ export default function AboutPage() {
               <span className="mx-2">&middot;</span>
               <Link href="/contact" className="text-primary hover:underline font-semibold">Contact us</Link>
               <span className="mx-2">&middot;</span>
-              <a href="mailto:hello@cleareds.com" className="text-primary hover:underline font-semibold">hello@cleareds.com</a>
+              <a href="mailto:hello@plantspack.com" className="text-primary hover:underline font-semibold">hello@plantspack.com</a>
             </p>
             <div className="flex flex-wrap gap-4 pt-3 border-t border-outline-variant/15">
               <a href="https://x.com/plantspackX" target="_blank" rel="noopener noreferrer" className="text-on-surface-variant hover:text-primary transition-colors text-sm">X (Twitter)</a>

@@ -127,6 +127,7 @@ export default function VeganScoreMap() {
           while (true) {
             const { data: batch } = await supabase.from('places')
               .select('id, name, slug, category, latitude, longitude, vegan_level, address, city, country, main_image_url, images, average_rating, review_count, description, website')
+              .is('archived_at', null)
               .range(offset, offset + 999)
             if (!batch || batch.length === 0) break
             all.push(...batch)

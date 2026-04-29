@@ -126,7 +126,7 @@ export default function TopBar() {
                     <HelpCircle className="h-5 w-5 text-on-surface-variant" />
                     <span className="text-sm text-on-surface">Help Center</span>
                   </Link>
-                  <a href="mailto:hello@cleareds.com" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <a href="mailto:hello@plantspack.com" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <Mail className="h-5 w-5 text-on-surface-variant" />
                     <span className="text-sm text-on-surface">Email Support</span>
                   </a>

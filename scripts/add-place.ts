@@ -31,6 +31,7 @@ import { createClient } from '@supabase/supabase-js'
 import * as dotenv from 'dotenv'
 import * as readline from 'readline'
 import { osmLookupByCoords, mergeOsmData } from './lib/place-pipeline'
+import { normalizeCity } from './lib/normalize-city'
 
 dotenv.config({ path: '.env.local' })
 
@@ -327,7 +328,7 @@ async function main() {
     address: address || null,
     website: input.website || null,
     phone: input.phone || null,
-    city: input.city,
+    city: normalizeCity(input.city, input.country) || input.city,
     country: input.country,
     vegan_level: input.vegan_level,
     verification_status: PENDING ? 'pending' : 'approved',

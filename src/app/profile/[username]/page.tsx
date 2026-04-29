@@ -143,6 +143,7 @@ export default function ProfilePage() {
         .from('places')
         .select('*')
         .eq('created_by', profileData.id)
+        .is('archived_at', null)
         .order('created_at', { ascending: false })
         .limit(20)
 

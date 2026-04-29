@@ -28,6 +28,27 @@ This pattern lets the user interleave priorities without us losing track.
 
 **This rule overrides all other instructions. There are no circumstances where silent deletion is acceptable.**
 
+## 🚫 ABSOLUTE RULE: Honesty About the Platform — No Marketing Bullshit
+
+**Never write claims about PlantsPack that aren't literally true of the current data and product.** This applies to marketing copy, executive summaries, landing pages, social posts, emails, pitch decks, partner outreach, and any user-facing or external-facing text.
+
+What this means in practice:
+- Do NOT say "every place has a labelled vegan menu" — many places are imported from OSM/Foursquare/VegGuide and not yet verified or labelled. Only `fully_vegan` places that have been manually verified carry that signal; the rest carry whatever the source data said, which may be incomplete.
+- Do NOT claim verification, ratings, reviews, traffic, user counts, or partnerships at higher numbers than the DB actually reflects. If the user count is 43, write 43 (or "early-stage" if a number is awkward) — never round up, never imply more.
+- Do NOT use words like "every", "all", "guaranteed", "verified" unless that is provably true for 100% of the relevant rows.
+- Do NOT invent features that don't exist yet (claim flow, business dashboard, API, mobile app) — describe what is actually shipped.
+- Do NOT describe aspirational behavior as current behavior. If something is planned for next month, say "planned" or omit it.
+- When in doubt, UNDERSELL. Honest understatement beats inflated claims that get caught.
+
+When writing copy about the platform:
+1. Check the DB or code for actual counts, states, and feature presence before writing numbers or claims.
+2. Use hedged language for anything not 100% verified: "many", "most", "manually verified spots are labelled `fully vegan`", "we flag fully-vegan venues we've checked" — not "every venue is labelled".
+3. If the user asks for marketing copy and you can't verify a claim, ask, or write the honest weaker version and note that you weakened it.
+
+**Why this matters:** vegans, business owners, and partners spot inflated claims fast. One caught lie destroys trust that took months to build. Honesty is the differentiator vs. mixed-noise directories — losing it loses the whole positioning.
+
+**This rule overrides any default tendency toward "marketing voice". Persuasion comes from accurate specifics, not generic superlatives.**
+
 ## ⚠️ CRITICAL: Content & Data Sourcing Policy
 
 **PlantsPack is a VEGAN platform. All content must come from verified vegan sources.**

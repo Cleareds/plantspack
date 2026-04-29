@@ -14,6 +14,7 @@
 
 import { config } from 'dotenv'; config({ path: '.env.local' });
 import { createClient } from '@supabase/supabase-js';
+import { normalizeCity } from './lib/normalize-city';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import {
   EXCLUDED_CHAINS, CITY_OVERRIDES,
@@ -267,7 +268,7 @@ async function importTerritory(
       longitude: p.lon,
       vegan_level: mapVeganLevel(p.tags),
       address: [p.tags['addr:housenumber'], p.tags['addr:street']].filter(Boolean).join(' ') || '',
-      city: p.city || null,
+      city: normalizeCity(p.city, t.country),
       country: t.country,
       website: p.tags.website || p.tags['contact:website'] || null,
       phone: p.tags.phone || p.tags['contact:phone'] || null,

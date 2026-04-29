@@ -9,7 +9,7 @@ export async function GET() {
     const supabase = await createClient()
 
     const [placesResult, recipesResult, membersResult] = await Promise.all([
-      supabase.from('places').select('*', { count: 'exact', head: true }),
+      supabase.from('places').select('*', { count: 'exact', head: true }).is('archived_at', null),
       supabase.from('posts').select('*', { count: 'exact', head: true }).eq('category', 'recipe'),
       supabase.from('users').select('*', { count: 'exact', head: true }).eq('is_banned', false),
     ])

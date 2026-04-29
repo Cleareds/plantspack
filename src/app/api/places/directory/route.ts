@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
         const { data: batch, error: batchError } = await supabase
           .from('places')
           .select('country, category, vegan_level, is_pet_friendly, cuisine_types, city, name')
+          .is('archived_at', null)
           .not('country', 'is', null)
           .neq('country', '')
           .range(from, from + batchSize - 1)
@@ -105,6 +106,7 @@ export async function GET(request: NextRequest) {
         const { data: batch, error: batchError } = await supabase
           .from('places')
           .select('city, country, category, vegan_level, is_pet_friendly, cuisine_types, name')
+          .is('archived_at', null)
           .not('city', 'is', null)
           .neq('city', '')
           .ilike('country', fromSlug(country))
@@ -168,6 +170,7 @@ export async function GET(request: NextRequest) {
       let query = supabase
         .from('places')
         .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
+        .is('archived_at', null)
         .ilike('country', fromSlug(country))
 
       if (category) {
@@ -225,6 +228,7 @@ export async function GET(request: NextRequest) {
         let q = supabase
           .from('places')
           .select(selectCols)
+          .is('archived_at', null)
           .ilike('city', actualCity)
           .ilike('country', actualCountry)
         if (category) q = q.eq('category', category)
