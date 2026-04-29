@@ -42,7 +42,7 @@ function makeCursor(item: UnifiedItem): string {
 }
 
 const POST_FIELDS = `
-  id, user_id, title, content, category, images, image_url, video_url,
+  id, user_id, title, content, category, images, image_url, video_urls,
   privacy, created_at, slug, is_pinned, place_id, parent_post_id,
   engagement_score, deleted_at,
   users!inner(id, username, first_name, last_name, avatar_url, subscription_tier, is_banned),
