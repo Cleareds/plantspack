@@ -350,15 +350,19 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
                 <div className="grid grid-cols-3 gap-2">
                   {([
-                    { icon: '🔍', title: 'Discover', desc: 'Find vegan places near you or in any city' },
-                    { icon: '⭐', title: 'Rate', desc: 'Review places and help other vegans decide' },
-                    { icon: '🏆', title: 'Rank cities', desc: 'Your reviews push your city up global rankings' },
+                    { icon: '🗺️', title: 'Browse the map', desc: 'See every vegan spot near you', href: '/map' },
+                    { icon: '🌍', title: 'Pick a city', desc: 'Vegan guides for 500+ cities', href: '/vegan-places' },
+                    { icon: '🏆', title: 'City ranks', desc: 'See where vegans live best', href: '/city-ranks' },
                   ]).map(s => (
-                    <div key={s.title} className="bg-surface-container-lowest rounded-xl ghost-border p-3 text-center">
-                      <div className="text-lg mb-1">{s.icon}</div>
+                    <Link
+                      key={s.title}
+                      href={s.href}
+                      className="bg-surface-container-lowest rounded-xl ghost-border p-3 text-center hover:bg-surface-container-low hover:border-primary/30 transition-colors group"
+                    >
+                      <div className="text-lg mb-1 group-hover:scale-110 transition-transform">{s.icon}</div>
                       <p className="text-xs font-semibold text-on-surface">{s.title}</p>
                       <p className="text-[10px] text-on-surface-variant mt-0.5 leading-relaxed">{s.desc}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
 
