@@ -6,6 +6,19 @@ import Link from 'next/link'
 const COUNTRY_REDIRECTS: Record<string, string> = {
   'macedonia': 'north-macedonia',
 }
+
+// City slug renames after a merge. Keyed by country slug. Hits when an
+// external link or old index used the variant slug; we 301 to canonical.
+const CITY_REDIRECTS: Record<string, Record<string, string>> = {
+  germany: {
+    'koln': 'cologne',
+    'nurnberg': 'nuremberg',
+    'hanover': 'hannover',
+    'brunswick': 'braunschweig',
+    'frankfurt': 'frankfurt-am-main',
+    'halle': 'halle-saale',
+  },
+}
 import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import PinCityButton from '@/components/places/PinCityButton'
@@ -159,6 +172,8 @@ async function fetchCityExperiences(country: string, city: string) {
 export default async function CityPage({ params }: PageProps) {
   const { country, city } = await params
   if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}/${city}`)
+  const cityAlias = CITY_REDIRECTS[country]?.[city]
+  if (cityAlias) redirect(`/vegan-places/${country}/${cityAlias}`)
   const [{ places, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([
     fetchCityPlaces(country, city),
     getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),
