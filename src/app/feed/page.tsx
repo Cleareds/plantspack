@@ -8,9 +8,8 @@ import Feed from "@/components/posts/Feed"
 // mention autocomplete) don't ship with the feed bundle until the user
 // actually clicks "Create Post".
 const CreatePostModal = dynamic(() => import('@/components/posts/CreatePostModal'), { ssr: false })
-import CategoryTabs from "@/components/posts/CategoryTabs"
+import CategoryTabs, { type FeedCategory } from "@/components/posts/CategoryTabs"
 import { useAuth } from "@/lib/auth"
-import type { PostCategory } from '@/lib/database.types'
 
 export default function FeedPage() {
   return (
@@ -24,7 +23,7 @@ function FeedPageContent() {
   const searchParams = useSearchParams()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
-  const [activeCategory, setActiveCategory] = useState<PostCategory | 'all'>('all')
+  const [activeCategory, setActiveCategory] = useState<FeedCategory>('all')
   const { user } = useAuth()
 
   const handlePostCreated = () => { setRefreshKey(prev => prev + 1); setIsCreatePostOpen(false) }

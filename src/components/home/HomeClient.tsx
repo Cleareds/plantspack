@@ -38,6 +38,19 @@ interface CompactPost {
   users: { username: string; first_name: string | null; avatar_url: string | null }
   post_reactions: { id: string }[]; comments: { id: string }[]
 }
+interface CompactReview {
+  id: string; user_id: string; place_id: string; rating: number; content: string
+  images: string[] | null; created_at: string
+  users: { username: string; first_name: string | null; avatar_url: string | null }
+  place: {
+    name: string; slug: string | null; city: string | null; country: string | null
+    main_image_url: string | null; images: string[] | null; category: string | null; vegan_level: string | null
+  } | null
+  place_review_reactions: { id: string }[]
+}
+type ActivityItem =
+  | { type: 'post'; created_at: string; data: CompactPost }
+  | { type: 'review'; created_at: string; data: CompactReview }
 
 const CATEGORY_LABEL: Record<string, string> = { eat: 'Restaurant', hotel: 'Stay', store: 'Store', organisation: 'Animal Sanctuary', event: 'Event' }
 const CATEGORY_EMOJI: Record<string, string> = { eat: '🌿', hotel: '🛏️', store: '🛍️', organisation: '🐾', event: '🎉' }
@@ -67,12 +80,13 @@ export interface FollowedCitySummary {
 interface Props {
   topCities: CityScoreData[]
   recentPosts: CompactPost[]
+  recentActivity?: ActivityItem[]
   cityImages?: Record<string, string>
   initialLocation?: InitialLocation | null
   followedCities?: FollowedCitySummary[]
 }
 
-function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}, initialLocation, followedCities = [] }: Props) {
+function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [] }: Props) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
@@ -732,7 +746,7 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
               <Link href="/feed" className="text-xs text-primary font-medium hover:underline">View all</Link>
             </div>
             <div className="xl:max-h-[calc(100vh-180px)] xl:overflow-y-auto">
-              <PostList posts={recentPosts} />
+              <ActivityList items={recentActivity && recentActivity.length > 0 ? recentActivity : recentPosts.map(p => ({ type: 'post' as const, created_at: p.created_at, data: p }))} />
             </div>
             {user && (
               <button onClick={() => setIsCreatePostOpen(true)}
@@ -756,70 +770,126 @@ function HomeContent({ topCities, recentPosts, cityImages: serverCityImages = {}
   )
 }
 
-// Static post list — renders SSR posts without client-side fetch
-function PostList({ posts }: { posts: CompactPost[] }) {
-  if (posts.length === 0) return <p className="text-xs text-on-surface-variant text-center py-4">No posts yet</p>
+// Mixed activity list — renders SSR posts + reviews without client fetch.
+function ActivityList({ items }: { items: ActivityItem[] }) {
+  if (items.length === 0) return <p className="text-xs text-on-surface-variant text-center py-4">No activity yet</p>
 
   return (
     <div className="space-y-2">
-      {posts.map(post => {
-        const content = post.title || post.content || ''
-        const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
-        const isArticle = post.category === 'article'
-        const postUrl = isArticle && post.slug
-          ? `/blog/${post.slug}`
-          : post.category === 'recipe' && post.slug
-          ? `/recipe/${post.slug}`
-          : `/post/${post.id}`
-        const u = post.users as any
-        const likes = post.post_reactions?.length || 0
-        const comments = post.comments?.length || 0
-        const thumb = post.images?.[0] || post.image_url
-
-        return (
-          <Link key={post.id} href={postUrl} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
-            <div className="flex gap-2.5">
-              {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                  {post.is_pinned && (
-                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
-                      <Pin className="h-2.5 w-2.5" /> Pinned
-                    </span>
-                  )}
-                  {isArticle && (
-                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-primary/10 text-primary">
-                      <BookOpen className="h-2.5 w-2.5" /> Blog
-                    </span>
-                  )}
-                  {u?.avatar_url ? (
-                    <img src={u.avatar_url} alt="" className="w-4 h-4 rounded-full object-cover" />
-                  ) : (
-                    <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
-                      {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
-                    </div>
-                  )}
-                  <span className="text-[10px] font-medium text-on-surface-variant truncate">{u?.first_name || u?.username}</span>
-                  <span className="text-[10px] text-on-surface-variant/50">·</span>
-                  <span className="text-[10px] text-on-surface-variant/50">{timeAgo(post.created_at)}</span>
-                </div>
-                <p className="text-xs text-on-surface leading-relaxed">
-                  {truncated}
-                  {content.length > 140 && <span className="text-primary font-medium ml-1">more</span>}
-                </p>
-              </div>
-            </div>
-            {(likes > 0 || comments > 0) && (
-              <div className="flex items-center gap-3 mt-1.5 pl-1">
-                {likes > 0 && <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant"><Heart className="h-2.5 w-2.5" /> {likes}</span>}
-                {comments > 0 && <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant"><MessageCircle className="h-2.5 w-2.5" /> {comments}</span>}
-              </div>
-            )}
-          </Link>
-        )
-      })}
+      {items.map(it => (
+        it.type === 'post' ? <PostRow key={`post-${it.data.id}`} post={it.data} /> : <ReviewRow key={`review-${it.data.id}`} review={it.data} />
+      ))}
       <Link href="/feed" className="block text-center text-xs text-primary font-medium hover:underline py-2">View full feed</Link>
     </div>
+  )
+}
+
+function PostRow({ post }: { post: CompactPost }) {
+  const content = post.title || post.content || ''
+  const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
+  const isArticle = post.category === 'article'
+  const postUrl = isArticle && post.slug
+    ? `/blog/${post.slug}`
+    : post.category === 'recipe' && post.slug
+    ? `/recipe/${post.slug}`
+    : `/post/${post.id}`
+  const u = post.users as any
+  const likes = post.post_reactions?.length || 0
+  const comments = post.comments?.length || 0
+  const thumb = post.images?.[0] || post.image_url
+
+  return (
+    <Link href={postUrl} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
+      <div className="flex gap-2.5">
+        {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+            {post.is_pinned && (
+              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
+                <Pin className="h-2.5 w-2.5" /> Pinned
+              </span>
+            )}
+            {isArticle && (
+              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-primary/10 text-primary">
+                <BookOpen className="h-2.5 w-2.5" /> Blog
+              </span>
+            )}
+            {u?.avatar_url ? (
+              <img src={u.avatar_url} alt="" className="w-4 h-4 rounded-full object-cover" />
+            ) : (
+              <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
+                {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
+              </div>
+            )}
+            <span className="text-[10px] font-medium text-on-surface-variant truncate">{u?.first_name || u?.username}</span>
+            <span className="text-[10px] text-on-surface-variant/50">·</span>
+            <span className="text-[10px] text-on-surface-variant/50">{timeAgo(post.created_at)}</span>
+          </div>
+          <p className="text-xs text-on-surface leading-relaxed">
+            {truncated}
+            {content.length > 140 && <span className="text-primary font-medium ml-1">more</span>}
+          </p>
+        </div>
+      </div>
+      {(likes > 0 || comments > 0) && (
+        <div className="flex items-center gap-3 mt-1.5 pl-1">
+          {likes > 0 && <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant"><Heart className="h-2.5 w-2.5" /> {likes}</span>}
+          {comments > 0 && <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant"><MessageCircle className="h-2.5 w-2.5" /> {comments}</span>}
+        </div>
+      )}
+    </Link>
+  )
+}
+
+function ReviewRow({ review }: { review: CompactReview }) {
+  const u = review.users as any
+  const place = review.place
+  const placeUrl = place?.slug ? `/place/${place.slug}#review-${review.id}` : '#'
+  const thumb = place?.main_image_url || place?.images?.[0] || review.images?.[0]
+  const reactions = review.place_review_reactions?.length || 0
+  const content = review.content || ''
+  const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
+
+  return (
+    <Link href={placeUrl} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border border-l-2 border-l-amber-300/70 hover:border-primary/15 transition-all">
+      <div className="flex gap-2.5">
+        {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
+              <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Review
+            </span>
+            {u?.avatar_url ? (
+              <img src={u.avatar_url} alt="" className="w-4 h-4 rounded-full object-cover" />
+            ) : (
+              <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
+                {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
+              </div>
+            )}
+            <span className="text-[10px] font-medium text-on-surface-variant truncate">{u?.first_name || u?.username}</span>
+            <span className="text-[10px] text-on-surface-variant/50">·</span>
+            <span className="text-[10px] text-on-surface-variant/50">{timeAgo(review.created_at)}</span>
+          </div>
+          <div className="flex items-center gap-1 mb-1" aria-label={`${review.rating} stars`}>
+            {[1, 2, 3, 4, 5].map(i => (
+              <Star key={i} className={`h-2.5 w-2.5 ${i <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-outline-variant'}`} />
+            ))}
+            {place && (
+              <span className="text-[10px] text-on-surface-variant ml-1 truncate">on <span className="font-medium text-on-surface">{place.name}</span></span>
+            )}
+          </div>
+          <p className="text-xs text-on-surface leading-relaxed">
+            {truncated}
+            {content.length > 140 && <span className="text-primary font-medium ml-1">more</span>}
+          </p>
+        </div>
+      </div>
+      {reactions > 0 && (
+        <div className="flex items-center gap-3 mt-1.5 pl-1">
+          <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant"><Heart className="h-2.5 w-2.5" /> {reactions}</span>
+        </div>
+      )}
+    </Link>
   )
 }
 

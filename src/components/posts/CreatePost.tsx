@@ -65,7 +65,10 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
     const [title, setTitle] = useState(() => loadDraft()?.title || '')
     const [content, setContent] = useState(() => loadDraft()?.content || '')
-    const [privacy, setPrivacy] = useState<'public' | 'friends'>(() => loadDraft()?.privacy || 'public')
+    // Privacy selector is hidden — new posts always default to public until
+    // the friends-graph is dense enough to make 'friends' meaningful. Drafts
+    // that had 'friends' set previously also flip to public on resume.
+    const [privacy, setPrivacy] = useState<'public' | 'friends'>('public')
     const [category, setCategory] = useState<PostCategory>(() => loadDraft()?.category || 'general')
     const [secondaryTags, setSecondaryTags] = useState<string[]>(() => loadDraft()?.secondaryTags || [])
     const [tagInput, setTagInput] = useState('')
@@ -1176,32 +1179,8 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between mt-3">
-                            <div className="flex items-center space-x-2">
-                                <label className="flex items-center space-x-1 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        value="public"
-                                        checked={privacy === 'public'}
-                                        onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-                                        className="text-primary focus:ring-primary"
-                                    />
-                                    <Globe className="h-4 w-4 text-outline"/>
-                                    <span className="text-sm text-on-surface-variant">Public</span>
-                                </label>
-                                <label className="flex items-center space-x-1 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        value="friends"
-                                        checked={privacy === 'friends'}
-                                        onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-                                        className="text-primary focus:ring-primary"
-                                    />
-                                    <Users className="h-4 w-4 text-outline"/>
-                                    <span className="text-sm text-on-surface-variant">Friends</span>
-                                </label>
-                            </div>
-                        </div>
+                        {/* Privacy radios hidden until the friends graph is dense enough to
+                            make a friends-only audience meaningful. New posts default to public. */}
 
                         <div className="flex flex-col space-y-2 mt-4">
                             <div className="flex items-center space-x-3">

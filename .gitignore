@@ -104,3 +104,6 @@ osm-*.json
 # External data dumps (license-limited or large) and debug logs
 /data/
 /logs/
+
+# Local notes / scratch files
+backlinks-catalog.html

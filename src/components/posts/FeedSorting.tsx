@@ -14,12 +14,6 @@ interface SortConfig {
 
 const SORT_OPTIONS: SortConfig[] = [
   {
-    value: 'relevancy',
-    label: 'Relevancy',
-    icon: Target,
-    description: 'Smart ranking based on engagement and recency'
-  },
-  {
     value: 'recent',
     label: 'Most Recent',
     icon: Clock,
@@ -38,6 +32,16 @@ const SORT_OPTIONS: SortConfig[] = [
     description: 'All-time most liked posts'
   }
 ]
+
+const HIDDEN_SORT_OPTIONS: SortConfig[] = [
+  {
+    value: 'relevancy',
+    label: 'Relevancy',
+    icon: Target,
+    description: 'Smart ranking based on engagement and recency'
+  }
+]
+void HIDDEN_SORT_OPTIONS
 
 interface FeedSortingProps {
   currentSort: SortOption
@@ -148,22 +152,6 @@ export default function FeedSorting({
             })}
           </div>
           
-          {/* Quick tip */}
-          <div className="p-3 bg-surface-container-low border-t border-outline-variant/15">
-            <div className="flex items-start space-x-2">
-              <div className="p-1 bg-surface-container rounded">
-                <Target className="h-3 w-3 text-primary" />
-              </div>
-              <div>
-                <p className="text-xs text-on-surface font-medium">
-                  Smart Ranking
-                </p>
-                <p className="text-xs text-on-surface-variant mt-1">
-                  The relevancy algorithm combines engagement signals and recency to surface the most interesting content.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 

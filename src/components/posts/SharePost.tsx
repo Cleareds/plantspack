@@ -258,21 +258,6 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
             </div>
           )}
 
-          {/* Privacy Setting */}
-          <div>
-            <label className="block text-sm font-medium text-on-surface-variant mb-2">
-              Who can see this?
-            </label>
-            <select
-              value={privacy}
-              onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-              className="w-full px-3 py-2 border border-outline-variant rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              <option value="public">Everyone</option>
-              <option value="friends">Friends only</option>
-            </select>
-          </div>
-
           {/* Original Post Preview */}
           <div className="border border-surface-container-high rounded-lg p-4 bg-surface-container-low">
             <div className="flex space-x-3">

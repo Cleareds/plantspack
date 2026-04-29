@@ -4,6 +4,7 @@ import {useState, useEffect, useCallback, useRef} from 'react'
 import {useAuth} from '@/lib/auth'
 import {supabase} from '@/lib/supabase'
 import PostCard from './PostCard'
+import ReviewFeedCard from './ReviewFeedCard'
 import {Tables} from '@/lib/supabase'
 import {Loader2, ArrowUp} from 'lucide-react'
 import FeedSorting, {type SortOption} from './FeedSorting'
@@ -12,6 +13,10 @@ import {getFeedPosts} from '@/lib/feed-algorithm'
 import {useRealtimePosts} from '@/hooks/useRealtimePosts'
 import {usePageState} from '@/hooks/usePageState'
 import {useScrollRestoration} from '@/hooks/useScrollRestoration'
+
+type UnifiedItem =
+    | { type: 'post'; id: string; created_at: string; data: any }
+    | { type: 'review'; id: string; created_at: string; data: any }
 // Page state storage removed — direct fetch prevents stale cache issues with category filtering
 
 type Post = Tables<'posts'> & {
@@ -35,6 +40,8 @@ interface FeedProps {
 
 export default function Feed({onPostCreated, category, excludeCategories}: FeedProps) {
     const [posts, setPosts] = useState<Post[]>([])
+    const [items, setItems] = useState<UnifiedItem[]>([])
+    const cursorRef = useRef<string | null>(null)
     const [pinnedPost, setPinnedPost] = useState<Post | null>(null)
     const [loading, setLoading] = useState(true)
     const [loadingMore, setLoadingMore] = useState(false)
@@ -43,14 +50,17 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
     const {user, authReady} = useAuth()
     const [feedState, setFeedState] = usePageState({
         key: 'feed_state',
-        defaultValue: { activeTab: 'public' as 'public' | 'friends', sortOption: 'relevancy' as SortOption },
+        defaultValue: { activeTab: 'public' as 'public' | 'friends', sortOption: 'recent' as SortOption },
         userId: user?.id,
         enabled: !!user,
     })
-    const activeTab = feedState.activeTab
-    const sortOption = feedState.sortOption
-    const setActiveTab = useCallback((tab: 'public' | 'friends') => setFeedState(prev => ({ ...prev, activeTab: tab })), [setFeedState])
+    // Friends tab + Relevancy sort are hidden until activity grows. Migrate any
+    // saved preferences so the UI doesn't end up in a hidden state.
+    const activeTab: 'public' | 'friends' = 'public'
+    const sortOption: SortOption = (feedState.sortOption === 'relevancy' ? 'recent' : feedState.sortOption) as SortOption
+    const setActiveTab = useCallback((_tab: 'public' | 'friends') => {}, [])
     const setSortOption = useCallback((sort: SortOption) => setFeedState(prev => ({ ...prev, sortOption: sort })), [setFeedState])
+    void setActiveTab
     const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
     const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
     const observerRef = useRef<IntersectionObserver | null>(null)
@@ -210,8 +220,19 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
             // Bulk load reactions and follows for performance
             const postsWithMetadata = await enrichPostsWithMetadata(data as Post[], user?.id)
 
-            // Add new posts to the top of the feed
+            // Add new posts to the top of the feed (both legacy `posts` array
+            // and the unified `items` list so the UI shows them).
             setPosts(prevPosts => [...postsWithMetadata, ...prevPosts])
+            setItems(prev => {
+                const newItems: UnifiedItem[] = postsWithMetadata.map(p => ({
+                    type: 'post' as const,
+                    id: p.id,
+                    created_at: p.created_at,
+                    data: p,
+                }))
+                const existing = new Set(prev.map(it => `${it.type}:${it.id}`))
+                return [...newItems.filter(it => !existing.has(`${it.type}:${it.id}`)), ...prev]
+            })
         }
 
         // Clear the realtime new posts queue
@@ -229,39 +250,57 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                 setLoading(true)
                 setError(null)
                 offsetRef.current = 0
+                cursorRef.current = null
                 setHasMore(true)
             }
 
             const currentOffset = loadMore ? offsetRef.current : 0
 
-            // Use feed algorithm with sorting for both public and friends feeds
+            // Unified feed: posts + reviews merged server-side. Replaces the old
+            // posts-only feed-algorithm path. Friends-only fetch (below) is
+            // currently unreachable because the Friends tab is hidden, but kept
+            // for the day we re-enable it.
             if (activeTab === 'public') {
-                const newPosts = await getFeedPosts({
-                    sortBy: sortOption,
-                    limit: POSTS_PER_PAGE,
-                    offset: currentOffset,
-                    userId: user?.id,
-                    includeAnalytics: true,
-                    category: category || 'all',
-                    excludeCategories,
-                })
+                const params = new URLSearchParams()
+                params.set('limit', String(POSTS_PER_PAGE))
+                params.set('sort', sortOption)
+                params.set('mode', category || 'all')
+                if (loadMore && cursorRef.current) params.set('cursor', cursorRef.current)
 
-                // Bulk load reactions and follows for performance (prevents N+1 queries)
-                const postsWithMetadata = await enrichPostsWithMetadata(newPosts as any, user?.id)
+                const res = await fetch(`/api/feed/unified?${params.toString()}`)
+                if (!res.ok) throw new Error(`Feed request failed: ${res.status}`)
+                const json: { items: UnifiedItem[]; hasMore: boolean; nextCursor: string | null } = await res.json()
+
+                // Enrich post items with reactions + follow status (review reactions
+                // are loaded inside ReviewFeedCard via ReviewReactions).
+                const postItems = json.items.filter(it => it.type === 'post')
+                const enrichedPosts = await enrichPostsWithMetadata(
+                    postItems.map(it => it.data) as Post[],
+                    user?.id,
+                )
+                const enrichedById = new Map(enrichedPosts.map(p => [p.id, p]))
+                const enrichedItems: UnifiedItem[] = json.items.map(it =>
+                    it.type === 'post'
+                        ? { ...it, data: enrichedById.get(it.id) || it.data }
+                        : it,
+                )
 
                 if (loadMore) {
-                    setPosts(prevPosts => {
-                        const existingIds = new Set(prevPosts.map(p => p.id))
-                        const uniqueNewPosts = postsWithMetadata.filter((p: any) => !existingIds.has(p.id))
-                        return [...prevPosts, ...uniqueNewPosts]
+                    setItems(prev => {
+                        const existing = new Set(prev.map(it => `${it.type}:${it.id}`))
+                        return [...prev, ...enrichedItems.filter(it => !existing.has(`${it.type}:${it.id}`))]
+                    })
+                    setPosts(prev => {
+                        const existing = new Set(prev.map(p => p.id))
+                        return [...prev, ...enrichedPosts.filter(p => !existing.has(p.id))]
                     })
                 } else {
-                    setPosts(postsWithMetadata as any)
+                    setItems(enrichedItems)
+                    setPosts(enrichedPosts)
                 }
 
-                setHasMore(newPosts.length === POSTS_PER_PAGE)
-                offsetRef.current = currentOffset + newPosts.length
-
+                cursorRef.current = json.nextCursor
+                setHasMore(json.hasMore)
                 return
             }
 
@@ -471,7 +510,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                 observerRef.current = null
             }
         }
-    }, [hasMore, loadingMore, loadMorePosts, posts.length])
+    }, [hasMore, loadingMore, loadMorePosts, items.length])
 
     // Fetch pinned post
     useEffect(() => {
@@ -523,7 +562,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
         onPostCreated?.() // Call parent callback if provided
     }, [fetchPosts, onPostCreated])
 
-    if (loading && posts.length === 0) {
+    if (loading && items.length === 0) {
         return (
             <div className="max-w-2xl mx-auto px-4">
                 <div className="space-y-4">
@@ -535,7 +574,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
         )
     }
 
-    if (error && posts.length === 0) {
+    if (error && items.length === 0) {
         return (
             <div className="max-w-2xl mx-auto px-4">
                 <div className="bg-error/10 rounded-2xl p-4 text-center">
@@ -556,38 +595,12 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
             {/* Feed Controls - Horizontal Layout with Tabs on Left, Sorting on Right */}
             <div className="bg-surface-container-lowest rounded-2xl editorial-shadow mb-4 px-2 sm:px-4 py-2 sm:py-2.5">
                 <div className="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap">
-                    {/* Tabs on the Left - Only for logged in users */}
-                    {user && (
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => handleTabChange('public')}
-                                className={`px-2 sm:px-4 py-1 sm:py-2 text-sm font-medium rounded-xl transition-colors ${
-                                    activeTab === 'public'
-                                        ? 'bg-primary text-on-primary'
-                                        : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-                                }`}
-                            >
-                                Public
-                            </button>
-                            <button
-                                onClick={() => handleTabChange('friends')}
-                                className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${
-                                    activeTab === 'friends'
-                                        ? 'bg-primary text-on-primary'
-                                        : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-                                }`}
-                            >
-                                Friends
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Guest label for non-authenticated users */}
-                    {!user && (
-                        <div className="text-sm font-medium text-on-surface-variant">
-                            Public Feed
-                        </div>
-                    )}
+                    {/* Friends tab is hidden for now (low activity). The Public/Friends
+                        switch will return once there's enough following graph density
+                        to make a friends-only view feel populated. */}
+                    <div className="text-sm font-medium text-on-surface-variant">
+                        Community Feed
+                    </div>
 
                     {/* Sorting on the Right - Always show */}
                     <div className="flex items-center gap-2 ml-auto">
@@ -595,7 +608,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                         <FeedSorting
                             currentSort={sortOption}
                             onSortChange={setSortOption}
-                            postCount={posts.length}
+                            postCount={items.length}
                         />
                     </div>
                 </div>
@@ -616,7 +629,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                 </div>
             )}
 
-            {posts.length === 0 && !pinnedPost && !loading ? (
+            {items.length === 0 && !pinnedPost && !loading ? (
                 <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-8 text-center">
                     <p className="text-outline mb-4">No posts yet.</p>
                     {!user && (
@@ -645,17 +658,23 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                                 />
                             </div>
                         )}
-                        {posts
-                            .filter(post => !blockedUserIds.includes(post.user_id) && !mutedUserIds.includes(post.user_id) && post.id !== pinnedPost?.id)
-                            .map((post) => (
-                                <PostCard
-                                    key={post.id}
-                                    post={post}
-                                    onUpdate={() => {}}
-                                    reactions={post._reactions}
-                                    isFollowing={post._isFollowing}
-                                />
-                            ))}
+                        {items
+                            .filter(it => !blockedUserIds.includes(it.data.user_id) && !mutedUserIds.includes(it.data.user_id) && !(it.type === 'post' && it.id === pinnedPost?.id))
+                            .map(it => {
+                                if (it.type === 'review') {
+                                    return <ReviewFeedCard key={`review-${it.id}`} review={it.data} />
+                                }
+                                const post = it.data as Post
+                                return (
+                                    <PostCard
+                                        key={`post-${post.id}`}
+                                        post={post}
+                                        onUpdate={() => {}}
+                                        reactions={post._reactions}
+                                        isFollowing={post._isFollowing}
+                                    />
+                                )
+                            })}
                     </div>
 
                     {/* Infinite scroll trigger - always render for intersection observer */}
@@ -682,7 +701,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                         )}
 
                         {/* End of feed message */}
-                        {!hasMore && posts.length > 0 && !loading && (
+                        {!hasMore && items.length > 0 && !loading && (
                             <div className="text-center py-8">
                                 <p className="text-outline text-sm">You&apos;re all caught up!</p>
                             </div>
@@ -690,7 +709,7 @@ export default function Feed({onPostCreated, category, excludeCategories}: FeedP
                     </div>
 
                     {/* Error loading more posts */}
-                    {error && posts.length > 0 && (
+                    {error && items.length > 0 && (
                         <div className="bg-error/10 rounded-2xl p-4 text-center mt-4">
                             <p className="text-error text-sm">{error}</p>
                             <button

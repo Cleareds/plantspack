@@ -2,8 +2,11 @@
 
 import type { PostCategory } from '@/lib/database.types'
 
-const CATEGORIES: { slug: PostCategory | 'all'; icon: string; label: string }[] = [
+export type FeedCategory = PostCategory | 'all' | 'reviews'
+
+const CATEGORIES: { slug: FeedCategory; icon: string; label: string }[] = [
   { slug: 'all', icon: 'apps', label: 'All' },
+  { slug: 'reviews', icon: 'star', label: 'Reviews' },
   { slug: 'recipe', icon: 'restaurant_menu', label: 'Recipes' },
   { slug: 'place', icon: 'location_on', label: 'Places' },
   { slug: 'event', icon: 'event', label: 'Events' },
@@ -17,8 +20,8 @@ const CATEGORIES: { slug: PostCategory | 'all'; icon: string; label: string }[] 
 ]
 
 interface CategoryTabsProps {
-  activeCategory: PostCategory | 'all'
-  onCategoryChange: (category: PostCategory | 'all') => void
+  activeCategory: FeedCategory
+  onCategoryChange: (category: FeedCategory) => void
 }
 
 export default function CategoryTabs({ activeCategory, onCategoryChange }: CategoryTabsProps) {

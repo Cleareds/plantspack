@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { X, Globe, Users, Save, Image as ImageIcon, Video } from 'lucide-react'
+import { X, Save, Image as ImageIcon, Video } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { getUserSubscription, type UserSubscription } from '@/lib/stripe'
 import ImageUploader from '../ui/ImageUploader'
@@ -514,32 +514,6 @@ export default function EditPost({ post, isOpen, onClose, onSaved }: EditPostPro
                 </div>
               </>
             )}
-
-            {/* Privacy */}
-            <div className="flex items-center space-x-2 mt-3">
-              <label className="flex items-center space-x-1 cursor-pointer">
-                <input
-                  type="radio"
-                  value="public"
-                  checked={privacy === 'public'}
-                  onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-                  className="text-primary focus:ring-primary"
-                />
-                <Globe className="h-4 w-4 text-outline" />
-                <span className="text-sm text-on-surface-variant">Public</span>
-              </label>
-              <label className="flex items-center space-x-1 cursor-pointer">
-                <input
-                  type="radio"
-                  value="friends"
-                  checked={privacy === 'friends'}
-                  onChange={(e) => setPrivacy(e.target.value as 'public' | 'friends')}
-                  className="text-primary focus:ring-primary"
-                />
-                <Users className="h-4 w-4 text-outline" />
-                <span className="text-sm text-on-surface-variant">Friends</span>
-              </label>
-            </div>
 
             {/* Action Bar */}
             <div className="flex items-center justify-between mt-4">

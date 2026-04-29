@@ -165,6 +165,27 @@ async function getRecentPosts() {
   return data || []
 }
 
+/**
+ * Recent place reviews for the homepage sidebar feed. Mixed with recent posts
+ * and sorted by created_at so the sidebar reflects all community activity, not
+ * just posts. Reviews are read-only items here — the link goes to the place.
+ */
+async function getRecentReviews() {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('place_reviews')
+    .select(`
+      id, user_id, place_id, rating, content, images, created_at,
+      users!inner(username, first_name, avatar_url),
+      place:place_id(name, slug, city, country, main_image_url, images, category, vegan_level),
+      place_review_reactions(id)
+    `)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(8)
+  return data || []
+}
+
 function getCityImages(): Record<string, string> {
   try {
     return JSON.parse(readFileSync(join(process.cwd(), 'public/data/city-images.json'), 'utf-8'))
@@ -215,9 +236,10 @@ async function getInitialLocationData() {
 }
 
 export default async function Home() {
-  const [topCities, recentPosts, initialLocation, featuredPlaces, followedCities] = await Promise.all([
+  const [topCities, recentPosts, recentReviews, initialLocation, featuredPlaces, followedCities] = await Promise.all([
     getTopCities(),
     getRecentPosts(),
+    getRecentReviews(),
     getInitialLocationData(),
     getFeaturedPlaces(),
     getFollowedCities(),
@@ -230,6 +252,29 @@ export default async function Home() {
     ...p,
     users: Array.isArray(p.users) ? p.users[0] : p.users,
   }))
+  const normalizedReviews = recentReviews.map((r: any) => ({
+    ...r,
+    users: Array.isArray(r.users) ? r.users[0] : r.users,
+    place: Array.isArray(r.place) ? r.place[0] : r.place,
+  }))
+
+  // Build a unified activity list: posts + reviews mixed by created_at desc.
+  // Pinned posts always lead so admin announcements stay visible.
+  type ActivityItem =
+    | { type: 'post'; created_at: string; data: any }
+    | { type: 'review'; created_at: string; data: any }
+  const activityItems: ActivityItem[] = [
+    ...normalizedPosts.map((p: any) => ({ type: 'post' as const, created_at: p.created_at, data: p })),
+    ...normalizedReviews.map((r: any) => ({ type: 'review' as const, created_at: r.created_at, data: r })),
+  ]
+  activityItems.sort((a, b) => {
+    // Pinned posts come first
+    const aPinned = a.type === 'post' && a.data.is_pinned ? 1 : 0
+    const bPinned = b.type === 'post' && b.data.is_pinned ? 1 : 0
+    if (aPinned !== bPinned) return bPinned - aPinned
+    return a.created_at < b.created_at ? 1 : -1
+  })
+  const sidebarActivity = activityItems.slice(0, 8)
 
   // Filter out the currently pinned city — it's already in the hero banner.
   const c = await cookies()
@@ -246,6 +291,7 @@ export default async function Home() {
       <HomeClient
         topCities={topCities}
         recentPosts={normalizedPosts}
+        recentActivity={sidebarActivity}
         cityImages={cityImages}
         initialLocation={initialLocation}
         followedCities={displayedFollowedCities}
