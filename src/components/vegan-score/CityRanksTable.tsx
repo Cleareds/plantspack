@@ -10,12 +10,10 @@ type SortKey = 'score' | 'accessibility' | 'choice' | 'variety' | 'quality' | 'p
 type SortDir = 'asc' | 'desc'
 const PAGE_SIZE = 50
 
-function getCitySlug(city: string) {
-  return city.toLowerCase().replace(/\s+/g, '-')
-}
-function getCountrySlug(country: string) {
-  return country.toLowerCase().replace(/\s+/g, '-')
-}
+import { toSlug } from '@/lib/slug'
+import { getCityImage } from '@/lib/city-images'
+const getCitySlug = toSlug
+const getCountrySlug = toSlug
 
 interface CityRanksTableProps {
   scores: CityScore[]
@@ -200,8 +198,7 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
           <h2 className="text-sm font-semibold text-on-surface-variant mb-3">Most vegan places</h2>
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
             {[...scores].sort((a, b) => b.placeCount - a.placeCount).slice(0, 10).map(city => {
-              const imgKey = `${city.city}|||${city.country}`
-              const img = cityImages[imgKey]
+              const img = getCityImage(cityImages || {}, city.city, city.country)
               return (
                 <Link
                   key={`pop-${city.city}-${city.country}`}

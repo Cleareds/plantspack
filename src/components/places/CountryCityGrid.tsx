@@ -7,6 +7,7 @@ import { ArrowRight } from 'lucide-react'
 import FilteredCount from '@/components/ui/FilteredCount'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import { getGradeColor } from '@/lib/score-utils'
+import { getCityImage } from '@/lib/city-images'
 
 interface CityData {
   name: string
@@ -98,7 +99,7 @@ export default function CountryCityGrid({ cities, cityImages, countryName, count
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {sorted.map(city => {
-          const img = cityImages[`${city.name}|||${countryName}`]
+          const img = getCityImage(cityImages, city.name, countryName)
           const score = scoreMap.get(city.name)
 
           return (
