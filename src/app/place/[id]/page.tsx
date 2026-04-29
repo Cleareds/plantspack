@@ -29,6 +29,7 @@ import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
+import VeganLevelInlineEditor from '@/components/places/VeganLevelInlineEditor'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
 
@@ -416,18 +417,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             {/* Vegan level + category badges */}
             <div className="space-y-1.5">
               <div className="flex flex-wrap gap-2">
-                {(place as any).vegan_level === 'fully_vegan' && (
-                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">🌿 100% Vegan</span>
-                )}
-                {(place as any).vegan_level === 'mostly_vegan' && (
-                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-700">🌿 Mostly Vegan</span>
-                )}
-                {(place as any).vegan_level === 'vegan_friendly' && (
-                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">🌿 Vegan-Friendly</span>
-                )}
-                {(place as any).vegan_level === 'vegan_options' && (
-                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-600">🌿 Has Vegan Options</span>
-                )}
+                <VeganLevelInlineEditor placeId={place.id} initialLevel={(place as any).vegan_level} />
                 {(place as any).subcategory && (
                   <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-surface-container-low text-on-surface-variant">
                     {(place as any).subcategory.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
