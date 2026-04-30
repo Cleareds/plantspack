@@ -510,6 +510,7 @@ export default async function CityPage({ params }: PageProps) {
               total={places.length}
               fullyVegan={places.filter((p: Place) => p.vegan_level === 'fully_vegan').length}
               topPlaceName={topPlace?.name}
+              topPlaceSlug={topPlace?.slug}
               topPlaceRating={topPlace?.average_rating || undefined}
               topPlaceReviews={topPlace?.review_count || undefined}
               cuisines={cuisines}

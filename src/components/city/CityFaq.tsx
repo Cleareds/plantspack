@@ -5,12 +5,15 @@
 // Every answer is grounded in real DB data - place counts, real top-place
 // names, actual cuisines from cuisine_types. No AI-generated copy.
 
+import Link from 'next/link'
+
 interface CityFaqProps {
   cityName: string
   countryName: string
   total: number
   fullyVegan: number
   topPlaceName?: string
+  topPlaceSlug?: string | null
   topPlaceRating?: number
   topPlaceReviews?: number
   cuisines: string[]
@@ -59,11 +62,14 @@ export function CityFaq(props: CityFaqProps) {
   }
 
   if (props.topPlaceName) {
+    const placeNode = props.topPlaceSlug
+      ? <Link href={`/place/${props.topPlaceSlug}`} className="text-primary hover:underline font-semibold">{props.topPlaceName}</Link>
+      : <strong>{props.topPlaceName}</strong>
     items.push({
       q: `What's the highest-rated vegan place in ${props.cityName}?`,
       a: (
         <>
-          <strong>{props.topPlaceName}</strong>
+          {placeNode}
           {props.topPlaceRating
             ? <> currently leads on community ratings ({props.topPlaceRating.toFixed(1)}/5{props.topPlaceReviews ? ` from ${props.topPlaceReviews} ${props.topPlaceReviews === 1 ? 'review' : 'reviews'}` : ''}).</>
             : <> is among the most-visited vegan spots here.</>
