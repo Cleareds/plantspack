@@ -24,6 +24,25 @@ Output is a count of places imported + any notable issues.
 | "add all these places: [URL list]" | URL-per-line → `add-place.ts` | individual calls |
 | "here's a CSV / spreadsheet" | Parse → JSON → `add-place.ts` | individual calls |
 
+## Estimating gap before running an import
+
+Use `scripts/_audit-osm-gap.ts` (or `_audit-osm-gap-2.ts`) to probe
+Overpass per-ISO and report `OSM_count − our_count` per country.
+
+**Important caveat:** the simple subtraction overstates the real
+"net new" significantly. The pipeline dedupes by `source_id` (exact
+OSM node ID), and prior imports under the same OSM node IDs will be
+skipped at insert time. After the 2026-04 session it turned out
+that for most "thin" countries OSM data and our DB were already
+mostly aligned by source_id — only Denmark had a substantial real
+gap (290 OSM → 247 actually new), Nicaragua was the next biggest
+(26 OSM → 17 new), and most other countries yielded 0-2 new even
+when the raw subtraction suggested 50+.
+
+Take the audit numbers as an upper bound; expect 10-30% to land
+as actual new rows, less for countries that were heavily imported
+in earlier passes.
+
 ## Standard pipeline shape (every OSM import gets all of these)
 
 Every imported place lands in the DB with the following fields populated.
