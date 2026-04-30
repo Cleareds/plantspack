@@ -172,6 +172,116 @@ const CITY_CONTEXT: Record<string, string> = {
   'Bali, Indonesia': 'Ubud, Canggu and Seminyak are where most of Bali\'s plant-based dining sits. Bali has one of Southeast Asia\'s densest concentrations of vegan and raw-vegan restaurants, especially around Ubud.',
   'Ubud, Indonesia': 'Ubud is the vegan and yoga heart of Bali. Plant-based, raw-vegan and macrobiotic restaurants are on virtually every street in the central area, alongside traditionally-vegan Balinese dishes.',
   'Mexico City, Mexico': 'Roma Norte, Condesa and Coyoacán carry most of Mexico City\'s plant-based scene. Naturally-vegan Mexican dishes (frijoles, nopales, salsas) plus dedicated vegan taquerias make it easier to eat plant-based here than visitors expect.',
+
+  // Renamed German + European cities (the keys above used native spellings;
+  // our DB now uses canonical English/standard names after the merge pass).
+  'Munich, Germany': 'Schwabing, Glockenbachviertel and Maxvorstadt are the most plant-based-dense Munich neighborhoods. Vegan beer-garden classics and dedicated all-vegan restaurants now sit alongside Bavaria\'s traditional fare.',
+  'Vienna, Austria': 'The 1st, 7th, and 8th districts plus Neubau host most of Vienna\'s plant-based dining. The legendary Kaffeehaus culture now serves plant-based Sachertorte and vegan Wiener Schnitzel.',
+  'Cologne, Germany': 'Belgisches Viertel, Ehrenfeld and the Südstadt are where Cologne\'s vegan scene clusters. The city has one of the strongest fully-vegan ratios in western Germany.',
+  'Nuremberg, Germany': 'Gostenhof and the Altstadt host most of Nuremberg\'s plant-based dining. The Franconian focus on vegetables and grains adapts well to vegan menus.',
+  'Hannover, Germany': 'Linden-Mitte and Nordstadt are the centers of Hannover\'s plant-based scene. The city has a steady all-vegan presence alongside vegan-friendly cafes.',
+  'Copenhagen, Denmark': 'Copenhagen applies New Nordic cuisine principles to plant-based cooking - seasonal, local, beautifully presented. Nørrebro, Vesterbro and Indre By carry most of the dedicated vegan spots.',
+  'Prague, Czech Republic': 'Old Town, Vinohrady and Žižkov neighborhoods are packed with affordable vegan spots. Prague offers some of the best-value plant-based dining in Europe.',
+  'Brussels, Belgium': 'The EU capital\'s plant-based dining reflects its multicultural character. From vegan waffles near Grand Place to innovative restaurants in Ixelles, plant-based options are widely available.',
+  'Ghent, Belgium': 'The world\'s first city with an official weekly veggie day, Ghent\'s plant-based scene punches far above its size. The medieval city center is packed with creative vegan restaurants and cafés.',
+  'Halle (Saale), Germany': 'Halle\'s student population drives a small but solid vegan scene, concentrated in the Altstadt and Paulusviertel.',
+  'Karlsruhe, Germany': 'The Innenstadt and Oststadt host most of Karlsruhe\'s plant-based dining. The university and tech-research presence keeps the vegan scene growing.',
+  'Freiburg im Breisgau, Germany': 'Freiburg\'s eco-conscious culture means plant-based options are everywhere. The Altstadt and Stühlinger neighborhoods have the densest vegan offerings.',
+  'Stuttgart, Germany': 'The West and Süd districts carry most of Stuttgart\'s plant-based scene. The city has a steady vegan presence despite a more conservative Swabian food culture overall.',
+  'Bonn, Germany': 'Bonn\'s former-capital character and university population give it a vegan scene larger than its size suggests, mostly clustered in the Altstadt and Poppelsdorf.',
+  'Darmstadt, Germany': 'Darmstadt\'s university scene drives a respectable plant-based offering, especially around Martinsviertel.',
+  'Kiel, Germany': 'Kiel\'s plant-based dining clusters around the central university area and Innenstadt.',
+  'Kassel, Germany': 'Vorderer Westen is Kassel\'s most vegan-dense neighborhood, with cafés and small restaurants reflecting the city\'s student culture.',
+  'Aachen, Germany': 'Aachen\'s university and cross-border location (with the Netherlands and Belgium) bring varied plant-based options, mostly in the city center.',
+  'Heidelberg, Germany': 'Altstadt, Bergheim and Neuenheim host most of Heidelberg\'s plant-based dining. The university town has a stronger vegan scene than its size suggests.',
+  'Mainz, Germany': 'The Altstadt and Neustadt are the densest neighborhoods for plant-based dining in Mainz. The city has a steady vegan presence alongside its wine-region food culture.',
+  'Essen, Germany': 'Rüttenscheid is Essen\'s most plant-based-dense neighborhood. The city\'s post-industrial transformation has brought a growing vegan scene.',
+  'Mannheim, Germany': 'Quadrate and the Jungbusch district carry most of Mannheim\'s plant-based dining. The city\'s diversity drives varied vegan options.',
+  'Dortmund, Germany': 'Kreuzviertel and the Innenstadt-West are where most of Dortmund\'s vegan scene sits. The city has steady plant-based growth in the wider Ruhr area.',
+  'Münster, Germany': 'Münster\'s university and cycling culture support a respectable plant-based scene, mostly concentrated in the Hansaviertel and around the Aasee.',
+  'Düsseldorf, Germany': 'Flingern, Pempelfort and Bilk are the densest Düsseldorf neighborhoods for plant-based dining. The city\'s Japanese community also brings dedicated vegan ramen and sushi spots.',
+  'Potsdam, Germany': 'Potsdam\'s plant-based scene is concentrated in the Holländisches Viertel and around the Sanssouci area.',
+  'Erfurt, Germany': 'Erfurt\'s well-preserved Altstadt holds most of the city\'s vegan options.',
+  'Braunschweig, Germany': 'Braunschweig\'s plant-based dining clusters in the Magniviertel and around the university.',
+  'Augsburg, Germany': 'Augsburg\'s Lechviertel and Innenstadt host most of the city\'s vegan options, blending Bavarian and Swabian influences.',
+  'Würzburg, Germany': 'Würzburg\'s student population supports a respectable plant-based scene in the Innenstadt and around the Sanderstraße area.',
+  'Saarbrücken, Germany': 'Saarbrücken\'s St. Johann district carries most of the city\'s plant-based dining.',
+
+  // UK
+  'Leeds, United Kingdom': 'The Northern Quarter, Hyde Park and Headingley host most of Leeds\' plant-based dining. The student population drives a strong fully-vegan share.',
+  'Bristol, United Kingdom': 'Stokes Croft, Gloucester Road and Clifton are Bristol\'s most vegan-dense neighborhoods. Bristol has one of the highest vegan-per-capita ratios in the UK after Brighton.',
+  'Oxford, United Kingdom': 'Oxford\'s plant-based scene clusters in Jericho, Cowley Road and the city centre. The student and academic population keeps the vegan offering growing.',
+  'Glasgow, United Kingdom': 'The West End, Finnieston and the Southside are where most of Glasgow\'s plant-based dining sits. Vegan haggis and plant-based Scottish breakfasts are easy finds.',
+  'York, United Kingdom': 'York\'s plant-based dining clusters in the city centre and Bishopthorpe Road. The historic city has a stronger vegan scene than its size suggests.',
+
+  // France
+  'Strasbourg, France': 'The city centre and Krutenau are where most of Strasbourg\'s vegan scene sits. The Alsatian-French culinary mix produces unique plant-based interpretations.',
+  'Nantes, France': 'Bouffay, Saint-Félix and the Île de Nantes carry most of Nantes\' plant-based dining. The city has one of France\'s most progressive vegan scenes outside Paris.',
+  'Grenoble, France': 'Hyper-Centre and Saint-Bruno host most of Grenoble\'s plant-based dining. The student and outdoor-sports culture supports a steady vegan presence.',
+  'Toulouse, France': 'Saint-Cyprien, Carmes and Saint-Aubin are the densest Toulouse neighborhoods for plant-based dining. The city has a growing vegan scene alongside its traditional southwestern French cuisine.',
+
+  // Iberia + Mediterranean
+  'Valencia, Spain': 'Ruzafa and El Carmen are the densest Valencia neighborhoods for plant-based dining. Vegan paella (yes, really) and dedicated vegan horchaterías are part of the scene.',
+
+  // Eastern Europe
+  'Warsaw, Poland': 'Praga, Śródmieście and Powiśle are the most vegan-dense Warsaw neighborhoods. Warsaw has one of Europe\'s most affordable and creative plant-based scenes.',
+  'Krakow, Poland': 'Kazimierz, Stare Miasto and Podgórze carry most of Krakow\'s plant-based dining. The city\'s low prices and strong vegan scene make it a favorite for budget plant-based travel.',
+  'Budapest, Hungary': 'District VII (Erzsébetváros), District V (Belváros) and District IX have the densest plant-based options in Budapest. Vegan goulash and plant-based lángos are now standard finds.',
+  'Sofia, Bulgaria': 'The city centre and Lozenets carry most of Sofia\'s plant-based dining. Bulgarian cuisine has many naturally-vegan dishes (lyutenitsa, ajvar, beans) plus a growing dedicated vegan scene.',
+  'Bratislava, Slovakia': 'The Old Town and Ružinov host most of Bratislava\'s plant-based dining. The scene is small but solid, with both traditional Slovak vegan adaptations and international options.',
+  'Tallinn, Estonia': 'Kalamaja, the Old Town and Kadriorg are the densest Tallinn neighborhoods for plant-based dining. Estonia\'s strong tech and design culture extends to a thoughtful vegan scene.',
+  'Tbilisi, Georgia': 'Vera and Vake are where most of Tbilisi\'s plant-based dining clusters. Georgian cuisine has many naturally-vegan dishes (lobio, badrijani, pkhali) plus dedicated vegan restaurants.',
+
+  // Switzerland + Ireland
+  'Zurich, Switzerland': 'District 4 (Aussersihl) and District 5 (Zurich West) carry most of the city\'s plant-based dining. Zurich has one of the highest fully-vegan ratios per capita in central Europe.',
+  'Dublin, Ireland': 'Temple Bar, Stoneybatter and Ranelagh host most of Dublin\'s plant-based dining. Vegan full Irish breakfasts and plant-based pub menus are now standard finds.',
+
+  // Scandinavia
+  'Gothenburg, Sweden': 'Linnéstaden, Haga and Majorna are the most vegan-dense Gothenburg neighborhoods. Sweden\'s sustainability culture means most cafés have plant-based defaults.',
+  'Malmo, Sweden': 'Möllevången and the city centre carry most of Malmö\'s plant-based dining. Malmö has one of the most progressive vegan scenes in Scandinavia.',
+  'Tampere, Finland': 'Tampere\'s plant-based dining clusters around the city centre and Pyynikki. The city has a stronger vegan offering than its size would suggest.',
+
+  // North America
+  'Philadelphia, United States': 'South Street, Fishtown and West Philly host most of Philadelphia\'s plant-based dining. Philadelphia has one of the strongest fully-vegan presences on the US East Coast.',
+  'Chicago, United States': 'Logan Square, Wicker Park and Andersonville are the densest Chicago neighborhoods for plant-based dining. Plant-based deep-dish pizza and vegan Chicago hot dogs are part of the scene.',
+  'San Diego, United States': 'North Park, Hillcrest and Encinitas (north of the city) carry most of San Diego\'s plant-based dining. The Southern California vegan share is one of the highest in the US.',
+  'Austin, United States': 'East Austin, South Congress and the University area host most of Austin\'s plant-based dining. The city has a strong fully-vegan share with vegan BBQ, tacos and food trucks.',
+  'Phoenix, United States': 'The Roosevelt Row arts district and Tempe (university area) carry most of Phoenix metro\'s plant-based dining.',
+  'Washington, United States': 'Logan Circle, U Street and Adams Morgan are the densest DC neighborhoods for plant-based dining.',
+  'Denver, United States': 'RiNo, Highland and Capitol Hill host most of Denver\'s plant-based dining. The city has steady fully-vegan growth alongside Colorado\'s wider plant-based scene.',
+  'Salt Lake City, United States': 'Sugar House, the 9th & 9th area and Downtown carry most of Salt Lake City\'s plant-based dining. The city has a stronger vegan scene than visitors expect.',
+  'Atlanta, United States': 'East Atlanta, Old Fourth Ward and Decatur are the most vegan-dense neighborhoods. Atlanta has one of the strongest Black-vegan scenes in the US, with dedicated soul-food vegan restaurants.',
+
+  // Australia + NZ
+  'Brisbane, Australia': 'West End, Fortitude Valley and South Brisbane host most of Brisbane\'s plant-based dining. The city\'s cafe culture means vegan brunch options are standard.',
+  'Melbourne, Australia': 'Fitzroy, Brunswick and St Kilda are the densest Melbourne neighborhoods for plant-based dining. Melbourne has one of the world\'s strongest fully-vegan shares, especially for plant-based brunch.',
+  'Sydney, Australia': 'Newtown, Surry Hills and Bondi carry most of Sydney\'s plant-based dining. The city has a steady fully-vegan presence and strong plant-based fusion scene.',
+  'Christchurch, New Zealand': 'The Christchurch CBD and Riccarton host most of the city\'s plant-based dining. New Zealand\'s strong dairy industry makes the vegan scene punch above weight.',
+
+  // Asia
+  'Singapore, Singapore': 'Tiong Bahru, Joo Chiat and Bugis carry most of Singapore\'s plant-based dining. The city\'s Buddhist and Hindu vegetarian traditions plus a growing modern vegan scene make plant-based eating easy.',
+  'Bengaluru, India': 'Indiranagar, Koramangala and Jayanagar host most of Bengaluru\'s plant-based dining. Indian vegetarian-by-default culture means most South Indian dishes (idli, dosa, sambar) are naturally vegan; dedicated vegan spots are growing.',
+  'New Delhi, India': 'Hauz Khas Village, Khan Market and Connaught Place carry most of New Delhi\'s plant-based dining. North Indian vegetarian dishes (chana masala, dal, aloo gobi) are naturally vegan with light adjustments.',
+  'Varanasi, India': 'Most plant-based dining in Varanasi is concentrated near the Assi Ghat and the Old City. Sattvic and Hindu temple cuisine traditions mean naturally-vegan options are everywhere.',
+  'Kochi, India': 'Fort Kochi and Mattancherry host most of Kochi\'s plant-based dining. Kerala\'s coconut-based cooking and Hindu vegetarian tradition make naturally-vegan options easy to find.',
+  'Leh, India': 'Leh\'s small plant-based scene is centered in the main bazaar area. Tibetan-Buddhist food traditions plus a growing yoga-traveler crowd support steady vegan options.',
+  'Hanoi, Vietnam': 'The Old Quarter, Tay Ho and Ba Dinh host most of Hanoi\'s plant-based dining. Vietnamese Buddhist (chay) cuisine plus a growing modern vegan scene make plant-based eating straightforward.',
+  'Ho Chi Minh City, Vietnam': 'District 1, District 3 and Thao Dien (District 2) carry most of HCMC\'s plant-based dining. Vietnamese chay (Buddhist vegan) traditions plus a strong international vegan scene make the city excellent for plant-based travel.',
+  'Seoul, South Korea': 'Itaewon, Hongdae and Gangnam are the densest Seoul neighborhoods for plant-based dining. Korean Buddhist temple cuisine plus a growing modern vegan scene make plant-based eating viable, especially for those willing to specify "no meat or fish".',
+  'Osaka, Japan': 'Osaka\'s plant-based scene is mostly in Namba, Shinsaibashi and Umeda. Vegan ramen, plant-based okonomiyaki and shojin-ryori options are growing alongside Osaka\'s famous food culture.',
+  'Beijing, China': 'Sanlitun, Wudaokou and the hutongs near Houhai carry most of Beijing\'s plant-based dining. Buddhist sushi (zhai) restaurants plus a small modern vegan scene make plant-based eating possible with planning.',
+  'Kuala Lumpur, Malaysia': 'Bangsar, Bukit Bintang and Petaling Jaya host most of KL\'s plant-based dining. Malaysian Indian and Chinese-Buddhist vegetarian traditions plus a growing modern vegan scene make plant-based eating easier than expected.',
+
+  // South America
+  'Bogota, Colombia': 'Chapinero, La Candelaria and Usaquén carry most of Bogotá\'s plant-based dining. The city has Latin America\'s most progressive vegan scene alongside Mexico City and São Paulo.',
+  'Sao Paulo, Brazil': 'Vila Madalena, Pinheiros and Jardins are the densest São Paulo neighborhoods for plant-based dining. Brazil\'s biggest city has the strongest vegan scene in South America.',
+  'Porto Alegre, Brazil': 'Cidade Baixa and Bom Fim host most of Porto Alegre\'s plant-based dining. Southern Brazil\'s vegan scene is smaller than São Paulo\'s but growing fast.',
+
+  // Middle East
+  'Dubai, United Arab Emirates': 'Jumeirah, Al Quoz and Downtown Dubai carry most of Dubai\'s plant-based dining. The city has a fast-growing vegan scene driven by international expat demand and luxury-focused plant-based restaurants.',
+
+  // Austrian + others
+  'Salzburg, Austria': 'The Altstadt and Neustadt host most of Salzburg\'s plant-based dining. The city has a steady vegan presence alongside its traditional Austrian fare.',
 }
 
 interface PlaceStats {
