@@ -22,9 +22,14 @@ interface PlaceMapProps {
   address: string
   category?: string
   veganLevel?: string
+  // Optional - when present, /map will center on this exact place and try
+  // to auto-focus its marker instead of geocoding the address (which can
+  // land near the user's current location).
+  placeId?: string
+  placeSlug?: string | null
 }
 
-export default function PlaceMap({ latitude, longitude, name, address, category, veganLevel }: PlaceMapProps) {
+export default function PlaceMap({ latitude, longitude, name, address, category, veganLevel, placeId, placeSlug }: PlaceMapProps) {
   const [customIcon, setCustomIcon] = useState<Icon | null>(null)
 
   useEffect(() => {
@@ -35,7 +40,15 @@ export default function PlaceMap({ latitude, longitude, name, address, category,
 
   return (
     <Link
-      href={`/map?location=${encodeURIComponent(address)}`}
+      href={(() => {
+        const params = new URLSearchParams()
+        params.set('lat', latitude.toString())
+        params.set('lng', longitude.toString())
+        params.set('zoom', '17')
+        if (placeId) params.set('place', placeId)
+        else if (placeSlug) params.set('place', placeSlug)
+        return `/map?${params.toString()}`
+      })()}
       className="block h-64 rounded-lg overflow-hidden ghost-border relative z-0 group cursor-pointer"
     >
       <MapContainer

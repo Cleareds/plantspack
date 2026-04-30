@@ -96,6 +96,10 @@ interface MapViewProps {
   onToggleFavorite: (placeId: string) => void
   onDeletePlace: (placeId: string) => void
   loading: boolean
+  // When set, MapView tries to auto-open the popup for the place whose id
+  // or slug matches, once that marker is rendered. Used by the "View on
+  // full map" link from a place page.
+  focusPlace?: string | null
 }
 
 // Memoized so re-renders in MapContainer (e.g. search-bar typing) don't force
@@ -118,6 +122,7 @@ function MapViewImpl({
   onToggleFavorite,
   onDeletePlace,
   loading,
+  focusPlace,
 }: MapViewProps) {
   return (
     <div className="flex-1 relative min-h-0 w-full">
@@ -195,6 +200,14 @@ function MapViewImpl({
             <Marker
               key={place.id}
               position={[place.latitude, place.longitude]}
+              ref={focusPlace && (place.id === focusPlace || (place as any).slug === focusPlace)
+                ? (m: any) => {
+                  // Auto-open the popup for the place the user came from.
+                  // Defer slightly so the marker is fully attached to the
+                  // Leaflet layer and parent cluster.
+                  if (m) setTimeout(() => { try { m.openPopup() } catch {} }, 150)
+                }
+                : undefined}
               icon={
                 getCategoryIcon
                   ? getCategoryIcon(

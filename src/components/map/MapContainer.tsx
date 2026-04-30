@@ -24,6 +24,14 @@ type Place = Tables<'places'> & {
 export default function MapContainerComponent() {
   const searchParams = useSearchParams()
   const initialLocation = searchParams.get('location')
+  // Direct-coords variant (used by "View on full map" from a place card):
+  // lat/lng skip the geocoding lottery, place id/slug auto-opens that
+  // marker once it appears in the loaded set.
+  const initialLat = parseFloat(searchParams.get('lat') || '')
+  const initialLng = parseFloat(searchParams.get('lng') || '')
+  const initialZoom = parseFloat(searchParams.get('zoom') || '')
+  const focusPlace = searchParams.get('place')
+  const hasDirectCoords = Number.isFinite(initialLat) && Number.isFinite(initialLng)
   const shouldOpenAddForm = searchParams.get('add') === 'true'
   const { user, authReady } = useAuth()
 
@@ -123,7 +131,7 @@ export default function MapContainerComponent() {
 
     if (!navigator.geolocation) {
       setUserLocation(defaultLocation)
-      if (!initialLocation) setMapCenter(defaultLocation)
+      if (!initialLocation && !hasDirectCoords) setMapCenter(defaultLocation)
       return
     }
 
@@ -134,12 +142,12 @@ export default function MapContainerComponent() {
         if (permission.state === 'prompt') {
           // Don't auto-prompt — use default location, user can click locate button
           setUserLocation(defaultLocation)
-          if (!initialLocation) setMapCenter(defaultLocation)
+          if (!initialLocation && !hasDirectCoords) setMapCenter(defaultLocation)
           return
         }
         if (permission.state === 'denied') {
           setUserLocation(defaultLocation)
-          if (!initialLocation) setMapCenter(defaultLocation)
+          if (!initialLocation && !hasDirectCoords) setMapCenter(defaultLocation)
           return
         }
       } catch {
@@ -151,11 +159,11 @@ export default function MapContainerComponent() {
       (position) => {
         const location: [number, number] = [position.coords.latitude, position.coords.longitude]
         setUserLocation(location)
-        if (!initialLocation) setMapCenter(location)
+        if (!initialLocation && !hasDirectCoords) setMapCenter(location)
       },
       () => {
         setUserLocation(defaultLocation)
-        if (!initialLocation) setMapCenter(defaultLocation)
+        if (!initialLocation && !hasDirectCoords) setMapCenter(defaultLocation)
       },
       { timeout: 10000, maximumAge: 300000, enableHighAccuracy: false }
     )
@@ -321,9 +329,23 @@ export default function MapContainerComponent() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Geocode initial location from URL
+  // Direct-coords path: lat/lng (and optional zoom) come straight from a
+  // place card's "View on full map" link. Skip geocoding entirely.
   useEffect(() => {
-    if (!initialLocation || !authReady) return
+    if (!hasDirectCoords || !authReady) return
+    const newCenter: [number, number] = [initialLat, initialLng]
+    setMapCenter(newCenter)
+    setCustomCenter(newCenter)
+    setTimeout(() => {
+      if (mapRef.current) {
+        mapRef.current.setView(newCenter, Number.isFinite(initialZoom) ? initialZoom : 17)
+      }
+    }, 100)
+  }, [hasDirectCoords, initialLat, initialLng, initialZoom, authReady, setCustomCenter])
+
+  // Geocode initial location from URL (the older ?location=... path).
+  useEffect(() => {
+    if (!initialLocation || hasDirectCoords || !authReady) return
     const geocodeInitialLocation = async () => {
       try {
         const data = await geocodingService.search(initialLocation, { limit: 1 })
@@ -348,7 +370,7 @@ export default function MapContainerComponent() {
       }
     }
     geocodeInitialLocation()
-  }, [initialLocation, authReady])
+  }, [initialLocation, hasDirectCoords, authReady])
 
   // Event listeners are now attached inside MapEventHandler (in MapView)
   // which has direct access to the Leaflet map instance via useMap()
@@ -483,6 +505,7 @@ export default function MapContainerComponent() {
           onToggleFavorite={toggleFavorite}
           onDeletePlace={handleDeletePlace}
           loading={loading}
+          focusPlace={focusPlace}
         />
 
         {/* Floating panel toggle button (mobile only, when panel closed) */}
