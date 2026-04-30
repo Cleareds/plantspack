@@ -77,6 +77,9 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'molenbeek-saint-jean - sint-jans-molenbeek': 'Molenbeek',
   // Germany / Austria
   'köln': 'Cologne', 'münchen': 'Munich', 'nürnberg': 'Nuremberg', 'wien': 'Vienna',
+  // Denmark - English exonym for capital + strip "Kommune" suffix from municipality names
+  'københavn': 'Copenhagen', 'kobenhavn': 'Copenhagen', 'koebenhavn': 'Copenhagen',
+  'tonder kommune': 'Tønder', 'tønder kommune': 'Tønder',
   // Netherlands
   'den haag': "The Hague", "'s-gravenhage": "The Hague",
   // South Korea
@@ -272,6 +275,11 @@ export const CITY_OVERRIDES: Record<string, string> = {
   'општини куршумлија': 'Kursumlija', 'општини сокобања': 'Sokobanja',
   'београд (врачар)': 'Belgrade',
 };
+
+// Hard-blocked ISO codes: never import. Russia per project policy
+// (see CLAUDE.md), Belarus added defensively (auth regime / sanctions).
+// Both also absent from COUNTRY_NAMES below as a second layer of defense.
+export const BLOCKED_COUNTRIES = new Set(['RU', 'BY'])
 
 export const COUNTRY_NAMES: Record<string, string> = {
   // Europe
