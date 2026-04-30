@@ -7,6 +7,11 @@ import { Globe } from 'lucide-react'
 // Add entries here when a country renames or when we consolidate variants.
 const COUNTRY_REDIRECTS: Record<string, string> = {
   'macedonia': 'north-macedonia',
+  'italia': 'italy',
+  'czechia': 'czech-republic',
+  'ivory-coast': 'cote-d-ivoire',
+  'laramie': 'united-states',
+  'marktheidenfeld-altfeld': 'germany',
 }
 import { generateCountryDescription, generateCountryMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'

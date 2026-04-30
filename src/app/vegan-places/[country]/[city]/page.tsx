@@ -2,9 +2,15 @@ import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 
-// Mirror of COUNTRY_REDIRECTS in ../page.tsx.
+// Mirror of COUNTRY_REDIRECTS in ../page.tsx. Old country slugs that still
+// appear in external links / old indexes are 301'd to the canonical form.
 const COUNTRY_REDIRECTS: Record<string, string> = {
   'macedonia': 'north-macedonia',
+  'italia': 'italy',
+  'czechia': 'czech-republic',
+  'ivory-coast': 'cote-d-ivoire',
+  'laramie': 'united-states',
+  'marktheidenfeld-altfeld': 'germany',
 }
 
 // City slug renames after a merge. Keyed by country slug. Hits when an
