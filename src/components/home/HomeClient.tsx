@@ -177,7 +177,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number } | null>(initData?.stats || null)
+  const [stats, setStats] = useState<{ totalPlaces: number; fullyVegan: number; restaurants: number; stores: number; stays: number; sanctuaries: number; countries: number; cities: number; citiesRanked?: number } | null>(initData?.stats || null)
 
   // Load location-aware data with localStorage caching.
   // If server already rendered initialLocation, skip the initial loading
@@ -334,8 +334,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                       <p className="text-[11px] text-on-surface-variant">countries</p>
                     </div>
                     <div>
-                      <p className="text-xl font-black text-primary">{stats.cities.toLocaleString()}+</p>
-                      <p className="text-[11px] text-on-surface-variant">cities covered</p>
+                      <p className="text-xl font-black text-primary">{(stats.citiesRanked ?? 0).toLocaleString()}+</p>
+                      <p className="text-[11px] text-on-surface-variant">cities ranked</p>
                     </div>
                   </div>
                 )}

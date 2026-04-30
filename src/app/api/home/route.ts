@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       .limit(8),
     supabase
       .from('platform_stats')
-      .select('total_places, fully_vegan, restaurants, stores, stays, sanctuaries, countries, cities')
+      .select('total_places, fully_vegan, restaurants, stores, stays, sanctuaries, countries, cities, cities_ranked')
       .single(),
   ])
 
@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
   const sanctuaries = statsRow?.sanctuaries ?? 0
   const totalCountries = statsRow?.countries ?? 0
   const totalCities = statsRow?.cities ?? 0
+  const citiesRanked = statsRow?.cities_ranked ?? 0
 
   // Nearby places — only hit the `places` table if we have a location hint.
   let nearbyPlaces: any[] = []
@@ -165,6 +166,7 @@ export async function GET(request: NextRequest) {
       sanctuaries: sanctuaries || 0,
       countries: totalCountries,
       cities: totalCities,
+      citiesRanked,
     },
   }, {
     headers: {
