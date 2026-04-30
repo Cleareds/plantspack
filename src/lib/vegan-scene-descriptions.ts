@@ -139,6 +139,39 @@ const CITY_CONTEXT: Record<string, string> = {
   'Brno, Czech Republic': 'Brno\'s student population drives a vibrant, affordable vegan scene. The city centre and Veveří neighborhoods offer diverse plant-based options.',
   'Dresden, Germany': 'The Neustadt district is Dresden\'s vegan heartland, with creative plant-based restaurants alongside the city\'s famous Baroque architecture.',
   'Bremen, Germany': 'Bremen\'s Viertel (Das Viertel) neighborhood is the center of the city\'s plant-based scene, with cafés and restaurants reflecting the area\'s alternative culture.',
+  'London, United Kingdom': 'Shoreditch, Hackney, Camden and Brixton anchor the London vegan scene, with the highest concentration of fully-vegan spots in the East End. Plant-based fish and chips, vegan Sunday roasts and dairy-free afternoon tea are all easy finds.',
+  'Amsterdam, Netherlands': 'De Pijp, Jordaan and Oost are the densest neighborhoods for plant-based dining in Amsterdam. The city\'s long head start on plant-based innovation shows in everything from vegan bitterballen to dedicated vegan supermarkets.',
+  'New York, United States': 'Manhattan\'s East Village, Lower East Side and Williamsburg in Brooklyn are the heart of NYC\'s vegan scene. Long-standing all-vegan institutions sit alongside newer chef-driven spots, with a stronger fully-vegan share than most US cities.',
+  'Brooklyn, United States': 'Williamsburg, Greenpoint and Bushwick host most of Brooklyn\'s independent vegan spots. The borough leans more fully-vegan and chef-driven than Manhattan, with strong representation of plant-based pizza, donuts and ice cream.',
+  'Los Angeles, United States': 'Silver Lake, Echo Park, Venice and Highland Park are the densest LA neighborhoods for plant-based dining. LA has one of the highest fully-vegan ratios of any large US city, including dedicated vegan butchers and creameries.',
+  'Barcelona, Spain': 'Gràcia, El Born and Eixample are where most plant-based dining clusters in Barcelona. The city has shifted faster than the Spanish average, with vegan tapas, plant-based paella and dedicated vegan bakeries in steady supply.',
+  'Madrid, Spain': 'Malasaña, Chueca and Lavapiés are the central Madrid neighborhoods with the most vegan options. The scene leans toward casual all-day cafés and quick-bite spots more than fine dining.',
+  'Lisbon, Portugal': 'Cais do Sodré, Chiado and Príncipe Real are the densest Lisbon neighborhoods for plant-based dining. The vegan scene grew quickly from a low base and includes a notable share of fully-vegan restaurants.',
+  'Rome, Italy': 'Trastevere, Monti and the Centro Storico are where most of Rome\'s plant-based dining sits. Naturally-vegan Roman pasta dishes, vegan pizza al taglio, and dairy-free gelato are easy finds.',
+  'Milan, Italy': 'Navigli, Isola and Porta Venezia carry most of Milan\'s vegan scene. The city has a stronger ratio of dedicated vegan restaurants than Italy\'s average, plus a growing plant-based aperitivo culture.',
+  'Florence, Italy': 'Oltrarno and Santa Croce are where Florence\'s small but solid plant-based scene clusters. Naturally-vegan Tuscan dishes - ribollita, panzanella, fagioli all\'uccelletto - cover most menus.',
+  'Athens, Greece': 'Exarchia, Koukaki and Pangrati are where Athens\' plant-based dining clusters. Greek Orthodox fasting traditions mean naturally-vegan classics (gigantes, fasolada, briam, dolmades) are on most taverna menus.',
+  'Istanbul, Turkey': 'Cihangir, Karaköy and Kadıköy host most of Istanbul\'s plant-based dining. Turkish meze, vegan döner and dairy-free baklava have all become easier to find in central neighborhoods.',
+  'Stockholm, Sweden': 'Södermalm and Vasastan are the most vegan-dense neighborhoods in Stockholm. Sweden\'s sustainability-focused food culture means plant-milk and vegan options are on most café menus by default.',
+  'Oslo, Norway': 'Grünerløkka and Sentrum carry most of Oslo\'s plant-based scene. Plant-based Nordic ingredients - root vegetables, foraged greens, mushrooms - feature heavily.',
+  'Reykjavik, Iceland': 'Most of Reykjavik\'s plant-based dining sits in 101 Reykjavik (the central postcode). The scene is small but punches above its weight given the city\'s size, and plant-based Icelandic dishes are increasingly on menus.',
+  'Edinburgh, United Kingdom': 'Bruntsfield, Newington and Leith carry most of Edinburgh\'s plant-based scene. Scottish staples including vegan haggis and plant-based full Scottish breakfasts are widely available.',
+  'Manchester, United Kingdom': 'The Northern Quarter, Ancoats and Chorlton are the densest neighborhoods for vegan dining in Manchester. The city has one of the strongest fully-vegan shares in the UK outside London.',
+  'Brighton, United Kingdom': 'North Laine, Kemptown and Hove host most of Brighton\'s plant-based dining. Brighton has long been the highest-vegan-density city in the UK by population.',
+  'Toronto, Canada': 'Kensington Market, Queen West and Leslieville are where Toronto\'s vegan scene clusters. The city has one of North America\'s most diverse plant-based ranges, especially for vegan Asian food.',
+  'Montreal, Canada': 'Plateau Mont-Royal, Mile End and Le Plateau are the densest Montreal neighborhoods for plant-based dining. The city has notable vegan poutine, plant-based bagels and dairy-free patisserie.',
+  'Vancouver, Canada': 'Mount Pleasant, Commercial Drive and Gastown are the most vegan-dense Vancouver neighborhoods. The city has one of the highest fully-vegan ratios in Canada.',
+  'San Francisco, United States': 'The Mission, Hayes Valley and Berkeley (across the bay) host most of the Bay Area\'s plant-based dining. The Bay Area pioneered plant-based fine dining and still has one of the highest fully-vegan shares in the US.',
+  'Portland, United States': 'Mississippi Avenue, Division Street and Alberta Street are the most vegan-dense Portland neighborhoods. Portland has the highest fully-vegan share of any major US city, with dedicated vegan strip malls and bakeries.',
+  'Seattle, United States': 'Capitol Hill, Ballard and Fremont host most of Seattle\'s plant-based dining. The city has steady all-vegan presence, especially for plant-based fast-casual.',
+  'Tel Aviv, Israel': 'Florentin, Rothschild and the Carmel Market area are the densest neighborhoods for vegan dining in Tel Aviv. Tel Aviv has long claimed the highest per-capita vegan share globally, with vegan options standard on most menus.',
+  'Tokyo, Japan': 'Shibuya, Shimokitazawa and Kichijōji are the most vegan-dense Tokyo neighborhoods. Vegan ramen, plant-based sushi and shojin-ryori (Buddhist temple cuisine) are easier finds than visitors expect.',
+  'Kyoto, Japan': 'Shojin-ryori (Buddhist temple cuisine) is naturally vegan and Kyoto has the strongest tradition of it in Japan. The Higashiyama district holds most of the city\'s dedicated vegan and shojin-ryori restaurants.',
+  'Bangkok, Thailand': 'Sukhumvit, Silom and Ari are the densest Bangkok neighborhoods for plant-based dining. Thai cuisine adapts well to vegan, and dedicated vegan and Buddhist-tradition jay restaurants are widely available.',
+  'Chiang Mai, Thailand': 'The Old City, Nimmanhaemin and Santitham host most of Chiang Mai\'s plant-based scene. Chiang Mai has more dedicated vegan restaurants per capita than Bangkok, helped by the Buddhist jay food tradition.',
+  'Bali, Indonesia': 'Ubud, Canggu and Seminyak are where most of Bali\'s plant-based dining sits. Bali has one of Southeast Asia\'s densest concentrations of vegan and raw-vegan restaurants, especially around Ubud.',
+  'Ubud, Indonesia': 'Ubud is the vegan and yoga heart of Bali. Plant-based, raw-vegan and macrobiotic restaurants are on virtually every street in the central area, alongside traditionally-vegan Balinese dishes.',
+  'Mexico City, Mexico': 'Roma Norte, Condesa and Coyoacán carry most of Mexico City\'s plant-based scene. Naturally-vegan Mexican dishes (frijoles, nopales, salsas) plus dedicated vegan taquerias make it easier to eat plant-based here than visitors expect.',
 }
 
 interface PlaceStats {
@@ -285,49 +318,44 @@ export function generateCityDescription(
   const ctx = CITY_CONTEXT[`${cityName}, ${countryName}`]
   const parts: string[] = []
 
-  // Search-intent opening
-  if (stats.total > 30) {
-    parts.push(`Looking for the best vegan food in ${cityName}? We've verified ${stats.total} plant-based restaurants, cafés, and shops across the city.`)
-  } else if (stats.total > 10) {
-    parts.push(`${cityName} has ${stats.total} vegan-friendly places worth visiting — from fully plant-based restaurants to shops stocking vegan products.`)
+  // Lead with the count, no rhetorical opener.
+  // Different shapes by size so all 10K cities don't read identically.
+  const fvFragment = stats.fullyVegan > 0
+    ? `, ${stats.fullyVegan} of them fully vegan`
+    : ''
+  if (stats.total >= 100) {
+    parts.push(`${cityName} has ${stats.total} vegan and vegan-friendly places listed${fvFragment}.`)
+  } else if (stats.total >= 20) {
+    parts.push(`${stats.total} vegan and vegan-friendly places in ${cityName}${fvFragment}.`)
+  } else if (stats.total >= 5) {
+    parts.push(`${stats.total} places with vegan options across ${cityName}${fvFragment}.`)
   } else {
-    parts.push(`Find ${stats.total} vegan ${stats.total === 1 ? 'place' : 'places'} in ${cityName}, ${countryName}.`)
+    parts.push(`${stats.total} vegan ${stats.total === 1 ? 'place' : 'places'} in ${cityName} so far - help us grow the list.`)
   }
 
-  // Breakdown
-  const catParts: string[] = []
-  if (stats.categories.eat) catParts.push(`${stats.categories.eat} places to eat`)
-  if (stats.categories.store) catParts.push(`${stats.categories.store} vegan ${stats.categories.store === 1 ? 'shop' : 'shops'}`)
-  if (stats.categories.hotel) catParts.push(`${stats.categories.hotel} places to stay`)
-  if (catParts.length > 1) {
-    parts.push(`Browse ${catParts.join(', ')}.`)
+  // Category breakdown - only when meaningful spread.
+  const catBits: string[] = []
+  if (stats.categories.eat) catBits.push(`${stats.categories.eat} restaurants and cafes`)
+  if (stats.categories.store) catBits.push(`${stats.categories.store} shops`)
+  if (stats.categories.hotel) catBits.push(`${stats.categories.hotel} ${stats.categories.hotel === 1 ? 'stay' : 'stays'}`)
+  if (catBits.length >= 2 && stats.total >= 10) {
+    parts.push(`Mix is roughly ${catBits.join(', ')}.`)
   }
 
-  // Cuisine variety
-  const cuisineStr = formatCuisineList(stats.cuisines)
-  if (cuisineStr) {
-    parts.push(`You'll find ${cuisineStr} cuisine — all vegan.`)
-  }
-
-  // City-specific context
+  // City-specific cultural context (manually curated for top cities).
   if (ctx) {
     parts.push(ctx)
   }
 
-  // Sample places
-  const placeStr = formatPlaceNames(stats.sampleNames, 4)
-  if (placeStr) {
-    parts.push(`Highlights include ${placeStr}.`)
+  // Cuisine variety - phrased as actual coverage, not marketing.
+  const cuisineStr = formatCuisineList(stats.cuisines)
+  if (cuisineStr && stats.total >= 10) {
+    parts.push(`Cuisines covered: ${cuisineStr}.`)
   }
 
-  // Fully vegan stat
-  if (stats.fullyVegan > 3) {
-    parts.push(`${stats.fullyVegan} of these are 100% vegan.`)
-  }
-
-  // Pet-friendly
-  if (stats.petFriendly > 0) {
-    parts.push(`${stats.petFriendly} ${stats.petFriendly === 1 ? 'place welcomes' : 'places welcome'} dogs.`)
+  // Pet-friendly - useful tactical info, not filler.
+  if (stats.petFriendly >= 3) {
+    parts.push(`${stats.petFriendly} of them welcome dogs.`)
   }
 
   return parts.join(' ')

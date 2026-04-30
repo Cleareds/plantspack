@@ -28,6 +28,7 @@ import { FilteredTotal } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
+import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
@@ -485,6 +486,38 @@ export default async function CityPage({ params }: PageProps) {
             />
           </div>
         )}
+
+        {/* Visible FAQ - mirrors the FAQ JSON-LD for rich-snippet eligibility
+            (Google rewards FAQ schema more when the questions are visible
+            on the page). All answers are grounded in real DB data. */}
+        {(() => {
+          const eatList = places.filter((p: Place) => p.category === 'eat')
+          const topPlace = [...eatList].sort(
+            (a, b) => (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0),
+          )[0]
+          const storeCount = places.filter((p: Place) => p.category === 'store').length
+          const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
+          const cuisineCounts: Record<string, number> = {}
+          for (const p of places) for (const c of (p.cuisine_types || [])) {
+            if (!c || c === 'regional' || c === 'yes' || c === 'vegan') continue
+            cuisineCounts[c.replace(/_/g, ' ')] = (cuisineCounts[c.replace(/_/g, ' ')] || 0) + 1
+          }
+          const cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => k)
+          return (
+            <CityFaq
+              cityName={cityName}
+              countryName={countryName}
+              total={places.length}
+              fullyVegan={places.filter((p: Place) => p.vegan_level === 'fully_vegan').length}
+              topPlaceName={topPlace?.name}
+              topPlaceRating={topPlace?.average_rating || undefined}
+              topPlaceReviews={topPlace?.review_count || undefined}
+              cuisines={cuisines}
+              storeCount={storeCount}
+              hotelCount={hotelCount}
+            />
+          )
+        })()}
 
         {/* Related: other cities in the same country */}
         <div className="mt-16 pt-8 border-t border-outline-variant/15">
