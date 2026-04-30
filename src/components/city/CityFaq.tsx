@@ -16,6 +16,7 @@ interface CityFaqProps {
   topPlaceSlug?: string | null
   topPlaceRating?: number
   topPlaceReviews?: number
+  topPlaceIsFullyVegan?: boolean
   cuisines: string[]
   storeCount: number
   hotelCount: number
@@ -61,19 +62,30 @@ export function CityFaq(props: CityFaqProps) {
     })
   }
 
-  if (props.topPlaceName) {
+  // Only emit the highest-rated question when we have a real signal
+  // (>=1 review). Otherwise the answer would be picked by sort tiebreak,
+  // which leads to misleading picks like a 0-review vegan-friendly cafe
+  // showing up as the city's top place.
+  if (props.topPlaceName && (props.topPlaceReviews ?? 0) >= 1 && (props.topPlaceRating ?? 0) > 0) {
     const placeNode = props.topPlaceSlug
       ? <Link href={`/place/${props.topPlaceSlug}`} className="text-primary hover:underline font-semibold">{props.topPlaceName}</Link>
       : <strong>{props.topPlaceName}</strong>
+    // Phrase the question according to what won: fully vegan or
+    // vegan-friendly. We never claim "vegan place" about a vegan-friendly
+    // spot that also serves animal products.
+    const q = props.topPlaceIsFullyVegan
+      ? `What's the top-rated fully vegan place in ${props.cityName}?`
+      : `What's the most-reviewed vegan-friendly spot in ${props.cityName}?`
     items.push({
-      q: `What's the highest-rated vegan place in ${props.cityName}?`,
+      q,
       a: (
         <>
-          {placeNode}
-          {props.topPlaceRating
-            ? <> currently leads on community ratings ({props.topPlaceRating.toFixed(1)}/5{props.topPlaceReviews ? ` from ${props.topPlaceReviews} ${props.topPlaceReviews === 1 ? 'review' : 'reviews'}` : ''}).</>
-            : <> is among the most-visited vegan spots here.</>
-          }
+          {placeNode}{' '}
+          {props.topPlaceIsFullyVegan ? 'is fully vegan and ' : ''}
+          currently leads on community ratings (
+          {props.topPlaceRating!.toFixed(1)}/5
+          {props.topPlaceReviews ? ` from ${props.topPlaceReviews} ${props.topPlaceReviews === 1 ? 'review' : 'reviews'}` : ''}
+          ).
         </>
       ),
     })

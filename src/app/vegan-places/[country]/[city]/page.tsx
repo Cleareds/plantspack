@@ -239,13 +239,16 @@ function generateFaqJsonLd(args: {
       },
     })
   }
-  if (topPlace) {
+  if (topPlace && (topPlace.review_count || 0) >= 1 && (topPlace.average_rating || 0) > 0) {
+    const isFv = topPlace.vegan_level === 'fully_vegan'
     main.push({
       '@type': 'Question',
-      name: `What's the highest-rated vegan place in ${cityName}?`,
+      name: isFv
+        ? `What's the top-rated fully vegan place in ${cityName}?`
+        : `What's the most-reviewed vegan-friendly spot in ${cityName}?`,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: `${topPlace.name}${topPlace.average_rating ? ` has the highest community rating (${topPlace.average_rating.toFixed(1)}/5 from ${topPlace.review_count || 0} reviews)` : ' is highly rated'} among vegan places in ${cityName} on PlantsPack.`,
+        text: `${topPlace.name}${isFv ? ' is fully vegan and' : ''} has the highest community rating (${topPlace.average_rating!.toFixed(1)}/5 from ${topPlace.review_count} ${topPlace.review_count === 1 ? 'review' : 'reviews'}) on PlantsPack.`,
       },
     })
   }
@@ -355,9 +358,14 @@ export default async function CityPage({ params }: PageProps) {
         const eatList = places.filter((p: Place) => p.category === 'eat')
         const storeCount = places.filter((p: Place) => p.category === 'store').length
         const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
-        const topPlace = [...eatList].sort(
-          (a, b) => (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0),
-        )[0]
+        // Same picker as the visible FAQ - reviews>=1 minimum bar, prefer
+        // fully_vegan, fall back to any reviewed. Avoids 0-review tiebreak
+        // picking arbitrary places as the "top".
+        const reviewed = eatList.filter((p: Place) => (p.review_count || 0) >= 1 && (p.average_rating || 0) > 0)
+        const cmpRR = (a: Place, b: Place) =>
+          (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0)
+        const topFv = reviewed.filter((p: Place) => p.vegan_level === 'fully_vegan').sort(cmpRR)[0]
+        const topPlace: Place | undefined = topFv || [...reviewed].sort(cmpRR)[0]
         const cuisineCounts: Record<string, number> = {}
         for (const p of places) for (const c of (p.cuisine_types || [])) {
           if (c) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
@@ -495,9 +503,16 @@ export default async function CityPage({ params }: PageProps) {
             on the page). All answers are grounded in real DB data. */}
         {(() => {
           const eatList = places.filter((p: Place) => p.category === 'eat')
-          const topPlace = [...eatList].sort(
-            (a, b) => (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0),
-          )[0]
+          // Pick top place: only places with at least one review qualify
+          // (otherwise "highest-rated" becomes a sort-tiebreak coin flip).
+          // Prefer fully_vegan, fall back to any with reviews. Sort by
+          // review count then rating.
+          const reviewed = eatList.filter((p: Place) => (p.review_count || 0) >= 1 && (p.average_rating || 0) > 0)
+          const sortByReviewsRating = (a: Place, b: Place) =>
+            (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0)
+          const topFullyVegan = reviewed.filter((p: Place) => p.vegan_level === 'fully_vegan').sort(sortByReviewsRating)[0]
+          const topReviewed = [...reviewed].sort(sortByReviewsRating)[0]
+          const topPlace = topFullyVegan || topReviewed
           const storeCount = places.filter((p: Place) => p.category === 'store').length
           const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
           const cuisineCounts: Record<string, number> = {}
@@ -516,6 +531,7 @@ export default async function CityPage({ params }: PageProps) {
               topPlaceSlug={topPlace?.slug}
               topPlaceRating={topPlace?.average_rating || undefined}
               topPlaceReviews={topPlace?.review_count || undefined}
+              topPlaceIsFullyVegan={topPlace?.vegan_level === 'fully_vegan'}
               cuisines={cuisines}
               storeCount={storeCount}
               hotelCount={hotelCount}
