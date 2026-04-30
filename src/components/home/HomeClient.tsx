@@ -335,7 +335,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                     </div>
                     <div>
                       <p className="text-xl font-black text-primary">{stats.cities.toLocaleString()}+</p>
-                      <p className="text-[11px] text-on-surface-variant">cities ranked</p>
+                      <p className="text-[11px] text-on-surface-variant">cities covered</p>
                     </div>
                   </div>
                 )}
@@ -351,8 +351,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 <div className="grid grid-cols-3 gap-2">
                   {([
                     { icon: '🗺️', title: 'Browse the map', desc: 'See every vegan spot near you', href: '/map' },
-                    { icon: '🌍', title: 'Pick a city', desc: 'Vegan guides for 500+ cities', href: '/vegan-places' },
-                    { icon: '🏆', title: 'City ranks', desc: 'See where vegans live best', href: '/city-ranks' },
+                    { icon: '🌍', title: 'Pick a city', desc: 'Vegan guides for 9,000+ cities', href: '/vegan-places' },
+                    { icon: '🏆', title: 'City ranks', desc: '1,300+ cities scored on density and quality', href: '/city-ranks' },
                   ]).map(s => (
                     <Link
                       key={s.title}
