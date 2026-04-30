@@ -23,13 +23,16 @@ export const metadata: Metadata = {
   },
 }
 
+// Country names include common synonyms (Czechia / Czech Republic, Ivory
+// Coast / Côte d'Ivoire) so DB rows under either form sort to the right
+// continent without a data migration.
 const CONTINENTS: Record<string, string[]> = {
-  'Europe': ['Albania','Andorra','Austria','Belarus','Belgium','Bosnia and Herzegovina','Bulgaria','Croatia','Cyprus','Czech Republic','Denmark','Estonia','Faroe Islands','Finland','France','Germany','Greece','Guernsey','Hungary','Iceland','Ireland','Italy','Jersey','Kosovo','Latvia','Liechtenstein','Lithuania','Luxembourg','Malta','Moldova','Monaco','Montenegro','Netherlands','North Macedonia','Norway','Poland','Portugal','Romania','Russia','Serbia','Slovakia','Slovenia','Spain','Sweden','Switzerland','Turkey','Ukraine','United Kingdom'],
-  'North America': ['Canada','Costa Rica','Cuba','Curacao','Dominican Republic','El Salvador','Guatemala','Honduras','Jamaica','Mexico','Nicaragua','Panama','Puerto Rico','Trinidad and Tobago','United States'],
+  'Europe': ['Albania','Andorra','Austria','Belarus','Belgium','Bosnia and Herzegovina','Bulgaria','Croatia','Cyprus','Czechia','Czech Republic','Denmark','Estonia','Faroe Islands','Finland','France','Germany','Gibraltar','Greece','Guernsey','Hungary','Iceland','Ireland','Isle of Man','Italy','Jersey','Kosovo','Latvia','Liechtenstein','Lithuania','Luxembourg','Malta','Moldova','Monaco','Montenegro','Netherlands','North Macedonia','Norway','Poland','Portugal','Romania','Russia','Serbia','Slovakia','Slovenia','Spain','Sweden','Switzerland','Turkey','Ukraine','United Kingdom'],
+  'North America': ['Antigua and Barbuda','Aruba','Bahamas','Barbados','Belize','Bermuda','Canada','Cayman Islands','Costa Rica','Cuba','Curacao','Dominica','Dominican Republic','El Salvador','Guatemala','Haiti','Honduras','Jamaica','Mexico','Nicaragua','Panama','Puerto Rico','Saint Kitts and Nevis','Saint Martin','St Martins','Trinidad and Tobago','United States'],
   'South America': ['Argentina','Bolivia','Brazil','Chile','Colombia','Ecuador','French Guiana','Guyana','Paraguay','Peru','Uruguay','Venezuela'],
-  'Asia': ['Afghanistan','Armenia','Azerbaijan','Bahrain','Bangladesh','Brunei','Cambodia','China','Georgia','Hong Kong','India','Indonesia','Iran','Iraq','Israel','Japan','Jordan','Kazakhstan','Kuwait','Kyrgyzstan','Laos','Lebanon','Macao','Malaysia','Maldives','Mongolia','Myanmar','Nepal','Oman','Pakistan','Palestine','Palestinian Territories','Philippines','Qatar','Saudi Arabia','Singapore','South Korea','Sri Lanka','Syria','Taiwan','Thailand','Turkey','United Arab Emirates','Uzbekistan','Vietnam'],
-  'Oceania': ['Australia','Fiji','New Caledonia','New Zealand'],
-  'Africa': ['Algeria','Botswana','Egypt','Ethiopia','Gabon','Ghana','Kenya','Madagascar','Mauritius','Morocco','Mozambique','Namibia','Nigeria','Reunion','Rwanda','Senegal','South Africa','Tanzania','Tunisia','Uganda','Zimbabwe'],
+  'Asia': ['Abkhazia','Afghanistan','Armenia','Azerbaijan','Bahrain','Bangladesh','Bhutan','Brunei','Cambodia','China','Georgia','Hong Kong','India','Indonesia','Iran','Iraq','Israel','Japan','Jordan','Kazakhstan','Kuwait','Kyrgyzstan','Laos','Lebanon','Macao','Malaysia','Maldives','Mongolia','Myanmar','Nepal','Oman','Pakistan','Palestine','Palestinian Territories','Philippines','Qatar','Saudi Arabia','Singapore','South Korea','Sri Lanka','Syria','Taiwan','Tajikistan','Thailand','Turkey','Turkmenistan','United Arab Emirates','Uzbekistan','Vietnam'],
+  'Oceania': ['Australia','Federated States of Micronesia','Fiji','Guam','New Caledonia','New Zealand'],
+  'Africa': ['Algeria','Angola','Benin','Botswana','Cabo Verde','Cameroon','Chad','Congo-Brazzaville','Côte d\'Ivoire','Democratic Republic of the Congo','Egypt','Ethiopia','Gabon','Ghana','Ivory Coast','Kenya','Lesotho','Libya','Madagascar','Mauritius','Morocco','Mozambique','Namibia','Niger','Nigeria','Reunion','Rwanda','Senegal','Seychelles','Somaliland','South Africa','Tanzania','The Gambia','Togo','Tunisia','Uganda','Zambia','Zimbabwe'],
 }
 
 const CONTINENT_EMOJI: Record<string, string> = {
@@ -112,6 +115,8 @@ export default async function VeganPlacesPage() {
     grouped[continent].push(country)
   }
 
+  // 'Other' (unmapped country names like mojibake / city-as-country bad
+  // data) is always pinned to the bottom regardless of place count.
   const sortedContinents = Object.entries(grouped)
     .map(([name, cs]) => ({
       name,
@@ -119,7 +124,11 @@ export default async function VeganPlacesPage() {
       totalPlaces: cs.reduce((sum: number, c: any) => sum + c.count, 0),
       totalFv: cs.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0),
     }))
-    .sort((a, b) => b.totalPlaces - a.totalPlaces)
+    .sort((a, b) => {
+      if (a.name === 'Other' && b.name !== 'Other') return 1
+      if (b.name === 'Other' && a.name !== 'Other') return -1
+      return b.totalPlaces - a.totalPlaces
+    })
 
   // Popular destinations — top 6 countries
   const popularDestinations = countries.slice(0, 6)
