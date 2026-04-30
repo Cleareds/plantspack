@@ -29,6 +29,8 @@ import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { loadCityImages } from '@/lib/city-images-server'
+import { getCityImage } from '@/lib/city-images'
 
 // SEO: city pages must be cacheable so Google spends crawl budget on them.
 // `force-dynamic` (no-store) means thousands of city pages are uncrawlable.
@@ -62,6 +64,34 @@ interface Place {
   cuisine_types: string[]
 }
 
+// Map our { Mon: "10:00-18:00", ... } shape to schema.org openingHoursSpecification.
+const DAYS_MAP: Record<string, string> = {
+  monday: 'Monday', mon: 'Monday',
+  tuesday: 'Tuesday', tue: 'Tuesday',
+  wednesday: 'Wednesday', wed: 'Wednesday',
+  thursday: 'Thursday', thu: 'Thursday',
+  friday: 'Friday', fri: 'Friday',
+  saturday: 'Saturday', sat: 'Saturday',
+  sunday: 'Sunday', sun: 'Sunday',
+}
+function buildOpeningHoursSpec(hours: Record<string, string> | null) {
+  if (!hours) return undefined
+  const out: any[] = []
+  for (const [k, v] of Object.entries(hours)) {
+    if (!v || v.toLowerCase() === 'closed') continue
+    const day = DAYS_MAP[k.toLowerCase()] ?? k
+    const m = v.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/)
+    if (!m) continue
+    out.push({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: `https://schema.org/${day}`,
+      opens: m[1],
+      closes: m[2],
+    })
+  }
+  return out.length ? out : undefined
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country, city } = await params
   const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
@@ -90,48 +120,148 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     ? `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots (${fv} Fully Vegan) | PlantsPack`
     : `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots | PlantsPack`
 
+  // Per-city og:image - improves SERP rich snippets and social previews.
+  // Falls back to the global og-image.png if no city image is on disk.
+  const cityImages = loadCityImages()
+  const cityImg = getCityImage(cityImages, cityName, countryName) || 'https://www.plantspack.com/og-image.png'
+  const ogImage = { url: cityImg, width: 1200, height: 630, alt: `Vegan places in ${cityName}, ${countryName}` }
+
   return {
     title,
     description: metaDesc,
     alternates: { canonical: `https://plantspack.com/vegan-places/${country}/${city}` },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     openGraph: {
       title: `Vegan Places in ${cityName}, ${countryName}`,
       description: metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
+      url: `https://plantspack.com/vegan-places/${country}/${city}`,
+      images: [ogImage],
+      locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Vegan Places in ${cityName}, ${countryName}`,
+      description: metaDesc,
+      images: [cityImg],
     },
   }
 }
 
-// JSON-LD structured data for SEO
+// JSON-LD structured data for SEO. Each place renders as a typed schema.org
+// entity (Restaurant / Store / LodgingBusiness) with everything Google
+// supports: PostalAddress (structured), telephone, openingHoursSpecification,
+// image, description, aggregateRating, servesCuisine. Cap at top 50 by
+// review_count to keep payload size reasonable.
 function generateJsonLd(places: Place[], cityName: string, countryName: string) {
+  const top = [...places]
+    .sort((a, b) => (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0))
+    .slice(0, 50)
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `Vegan Places in ${cityName}, ${countryName}`,
     numberOfItems: places.length,
-    itemListElement: places.slice(0, 50).map((place, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: {
-        '@type': place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant',
-        name: place.name,
-        address: place.address,
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: place.latitude,
-          longitude: place.longitude,
-        },
-        ...(place.average_rating > 0 ? {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: place.average_rating,
-            reviewCount: place.review_count || 1,
+    itemListElement: top.map((place, i) => {
+      const placeUrl = place.slug ? `https://plantspack.com/place/${place.slug}` : undefined
+      const image = place.main_image_url || place.images?.[0] || undefined
+      const hoursSpec = buildOpeningHoursSpec(place.opening_hours)
+      const servesCuisine = (place.cuisine_types || []).filter(c => c && c !== 'regional' && c !== 'yes').map(c => c.replace(/_/g, ' '))
+      const itemType = place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant'
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        url: placeUrl,
+        item: {
+          '@type': itemType,
+          '@id': placeUrl,
+          name: place.name,
+          ...(place.description ? { description: place.description } : {}),
+          ...(image ? { image } : {}),
+          address: {
+            '@type': 'PostalAddress',
+            ...(place.address ? { streetAddress: place.address } : {}),
+            addressLocality: cityName,
+            addressCountry: countryName,
           },
-        } : {}),
-        ...(place.website ? { url: place.website } : {}),
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: place.latitude,
+            longitude: place.longitude,
+          },
+          ...(place.phone ? { telephone: place.phone } : {}),
+          ...(hoursSpec ? { openingHoursSpecification: hoursSpec } : {}),
+          ...(servesCuisine.length && itemType === 'Restaurant' ? { servesCuisine } : {}),
+          ...(place.average_rating > 0 ? {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: place.average_rating,
+              reviewCount: place.review_count || 1,
+              bestRating: 5,
+              worstRating: 1,
+            },
+          } : {}),
+          ...(place.website ? { url: place.website } : {}),
+          ...(placeUrl ? { sameAs: placeUrl } : {}),
+        },
+      }
+    }),
+  }
+}
+
+// FAQ JSON-LD - eligible for rich snippets in Google SERP. Only fires for
+// pages with enough data to answer real questions honestly.
+function generateFaqJsonLd(args: {
+  cityName: string; countryName: string;
+  total: number; fullyVegan: number; topPlace?: Place; veganLevel4?: Place;
+  cuisineSample?: string[]; storeCount: number; hotelCount: number;
+}): any | null {
+  const { cityName, countryName, total, fullyVegan, topPlace, cuisineSample, storeCount, hotelCount } = args
+  if (total < 5) return null
+  const main: any[] = []
+  main.push({
+    '@type': 'Question',
+    name: `How many vegan places are in ${cityName}?`,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: `${total} vegan and vegan-friendly places in ${cityName}, ${countryName} on PlantsPack, including ${fullyVegan} fully vegan${storeCount ? `, ${storeCount} vegan stores` : ''}${hotelCount ? `, ${hotelCount} vegan-friendly stays` : ''}.`,
+    },
+  })
+  if (fullyVegan > 0) {
+    main.push({
+      '@type': 'Question',
+      name: `Are there fully vegan restaurants in ${cityName}?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `Yes - ${fullyVegan} fully vegan ${fullyVegan === 1 ? 'spot serves' : 'spots serve'} no animal products at all in ${cityName}. The rest of the ${total - fullyVegan} places are vegan-friendly, with plant-based options on the menu.`,
       },
-    })),
+    })
+  }
+  if (topPlace) {
+    main.push({
+      '@type': 'Question',
+      name: `What's the highest-rated vegan place in ${cityName}?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `${topPlace.name}${topPlace.average_rating ? ` has the highest community rating (${topPlace.average_rating.toFixed(1)}/5 from ${topPlace.review_count || 0} reviews)` : ' is highly rated'} among vegan places in ${cityName} on PlantsPack.`,
+      },
+    })
+  }
+  if (cuisineSample && cuisineSample.length) {
+    main.push({
+      '@type': 'Question',
+      name: `What kind of vegan food can I find in ${cityName}?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: `${cityName} has a varied vegan scene - cuisines include ${cuisineSample.slice(0, 6).join(', ')}, plus cafes, bakeries, and stores stocking vegan products.`,
+      },
+    })
+  }
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: main,
   }
 }
 
@@ -217,6 +347,34 @@ export default async function CityPage({ params }: PageProps) {
           }}
         />
       )}
+      {(() => {
+        const eatList = places.filter((p: Place) => p.category === 'eat')
+        const storeCount = places.filter((p: Place) => p.category === 'store').length
+        const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
+        const topPlace = [...eatList].sort(
+          (a, b) => (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0),
+        )[0]
+        const cuisineCounts: Record<string, number> = {}
+        for (const p of places) for (const c of (p.cuisine_types || [])) {
+          if (!c || c === 'regional' || c === 'yes' || c === 'vegan') continue
+          cuisineCounts[c.replace(/_/g, ' ')] = (cuisineCounts[c.replace(/_/g, ' ')] || 0) + 1
+        }
+        const cuisineSample = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => k)
+        const faq = generateFaqJsonLd({
+          cityName, countryName,
+          total: places.length,
+          fullyVegan: places.filter((p: Place) => p.vegan_level === 'fully_vegan').length,
+          topPlace,
+          cuisineSample,
+          storeCount, hotelCount,
+        })
+        return faq ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }}
+          />
+        ) : null
+      })()}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
