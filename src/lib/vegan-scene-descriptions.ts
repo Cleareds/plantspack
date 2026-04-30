@@ -124,7 +124,7 @@ const COUNTRY_CONTEXT: Record<string, { veganCulture: string; localDishes: strin
 }
 
 const CITY_CONTEXT: Record<string, string> = {
-  'Berlin, Germany': 'Kreuzberg, Friedrichshain, and Neukölln are the most concentrated areas for plant-based dining. The city\'s international and alternative culture has made it a global magnet for vegan innovation, from late-night döner shops to zero-waste restaurants.',
+  'Berlin, Germany': 'Kreuzberg, Friedrichshain and Neukölln are the densest neighborhoods for plant-based dining. Berlin has one of the highest absolute counts of vegan and vegan-friendly places in Europe, including dedicated all-vegan supermarkets, vegan döner spots and a long-running plant-based fine-dining scene.',
   'Paris, France': 'Le Marais, the 11th arrondissement, and Bastille are the best neighborhoods for vegan dining. Paris\'s plant-based patisseries and fromageries bring French culinary artistry to cruelty-free cooking.',
   'Wien, Austria': 'The city\'s legendary Kaffeehaus culture now serves plant-based Sachertorte and vegan Melange. Nearly every traditional café offers plant-milk options, and dedicated vegan restaurants span from the 1st district to the outer Bezirke.',
   'Hamburg, Germany': 'The Schanzenviertel and St. Pauli neighborhoods are the heart of Hamburg\'s vegan scene. The city\'s cosmopolitan port culture brings diverse plant-based influences from across the globe.',
@@ -294,15 +294,50 @@ interface PlaceStats {
   cityCount?: number
 }
 
-function formatCuisineList(cuisines: string[]): string {
-  if (cuisines.length === 0) return ''
-  const cleaned = cuisines
-    .filter(c => c && c !== 'vegan' && c !== 'regional')
+// Tags that come through cuisine_types but describe the venue type or a
+// dish category, not a cuisine. Filtering these out leaves an honest
+// list of actual cuisines (Italian, Vietnamese, Indian, etc.) for the
+// description and FAQ.
+const VENUE_TYPE_TAGS = new Set([
+  'vegan', 'regional', 'yes', 'no',
+  'coffee_shop', 'coffee', 'cafe', 'tea',
+  'fast_food', 'restaurant', 'bar', 'pub', 'snack', 'snack_bar',
+  'sandwich', 'bagel', 'donut', 'doughnut', 'salad', 'soup',
+  'breakfast', 'brunch', 'lunch', 'dinner',
+  'dessert', 'cake', 'pancake', 'crepe', 'pastry', 'pastries',
+  'ice_cream', 'gelato', 'frozen_yoghurt', 'frozen_yogurt',
+  'juice', 'smoothie', 'bakery', 'bread',
+  'hot_dog', 'kebab', 'shawarma', 'doner', 'wrap', 'pita', 'pita_bread',
+  'burger', 'burgers',
+  'pizza', // arguably Italian, but venue-type more often than cuisine
+  'sushi', // similar - venue type more than cuisine descriptor
+  'wok', 'noodle', 'porridge', 'empanada', 'dumpling',
+  'organic', 'healthy', 'health_food', 'health',
+  'vegetarian', 'plant_based', 'plant-based',
+  'international', 'fusion', 'european', 'asian',
+  'tapas', 'mezze', 'street_food', 'food_court',
+])
+
+export function filterCuisinesForDisplay(cuisineTypes: string[]): string[] {
+  return cuisineTypes
+    .filter(c => c && !VENUE_TYPE_TAGS.has(c.toLowerCase()))
     .map(c => c.replace(/_/g, ' '))
-    .slice(0, 4)
+}
+
+function formatCuisineList(cuisines: string[]): string {
+  const cleaned = filterCuisinesForDisplay(cuisines).slice(0, 4)
   if (cleaned.length === 0) return ''
   if (cleaned.length === 1) return cleaned[0]
   return cleaned.slice(0, -1).join(', ') + ' and ' + cleaned[cleaned.length - 1]
+}
+
+// Round to nearest "nice" number for human-readable counts.
+// 1695 -> 1700, 38 -> 38 (small numbers stay precise).
+function roundFriendly(n: number): string {
+  if (n < 50) return n.toString()
+  if (n < 200) return (Math.round(n / 10) * 10).toString()
+  if (n < 1000) return (Math.round(n / 50) * 50).toString()
+  return (Math.round(n / 100) * 100).toLocaleString()
 }
 
 function formatPlaceNames(names: string[], max: number = 3): string {
@@ -443,13 +478,18 @@ export function generateCityDescription(
     parts.push(`${stats.total} vegan ${stats.total === 1 ? 'place' : 'places'} in ${cityName} so far - help us grow the list.`)
   }
 
-  // Category breakdown - only when meaningful spread.
+  // Category breakdown - only when meaningful spread, with rounded numbers
+  // so big city counts read as approximate ("around 1,700") rather than
+  // false-precise ("1695"). Stores/stays stay precise since they're small.
   const catBits: string[] = []
-  if (stats.categories.eat) catBits.push(`${stats.categories.eat} restaurants and cafes`)
-  if (stats.categories.store) catBits.push(`${stats.categories.store} shops`)
+  if (stats.categories.eat) {
+    const eat = stats.categories.eat
+    catBits.push(eat >= 100 ? `around ${roundFriendly(eat)} restaurants and cafes` : `${eat} restaurants and cafes`)
+  }
+  if (stats.categories.store) catBits.push(`${stats.categories.store} ${stats.categories.store === 1 ? 'shop' : 'shops'}`)
   if (stats.categories.hotel) catBits.push(`${stats.categories.hotel} ${stats.categories.hotel === 1 ? 'stay' : 'stays'}`)
   if (catBits.length >= 2 && stats.total >= 10) {
-    parts.push(`Mix is roughly ${catBits.join(', ')}.`)
+    parts.push(`Mostly ${catBits.join(', ')}.`)
   }
 
   // City-specific cultural context (manually curated for top cities).

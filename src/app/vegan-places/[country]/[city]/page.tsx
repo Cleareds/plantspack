@@ -23,7 +23,7 @@ import { Globe } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import PinCityButton from '@/components/places/PinCityButton'
 import FollowCityButton from '@/components/places/FollowCityButton'
-import { generateCityDescription, generateCityMetaDescription } from '@/lib/vegan-scene-descriptions'
+import { generateCityDescription, generateCityMetaDescription, filterCuisinesForDisplay } from '@/lib/vegan-scene-descriptions'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
@@ -328,10 +328,13 @@ export default async function CityPage({ params }: PageProps) {
     if ((p as any).vegan_level === 'fully_vegan') cityStats.fullyVegan++
     if (p.is_pet_friendly) cityStats.petFriendly++
     for (const ct of ((p as any).cuisine_types || [])) {
-      if (ct && ct !== 'vegan') cuisineCounts[ct] = (cuisineCounts[ct] || 0) + 1
+      if (ct) cuisineCounts[ct] = (cuisineCounts[ct] || 0) + 1
     }
   }
-  cityStats.cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k]) => k)
+  // Filter out venue-type tags (coffee_shop, fast_food, sandwich, etc.) so
+  // the cuisine list shows actual cuisines (italian, vietnamese, indian).
+  const rankedCuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).map(([k]) => k)
+  cityStats.cuisines = filterCuisinesForDisplay(rankedCuisines).slice(0, 5)
   const sceneDescription = generateCityDescription(cityName, countryName, cityStats)
 
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
@@ -357,10 +360,10 @@ export default async function CityPage({ params }: PageProps) {
         )[0]
         const cuisineCounts: Record<string, number> = {}
         for (const p of places) for (const c of (p.cuisine_types || [])) {
-          if (!c || c === 'regional' || c === 'yes' || c === 'vegan') continue
-          cuisineCounts[c.replace(/_/g, ' ')] = (cuisineCounts[c.replace(/_/g, ' ')] || 0) + 1
+          if (c) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
         }
-        const cuisineSample = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => k)
+        const rankedJsonLdCuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).map(([k]) => k)
+        const cuisineSample = filterCuisinesForDisplay(rankedJsonLdCuisines).slice(0, 6)
         const faq = generateFaqJsonLd({
           cityName, countryName,
           total: places.length,
@@ -499,10 +502,10 @@ export default async function CityPage({ params }: PageProps) {
           const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
           const cuisineCounts: Record<string, number> = {}
           for (const p of places) for (const c of (p.cuisine_types || [])) {
-            if (!c || c === 'regional' || c === 'yes' || c === 'vegan') continue
-            cuisineCounts[c.replace(/_/g, ' ')] = (cuisineCounts[c.replace(/_/g, ' ')] || 0) + 1
+            if (c) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
           }
-          const cuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => k)
+          const rankedFaqCuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).map(([k]) => k)
+          const cuisines = filterCuisinesForDisplay(rankedFaqCuisines).slice(0, 6)
           return (
             <CityFaq
               cityName={cityName}
