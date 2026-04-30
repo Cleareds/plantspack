@@ -21,7 +21,7 @@ import {
   transliterate, toSlug, normalizeCity, isExcludedChain,
   mapOsmCategory, mapVeganLevel, buildOsmTags, extractOsmImages,
   uniqueSlug, sleep, buildOsmQuery, buildOsmBboxQuery, runOverpassQuery,
-  reverseGeocode, scrapeHeroImage, scrapeDescription,
+  reverseGeocodeCity, scrapeHeroImage, scrapeDescription,
   type OsmPlace,
 } from './lib/place-pipeline';
 
@@ -238,7 +238,7 @@ async function importTerritory(
     let done = 0;
     for (const p of toImport) {
       if (!p.city) {
-        p.city = await reverseGeocode(p.lat, p.lon);
+        p.city = await reverseGeocodeCity(p.lat, p.lon);
         done++;
         if (done % 50 === 0) process.stdout.write(`  Geocoded ${done}/${needsGeocode}...\r`);
       }

@@ -503,25 +503,106 @@ export function mergeOsmData(
 
 // ─── Nominatim geocoding ──────────────────────────────────────────────────────
 
-const nominatimCache = new Map<string, string>();
+// Cache reverse-geocode by ~1km grid cell (lat*100, lon*100). Stores the
+// full result object so callers can pick city, address, or both.
+const nominatimCache = new Map<string, { city: string; address: string }>();
 
-export async function reverseGeocode(lat: number, lon: number, delayMs = 1200): Promise<string> {
+export interface ReverseGeocodeResult {
+  city: string;       // normalized + transliterated, ready for places.city
+  address: string;    // "house# road, postcode city", ready for places.address
+}
+
+/**
+ * Reverse-geocode lat/lon to both a city (canonicalized) and a full
+ * street-level address. Both come from the same Nominatim call, so this
+ * is no more expensive than the previous city-only version.
+ *
+ * Always use this when OSM tags don't provide addr:street + addr:housenumber
+ * (typical for diet:vegan-tagged restaurant nodes - they're usually only
+ * tagged with diet info, not full street address).
+ */
+export async function reverseGeocode(lat: number, lon: number, delayMs = 1200): Promise<ReverseGeocodeResult> {
   const key = `${(lat * 100 | 0)},${(lon * 100 | 0)}`;
   if (nominatimCache.has(key)) return nominatimCache.get(key)!;
   await sleep(delayMs);
   try {
-    const url = `${NOMINATIM_API}/reverse?lat=${lat}&lon=${lon}&format=json&zoom=13&addressdetails=1`;
+    // zoom=18 gets street-level detail; addressdetails=1 returns the
+    // structured address object we use to build both city + full address.
+    const url = `${NOMINATIM_API}/reverse?lat=${lat}&lon=${lon}&format=json&zoom=18&addressdetails=1`;
     const resp = await fetch(url, {
       headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com; admin@plantspack.com)' },
     });
-    if (!resp.ok) { nominatimCache.set(key, ''); return ''; }
+    if (!resp.ok) { const empty = { city: '', address: '' }; nominatimCache.set(key, empty); return empty; }
     const data = await resp.json();
-    const addr = data.address || {};
-    const city = addr.city || addr.town || addr.village || addr.suburb || addr.municipality || '';
-    const result = normalizeCity(transliterate(city));
+    const a = data.address || {};
+    const cityRaw = a.city || a.town || a.village || a.suburb || a.municipality || '';
+    const city = normalizeCity(transliterate(cityRaw));
+    const street = [a.house_number, a.road].filter(Boolean).join(' ');
+    const postCity = [a.postcode, cityRaw].filter(Boolean).join(' ');
+    const address = [street, postCity].filter((s: string) => s && s.length > 1).join(', ');
+    const result = { city, address };
     nominatimCache.set(key, result);
     return result;
-  } catch { nominatimCache.set(key, ''); return ''; }
+  } catch { const empty = { city: '', address: '' }; nominatimCache.set(key, empty); return empty; }
+}
+
+/**
+ * Backwards-compatible city-only wrapper for callers that only need the
+ * city (kept so existing scripts using the old shape don't break).
+ */
+export async function reverseGeocodeCity(lat: number, lon: number, delayMs = 1200): Promise<string> {
+  const r = await reverseGeocode(lat, lon, delayMs);
+  return r.city;
+}
+
+/**
+ * Deterministic 1-sentence description fallback for places that didn't
+ * get one from og:meta scraping. Honest by construction - we only
+ * mention what we know (category, cuisine, vegan-level, city).
+ *
+ * Standardised so every OSM-imported place has SOME description even
+ * when the website didn't supply one. Operators can Claude-improve
+ * specific entries later via _fetch-places-needing-desc.ts +
+ * _apply-descriptions.ts.
+ */
+export function buildFallbackDescription(p: {
+  name: string;
+  city?: string | null;
+  category: string;
+  vegan_level?: string | null;
+  cuisine_types?: string[] | null;
+  tags?: string[] | null;
+}): string {
+  const city = p.city ? ` in ${p.city}` : '';
+  const cuisines = (p.cuisine_types || []).filter(c => c && c !== 'vegan' && c !== 'regional' && c !== 'yes')
+  const cuisine = cuisines[0]?.replace(/_/g, ' ');
+
+  // Stores
+  if (p.category === 'store') {
+    if (p.tags?.includes('vegan shop')) return `Shop${city} stocking vegan products and plant-based goods.`;
+    return `Shop${city} with vegan items in stock.`;
+  }
+  // Hotels / stays
+  if (p.category === 'hotel') {
+    return `Stay${city} that caters to vegan guests with plant-based food options.`;
+  }
+  // Sanctuaries / orgs
+  if (p.category === 'organisation') {
+    return `Vegan organisation${city}.`;
+  }
+
+  // Eat - tier by vegan_level
+  if (p.vegan_level === 'fully_vegan') {
+    if (cuisine) return `100% vegan ${cuisine} spot${city} - no animal products on the menu.`;
+    return `100% vegan eatery${city} - everything on the menu is plant-based.`;
+  }
+  if (p.vegan_level === 'mostly_vegan') {
+    if (cuisine) return `Mostly vegan ${cuisine} spot${city} - the menu is plant-based with a few non-vegan items.`;
+    return `Mostly vegan eatery${city} - the menu is plant-based with a few non-vegan items.`;
+  }
+  // vegan_friendly - default safe baseline
+  if (cuisine) return `${cuisine.charAt(0).toUpperCase()}${cuisine.slice(1)} restaurant${city} with vegan options on the menu.`;
+  return `Eatery${city} with vegan options on the menu.`;
 }
 
 export async function forwardGeocode(query: string, countryCode = 'gb'): Promise<GeoResult | null> {

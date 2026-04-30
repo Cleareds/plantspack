@@ -24,6 +24,24 @@ Output is a count of places imported + any notable issues.
 | "add all these places: [URL list]" | URL-per-line → `add-place.ts` | individual calls |
 | "here's a CSV / spreadsheet" | Parse → JSON → `add-place.ts` | individual calls |
 
+## Standard pipeline shape (every OSM import gets all of these)
+
+Every imported place lands in the DB with the following fields populated.
+Sourced in this priority order; each step is mandatory and runs as part
+of `scripts/import-osm-countries.ts`:
+
+| Field | Source priority |
+|---|---|
+| `vegan_level` | OSM `diet:vegan=only` → `fully_vegan`; `diet:vegan=yes` / `cuisine=vegan` → `fully_vegan`; `diet:vegetarian=only` → `vegan_friendly`. 4-tier system (`fully_vegan` / `mostly_vegan` / `vegan_friendly` / `vegan_options`) preserved end-to-end - admin re-tiers in staging. |
+| `address` | OSM `addr:street`+`addr:housenumber` if present, else **Nominatim reverse-geocode** (`zoom=18`) - same call that resolves city, no extra API traffic. Always populated. |
+| `city` | OSM `addr:city` / `addr:town` / `addr:village` / `addr:suburb` if present, else Nominatim reverse-geocode. Always populated. |
+| `description` | og:description / `<meta name="description">` scrape from website if present, else **`buildFallbackDescription()` deterministic template** (category + cuisine + vegan_level + city). Always populated. |
+| `main_image_url` | OSM `image` tags first, then og:image / twitter:image scrape from website. Best-effort - many small spots use Instagram/Facebook only. |
+
+After import, the operator can Claude-improve specific descriptions via
+`scripts/_fetch-places-needing-desc.ts` → manual JSON edit →
+`scripts/_apply-descriptions.ts`. **Never use OpenAI for descriptions.**
+
 ## Full pipeline for country/city imports
 
 The pipeline in `scripts/import-osm-countries.ts` does all of this automatically:
