@@ -17,6 +17,7 @@ import { generateCountryDescription, generateCountryMetaDescription } from '@/li
 import { getCities } from '@/lib/directory-queries'
 import { getRegionsForCountry } from '@/lib/regions'
 import { loadCityImages } from '@/lib/city-images-server'
+import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
@@ -117,16 +118,23 @@ export default async function CountryPage({ params }: PageProps) {
   for (const r of regions) for (const cn of r.city_names) cityToRegion.set(cn, r)
   const regionCards: RegionCard[] = regions.map(r => {
     const inRegion = cities.filter((c: any) => r.city_names.includes(c.name))
+    const sortedInRegion = [...inRegion].sort((a: any, b: any) => b.count - a.count)
+    // Region thumbnail: first city in the region (by place_count) that has
+    // an image on disk. Same auto-hero logic as the region detail page.
+    let heroImage: string | null = null
+    for (const c of sortedInRegion) {
+      const img = getCityImage(cityImages, c.name, countryName)
+      if (img) { heroImage = img; break }
+    }
     return {
       region: r,
       totalPlaces: inRegion.reduce((s: number, c: any) => s + c.count, 0),
       fullyVegan: inRegion.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0),
+      heroImage,
       // All cities with data, sorted by place_count desc. The component
       // shows top 8 inline + the rest inside a <details> expander so every
       // city link stays crawlable while the default UI stays clean.
-      cities: [...inRegion]
-        .sort((a: any, b: any) => b.count - a.count)
-        .map((c: any) => ({ city: c.name, city_slug: c.slug, place_count: c.count })),
+      cities: sortedInRegion.map((c: any) => ({ city: c.name, city_slug: c.slug, place_count: c.count })),
     }
   }).filter(rc => rc.totalPlaces > 0)
   const unassignedCities = regions.length > 0

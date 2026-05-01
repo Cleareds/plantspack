@@ -6,6 +6,9 @@ interface RegionCard {
   region: CountryRegion
   totalPlaces: number
   fullyVegan: number
+  // Auto-picked thumbnail: top-place-count city in the region that has an
+  // image on disk. Null if none of the region's cities are illustrated.
+  heroImage: string | null
   // All cities in the region with data, sorted by place_count desc.
   // Component renders top 8 inline + the rest inside a <details> expander
   // so every city link stays crawlable while the default UI stays clean.
@@ -33,27 +36,44 @@ export default function CountryRegionsSection({
     <div className="mb-10">
       <h2 className="text-lg font-semibold text-on-surface mb-4">Browse {countryName} by region</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {regions.map(({ region, totalPlaces, fullyVegan, cities }) => {
+        {regions.map(({ region, totalPlaces, fullyVegan, cities, heroImage }) => {
           const visibleCities = cities.slice(0, VISIBLE_CITY_COUNT)
           const hiddenCities = cities.slice(VISIBLE_CITY_COUNT)
           return (
             <div
               key={region.region_slug}
-              className="bg-surface-container-lowest ghost-border rounded-xl p-5 hover:border-primary/30 transition-colors flex flex-col"
+              className="bg-surface-container-lowest ghost-border rounded-xl overflow-hidden hover:border-primary/30 transition-colors flex flex-col"
             >
               <Link
                 href={`/vegan-places/${countrySlug}/region/${region.region_slug}`}
-                className="block"
+                className="block group"
               >
-                <h3 className="font-semibold text-on-surface text-base group-hover:text-primary mb-1">
-                  {region.region_name}
-                </h3>
+                {heroImage ? (
+                  <div className="relative h-32 overflow-hidden">
+                    <img
+                      src={heroImage}
+                      alt={region.region_name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                    <h3 className="absolute bottom-2 left-3 right-3 font-semibold text-white text-base drop-shadow-md">
+                      {region.region_name}
+                    </h3>
+                  </div>
+                ) : (
+                  <div className="px-5 pt-5 pb-1">
+                    <h3 className="font-semibold text-on-surface text-base group-hover:text-primary">
+                      {region.region_name}
+                    </h3>
+                  </div>
+                )}
+              </Link>
+              <div className="px-5 pt-3 pb-5 flex flex-col flex-1">
                 <p className="text-xs text-on-surface-variant mb-3">
                   <strong>{totalPlaces}</strong> {totalPlaces === 1 ? 'place' : 'places'}
                   {fullyVegan > 0 ? <> · <strong>{fullyVegan}</strong> fully vegan</> : null}
                   {' '}· {cities.length} {cities.length === 1 ? 'city' : 'cities'}
                 </p>
-              </Link>
               {visibleCities.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {visibleCities.map(c => (
@@ -95,6 +115,7 @@ export default function CountryRegionsSection({
               >
                 View all of {region.region_name} →
               </Link>
+              </div>
             </div>
           )
         })}
