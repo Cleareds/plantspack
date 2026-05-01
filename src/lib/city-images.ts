@@ -14,6 +14,34 @@ export function getCityImage(images: Record<string, string>, city: string, count
   if (direct) return direct
   const ascii = images[`${stripDiacritics(city)}|||${stripDiacritics(country)}`]
   if (ascii) return ascii
+  // Bilingual / parenthetical fallback. City keys often use "FR - NL"
+  // ("Saint-Gilles - Sint-Gillis") while places.city stores just one side.
+  // The reverse is also true ("Uccle - Ukkel" in places, "Uccle" in images).
+  // Also strip "(Province)" suffixes so "Vroenhoven (Riemst)" matches
+  // "Vroenhoven". Build candidate forms for both input and key, compare.
+  const candidatesFor = (s: string): string[] => {
+    const out = new Set<string>()
+    const base = stripDiacritics(s).toLowerCase().trim()
+    out.add(base)
+    // Drop "(...)" parenthetical
+    const noParen = base.replace(/\s*\([^)]*\)\s*$/, '').trim()
+    if (noParen) out.add(noParen)
+    // Split on " - " (bilingual variants)
+    if (base.includes(' - ')) for (const half of base.split(' - ')) out.add(half.trim())
+    if (noParen.includes(' - ')) for (const half of noParen.split(' - ')) out.add(half.trim())
+    return [...out].filter(Boolean)
+  }
+  const inputCandidates = new Set(candidatesFor(city))
+  const countryAscii = stripDiacritics(country)
+  const suffixA = `|||${country}`
+  const suffixB = `|||${countryAscii}`
+  for (const key of Object.keys(images)) {
+    if (!key.endsWith(suffixA) && !key.endsWith(suffixB)) continue
+    const cityPart = key.split('|||')[0]
+    for (const keyForm of candidatesFor(cityPart)) {
+      if (inputCandidates.has(keyForm)) return images[key]
+    }
+  }
   return null
 }
 
