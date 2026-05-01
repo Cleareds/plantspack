@@ -15,11 +15,13 @@ const COUNTRY_REDIRECTS: Record<string, string> = {
 }
 import { generateCountryDescription, generateCountryMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
+import { getRegionsForCountry } from '@/lib/regions'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CountryCityGrid from '@/components/places/CountryCityGrid'
+import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
 export const revalidate = 3600
@@ -94,12 +96,33 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
   if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}`)
-  const [{ cities, country: countryName }, { places }, allScores, cityImages] = await Promise.all([
+  const [{ cities, country: countryName }, { places }, allScores, cityImages, regions] = await Promise.all([
     getCities(country),
     fetchCountryPlaces(country),
     getCityScores(),
     loadCityImages(),
+    getRegionsForCountry(country),
   ])
+
+  // Split cities into "in a region" vs "unassigned". Region cards roll up
+  // their cities; unassigned cities fall through to the existing grid.
+  const cityToRegion = new Map<string, typeof regions[number]>()
+  for (const r of regions) for (const cn of r.city_names) cityToRegion.set(cn, r)
+  const regionCards: RegionCard[] = regions.map(r => {
+    const inRegion = cities.filter((c: any) => r.city_names.includes(c.name))
+    return {
+      region: r,
+      totalPlaces: inRegion.reduce((s: number, c: any) => s + c.count, 0),
+      fullyVegan: inRegion.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0),
+      topCities: [...inRegion]
+        .sort((a: any, b: any) => b.count - a.count)
+        .slice(0, 6)
+        .map((c: any) => ({ city: c.name, city_slug: c.slug, place_count: c.count })),
+    }
+  }).filter(rc => rc.totalPlaces > 0)
+  const unassignedCities = regions.length > 0
+    ? cities.filter((c: any) => !cityToRegion.has(c.name))
+    : cities
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
   const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
 
@@ -173,12 +196,26 @@ export default async function CountryPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* Cities Grid — interactive with sorting */}
-        {cities.length > 0 && (
+        {/* Regions section — only renders if the country has regions seeded */}
+        {regionCards.length > 0 && (
+          <CountryRegionsSection
+            countrySlug={country}
+            countryName={countryName}
+            regions={regionCards}
+          />
+        )}
+
+        {/* Cities Grid — interactive with sorting. When regions exist, this
+            shows only cities that aren't part of any region (so visitors
+            don't see e.g. Brussels-Capital communes here AND in the region
+            card). When no regions exist, this shows everything. */}
+        {unassignedCities.length > 0 && (
           <>
-            <h2 className="text-lg font-semibold text-on-surface mb-4">Cities in {countryName}</h2>
+            <h2 className="text-lg font-semibold text-on-surface mb-4">
+              {regionCards.length > 0 ? `Other cities in ${countryName}` : `Cities in ${countryName}`}
+            </h2>
             <CountryCityGrid
-              cities={cities}
+              cities={unassignedCities}
               cityImages={cityImages}
               countryName={countryName}
               countrySlug={country}

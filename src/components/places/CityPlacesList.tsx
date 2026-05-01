@@ -106,6 +106,21 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
   const PAGE_SIZE = 30
   const currentPage = parseInt(searchParams?.get('page') || '1') || 1
 
+  // Faceted-count predicates: each pill's count reflects every OTHER active
+  // filter but not its own facet. Lets users see how many places they'd land
+  // on if they swapped a value within the same facet.
+  const matchCategory = (p: Place) => !validCategory || p.category === validCategory
+  const matchSubcategory = (p: Place) => !validSubcategory || p.subcategory === validSubcategory
+  const matchPet = (p: Place) => !petOnly || p.is_pet_friendly
+  const matchVeganLevel = (p: Place) => !activeVeganLevel || p.vegan_level === activeVeganLevel
+
+  // Pool used to count category pills: apply vl + pet, not category/sub.
+  const poolForCategoryPills = basePlaces.filter(p => matchVeganLevel(p) && matchPet(p))
+  // Pool for subcategory pills: apply category + vl + pet, not sub.
+  const poolForSubPills = basePlaces.filter(p => matchCategory(p) && matchVeganLevel(p) && matchPet(p))
+  // Pool for vegan-level pills: apply category + sub + pet, not vl.
+  const poolForVeganLevelPills = basePlaces.filter(p => matchCategory(p) && matchSubcategory(p) && matchPet(p))
+
   const filtered = basePlaces.filter(p => {
     if (validCategory && p.category !== validCategory) return false
     if (validSubcategory && p.subcategory !== validSubcategory) return false
@@ -135,10 +150,10 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
         {/* Category pills */}
         <button onClick={() => setFilter({ category: null, sub: null })}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!validCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
-          All ({basePlaces.length})
+          All ({poolForCategoryPills.length})
         </button>
         {categories.map(cat => {
-          const count = basePlaces.filter(p => p.category === cat).length
+          const count = poolForCategoryPills.filter(p => p.category === cat).length
           return (
             <button key={cat} onClick={() => setFilter({ category: validCategory === cat ? null : cat, sub: null })}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${validCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
@@ -153,7 +168,7 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
             <div className="w-px h-8 bg-outline-variant/30 self-center" />
             {subcategories.map(sub => {
               if (!sub) return null
-              const count = basePlaces.filter(p => p.category === validCategory && p.subcategory === sub).length
+              const count = poolForSubPills.filter(p => p.subcategory === sub).length
               const label = (validCategory && SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub
               return (
                 <button key={sub} onClick={() => setFilter({ sub: validSubcategory === sub ? null : sub })}
@@ -169,16 +184,21 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
         {!isFullyVeganOnly && (
           <>
             <div className="w-px h-8 bg-outline-variant/30 self-center" />
-            {VEGAN_LEVEL_FILTERS.map(({ value, label }) => (
-              <button key={value ?? 'all'} onClick={() => setFilter({ vl: value })}
-                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                  activeVeganLevel === value
-                    ? 'bg-primary text-on-primary-btn'
-                    : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-                }`}>
-                {label}
-              </button>
-            ))}
+            {VEGAN_LEVEL_FILTERS.map(({ value, label }) => {
+              const count = value === null
+                ? poolForVeganLevelPills.length
+                : poolForVeganLevelPills.filter(p => p.vegan_level === value).length
+              return (
+                <button key={value ?? 'all'} onClick={() => setFilter({ vl: value })}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                    activeVeganLevel === value
+                      ? 'bg-primary text-on-primary-btn'
+                      : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                  }`}>
+                  {label} ({count})
+                </button>
+              )
+            })}
           </>
         )}
 

@@ -222,6 +222,17 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     for (const cc of cityCountry) {
       entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, changeFreq: 'daily', priority: 0.9 })
     }
+    // Region landing pages (Belgium today; generic for any seeded country).
+    const { data: regionRows } = await sb
+      .from('country_regions')
+      .select('country_slug, region_slug')
+    for (const r of regionRows || []) {
+      entries.push({
+        url: `${SITE_URL}/vegan-places/${r.country_slug}/region/${r.region_slug}`,
+        changeFreq: 'weekly',
+        priority: 0.85,
+      })
+    }
     for (const p of byTier.priority) {
       const imgs = collectImageUrls(p)
       entries.push({

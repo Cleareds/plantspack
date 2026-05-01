@@ -38,6 +38,7 @@ import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
+import { getRegionForCity } from '@/lib/regions'
 
 // SEO: city pages must be cacheable so Google spends crawl budget on them.
 // `force-dynamic` (no-store) means thousands of city pages are uncrawlable.
@@ -322,6 +323,11 @@ export default async function CityPage({ params }: PageProps) {
 
   if (places.length === 0) notFound()
 
+  // Region back-link banner. Resolved by canonical city name (e.g. "Brussels",
+  // "Saint-Josse-ten-Noode") so spelling variants stay grouped. Null for any
+  // city not assigned to a region.
+  const region = await getRegionForCity(country, cityName)
+
   // Build stats from fetched places for data-driven description
   const cityStats = {
     total: places.length,
@@ -473,6 +479,25 @@ export default async function CityPage({ params }: PageProps) {
             <FollowCityButton cityName={cityName} countryName={countryName} currentScore={cityScore?.score} currentGrade={cityScore?.grade} />
           </div>
         </div>
+
+        {/* Region back-link banner — shown only when this city is part of a
+            seeded country region (today: Belgium). Lets visitors zoom out to
+            see all places across the wider region. */}
+        {region && (
+          <Link
+            href={`/vegan-places/${country}/region/${region.region_slug}`}
+            className="block mb-6 bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 hover:bg-primary/10 transition-colors"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-sm">
+                <span className="text-on-surface-variant">Part of </span>
+                <span className="font-semibold text-on-surface">{region.region_name}</span>
+                <span className="text-on-surface-variant"> — see every vegan place across the region.</span>
+              </div>
+              <span className="text-primary text-sm font-medium flex-shrink-0">View region →</span>
+            </div>
+          </Link>
+        )}
 
         {/* Vegan experiences for this city — SSR-fed so there's no loading
             flash + delete/edit flow uses router.refresh() for re-render. */}
