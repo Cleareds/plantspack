@@ -114,9 +114,11 @@ export default async function CountryPage({ params }: PageProps) {
       region: r,
       totalPlaces: inRegion.reduce((s: number, c: any) => s + c.count, 0),
       fullyVegan: inRegion.reduce((s: number, c: any) => s + (c.stats?.fullyVegan || 0), 0),
-      topCities: [...inRegion]
+      // All cities with data, sorted by place_count desc. The component
+      // shows top 8 inline + the rest inside a <details> expander so every
+      // city link stays crawlable while the default UI stays clean.
+      cities: [...inRegion]
         .sort((a: any, b: any) => b.count - a.count)
-        .slice(0, 6)
         .map((c: any) => ({ city: c.name, city_slug: c.slug, place_count: c.count })),
     }
   }).filter(rc => rc.totalPlaces > 0)
