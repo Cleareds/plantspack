@@ -126,7 +126,7 @@ export const getRegionPlaces = async (
   const sb = createAdminClient()
   const { data, error } = await sb
     .from('places')
-    .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, phone, opening_hours, google_place_id, latitude, longitude, city, country, vegan_level, cuisine_types')
+    .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, phone, opening_hours, latitude, longitude, city, country, vegan_level, cuisine_types')
     .eq('country', countryDisplayName)
     .in('city', region.city_names)
     .is('archived_at', null)
