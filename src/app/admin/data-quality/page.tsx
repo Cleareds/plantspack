@@ -381,11 +381,19 @@ export default function DataQualityPage() {
             {stats ? `${totalIssues} issues across ${stats.totalPlaces.toLocaleString()} places` : 'Loading...'}
           </p>
         </div>
-        <button onClick={fetchStats} disabled={statsLoading}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg text-sm disabled:opacity-50">
-          <RefreshCw className={`h-3.5 w-3.5 ${statsLoading ? 'animate-spin' : ''}`} />
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/data-quality/belgium"
+            className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium"
+          >
+            Belgium audit →
+          </Link>
+          <button onClick={fetchStats} disabled={statsLoading}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg text-sm disabled:opacity-50">
+            <RefreshCw className={`h-3.5 w-3.5 ${statsLoading ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Stats bar */}
