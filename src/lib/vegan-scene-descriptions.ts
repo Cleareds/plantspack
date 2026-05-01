@@ -363,11 +363,14 @@ export function generateCountryDescription(
     parts.push(`Find vegan-friendly places in ${countryName} — we currently list ${stats.total} verified spots.`)
   }
 
-  // Category breakdown
+  // Category breakdown. Reads every category present in stats.categories
+  // so sanctuaries (organisation) and any future category (event, other)
+  // surface honestly instead of being silently dropped.
   const catParts: string[] = []
   if (stats.categories.eat) catParts.push(`${stats.categories.eat} restaurants and cafés`)
   if (stats.categories.store) catParts.push(`${stats.categories.store} vegan shops`)
   if (stats.categories.hotel) catParts.push(`${stats.categories.hotel} vegan-friendly places to stay`)
+  if (stats.categories.organisation) catParts.push(`${stats.categories.organisation} ${stats.categories.organisation === 1 ? 'animal sanctuary' : 'animal sanctuaries'}`)
   if (catParts.length > 1) {
     parts.push(`That includes ${catParts.join(', ')}.`)
   }
@@ -417,10 +420,12 @@ export function generateCountryMetaDescription(
   const restaurants = categories.eat || 0
   const shops = categories.store || 0
   const stays = categories.hotel || 0
+  const sanctuaries = categories.organisation || 0
   const mix: string[] = []
   if (restaurants) mix.push(`${restaurants} restaurants`)
   if (shops) mix.push(`${shops} shops`)
   if (stays) mix.push(`${stays} stays`)
+  if (sanctuaries) mix.push(`${sanctuaries} ${sanctuaries === 1 ? 'sanctuary' : 'sanctuaries'}`)
   const mixStr = mix.length ? mix.slice(0, 3).join(', ') : `${total} places`
   const topCuisine = cuisines && cuisines.length ? cuisines.slice(0, 2).join(' and ') : ''
   const cuisinePart = topCuisine ? `. Popular: ${topCuisine} cuisine.` : '.'

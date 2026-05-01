@@ -43,7 +43,11 @@ async function getCityScores(): Promise<any[]> {
 async function fetchCountryPlaces(country: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=500`, { next: { revalidate: 3600 } })
+    // 3000 covers every country in our DB except the US — keeps "All N places
+    // in <country>" honest. Paid Vercel/Supabase tiers absorb the bigger SSR
+    // payload; the bottleneck is render, and CityPlacesList paginates client-
+    // side at 30 per page so the DOM stays light.
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=3000`, { next: { revalidate: 3600 } })
     if (!res.ok) return { places: [], country: country.replace(/-/g, ' '), total: 0 }
     return res.json()
   } catch { return { places: [], country: country.replace(/-/g, ' '), total: 0 } }
@@ -58,6 +62,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const totalEat = cities.reduce((sum: number, c: any) => sum + (c.stats?.categories?.eat || 0), 0)
   const totalStore = cities.reduce((sum: number, c: any) => sum + (c.stats?.categories?.store || 0), 0)
   const totalHotel = cities.reduce((sum: number, c: any) => sum + (c.stats?.categories?.hotel || 0), 0)
+  // Sanctuary/organisation count is not in directory_cities MV, so derive
+  // from total - the three known categories. Ok approximation for meta tag.
+  const totalSanctuary = Math.max(0, totalPlaces - totalEat - totalStore - totalHotel)
   const totalPet = cities.reduce((sum: number, c: any) => sum + (c.stats?.petFriendly || 0), 0)
   const cuisineSet = new Set<string>()
   const sampleSet = new Set<string>()
@@ -68,7 +75,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const metaDesc = generateCountryMetaDescription(countryName, {
     total: totalPlaces,
-    categories: { eat: totalEat, store: totalStore, hotel: totalHotel },
+    categories: { eat: totalEat, store: totalStore, hotel: totalHotel, organisation: totalSanctuary },
     cuisines: Array.from(cuisineSet).slice(0, 6),
     sampleNames: Array.from(sampleSet).slice(0, 6),
     fullyVegan: totalFv,
@@ -131,18 +138,20 @@ export default async function CountryPage({ params }: PageProps) {
   // Country scores (for city cards, no average displayed)
   const countryScores = allScores.filter((s: any) => s.country === countryName)
 
-  // Country description
+  // Country description. Categories are counted from the actual `places`
+  // array (not the directory_cities MV which only exposes eat/store/hotel)
+  // so sanctuaries/organisations and other categories show up honestly.
   const countryStats = {
     total: totalPlaces, categories: {} as Record<string, number>,
     fullyVegan: 0, petFriendly: 0, cuisines: [] as string[],
     sampleNames: [] as string[], cityCount: cities.length,
   }
+  for (const p of places) {
+    if (p.category) countryStats.categories[p.category] = (countryStats.categories[p.category] || 0) + 1
+  }
   const cuisineCounts: Record<string, number> = {}
   for (const city of cities) {
     if (!city.stats) continue
-    for (const [cat, n] of Object.entries(city.stats.categories || {})) {
-      countryStats.categories[cat] = (countryStats.categories[cat] || 0) + (n as number)
-    }
     countryStats.fullyVegan += city.stats.fullyVegan || 0
     countryStats.petFriendly += city.stats.petFriendly || 0
     for (const c of city.stats.cuisines || []) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
@@ -229,7 +238,11 @@ export default async function CountryPage({ params }: PageProps) {
         {/* All places in country with map */}
         {places.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-lg font-semibold text-on-surface mb-4">All {places.length} places in {countryName}</h2>
+            <h2 className="text-lg font-semibold text-on-surface mb-4">
+              {places.length >= totalPlaces
+                ? `All ${places.length} places in ${countryName}`
+                : `Showing ${places.length} of ${totalPlaces} places in ${countryName}`}
+            </h2>
             <CityPlacesList places={places} />
           </div>
         )}

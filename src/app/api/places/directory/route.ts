@@ -183,10 +183,23 @@ export async function GET(request: NextRequest) {
         query = query.order('name', { ascending: true })
       }
 
-      // Country-level list — keep the caller's limit but cap at 500 to
-      // avoid bulk country dumps. City-level uses pagination above.
-      const { data, error } = await query.limit(Math.min(requestedLimit, 500))
-      if (error) throw error
+      // Country-level list — paginate past Supabase's 1000-row default so
+      // mid-size countries (Belgium ~566, France ~1400, UK ~3000) are not
+      // truncated. Hard-cap at 5000 to avoid runaway dumps for the US/India.
+      const hardCap = Math.min(requestedLimit || 3000, 5000)
+      const allCountryPlaces: any[] = []
+      let from = 0
+      while (allCountryPlaces.length < hardCap) {
+        const remaining = hardCap - allCountryPlaces.length
+        const pageSize = Math.min(1000, remaining)
+        const { data: page, error } = await query.range(from, from + pageSize - 1)
+        if (error) throw error
+        if (!page || page.length === 0) break
+        allCountryPlaces.push(...page)
+        if (page.length < pageSize) break
+        from += pageSize
+      }
+      const data = allCountryPlaces
 
       const dbCountry = data?.[0]?.country || fromSlugDisplay(country)
 
