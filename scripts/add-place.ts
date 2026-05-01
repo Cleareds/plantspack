@@ -246,6 +246,62 @@ async function main() {
     process.exit(2)
   }
 
+  // Vegan-level sanity guard. mostly_vegan is a strict tier — it means
+  // "place presents as vegan with specific named exceptions" (e.g. "all
+  // mains vegan, one dessert uses honey"). Marketing words like
+  // "plant-based" or "95% plant-based" almost always mean vegetarian
+  // with dairy/eggs and should be vegan_friendly, not mostly_vegan.
+  if (input.vegan_level === 'mostly_vegan') {
+    const desc = (input.description || '').toLowerCase()
+    const tags = (input.tags || []).map((t: string) => t.toLowerCase())
+    // Strong "mostly vegan" signals: explicit dish-count breakdown,
+    // explicit "100% vegan menu" / "fully vegan except", named exceptions.
+    const positiveSignals = [
+      /\ball mains? (?:are|is) vegan\b/,
+      /\bfully vegan except\b/,
+      /\b100% vegan (?:menu|kitchen)\b/,
+      /\bmostly vegan\b/,
+      /\beverything is vegan except\b/,
+      /\bvegan with the exception\b/,
+      /\b\d+% (?:of (?:the )?menu (?:is|are) vegan|of dishes are vegan)\b/,  // "95% of menu is vegan" (NOT "95% plant-based")
+    ]
+    const hasPositive = positiveSignals.some(re => re.test(desc))
+    // Negative signals: "plant-based" alone (without "100%"), "vegetarian",
+    // "can be made vegan on request" — these all suggest vegan_friendly.
+    const negativeSignals = [
+      /\bplant-based\b(?!.*100%)/,
+      /\bplant-forward\b/,
+      /\bcan be made vegan\b/,
+      /\bvegetarian (?:restaurant|cafe|menu)(?!.*all (?:mains|dishes) (?:are|is) vegan)/,
+      /\bdairy\b/,
+      /\bcheese\b/,
+      /\beggs?\b(?! ?free)/,
+      /\bhoney\b/,
+    ]
+    const triggered = negativeSignals.filter(re => re.test(desc)).map(re => re.source)
+    if (!hasPositive || triggered.length > 0) {
+      console.warn(`\n⚠ vegan_level guard — '${input.name}' is tagged mostly_vegan but the description does not satisfy the strict definition.`)
+      if (!hasPositive) {
+        console.warn(`  Missing explicit signal. mostly_vegan needs language like "all mains are vegan", "fully vegan except for X", or "95% of the menu is vegan".`)
+      }
+      if (triggered.length > 0) {
+        console.warn(`  Suspect phrases in description: ${triggered.join(', ')}`)
+      }
+      console.warn(`  Reminder: "plant-based", "plant-forward", or "vegetarian" alone usually = vegan_friendly, not mostly_vegan.`)
+      console.warn(`  Pass --force-vegan-level to override this guard, otherwise downgrade to vegan_friendly.\n`)
+      const forceFlag = process.argv.includes('--force-vegan-level')
+      if (!forceFlag) {
+        console.error(`Aborting. Either fix the description to include explicit vegan-with-named-exceptions language, or set vegan_level to "vegan_friendly", or pass --force-vegan-level if you are sure.`)
+        process.exit(2)
+      }
+    }
+  }
+  // fully_vegan with no website at all is hard to verify — surface it
+  // but don't block. The admin data-quality view flags these too.
+  if (input.vegan_level === 'fully_vegan' && !input.website) {
+    console.warn(`\n⚠ '${input.name}' tagged fully_vegan but has no website. Hard to verify; consider downgrading or adding a source URL. Continuing.\n`)
+  }
+
   // Defaults + derived fields.
   const source = input.source || `manual-${todayIso()}`
   const source_id = input.source_id || slugify(`${input.name}-${input.city}`)
