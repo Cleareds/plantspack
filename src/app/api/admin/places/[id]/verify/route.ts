@@ -49,9 +49,12 @@ export async function POST(
   // is_verified drives the existing "Confirmed - Admin-reviewed" badge in
   // the place page footer. Setting it together with verification_level=3
   // keeps both verification systems in sync.
-  const update = unverify
-    ? { verification_level: 2, verification_method: null, verification_status: 'scraping_verified' as const, is_verified: false }
-    : { verification_level: 3, verification_method: 'admin_review' as const, verification_status: 'approved' as const, is_verified: true }
+  const update: any = unverify
+    ? { verification_level: 2, verification_method: null, verification_status: 'scraping_verified', is_verified: false }
+    : { verification_level: 3, verification_method: 'admin_review', verification_status: 'approved', is_verified: true, last_verified_at: new Date().toISOString() }
+  // Optional admin_notes update — sent from the data-quality table inline.
+  // Empty string clears the note; undefined leaves it untouched.
+  if (typeof body.admin_notes === 'string') update.admin_notes = body.admin_notes
 
   const { error } = await admin.from('places').update(update).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
