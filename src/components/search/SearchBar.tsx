@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Search, X, MapPin, Loader2, Globe, Plus, Clock, ChefHat } from 'lucide-react'
 import { useSearch } from '@/hooks/useSearch'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const CATEGORY_EMOJI: Record<string, string> = {
   eat: '🌿', hotel: '🛏️', store: '🛍️', organisation: '🐾', event: '🎉', other: '📍',
@@ -42,6 +43,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ className = '' }: SearchBarProps) {
+  const router = useRouter()
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([])
@@ -117,13 +119,26 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                 <span className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider">Recent</span>
               </div>
               {recentSearches.map((r, i) => (
-                <Link key={i} href={r.href} onClick={() => handleResultClick(r)}
-                  className="flex items-center gap-3 px-3 py-2.5 hover:bg-surface-container-low transition-colors">
+                /* Recent items use programmatic navigation on mousedown so
+                   the dropdown's click-outside handler (which also fires on
+                   mousedown) can never race ahead and unmount the link
+                   before the click event lands. preventDefault stops the
+                   focus-shift to button, keeping the input cursor steady. */
+                <button
+                  key={i}
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    handleResultClick(r)
+                    router.push(r.href)
+                  }}
+                  className="flex items-center gap-3 px-3 py-2.5 w-full text-left hover:bg-surface-container-low transition-colors cursor-pointer"
+                >
                   <div className="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center">
                     <Clock className="h-4 w-4 text-on-surface-variant" />
                   </div>
                   <p className="text-sm text-on-surface truncate">{r.label}</p>
-                </Link>
+                </button>
               ))}
             </div>
           )}
