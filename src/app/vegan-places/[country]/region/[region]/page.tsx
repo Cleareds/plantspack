@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Globe } from 'lucide-react'
@@ -157,20 +158,27 @@ export default async function RegionPage({ params }: PageProps) {
         {cityCards.length > 0 && (
           <div className="mb-10">
             <h2 className="text-lg font-semibold text-on-surface mb-4">Cities in {r.region_name}</h2>
-            <CountryCityGrid
-              cities={cityCards}
-              cityImages={cityImages}
-              countryName={countryName}
-              countrySlug={country}
-              cityScores={countryScores}
-            />
+            {/* CountryCityGrid + CityPlacesList both use useSearchParams,
+                which Next 16 requires inside a Suspense boundary when the
+                page is pre-rendered via generateStaticParams. */}
+            <Suspense fallback={null}>
+              <CountryCityGrid
+                cities={cityCards}
+                cityImages={cityImages}
+                countryName={countryName}
+                countrySlug={country}
+                cityScores={countryScores}
+              />
+            </Suspense>
           </div>
         )}
 
         {places.length > 0 && (
           <div>
             <h2 className="text-lg font-semibold text-on-surface mb-4">All places in {r.region_name}</h2>
-            <CityPlacesList places={places as any} cityName={r.region_name} countryName={countryName} />
+            <Suspense fallback={null}>
+              <CityPlacesList places={places as any} cityName={r.region_name} countryName={countryName} />
+            </Suspense>
           </div>
         )}
 
