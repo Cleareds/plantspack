@@ -302,6 +302,36 @@ async function main() {
     console.warn(`\n⚠ '${input.name}' tagged fully_vegan but has no website. Hard to verify; consider downgrading or adding a source URL. Continuing.\n`)
   }
 
+  // Description / vegan_level consistency guard. If the place is NOT
+  // tagged fully_vegan, the description must not claim it is. This
+  // catches AI-generated descriptions that hallucinated "entirely
+  // plant-based menu", "fully vegan", "100% vegan" for venues that just
+  // have a few vegan options. Project policy: never lie about a place's
+  // vegan status. The earlier OSM batch produced ~8 of these in Belgium
+  // alone before this guard existed.
+  if (input.vegan_level && input.vegan_level !== 'fully_vegan' && input.description) {
+    const desc = input.description.toLowerCase()
+    const fullyVeganClaims = [
+      /\bentirely (?:plant-based|vegan)\b/,
+      /\bfully (?:plant-based|vegan)(?:\s+(?:menu|kitchen|setting|restaurant|cafe))?\b/,
+      /\b100% (?:plant-based|vegan)\b/,
+      /\ball[- ]vegan\b/,
+      /\bcompletely (?:plant-based|vegan)\b/,
+      // "vegan menu" alone is a soft signal — only flag when not balanced
+      // by "options" / "items" / "dishes" qualifier.
+      /\b(?:plant-based|vegan) menu\b(?!.*\b(?:options?|items?|dishes?|selection|choices)\b)/,
+    ]
+    const hits = fullyVeganClaims.filter(re => re.test(desc)).map(re => re.source)
+    if (hits.length > 0) {
+      console.error(`\n✗ description contradicts vegan_level — '${input.name}' is tagged ${input.vegan_level} but the description claims it is fully vegan.`)
+      console.error(`  Phrases that triggered the guard: ${hits.join(', ')}`)
+      console.error(`  EITHER tag it as fully_vegan with strong evidence (HappyCow, Yelp "Vegan" category, etc.)`)
+      console.error(`  OR rewrite the description to honestly reflect that this is a non-vegan place with vegan options/section.`)
+      console.error(`  Pass --force-description to override after manual review.\n`)
+      if (!process.argv.includes('--force-description')) process.exit(2)
+    }
+  }
+
   // Defaults + derived fields.
   const source = input.source || `manual-${todayIso()}`
   const source_id = input.source_id || slugify(`${input.name}-${input.city}`)
