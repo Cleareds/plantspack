@@ -9,11 +9,12 @@
 // statement. To keep slug under user control, we save title/content/privacy
 // first, then write slug as a second update.
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState, use, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import { ArrowLeft, Save, Loader2, AlertCircle, ExternalLink } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
+import { ArrowLeft, Save, Loader2, AlertCircle, ExternalLink, Upload, X, Image as ImageIcon } from 'lucide-react'
 
 interface Article {
   id: string
@@ -22,6 +23,7 @@ interface Article {
   content: string
   privacy: string
   category: string
+  image_url: string | null
   updated_at: string | null
   created_at: string
 }
@@ -31,17 +33,21 @@ const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 export default function AdminBlogEdit({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
+  const { user } = useAuth()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [okMsg, setOkMsg] = useState<string | null>(null)
   const [article, setArticle] = useState<Article | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Form state
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [privacy, setPrivacy] = useState('draft')
   const [content, setContent] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   const [originalSlug, setOriginalSlug] = useState<string | null>(null)
 
   useEffect(() => {
@@ -50,7 +56,7 @@ export default function AdminBlogEdit({ params }: { params: Promise<{ id: string
       setLoading(true)
       const { data, error } = await supabase
         .from('posts')
-        .select('id, slug, title, content, privacy, category, updated_at, created_at')
+        .select('id, slug, title, content, privacy, category, image_url, updated_at, created_at')
         .eq('id', id)
         .maybeSingle()
       if (!active) return
@@ -70,6 +76,7 @@ export default function AdminBlogEdit({ params }: { params: Promise<{ id: string
       setOriginalSlug(data.slug || null)
       setPrivacy(data.privacy || 'draft')
       setContent(data.content || '')
+      setImageUrl((data as Article).image_url || '')
       setLoading(false)
     })()
     return () => { active = false }
@@ -88,14 +95,15 @@ export default function AdminBlogEdit({ params }: { params: Promise<{ id: string
     if (v) { setErr(v); setOkMsg(null); return }
     setErr(null); setOkMsg(null); setSaving(true)
 
-    // Step 1: write title/content/privacy. The slug trigger may auto-regenerate
-    // the slug here if title changed.
+    // Step 1: write title/content/privacy/image_url. The slug trigger may
+    // auto-regenerate the slug here if title changed.
     const { error: e1 } = await supabase
       .from('posts')
       .update({
         title: title.trim(),
         content,
         privacy,
+        image_url: imageUrl.trim() || null,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -124,6 +132,48 @@ export default function AdminBlogEdit({ params }: { params: Promise<{ id: string
     setOriginalSlug(desiredSlug)
     setOkMsg('Saved.')
     setSaving(false)
+  }
+
+  // Upload a thumbnail directly to Supabase Storage post-images bucket
+  // and set imageUrl to the resulting public URL. Auto-saves immediately
+  // so closing the page without clicking Save still keeps the new image.
+  async function uploadThumbnail(file: File) {
+    if (!user) { setErr('You must be signed in to upload.'); return }
+    setUploading(true); setErr(null); setOkMsg(null)
+    try {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase()
+      const path = `${user.id}/blog-${id}-${Date.now()}.${ext}`
+      const { error: upErr } = await supabase.storage
+        .from('post-images')
+        .upload(path, file, { cacheControl: 'public, max-age=2592000, immutable', upsert: false })
+      if (upErr) throw upErr
+      const { data: urlData } = supabase.storage.from('post-images').getPublicUrl(path)
+      const publicUrl = urlData.publicUrl
+      // Persist immediately so the post pages can use it without clicking Save
+      const { error: dbErr } = await supabase.from('posts').update({ image_url: publicUrl, updated_at: new Date().toISOString() }).eq('id', id)
+      if (dbErr) throw dbErr
+      setImageUrl(publicUrl)
+      setOkMsg('Thumbnail uploaded and saved.')
+      // Bust caches so /blog and the post page show the new image
+      const paths = ['/blog', originalSlug ? `/blog/${originalSlug}` : null].filter(Boolean) as string[]
+      await Promise.all(paths.map(p => fetch('/api/revalidate', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ path: p })
+      }).catch(() => {})))
+    } catch (e: any) {
+      setErr(`Upload failed: ${e?.message || e}`)
+    } finally {
+      setUploading(false)
+    }
+  }
+  async function clearThumbnail() {
+    setImageUrl('')
+    const { error } = await supabase.from('posts').update({ image_url: null, updated_at: new Date().toISOString() }).eq('id', id)
+    if (error) { setErr(error.message); return }
+    setOkMsg('Thumbnail cleared.')
+    const paths = ['/blog', originalSlug ? `/blog/${originalSlug}` : null].filter(Boolean) as string[]
+    await Promise.all(paths.map(p => fetch('/api/revalidate', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ path: p })
+    }).catch(() => {})))
   }
 
   if (loading) {
@@ -203,6 +253,58 @@ export default function AdminBlogEdit({ params }: { params: Promise<{ id: string
               <input type="radio" name="privacy" value="public" checked={privacy === 'public'} onChange={() => setPrivacy('public')} />
               <span>Public (visible on /blog)</span>
             </label>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-on-surface mb-1">Thumbnail / hero image</label>
+          <div className="flex items-start gap-4">
+            <div className="w-40 h-28 rounded-lg bg-surface-container-low ghost-border flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {imageUrl ? (
+                <img src={imageUrl} alt="thumbnail preview" className="w-full h-full object-cover" />
+              ) : (
+                <ImageIcon className="h-6 w-6 text-on-surface-variant/40" />
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <input
+                type="url"
+                value={imageUrl}
+                onChange={e => setImageUrl(e.target.value)}
+                placeholder="Paste image URL, or upload below"
+                className="w-full px-3 py-2 border border-outline-variant/30 rounded-lg bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+              />
+              <div className="flex items-center gap-2 flex-wrap">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={e => { const f = e.target.files?.[0]; if (f) uploadThumbnail(f) }}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-on-primary text-sm font-medium hover:opacity-90 disabled:opacity-50"
+                >
+                  {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                  {uploading ? 'Uploading…' : 'Upload file'}
+                </button>
+                {imageUrl && (
+                  <button
+                    type="button"
+                    onClick={clearThumbnail}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-red-700 hover:bg-red-50 text-sm"
+                  >
+                    <X className="h-3.5 w-3.5" /> Remove
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-on-surface-variant">
+                Shown on <code>/blog</code> index card and at the top of the post. Upload saves immediately. URL field also accepts external links.
+              </p>
+            </div>
           </div>
         </div>
 
