@@ -43,8 +43,10 @@ export async function POST(
   )
   const { data: place } = await admin.from('places').select('slug, country, city').eq('id', id).maybeSingle()
   // Setting via admin counts as level-3 verification — the admin manually
-  // decided the tier. Bumps last_verified_at as well.
-  const update = {
+  // decided the tier. Bumps last_verified_at as well. Optionally saves
+  // admin_notes in the same transaction so the row UI doesn't race
+  // textarea-blur against dropdown-change.
+  const update: any = {
     vegan_level: newLevel,
     verification_level: 3,
     verification_method: 'admin_review',
@@ -52,6 +54,7 @@ export async function POST(
     is_verified: true,
     last_verified_at: new Date().toISOString(),
   }
+  if (typeof body.admin_notes === 'string') update.admin_notes = body.admin_notes
   const { error } = await admin.from('places').update(update).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 

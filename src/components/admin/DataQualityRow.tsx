@@ -113,9 +113,15 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
     if (newLevel === veganLevel) return
     setBusy('level')
     try {
-      await postJson(`/api/admin/places/${place.id}/level`, { vegan_level: newLevel })
+      // Send any unsaved notes alongside the level change so they're
+      // persisted in the same call — avoids losing notes when the
+      // dropdown change races the textarea blur handler.
+      const payload: any = { vegan_level: newLevel }
+      if (notes !== savedNotes) payload.admin_notes = notes
+      await postJson(`/api/admin/places/${place.id}/level`, payload)
       setVeganLevel(newLevel)
       setVerified(true)  // setting level via admin counts as verified
+      if (notes !== savedNotes) setSavedNotes(notes)
     } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
   }
   const onDelete = async () => {
