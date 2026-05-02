@@ -1,4 +1,27 @@
 /**
+ * ⚠ DEPRECATED — DO NOT RUN WITHOUT EXPLICIT USER AUTHORIZATION.
+ *
+ * This script was the source of the May 2026 Belgium fully_vegan
+ * misclassification incident. The OpenAI Batch API decided that ~95
+ * vegan-options places (with OSM tag diet:vegan=yes that the importer
+ * had already mistranslated as vegan_friendly) were actually fully
+ * vegan, based on AI-generated descriptions.
+ *
+ * Two guards now exist that prevent this script from causing damage
+ * even if executed:
+ *  1. DB trigger places_fully_vegan_human_only blocks any INSERT/UPDATE
+ *     that sets vegan_level='fully_vegan' with verification_method=
+ *     'ai_verified'. The script will fail mid-run.
+ *  2. Project rule against paid tools — OpenAI is paid; never re-run
+ *     without explicit per-run user confirmation and a cost cap.
+ *
+ * If you absolutely need to reclassify with AI in the future:
+ *  - Use only DOWNGRADE direction (high → low). The trigger blocks
+ *    upgrades, so AI cannot accidentally promote.
+ *  - Provide rigorous prompts grounded in real menu data (not in the
+ *    place's own description, which is itself often AI-generated).
+ *  - Have a human review every fully_vegan output before applying.
+ *
  * Bulk reclassification of all places into the 4-tier vegan level system.
  * Uses OpenAI Batch API (50% cheaper, async, no rate-limit pressure).
  *
