@@ -52,6 +52,7 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
   const [verified, setVerified] = useState((place.verification_level ?? 0) >= 3)
   const [notes, setNotes] = useState(place.admin_notes || '')
   const [savedNotes, setSavedNotes] = useState(place.admin_notes || '')
+  const [veganLevel, setVeganLevel] = useState(place.vegan_level || '')
   const [busy, setBusy] = useState<string | null>(null)
   const [archived, setArchived] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -108,6 +109,15 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
     try { await postJson(`/api/admin/places/${place.id}/archive`, { reason }); setArchived(true) }
     catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
   }
+  const onChangeLevel = async (newLevel: string) => {
+    if (newLevel === veganLevel) return
+    setBusy('level')
+    try {
+      await postJson(`/api/admin/places/${place.id}/level`, { vegan_level: newLevel })
+      setVeganLevel(newLevel)
+      setVerified(true)  // setting level via admin counts as verified
+    } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
+  }
   const onDelete = async () => {
     // Hard-deletes are forbidden by project policy ("never delete data
     // silently"). This soft-archives with a distinct reason so the row
@@ -161,10 +171,21 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
 
       <td className="px-3 py-2 whitespace-nowrap align-top">
         <div className="flex flex-col gap-1">
-          {place.vegan_level
-            ? <span className={`text-xs px-2 py-0.5 rounded ${VL_CLASS[place.vegan_level] || 'bg-stone-100'}`}>{VEGAN_LEVEL_LABEL[place.vegan_level] || place.vegan_level}</span>
-            : <span className="text-xs text-on-surface-variant">—</span>}
-          <div className="flex flex-col gap-0.5 text-[10px]">
+          {/* Inline level selector — changes count as admin-review (level 3). */}
+          <select
+            value={veganLevel}
+            disabled={busy === 'level'}
+            onChange={e => onChangeLevel(e.target.value)}
+            className={`text-xs px-1.5 py-0.5 rounded border-0 cursor-pointer font-medium ${VL_CLASS[veganLevel] || 'bg-stone-100'}`}
+            title="Change vegan level (counts as admin verification)"
+          >
+            <option value="fully_vegan">100% Vegan</option>
+            <option value="mostly_vegan">Mostly Vegan</option>
+            <option value="vegan_friendly">Vegan-Friendly</option>
+            <option value="vegan_options">Has Vegan Options</option>
+          </select>
+          {busy === 'level' && <span className="text-[10px] text-stone-500">saving…</span>}
+          <div className="flex flex-col gap-0.5 text-[10px] mt-1">
             <YesNo ok={!!place.website} label="web" />
             <YesNo ok={!!place.phone} label="phone" />
             <YesNo ok={hasHours} label="hours" />
