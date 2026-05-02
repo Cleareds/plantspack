@@ -376,11 +376,35 @@ export function mapOsmCategory(tags: Record<string, string>): 'eat' | 'hotel' | 
   return 'eat';
 }
 
-/** Extract vegan_level from OSM diet:vegan tag. */
-export function mapVeganLevel(tags: Record<string, string>): 'fully_vegan' | 'vegan_friendly' {
-  if (tags['diet:vegan'] === 'only') return 'fully_vegan';
-  // Pure vegetarian-only restaurants without explicit vegan=only get vegan_friendly
-  return 'vegan_friendly';
+/**
+ * Extract vegan_level from OSM diet:vegan tag.
+ *
+ * IMPORTANT: this mapper enforces strict OSM semantics. The tag
+ * diet:vegan=yes means "has vegan options alongside non-vegan items"
+ * (= vegan_options). The tag diet:vegan=only means "fully vegan menu"
+ * (= fully_vegan). The May 2026 Belgium audit found ~95 places that
+ * had been promoted to fully_vegan from a =yes tag — that bug is fixed
+ * here at the source.
+ *
+ * Falls back to vegan_options when no usable signal is present — the
+ * conservative default. Downstream evidence (HappyCow, Yelp, manual
+ * review) can upgrade later.
+ */
+export function mapVeganLevel(tags: Record<string, string>): 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options' {
+  // cuisine=vegan is a strong signal — OSM mappers use it specifically
+  // for fully-vegan venues. Trust it the same as diet:vegan=only.
+  if (tags['cuisine'] === 'vegan' || tags['diet:vegan'] === 'only') return 'fully_vegan';
+  const v = tags['diet:vegan']?.toLowerCase();
+  const veg = tags['diet:vegetarian']?.toLowerCase();
+  if (v === 'yes') {
+    // diet:vegetarian=only AND diet:vegan=yes → vegetarian restaurant with vegan options
+    if (veg === 'only') return 'vegan_friendly';
+    return 'vegan_options';
+  }
+  if (v === 'limited') return 'vegan_options';
+  if (veg === 'only') return 'vegan_friendly';
+  if (veg === 'yes') return 'vegan_options';
+  return 'vegan_options';
 }
 
 /** Extract default tags for import-time categorisation. */
