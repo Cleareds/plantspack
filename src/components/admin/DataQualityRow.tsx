@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, X, RotateCcw, Loader2, MapPin, Search, ExternalLink, Trash2 } from 'lucide-react'
+import { Check, X, RotateCcw, Loader2, MapPin, Search, ExternalLink, Trash2, XOctagon } from 'lucide-react'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
 export interface DataQualityRowProps {
@@ -106,6 +106,21 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
     if (!reason) return
     setBusy('archive')
     try { await postJson(`/api/admin/places/${place.id}/archive`, { reason }); setArchived(true) }
+    catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
+  }
+  const onDelete = async () => {
+    // Hard-deletes are forbidden by project policy ("never delete data
+    // silently"). This soft-archives with a distinct reason so the row
+    // is removed from the public site but recoverable. The double prompt
+    // mirrors the "Yes delete" confirmation rule.
+    const ok1 = confirm(`Remove "${place.name}" from the platform? (Soft-archive — data is preserved.)`)
+    if (!ok1) return
+    const confirmText = prompt('To confirm, type DELETE:')
+    if (confirmText !== 'DELETE') { setErr('Not confirmed — type DELETE in the prompt.'); return }
+    const reason = prompt('Reason (e.g. "spam", "wrong country", "duplicate"):', 'admin_deleted')
+    if (!reason) return
+    setBusy('delete')
+    try { await postJson(`/api/admin/places/${place.id}/archive`, { reason: `admin_deleted: ${reason}` }); setArchived(true) }
     catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
   }
 
@@ -217,7 +232,10 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
             </button>
           )}
           <button onClick={onArchive} disabled={busy === 'archive'} title="Mark as permanently closed" className="inline-flex items-center gap-1 px-2 py-1 rounded text-red-700 hover:bg-red-50 text-[11px]">
-            {busy === 'archive' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />} Closed
+            {busy === 'archive' ? <Loader2 className="h-3 w-3 animate-spin" /> : <XOctagon className="h-3 w-3" />} Closed
+          </button>
+          <button onClick={onDelete} disabled={busy === 'delete'} title="Remove from platform (soft-archive with admin_deleted reason)" className="inline-flex items-center gap-1 px-2 py-1 rounded text-red-800 bg-red-50 hover:bg-red-100 text-[11px]">
+            {busy === 'delete' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />} Delete
           </button>
         </div>
       </td>
