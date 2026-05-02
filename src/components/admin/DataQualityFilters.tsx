@@ -21,6 +21,8 @@ const FLAGS = [
   { key: 'no_website', label: 'No website' },
   { key: 'no_image', label: 'No image' },
   { key: 'thin_desc', label: 'Thin description' },
+  { key: 'audit_flagged', label: 'Audit-flagged' },  // any place whose admin_notes begins with "audit-"
+  { key: 'suspect_fv', label: 'Suspect fully-vegan' },  // fully_vegan + ai_verified, no admin sign-off
 ]
 
 export default function DataQualityFilters() {

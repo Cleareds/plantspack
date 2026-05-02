@@ -95,6 +95,13 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
     if (filterFlag === 'no_website' && p.website) return false
     if (filterFlag === 'no_image' && (p.main_image_url || (p.images && p.images.length > 0))) return false
     if (filterFlag === 'thin_desc' && (p.description || '').length > 120) return false
+    // audit_flagged: places marked by an audit run (admin_notes starts with "audit-")
+    if (filterFlag === 'audit_flagged' && !((p as any).admin_notes || '').startsWith('audit-')) return false
+    // suspect_fv: fully_vegan that hasn't passed admin review (level<3 or method=ai_verified)
+    if (filterFlag === 'suspect_fv') {
+      if (p.vegan_level !== 'fully_vegan') return false
+      if ((p.verification_level ?? 0) >= 3 && p.verification_method === 'admin_review') return false
+    }
     return true
   })
 
