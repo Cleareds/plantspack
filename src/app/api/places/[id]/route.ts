@@ -169,9 +169,16 @@ export async function PUT(
     // Geocode new address to update map coordinates (skip if client already sent coords)
     if (body.address && body.address !== existingPlace.address && !body.latitude) {
       try {
+        // accept-language=en forces Nominatim to return city/country names
+        // in English regardless of the input language. Otherwise a Ukrainian
+        // address comes back as "Київ"/"Україна", a German one as "München"/
+        // "Deutschland", etc. — we want one canonical English label per
+        // place so search and aggregation stay consistent. The Accept-Language
+        // header alone is sometimes ignored by Nominatim's CDN layer, so we
+        // also pass the query parameter (which is authoritative).
         const geoRes = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(body.address)}&limit=1&addressdetails=1`,
-          { headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)' } }
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(body.address)}&limit=1&addressdetails=1&accept-language=en`,
+          { headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)', 'Accept-Language': 'en' } }
         )
         if (geoRes.ok) {
           const geoData = await geoRes.json()

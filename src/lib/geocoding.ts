@@ -114,12 +114,12 @@ class GeocodingService {
     await this.waitForRateLimit()
 
     try {
-      // Detect browser language to improve results for non-Latin scripts (Ukrainian, etc.)
-      const browserLang = typeof navigator !== 'undefined' ? navigator.language?.split('-')[0] : 'en'
-      const acceptLanguage = browserLang === 'en'
-        ? 'en,uk,de,fr,es,nl'
-        : `${browserLang},en,uk,de,fr,es,nl`
-
+      // accept-language=en forces Nominatim to return city/country/road
+      // names in English regardless of the input-script. The query string
+      // itself can be any language (Nominatim's index covers all). Mixing
+      // browser-language into the response language used to leak Cyrillic
+      // / German / French names back into the DB; English-only is the
+      // canonical platform standard.
       const params = new URLSearchParams({
         format: 'json',
         q: query,
@@ -127,7 +127,7 @@ class GeocodingService {
         addressdetails: addressDetails ? '1' : '0',
         extratags: extraTags ? '1' : '0',
         namedetails: nameDetails ? '1' : '0',
-        'accept-language': acceptLanguage,
+        'accept-language': 'en',
         dedupe: '1'
       })
 
@@ -137,6 +137,7 @@ class GeocodingService {
           headers: {
             'User-Agent': this.USER_AGENT,
             'Accept': 'application/json',
+            'Accept-Language': 'en',
           },
           signal: AbortSignal.timeout(10000),
         }
