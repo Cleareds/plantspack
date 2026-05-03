@@ -226,7 +226,9 @@ export async function PUT(
       }
     }
 
-    // Revalidate cached pages that show this place
+    // Revalidate cached pages that show this place. Errors here are
+    // surfaced (was previously a silent catch) so any future cache-bust
+    // failure is at least visible in the server logs.
     try {
       revalidatePath(`/place/${id}`)
       if (updatedPlace?.slug && updatedPlace.slug !== id) {
@@ -238,7 +240,9 @@ export async function PUT(
         revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
         revalidatePath(`/vegan-places/${countrySlug}`)
       }
-    } catch {}
+    } catch (revalidateErr) {
+      console.error('[Place API] revalidatePath failed:', revalidateErr)
+    }
 
     return NextResponse.json({ place: updatedPlace })
   } catch (error) {
