@@ -143,8 +143,9 @@ jobs:
             console.log('Pending corrections:', pendingCorrections);
 
             // Refresh materialized views
-            await supabase.rpc('refresh_directory_views').catch(() => console.log('View refresh failed'));
-            console.log('\nMaterialized views refreshed.');
+            const { error: refreshErr } = await supabase.rpc('refresh_directory_views');
+            if (refreshErr) console.log('View refresh failed:', refreshErr.message);
+            else console.log('\nMaterialized views refreshed.');
             console.log('=== Audit Complete ===');
           })();
           "
