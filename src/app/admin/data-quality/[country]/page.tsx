@@ -23,6 +23,7 @@ interface PlaceRow {
   country: string
   vegan_level: string | null
   category: string | null
+  subcategory: string | null
   website: string | null
   phone: string | null
   address: string | null
@@ -64,7 +65,7 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
   // Try fetching with admin_notes; gracefully fall back if migration not applied.
   let places: PlaceRow[] = []
   let migrationMissing = false
-  const cols = 'id, slug, name, city, country, vegan_level, category, website, phone, address, description, main_image_url, images, opening_hours, review_count, average_rating, latitude, longitude, verification_level, verification_method, verification_status, last_verified_at, source'
+  const cols = 'id, slug, name, city, country, vegan_level, category, subcategory, website, phone, address, description, main_image_url, images, opening_hours, review_count, average_rating, latitude, longitude, verification_level, verification_method, verification_status, last_verified_at, source'
   const initial: any = await admin
     .from('places')
     .select(`${cols}, admin_notes`)

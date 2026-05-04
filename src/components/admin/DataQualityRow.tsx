@@ -24,6 +24,8 @@ export interface DataQualityRowProps {
     phone: string | null
     website: string | null
     vegan_level: string | null
+    category: string | null
+    subcategory: string | null
     verification_level: number | null
     verification_method: string | null
     last_verified_at: string | null
@@ -37,6 +39,41 @@ const VL_CLASS: Record<string, string> = {
   mostly_vegan: 'bg-teal-100 text-teal-800',
   vegan_friendly: 'bg-stone-100 text-stone-700',
   vegan_options: 'bg-stone-100 text-stone-600',
+}
+
+const CATEGORY_OPTIONS: Array<{ value: string; label: string }> = [
+  { value: 'eat', label: 'Eat' },
+  { value: 'store', label: 'Store' },
+  { value: 'hotel', label: 'Stay' },
+  { value: 'organisation', label: 'Sanctuary' },
+  { value: 'event', label: 'Event' },
+  { value: 'community', label: 'Community' },
+  { value: 'other', label: 'Other' },
+]
+
+const SUBCATEGORY_OPTIONS: Record<string, Array<{ value: string; label: string }>> = {
+  eat: [
+    { value: 'restaurant', label: 'Restaurant' },
+    { value: 'cafe', label: 'Cafe' },
+    { value: 'fast_food', label: 'Fast Food' },
+    { value: 'bar', label: 'Bar/Pub' },
+    { value: 'bakery', label: 'Bakery' },
+    { value: 'ice_cream', label: 'Ice Cream' },
+  ],
+  store: [
+    { value: 'grocery', label: 'Grocery' },
+    { value: 'bakery', label: 'Bakery' },
+    { value: 'health_food', label: 'Health Food' },
+    { value: 'specialty', label: 'Specialty' },
+    { value: 'other_shop', label: 'Other' },
+  ],
+  hotel: [
+    { value: 'hotel', label: 'Hotel' },
+    { value: 'hostel', label: 'Hostel' },
+    { value: 'bnb', label: 'B&B' },
+    { value: 'retreat', label: 'Retreat' },
+    { value: 'other_stay', label: 'Other' },
+  ],
 }
 
 function YesNo({ ok, label }: { ok: boolean; label: string }) {
@@ -53,6 +90,8 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
   const [notes, setNotes] = useState(place.admin_notes || '')
   const [savedNotes, setSavedNotes] = useState(place.admin_notes || '')
   const [veganLevel, setVeganLevel] = useState(place.vegan_level || '')
+  const [category, setCategory] = useState(place.category || '')
+  const [subcategory, setSubcategory] = useState(place.subcategory || '')
   const [busy, setBusy] = useState<string | null>(null)
   const [archived, setArchived] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -108,6 +147,26 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
     setBusy('archive')
     try { await postJson(`/api/admin/places/${place.id}/archive`, { reason }); setArchived(true) }
     catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
+  }
+  const onChangeCategory = async (newCat: string) => {
+    if (newCat === category) return
+    setBusy('category')
+    try {
+      // Reset subcategory when category changes (the old sub may be invalid for the new cat).
+      const subValid = SUBCATEGORY_OPTIONS[newCat]?.some(o => o.value === subcategory)
+      const nextSub = subValid ? subcategory : null
+      await postJson(`/api/admin/places/${place.id}/category`, { category: newCat, subcategory: nextSub })
+      setCategory(newCat)
+      setSubcategory(nextSub || '')
+    } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
+  }
+  const onChangeSubcategory = async (newSub: string) => {
+    if (newSub === subcategory) return
+    setBusy('subcategory')
+    try {
+      await postJson(`/api/admin/places/${place.id}/category`, { subcategory: newSub || null, parent_category: category || null })
+      setSubcategory(newSub)
+    } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
   }
   const onChangeLevel = async (newLevel: string) => {
     if (newLevel === veganLevel) return
@@ -191,6 +250,33 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
             <option value="vegan_options">Has Vegan Options</option>
           </select>
           {busy === 'level' && <span className="text-[10px] text-stone-500">saving…</span>}
+          <select
+            value={category}
+            disabled={busy === 'category'}
+            onChange={e => onChangeCategory(e.target.value)}
+            className="text-[11px] px-1.5 py-0.5 rounded border border-outline-variant/40 bg-surface-container-lowest cursor-pointer"
+            title="Place category"
+          >
+            <option value="">— category —</option>
+            {CATEGORY_OPTIONS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          {SUBCATEGORY_OPTIONS[category] && (
+            <select
+              value={subcategory}
+              disabled={busy === 'subcategory'}
+              onChange={e => onChangeSubcategory(e.target.value)}
+              className="text-[11px] px-1.5 py-0.5 rounded border border-outline-variant/40 bg-surface-container-lowest cursor-pointer"
+              title="Subcategory"
+            >
+              <option value="">— subcategory —</option>
+              {SUBCATEGORY_OPTIONS[category].map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          )}
+          {(busy === 'category' || busy === 'subcategory') && <span className="text-[10px] text-stone-500">saving…</span>}
           <div className="flex flex-col gap-0.5 text-[10px] mt-1">
             <YesNo ok={!!place.website} label="web" />
             <YesNo ok={!!place.phone} label="phone" />
