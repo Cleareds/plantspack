@@ -334,10 +334,10 @@ async function main() {
 
   // Defaults + derived fields.
   const source = input.source || `manual-${todayIso()}`
-  const source_id = input.source_id || slugify(`${input.name}-${input.city}`)
-  const slug = input.slug || source_id
+  let source_id = input.source_id || slugify(`${input.name}-${input.city}`)
+  let slug = input.slug || source_id
 
-  // De-dupe.
+  // De-dupe by (source, source_id) - catches re-runs of the same manual add.
   const { data: existing } = await supabase
     .from('places')
     .select('id, slug')
@@ -390,6 +390,21 @@ async function main() {
       if (merged.opening_hours && !input.opening_hours) { input.opening_hours = merged.opening_hours as any; console.log(`  OSM merged opening_hours`) }
       if (!input.source_id) { input.source_id = osmId; console.log(`  OSM source_id: ${osmId}`) }
       console.log(`  ✅ OSM match: ${osmEl.tags.name} (${osmId})`)
+
+      // Cross-source dedup: a previous OSM import may already have this node.
+      // Check by source_id alone (OSM ids are globally unique across `source`
+      // values like 'osm-import-2026-04', 'osm-import-2026-03', etc.).
+      const { data: osmDupe } = await supabase
+        .from('places')
+        .select('id, slug, source')
+        .eq('source_id', osmId)
+        .is('archived_at', null)
+        .maybeSingle()
+      if (osmDupe) {
+        console.log(`↻ Already in DB via OSM import (source=${osmDupe.source}, source_id=${osmId}) → /place/${osmDupe.slug}`)
+        console.log(`  Tip: edit at /admin/data-quality, or merge manually if details differ.`)
+        return
+      }
     }
   }
 
