@@ -419,6 +419,13 @@ async function main() {
     vegan_level: input.vegan_level,
     verification_status: PENDING ? 'pending' : 'approved',
     is_verified: !PENDING,
+    // Places added via this script are admin-curated (Claude is asked by an
+    // admin to add a specific place after manual confirmation). Mark them as
+    // admin_review at level 3 so the public verification footer reads
+    // "Confirmed - Admin-reviewed" instead of "Confirmed - Imported".
+    verification_level: PENDING ? 1 : 3,
+    verification_method: PENDING ? null : 'admin_review',
+    last_verified_at: PENDING ? null : new Date().toISOString(),
     source,
     source_id,
     slug,
