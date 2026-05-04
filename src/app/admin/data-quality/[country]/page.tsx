@@ -69,7 +69,7 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
   const initial: any = await admin
     .from('places')
     .select(`${cols}, admin_notes`)
-    .ilike('country', countryName)
+    .eq('country', countryName)
     .is('archived_at', null)
     .limit(3000)
   if (initial.error?.code === '42703' || /admin_notes/.test(initial.error?.message || '')) {
@@ -77,7 +77,7 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
     const fallback: any = await admin
       .from('places')
       .select(cols)
-      .ilike('country', countryName)
+      .eq('country', countryName)
       .is('archived_at', null)
       .limit(3000)
     if (fallback.error) return <div className="p-8 text-red-600">Error: {fallback.error.message}</div>
