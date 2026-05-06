@@ -61,7 +61,7 @@ export default function PlaceMap({ latitude, longitude, name, address, category,
       >
         <TileLayer
           attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=99cVeZ5JM3met86KZyyD"
+          url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=CBtMRLqBbJmyBLkXAk5p"
           tileSize={256}
         />
         {customIcon && <Marker position={[latitude, longitude]} icon={customIcon} />}
