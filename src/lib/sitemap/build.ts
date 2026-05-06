@@ -26,6 +26,7 @@ export interface PlaceRow {
   opening_hours: string | Record<string, string> | null
   updated_at: string | null
   created_at: string | null
+  website?: string | null
 }
 
 function getSupabase(): SupabaseClient {
@@ -103,17 +104,23 @@ function collectImageUrls(p: PlaceRow): string[] {
 }
 
 function placeTier(p: PlaceRow): SegmentId {
-  const hasDescription = !!(p.description && p.description.trim().length > 40)
+  const hasDescription = !!(p.description && p.description.trim().length >= 50)
   const hasImage = !!(p.main_image_url || (p.images && p.images.length > 0))
   const hasReview = (p.review_count || 0) > 0
   const isFullyVegan = p.vegan_level === 'fully_vegan'
+  const isMostlyVegan = p.vegan_level === 'mostly_vegan'
+  const hasWebsite = !!p.website
   const hasHours =
     !!p.opening_hours &&
     (typeof p.opening_hours === 'string'
       ? p.opening_hours.trim().length > 0
       : Object.keys(p.opening_hours).length > 0)
   if (hasDescription && hasImage && (hasReview || isFullyVegan)) return 'priority'
-  if (hasDescription || hasImage || hasReview || hasHours) return 'content'
+  // Mirror the per-page noindex predicate so the sitemap never advertises
+  // URLs the page tells Google not to index. Vegan-tier (fully/mostly) is
+  // always at least 'content' — it's a rare, high-value signal even with
+  // no description.
+  if (isFullyVegan || isMostlyVegan || hasDescription || hasImage || hasReview || hasHours || hasWebsite) return 'content'
   return 'thin'
 }
 
@@ -151,7 +158,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     fetchAll<PlaceRow>(
       sb,
       'places',
-      'slug, city, country, description, images, main_image_url, review_count, vegan_level, opening_hours, updated_at, created_at',
+      'slug, city, country, description, images, main_image_url, review_count, vegan_level, opening_hours, website, updated_at, created_at',
       (q) => q.is('archived_at', null),
     ),
     fetchAll<any>(
@@ -206,6 +213,11 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
 
     const countries = new Set<string>()
     const cityCountry = new Set<string>()
+    // Track place counts per (country, city) so we can skip thin city pages
+    // (<5 places). The city page noindexes itself when below the threshold;
+    // we mirror that here to keep the sitemap and the per-page directive in
+    // agreement.
+    const cityCountryCounts = new Map<string, number>()
     for (const p of places) {
       if (!p.country) continue
       const cs = slugifyCityOrCountry(p.country)
@@ -213,13 +225,18 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       countries.add(cs)
       if (p.city) {
         const ct = slugifyCityOrCountry(p.city)
-        if (ct) cityCountry.add(`${cs}/${ct}`)
+        if (ct) {
+          const k = `${cs}/${ct}`
+          cityCountry.add(k)
+          cityCountryCounts.set(k, (cityCountryCounts.get(k) ?? 0) + 1)
+        }
       }
     }
     for (const country of countries) {
       entries.push({ url: `${SITE_URL}/vegan-places/${country}`, changeFreq: 'daily', priority: 0.85 })
     }
     for (const cc of cityCountry) {
+      if ((cityCountryCounts.get(cc) ?? 0) < 5) continue
       entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, changeFreq: 'daily', priority: 0.9 })
     }
     // Region landing pages (Belgium today; generic for any seeded country).
@@ -276,14 +293,10 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       })
     }
   } else {
-    for (const p of byTier.thin) {
-      entries.push({
-        url: `${SITE_URL}/place/${p.slug}`,
-        lastModified: p.updated_at || p.created_at || undefined,
-        changeFreq: 'monthly',
-        priority: 0.3,
-      })
-    }
+    // Thin tier intentionally emits no place URLs. These pages carry
+    // <meta robots="noindex"> at the page level, so listing them in a
+    // sitemap would only contradict that signal. Kept as an empty
+    // sitemap so the sitemap index URL remains stable.
   }
 
   const body =

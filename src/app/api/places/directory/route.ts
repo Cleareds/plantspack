@@ -169,7 +169,7 @@ export async function GET(request: NextRequest) {
       // Get all places in a country (for country pages)
       let query = supabase
         .from('places')
-        .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types')
+        .select('id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types, verification_level')
         .is('archived_at', null)
         .ilike('country', fromSlug(country))
 
@@ -233,7 +233,7 @@ export async function GET(request: NextRequest) {
       // Paginate server-side through Supabase's 1000-row-per-request cap so
       // large cities (Berlin 1300+) return in full. The cap-free `all`
       // output is what the client paginates at 30 rows/page in the UI.
-      const selectCols = 'id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types'
+      const selectCols = 'id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types, verification_level'
       const all: any[] = []
       const BATCH = 1000
       let from = 0

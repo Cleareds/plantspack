@@ -173,10 +173,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // (set in root layout) when no real photo is available.
   const image = pickOgImage((place as any).main_image_url, ...(place.images ?? []))
 
+  // Indexation hygiene — noindex thin places that drag down site quality.
+  // Always index a place that is fully_vegan / mostly_vegan (rare and unique
+  // signal worth preserving) OR that has at least one quality signal:
+  // a real description (>=50 chars), an image, a website, or hours.
+  const vl = (place as any).vegan_level
+  const hasDesc = (place.description ?? '').trim().length >= 50
+  const hasImage = !!(place as any).main_image_url || (place.images?.length ?? 0) > 0
+  const hasWeb = !!(place as any).website
+  const hasHours = !!(place as any).opening_hours && Object.keys((place as any).opening_hours).length > 0
+  const isVeganTier = vl === 'fully_vegan' || vl === 'mostly_vegan'
+  const isThin = !isVeganTier && !hasDesc && !hasImage && !hasWeb && !hasHours
+
   return {
     title,
     description,
     alternates: { canonical: `https://plantspack.com/place/${place.slug || id}` },
+    robots: isThin ? { index: false, follow: true } : undefined,
     openGraph: {
       title: `${place.name} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
       description,

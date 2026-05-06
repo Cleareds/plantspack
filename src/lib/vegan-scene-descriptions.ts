@@ -292,6 +292,13 @@ interface PlaceStats {
   fullyVegan: number
   petFriendly: number
   cityCount?: number
+  // Extended signals (optional). Used when present to lengthen and
+  // diversify per-city descriptions for SEO depth.
+  mostlyVegan?: number
+  verified?: number  // verification_level >= 3
+  withWebsite?: number
+  withHours?: number
+  topPicks?: string[] // names of best-known/verified places (3-5)
 }
 
 // Tags that come through cuisine_types but describe the venue type or a
@@ -511,6 +518,41 @@ export function generateCityDescription(
   // Pet-friendly - useful tactical info, not filler.
   if (stats.petFriendly >= 3) {
     parts.push(`${stats.petFriendly} of them welcome dogs.`)
+  }
+
+  // Verified split - signals data quality and gives an honest
+  // "most of these are imports" framing where applicable.
+  if (typeof stats.verified === 'number' && stats.total >= 8) {
+    const v = stats.verified
+    if (v >= 1 && v < stats.total) {
+      const rest = stats.total - v
+      parts.push(
+        v >= stats.total / 2
+          ? `${v} are admin-reviewed; ${rest} are community-tracked listings we are still verifying.`
+          : `${v} ${v === 1 ? 'is' : 'are'} admin-reviewed so far; the remaining ${rest} come from community and OSM imports.`
+      )
+    }
+  }
+
+  // Mostly-vegan signal — sits between fully_vegan and vegan_friendly,
+  // worth surfacing distinctly when present.
+  if (typeof stats.mostlyVegan === 'number' && stats.mostlyVegan >= 2) {
+    parts.push(`${stats.mostlyVegan} are mostly-vegan venues with a small non-vegan menu.`)
+  }
+
+  // Top picks — drives unique content per city and densifies internal links
+  // (the names are also rendered as anchors elsewhere on the page).
+  const picks = formatPlaceNames(stats.topPicks ?? [], 3)
+  if (picks && stats.total >= 6) {
+    parts.push(`Notable spots include ${picks}.`)
+  }
+
+  // Practical info — open hours / web presence — useful trip-planning signal.
+  if (typeof stats.withHours === 'number' && stats.total >= 10) {
+    const pct = Math.round((stats.withHours / stats.total) * 100)
+    if (pct >= 30 && pct <= 95) {
+      parts.push(`Roughly ${pct}% have published opening hours.`)
+    }
   }
 
   return parts.join(' ')

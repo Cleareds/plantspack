@@ -70,6 +70,7 @@ interface Place {
   longitude: number
   vegan_level: string | null
   cuisine_types: string[]
+  verification_level?: number | null
 }
 
 // Map our { Mon: "10:00-18:00", ... } shape to schema.org openingHoursSpecification.
@@ -138,7 +139,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description: metaDesc,
     alternates: { canonical: `https://plantspack.com/vegan-places/${country}/${city}` },
-    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
+    // Indexation hygiene: cities with fewer than 5 places are too thin to
+    // earn rankings and dilute the site's quality signal. They stay
+    // crawlable (follow=true) so internal links to richer pages keep flowing.
+    robots:
+      places.length < 5
+        ? { index: false, follow: true }
+        : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     openGraph: {
       title: `Vegan Places in ${cityName}, ${countryName}`,
       description: metaDesc,
@@ -329,19 +336,41 @@ export default async function CityPage({ params }: PageProps) {
   const region = await getRegionForCity(country, cityName)
 
   // Build stats from fetched places for data-driven description
-  const cityStats = {
+  const cityStats: any = {
     total: places.length,
     categories: {} as Record<string, number>,
     fullyVegan: 0,
+    mostlyVegan: 0,
     petFriendly: 0,
+    verified: 0,
+    withWebsite: 0,
+    withHours: 0,
     cuisines: [] as string[],
     sampleNames: places.slice(0, 8).map((p: Place) => p.name),
+    topPicks: [] as string[],
   }
   const cuisineCounts: Record<string, number> = {}
+  // Rank places for "top picks": prefer fully_vegan + verified + has reviews/rating
+  const ranked = [...places].sort((a: any, b: any) => {
+    const score = (p: any) =>
+      (p.vegan_level === 'fully_vegan' ? 4 : p.vegan_level === 'mostly_vegan' ? 3 : p.vegan_level === 'vegan_friendly' ? 1 : 0) +
+      (p.verification_level >= 3 ? 3 : 0) +
+      (p.average_rating ? Math.min(p.average_rating, 5) * 0.6 : 0) +
+      (p.review_count ? Math.min(p.review_count, 20) * 0.05 : 0)
+    return score(b) - score(a)
+  })
+  cityStats.topPicks = ranked
+    .slice(0, 5)
+    .map((p: any) => p.name)
+    .filter((n: string) => n && n.length > 2 && n.length < 40)
   for (const p of places) {
     cityStats.categories[p.category] = (cityStats.categories[p.category] || 0) + 1
     if ((p as any).vegan_level === 'fully_vegan') cityStats.fullyVegan++
+    if ((p as any).vegan_level === 'mostly_vegan') cityStats.mostlyVegan++
     if (p.is_pet_friendly) cityStats.petFriendly++
+    if ((p as any).verification_level >= 3) cityStats.verified++
+    if ((p as any).website) cityStats.withWebsite++
+    if ((p as any).opening_hours && Object.keys((p as any).opening_hours).length > 0) cityStats.withHours++
     for (const ct of ((p as any).cuisine_types || [])) {
       if (ct) cuisineCounts[ct] = (cuisineCounts[ct] || 0) + 1
     }
