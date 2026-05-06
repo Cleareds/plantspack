@@ -46,7 +46,7 @@ export default function AboutPage() {
             <div className="flex gap-3">
               <BookOpen className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <div className="font-semibold text-on-surface text-sm">Recipes &amp; Resources</div>
+                <div className="font-semibold text-on-surface text-sm">Feed</div>
                 <p className="text-sm text-on-surface-variant">Discover and share plant-based recipes, products, and lifestyle tips.</p>
               </div>
             </div>
