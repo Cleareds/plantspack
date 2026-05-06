@@ -12,6 +12,7 @@ import { Search, Info, X, TrendingUp, ChevronRight, Plus } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import RatingBadge from '@/components/places/RatingBadge'
+import { useInView } from '@/lib/hooks/use-in-view'
 
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -76,6 +77,9 @@ export default function VeganScoreMap() {
   const [icons, setIcons] = useState<Record<string, any>>({})
   const [clusterIcon, setClusterIcon] = useState<any>(null)
   const mapRef = useRef<any>(null)
+  // Defer tile fetching until the map area scrolls near the viewport.
+  // Prevents non-rendering bot crawlers from burning MapTiler quota.
+  const { ref: mapShellRef, inView: mapInView } = useInView<HTMLDivElement>({ rootMargin: '100px' })
 
   // Filtered places based on active category
   const filteredPlaces = useMemo(() => {
@@ -381,7 +385,7 @@ export default function VeganScoreMap() {
         </div>
 
         {/* Map */}
-        <div className="flex-1 relative rounded-xl overflow-hidden ghost-border">
+        <div ref={mapShellRef} className="flex-1 relative rounded-xl overflow-hidden ghost-border">
           {/* Selected city score overlay */}
           {selectedCity && (
             <div className="absolute top-3 left-3 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 p-3 w-64">
@@ -462,7 +466,7 @@ export default function VeganScoreMap() {
             </div>
           </div>
 
-          {typeof window !== 'undefined' && (
+          {typeof window !== 'undefined' && mapInView && (
             <LeafletMapContainer
               ref={mapRef}
               center={mapCenter}
