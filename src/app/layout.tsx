@@ -9,6 +9,7 @@ import ClientProviders from "@/components/providers/ClientProviders";
 import AppShell from "@/components/layout/AppShell";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
+import NavigationProgress from "@/components/layout/NavigationProgress";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -115,6 +116,7 @@ export default function RootLayout({
           }}
         />
         <GoogleAnalytics />
+        <NavigationProgress />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>
