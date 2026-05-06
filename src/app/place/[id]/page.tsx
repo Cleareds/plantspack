@@ -388,9 +388,14 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           </div>
 
           {/* Image Gallery */}
-          {place.images?.length > 0 && (
+          {(() => {
+            const mainUrl = (place as any).main_image_url as string | null
+            const gallery = place.images?.length
+              ? place.images
+              : (mainUrl ? [mainUrl] : [])
+            return gallery.length > 0 ? (
             <div className="p-6 border-b border-outline-variant/15 relative">
-              <ImageSlider images={place.images} />
+              <ImageSlider images={gallery} />
               {/* Vegan + Pet badges */}
               <div className="absolute top-8 left-8 flex gap-2 z-10">
                 {(place as any).vegan_level === 'fully_vegan' && (
@@ -410,7 +415,8 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 )}
               </div>
             </div>
-          )}
+            ) : null
+          })()}
 
           {/* Details */}
           <div className="p-6 space-y-4 border-b border-outline-variant/15">
