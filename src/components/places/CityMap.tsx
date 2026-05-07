@@ -48,15 +48,22 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
     if (!mapRef.current || mapInstanceRef.current) return
     let cancelled = false
 
-    Promise.all([
-      import('leaflet'),
+    // CRITICAL: leaflet.markercluster is a UMD plugin that expects L to be
+    // present on window at module-evaluation time (it does
+    // `var MarkerClusterGroup = L.MarkerClusterGroup = L.FeatureGroup.extend(...)`
+    // at the top of its IIFE). If we import it in parallel with leaflet,
+    // its evaluation throws "L is not defined" and the entire promise
+    // chain rejects silently — leaving the map host empty. Load leaflet
+    // first, expose it globally, *then* pull in the cluster plugin.
+    ;(async () => {
+      const Lmod = await import('leaflet')
+      const L = (Lmod as any).default || Lmod
+      ;(window as any).L = L
       // @ts-expect-error — leaflet.markercluster ships no .d.ts; we use it
       // as a side-effect import that augments L with markerClusterGroup().
-      import('leaflet.markercluster'),
-      import('@/lib/leaflet-config'),
-    ]).then(([Lmod]) => {
+      await import('leaflet.markercluster')
+      await import('@/lib/leaflet-config')
       if (cancelled || !mapRef.current) return
-      const L = (Lmod as any).default || Lmod
       LRef.current = L
 
       // Default center over the world; the markers effect below will fit
@@ -101,6 +108,11 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
       setMapReady(n => n + 1)
       // Tile sizing fix in case the host's height was 0 at mount time.
       setTimeout(() => map.invalidateSize(), 0)
+    })().catch((err) => {
+      // Surface failures instead of swallowing them silently — the previous
+      // bug (parallel-import of leaflet.markercluster) failed silently and
+      // left the map host empty for ~24h.
+      console.error('[CityMap] init failed:', err)
     })
 
     return () => {
