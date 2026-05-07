@@ -81,8 +81,13 @@ export default function VerificationFooter({
   const [modalOpen, setModalOpen] = useState(false)
   const community = communityState(isVerified, tags)
   const level = verificationLevel ?? 0
-  const showAILine = level >= 2 && community !== 'confirmed' // when community-confirmed, AI line is redundant noise
-  const showSourcedLine = level === 1 && community !== 'confirmed' // L1-only places get the sourced label
+  const isAdminReviewed = verificationMethod === 'admin_review'
+  // Admin review is a stronger signal than AI verification — render an
+  // explicit "Admin-reviewed" line instead of the generic "AI-verified"
+  // copy so admins who promote a place see their action reflected.
+  const showAdminLine = isAdminReviewed && community !== 'confirmed'
+  const showAILine = !isAdminReviewed && level >= 2 && community !== 'confirmed' // when community-confirmed, AI line is redundant noise
+  const showSourcedLine = level === 1 && !isAdminReviewed && community !== 'confirmed' // L1-only places get the sourced label
   const showHonestNote = level === 0 // basically never (every place is at least L1) but here for completeness
 
   return (
@@ -94,6 +99,16 @@ export default function VerificationFooter({
           <div>
             <span className="font-semibold text-emerald-700">Confirmed</span>
             <span className="text-on-surface-variant">{' '}- {methodLabel(verificationMethod)}{lastVerifiedAt ? ` on ${formatDate(lastVerifiedAt)}` : ''}.</span>
+          </div>
+        </div>
+      )}
+
+      {showAdminLine && (
+        <div className="flex items-start gap-2">
+          <BadgeCheck className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <span className="font-medium text-on-surface">Admin-reviewed</span>
+            <span className="text-on-surface-variant">{lastVerifiedAt ? ` on ${formatDate(lastVerifiedAt)}` : ''}. Manually checked by a PlantsPack admin.</span>
           </div>
         </div>
       )}
