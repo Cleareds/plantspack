@@ -160,6 +160,20 @@ export async function PUT(
       }
     }
 
+    // Admin promotion to fully_vegan: also flip verification_method to
+    // admin_review and bump the verification ladder to level 3. Without
+    // this, the places_fully_vegan_human_only trigger (migration
+    // 20260502120000) rejects the update because the row's stored
+    // verification_method is still 'ai_verified' from the original
+    // import. Admin acting through this endpoint *is* human review, so
+    // record that fact on the row.
+    if (isAdmin && body.vegan_level === 'fully_vegan') {
+      updateData.verification_method = 'admin_review'
+      updateData.verification_level = 3
+      updateData.verification_status = 'admin_verified'
+      updateData.last_verified_at = new Date().toISOString()
+    }
+
     // Handle image append mode: merge new images with existing
     if (body.append_images && Array.isArray(body.append_images) && body.append_images.length > 0) {
       const currentImages = existingPlace.images || []
