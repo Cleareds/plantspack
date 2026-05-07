@@ -94,11 +94,18 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
         }).addTo(map)
       }
 
+      // Use the shared green-gradient cluster icon from leaflet-config so
+      // we don't render bare numbers. The default MarkerCluster styles
+      // are intentionally killed in globals.css for the other map
+      // surfaces, so without an iconCreateFunction here the cluster
+      // bubble has no background — exactly the bug screenshot showed.
+      const leafletConfig = await import('@/lib/leaflet-config')
       const cluster = (L as any).markerClusterGroup({
         showCoverageOnHover: false,
         spiderfyOnMaxZoom: true,
         chunkedLoading: true,
         maxClusterRadius: 60,
+        iconCreateFunction: leafletConfig.createClusterIcon,
       })
       map.addLayer(cluster)
 
