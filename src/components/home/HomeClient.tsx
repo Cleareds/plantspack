@@ -84,9 +84,17 @@ interface Props {
   cityImages?: Record<string, string>
   initialLocation?: InitialLocation | null
   followedCities?: FollowedCitySummary[]
+  /**
+   * SSR-derived auth flag. Path A (2026-05-07) gates location-aware blocks
+   * behind sign-in to eliminate the CLS=0.46 caused by the client geo
+   * poll injecting a city-hero block 1-3s after first paint. Anonymous
+   * visitors (and Googlebot) get a fully static home; signed-in users
+   * still get the personalised payload.
+   */
+  isSignedIn?: boolean
 }
 
-function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [] }: Props) {
+function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false }: Props) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
@@ -196,6 +204,13 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
   }, [])
 
   useEffect(() => {
+    // Path A: only signed-in users opt into the personalised home. Anon
+    // visitors get the static SSR payload — no geo poll, no /api/home
+    // refetch, no late-arriving city-hero block to shift the layout.
+    if (!isSignedIn) {
+      setLocationLoading(false)
+      return
+    }
     const CACHE_KEY = 'plantspack_home_cache'
     const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 
@@ -286,7 +301,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
       setLocationLoading(false)
     }
     load()
-  }, [initialLocation])
+  }, [initialLocation, isSignedIn])
 
   const { isFullyVeganOnly } = useVeganFilter()
   const [showCitySearch, setShowCitySearch] = useState(false)
@@ -372,16 +387,17 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               </div>
             )}
 
-            {/* Search bar — shown before geolocation resolves, or when user wants to change city */}
-            {(locationLoading || showCitySearch || (!userCity && !locationLoading)) && (
+            {/* Search bar — shown before geolocation resolves, or when user wants to change city.
+                Anon users (Path A) don't get the geolocation flow so this bar is hidden for them. */}
+            {isSignedIn && (locationLoading || showCitySearch || (!userCity && !locationLoading)) && (
               <div className="max-w-md">
                 <SearchBar className="" />
                 <p className="text-[10px] text-on-surface-variant mt-1.5">Search a city to see vegan places and rankings</p>
               </div>
             )}
 
-            {/* Location controls — shown when city is detected */}
-            {userCity && !showCitySearch && !locationLoading && (
+            {/* Location controls — only when signed in (Path A: anon users get a static home) */}
+            {isSignedIn && userCity && !showCitySearch && !locationLoading && (
               <div className="flex flex-wrap items-center gap-3 text-xs">
                 <span className="text-on-surface-variant flex items-center gap-1">
                   <MapPin className="h-3 w-3" /> {userCity}, {userCountry}
@@ -425,8 +441,9 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               </p>
             )}
 
-            {/* City Score Hero */}
-            {(cityScore || userCity) && (() => {
+            {/* City Score Hero — signed-in only; this block was the main CLS culprit
+                when it slid into the layout 1-3s after the geolocation poll. */}
+            {isSignedIn && (cityScore || userCity) && (() => {
               const heroCity = userCity || cityScore?.city || ''
               const heroCountry = userCountry || cityScore?.country || ''
               // Only build the link if we actually have both city + country —
@@ -578,7 +595,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               </div>
             )}
 
-            {filteredNearby.length > 0 && (
+            {isSignedIn && filteredNearby.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="font-semibold text-on-surface">Vegan places near you</h2>
@@ -627,8 +644,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               </section>
             )}
 
-            {/* Sanctuaries */}
-            {filteredSanctuaries.length > 0 && (
+            {/* Sanctuaries — signed-in only */}
+            {isSignedIn && filteredSanctuaries.length > 0 && (
               <section>
                 <h2 className="font-semibold text-on-surface flex items-center gap-2 mb-3">🐾 Nearby sanctuaries to support</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -654,8 +671,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               </section>
             )}
 
-            {/* Stays */}
-            {filteredStays.length > 0 && (
+            {/* Stays — signed-in only */}
+            {isSignedIn && filteredStays.length > 0 && (
               <section>
                 <h2 className="font-semibold text-on-surface flex items-center gap-2 mb-3">🛏️ Vegan stays nearby</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

@@ -203,40 +203,48 @@ function getCityImages(): Record<string, string> {
   }
 }
 
-async function getInitialLocationData() {
-  // Pull location hints from cookies set by the client (HomeClient syncs them
-  // from localStorage on mount — pinned city takes priority over geolocation).
-  // If anything's there, SSR the nearby-places payload so pinned users don't
-  // see the search-bar flash on first paint.
+async function getInitialLocationData(isSignedIn: boolean) {
+  // Path A (2026-05-07): location-based blocks are gated behind sign-in.
+  // For anonymous visitors we skip all location params and fetch only the
+  // cookieless `/api/home` payload (hero stats + top cities). This:
+  //   - Eliminates the CLS=0.46 caused by the client geolocation poll
+  //     injecting a city-hero block 1-3s after first paint.
+  //   - Removes a /api/home round-trip from the anon hot path.
+  //   - Makes the SSR page identical for every anon visitor (and Googlebot),
+  //     improving cache hit rate on Vercel.
+  //
+  // For signed-in users we still honour pinned/geo cookies and SSR the
+  // personalised payload — they explicitly opted into the personalised
+  // home and can have their saved city render server-side without shift.
   try {
     const c = await cookies()
-    const pinnedCity = c.get('pp_pinned_city')?.value
-    const pinnedCountry = c.get('pp_pinned_country')?.value
-    const geoLat = c.get('pp_user_lat')?.value
-    const geoLng = c.get('pp_user_lng')?.value
-    const geoCity = c.get('pp_user_city')?.value
-    const geoCountry = c.get('pp_user_country')?.value
-
     const params = new URLSearchParams()
-    if (pinnedCity) {
-      params.set('city', pinnedCity)
-      if (pinnedCountry) params.set('country', pinnedCountry)
-    } else if (geoLat || geoCity) {
-      if (geoLat) params.set('lat', geoLat)
-      if (geoLng) params.set('lng', geoLng)
-      if (geoCity) params.set('city', geoCity)
-      if (geoCountry) params.set('country', geoCountry)
+    let pinnedCity: string | undefined
+    let pinnedCountry: string | undefined
+    let geoCity: string | undefined
+    let geoCountry: string | undefined
+
+    if (isSignedIn) {
+      pinnedCity = c.get('pp_pinned_city')?.value
+      pinnedCountry = c.get('pp_pinned_country')?.value
+      const geoLat = c.get('pp_user_lat')?.value
+      const geoLng = c.get('pp_user_lng')?.value
+      geoCity = c.get('pp_user_city')?.value
+      geoCountry = c.get('pp_user_country')?.value
+      if (pinnedCity) {
+        params.set('city', pinnedCity)
+        if (pinnedCountry) params.set('country', pinnedCountry)
+      } else if (geoLat || geoCity) {
+        if (geoLat) params.set('lat', geoLat)
+        if (geoLng) params.set('lng', geoLng)
+        if (geoCity) params.set('city', geoCity)
+        if (geoCountry) params.set('country', geoCountry)
+      }
     }
-    // Always call /api/home so the hero stats (places / countries / cities)
-    // land in the SSR HTML even for fresh visitors with no cookies set.
-    // Without params the endpoint skips the nearby-places query, so this
-    // is the same lightweight 3-query path that runs for any visitor.
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
     const hasParams = params.toString().length > 0
     const url = hasParams ? `${baseUrl}/api/home?${params.toString()}` : `${baseUrl}/api/home`
-    // Personalised (location) responses must be fresh; the cookieless general
-    // payload (used for the hero stats) is fine to cache for 5 minutes.
     const res = await fetch(url, hasParams ? { cache: 'no-store' } : { next: { revalidate: 300 } })
     if (!res.ok) return null
     const data = await res.json()
@@ -251,10 +259,17 @@ async function getInitialLocationData() {
 }
 
 export default async function Home() {
+  // Resolve auth state once so we can branch the location-aware fetch and
+  // pass an explicit isSignedIn flag to the client (avoids hydration drift
+  // when the client useAuth resolves on a different schedule than SSR).
+  const supabase = await createServerClient()
+  const { data: { user: sessionUser } } = await supabase.auth.getUser()
+  const isSignedIn = !!sessionUser
+
   const [recentPosts, recentReviews, initialLocation, featuredPlaces, followedCities] = await Promise.all([
     getRecentPosts(),
     getRecentReviews(),
-    getInitialLocationData(),
+    getInitialLocationData(isSignedIn),
     getFeaturedPlaces(),
     getFollowedCities(),
   ])
@@ -310,6 +325,7 @@ export default async function Home() {
         cityImages={cityImages}
         initialLocation={initialLocation}
         followedCities={displayedFollowedCities}
+        isSignedIn={isSignedIn}
       />
 
       {/* Featured Places — SSR plain-HTML links, visible to Googlebot without JS.
