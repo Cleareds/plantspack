@@ -243,13 +243,14 @@ export default async function CountryPage({ params }: PageProps) {
           </>
         )}
 
-        {/* All places in country with map */}
+        {/* All places in country with map.
+            CityPlacesList paginates 30 per page via ?page=N, so the heading
+            here intentionally states the country total only. The "1–30 of N"
+            page-specific count is rendered by CityPlacesList itself. */}
         {places.length > 0 && (
           <div className="mt-12">
             <h2 className="text-lg font-semibold text-on-surface mb-4">
-              {places.length >= totalPlaces
-                ? `All ${places.length} places in ${countryName}`
-                : `Showing ${places.length} of ${totalPlaces} places in ${countryName}`}
+              All places in {countryName}
             </h2>
             <CityPlacesList places={places} />
           </div>
