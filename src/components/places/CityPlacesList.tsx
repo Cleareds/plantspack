@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight, Map } from 'lucide-react'
 import CityMap from './CityMap'
+import { useInView } from '@/lib/hooks/use-in-view'
 import RatingBadge from './RatingBadge'
 import PlaceImage from './PlaceImage'
 import AddPlaceButton from './AddPlaceButton'
@@ -407,16 +408,49 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
           )}
         </div>
 
-        {/* Sticky Map */}
+        {/* Sticky Map (lazy-mounted) */}
         <div className="lg:w-[400px] flex-shrink-0">
           <div className="lg:sticky lg:top-24">
-            <CityMap
-              places={filtered.map(p => ({ id: p.id, name: p.name, slug: p.slug || undefined, latitude: p.latitude, longitude: p.longitude, category: p.category }))}
+            <LazyCityMap
+              places={filtered}
               className="h-[300px] lg:h-[calc(100vh-8rem)]"
             />
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Defer mounting CityMap (and the Leaflet bundle + OSM tile fetches it
+// triggers) until the sidebar nears the viewport. On mobile the map is
+// well below the fold, so deferral is a clean LCP win. On desktop the
+// observer fires almost immediately on mount, so user-perceived delay
+// stays sub-100ms while the document paints first.
+function LazyCityMap({ places, className }: { places: Place[]; className?: string }) {
+  const { ref, inView } = useInView<HTMLDivElement>({ rootMargin: '300px' })
+  const mapPlaces = places.map(p => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug || undefined,
+    latitude: p.latitude,
+    longitude: p.longitude,
+    category: p.category,
+  }))
+  return (
+    <div ref={ref} className={className} style={{ minHeight: '300px' }}>
+      {inView ? (
+        <CityMap places={mapPlaces} className="h-full" />
+      ) : (
+        // Reserved-space placeholder, no network/JS work. Same min-height
+        // as the real map so CLS stays at 0 when it swaps in.
+        <div className="h-full w-full rounded-xl bg-gradient-to-br from-emerald-50 via-stone-50 to-emerald-50 flex items-center justify-center">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-lowest shadow-sm">
+            <Map className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-on-surface">Map loads as you scroll</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

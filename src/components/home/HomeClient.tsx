@@ -439,12 +439,13 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 {cityImageUrl && !cityImageFailed && (
                   heroHref ? (
                     <Link href={heroHref} className="block relative h-32 overflow-hidden group" aria-label={`Explore vegan places in ${heroCity}`}>
-                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover transition-transform group-hover:scale-[1.02]" onError={() => setCityImageFailed(true)} />
+                      {/* LCP element on home — must be discoverable + high priority. */}
+                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover transition-transform group-hover:scale-[1.02]" fetchPriority="high" loading="eager" decoding="sync" onError={() => setCityImageFailed(true)} />
                       <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
                     </Link>
                   ) : (
                     <div className="relative h-32 overflow-hidden">
-                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover" onError={() => setCityImageFailed(true)} />
+                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover" fetchPriority="high" loading="eager" decoding="sync" onError={() => setCityImageFailed(true)} />
                       <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
                     </div>
                   )

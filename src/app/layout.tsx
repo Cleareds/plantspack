@@ -73,9 +73,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/*
+          Preconnect to the third-party origins on the critical path so the
+          TLS handshake + DNS lookup for fonts, hero images, and place card
+          images happens in parallel with the document download. Skip
+          tile.openstreetmap.org on purpose — that origin is only needed
+          after CityMap lazy-mounts; warming it would defeat the deferral.
+        */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://mfeelaqjbtnypoojhfjp.supabase.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://lh3.googleusercontent.com" crossOrigin="anonymous" />
+        {/*
+          Material Symbols Outlined: narrowed from the full variable axis
+          range (opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200) to a
+          single-weight subset. The full range made Google Fonts ship 7.9MB
+          on first paint of the city directory page; this trims it to a
+          static subset under 200KB while preserving every icon glyph
+          we render across the app.
+        */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"
           crossOrigin="anonymous"
         />
       </head>
