@@ -8,7 +8,7 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface CityMapPlace {
   id: string
@@ -36,6 +36,12 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
   const mapInstanceRef = useRef<any>(null)
   const clusterGroupRef = useRef<any>(null)
   const LRef = useRef<any>(null)
+  // State counter that flips when the map+cluster finish initializing. Refs
+  // alone don't trigger re-renders, so without this the markers effect
+  // would fire on first paint (when refs are null), bail out, and never
+  // re-run — leaving the map host empty. Bumping this triggers React to
+  // re-evaluate the markers effect once the map is actually ready.
+  const [mapReady, setMapReady] = useState(0)
 
   // One-time map + cluster setup
   useEffect(() => {
@@ -91,9 +97,9 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
 
       mapInstanceRef.current = map
       clusterGroupRef.current = cluster
-      // Trigger initial marker population now that the map is ready.
-      // The next effect below depends on cluster being non-null.
-      // Force a no-op state nudge by invalidating size.
+      // Force the markers effect to re-run now that map + cluster exist.
+      setMapReady(n => n + 1)
+      // Tile sizing fix in case the host's height was 0 at mount time.
       setTimeout(() => map.invalidateSize(), 0)
     })
 
@@ -153,7 +159,7 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
       )
       map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 })
     })
-  }, [places])
+  }, [places, mapReady])
 
   if (places.length === 0) {
     return (
