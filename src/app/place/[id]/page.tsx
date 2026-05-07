@@ -219,11 +219,17 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
       const admin = createAdminClient()
       const { data: alias } = await admin
         .from('place_slug_aliases')
-        .select('place_id, places!inner(slug)')
+        .select('place_id, places!inner(slug, archived_at)')
         .eq('old_slug', id)
         .limit(1)
         .maybeSingle()
-      aliasSlug = (alias as any)?.places?.slug || null
+      const tgt = (alias as any)?.places
+      // Guard against bad aliases that would redirect to themselves or to
+      // an archived row. Either case used to surface as a redirect loop in
+      // GSC (the place page would 307 back to the same URL forever).
+      if (tgt && tgt.slug && tgt.slug !== id && !tgt.archived_at) {
+        aliasSlug = tgt.slug
+      }
     } catch {}
   }
   if (aliasSlug) redirect(`/place/${aliasSlug}`)
