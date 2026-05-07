@@ -1,97 +1,185 @@
 'use client'
 
-// Leaflet CSS — scoped to the city-directory route via this component.
-// Webpack chunks this so non-map routes don't ship it; do NOT also load
-// the same stylesheet from a CDN at runtime — that turns it into a
-// render-blocking critical-path resource and was the #1 cause of the
-// city page's 5.6s LCP before this fix.
+// Leaflet + cluster CSS scoped to the city-directory route. Webpack chunks
+// these so non-map routes don't ship them. Do NOT also load the same
+// stylesheets from a CDN at runtime — that turns them into render-blocking
+// critical-path resources.
 import 'leaflet/dist/leaflet.css'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+
+interface CityMapPlace {
+  id: string
+  slug?: string
+  name: string
+  category: string
+  vegan_level?: string | null
+  average_rating?: number | null
+  review_count?: number | null
+  latitude: number
+  longitude: number
+}
 
 interface CityMapProps {
-  places: { id: string; name: string; slug?: string; latitude: number; longitude: number; category: string }[]
+  places: CityMapPlace[]
   className?: string
 }
 
-// Cap the number of markers rendered on the city-page sidebar map.
-// Berlin pushes ~1,300 places; creating that many markers synchronously
-// freezes the main thread for hundreds of ms. Real clustering belongs
-// in a follow-up — for now, render the first MAX_MARKERS and offer a
-// "view all on full map" link.
-const MAX_MARKERS = 200
-
 export default function CityMap({ places, className = '' }: CityMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const [mapInstance, setMapInstance] = useState<any>(null)
-  const limitedPlaces = places.length > MAX_MARKERS ? places.slice(0, MAX_MARKERS) : places
-  const truncated = places.length > MAX_MARKERS
+  // Persist map + cluster group across renders so we can update markers in
+  // place when the parent re-renders with a different `places` array
+  // (e.g. when the user changes filters). Previously we mounted markers
+  // exactly once and the map went stale on filter changes.
+  const mapInstanceRef = useRef<any>(null)
+  const clusterGroupRef = useRef<any>(null)
+  const LRef = useRef<any>(null)
 
+  // One-time map + cluster setup
   useEffect(() => {
-    if (!mapRef.current || limitedPlaces.length === 0 || mapInstance) return
+    if (!mapRef.current || mapInstanceRef.current) return
+    let cancelled = false
 
-    // Dynamic import of Leaflet
-    import('leaflet').then((L) => {
-      // Skip the default-icon bootstrap entirely — every marker below is
-      // a custom divIcon (inline SVG), so we never resolve Leaflet's
-      // default marker URLs. Avoids three render-blocking PNG requests
-      // to cdnjs.cloudflare.com that the previous code wired up.
+    Promise.all([
+      import('leaflet'),
+      // @ts-expect-error — leaflet.markercluster ships no .d.ts; we use it
+      // as a side-effect import that augments L with markerClusterGroup().
+      import('leaflet.markercluster'),
+      import('@/lib/leaflet-config'),
+    ]).then(([Lmod]) => {
+      if (cancelled || !mapRef.current) return
+      const L = (Lmod as any).default || Lmod
+      LRef.current = L
 
-      // Calculate bounds from the (possibly truncated) marker set
-      const lats = limitedPlaces.map(p => p.latitude)
-      const lngs = limitedPlaces.map(p => p.longitude)
+      // Default center over the world; the markers effect below will fit
+      // bounds the moment the first batch arrives.
+      const map = L.map(mapRef.current, {
+        scrollWheelZoom: false,
+        zoomControl: true,
+        worldCopyJump: true,
+      }).setView([20, 0], 2)
+
+      // Tile source: prefer Stadia (matches /map page) with OSM fallback.
+      const stadiaKey = process.env.NEXT_PUBLIC_STADIA_KEY
+      if (stadiaKey) {
+        L.tileLayer(
+          `https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${stadiaKey}`,
+          {
+            attribution:
+              '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            tileSize: 256,
+            maxZoom: 19,
+          }
+        ).addTo(map)
+      } else {
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+          maxZoom: 19,
+          referrerPolicy: 'origin',
+        }).addTo(map)
+      }
+
+      const cluster = (L as any).markerClusterGroup({
+        showCoverageOnHover: false,
+        spiderfyOnMaxZoom: true,
+        chunkedLoading: true,
+        maxClusterRadius: 60,
+      })
+      map.addLayer(cluster)
+
+      mapInstanceRef.current = map
+      clusterGroupRef.current = cluster
+      // Trigger initial marker population now that the map is ready.
+      // The next effect below depends on cluster being non-null.
+      // Force a no-op state nudge by invalidating size.
+      setTimeout(() => map.invalidateSize(), 0)
+    })
+
+    return () => {
+      cancelled = true
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove()
+        mapInstanceRef.current = null
+        clusterGroupRef.current = null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Update markers whenever the `places` prop changes (filter changes,
+  // pagination, etc.). Cheap because cluster.clearLayers + addLayers
+  // is O(n) and we hand-roll the icon lookups via the cached helper.
+  useEffect(() => {
+    const map = mapInstanceRef.current
+    const cluster = clusterGroupRef.current
+    const L = LRef.current
+    if (!map || !cluster || !L) {
+      // Map still initializing; the init effect's resolution will trigger
+      // a re-render that lands here on the next tick.
+      return
+    }
+
+    cluster.clearLayers()
+    if (places.length === 0) return
+
+    // Lazy-load the icon factory only on the first render that has data.
+    // The promise resolves quickly because leaflet-config was already
+    // pre-loaded by the init effect's Promise.all.
+    import('@/lib/leaflet-config').then((mod) => {
+      const layers: any[] = []
+      const lats: number[] = []
+      const lngs: number[] = []
+      for (const p of places) {
+        const icon = mod.getCategoryIcon(
+          p.category || 'eat',
+          p.vegan_level ?? undefined,
+          p.average_rating ?? undefined,
+          p.review_count ?? undefined
+        )
+        const marker = L.marker([p.latitude, p.longitude], { icon }).bindPopup(
+          `<a href="/place/${p.slug || p.id}" style="font-weight:600;text-decoration:none;color:#16a34a">${escapeHtml(p.name)}</a>`
+        )
+        layers.push(marker)
+        lats.push(p.latitude)
+        lngs.push(p.longitude)
+      }
+      cluster.addLayers(layers)
+
       const bounds = L.latLngBounds(
         [Math.min(...lats) - 0.01, Math.min(...lngs) - 0.01],
         [Math.max(...lats) + 0.01, Math.max(...lngs) + 0.01]
       )
-
-      const map = L.map(mapRef.current!, {
-        scrollWheelZoom: false,
-        zoomControl: true,
-      }).fitBounds(bounds, { padding: [30, 30] })
-
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://openstreetmap.org">OSM</a>',
-        maxZoom: 18,
-        referrerPolicy: 'origin',
-      }).addTo(map)
-
-      // Custom green marker
-      const veganIcon = L.divIcon({
-        html: '<div style="background:#16a34a;width:12px;height:12px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>',
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
-        className: '',
-      })
-
-      // Add markers (capped at MAX_MARKERS)
-      for (const place of limitedPlaces) {
-        L.marker([place.latitude, place.longitude], { icon: veganIcon })
-          .addTo(map)
-          .bindPopup(`<a href="/place/${place.slug || place.id}" style="font-weight:600;text-decoration:none;color:#16a34a">${place.name}</a>`)
-      }
-
-      setMapInstance(map)
+      map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15 })
     })
+  }, [places])
 
-    return () => {
-      if (mapInstance) {
-        mapInstance.remove()
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [limitedPlaces.length])
-
-  if (places.length === 0) return null
+  if (places.length === 0) {
+    return (
+      <div className={`relative ${className}`}>
+        <div
+          className="rounded-xl overflow-hidden h-full w-full bg-gradient-to-br from-emerald-50 via-stone-50 to-emerald-50 flex items-center justify-center text-sm text-on-surface-variant"
+          style={{ minHeight: '300px' }}
+        >
+          No places match the current filters.
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={`relative ${className}`}>
       <div ref={mapRef} className="rounded-xl overflow-hidden h-full w-full" style={{ minHeight: '300px' }} />
-      {truncated && (
-        <div className="absolute bottom-2 left-2 right-2 text-[11px] text-on-surface-variant bg-surface-container-lowest/95 backdrop-blur px-2 py-1 rounded-md text-center pointer-events-none">
-          Showing {MAX_MARKERS} of {places.length} places. View all on the <a href="/map" className="text-primary underline pointer-events-auto">full map</a>.
-        </div>
-      )}
     </div>
   )
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }

@@ -429,14 +429,21 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
 // stays sub-100ms while the document paints first.
 function LazyCityMap({ places, className }: { places: Place[]; className?: string }) {
   const { ref, inView } = useInView<HTMLDivElement>({ rootMargin: '300px' })
-  const mapPlaces = places.map(p => ({
-    id: p.id,
-    name: p.name,
-    slug: p.slug || undefined,
-    latitude: p.latitude,
-    longitude: p.longitude,
-    category: p.category,
-  }))
+  const mapPlaces = useMemo(
+    () =>
+      places.map(p => ({
+        id: p.id,
+        name: p.name,
+        slug: p.slug || undefined,
+        latitude: p.latitude,
+        longitude: p.longitude,
+        category: p.category,
+        vegan_level: p.vegan_level,
+        average_rating: p.average_rating,
+        review_count: p.review_count,
+      })),
+    [places]
+  )
   return (
     <div ref={ref} className={className} style={{ minHeight: '300px' }}>
       {inView ? (
