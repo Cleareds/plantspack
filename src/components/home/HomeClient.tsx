@@ -331,6 +331,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               </h1>
             ) : (
               <div className="space-y-4">
+                <GuestSignInBanner cityImages={serverCityImages} topCities={topCities} />
+
                 <div>
                   <h1 className="text-3xl font-headline font-bold text-on-surface tracking-tight leading-tight mb-2">
                     The world&apos;s vegan places, ranked by the community
@@ -381,9 +383,6 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                   ))}
                 </div>
 
-                <Link href="/auth" className="inline-flex items-center gap-2 px-5 py-2.5 silk-gradient text-on-primary-btn rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
-                  Join for free →
-                </Link>
               </div>
             )}
 
@@ -921,5 +920,83 @@ export default function HomeClient(props: Props) {
     <Suspense fallback={null}>
       <HomeContent {...props} />
     </Suspense>
+  )
+}
+
+/**
+ * Guest hero banner for the homepage. Anonymous visitors lost the
+ * city-hero block when location-aware content was gated behind sign-in
+ * (CLS fix, 2026-05-07). Replaces a small "Join for free" button with a
+ * fixed-height banner that sells the value of signing in: a curated city
+ * image (deterministic by day so SSR cache stays stable), a clear
+ * "See vegan places near you" headline, and primary/secondary CTAs.
+ *
+ * Fixed dimensions (h-48 mobile, h-56 desktop) so this banner does not
+ * contribute to CLS regardless of when the image finishes decoding.
+ */
+function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<string, string>; topCities: CityScoreData[] }) {
+  // Curated rotation: pick from top-graded cities we know have an image.
+  // Day-of-year index keeps SSR stable across the cache TTL while still
+  // varying the visual across visits over time.
+  const candidates: Array<{ city: string; country: string }> = (topCities || [])
+    .filter(c => c.grade?.startsWith('A') || c.grade?.startsWith('B'))
+    .slice(0, 12)
+    .map(c => ({ city: c.city, country: c.country }))
+    .filter(c => cityImages[`${c.city}|||${c.country}`])
+
+  const fallback = { city: 'Berlin', country: 'Germany' }
+  const pool = candidates.length > 0 ? candidates : [fallback]
+  const dayIndex = Math.floor(Date.now() / 86400000) % pool.length
+  const pick = pool[dayIndex]
+  const heroImg = cityImages[`${pick.city}|||${pick.country}`] || null
+
+  return (
+    <section
+      aria-label="Sign in to see vegan places near you"
+      className="relative overflow-hidden rounded-2xl ghost-border editorial-shadow"
+    >
+      <div className="relative h-48 md:h-56 w-full">
+        {heroImg ? (
+          <img
+            src={heroImg}
+            alt={`Vegan places in ${pick.city}, ${pick.country}`}
+            className="absolute inset-0 w-full h-full object-cover"
+            fetchPriority="high"
+            loading="eager"
+            decoding="sync"
+          />
+        ) : (
+          <div className="absolute inset-0 silk-gradient" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/45 to-black/30" />
+        <div className="relative h-full flex flex-col justify-center px-5 md:px-7 text-white">
+          <h2 className="text-xl md:text-2xl font-headline font-bold leading-tight max-w-md">
+            See vegan places near you
+          </h2>
+          <p className="text-xs md:text-sm text-white/85 mt-1.5 max-w-md leading-snug">
+            Sign in and we&apos;ll auto-detect your city, then show top-rated vegan spots, fully-vegan venues, animal sanctuaries, and stays within reach.
+          </p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <Link
+              href="/auth"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white text-on-surface rounded-xl text-sm font-semibold hover:bg-white/90 transition-colors"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/auth?mode=signup"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm text-white rounded-xl text-sm font-medium border border-white/30 hover:bg-white/25 transition-colors"
+            >
+              Create free account
+            </Link>
+          </div>
+          {heroImg && (
+            <p className="text-[10px] text-white/65 mt-2.5">
+              Pictured: {pick.city}, {pick.country}
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
   )
 }
