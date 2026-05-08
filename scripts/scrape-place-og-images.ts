@@ -20,6 +20,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { config } from 'dotenv'
+import { readFileSync } from 'fs'
 
 config({ path: '.env.local' })
 
@@ -31,6 +32,8 @@ const sb = createClient(
 const DRY_RUN = !process.argv.includes('--commit')
 const LIMIT_IDX = process.argv.indexOf('--limit')
 const LIMIT = LIMIT_IDX >= 0 ? parseInt(process.argv[LIMIT_IDX + 1], 10) : Infinity
+const IDS_FILE_IDX = process.argv.indexOf('--ids-file')
+const IDS_FILE = IDS_FILE_IDX >= 0 ? process.argv[IDS_FILE_IDX + 1] : null
 const CONCURRENCY = 8
 const FETCH_TIMEOUT_MS = 10000
 const BUCKET = 'place-images'
@@ -169,23 +172,41 @@ async function main() {
 
   // Paginate — Supabase caps each query at 1000 rows.
   const candidatesAll: Array<{ id: string; slug: string | null; name: string; website: string | null }> = []
-  let offset = 0
-  while (true) {
-    const { data, error } = await sb
-      .from('places')
-      .select('id, slug, name, website')
-      .is('archived_at', null)
-      .is('main_image_url', null)
-      .not('website', 'is', null)
-      .range(offset, offset + 999)
-    if (error) {
-      console.error('Query failed:', error)
-      process.exit(1)
+  if (IDS_FILE) {
+    // Restrict to a caller-supplied id list (e.g. one country audit).
+    const ids = readFileSync(IDS_FILE, 'utf8').split('\n').map(s => s.trim()).filter(Boolean)
+    console.log(`Filtering by --ids-file: ${ids.length} ids`)
+    for (let i = 0; i < ids.length; i += 200) {
+      const slice = ids.slice(i, i + 200)
+      const { data, error } = await sb
+        .from('places')
+        .select('id, slug, name, website')
+        .is('archived_at', null)
+        .is('main_image_url', null)
+        .not('website', 'is', null)
+        .in('id', slice)
+      if (error) { console.error('Query failed:', error); process.exit(1) }
+      candidatesAll.push(...((data || []) as any[]))
     }
-    if (!data || data.length === 0) break
-    candidatesAll.push(...(data as any[]))
-    if (data.length < 1000) break
-    offset += 1000
+  } else {
+    let offset = 0
+    while (true) {
+      const { data, error } = await sb
+        .from('places')
+        .select('id, slug, name, website')
+        .is('archived_at', null)
+        .is('main_image_url', null)
+        .not('website', 'is', null)
+        .range(offset, offset + 999)
+      if (error) {
+        console.error('Query failed:', error)
+        process.exit(1)
+      }
+      if (!data || data.length === 0) break
+      candidatesAll.push(...(data as any[]))
+      if (data.length < 1000) break
+      offset += 1000
+    }
   }
   const candidates = candidatesAll.slice(0, LIMIT)
   console.log(`Candidates: ${candidates.length}`)

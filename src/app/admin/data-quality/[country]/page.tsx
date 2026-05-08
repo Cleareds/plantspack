@@ -113,9 +113,15 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
     if (!byCity.has(c)) byCity.set(c, [])
     byCity.get(c)!.push(r)
   }
+  const isAuditFlagged = (r: PlaceRow) => ((r as any).admin_notes || '').startsWith('audit-')
   const cities = [...byCity.entries()].sort((a, b) => b[1].length - a[1].length).map(([city, list]) => ({
     city,
-    list: list.sort((a, b) => veganOrderDesc(a.vegan_level, b.vegan_level) || a.name.localeCompare(b.name)),
+    list: list.sort((a, b) => {
+      // Audit-flagged rows pin to the top of each city.
+      const af = (isAuditFlagged(a) ? 0 : 1) - (isAuditFlagged(b) ? 0 : 1)
+      if (af !== 0) return af
+      return veganOrderDesc(a.vegan_level, b.vegan_level) || a.name.localeCompare(b.name)
+    }),
   }))
 
   const all = places.length
