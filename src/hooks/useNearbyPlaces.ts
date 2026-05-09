@@ -126,9 +126,13 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
       let offset = 0
       const batchSize = 1000
       while (true) {
+        // Bug fix May 2026: was returning archived rows alongside live ones,
+        // so closed/merged places stacked as duplicate markers at the same
+        // coordinates (e.g. Bistro Tilo Retie showed twice).
         let query = supabase
           .from('places')
           .select('*')
+          .is('archived_at', null)
           .gte('latitude', bounds.minLat)
           .lte('latitude', bounds.maxLat)
           .gte('longitude', bounds.minLng)
@@ -179,7 +183,7 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
   // Fetch count for pagination display
   const fetchCount = useCallback(async (cat: string) => {
     try {
-      let query = supabase.from('places').select('id', { count: 'exact', head: true })
+      let query = supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null)
       if (cat !== 'all') {
         query = query.eq('category', cat)
       }
