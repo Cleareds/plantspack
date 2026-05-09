@@ -130,10 +130,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots | PlantsPack`
 
   // Per-city og:image - improves SERP rich snippets and social previews.
-  // Falls back to the global og-image.png if no city image is on disk.
+  // When the city has no hero image on disk, return undefined so Next.js
+  // falls back to the file-based opengraph-image.tsx generator (the
+  // brand-mark default), not the now-deleted static og-image.png.
   const cityImages = loadCityImages()
-  const cityImg = getCityImage(cityImages, cityName, countryName) || 'https://www.plantspack.com/og-image.png'
-  const ogImage = { url: cityImg, width: 1200, height: 630, alt: `Vegan places in ${cityName}, ${countryName}` }
+  const cityImgUrl = getCityImage(cityImages, cityName, countryName)
+  const ogImage = cityImgUrl ? { url: cityImgUrl, width: 1200, height: 630, alt: `Vegan places in ${cityName}, ${countryName}` } : null
 
   return {
     title,
@@ -152,15 +154,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'website',
       siteName: 'PlantsPack',
       url: `https://plantspack.com/vegan-places/${country}/${city}`,
-      images: [ogImage],
+      // Only set images when we actually have a city hero. Otherwise
+      // omit so Next.js inherits the file-based default (the brand-mark
+      // OG generator at src/app/opengraph-image.tsx).
+      ...(ogImage ? { images: [ogImage] } : {}),
       locale: 'en_US',
     },
-    twitter: {
-      card: 'summary_large_image',
-      title: `Vegan Places in ${cityName}, ${countryName}`,
-      description: metaDesc,
-      images: [cityImg],
-    },
+    // Same logic for the Twitter card.
+    ...(cityImgUrl ? {
+      twitter: {
+        card: 'summary_large_image' as const,
+        title: `Vegan Places in ${cityName}, ${countryName}`,
+        description: metaDesc,
+        images: [cityImgUrl],
+      },
+    } : {}),
   }
 }
 
