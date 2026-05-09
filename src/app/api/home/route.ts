@@ -16,7 +16,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
  * The MVs are refreshed by the existing `refresh_directory_views()` cron
  * and on mutations, so the data is current to within a day worst-case.
  */
-export const revalidate = 300 // 5 minutes edge cache for bg queries
+export const revalidate = 1800 // 30-min edge cache; bumped from 300 in May 2026 to reduce Vercel Function Invocations. On-demand revalidate covers fresh-content cases.
 
 export async function GET(request: NextRequest) {
   const supabase = createAdminClient()

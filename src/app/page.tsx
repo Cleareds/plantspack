@@ -26,10 +26,10 @@ export interface FollowedCity {
 // is fetched per-request using `dynamic = 'force-dynamic'` semantics via
 // the cookies() call — the page becomes dynamic whenever location cookies
 // exist, so each pinned user gets their own server-rendered home.
-// Aligned with /api/home edge cache (revalidate=300). Recent posts/reviews
-// can be up to 5min stale on the homepage; mutations elsewhere already call
-// revalidatePath('/') when they need an immediate refresh.
-export const revalidate = 300
+// May 2026: bumped 300 -> 1800 to cut Vercel Function Invocations on the
+// hottest path. On-demand revalidatePath('/') is already wired into the
+// add/edit/delete mutation APIs so fresh content still appears immediately.
+export const revalidate = 1800
 
 export const metadata: Metadata = {
   title: 'PlantsPack — Vegan Places, Recipes & City Rankings Worldwide',

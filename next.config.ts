@@ -12,6 +12,16 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
 
+  // Strip console.log/info/debug from production builds. Keeps console.error
+  // and console.warn so real problems still surface in Vercel logs.
+  // Rationale: April 2026 Vercel bill showed 11.56M Observability Events =
+  // $13.87 (51% of the bill). The 280+ console.* calls in API routes were
+  // a major contributor; killing the verbose ones cuts log volume sharply
+  // without losing actionable signal.
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
+
   // Configure remote image domains for Next.js Image component
   images: {
     remotePatterns: [
@@ -311,11 +321,12 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
 
-  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  tunnelRoute: "/monitoring",
+  // Tunnel route disabled May 2026 to reduce Vercel function invocations.
+  // Ad-blockers are not a meaningful concern for this audience, and routing
+  // every client-side error through our origin counted toward the
+  // Function Invocations bill. If browser-side error reports drop noticeably
+  // in Sentry after this change we can re-enable.
+  // tunnelRoute: "/monitoring",
 
   // Automatically tree-shake Sentry logger statements to reduce bundle size
   disableLogger: true,
