@@ -272,9 +272,10 @@ const nextConfig: NextConfig = {
       { source: '/vegan-places/belgium/ieper', destination: '/vegan-places/belgium/ypres', permanent: true },
       { source: '/vegan-places/belgium/bruxelles', destination: '/vegan-places/belgium/brussels', permanent: true },
       { source: '/vegan-places/belgium/brussel', destination: '/vegan-places/belgium/brussels', permanent: true },
-      { source: '/vegan-places/belgium/leuven', destination: '/vegan-places/belgium/leuven', permanent: false }, // canonical, no-op
+      // Note: leuven and mechelen are already canonical - no self-redirects.
+      // Self-redirect entries (source === destination) cause ERR_TOO_MANY_REDIRECTS,
+      // they are NOT a no-op. Only add real variant -> canonical redirects.
       { source: '/vegan-places/belgium/louvain', destination: '/vegan-places/belgium/leuven', permanent: true },
-      { source: '/vegan-places/belgium/mechelen', destination: '/vegan-places/belgium/mechelen', permanent: false }, // canonical, no-op
       { source: '/vegan-places/belgium/malines', destination: '/vegan-places/belgium/mechelen', permanent: true },
       { source: '/vegan-places/belgium/bergen', destination: '/vegan-places/belgium/mons', permanent: true },
       { source: '/vegan-places/belgium/namen', destination: '/vegan-places/belgium/namur', permanent: true },
