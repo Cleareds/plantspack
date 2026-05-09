@@ -109,9 +109,12 @@ export function useSearch(query: string, minLength: number = 2) {
 
   const searchPlaces = useCallback(async (term: string): Promise<PlaceResult[]> => {
     try {
+      // Bug fix May 2026: search was returning archived rows, so users could
+      // click a result and land on a /place/<slug> 404. Filter them out.
       let q = supabase
         .from('places')
         .select('id, name, slug, category, subcategory, vegan_level, city, country, main_image_url')
+        .is('archived_at', null)
         .ilike('name', `%${term}%`)
       if (isFullyVeganOnly) q = q.eq('vegan_level', 'fully_vegan')
       const { data } = await q
@@ -122,7 +125,7 @@ export function useSearch(query: string, minLength: number = 2) {
     } catch {
       return []
     }
-  }, [])
+  }, [isFullyVeganOnly])
 
   const searchRecipes = useCallback(async (term: string): Promise<RecipeResult[]> => {
     try {
