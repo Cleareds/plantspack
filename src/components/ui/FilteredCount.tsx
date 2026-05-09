@@ -28,3 +28,18 @@ export function FilteredLabel({ allLabel, veganLabel }: { allLabel: string; vega
   const { isFullyVeganOnly } = useVeganFilter()
   return <>{isFullyVeganOnly ? veganLabel : allLabel}</>
 }
+
+/**
+ * "(N fully vegan)" parenthetical that only appears when the global
+ * vegan toggle is OFF (because when ON, the headline count is already
+ * the fully-vegan count). Hidden if there are no fully-vegan rows.
+ *
+ * Used on country / city descriptor lines where the headline count
+ * mixes vegan + vegan-friendly tiers; the parenthetical surfaces the
+ * verified fully-vegan share without inflating the main number.
+ */
+export function FullyVeganNote({ count }: { count: number }) {
+  const { isFullyVeganOnly } = useVeganFilter()
+  if (isFullyVeganOnly || count <= 0) return null
+  return <> ({count.toLocaleString()} fully vegan)</>
+}

@@ -30,7 +30,7 @@ import AddPlaceButton from '@/components/places/AddPlaceButton'
 import PinCityButton from '@/components/places/PinCityButton'
 import FollowCityButton from '@/components/places/FollowCityButton'
 import { generateCityDescription, generateCityMetaDescription, filterCuisinesForDisplay } from '@/lib/vegan-scene-descriptions'
-import { FilteredTotal } from '@/components/ui/FilteredCount'
+import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
@@ -492,7 +492,16 @@ export default async function CityPage({ params }: PageProps) {
           )}
           <p className="text-on-surface-variant text-base mb-3">
             {places.length > 0
-              ? <><FilteredTotal total={places.length} fullyVegan={places.filter((p: any) => p.vegan_level === 'fully_vegan').length} /> vegan restaurants, stores, and stays in {cityName}, {countryName}.</>
+              ? (() => {
+                  const fv = places.filter((p: any) => p.vegan_level === 'fully_vegan').length
+                  return (
+                    <>
+                      <FilteredTotal total={places.length} fullyVegan={fv} />{' '}
+                      <FilteredLabel allLabel="vegan and vegan-friendly" veganLabel="fully vegan" />{' '}
+                      places in {cityName}, {countryName}<FullyVeganNote count={fv} />.
+                    </>
+                  )
+                })()
               : <>Discover vegan-friendly places in {cityName}.</>
             }
           </p>

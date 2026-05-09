@@ -19,7 +19,7 @@ import { getRegionsForCountry } from '@/lib/regions'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
-import { FilteredTotal } from '@/components/ui/FilteredCount'
+import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import CityPlacesList from '@/components/places/CityPlacesList'
 import CountryCityGrid from '@/components/places/CountryCityGrid'
 import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
@@ -200,7 +200,9 @@ export default async function CountryPage({ params }: PageProps) {
           </h1>
           <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
-              ? <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} /> vegan restaurants, stores, and stays across {cities.length} {cities.length === 1 ? 'city' : 'cities'}.</>
+              ? <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} />{' '}
+                  <FilteredLabel allLabel="vegan and vegan-friendly" veganLabel="fully vegan" />{' '}
+                  places across {cities.length} {cities.length === 1 ? 'city' : 'cities'}<FullyVeganNote count={totalFv} />.</>
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
