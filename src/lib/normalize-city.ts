@@ -13,8 +13,37 @@ const REGIONS_NOT_CITIES = new Set([
   'kuta','badung','badung regency','jawa timur','kabupaten gianyar','liang ndara',
 ])
 
+// Lowercase prepositions / articles that stay lowercase when they appear
+// mid-word in hyphenated multi-word city names.
+// "Louvain-la-Neuve", "Saint-Josse-ten-Noode", "Castel di Sangro",
+// "Aix-en-Provence", "Sant'Angelo", etc.
+const LOWERCASE_PARTICLES = new Set([
+  'la','le','les','du','de','des','d','en','el',
+  'von','der','den','dem','aan','op','in','ten','te',
+  'van','y','e','i','of','the','and','sur','sous',
+])
+
+/**
+ * Capitalise the first letter of each space- or hyphen-separated word,
+ * except for known lowercase particles (la, de, van, etc.) when they
+ * appear mid-word.
+ *
+ * Bug history: previously used `s.replace(/\b\w/g, c => c.toUpperCase())`,
+ * which broke on accented characters because `\w` is ASCII-only without
+ * the `/u` flag - the word boundary fired after `è`, so "Liège" became
+ * "LièGe" and "Louvain-la-Neuve" became "Louvain-La-Neuve". This
+ * implementation handles those correctly.
+ */
 function titleCase(s: string): string {
-  return s.replace(/\b\w/g, c => c.toUpperCase())
+  return s.split(' ').map(spaceWord => {
+    if (!spaceWord) return spaceWord
+    return spaceWord.split('-').map((part, idx) => {
+      if (!part) return part
+      const lower = part.toLowerCase()
+      if (idx > 0 && LOWERCASE_PARTICLES.has(lower)) return lower
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+    }).join('-')
+  }).join(' ')
 }
 
 /**
