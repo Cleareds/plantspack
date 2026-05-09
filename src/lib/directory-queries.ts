@@ -146,6 +146,7 @@ export const getCityPlaces = async (countrySlug: string, citySlug: string) => {
   const { data, error } = await supabase
     .from('places')
     .select('id, slug, name, category, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, website, phone, opening_hours, latitude, longitude, city, country, vegan_level, cuisine_types')
+    .is('archived_at', null)
     .ilike('country', actualCountry)
     .ilike('city', actualCity)
     .order('name', { ascending: true })

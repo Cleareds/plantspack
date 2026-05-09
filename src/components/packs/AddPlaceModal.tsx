@@ -43,6 +43,7 @@ export default function AddPlaceModal({ packId, onClose, onPlaceAdded }: AddPlac
         const { data, error } = await supabase
           .from('places')
           .select('*')
+          .is('archived_at', null)
           .or(`name.ilike.%${searchQuery}%,address.ilike.%${searchQuery}%`)
           .order('created_at', { ascending: false })
           .limit(10)
