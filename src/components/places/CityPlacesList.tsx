@@ -70,25 +70,44 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
   const activeCategory = searchParams?.get('category') || null
   const activeSubcategory = searchParams?.get('sub') || null
   const petOnly = searchParams?.get('pet') === '1'
-  const activeVeganLevel = searchParams?.get('vl') || null
+  // /<city>/fully-vegan and ?vl=fully_vegan are equivalent. The path-based
+  // form is the canonical URL (rewritten server-side to ?level=fully-vegan).
+  // Detect both so the UI shows the same active pill regardless.
+  const isOnFvPath = pathname?.endsWith('/fully-vegan') ?? false
+  const activeVeganLevel = isOnFvPath ? 'fully_vegan' : (searchParams?.get('vl') || null)
   // Default: fully-vegan places first, then by rating, then by name. A Lemmy
   // reviewer rightly pointed out that alphabetical default put Bojangles (a
   // chicken chain that shouldn't be here anyway) at the top. Now vegan-first
   // is the baseline; alphabetical stays available as a toggle.
   const sortBy = (searchParams?.get('sort') as 'name' | 'rating' | 'vegan') || 'vegan'
 
-  // Update URL params — alphabetical order for consistency
+  // Update URL params — alphabetical order for consistency.
+  // Special vl handling so the canonical /<city>/fully-vegan URL is used:
+  //   - vl=fully_vegan -> navigate to /<basePath>/fully-vegan, drop ?vl
+  //   - vl=null/other  -> strip /fully-vegan suffix from basePath, then add ?vl=<value>
   const setFilter = useCallback((updates: Record<string, string | null>) => {
+    const basePath = (pathname || '').replace(/\/fully-vegan$/, '')
     const params = new URLSearchParams(searchParams?.toString() || '')
-    // Reset to page 1 when filters change (unless explicitly setting page)
     if (!('page' in updates)) params.delete('page')
+
+    const vlChange = 'vl' in updates ? updates.vl : undefined  // undefined = not part of this update
+    const goingToFv = vlChange === 'fully_vegan'
+    const targetPath = goingToFv ? `${basePath}/fully-vegan` : basePath
+
     for (const [key, value] of Object.entries(updates)) {
+      if (key === 'vl') {
+        // The path encodes vl=fully_vegan, so we never need ?vl=fully_vegan.
+        if (value === 'fully_vegan' || value === null || value === '') params.delete('vl')
+        else params.set('vl', value)
+        continue
+      }
       if (value === null || value === '') params.delete(key)
       else params.set(key, value)
     }
+
     const sorted = new URLSearchParams([...params.entries()].sort((a, b) => a[0].localeCompare(b[0])))
     const qs = sorted.toString()
-    router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false })
+    router.replace(`${targetPath}${qs ? '?' + qs : ''}`, { scroll: false })
   }, [searchParams, router, pathname])
 
   // Pre-filter by global vegan toggle

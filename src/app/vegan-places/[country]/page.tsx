@@ -116,8 +116,25 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
 export default async function CountryPage({ params, searchParams }: PageProps) {
   const { country } = await params
-  const { level } = (await searchParams) || {}
+  const sp = (await searchParams) || {}
+  const level = sp.level
+  const vl = (sp as any).vl as string | undefined
   const isFullyVeganMode = level === 'fully-vegan'
+
+  // URL conflict resolution mirrors the city page: prefer explicit ?vl=
+  // when both are set, and redirect ?vl=fully_vegan to the canonical path.
+  const otherSp = new URLSearchParams()
+  for (const [k, v] of Object.entries(sp)) if (k !== 'level' && k !== 'vl' && typeof v === 'string') otherSp.set(k, v)
+  if (isFullyVeganMode && vl && vl !== 'fully_vegan') {
+    otherSp.set('vl', vl)
+    const qs = otherSp.toString()
+    redirect(`/vegan-places/${country}${qs ? '?' + qs : ''}`)
+  }
+  if (!isFullyVeganMode && vl === 'fully_vegan') {
+    const qs = otherSp.toString()
+    redirect(`/vegan-places/${country}/fully-vegan${qs ? '?' + qs : ''}`)
+  }
+
   if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const [{ cities: allCities, country: countryName }, { places: allRawPlaces }, allScores, cityImages, regions, auditPost] = await Promise.all([
     getCities(country),
@@ -239,17 +256,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90">
               <Globe className="h-4 w-4" /> View on map
             </Link>
-            {isFullyVeganMode ? (
-              <Link href={`/vegan-places/${country}`}
-                className="inline-flex items-center gap-2 text-sm font-medium bg-surface-container-low text-on-surface-variant ghost-border px-4 py-2 rounded-lg hover:bg-surface-container transition-colors">
-                ← All vegan and vegan-friendly in {countryName}
-              </Link>
-            ) : totalFv > 0 && (
-              <Link href={`/vegan-places/${country}/fully-vegan`}
-                className="inline-flex items-center gap-2 text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg hover:bg-emerald-100 transition-colors">
-                See {totalFv} 100% vegan only →
-              </Link>
-            )}
+            {/* Global "100% vegan only" toggle in TopBar handles tier switching
+                site-wide. /fully-vegan exists as an SEO/share URL but doesn't
+                need a button here. */}
           </div>
         </div>
 

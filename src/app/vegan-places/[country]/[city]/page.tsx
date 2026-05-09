@@ -346,8 +346,31 @@ async function fetchCityExperiences(country: string, city: string) {
 
 export default async function CityPage({ params, searchParams }: PageProps) {
   const { country, city } = await params
-  const { level } = (await searchParams) || {}
-  const isFullyVeganMode = level === 'fully-vegan'
+  const sp = (await searchParams) || {}
+  const level = sp.level
+  // Read the vl param (forwarded directly via the rewrite). The pill UI in
+  // CityPlacesList writes vl=<value> for non-FV levels; FV is encoded as
+  // the /fully-vegan path segment instead, so vl=fully_vegan should never
+  // appear here in normal navigation.
+  const vl = (sp as any).vl as string | undefined
+  let isFullyVeganMode = level === 'fully-vegan'
+
+  // URL conflict resolution: if user lands on /fully-vegan?vl=<other>,
+  // honour the explicit ?vl= and redirect to the non-FV URL with it.
+  // Conversely, if not on /fully-vegan but ?vl=fully_vegan is set,
+  // redirect to the canonical /fully-vegan path.
+  const otherSp = new URLSearchParams()
+  for (const [k, v] of Object.entries(sp)) if (k !== 'level' && k !== 'vl' && typeof v === 'string') otherSp.set(k, v)
+  if (isFullyVeganMode && vl && vl !== 'fully_vegan') {
+    otherSp.set('vl', vl)
+    const qs = otherSp.toString()
+    redirect(`/vegan-places/${country}/${city}${qs ? '?' + qs : ''}`)
+  }
+  if (!isFullyVeganMode && vl === 'fully_vegan') {
+    const qs = otherSp.toString()
+    redirect(`/vegan-places/${country}/${city}/fully-vegan${qs ? '?' + qs : ''}`)
+  }
+
   if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}/${city}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const cityAlias = CITY_REDIRECTS[country]?.[city]
   if (cityAlias) redirect(`/vegan-places/${country}/${cityAlias}${isFullyVeganMode ? '/fully-vegan' : ''}`)
@@ -544,24 +567,10 @@ export default async function CityPage({ params, searchParams }: PageProps) {
               <Globe className="h-4 w-4" />
               View on map
             </Link>
-            {isFullyVeganMode ? (
-              <Link
-                href={`/vegan-places/${country}/${city}`}
-                className="inline-flex items-center gap-2 text-sm font-medium bg-surface-container-low text-on-surface-variant ghost-border px-4 py-2 rounded-lg hover:bg-surface-container transition-colors"
-              >
-                ← All vegan and vegan-friendly in {cityName}
-              </Link>
-            ) : (() => {
-              const fvCount = places.filter((p: any) => p.vegan_level === 'fully_vegan').length
-              return fvCount > 0 ? (
-                <Link
-                  href={`/vegan-places/${country}/${city}/fully-vegan`}
-                  className="inline-flex items-center gap-2 text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg hover:bg-emerald-100 transition-colors"
-                >
-                  See {fvCount} 100% vegan only →
-                </Link>
-              ) : null
-            })()}
+            {/* Filter pills inside CityPlacesList already let users switch
+                between vegan levels - and they route to the canonical
+                /fully-vegan URL when 100% Vegan is selected. No extra
+                button needed here. */}
             <AddPlaceButton
               cityName={cityName}
               countryName={countryName}
