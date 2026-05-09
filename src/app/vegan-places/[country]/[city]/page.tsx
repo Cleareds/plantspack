@@ -48,6 +48,11 @@ export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>
+  // searchParams.level === 'fully-vegan' is set by the next.config rewrite
+  // for /vegan-places/<country>/<city>/fully-vegan. When present, the page
+  // serves the same layout but filters places to fully_vegan, swaps the
+  // title/description, and points the canonical at the /fully-vegan URL.
+  searchParams?: Promise<{ level?: string }>
 }
 
 interface Place {
@@ -101,9 +106,12 @@ function buildOpeningHoursSpec(hours: Record<string, string> | null) {
   return out.length ? out : undefined
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { country, city } = await params
-  const { places, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
+  const { level } = (await searchParams) || {}
+  const isFullyVeganMode = level === 'fully-vegan'
+  const { places: allPlaces, city: cityName, country: countryName } = await fetchCityPlaces(country, city)
+  const places = isFullyVeganMode ? allPlaces.filter((p: Place) => p.vegan_level === 'fully_vegan') : allPlaces
 
   const fv = places.filter((p: Place) => p.vegan_level === 'fully_vegan').length
   const eat = places.filter((p: Place) => p.category === 'eat').length
@@ -125,9 +133,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     petFriendly: pet,
   })
 
-  const title = fv > 0
-    ? `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots (${fv} Fully Vegan) | PlantsPack`
-    : `Vegan Places in ${cityName}, ${countryName} — ${places.length} Spots | PlantsPack`
+  const title = isFullyVeganMode
+    ? `100% Vegan in ${cityName}, ${countryName} — ${places.length} Verified Spots | PlantsPack`
+    : fv > 0
+      ? `Vegan Places in ${cityName}, ${countryName} — ${allPlaces.length} Spots (${fv} Fully Vegan) | PlantsPack`
+      : `Vegan Places in ${cityName}, ${countryName} — ${allPlaces.length} Spots | PlantsPack`
+
+  // FV-mode-specific meta description that emphasises hand-verification
+  const fvDesc = `Manually verified directory of ${places.length} fully vegan ${places.length === 1 ? 'venue' : 'venues'} in ${cityName}, ${countryName}. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
 
   // Per-city og:image - improves SERP rich snippets and social previews.
   // When the city has no hero image on disk, return undefined so Next.js
@@ -137,10 +150,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const cityImgUrl = getCityImage(cityImages, cityName, countryName)
   const ogImage = cityImgUrl ? { url: cityImgUrl, width: 1200, height: 630, alt: `Vegan places in ${cityName}, ${countryName}` } : null
 
+  // When in fully-vegan mode, canonical points at the /fully-vegan URL
+  // (not the underlying ?level=fully-vegan that the rewrite uses).
+  const canonical = isFullyVeganMode
+    ? `https://plantspack.com/vegan-places/${country}/${city}/fully-vegan`
+    : `https://plantspack.com/vegan-places/${country}/${city}`
+
   return {
     title,
-    description: metaDesc,
-    alternates: { canonical: `https://plantspack.com/vegan-places/${country}/${city}` },
+    description: isFullyVeganMode ? fvDesc : metaDesc,
+    alternates: { canonical },
     // Indexation hygiene: cities with fewer than 5 places are too thin to
     // earn rankings and dilute the site's quality signal. They stay
     // crawlable (follow=true) so internal links to richer pages keep flowing.
@@ -149,11 +168,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         ? { index: false, follow: true }
         : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     openGraph: {
-      title: `Vegan Places in ${cityName}, ${countryName}`,
-      description: metaDesc,
+      title: isFullyVeganMode ? `100% Vegan in ${cityName}, ${countryName}` : `Vegan Places in ${cityName}, ${countryName}`,
+      description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
-      url: `https://plantspack.com/vegan-places/${country}/${city}`,
+      url: canonical,
       // Only set images when we actually have a city hero. Otherwise
       // omit so Next.js inherits the file-based default (the brand-mark
       // OG generator at src/app/opengraph-image.tsx).
@@ -325,18 +344,24 @@ async function fetchCityExperiences(country: string, city: string) {
   }
 }
 
-export default async function CityPage({ params }: PageProps) {
+export default async function CityPage({ params, searchParams }: PageProps) {
   const { country, city } = await params
-  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}/${city}`)
+  const { level } = (await searchParams) || {}
+  const isFullyVeganMode = level === 'fully-vegan'
+  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}/${city}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const cityAlias = CITY_REDIRECTS[country]?.[city]
-  if (cityAlias) redirect(`/vegan-places/${country}/${cityAlias}`)
-  const [{ places, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([
+  if (cityAlias) redirect(`/vegan-places/${country}/${cityAlias}${isFullyVeganMode ? '/fully-vegan' : ''}`)
+  const [{ places: allPlaces, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([
     fetchCityPlaces(country, city),
     getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),
     fetchCityExperiences(country, city),
   ])
 
-  if (places.length === 0) notFound()
+  // FV-mode filters the place list at SSR. Empty filter -> redirect back
+  // to the regular city page rather than serving "0 fully vegan in X".
+  const places = isFullyVeganMode ? allPlaces.filter((p: Place) => p.vegan_level === 'fully_vegan') : allPlaces
+  if (allPlaces.length === 0) notFound()
+  if (isFullyVeganMode && places.length === 0) redirect(`/vegan-places/${country}/${city}`)
 
   // Region back-link banner. Resolved by canonical city name (e.g. "Brussels",
   // "Saint-Josse-ten-Noode") so spelling variants stay grouped. Null for any
@@ -466,7 +491,7 @@ export default async function CityPage({ params }: PageProps) {
         <div className="mb-8">
           <div className="flex items-start justify-between gap-4 mb-3">
             <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight">
-              Vegan Places in <span className="text-primary">{cityName}</span>
+              {isFullyVeganMode ? '100% Vegan in ' : 'Vegan Places in '}<span className="text-primary">{cityName}</span>
             </h1>
             {cityScore && (
               <div className="text-right flex-shrink-0">
@@ -494,6 +519,9 @@ export default async function CityPage({ params }: PageProps) {
             {places.length > 0
               ? (() => {
                   const fv = places.filter((p: any) => p.vegan_level === 'fully_vegan').length
+                  if (isFullyVeganMode) {
+                    return <>{places.length} fully vegan {places.length === 1 ? 'place' : 'places'} in {cityName}, {countryName}, hand-verified against each venue&apos;s own website.</>
+                  }
                   return (
                     <>
                       <FilteredTotal total={places.length} fullyVegan={fv} />{' '}
@@ -516,7 +544,14 @@ export default async function CityPage({ params }: PageProps) {
               <Globe className="h-4 w-4" />
               View on map
             </Link>
-            {(() => {
+            {isFullyVeganMode ? (
+              <Link
+                href={`/vegan-places/${country}/${city}`}
+                className="inline-flex items-center gap-2 text-sm font-medium bg-surface-container-low text-on-surface-variant ghost-border px-4 py-2 rounded-lg hover:bg-surface-container transition-colors"
+              >
+                ← All vegan and vegan-friendly in {cityName}
+              </Link>
+            ) : (() => {
               const fvCount = places.filter((p: any) => p.vegan_level === 'fully_vegan').length
               return fvCount > 0 ? (
                 <Link

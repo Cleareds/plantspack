@@ -30,6 +30,7 @@ export const revalidate = 3600
 
 interface PageProps {
   params: Promise<{ country: string }>
+  searchParams?: Promise<{ level?: string }>
 }
 
 async function getCityScores(): Promise<any[]> {
@@ -55,9 +56,11 @@ async function fetchCountryPlaces(country: string) {
   } catch { return { places: [], country: country.replace(/-/g, ' '), total: 0 } }
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { country } = await params
-  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}`)
+  const { level } = (await searchParams) || {}
+  const isFullyVeganMode = level === 'fully-vegan'
+  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const { cities, country: countryName } = await getCities(country)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
   const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
@@ -85,27 +88,38 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     cityCount: cities.length,
   })
 
-  const title = cities.length > 1
-    ? `Vegan Places in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
-    : `Vegan Places in ${countryName} — ${totalPlaces} Verified Spots | PlantsPack`
+  const title = isFullyVeganMode
+    ? `100% Vegan in ${countryName} — ${totalFv} Hand-Verified Spots | PlantsPack`
+    : cities.length > 1
+      ? `Vegan Places in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
+      : `Vegan Places in ${countryName} — ${totalPlaces} Verified Spots | PlantsPack`
+
+  const fvDesc = `Manually verified directory of ${totalFv} fully vegan ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName}: restaurants, cafés, bakeries, sanctuaries and stores. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
+
+  const canonical = isFullyVeganMode
+    ? `https://plantspack.com/vegan-places/${country}/fully-vegan`
+    : `https://plantspack.com/vegan-places/${country}`
 
   return {
     title,
-    description: metaDesc,
-    alternates: { canonical: `https://plantspack.com/vegan-places/${country}` },
+    description: isFullyVeganMode ? fvDesc : metaDesc,
+    alternates: { canonical },
     openGraph: {
-      title: `Vegan Places in ${countryName}`,
-      description: metaDesc,
+      title: isFullyVeganMode ? `100% Vegan in ${countryName}` : `Vegan Places in ${countryName}`,
+      description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
+      url: canonical,
     },
   }
 }
 
-export default async function CountryPage({ params }: PageProps) {
+export default async function CountryPage({ params, searchParams }: PageProps) {
   const { country } = await params
-  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}`)
-  const [{ cities, country: countryName }, { places }, allScores, cityImages, regions, auditPost] = await Promise.all([
+  const { level } = (await searchParams) || {}
+  const isFullyVeganMode = level === 'fully-vegan'
+  if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}${isFullyVeganMode ? '/fully-vegan' : ''}`)
+  const [{ cities: allCities, country: countryName }, { places: allRawPlaces }, allScores, cityImages, regions, auditPost] = await Promise.all([
     getCities(country),
     fetchCountryPlaces(country),
     getCityScores(),
@@ -113,6 +127,13 @@ export default async function CountryPage({ params }: PageProps) {
     getRegionsForCountry(country),
     getCountryAuditPost(country),
   ])
+
+  // FV-mode filters places + drops cities with zero fully_vegan venues
+  // from the city list so the page reflects "100% vegan in X" honestly.
+  const places = isFullyVeganMode ? allRawPlaces.filter((p: any) => p.vegan_level === 'fully_vegan') : allRawPlaces
+  const cities = isFullyVeganMode
+    ? allCities.map((c: any) => ({ ...c, count: c.stats?.fullyVegan || 0 })).filter((c: any) => c.count > 0)
+    : allCities
 
   // Split cities into "in a region" vs "unassigned". Region cards roll up
   // their cities; unassigned cities fall through to the existing grid.
@@ -198,17 +219,19 @@ export default async function CountryPage({ params }: PageProps) {
         {/* Header */}
         <div className="mb-8">
           <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
-            Vegan Places in <span className="text-primary">{countryName}</span>
+            {isFullyVeganMode ? '100% Vegan in ' : 'Vegan Places in '}<span className="text-primary">{countryName}</span>
           </h1>
           <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
-              ? <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} />{' '}
-                  <FilteredLabel allLabel="vegan and vegan-friendly" veganLabel="fully vegan" />{' '}
-                  places across {cities.length} {cities.length === 1 ? 'city' : 'cities'}<FullyVeganNote count={totalFv} />.</>
+              ? isFullyVeganMode
+                ? <>{totalFv} fully vegan {totalFv === 1 ? 'venue' : 'venues'} across {cities.length} {cities.length === 1 ? 'city' : 'cities'}, hand-verified against each venue&apos;s own website.</>
+                : <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} />{' '}
+                    <FilteredLabel allLabel="vegan and vegan-friendly" veganLabel="fully vegan" />{' '}
+                    places across {cities.length} {cities.length === 1 ? 'city' : 'cities'}<FullyVeganNote count={totalFv} />.</>
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
-          {sceneDescription && (
+          {sceneDescription && !isFullyVeganMode && (
             <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
           )}
           <div className="flex flex-wrap gap-3 mt-4">
@@ -216,7 +239,12 @@ export default async function CountryPage({ params }: PageProps) {
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90">
               <Globe className="h-4 w-4" /> View on map
             </Link>
-            {totalFv > 0 && (
+            {isFullyVeganMode ? (
+              <Link href={`/vegan-places/${country}`}
+                className="inline-flex items-center gap-2 text-sm font-medium bg-surface-container-low text-on-surface-variant ghost-border px-4 py-2 rounded-lg hover:bg-surface-container transition-colors">
+                ← All vegan and vegan-friendly in {countryName}
+              </Link>
+            ) : totalFv > 0 && (
               <Link href={`/vegan-places/${country}/fully-vegan`}
                 className="inline-flex items-center gap-2 text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg hover:bg-emerald-100 transition-colors">
                 See {totalFv} 100% vegan only →
