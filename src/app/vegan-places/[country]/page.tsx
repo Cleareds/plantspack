@@ -16,6 +16,7 @@ const COUNTRY_REDIRECTS: Record<string, string> = {
 import { generateCountryDescription, generateCountryMetaDescription } from '@/lib/vegan-scene-descriptions'
 import { getCities } from '@/lib/directory-queries'
 import { getRegionsForCountry } from '@/lib/regions'
+import { getCountryAuditPost } from '@/lib/country-audit-post'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
@@ -104,12 +105,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CountryPage({ params }: PageProps) {
   const { country } = await params
   if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}`)
-  const [{ cities, country: countryName }, { places }, allScores, cityImages, regions] = await Promise.all([
+  const [{ cities, country: countryName }, { places }, allScores, cityImages, regions, auditPost] = await Promise.all([
     getCities(country),
     fetchCountryPlaces(country),
     getCityScores(),
     loadCityImages(),
     getRegionsForCountry(country),
+    getCountryAuditPost(country),
   ])
 
   // Split cities into "in a region" vs "unassigned". Region cards roll up
@@ -216,6 +218,39 @@ export default async function CountryPage({ params }: PageProps) {
             </Link>
           </div>
         </div>
+
+        {/* Country-audit blog callout — links Google + visitors to the
+            authoritative writeup of how this country's directory was built.
+            Strong internal-link signal for the audit post; honest signal to
+            visitors that the data is hand-curated, not just imported. */}
+        {auditPost && (
+          <Link
+            href={`/blog/${auditPost.slug}`}
+            className="block mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
+          >
+            <div className="flex flex-col md:flex-row gap-0">
+              {auditPost.image_url && (
+                <div className="md:w-1/3 aspect-[16/9] md:aspect-auto md:max-h-48 overflow-hidden bg-surface-container-low">
+                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                </div>
+              )}
+              <div className="flex-1 p-5 md:p-6">
+                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
+                  How we audited {countryName}
+                </div>
+                <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
+                  {auditPost.title}
+                </h2>
+                <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                  {auditPost.description}
+                </p>
+                <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
+                  Read the audit →
+                </span>
+              </div>
+            </div>
+          </Link>
+        )}
 
         {/* Regions section — only renders if the country has regions seeded */}
         {regionCards.length > 0 && (

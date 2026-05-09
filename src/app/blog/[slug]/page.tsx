@@ -31,14 +31,14 @@ interface Article {
   }
 }
 
-async function getArticle(idOrSlug: string): Promise<Article | null> {
+async function getArticle(idOrSlug: string): Promise<(Article & { tags?: string[] | null }) | null> {
   const sb = createAdminClient()
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug)
   const column = isUuid ? 'id' : 'slug'
   const { data } = await sb
     .from('posts')
     .select(`
-      id, slug, title, content, image_url, images, category, privacy, created_at, updated_at,
+      id, slug, title, content, image_url, images, category, privacy, created_at, updated_at, tags,
       users!inner(id, username, first_name, last_name, avatar_url, bio)
     `)
     .eq(column, idOrSlug)
@@ -133,14 +133,30 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
   marked.setOptions({ breaks: true })
   const bodyHtml = await marked(article.content)
 
+  // Pull a short clean description from the body for SEO + JSON-LD.
+  const description = article.content
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')   // strip markdown links, keep text
+    .replace(/[#*_`>-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 240)
+    .replace(/\s\S*$/, '') + '...'
+
+  const wordCount = (article.content || '').trim().split(/\s+/).length
+  const keywords = Array.isArray((article as any).tags) ? (article as any).tags as string[] : []
+
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: title,
+    description,
     datePublished: article.created_at,
     dateModified: article.updated_at || article.created_at,
     url,
     mainEntityOfPage: url,
+    wordCount,
+    inLanguage: 'en',
+    ...(keywords.length > 0 ? { keywords: keywords.join(', ') } : {}),
     author: {
       '@type': 'Person',
       name: authorName,
@@ -151,7 +167,8 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     publisher: {
       '@type': 'Organization',
       name: 'PlantsPack',
-      logo: { '@type': 'ImageObject', url: 'https://plantspack.com/plantspack-logo-real.svg' },
+      url: 'https://www.plantspack.com',
+      logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/og-logo.png' },
     },
   }
 
