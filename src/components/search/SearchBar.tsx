@@ -225,6 +225,15 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                             {SUBCATEGORY_LABELS[place.subcategory || ''] || place.category}
                             {place.city ? ` · ${place.city}` : ''}
                           </p>
+                          {place.address && (
+                            // Surface the street so chain branches in the
+                            // same city (Flower Burger Roma Alessandria vs
+                            // Roma Gracchi, multiple LPQ etc.) are visibly
+                            // distinct in the dropdown.
+                            <p className="text-[10px] text-on-surface-variant/80 truncate">
+                              {place.address.split(',').slice(0, 2).join(',').trim()}
+                            </p>
+                          )}
                         </div>
                         {place.vegan_level === 'fully_vegan' && (
                           <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 flex-shrink-0">

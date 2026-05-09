@@ -29,6 +29,7 @@ export interface PlaceResult {
   vegan_level: string | null
   city: string | null
   country: string | null
+  address: string | null
   main_image_url: string | null
 }
 
@@ -113,7 +114,7 @@ export function useSearch(query: string, minLength: number = 2) {
       // click a result and land on a /place/<slug> 404. Filter them out.
       let q = supabase
         .from('places')
-        .select('id, name, slug, category, subcategory, vegan_level, city, country, main_image_url')
+        .select('id, name, slug, category, subcategory, vegan_level, city, country, address, main_image_url')
         .is('archived_at', null)
         .ilike('name', `%${term}%`)
       if (isFullyVeganOnly) q = q.eq('vegan_level', 'fully_vegan')
