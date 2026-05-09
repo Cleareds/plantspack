@@ -1,28 +1,25 @@
 import { ImageResponse } from 'next/og'
 
 // Auto-generated OG / social-share image for the homepage and any page
-// that doesn't override its own. Mirrors the TopBar composition:
-//   [logo SVG] Plants Pack
-//              VEGAN SYNDICATE
-// Renders at 1200×630 (the spec all major social platforms target).
+// that doesn't override its own. Composes the brand's full pre-rendered
+// logo PNG (animals + wordmark + tagline) onto a 1200x630 canvas - the
+// spec all major social platforms target. Replaces the older Satori-
+// rendered version that approximated the typography but didn't match.
 //
-// Replaces the older static /public/og-image.png so we don't have to
-// hand-author a PNG when the brand mark changes - it pulls the SVG
-// directly from /plantspack-logo-real.svg, which is the same file the
-// TopBar renders.
+// To update the brand mark: replace /public/og-logo.png. The OG endpoint
+// and all downstream social previews will pick it up on next deploy.
 export const runtime = 'edge'
 export const alt = 'PlantsPack — vegan places, ranked by the community'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export default async function Image() {
-  // Fetch the brand SVG at render time. Edge runtime cannot read fs;
-  // since the file ships in /public it's always reachable at the same
-  // origin we're being rendered for. Fall back to absolute prod URL
-  // during preview builds.
+  // Edge runtime can't read fs; the file ships in /public and is reachable
+  // at the same origin we're being rendered for. Fall back to absolute
+  // prod URL during preview builds where the host might differ.
   const logoUrl = process.env.NEXT_PUBLIC_SITE_URL
-    ? `${process.env.NEXT_PUBLIC_SITE_URL}/plantspack-logo-real.svg`
-    : 'https://www.plantspack.com/plantspack-logo-real.svg'
+    ? `${process.env.NEXT_PUBLIC_SITE_URL}/og-logo.png`
+    : 'https://www.plantspack.com/og-logo.png'
 
   return new ImageResponse(
     (
@@ -38,41 +35,16 @@ export default async function Image() {
           padding: 80,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 48 }}>
-          <img src={logoUrl} alt="" width={220} height={220} />
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div
-              style={{
-                fontSize: 132,
-                fontWeight: 800,
-                color: '#1f6f3a',
-                letterSpacing: '-0.04em',
-                lineHeight: 1,
-              }}
-            >
-              Plants Pack
-            </div>
-            <div
-              style={{
-                fontSize: 28,
-                fontWeight: 700,
-                color: '#5a6b5e',
-                letterSpacing: '0.32em',
-                marginTop: 12,
-                opacity: 0.7,
-              }}
-            >
-              VEGAN SYNDICATE
-            </div>
-          </div>
-        </div>
+        {/* Logo: 516 x 133 native; scaled to 900 x 232 to fill the canvas
+            without cropping. Maintains the brand's exact typography. */}
+        <img src={logoUrl} alt="" width={900} height={232} />
         <div
           style={{
-            marginTop: 48,
-            fontSize: 32,
-            color: '#3a4a3d',
+            marginTop: 56,
+            fontSize: 36,
+            color: '#2a3a2d',
             textAlign: 'center',
-            maxWidth: 900,
+            maxWidth: 960,
             lineHeight: 1.3,
           }}
         >
@@ -80,8 +52,8 @@ export default async function Image() {
         </div>
         <div
           style={{
-            marginTop: 16,
-            fontSize: 22,
+            marginTop: 20,
+            fontSize: 24,
             color: '#7a8a7e',
             letterSpacing: '0.08em',
           }}
