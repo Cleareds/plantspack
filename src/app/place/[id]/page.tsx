@@ -196,7 +196,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       type: 'website',
       siteName: 'PlantsPack',
       ...(image ? { images: [image] } : {}),
-    }
+    },
+    // Mirror the place's hero image into the Twitter card too. Without this,
+    // a place with its own photo would still fall back to the global
+    // og-image.png on Twitter / X / Slack / WhatsApp share previews.
+    ...(image ? {
+      twitter: {
+        card: 'summary_large_image' as const,
+        title: `${place.name} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
+        description,
+        images: [image],
+      },
+    } : {}),
   }
 }
 

@@ -42,18 +42,22 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  // openGraph.images and twitter.images are auto-supplied by Next.js's
+  // file-based metadata convention from src/app/opengraph-image.tsx and
+  // src/app/twitter-image.tsx. Those generators render the brand SVG +
+  // wordmark live, so we don't have to maintain a static og-image.png.
+  // Per-page metadata can still override (place / post / recipe pages
+  // do, with their own hero photo).
   openGraph: {
     type: 'website',
     siteName: 'PlantsPack',
     title: 'PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide',
     description: '33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.',
     locale: 'en_US',
-    images: [{ url: 'https://www.plantspack.com/og-image.png', width: 1200, height: 630, alt: 'PlantsPack — Vegan Community Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@plantspackX',
-    images: ['https://www.plantspack.com/og-image.png'],
   },
   alternates: {
     canonical: 'https://plantspack.com',

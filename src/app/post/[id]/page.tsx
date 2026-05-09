@@ -78,7 +78,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       type: 'article',
       siteName: 'PlantsPack',
       ...(image ? { images: [image] } : {}),
-    }
+    },
+    // Mirror the post's hero image into the Twitter card so a post with
+    // its own photo doesn't fall back to the global og-image on Twitter / X.
+    ...(image ? {
+      twitter: {
+        card: 'summary_large_image' as const,
+        title: pageTitle,
+        description,
+        images: [image],
+      },
+    } : {}),
   }
 }
 

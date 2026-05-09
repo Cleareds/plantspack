@@ -140,6 +140,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     description,
     alternates: { canonical: `https://plantspack.com/recipe/${post.slug || id}` },
     openGraph: { title: `${rawTitle} — Vegan Recipe`, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
+    // Mirror the recipe's image into the Twitter card.
+    ...(image ? {
+      twitter: { card: 'summary_large_image' as const, title: `${rawTitle} — Vegan Recipe`, description, images: [image] },
+    } : {}),
   }
 }
 
