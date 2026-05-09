@@ -30,6 +30,33 @@ Disallow: /
 User-agent: PetalBot
 Disallow: /
 
+# AI crawlers - explicitly allow so PlantsPack can be cited as a source
+# in ChatGPT search answers, Perplexity, Claude, Gemini, etc.
+# OpenAI: OAI-SearchBot powers ChatGPT search citations; GPTBot is the
+# training crawler; ChatGPT-User is on-demand fetching during chats.
+# Per OpenAI docs, sites blocking OAI-SearchBot are not surfaced as
+# citations in ChatGPT search results.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 # The sitemap index lists the three tiered segments below. Next.js
 # reserves /sitemap.xml for its own use but doesn't populate it when
 # generateSitemaps() is used, so we publish the index under a different

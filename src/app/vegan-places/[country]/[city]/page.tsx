@@ -516,6 +516,17 @@ export default async function CityPage({ params }: PageProps) {
               <Globe className="h-4 w-4" />
               View on map
             </Link>
+            {(() => {
+              const fvCount = places.filter((p: any) => p.vegan_level === 'fully_vegan').length
+              return fvCount > 0 ? (
+                <Link
+                  href={`/vegan-places/${country}/${city}/fully-vegan`}
+                  className="inline-flex items-center gap-2 text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg hover:bg-emerald-100 transition-colors"
+                >
+                  See {fvCount} 100% vegan only →
+                </Link>
+              ) : null
+            })()}
             <AddPlaceButton
               cityName={cityName}
               countryName={countryName}

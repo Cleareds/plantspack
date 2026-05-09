@@ -211,11 +211,17 @@ export default async function CountryPage({ params }: PageProps) {
           {sceneDescription && (
             <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
           )}
-          <div className="flex gap-3 mt-4">
+          <div className="flex flex-wrap gap-3 mt-4">
             <Link href={`/map?location=${encodeURIComponent(countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90">
               <Globe className="h-4 w-4" /> View on map
             </Link>
+            {totalFv > 0 && (
+              <Link href={`/vegan-places/${country}/fully-vegan`}
+                className="inline-flex items-center gap-2 text-sm font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-lg hover:bg-emerald-100 transition-colors">
+                See {totalFv} 100% vegan only →
+              </Link>
+            )}
           </div>
         </div>
 
