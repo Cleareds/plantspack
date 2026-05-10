@@ -37,7 +37,7 @@ type EventPost = {
 
 async function getEventPost(id: string): Promise<EventPost | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
       cache: 'no-store',
     })
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: `${title} - Event | PlantsPack`,
     description,
-    alternates: { canonical: `https://plantspack.com/event/${post.slug || id}` },
+    alternates: { canonical: `https://www.plantspack.com/event/${post.slug || id}` },
     openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
   }
 }
@@ -110,8 +110,8 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(
         buildBreadcrumbs([
           HOME_CRUMB,
-          { name: 'Events', url: 'https://plantspack.com/events' },
-          { name: eventTitle, url: `https://plantspack.com/event/${post.slug || post.id}` },
+          { name: 'Events', url: 'https://www.plantspack.com/events' },
+          { name: eventTitle, url: `https://www.plantspack.com/event/${post.slug || post.id}` },
         ])
       ) }} />
       <div className="max-w-3xl mx-auto px-4 py-8">

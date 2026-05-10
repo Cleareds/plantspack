@@ -32,9 +32,9 @@ export interface FollowedCity {
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'PlantsPack — Vegan Places, Recipes & City Rankings Worldwide',
-  description: '37,000+ vegan restaurants, shops, and stays across 170+ countries. Compare 1,000+ cities by vegan-friendliness, browse 580+ recipes, and post reviews. Free, ad-free.',
-  alternates: { canonical: 'https://plantspack.com' },
+  title: 'PlantsPack — Vegan Places & City Rankings Worldwide',
+  description: '50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries. Compare cities by vegan-friendliness with community reviews and ratings. Free, ad-free.',
+  alternates: { canonical: 'https://www.plantspack.com' },
 }
 
 // Top cities are also returned by /api/home (which we always call now), so
@@ -242,7 +242,7 @@ async function getInitialLocationData(isSignedIn: boolean) {
       }
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const hasParams = params.toString().length > 0
     const url = hasParams ? `${baseUrl}/api/home?${params.toString()}` : `${baseUrl}/api/home`
     const res = await fetch(url, hasParams ? { cache: 'no-store' } : { next: { revalidate: 300 } })

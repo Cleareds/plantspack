@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   title: 'Blog — PlantsPack',
   description:
     'Data-driven essays on veganism, restaurant rankings by city, and insights from 37,000+ verified vegan places worldwide.',
-  alternates: { canonical: 'https://plantspack.com/blog' },
+  alternates: { canonical: 'https://www.plantspack.com/blog' },
   openGraph: {
     title: 'PlantsPack Blog',
     description:
       'Data-driven essays on veganism, restaurant rankings by city, and insights from 37,000+ verified vegan places worldwide.',
     type: 'website',
-    url: 'https://plantspack.com/blog',
+    url: 'https://www.plantspack.com/blog',
     siteName: 'PlantsPack',
   },
 }
@@ -93,7 +93,7 @@ export default async function BlogIndex() {
 
   const breadcrumbs = buildBreadcrumbs([
     HOME_CRUMB,
-    { name: 'Blog', url: 'https://plantspack.com/blog' },
+    { name: 'Blog', url: 'https://www.plantspack.com/blog' },
   ])
 
   return (

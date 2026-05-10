@@ -32,7 +32,7 @@ class GeocodingService {
   private lastRequestTime = 0
   private readonly MIN_REQUEST_INTERVAL = 1000 // 1 second in milliseconds
   private readonly CACHE_DURATION = 1000 * 60 * 60 // 1 hour
-  private readonly USER_AGENT = 'PlantsPack/1.0 (https://plantspack.com)'
+  private readonly USER_AGENT = 'PlantsPack/1.0 (https://www.plantspack.com)'
 
   /**
    * Wait for rate limit compliance (1 request per second)

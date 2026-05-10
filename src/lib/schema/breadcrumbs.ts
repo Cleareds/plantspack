@@ -37,5 +37,5 @@ export function buildBreadcrumbs(items: BreadcrumbItem[]) {
 /** Site root — every breadcrumb chain starts here. */
 export const HOME_CRUMB: BreadcrumbItem = {
   name: 'Home',
-  url: 'https://plantspack.com',
+  url: 'https://www.plantspack.com',
 }

@@ -53,7 +53,7 @@ function SimilarRecipes({ postId }: { postId: string }) {
 
 async function SimilarRecipesClient({ postId }: { postId: string }) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const resp = await fetch(`${baseUrl}/api/recipes?limit=6&offset=0`, { cache: 'no-store' })
     if (!resp.ok) return <p className="text-sm text-on-surface-variant">No recipes found</p>
     const data = await resp.json()
@@ -89,7 +89,7 @@ async function SimilarRecipesClient({ postId }: { postId: string }) {
 
 async function getRecipePost(id: string): Promise<RecipePost | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     // The API handles both UUIDs and slugs
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
       cache: 'no-store',
@@ -138,7 +138,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title,
     description,
-    alternates: { canonical: `https://plantspack.com/recipe/${post.slug || id}` },
+    alternates: { canonical: `https://www.plantspack.com/recipe/${post.slug || id}` },
     openGraph: { title: `${rawTitle} — Vegan Recipe`, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
     // Mirror the recipe's image into the Twitter card.
     ...(image ? {
@@ -186,8 +186,8 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(
         buildBreadcrumbs([
           HOME_CRUMB,
-          { name: 'Recipes', url: 'https://plantspack.com/recipes' },
-          { name: recipeTitle, url: `https://plantspack.com/recipe/${post.slug || post.id}` },
+          { name: 'Recipes', url: 'https://www.plantspack.com/recipes' },
+          { name: recipeTitle, url: `https://www.plantspack.com/recipe/${post.slug || post.id}` },
         ])
       ) }} />
       <div className="max-w-3xl mx-auto px-4 py-8">

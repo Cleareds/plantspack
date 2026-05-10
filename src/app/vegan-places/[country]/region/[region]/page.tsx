@@ -37,21 +37,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `Vegan Places in ${r.region_name}, ${countryName} | PlantsPack`,
     description: r.description ?? `Vegan and vegan-friendly places across ${r.region_name}, ${countryName}.`,
-    alternates: { canonical: `https://plantspack.com/vegan-places/${country}/region/${region}` },
+    alternates: { canonical: `https://www.plantspack.com/vegan-places/${country}/region/${region}` },
     robots: { index: true, follow: true },
     openGraph: {
       title: `Vegan Places in ${r.region_name}`,
       description: r.description ?? '',
       type: 'website',
       siteName: 'PlantsPack',
-      url: `https://plantspack.com/vegan-places/${country}/region/${region}`,
+      url: `https://www.plantspack.com/vegan-places/${country}/region/${region}`,
     },
   }
 }
 
 async function getCityScores(): Promise<any[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
     if (!res.ok) return []
     const data = await res.json()
@@ -106,9 +106,9 @@ export default async function RegionPage({ params }: PageProps) {
           __html: JSON.stringify(
             buildBreadcrumbs([
               HOME_CRUMB,
-              { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
-              { name: countryName, url: `https://plantspack.com/vegan-places/${country}` },
-              { name: r.region_name, url: `https://plantspack.com/vegan-places/${country}/region/${region}` },
+              { name: 'Vegan Places', url: 'https://www.plantspack.com/vegan-places' },
+              { name: countryName, url: `https://www.plantspack.com/vegan-places/${country}` },
+              { name: r.region_name, url: `https://www.plantspack.com/vegan-places/${country}/region/${region}` },
             ]),
           ),
         }}

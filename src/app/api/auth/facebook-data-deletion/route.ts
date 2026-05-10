@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Return confirmation URL as required by Facebook
-    const confirmationUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'}/data-deletion-confirmation?code=${confirmationCode}`
+    const confirmationUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'}/data-deletion-confirmation?code=${confirmationCode}`
 
     return NextResponse.json({
       url: confirmationUrl,

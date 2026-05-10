@@ -14,20 +14,20 @@ export const revalidate = 86400
 export const metadata: Metadata = {
   title: 'How PlantsPack classifies vegan places — Methodology | PlantsPack',
   description: 'The 4 vegan-level tiers we use (100% vegan, mostly vegan, vegan-friendly, vegan options), how we verify entries, and what we explicitly do NOT include on the platform.',
-  alternates: { canonical: 'https://plantspack.com/methodology' },
+  alternates: { canonical: 'https://www.plantspack.com/methodology' },
   openGraph: {
     title: 'How PlantsPack classifies vegan places',
     description: 'The 4 vegan-level tiers, our verification process, and what does not belong on the platform.',
     type: 'article',
     siteName: 'PlantsPack',
-    url: 'https://plantspack.com/methodology',
+    url: 'https://www.plantspack.com/methodology',
   },
 }
 
 export default function MethodologyPage() {
   const breadcrumbs = buildBreadcrumbs([
     HOME_CRUMB,
-    { name: 'Methodology', url: 'https://plantspack.com/methodology' },
+    { name: 'Methodology', url: 'https://www.plantspack.com/methodology' },
   ])
 
   return (

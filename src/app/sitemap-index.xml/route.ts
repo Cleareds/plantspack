@@ -11,7 +11,7 @@
  * each segment individually as a belt-and-braces fallback.
  */
 
-const SITE_URL = 'https://plantspack.com'
+const SITE_URL = 'https://www.plantspack.com'
 const SEGMENTS = ['priority', 'content', 'thin'] as const
 
 export function GET() {

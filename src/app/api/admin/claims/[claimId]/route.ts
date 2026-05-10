@@ -139,7 +139,7 @@ export async function PATCH(
           ? `${userFirstName} ${userLastName || ''}`.trim()
           : userName
 
-        const placeUrl = `https://plantspack.com/place/${claim.place_id}`
+        const placeUrl = `https://www.plantspack.com/place/${claim.place_id}`
 
         await sendClaimApprovedEmail(
           userEmail,

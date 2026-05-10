@@ -5,7 +5,7 @@ import PackDetailClient from './PackDetailClient'
 // Community content — member counts, new posts/places need to update live.
 export const revalidate = 0
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
 
 async function fetchPackData(id: string) {
   try {
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: `${title} — PlantsPack`,
     description,
-    alternates: { canonical: `https://plantspack.com/packs/${id}` },
+    alternates: { canonical: `https://www.plantspack.com/packs/${id}` },
     openGraph: {
       title,
       description,

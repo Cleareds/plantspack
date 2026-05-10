@@ -29,14 +29,14 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
       title: `${displayName} (@${user.username}) - PlantsPack`,
       description: user.bio || `${displayName}'s profile on PlantsPack, the vegan community platform.`,
       alternates: {
-        canonical: `https://plantspack.com/profile/${user.username}`,
+        canonical: `https://www.plantspack.com/profile/${user.username}`,
       },
       openGraph: {
         title: `${displayName} (@${user.username})`,
         description: user.bio || `${displayName}'s profile on PlantsPack.`,
         type: 'profile',
         siteName: 'PlantsPack',
-        url: `https://plantspack.com/profile/${user.username}`,
+        url: `https://www.plantspack.com/profile/${user.username}`,
       },
     }
   } catch {
@@ -72,7 +72,7 @@ export default async function ProfileLayout({
         '@type': 'Person',
         name: displayName,
         alternateName: u.username,
-        url: `https://plantspack.com/profile/${u.username}`,
+        url: `https://www.plantspack.com/profile/${u.username}`,
         ...(u.avatar_url ? { image: u.avatar_url } : {}),
         ...(u.bio ? { description: u.bio } : {}),
       }

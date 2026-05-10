@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const article = await getArticle(slug)
   if (!article) return { title: 'Article not found — PlantsPack' }
 
-  const canonical = `https://plantspack.com/blog/${article.slug || article.id}`
+  const canonical = `https://www.plantspack.com/blog/${article.slug || article.id}`
   const title = article.title || article.content.slice(0, 80)
   const description =
     article.content.length > 200
@@ -127,7 +127,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
   const authorName = article.users.first_name
     ? `${article.users.first_name} ${article.users.last_name || ''}`.trim()
     : `@${article.users.username}`
-  const url = `https://plantspack.com/blog/${article.slug || article.id}`
+  const url = `https://www.plantspack.com/blog/${article.slug || article.id}`
 
   // Render content as markdown
   marked.setOptions({ breaks: true })
@@ -160,7 +160,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     author: {
       '@type': 'Person',
       name: authorName,
-      url: `https://plantspack.com/profile/${article.users.username}`,
+      url: `https://www.plantspack.com/profile/${article.users.username}`,
     },
     ...(heroImage ? { image: heroImage } : {}),
     articleBody: article.content,
@@ -174,7 +174,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
 
   const breadcrumbs = buildBreadcrumbs([
     HOME_CRUMB,
-    { name: 'Blog', url: 'https://plantspack.com/blog' },
+    { name: 'Blog', url: 'https://www.plantspack.com/blog' },
     { name: title, url },
   ])
 

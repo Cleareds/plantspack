@@ -28,7 +28,7 @@ type Post = Tables<'posts'> & {
 
 async function getPost(id: string): Promise<Post | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     // The API handles both UUIDs and slugs
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
       cache: 'no-store',
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title: pageTitle,
     description,
-    alternates: { canonical: `https://plantspack.com/post/${post.slug || id}` },
+    alternates: { canonical: `https://www.plantspack.com/post/${post.slug || id}` },
     openGraph: {
       title: pageTitle,
       description,
@@ -127,7 +127,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
   const authorName = post.users?.first_name
     ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
     : post.users?.username || 'PlantsPack User'
-  const postUrl = `https://plantspack.com/post/${post.slug || id}`
+  const postUrl = `https://www.plantspack.com/post/${post.slug || id}`
   const postImage = post.images?.[0] || post.image_url
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -140,19 +140,19 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     author: {
       '@type': 'Person',
       name: authorName,
-      url: `https://plantspack.com/profile/${post.users?.username || 'unknown'}`,
+      url: `https://www.plantspack.com/profile/${post.users?.username || 'unknown'}`,
     },
     ...(postImage ? { image: postImage } : {}),
     articleBody: post.content,
     publisher: {
       '@type': 'Organization',
       name: 'PlantsPack',
-      logo: { '@type': 'ImageObject', url: 'https://plantspack.com/plantspack-logo-real.svg' },
+      logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/plantspack-logo-real.svg' },
     },
   }
   const breadcrumbJsonLd = buildBreadcrumbs([
     HOME_CRUMB,
-    { name: 'Feed', url: 'https://plantspack.com/feed' },
+    { name: 'Feed', url: 'https://www.plantspack.com/feed' },
     { name: post.title || 'Post', url: postUrl },
   ])
 

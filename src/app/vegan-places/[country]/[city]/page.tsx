@@ -155,8 +155,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   // When in fully-vegan mode, canonical points at the /fully-vegan URL
   // (not the underlying ?level=fully-vegan that the rewrite uses).
   const canonical = isFullyVeganMode
-    ? `https://plantspack.com/vegan-places/${country}/${city}/fully-vegan`
-    : `https://plantspack.com/vegan-places/${country}/${city}`
+    ? `https://www.plantspack.com/vegan-places/${country}/${city}/fully-vegan`
+    : `https://www.plantspack.com/vegan-places/${country}/${city}`
 
   return {
     title,
@@ -208,7 +208,7 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
     name: `Vegan Places in ${cityName}, ${countryName}`,
     numberOfItems: places.length,
     itemListElement: top.map((place, i) => {
-      const placeUrl = place.slug ? `https://plantspack.com/place/${place.slug}` : undefined
+      const placeUrl = place.slug ? `https://www.plantspack.com/place/${place.slug}` : undefined
       const image = place.main_image_url || place.images?.[0] || undefined
       const hoursSpec = buildOpeningHoursSpec(place.opening_hours)
       const servesCuisine = (place.cuisine_types || []).filter(c => c && c !== 'regional' && c !== 'yes').map(c => c.replace(/_/g, ' '))
@@ -314,7 +314,7 @@ function generateFaqJsonLd(args: {
 
 async function fetchCityPlaces(country: string, city: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     // City query paginates server-side so we always get ALL places, no cap.
     const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`, { cache: 'no-store' })
     if (!res.ok) return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
@@ -326,7 +326,7 @@ async function fetchCityPlaces(country: string, city: string) {
 
 async function getCityScore(cityName: string, countryName: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
     if (!res.ok) return null
     const data = await res.json()
@@ -336,7 +336,7 @@ async function getCityScore(cityName: string, countryName: string) {
 
 async function fetchCityExperiences(country: string, city: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const res = await fetch(`${baseUrl}/api/cities/${country}/${city}/experiences`, { cache: 'no-store' })
     if (!res.ok) return { experiences: [], summary: { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
     const data = await res.json()
@@ -467,7 +467,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
     itemListElement: fvSet.map((p: Place, i: number) => ({
       '@type': 'ListItem',
       position: i + 1,
-      url: `https://plantspack.com/place/${p.slug || p.id}`,
+      url: `https://www.plantspack.com/place/${p.slug || p.id}`,
       name: p.name,
     })),
   } : null
@@ -528,9 +528,9 @@ export default async function CityPage({ params, searchParams }: PageProps) {
           __html: JSON.stringify(
             buildBreadcrumbs([
               HOME_CRUMB,
-              { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
-              { name: countryName, url: `https://plantspack.com/vegan-places/${country}` },
-              { name: cityName, url: `https://plantspack.com/vegan-places/${country}/${city}` },
+              { name: 'Vegan Places', url: 'https://www.plantspack.com/vegan-places' },
+              { name: countryName, url: `https://www.plantspack.com/vegan-places/${country}` },
+              { name: cityName, url: `https://www.plantspack.com/vegan-places/${country}/${city}` },
             ]),
           ),
         }}

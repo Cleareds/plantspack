@@ -76,7 +76,7 @@ type PlaceData = {
 
 async function getPlace(id: string): Promise<PlaceData | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const [placeResponse, ownerResponse] = await Promise.all([
       fetch(`${baseUrl}/api/places/${id}`, {
         cache: 'no-store'
@@ -188,7 +188,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title,
     description,
-    alternates: { canonical: `https://plantspack.com/place/${place.slug || id}` },
+    alternates: { canonical: `https://www.plantspack.com/place/${place.slug || id}` },
     robots: isThin ? { index: false, follow: true } : undefined,
     openGraph: {
       title: `${place.name} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
@@ -311,14 +311,14 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   const citySlug = slugifyCityOrCountry(place.city)
   const breadcrumbJsonLd = buildBreadcrumbs([
     HOME_CRUMB,
-    { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
+    { name: 'Vegan Places', url: 'https://www.plantspack.com/vegan-places' },
     ...(place.country && countrySlug
-      ? [{ name: place.country, url: `https://plantspack.com/vegan-places/${countrySlug}` }]
+      ? [{ name: place.country, url: `https://www.plantspack.com/vegan-places/${countrySlug}` }]
       : []),
     ...(place.city && citySlug && countrySlug
-      ? [{ name: place.city, url: `https://plantspack.com/vegan-places/${countrySlug}/${citySlug}` }]
+      ? [{ name: place.city, url: `https://www.plantspack.com/vegan-places/${countrySlug}/${citySlug}` }]
       : []),
-    { name: place.name, url: `https://plantspack.com/place/${place.slug || place.id}` },
+    { name: place.name, url: `https://www.plantspack.com/place/${place.slug || place.id}` },
   ])
 
   const categoryLabels: Record<string, string> = {

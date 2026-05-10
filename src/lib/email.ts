@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase-admin'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://plantspack.com'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://www.plantspack.com'
 
 // Lazy-init so missing RESEND_API_KEY at build time doesn't crash module load
 // (Next.js "Collecting page data" evaluates server modules without runtime env).
@@ -59,7 +59,7 @@ export async function sendEmail({ to, subject, html, text, headers }: SendEmailO
 // Shared email header with logo
 const EMAIL_HEADER = `
       <div style="text-align: center; padding: 32px 20px; border-bottom: 1px solid #e5e7eb;">
-        <img src="https://plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
+        <img src="https://www.plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
       </div>`
 
 // Welcome email for new users
@@ -95,7 +95,7 @@ export async function sendWelcomeEmail(to: string, username: string) {
         </div>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://plantspack.com" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+          <a href="https://www.plantspack.com" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
             Start Exploring
           </a>
         </div>
@@ -108,7 +108,7 @@ export async function sendWelcomeEmail(to: string, username: string) {
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
           You're receiving this because you signed up for PlantsPack.<br>
-          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+          <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
       </div>
@@ -183,8 +183,8 @@ export async function sendNotificationEmail(
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
-          Manage your <a href="https://plantspack.com/settings" style="color: #16a34a;">notification settings</a><br>
-          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+          Manage your <a href="https://www.plantspack.com/settings" style="color: #16a34a;">notification settings</a><br>
+          <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
       </div>
@@ -240,7 +240,7 @@ export async function sendSubscriptionEmail(
         </ul>
 
         <div style="text-align: center; margin: 30px 0;">
-          <a href="https://plantspack.com" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+          <a href="https://www.plantspack.com" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
             View Your Profile
           </a>
         </div>
@@ -252,7 +252,7 @@ export async function sendSubscriptionEmail(
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
-          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+          <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
       </div>
@@ -365,7 +365,7 @@ WHERE id = '${claimData.claim_id}';</pre>
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
           Claim ID: ${claimData.claim_id}<br>
-          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+          <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
       </div>
@@ -431,7 +431,7 @@ export async function sendClaimApprovedEmail(
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
-          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+          <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
       </div>
@@ -493,7 +493,7 @@ export async function sendClaimRejectedEmail(
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
-          <a href="https://plantspack.com" style="color: #16a34a;">plantspack.com</a>
+          <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
       </div>
@@ -519,7 +519,7 @@ export function renderNewsletterFooter(unsubscribeUrl: string, emailAddress: str
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
           <a href="${unsubscribeUrl}" style="color: #6b7280; text-decoration: underline;">Unsubscribe</a>
           &nbsp;·&nbsp;
-          <a href="https://plantspack.com" style="color: #6b7280;">plantspack.com</a>
+          <a href="https://www.plantspack.com" style="color: #6b7280;">plantspack.com</a>
         </p>
         <p style="font-size: 11px; color: #9ca3af; margin: 10px 0 0 0;">
           Cleareds · Belgium · hello@plantspack.com

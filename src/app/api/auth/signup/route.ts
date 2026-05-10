@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'}/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'}/auth/callback`,
         data: {
           username,
           first_name: firstName || '',

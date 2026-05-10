@@ -9,7 +9,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'City Ranks — Most Vegan-Friendly Cities | PlantsPack',
   description: '1,000+ cities ranked by vegan-friendliness. Scores based on place density, variety, and community ratings. See how your city compares.',
-  alternates: { canonical: 'https://plantspack.com/city-ranks' },
+  alternates: { canonical: 'https://www.plantspack.com/city-ranks' },
 }
 
 export default async function CityRanksPage() {

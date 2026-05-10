@@ -4,7 +4,7 @@ import { ArrowLeft, Cookie } from 'lucide-react'
 export const metadata = {
   title: 'Cookie Policy — How PlantsPack Uses Cookies | PlantsPack',
   description: 'PlantsPack uses a minimal set of cookies for authentication, saved preferences, and anonymous analytics. No third-party ad cookies. Read the full policy here.',
-  alternates: { canonical: 'https://plantspack.com/legal/cookies' },
+  alternates: { canonical: 'https://www.plantspack.com/legal/cookies' },
 }
 
 export default function CookiePolicyPage() {

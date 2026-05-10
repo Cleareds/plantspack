@@ -32,9 +32,17 @@ export const viewport: Viewport = {
   maximumScale: 5,
 }
 
+// Single source of truth for the homepage tagline. Used in title, meta
+// description, OG, and the Organization JSON-LD so they cannot drift apart.
+// Numbers reflect actual DB counts as of 2026-05 (~52K places, ~10K cities,
+// ~163 countries) rounded down per the honesty-first copy rule.
+const SITE_TITLE = 'PlantsPack — Vegan Places & City Rankings Worldwide';
+const SITE_DESCRIPTION =
+  '50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries. Compare cities by vegan-friendliness with community reviews and ratings. Free, ad-free.';
+
 export const metadata: Metadata = {
-  title: "PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide",
-  description: "33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   metadataBase: new URL('https://www.plantspack.com'),
   manifest: '/manifest.json',
   robots: {
@@ -51,8 +59,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'PlantsPack',
-    title: 'PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide',
-    description: '33,000+ vegan restaurants, stores, stays, and sanctuaries across 117 countries. City vegan rankings, 580+ recipes, community reviews. Free, no ads.',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: 'https://www.plantspack.com/',
     locale: 'en_US',
   },
   twitter: {
@@ -60,7 +69,7 @@ export const metadata: Metadata = {
     site: '@plantspackX',
   },
   alternates: {
-    canonical: 'https://plantspack.com',
+    canonical: 'https://www.plantspack.com',
     types: {
       // Auto-discovery: aggregators (Feedly, Inoreader, Mastodon feed bots)
       // and modern browsers find the RSS feed via this <link rel="alternate">
@@ -106,9 +115,16 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"
           crossOrigin="anonymous"
         />
-      </head>
-      <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
+        {/*
+          Brand JSON-LD lives in <head> (not <body>) on purpose: when emitted
+          inside <body> under React 19 streaming SSR, Next.js renders it once
+          as a real <script> tag AND re-serializes it inside the Flight
+          hydration payload, producing two identical application/ld+json
+          blocks in the rendered DOM. Keeping it in <head> with a stable id
+          gives exactly one tag and the cleanest signal to Google.
+        */}
         <script
+          id="ld-org-website"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -116,11 +132,13 @@ export default function RootLayout({
               '@graph': [
                 {
                   '@type': 'Organization',
-                  '@id': 'https://plantspack.com/#organization',
+                  '@id': 'https://www.plantspack.com/#organization',
                   name: 'PlantsPack',
-                  url: 'https://plantspack.com',
-                  logo: 'https://plantspack.com/plantspack-logo-real.svg',
-                  description: 'Community-funded vegan platform with 33,000+ places across 117 countries, city vegan rankings, and 580+ recipes. Free forever, no ads.',
+                  url: 'https://www.plantspack.com',
+                  logo: 'https://www.plantspack.com/plantspack-logo-real.svg',
+                  description:
+                    'Community-funded vegan platform mapping 50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries. Free, ad-free.',
+                  slogan: 'Vegan places and city rankings, free and ad-free.',
                   sameAs: [
                     'https://x.com/plantspackX',
                     'https://www.instagram.com/plants.pack/',
@@ -134,15 +152,17 @@ export default function RootLayout({
                 // to Google and degrade trust. Add later if we build one.
                 {
                   '@type': 'WebSite',
-                  '@id': 'https://plantspack.com/#website',
-                  url: 'https://plantspack.com',
+                  '@id': 'https://www.plantspack.com/#website',
+                  url: 'https://www.plantspack.com',
                   name: 'PlantsPack',
-                  publisher: { '@id': 'https://plantspack.com/#organization' },
+                  publisher: { '@id': 'https://www.plantspack.com/#organization' },
                 },
               ],
             }),
           }}
         />
+      </head>
+      <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
         <GoogleAnalytics />
         <NavigationProgress />
         <Suspense fallback={null}>
