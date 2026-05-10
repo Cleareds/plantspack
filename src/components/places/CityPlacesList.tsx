@@ -58,6 +58,9 @@ interface Place {
   longitude: number
   vegan_level: string | null
   cuisine_types: string[] | null
+  verification_level?: number | null
+  verification_method?: string | null
+  last_verified_at?: string | null
 }
 
 export default function CityPlacesList({ places, allPlaces, cityName, countryName }: { places: Place[]; allPlaces?: Place[]; cityName?: string; countryName?: string }) {
@@ -311,6 +314,16 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
                       {place.vegan_level && (
                         <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${VEGAN_LEVEL_INLINE_CLASS[place.vegan_level] || 'bg-stone-100 text-stone-600'}`}>
                           {VEGAN_LEVEL_LABEL[place.vegan_level] || place.vegan_level}
+                        </span>
+                      )}
+                      {/* Hand-verified freshness badge - shown on /fully-vegan
+                          tiles only. Surfaces last_verified_at as visible
+                          text so AI search systems can quote it as a
+                          freshness signal rather than guessing from the page
+                          publish date. */}
+                      {isOnFvPath && (place.verification_level ?? 0) >= 3 && place.verification_method === 'admin_review' && (
+                        <span className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-xs flex items-center gap-1" title="Hand-checked against the venue's own website">
+                          ✓ Verified{place.last_verified_at ? ` ${new Date(place.last_verified_at).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}` : ''}
                         </span>
                       )}
                       {place.is_pet_friendly && (

@@ -76,6 +76,8 @@ interface Place {
   vegan_level: string | null
   cuisine_types: string[]
   verification_level?: number | null
+  verification_method?: string | null
+  last_verified_at?: string | null
 }
 
 // Map our { Mon: "10:00-18:00", ... } shape to schema.org openingHoursSpecification.
@@ -440,6 +442,36 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
   categories.sort()
 
+  // Freshness signal computed once: most recent last_verified_at across
+  // the FV set, plus admin-reviewed count. Used both in the verification
+  // paragraph and when rendering per-tile badges.
+  const fvSet: Place[] = isFullyVeganMode ? places : []
+  const fvLastVerified = fvSet
+    .map((p: Place) => p.last_verified_at)
+    .filter((d): d is string => !!d)
+    .sort()
+    .reverse()[0] || null
+  const fvAdminReviewed = fvSet.filter((p: Place) => (p.verification_level ?? 0) >= 3).length
+  const formatVerifiedDate = (d: string) =>
+    new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+
+  // ItemList JSON-LD for AI-search citation: only on /fully-vegan, with
+  // the verified FV venues listed as ListItem entries. AI parsers (ChatGPT,
+  // Perplexity, Claude) read this as structured source data they can cite.
+  const fvItemListJsonLd = isFullyVeganMode && fvSet.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `100% Vegan Places in ${cityName}, ${countryName}`,
+    description: `Manually verified 100% vegan venues in ${cityName}, ${countryName}.`,
+    numberOfItems: fvSet.length,
+    itemListElement: fvSet.map((p: Place, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://plantspack.com/place/${p.slug || p.id}`,
+      name: p.name,
+    })),
+  } : null
+
   return (
     <div className="min-h-screen bg-surface">
       {/* JSON-LD */}
@@ -449,6 +481,12 @@ export default async function CityPage({ params, searchParams }: PageProps) {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(generateJsonLd(places, cityName, countryName)),
           }}
+        />
+      )}
+      {fvItemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(fvItemListJsonLd) }}
         />
       )}
       {(() => {
@@ -614,7 +652,26 @@ export default async function CityPage({ params, searchParams }: PageProps) {
 
         {/* Places list with client-side category filter + map */}
         {places.length > 0 ? (
-          <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
+          <>
+            {/* FV-only verification block. Two purposes:
+                (a) Adds 60-80 words of unique copy on /fully-vegan that no
+                    other URL has, helping Google treat it as a distinct
+                    page intent rather than a near-duplicate of /<city>.
+                (b) Surfaces freshness (last_verified_at) so AI search
+                    systems can quote it as a reliability signal. */}
+            {isFullyVeganMode && (
+              <section className="mb-6 rounded-2xl bg-emerald-50 ghost-border border-emerald-100/80 p-5 text-sm leading-relaxed text-on-surface">
+                <h2 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is verified</h2>
+                <p className="mb-2">
+                  Every venue above was opened on its own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs), and confirmed currently open before being tagged 100% vegan. {fvAdminReviewed} of {fvSet.length} entries here are at the highest verification tier (admin-reviewed){fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}.
+                </p>
+                <p className="text-xs text-on-surface-variant">
+                  Full audit methodology: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>. Found a place we have classified wrong, or know of a fully vegan venue in {cityName} that should be here? Use Suggest Correction on any place page or write to <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.
+                </p>
+              </section>
+            )}
+            <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
+          </>
         ) : (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🌱</div>
