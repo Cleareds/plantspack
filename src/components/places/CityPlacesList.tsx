@@ -60,7 +60,13 @@ interface Place {
   cuisine_types: string[] | null
 }
 
-export default function CityPlacesList({ places, cityName, countryName }: { places: Place[]; cityName?: string; countryName?: string }) {
+export default function CityPlacesList({ places, allPlaces, cityName, countryName }: { places: Place[]; allPlaces?: Place[]; cityName?: string; countryName?: string }) {
+  // `places` is the SSR-filtered list (e.g. FV-only on /fully-vegan).
+  // `allPlaces` is the unfiltered universe — needed so the pill counts
+  // ("Mostly Vegan (3)", "Vegan-Friendly (24)") show the real cross-tier
+  // numbers instead of zeros when the page is server-filtered to one tier.
+  // Falls back to `places` for callers that don't pass it.
+  const placesForCounts = allPlaces ?? places
   const { isFullyVeganOnly } = useVeganFilter()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -112,11 +118,14 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
 
   // Pre-filter by global vegan toggle
   const basePlaces = isFullyVeganOnly ? places.filter(p => p.vegan_level === 'fully_vegan') : places
-  const categories = [...new Set(basePlaces.map(p => p.category))].sort()
+  // Counts pool: use the unfiltered universe (not the SSR-filtered display
+  // set) so vl pills show the real cross-tier numbers when on /fully-vegan.
+  const baseForCounts = isFullyVeganOnly ? placesForCounts.filter(p => p.vegan_level === 'fully_vegan') : placesForCounts
+  const categories = [...new Set(baseForCounts.map(p => p.category))].sort()
 
   // Get available subcategories for active category
   const subcategories = activeCategory
-    ? [...new Set(basePlaces.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
+    ? [...new Set(baseForCounts.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
     : []
 
   // Safety: reset stale filters when underlying data changes
@@ -134,12 +143,12 @@ export default function CityPlacesList({ places, cityName, countryName }: { plac
   const matchPet = (p: Place) => !petOnly || p.is_pet_friendly
   const matchVeganLevel = (p: Place) => !activeVeganLevel || p.vegan_level === activeVeganLevel
 
-  // Pool used to count category pills: apply vl + pet, not category/sub.
-  const poolForCategoryPills = basePlaces.filter(p => matchVeganLevel(p) && matchPet(p))
-  // Pool for subcategory pills: apply category + vl + pet, not sub.
-  const poolForSubPills = basePlaces.filter(p => matchCategory(p) && matchVeganLevel(p) && matchPet(p))
-  // Pool for vegan-level pills: apply category + sub + pet, not vl.
-  const poolForVeganLevelPills = basePlaces.filter(p => matchCategory(p) && matchSubcategory(p) && matchPet(p))
+  // Pill counts use the unfiltered universe (baseForCounts) so the numbers
+  // reflect "if you switched to this filter, here's how many you'd see"
+  // even when the SSR set is already pre-filtered (e.g. on /fully-vegan).
+  const poolForCategoryPills = baseForCounts.filter(p => matchVeganLevel(p) && matchPet(p))
+  const poolForSubPills = baseForCounts.filter(p => matchCategory(p) && matchVeganLevel(p) && matchPet(p))
+  const poolForVeganLevelPills = baseForCounts.filter(p => matchCategory(p) && matchSubcategory(p) && matchPet(p))
 
   const filtered = basePlaces.filter(p => {
     if (validCategory && p.category !== validCategory) return false
