@@ -14,6 +14,7 @@
 
 import { useState } from 'react'
 import { BadgeCheck, Sparkles, Database, AlertCircle, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 import SuggestCorrectionModal from './SuggestCorrectionModal'
 
 interface VerificationFooterProps {
@@ -160,7 +161,7 @@ export default function VerificationFooter({
       )}
 
       {/* Suggest correction is always available, regardless of state. */}
-      <div className="pt-1">
+      <div className="pt-1 flex items-center gap-4 flex-wrap">
         <button
           type="button"
           onClick={() => setModalOpen(true)}
@@ -168,6 +169,12 @@ export default function VerificationFooter({
         >
           Suggest correction <ChevronRight className="h-3 w-3" />
         </button>
+        <Link
+          href="/methodology"
+          className="text-on-surface-variant hover:text-primary hover:underline"
+        >
+          How we verify →
+        </Link>
       </div>
 
       <SuggestCorrectionModal

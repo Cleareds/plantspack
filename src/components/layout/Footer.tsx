@@ -59,6 +59,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/methodology"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Methodology
+                </Link>
+              </li>
+              <li>
                 <a
                   href="https://cleareds.com"
                   target="_blank"
