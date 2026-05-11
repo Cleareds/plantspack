@@ -295,16 +295,16 @@ export default function ReactionButtons({
           </button>
         )
 
-        // Wrap the like button in a popover so hovering shows the list of
-        // users who reacted with that type. Other reaction types stay plain
-        // for now to keep the UI uncluttered.
-        if (reactionType === 'like' && count > 0) {
+        // Wrap every reaction button in a popover so hovering shows who
+        // reacted with that specific type.
+        if (count > 0) {
           return (
             <LikersPopover
               key={reactionType}
               entityType="post"
               entityId={postId}
               count={count}
+              reactionType={reactionType}
             >
               {button}
             </LikersPopover>

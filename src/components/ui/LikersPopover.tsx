@@ -25,6 +25,7 @@ interface LikersPopoverProps {
   entityType: 'post' | 'review'
   entityId: string
   count: number
+  reactionType?: 'like' | 'helpful' | 'inspiring' | 'thoughtful'
   // Optional analytics row data, shown to the entity author only.
   analytics?: {
     likes: number
@@ -43,6 +44,7 @@ export default function LikersPopover({
   entityType,
   entityId,
   count,
+  reactionType = 'like',
   analytics,
   showAnalytics,
   children,
@@ -58,14 +60,14 @@ export default function LikersPopover({
     if (!open || users !== null || count === 0) return
     setLoading(true)
     const url = entityType === 'post'
-      ? `/api/posts/${entityId}/reactions/users?type=like&limit=50`
-      : `/api/reviews/${entityId}/reactions/users?type=like&limit=50`
+      ? `/api/posts/${entityId}/reactions/users?type=${reactionType}&limit=50`
+      : `/api/reviews/${entityId}/reactions/users?type=${reactionType}&limit=50`
     fetch(url)
       .then((r) => r.json())
       .then((data) => setUsers(data.users || []))
       .catch(() => setUsers([]))
       .finally(() => setLoading(false))
-  }, [open, users, entityType, entityId, count])
+  }, [open, users, entityType, entityId, reactionType, count])
 
   // Close on outside-click for the mobile (tap-to-open) flow.
   useEffect(() => {

@@ -240,13 +240,14 @@ export default function ReviewReactions({
           </button>
         )
 
-        if (reactionType === 'like' && count > 0) {
+        if (count > 0) {
           return (
             <LikersPopover
               key={reactionType}
               entityType="review"
               entityId={reviewId}
               count={count}
+              reactionType={reactionType}
             >
               {button}
             </LikersPopover>
