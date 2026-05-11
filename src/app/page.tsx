@@ -6,6 +6,7 @@ import { cookies } from 'next/headers'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
+import HeroSearch from '@/components/search/HeroSearch'
 import PlaceImage from '@/components/places/PlaceImage'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
@@ -317,7 +318,15 @@ export default async function Home() {
   return (
     <>
       {/* SSR h1 for SEO crawlers that don't execute JS */}
-      <h1 className="sr-only">PlantsPack — Find Vegan Places, Recipes & City Rankings Worldwide</h1>
+      <h1 className="sr-only">PlantsPack — Vegan Places &amp; City Rankings Worldwide</h1>
+
+      {/* Hero search — sits above HomeClient as the homepage's primary CTA.
+          Submits to /search?q=…, which renders an indexable result page and
+          unlocks the SearchAction sitelinks-searchbox in Google SERPs. */}
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-6 pb-2">
+        <HeroSearch />
+      </div>
+
       <HomeClient
         topCities={topCities}
         recentPosts={normalizedPosts}

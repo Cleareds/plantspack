@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState, useEffect } from 'react'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 
 export interface CityResult {
@@ -31,6 +30,8 @@ export interface PlaceResult {
   country: string | null
   address: string | null
   main_image_url: string | null
+  rank?: number
+  distance_km?: number | null
 }
 
 export interface RecipeResult {
@@ -51,6 +52,9 @@ export interface SearchResults {
   error: string | null
 }
 
+// useSearch — single round-trip to /api/search instead of the previous
+// 4-parallel-browser-queries-against-Supabase pattern. The API endpoint
+// fans out to ranked Postgres FTS+trigram RPCs server-side.
 export function useSearch(query: string, minLength: number = 2) {
   const { isFullyVeganOnly } = useVeganFilter()
   const [results, setResults] = useState<SearchResults>({
@@ -59,7 +63,7 @@ export function useSearch(query: string, minLength: number = 2) {
     places: [],
     recipes: [],
     loading: false,
-    error: null
+    error: null,
   })
   const [debouncedQuery, setDebouncedQuery] = useState('')
 
@@ -68,116 +72,93 @@ export function useSearch(query: string, minLength: number = 2) {
     return () => clearTimeout(timer)
   }, [query])
 
-  const searchCities = useCallback(async (term: string): Promise<CityResult[]> => {
-    try {
-      const { data } = await supabase
-        .from('directory_cities')
-        .select('city, country, city_slug, place_count, fully_vegan_count')
-        .ilike('city', `%${term}%`)
-        .order('place_count', { ascending: false })
-        .limit(6)
-
-      return (data || []).map((c: any) => ({
-        city: c.city,
-        country: c.country,
-        slug: c.city_slug,
-        placeCount: isFullyVeganOnly ? (c.fully_vegan_count || 0) : c.place_count,
-      }))
-    } catch {
-      return []
-    }
-  }, [isFullyVeganOnly])
-
-  const searchCountries = useCallback(async (term: string): Promise<CountryResult[]> => {
-    try {
-      const { data } = await supabase
-        .from('directory_countries')
-        .select('country, country_slug, place_count, city_count')
-        .ilike('country', `%${term}%`)
-        .order('place_count', { ascending: false })
-        .limit(3)
-
-      return (data || []).map((c: any) => ({
-        country: c.country,
-        slug: c.country_slug,
-        placeCount: c.place_count,
-        cityCount: c.city_count,
-      }))
-    } catch {
-      return []
-    }
-  }, [])
-
-  const searchPlaces = useCallback(async (term: string): Promise<PlaceResult[]> => {
-    try {
-      // Bug fix May 2026: search was returning archived rows, so users could
-      // click a result and land on a /place/<slug> 404. Filter them out.
-      let q = supabase
-        .from('places')
-        .select('id, name, slug, category, subcategory, vegan_level, city, country, address, main_image_url')
-        .is('archived_at', null)
-        .ilike('name', `%${term}%`)
-      if (isFullyVeganOnly) q = q.eq('vegan_level', 'fully_vegan')
-      const { data } = await q
-        .order('average_rating', { ascending: false, nullsFirst: false })
-        .limit(6)
-
-      return (data || []) as PlaceResult[]
-    } catch {
-      return []
-    }
-  }, [isFullyVeganOnly])
-
-  const searchRecipes = useCallback(async (term: string): Promise<RecipeResult[]> => {
-    try {
-      const { data } = await supabase
-        .from('posts')
-        .select('id, title, slug, image_url, recipe_data')
-        .eq('category', 'recipe')
-        .is('deleted_at', null)
-        .not('recipe_data', 'is', null)
-        .ilike('title', `%${term}%`)
-        .order('created_at', { ascending: false })
-        .limit(4)
-
-      return (data || []).map((r: any) => ({
-        id: r.id,
-        title: r.title,
-        slug: r.slug,
-        image_url: r.image_url,
-        meal_type: r.recipe_data?.meal_type || null,
-        cuisine: r.recipe_data?.cuisine || null,
-      }))
-    } catch {
-      return []
-    }
-  }, [])
-
   useEffect(() => {
     const performSearch = async () => {
       if (!debouncedQuery || debouncedQuery.length < minLength) {
         setResults({ cities: [], countries: [], places: [], recipes: [], loading: false, error: null })
         return
       }
+      setResults((prev) => ({ ...prev, loading: true, error: null }))
 
-      setResults(prev => ({ ...prev, loading: true, error: null }))
+      const params = new URLSearchParams({ q: debouncedQuery })
+      if (isFullyVeganOnly) params.set('vl', 'fully_vegan')
 
       try {
-        const [cities, countries, places, recipes] = await Promise.all([
-          searchCities(debouncedQuery),
-          searchCountries(debouncedQuery),
-          searchPlaces(debouncedQuery),
-          searchRecipes(debouncedQuery),
-        ])
+        const res = await fetch(`/api/search?${params.toString()}`)
+        if (!res.ok) throw new Error('search failed')
+        const data = await res.json()
+
+        const cities: CityResult[] = (data.cities || []).map((c: any) => ({
+          city: c.city,
+          country: c.country,
+          slug: c.city_slug,
+          placeCount: c.place_count ?? 0,
+        }))
+
+        // Countries are intentionally not surfaced from the new search
+        // RPC — they would have stale aggregate counts that confuse the
+        // dropdown. Browsing to a country happens via clicking a city.
+        const countries: CountryResult[] = []
+
+        const places: PlaceResult[] = (data.places || []).map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          slug: p.slug,
+          category: p.category,
+          subcategory: null,
+          vegan_level: p.vegan_level,
+          city: p.city,
+          country: p.country,
+          address: null,
+          main_image_url: p.main_image_url,
+          rank: p.rank,
+          distance_km: p.distance_km,
+        }))
+
+        const recipes: RecipeResult[] = (data.recipes || []).map((r: any) => ({
+          id: r.id,
+          title: r.title,
+          slug: r.slug,
+          image_url: r.image_url,
+          meal_type: null,
+          cuisine: null,
+        }))
 
         setResults({ cities, countries, places, recipes, loading: false, error: null })
-      } catch (error) {
+      } catch {
         setResults({ cities: [], countries: [], places: [], recipes: [], loading: false, error: 'Search failed' })
       }
     }
-
     performSearch()
-  }, [debouncedQuery, minLength, searchCities, searchCountries, searchPlaces, searchRecipes])
+  }, [debouncedQuery, minLength, isFullyVeganOnly])
 
   return results
+}
+
+// Fire-and-forget click logger. Always returns immediately so it cannot
+// delay navigation; failures are silent — this is analytics, not data.
+export function logSearchClick(args: {
+  q: string
+  result_count: number
+  clicked_slug?: string | null
+  clicked_kind?: 'place' | 'city' | 'recipe' | null
+}) {
+  try {
+    let sessionId = ''
+    if (typeof window !== 'undefined') {
+      sessionId = window.localStorage.getItem('plantspack_session_id') || ''
+      if (!sessionId) {
+        sessionId = crypto.randomUUID()
+        window.localStorage.setItem('plantspack_session_id', sessionId)
+      }
+    }
+    fetch('/api/search/log', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ...args, session_id: sessionId }),
+      keepalive: true,
+    }).catch(() => {})
+  } catch {
+    // intentionally swallow — analytics must not break UX
+  }
 }
