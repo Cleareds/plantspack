@@ -25,7 +25,7 @@ const CITY_REDIRECTS: Record<string, Record<string, string>> = {
     'halle': 'halle-saale',
   },
 }
-import { Globe } from 'lucide-react'
+import { Globe, MapPin } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
 import PinCityButton from '@/components/places/PinCityButton'
 import FollowCityButton from '@/components/places/FollowCityButton'
@@ -38,7 +38,8 @@ import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
-import { getRegionForCity } from '@/lib/regions'
+import { getRegionForCity, getRegionCityStats } from '@/lib/regions'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 // SEO: city pages must be cacheable so Google spends crawl budget on them.
 // `force-dynamic` (no-store) means thousands of city pages are uncrawlable.
@@ -393,6 +394,46 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   // city not assigned to a region.
   const region = await getRegionForCity(country, cityName)
 
+  // Compute the city centroid from its places (cheap — already in memory).
+  // Used to find nearby cities, and also handy for any future "near me"
+  // features on this page.
+  let cityCentroidLat: number | null = null
+  let cityCentroidLng: number | null = null
+  {
+    let sumLat = 0, sumLng = 0, n = 0
+    for (const p of allPlaces) {
+      if (typeof p.latitude === 'number' && typeof p.longitude === 'number') {
+        sumLat += p.latitude
+        sumLng += p.longitude
+        n++
+      }
+    }
+    if (n > 0) {
+      cityCentroidLat = sumLat / n
+      cityCentroidLng = sumLng / n
+    }
+  }
+
+  // Nearby cities (same country, sorted by distance, min 5 places to
+  // match the country-page threshold) + other cities in the region
+  // when the city belongs to one. Both surface as related-city blocks
+  // at the bottom of the page — improves crawl graph and gives AI
+  // agents more paths through the directory.
+  const nearbyCitiesPromise = (cityCentroidLat !== null && cityCentroidLng !== null)
+    ? createAdminClient().rpc('nearby_cities', {
+        src_lat: cityCentroidLat,
+        src_lng: cityCentroidLng,
+        src_country: countryName,
+        lim: 6,
+        exclude_city: cityName,
+        min_places: 5,
+      }).then((res: any) => (res.data || []) as Array<{ city: string; city_slug: string; place_count: number; fully_vegan_count: number; distance_km: number }>)
+    : Promise.resolve([] as Array<{ city: string; city_slug: string; place_count: number; fully_vegan_count: number; distance_km: number }>)
+  const regionCitiesPromise = region
+    ? getRegionCityStats(region, countryName).then(stats => stats.filter(s => s.city !== cityName))
+    : Promise.resolve([] as Awaited<ReturnType<typeof getRegionCityStats>>)
+  const [nearbyCities, regionCities] = await Promise.all([nearbyCitiesPromise, regionCitiesPromise])
+
   // Build stats from fetched places for data-driven description
   const cityStats: any = {
     total: places.length,
@@ -728,8 +769,82 @@ export default async function CityPage({ params, searchParams }: PageProps) {
           )
         })()}
 
-        {/* Related: other cities in the same country */}
-        <div className="mt-16 pt-8 border-t border-outline-variant/15">
+        {/* Related cities — two sections that improve crawl graph and
+            give AI agents more paths through the directory.
+
+            "Other cities in <region>" only renders when the city
+            belongs to a seeded region (Belgium has these; most other
+            countries don't yet).
+
+            "Nearby cities" is geographic — closest cities in the same
+            country by ST_Distance over the city centroids of their
+            places. Falls back to silence if we couldn't compute a
+            centroid (city with no geocoded places). */}
+        {regionCities.length > 0 && region && (
+          <div className="mt-16 pt-8 border-t border-outline-variant/15">
+            <h2 className="text-lg font-semibold text-on-surface mb-1">
+              Other cities in {region.region_name}
+            </h2>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Part of the same region as {cityName}.{' '}
+              <Link href={`/vegan-places/${country}/region/${region.region_slug}`} className="text-primary hover:underline">
+                See the full region →
+              </Link>
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {regionCities.slice(0, 9).map((c) => (
+                <li key={c.city_slug}>
+                  <Link
+                    href={`/vegan-places/${country}/${c.city_slug}`}
+                    className="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors"
+                  >
+                    <span className="text-xl" aria-hidden>🏙️</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-on-surface truncate">{c.city}</p>
+                      <p className="text-xs text-on-surface-variant truncate">
+                        {c.place_count} {c.place_count === 1 ? 'place' : 'places'}
+                        {c.fully_vegan_count > 0 && ` · ${c.fully_vegan_count} fully vegan`}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {nearbyCities.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-outline-variant/15">
+            <h2 className="text-lg font-semibold text-on-surface mb-1">
+              Nearby cities
+            </h2>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Other vegan-friendly cities within day-trip distance of {cityName}.
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {nearbyCities.map((c) => (
+                <li key={c.city_slug}>
+                  <Link
+                    href={`/vegan-places/${country}/${c.city_slug}`}
+                    className="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors"
+                  >
+                    <MapPin className="h-4 w-4 text-primary flex-shrink-0" aria-hidden />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-on-surface truncate">{c.city}</p>
+                      <p className="text-xs text-on-surface-variant truncate">
+                        {Math.round(c.distance_km)} km · {c.place_count} {c.place_count === 1 ? 'place' : 'places'}
+                        {c.fully_vegan_count > 0 && ` · ${c.fully_vegan_count} fully vegan`}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Related: country-wide browse */}
+        <div className="mt-12 pt-8 border-t border-outline-variant/15">
           <h2 className="text-lg font-semibold text-on-surface mb-4">
             More vegan places in {countryName}
           </h2>

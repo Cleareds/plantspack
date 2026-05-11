@@ -25,6 +25,8 @@ export default function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
+            aria-current={isActive ? 'page' : undefined}
+            aria-label={item.label}
             className={`flex flex-col items-center justify-center px-1 py-2 ${
               isActive ? 'text-primary scale-110' : 'text-on-surface-variant opacity-60'
             } transition-all`}
@@ -42,6 +44,8 @@ export default function BottomNav() {
       {user && username ? (
         <Link
           href={`/profile/${username}`}
+          aria-current={pathname?.startsWith('/profile') ? 'page' : undefined}
+          aria-label="Profile"
           className={`flex flex-col items-center justify-center px-1 py-2 ${
             pathname?.startsWith('/profile') ? 'text-primary scale-110' : 'text-on-surface-variant opacity-60'
           } transition-all`}

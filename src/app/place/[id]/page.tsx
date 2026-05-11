@@ -29,6 +29,7 @@ import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
+import { buildPlaceFaqJsonLd, PLACE_SPEAKABLE } from '@/lib/places/faq'
 import VeganLevelInlineEditor from '@/components/places/VeganLevelInlineEditor'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
@@ -303,7 +304,30 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         reviewCount: place.review_count || 1,
       }
     } : {}),
+    // Speakable: tells voice agents which selectors hold the
+    // canonical short-form answer (H1 + the description paragraph).
+    speakable: PLACE_SPEAKABLE,
   }
+
+  // FAQ JSON-LD generated from the place's own data — gives LLM
+  // search agents (ChatGPT, Perplexity, Claude, AI Overviews)
+  // explicit Q&A about vegan status, address, hours, verification
+  // freshness, contact. They quote these directly when answering
+  // user questions, often citing the source.
+  const placeFaqJsonLd = buildPlaceFaqJsonLd({
+    name: place.name,
+    vegan_level: (place as any).vegan_level,
+    address: place.address,
+    city: place.city,
+    country: place.country,
+    opening_hours: place.opening_hours,
+    is_pet_friendly: place.is_pet_friendly,
+    website: place.website,
+    phone: place.phone,
+    last_verified_at: (place as any).last_verified_at,
+    verification_method: (place as any).verification_method,
+    verification_level: (place as any).verification_level,
+  })
 
   // Breadcrumbs — Home > Vegan Places > Country > City > Place. Matches the
   // visual breadcrumb nav below; gives Google rich-result hierarchy in SERPs.
@@ -332,6 +356,9 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     <div className="min-h-screen bg-surface-container-low">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {placeFaqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeFaqJsonLd) }} />
+      )}
       <HashScroller />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb — full on desktop, short on mobile */}
@@ -381,7 +408,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 )}
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-on-surface mb-2">{place.name}</h1>
-              <div className="mb-3">
+              <div className="mb-3 flex items-center gap-3 flex-wrap">
                 <RatingBadge
                   rating={place.average_rating}
                   reviewCount={place.review_count}
@@ -389,6 +416,15 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   showEmpty
                   href="#reviews"
                 />
+                {(place as any).last_verified_at && ((place as any).verification_level ?? 0) >= 2 && (
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                    title={`Manually verified by PlantsPack ${(place as any).verification_method === 'admin_review' ? 'admin' : 'community'}`}
+                  >
+                    <CheckCircle className="h-3 w-3" aria-hidden />
+                    Verified {new Date((place as any).last_verified_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                )}
               </div>
               {place.tags && place.tags.length > 0 && (
                 <div className="mb-3">
@@ -476,7 +512,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               return cleanDesc ? (
                 <div>
                   <h2 className="text-lg font-semibold text-on-surface mb-2">About</h2>
-                  <p className="text-on-surface-variant whitespace-pre-wrap">{cleanDesc}</p>
+                  <p
+                    className="text-on-surface-variant whitespace-pre-wrap"
+                    data-speakable="description"
+                  >{cleanDesc}</p>
                 </div>
               ) : null
             })()}

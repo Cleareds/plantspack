@@ -353,7 +353,7 @@ export default async function Home() {
                   <Link href={`/place/${p.slug}`} prefetch={false} className="block">
                     <PlaceImage
                       src={image}
-                      alt={p.name}
+                      alt={`${p.name}${p.city ? ` — vegan ${(p.category === 'eat' ? 'restaurant' : p.category)} in ${p.city}` : ''}`}
                       category={p.category}
                       className="w-full h-28 object-cover"
                     />
