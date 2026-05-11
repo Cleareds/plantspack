@@ -634,6 +634,14 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             className="w-full px-3 py-2 mb-2 bg-surface-container-low border-0 rounded-lg text-sm font-medium focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border placeholder:text-outline"
                         />
                         <div className="relative pr-[16px]">
+              <textarea
+                  ref={textareaRef}
+                  value={content}
+                  onChange={handleContentChange}
+                  placeholder="Share your vegan journey..."
+                  className="w-full p-3 bg-surface-container-low border-0 rounded-lg resize-y focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border text-sm"
+                  rows={5}
+              />
                             <EditorToolbar
                                 textareaRef={textareaRef}
                                 value={content}
@@ -643,16 +651,8 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                         setCharCount(next.length)
                                     }
                                 }}
-                                className="mb-1.5"
+                                className="mt-1.5"
                             />
-              <textarea
-                  ref={textareaRef}
-                  value={content}
-                  onChange={handleContentChange}
-                  placeholder="Share your vegan journey..."
-                  className="w-full p-3 bg-surface-container-low border-0 rounded-lg resize-y focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border text-sm"
-                  rows={5}
-              />
 
                             {/* Mention Autocomplete */}
                             {showMentionAutocomplete && (

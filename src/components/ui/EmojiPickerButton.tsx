@@ -77,7 +77,7 @@ export default function EmojiPickerButton({
         <Smile className="h-4 w-4" />
       </button>
       {open && (
-        <div className="absolute z-50 bottom-full mb-2 left-0">
+        <div className="absolute z-50 top-full mt-2 left-0">
           <EmojiPicker
             onEmojiClick={(data) => insertEmoji(data.emoji)}
             lazyLoadEmojis
