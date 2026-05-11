@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth'
-import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2 } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2, Sparkles } from 'lucide-react'
+import { pushDataLayerEvent } from '@/lib/analytics'
 
 interface SignupFormProps {
   onToggle: () => void
@@ -150,6 +151,15 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         setLoading(false)
         return
       }
+
+      // Track newsletter opt-in conversion at signup so GTM can correlate
+      // the new visual treatment + copy against the prior 0% baseline.
+      // Fires regardless of email-confirmation state because the consent
+      // is captured server-side either way.
+      pushDataLayerEvent('newsletter_optin_signup', {
+        opted_in: newsletterOptIn,
+        method: 'signup_form',
+      })
 
       // Success!
       if (data.emailConfirmationRequired) {
@@ -325,6 +335,34 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           </div>
 
           <div className="space-y-3 pt-1">
+            {/*
+              Newsletter opt-in sits ABOVE the T&Cs (not after) so it gets
+              eyeballs before users finalise-and-submit. Visually distinct
+              accent box prevents users from batching it with the required
+              legal checkbox - the 2026-04-23 signup baseline was 0 / 33
+              opt-ins when this lived as a plain checkbox in the legal
+              cluster. Specific copy with explicit "one email per month"
+              frequency anchor and concrete value.
+            */}
+            <label className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/15 cursor-pointer hover:bg-primary/8 transition-colors">
+              <input
+                type="checkbox"
+                checked={newsletterOptIn}
+                onChange={(e) => setNewsletterOptIn(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-outline-variant/40 text-primary focus:ring-primary"
+              />
+              <span className="flex-1 text-sm">
+                <span className="flex items-center gap-1.5 font-semibold text-on-surface mb-0.5">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" />
+                  One email per month
+                  <span className="text-xs font-normal text-outline">· optional</span>
+                </span>
+                <span className="text-on-surface-variant leading-snug">
+                  New vegan spots opening near you, plus the top new vegan
+                  cities we add each month. One-click unsubscribe.
+                </span>
+              </span>
+            </label>
             <label className="flex items-start gap-2 text-sm text-on-surface-variant cursor-pointer">
               <input
                 type="checkbox"
@@ -343,18 +381,6 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
                   Privacy Policy
                 </Link>
                 .
-              </span>
-            </label>
-            <label className="flex items-start gap-2 text-sm text-on-surface-variant cursor-pointer">
-              <input
-                type="checkbox"
-                checked={newsletterOptIn}
-                onChange={(e) => setNewsletterOptIn(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-outline-variant/40 text-primary focus:ring-primary"
-              />
-              <span>
-                Email me the PlantsPack newsletter — new vegan places near me plus top spots worldwide.
-                Optional; unsubscribe anytime.
               </span>
             </label>
           </div>
