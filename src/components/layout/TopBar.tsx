@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import SearchBar from '@/components/search/SearchBar'
 import VeganToggle from '@/components/ui/VeganToggle'
@@ -12,10 +11,6 @@ import { Search, Menu, X, Heart, HelpCircle, Mail } from 'lucide-react'
 
 export default function TopBar() {
   const { user } = useAuth()
-  const pathname = usePathname()
-  // Homepage has its own large HeroSearch above the fold. Hide the
-  // header search there so users don't see two search inputs at once.
-  const isHomepage = pathname === '/'
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -49,34 +44,28 @@ export default function TopBar() {
           />
           <div className="flex flex-col">
             <span className="font-headline font-extrabold text-primary text-lg tracking-tight leading-tight">Plants Pack</span>
-            <span className="text-[8px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">vegan syndicate</span>
+            <span className="text-[8px] uppercase tracking-widest text-on-surface-variant font-bold">vegan syndicate</span>
           </div>
         </Link>
 
-        {/* Search Bar - center (desktop only, hidden on homepage where
-            the HeroSearch is the primary search input). */}
-        {!isHomepage && (
-          <div className="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-1.5 gap-2 flex-1 max-w-lg mx-auto">
-            <SearchBar />
-          </div>
-        )}
+        {/* Search Bar - center (desktop only) */}
+        <div className="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-1.5 gap-2 flex-1 max-w-lg mx-auto">
+          <SearchBar />
+        </div>
 
         {/* Right side */}
         <div className="flex items-center gap-2">
           {/* Vegan toggle */}
           <VeganToggle />
 
-          {/* Mobile search toggle — hidden on homepage where HeroSearch
-              is rendered directly. */}
-          {!isHomepage && (
-            <button
-              onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMenuOpen(false) }}
-              className="md:hidden p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors"
-              aria-label="Toggle search"
-            >
-              {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
-            </button>
-          )}
+          {/* Mobile search toggle */}
+          <button
+            onClick={() => { setIsSearchOpen(!isSearchOpen); setIsMenuOpen(false) }}
+            className="md:hidden p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors"
+            aria-label="Toggle search"
+          >
+            {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+          </button>
 
           {user && <div className="hidden sm:block"><NotificationBell /></div>}
           {!user && (

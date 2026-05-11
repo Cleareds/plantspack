@@ -104,8 +104,8 @@ export default function CompactFeed() {
                     </div>
                   )}
                   <span className="text-[10px] font-medium text-on-surface-variant truncate">{user?.first_name || user?.username}</span>
-                  <span className="text-[10px] text-on-surface-variant/50">·</span>
-                  <span className="text-[10px] text-on-surface-variant/50">{timeAgo}</span>
+                  <span className="text-[10px] text-on-surface-variant/80">·</span>
+                  <span className="text-[10px] text-on-surface-variant/80">{timeAgo}</span>
                   {post.category && (
                     <span className="text-[10px] ml-auto">{CATEGORY_EMOJI[post.category] || ''}</span>
                   )}

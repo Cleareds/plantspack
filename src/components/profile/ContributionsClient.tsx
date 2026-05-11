@@ -482,7 +482,7 @@ function ContribCard({ thumb, title, subtitle, meta, openHref, actions, dim, sta
 function EmptyState({ label, cta }: { label: string; cta?: { href: string; text: string } }) {
   return (
     <div className="py-12 text-center">
-      <AlertCircle className="w-8 h-8 mx-auto text-on-surface-variant/50" />
+      <AlertCircle className="w-8 h-8 mx-auto text-on-surface-variant/80" />
       <p className="mt-3 text-on-surface-variant">{label}</p>
       {cta && (
         <Link href={cta.href} className="inline-block mt-4 text-primary hover:underline">

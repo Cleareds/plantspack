@@ -287,16 +287,17 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
                       category={place.category}
                       className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover"
                     />
-                    {/* Overlay badges */}
+                    {/* Overlay badges. Use *-700 shades for WCAG AA
+                        contrast at 8px white text on coloured bg. */}
                     <div className="absolute top-1 left-1 flex flex-col gap-0.5">
                       {place.vegan_level === 'fully_vegan' && (
-                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-emerald-600 text-white leading-none">VEGAN</span>
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-emerald-700 text-white leading-none">VEGAN</span>
                       )}
                       {place.vegan_level === 'mostly_vegan' && (
-                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-teal-600 text-white leading-none">MOSTLY</span>
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-teal-700 text-white leading-none">MOSTLY</span>
                       )}
                       {place.is_pet_friendly && (
-                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-orange-500 text-white leading-none">🐾</span>
+                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-orange-600 text-white leading-none" aria-label="Pet friendly">🐾</span>
                       )}
                     </div>
                   </div>
@@ -368,15 +369,29 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
                     <MapPin className="h-3 w-3" />
                     <span className="line-clamp-1">{place.address}</span>
                   </span>
-                  <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+                  <div className="flex items-center gap-1 ml-auto flex-shrink-0">
                     {place.phone && (
-                      <a href={`tel:${place.phone}`} onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title={place.phone}>
-                        <Phone className="h-3.5 w-3.5" />
+                      <a
+                        href={`tel:${place.phone}`}
+                        onClick={e => e.stopPropagation()}
+                        className="text-primary hover:text-primary/80 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-primary/10 transition-colors"
+                        title={place.phone}
+                        aria-label={`Call ${place.phone}`}
+                      >
+                        <Phone className="h-3.5 w-3.5" aria-hidden />
                       </a>
                     )}
                     {place.website && (
-                      <a href={place.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="Website">
-                        <Globe className="h-3.5 w-3.5" />
+                      <a
+                        href={place.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={e => e.stopPropagation()}
+                        className="text-primary hover:text-primary/80 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-primary/10 transition-colors"
+                        title="Website"
+                        aria-label="Open website"
+                      >
+                        <Globe className="h-3.5 w-3.5" aria-hidden />
                       </a>
                     )}
                     <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="text-primary hover:text-primary/80" title="Google Maps">

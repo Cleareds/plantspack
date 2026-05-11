@@ -74,7 +74,7 @@ export default function RatingBadge({
       <span className={`inline-flex items-center gap-1 text-xs text-on-surface-variant ${className}`}>
         <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
         <span className="font-medium text-on-surface">{value}</span>
-        <span className="opacity-60">· {count}</span>
+        <span className="opacity-80">· {count}</span>
       </span>
     )
   } else {
@@ -93,7 +93,7 @@ export default function RatingBadge({
     <Link
       href={href}
       className="inline-block cursor-pointer hover:opacity-80 transition-opacity"
-      aria-label={`${value} stars from ${count} ${count === 1 ? 'review' : 'reviews'} — jump to reviews`}
+      aria-label={`${value} (${count} ${count === 1 ? 'review' : 'reviews'}), jump to reviews`}
     >
       {body}
     </Link>

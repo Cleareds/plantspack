@@ -82,7 +82,7 @@ export default function CountryRegionsSection({
                       href={`/vegan-places/${countrySlug}/${c.city_slug}`}
                       className="text-xs px-2 py-1 rounded-md bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors"
                     >
-                      {c.city} <span className="opacity-60">({c.place_count})</span>
+                      {c.city} <span className="opacity-80">({c.place_count})</span>
                     </Link>
                   ))}
                 </div>
@@ -103,7 +103,7 @@ export default function CountryRegionsSection({
                         href={`/vegan-places/${countrySlug}/${c.city_slug}`}
                         className="text-xs px-2 py-1 rounded-md bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors"
                       >
-                        {c.city} <span className="opacity-60">({c.place_count})</span>
+                        {c.city} <span className="opacity-80">({c.place_count})</span>
                       </Link>
                     ))}
                   </div>

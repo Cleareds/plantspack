@@ -28,7 +28,7 @@ export default function BottomNav() {
             aria-current={isActive ? 'page' : undefined}
             aria-label={item.label}
             className={`flex flex-col items-center justify-center px-1 py-2 ${
-              isActive ? 'text-primary scale-110' : 'text-on-surface-variant opacity-60'
+              isActive ? 'text-primary scale-110' : 'text-on-surface-variant opacity-80'
             } transition-all`}
           >
             <span
@@ -47,7 +47,7 @@ export default function BottomNav() {
           aria-current={pathname?.startsWith('/profile') ? 'page' : undefined}
           aria-label="Profile"
           className={`flex flex-col items-center justify-center px-1 py-2 ${
-            pathname?.startsWith('/profile') ? 'text-primary scale-110' : 'text-on-surface-variant opacity-60'
+            pathname?.startsWith('/profile') ? 'text-primary scale-110' : 'text-on-surface-variant opacity-80'
           } transition-all`}
         >
           <span className="material-symbols-outlined text-2xl">person</span>
@@ -56,7 +56,7 @@ export default function BottomNav() {
       ) : (
         <Link
           href="/auth"
-          className="flex flex-col items-center justify-center px-1 py-2 text-on-surface-variant opacity-60 transition-all"
+          className="flex flex-col items-center justify-center px-1 py-2 text-on-surface-variant opacity-80 transition-all"
         >
           <span className="material-symbols-outlined text-2xl">login</span>
           <span className="text-[10px] font-bold uppercase tracking-widest mt-1">Sign In</span>
