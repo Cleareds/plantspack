@@ -38,6 +38,13 @@ interface CityRow {
   fully_vegan_count: number
 }
 
+interface CountryRow {
+  country: string
+  country_slug: string
+  place_count: number
+  city_count: number
+}
+
 interface RecipeRow {
   id: string
   slug: string | null
@@ -79,17 +86,26 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 }
 
 async function runSearch(q: string, vl: string | null, cat: string | null) {
-  if (!q || q.length < 2) return { places: [] as PlaceRow[], cities: [] as CityRow[], recipes: [] as RecipeRow[] }
+  if (!q || q.length < 2) {
+    return {
+      places: [] as PlaceRow[],
+      cities: [] as CityRow[],
+      countries: [] as CountryRow[],
+      recipes: [] as RecipeRow[],
+    }
+  }
   const sb = createAdminClient()
-  const [placesRes, citiesRes, recipesRes] = await Promise.all([
-    sb.rpc('search_places', { q, vl, cat, near_lat: null, near_lng: null, result_limit: 40 }),
-    sb.rpc('search_cities', { q, vl, result_limit: 12 }),
-    sb.rpc('search_recipes', { q, result_limit: 10 }),
+  const [placesRes, citiesRes, countriesRes, recipesRes] = await Promise.all([
+    sb.rpc('search_places',    { q, vl, cat, near_lat: null, near_lng: null, result_limit: 40 }),
+    sb.rpc('search_cities',    { q, vl, result_limit: 12 }),
+    sb.rpc('search_countries', { q, vl, result_limit: 4 }),
+    sb.rpc('search_recipes',   { q, result_limit: 10 }),
   ])
   return {
-    places: (placesRes.data || []) as PlaceRow[],
-    cities: (citiesRes.data || []) as CityRow[],
-    recipes: (recipesRes.data || []) as RecipeRow[],
+    places:    (placesRes.data    || []) as PlaceRow[],
+    cities:    (citiesRes.data    || []) as CityRow[],
+    countries: (countriesRes.data || []) as CountryRow[],
+    recipes:   (recipesRes.data   || []) as RecipeRow[],
   }
 }
 
@@ -108,7 +124,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
   const cat = (sp.cat ?? normalized.cat) || null
 
   const facets = { category: normalized.cat, vl: normalized.vl }
-  const { places, cities, recipes } = await runSearch(rpcQ, vl, cat)
+  const { places, cities, countries, recipes } = await runSearch(rpcQ, vl, cat)
 
   // ItemList JSON-LD for AI search / Google ItemList preview.
   const itemListJsonLd = places.length > 0 ? {
@@ -146,8 +162,33 @@ export default async function SearchPage({ searchParams }: PageProps) {
       </h1>
       {q && (
         <p className="text-sm text-on-surface-variant mb-4">
-          {places.length} {places.length === 1 ? 'place' : 'places'} · {cities.length} {cities.length === 1 ? 'city' : 'cities'} · {recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}
+          {countries.length > 0 && <>{countries.length} {countries.length === 1 ? 'country' : 'countries'} · </>}
+          {cities.length} {cities.length === 1 ? 'city' : 'cities'} · {places.length} {places.length === 1 ? 'place' : 'places'} · {recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}
         </p>
+      )}
+
+      {countries.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-lg font-semibold text-on-surface mb-3">Countries</h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {countries.map((c) => (
+              <li key={c.country_slug}>
+                <Link
+                  href={`/vegan-places/${c.country_slug}`}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors"
+                >
+                  <span className="text-2xl" aria-hidden>🌍</span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-on-surface truncate">{c.country}</p>
+                    <p className="text-xs text-on-surface-variant truncate">
+                      {c.place_count} places · {c.city_count} cities
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {/* P1 — inferred facet chips */}

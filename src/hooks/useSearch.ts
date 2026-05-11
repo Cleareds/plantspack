@@ -95,10 +95,15 @@ export function useSearch(query: string, minLength: number = 2) {
           placeCount: c.place_count ?? 0,
         }))
 
-        // Countries are intentionally not surfaced from the new search
-        // RPC — they would have stale aggregate counts that confuse the
-        // dropdown. Browsing to a country happens via clicking a city.
-        const countries: CountryResult[] = []
+        // Countries surfaced from the search_countries RPC (added so a
+        // search for "belgium" returns Belgium directly instead of
+        // trigram-adjacent cities like Belgrade or Bell-town).
+        const countries: CountryResult[] = (data.countries || []).map((c: any) => ({
+          country: c.country,
+          slug: c.country_slug,
+          placeCount: c.place_count ?? 0,
+          cityCount: c.city_count ?? 0,
+        }))
 
         const places: PlaceResult[] = (data.places || []).map((p: any) => ({
           id: p.id,

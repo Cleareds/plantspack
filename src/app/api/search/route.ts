@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
   }
 
   const sb = createAdminClient()
-  const [placesRes, citiesRes, recipesRes] = await Promise.all([
+  const [placesRes, citiesRes, countriesRes, recipesRes] = await Promise.all([
     sb.rpc('search_places', {
       q, vl, cat,
       near_lat: nearLat,
@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
       result_limit: 12,
     }),
     sb.rpc('search_cities', { q, vl, result_limit: 6 }),
+    sb.rpc('search_countries', { q, vl, result_limit: 3 }),
     sb.rpc('search_recipes', { q, result_limit: 6 }),
   ])
 
@@ -53,9 +54,10 @@ export async function GET(req: NextRequest) {
       q: rawQ,
       normalized_q: q,
       inferred: { vl: normalized.vl || null, cat: normalized.cat || null },
-      places:  placesRes.data  || [],
-      cities:  citiesRes.data  || [],
-      recipes: recipesRes.data || [],
+      places:    placesRes.data    || [],
+      cities:    citiesRes.data    || [],
+      countries: countriesRes.data || [],
+      recipes:   recipesRes.data   || [],
     },
     {
       headers: {
