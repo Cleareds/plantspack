@@ -74,9 +74,10 @@ export default async function SummerHubDataQuality({ searchParams }: PageProps) 
   const filterVl = (typeof sp.vl === 'string' ? sp.vl : '') || ''
   const filterVerif = (typeof sp.verif === 'string' ? sp.verif : '') || ''
   const filterFlag = (typeof sp.flag === 'string' ? sp.flag : '') || ''
-  // Default the priority filter to "FV + MV only" since the user explicitly
-  // said they'll mostly review those tiers. Pass ?all=1 to widen.
-  const showAll = sp.all === '1'
+  // Default to showing every place in the hub cities (not just FV/MV). The
+  // page is the review surface for ALL hub-city venues. Opt into the
+  // narrower "FV + MV only" curation view by passing ?fvmv=1.
+  const fvmvOnly = sp.fvmv === '1'
 
   // Auth
   const supabase = await createClient()
@@ -127,8 +128,9 @@ export default async function SummerHubDataQuality({ searchParams }: PageProps) 
 
   // Apply filters
   const filtered = places.filter(p => {
-    // Priority default: fully_vegan + mostly_vegan only, unless ?all=1 is set
-    if (!showAll && !filterVl) {
+    // Optional priority filter: FV + MV only when ?fvmv=1 is set. By default,
+    // every place in the hub cities is included.
+    if (fvmvOnly && !filterVl) {
       if (p.vegan_level !== 'fully_vegan' && p.vegan_level !== 'mostly_vegan') return false
     }
     if (filterVl && p.vegan_level !== filterVl) return false
@@ -190,12 +192,12 @@ export default async function SummerHubDataQuality({ searchParams }: PageProps) 
         </Link>
       </div>
       <p className="text-sm text-on-surface-variant mb-4">
-        Aggregated review surface for the {HUB_CITIES.length} Mediterranean
-        destinations linked from <code>/vegan-summer-destinations</code>. Defaults
-        to <strong>fully vegan + mostly vegan only</strong> — the tiers most worth
-        confirming before the hub flips to <code>index: true</code>.
-        {' '}<Link href={showAll ? '?' : '?all=1'} className="text-primary hover:underline">
-          {showAll ? 'Show FV/MV only' : 'Show all tiers'}
+        Aggregated review surface for every place in the {HUB_CITIES.length}{' '}
+        Mediterranean destinations linked from <code>/vegan-summer-destinations</code>.
+        Includes all vegan tiers across all sources (existing OSM imports,
+        blog-sourced batch, manual additions).
+        {' '}<Link href={fvmvOnly ? '?' : '?fvmv=1'} className="text-primary hover:underline font-medium">
+          {fvmvOnly ? 'Show all tiers' : 'Show only fully-vegan + mostly-vegan (review priority)'}
         </Link>
       </p>
 
