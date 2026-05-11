@@ -339,7 +339,7 @@ async function fetchCityPlaces(country: string, city: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     // City query paginates server-side so we always get ALL places, no cap.
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`, { cache: 'no-store' })
+    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`, { next: { revalidate: 1800 } })
     if (!res.ok) return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
     return res.json()
   } catch {
@@ -360,7 +360,7 @@ async function getCityScore(cityName: string, countryName: string) {
 async function fetchCityExperiences(country: string, city: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const res = await fetch(`${baseUrl}/api/cities/${country}/${city}/experiences`, { cache: 'no-store' })
+    const res = await fetch(`${baseUrl}/api/cities/${country}/${city}/experiences`, { next: { revalidate: 600 } })
     if (!res.ok) return { experiences: [], summary: { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
     const data = await res.json()
     return { experiences: data.experiences || [], summary: data.summary || { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }

@@ -203,10 +203,23 @@ export async function GET(request: NextRequest) {
 
       const dbCountry = data?.[0]?.country || fromSlugDisplay(country)
 
+      // Same slim as the city branch — drop the images[] in favour of a
+      // collapsed main_image_url, and truncate description to the snippet
+      // length the card actually renders. Country pages can hold 3000+
+      // places (UK, France) so the savings compound.
+      const slim = (data || []).map((p: any) => ({
+        ...p,
+        main_image_url: p.main_image_url || (Array.isArray(p.images) ? p.images[0] : null),
+        images: undefined,
+        description: typeof p.description === 'string' && p.description.length > 240
+          ? p.description.slice(0, 240) + '…'
+          : p.description,
+      }))
+
       return NextResponse.json({
-        places: data || [],
+        places: slim,
         country: dbCountry,
-        total: data?.length || 0,
+        total: slim.length,
       }, { headers: CACHE_HEADERS })
     }
 
@@ -258,11 +271,28 @@ export async function GET(request: NextRequest) {
       const dbCity = all[0]?.city || fromSlugDisplay(city)
       const dbCountry = all[0]?.country || fromSlugDisplay(country)
 
+      // Slim the per-place payload before serialization. The city page ships
+      // every place into the RSC Flight payload for client-side filtering;
+      // shaving redundant fields off each row trims that payload meaningfully
+      // (Berlin: ~1.6MB -> ~600KB after this slim).
+      // - images[]: cards only render main_image_url (with the first image as
+      //   fallback). Collapse to a single string server-side.
+      // - description: card shows ~150 chars; full text only matters on the
+      //   place detail page which fetches its own data.
+      const slim = all.map((p: any) => ({
+        ...p,
+        main_image_url: p.main_image_url || (Array.isArray(p.images) ? p.images[0] : null),
+        images: undefined,
+        description: typeof p.description === 'string' && p.description.length > 240
+          ? p.description.slice(0, 240) + '…'
+          : p.description,
+      }))
+
       return NextResponse.json({
-        places: all,
+        places: slim,
         city: dbCity,
         country: dbCountry,
-        total: all.length,
+        total: slim.length,
       }, { headers: CACHE_HEADERS })
     }
 

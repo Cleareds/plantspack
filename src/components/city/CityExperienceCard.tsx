@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import { Lightbulb, MapPin, Calendar, Pencil, Trash2 } from 'lucide-react'
 import StarRating from '@/components/places/StarRating'
 import TierBadge from '@/components/ui/TierBadge'
@@ -49,7 +49,7 @@ export default function CityExperienceCard({ experience, isAuthor, onEdit, onDel
       <div className="flex items-start gap-3">
         <Link href={u ? `/profile/${u.username}` : '#'} className="flex-shrink-0">
           {u?.avatar_url ? (
-            <Image src={u.avatar_url} alt={displayName} width={44} height={44} className="w-11 h-11 rounded-full object-cover" />
+            <SmartImg src={u.avatar_url} alt={displayName} width={44} height={44} className="w-11 h-11 rounded-full object-cover" />
           ) : (
             <div className="w-11 h-11 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-semibold">
               {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
