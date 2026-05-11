@@ -1,0 +1,11 @@
+# Modern-only target. Every listed feature in the polyfill audit
+# (Array.at, flat, flatMap, Object.fromEntries, Object.hasOwn,
+# String.trimStart/trimEnd) is native in these browser versions, so
+# SWC will skip the polyfill bundle.
+Chrome >= 113
+Firefox >= 117
+Safari >= 16.4
+Edge >= 113
+iOS >= 16.4
+not dead
+not op_mini all

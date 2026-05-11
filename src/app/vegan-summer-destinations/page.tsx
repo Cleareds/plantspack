@@ -18,11 +18,12 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: CANONICAL },
-  // Temporarily noindex while the summer-sprint data cleanup is in flight
-  // (image backfill, missing destinations, metadata polish). follow:true so
-  // Google still crawls the internal links to city pages from here. Flip to
-  // index:true once Day 5 polish is shipped.
-  robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
+  // Indexable. Google handles content updates fine — when we improve the
+  // page later (more destinations, better blurbs, post-review data quality
+  // pass), the re-crawl will pick it up and re-rank. The cost of staying
+  // noindex'd through summer is bigger than the cost of indexing early
+  // and improving in place.
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   openGraph: {
     title: 'Vegan Summer Destinations Europe 2026 | PlantsPack',
     description: DESCRIPTION,

@@ -33,11 +33,11 @@
     "test:clean": "bash scripts/clean-test-artifacts.sh"
   },
   "browserslist": [
-    "Chrome >= 100",
-    "Firefox >= 100",
-    "Safari >= 15",
-    "Edge >= 100",
-    "iOS >= 15",
+    "Chrome >= 113",
+    "Firefox >= 117",
+    "Safari >= 16.4",
+    "Edge >= 113",
+    "iOS >= 16.4",
     "not dead",
     "not op_mini all"
   ],
