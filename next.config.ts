@@ -9,14 +9,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const nextConfig: NextConfig = {
   typescript: {
-    // Temporary unblock: a TypeScript 5.8.x compiler bug crashes during
-    // `next build`'s typecheck pass after the 2026-05-11 Supabase 2.105
-    // lib bump ("Cannot read properties of undefined (reading 'kind')"
-    // in getModifierFlagsWorker). SWC/Turbopack compilation succeeds; only
-    // the separate type-check step crashes. Skipping it here unblocks
-    // deploys while the underlying TS / Supabase types interaction is
-    // investigated separately. Re-enable once a working TS+lib pair is in.
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 
   // Strip console.log/info/debug from production builds. Keeps console.error

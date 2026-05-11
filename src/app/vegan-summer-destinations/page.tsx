@@ -10,8 +10,8 @@ import SummerHubFooterCta from '@/components/home/SummerHubFooterCta'
 // build time on the next request after this expires.
 export const revalidate = 86400
 
-const TITLE = 'Vegan Summer Destinations in Europe 2026 — Mediterranean Vegan Travel Guide | PlantsPack'
-const DESCRIPTION = 'Where to eat vegan on your summer trip across Italy, Spain, Greece, Portugal, Croatia, and Turkey. 27 Mediterranean destinations with verified vegan and vegan-friendly spots — restaurants, beach cafes, and stays.'
+const TITLE = 'Vegan Summer Destinations in Europe 2026 - Mediterranean Vegan Travel Guide | PlantsPack'
+const DESCRIPTION = 'Where to eat vegan on your Mediterranean trip across Italy, Spain, Greece, Portugal, Croatia, and Turkey. 31 destinations from Rome and Athens to Santorini, Ibiza, and the Amalfi Coast - thousands of verified vegan and vegan-friendly restaurants, cafes, and stays.'
 const CANONICAL = 'https://www.plantspack.com/vegan-summer-destinations'
 
 export const metadata: Metadata = {
@@ -54,44 +54,44 @@ const DESTINATIONS: Record<string, Destination[]> = {
   Italy: [
     { city: 'Rome', country: 'Italy', blurb: 'Trastevere\'s plant-based osterias, fully-vegan gelaterias near Termini, and the best vegan pizza in Trastevere and Monti.' },
     { city: 'Florence', country: 'Italy', blurb: 'Tuscan ribollita and pici cacio e pepe done vegan, plus a tight cluster of fully-vegan spots in San Frediano.' },
-    { city: 'Naples', country: 'Italy', blurb: 'Naples invented pizza marinara — naturally vegan and still the best version anywhere. Plus growing plant-based scene in Vomero.' },
-    { city: 'Venice', country: 'Italy', blurb: 'Cicchetti bars with vegan options in Cannaregio and Dorsoduro — easier to eat vegan in Venice than most tourists realise.' },
-    { city: 'Palermo', country: 'Italy', blurb: 'Sicilian street food is accidentally vegan — sfincione, panelle, caponata. Palermo\'s vegan scene punches above its weight.' },
+    { city: 'Naples', country: 'Italy', blurb: 'Naples invented pizza marinara - naturally vegan and still the best version anywhere. Plus growing plant-based scene in Vomero.' },
+    { city: 'Venice', country: 'Italy', blurb: 'Cicchetti bars with vegan options in Cannaregio and Dorsoduro - easier to eat vegan in Venice than most tourists realise.' },
+    { city: 'Palermo', country: 'Italy', blurb: 'Sicilian street food is accidentally vegan - sfincione, panelle, caponata. Palermo\'s vegan scene punches above its weight.' },
     { city: 'Catania', country: 'Italy', blurb: 'Mount Etna foothills, Sicilian arancini done vegan, and the cleanest plant-based granita on the island.' },
   ],
   Spain: [
-    { city: 'Barcelona', country: 'Spain', blurb: '265 vegan and vegan-friendly spots — Gràcia, Sant Antoni, and El Born form a near-perfect plant-based triangle.' },
+    { city: 'Barcelona', country: 'Spain', blurb: '265 vegan and vegan-friendly spots - Gràcia, Sant Antoni, and El Born form a near-perfect plant-based triangle.' },
     { city: 'Madrid', country: 'Spain', blurb: 'Malasaña and Lavapiés are dense with fully-vegan restaurants. Don\'t miss the Sunday Mercado de la Cebada\'s vegan stalls.' },
-    { city: 'Valencia', country: 'Spain', blurb: 'Birthplace of paella — vegan versions abound. Ruzafa neighbourhood is the city\'s vegan epicentre.' },
+    { city: 'Valencia', country: 'Spain', blurb: 'Birthplace of paella - vegan versions abound. Ruzafa neighbourhood is the city\'s vegan epicentre.' },
     { city: 'Ibiza', country: 'Spain', blurb: 'Beyond the clubs: Ibiza Town and Santa Eulalia have a serious plant-based wellness scene supporting the island\'s yoga retreats.' },
     { city: 'Palma de Mallorca', country: 'Spain', blurb: 'Old Town tapas with proper vegan menus, and Sóller\'s farm-to-table spots are a quick train ride away.' },
-    { city: 'Santa Cruz de Tenerife', country: 'Spain', blurb: 'Canarian cuisine is heavy on potatoes, mojo, and gofio — many naturally vegan. The wellness scene around La Laguna is rich.' },
+    { city: 'Santa Cruz de Tenerife', country: 'Spain', blurb: 'Canarian cuisine is heavy on potatoes, mojo, and gofio - many naturally vegan. The wellness scene around La Laguna is rich.' },
   ],
   Greece: [
-    { city: 'Athens', country: 'Greece', blurb: '140 vegan and vegan-friendly places — Exarcheia and Koukaki are the densest. Many tavernas keep nistisima (fasting) menus year-round, all vegan.' },
+    { city: 'Athens', country: 'Greece', blurb: '140 vegan and vegan-friendly places - Exarcheia and Koukaki are the densest. Many tavernas keep nistisima (fasting) menus year-round, all vegan.' },
     { city: 'Santorini', country: 'Greece', blurb: 'Tomatokeftedes and fava are local specialities and naturally vegan. Oia and Fira both have dedicated plant-based menus now.' },
     { city: 'Mykonos', country: 'Greece', blurb: 'Beyond the party reputation, Mykonos Town and Ano Mera have a quiet vegan scene catering to the wellness retreat circuit.' },
-    { city: 'Naxos', country: 'Greece', blurb: 'Quieter Cyclades alternative — Naxos Town has a small but real vegan scene and the island\'s farms supply much of the produce.' },
-    { city: 'Corfu', country: 'Greece', blurb: 'Venetian-influenced cuisine with strong olive-oil and vegetable traditions — Corfu Town has more vegan spots than you\'d expect.' },
+    { city: 'Naxos', country: 'Greece', blurb: 'Quieter Cyclades alternative - Naxos Town has a small but real vegan scene and the island\'s farms supply much of the produce.' },
+    { city: 'Corfu', country: 'Greece', blurb: 'Venetian-influenced cuisine with strong olive-oil and vegetable traditions - Corfu Town has more vegan spots than you\'d expect.' },
     { city: 'Heraklion', country: 'Greece', blurb: 'Cretan cuisine is one of the most plant-forward in the Mediterranean. Heraklion is the gateway to a week of easy vegan eating.' },
   ],
   Portugal: [
-    { city: 'Lisbon', country: 'Portugal', blurb: '113 spots across Príncipe Real, Alfama, and Cais do Sodré — Lisbon is one of Europe\'s best vegan cities and tourists rarely realise it.' },
-    { city: 'Porto', country: 'Portugal', blurb: 'A surprisingly dense plant-based scene in Cedofeita and Foz do Douro. The francesinha vegana is a thing — and it works.' },
+    { city: 'Lisbon', country: 'Portugal', blurb: '113 spots across Príncipe Real, Alfama, and Cais do Sodré - Lisbon is one of Europe\'s best vegan cities and tourists rarely realise it.' },
+    { city: 'Porto', country: 'Portugal', blurb: 'A surprisingly dense plant-based scene in Cedofeita and Foz do Douro. The francesinha vegana is a thing - and it works.' },
     { city: 'Faro', country: 'Portugal', blurb: 'Gateway to the Algarve. Faro Old Town has a handful of fully-vegan spots and access to the whole coastal cluster.' },
     { city: 'Lagos', country: 'Portugal', blurb: 'Surf-town energy with a matching plant-based menu density. Most beach bars carry vegan options as default.' },
-    { city: 'Funchal', country: 'Portugal', blurb: 'Madeira island\'s capital — tropical fruit, espetada done vegan, and the Mercado dos Lavradores for fresh produce.' },
+    { city: 'Funchal', country: 'Portugal', blurb: 'Madeira island\'s capital - tropical fruit, espetada done vegan, and the Mercado dos Lavradores for fresh produce.' },
   ],
   Croatia: [
     { city: 'Zagreb', country: 'Croatia', blurb: '21 places across Donji Grad and Trešnjevka. Croatia\'s vegan capital, and a smart base before island-hopping.' },
     { city: 'Split', country: 'Croatia', blurb: 'Old Town within Diocletian\'s Palace has a small but real vegan scene. Ferry hub for Hvar, Brač, Vis.' },
-    { city: 'Dubrovnik', country: 'Croatia', blurb: 'Pricey, crowded, beautiful — and now with enough vegan options that you won\'t be stuck on a tomato salad.' },
+    { city: 'Dubrovnik', country: 'Croatia', blurb: 'Pricey, crowded, beautiful - and now with enough vegan options that you won\'t be stuck on a tomato salad.' },
     { city: 'Pula', country: 'Croatia', blurb: 'Istrian coast, Roman amphitheatre, and a surprisingly modern plant-based scene driven by Italian crossover.' },
   ],
   Turkey: [
-    { city: 'Istanbul', country: 'Turkey', blurb: '76 spots — Cihangir and Kadıköy lead the vegan scene. Turkish breakfast spreads (kahvaltı) work brilliantly vegan with the right place.' },
+    { city: 'Istanbul', country: 'Turkey', blurb: '76 spots - Cihangir and Kadıköy lead the vegan scene. Turkish breakfast spreads (kahvaltı) work brilliantly vegan with the right place.' },
     { city: 'Antalya', country: 'Turkey', blurb: 'Mediterranean coast base with a growing wellness-driven vegan scene in Kaleiçi (Old Town) and Konyaaltı.' },
-    { city: 'Kas', country: 'Turkey', blurb: 'Small Lycian-coast town with a disproportionately strong vegan offering — diving, hiking, and proper plant-based cafes.' },
+    { city: 'Kas', country: 'Turkey', blurb: 'Small Lycian-coast town with a disproportionately strong vegan offering - diving, hiking, and proper plant-based cafes.' },
     { city: 'Fethiye', country: 'Turkey', blurb: 'Turquoise Coast hub with a relaxed expat-driven plant-based scene. Çalış Beach and Old Town both have proper vegan options.' },
   ],
 }
@@ -182,20 +182,29 @@ export default async function VeganSummerDestinationsPage() {
             Vegan Summer Destinations in Europe
           </h1>
           <p className="text-base md:text-lg text-on-surface-variant leading-relaxed max-w-3xl">
-            Planning a Mediterranean trip this summer? Here&apos;s where eating vegan is
-            easy across {Object.keys(DESTINATIONS).length} countries and{' '}
-            {Object.values(DESTINATIONS).flat().length} destinations. Every spot
-            below has at least 5 verified vegan or vegan-friendly places — no
-            ghost listings, no &quot;hidden gems&quot; with two reviews.
-            {totalPlaces > 0 && (
+            {totalPlaces > 0 ? (
               <>
-                {' '}Total across this guide:{' '}
-                <strong>{totalPlaces.toLocaleString()} places</strong>
-                {totalFv > 0 && <> ({totalFv} fully vegan)</>}.
+                Where to eat vegan on your Mediterranean trip:{' '}
+                <strong>{totalPlaces.toLocaleString()} verified vegan and
+                vegan-friendly restaurants, cafes, and stays</strong>
+                {totalFv > 0 && <> ({totalFv.toLocaleString()} fully vegan)</>}
+                {' '}across {Object.values(DESTINATIONS).flat().length}{' '}
+                destinations in Italy, Spain, Greece, Portugal, Croatia, and
+                Turkey. Every destination below has at least 5 verified
+                places - no thin listings, no "hidden gems" with two reviews.
+              </>
+            ) : (
+              <>
+                Where to eat vegan on your Mediterranean trip across{' '}
+                {Object.values(DESTINATIONS).flat().length} destinations in
+                Italy, Spain, Greece, Portugal, Croatia, and Turkey. Every
+                destination below has at least 5 verified vegan or
+                vegan-friendly places - no thin listings, no "hidden gems"
+                with two reviews.
               </>
             )}
           </p>
-          {/* Intentionally no hero CTAs — the destination cards below are the
+          {/* Intentionally no hero CTAs - the destination cards below are the
               natural action. Forced CTAs at the top of an editorial hub feel
               salesy and the alternatives ("save destinations", "open map")
               promised features that don't apply to this page. */}
