@@ -190,7 +190,9 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: SITE_URL, changeFreq: 'daily', priority: 1.0 },
       { url: `${SITE_URL}/map`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/vegan-places`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/vegan-summer-destinations`, changeFreq: 'weekly', priority: 0.85 },
+      // /vegan-summer-destinations intentionally omitted while page is
+      // noindex during the summer-sprint data cleanup. Re-add when flipping
+      // robots:index to true (Day 5 polish).
       { url: `${SITE_URL}/recipes`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/events`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/packs`, changeFreq: 'daily', priority: 0.8 },

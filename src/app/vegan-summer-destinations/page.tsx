@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: CANONICAL },
+  // Temporarily noindex while the summer-sprint data cleanup is in flight
+  // (image backfill, missing destinations, metadata polish). follow:true so
+  // Google still crawls the internal links to city pages from here. Flip to
+  // index:true once Day 5 polish is shipped.
+  robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
   openGraph: {
     title: 'Vegan Summer Destinations Europe 2026 | PlantsPack',
     description: DESCRIPTION,
