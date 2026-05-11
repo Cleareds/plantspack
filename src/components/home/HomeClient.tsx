@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useLayoutEffect, Suspense } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useState, useEffect, useLayoutEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { MapPin, Plus, TrendingUp, TrendingDown, Star, Heart, MessageCircle, Share2, Pin, BookOpen } from 'lucide-react'
@@ -97,7 +97,6 @@ interface Props {
 }
 
 function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false }: Props) {
-  const searchParams = useSearchParams()
   const router = useRouter()
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false)
@@ -136,12 +135,18 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
   )
   const [cityImageFailed, setCityImageFailed] = useState(false)
 
+  // Read ?create=true via window.location so we avoid useSearchParams(),
+  // which would force the entire component tree behind a Suspense boundary
+  // and stream the top block in after the rest of the page (caused the
+  // "Featured Places paint before the hero" issue for guests on first load).
   useEffect(() => {
-    if (searchParams?.get('create') === 'true' && user) {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('create') === 'true' && user) {
       setIsCreatePostOpen(true)
       router.replace('/', { scroll: false })
     }
-  }, [searchParams, user, router])
+  }, [user, router])
 
   // Mirror "is this city pinned?" into state so JSX render doesn't touch
   // localStorage (which breaks SSR with "localStorage is not defined").
@@ -918,11 +923,7 @@ function ReviewRow({ review }: { review: CompactReview }) {
 }
 
 export default function HomeClient(props: Props) {
-  return (
-    <Suspense fallback={null}>
-      <HomeContent {...props} />
-    </Suspense>
-  )
+  return <HomeContent {...props} />
 }
 
 /**

@@ -48,7 +48,7 @@ export default function GoogleTagManager() {
   if (!GTM_ID || !shouldLoad) return null
 
   return (
-    <Script id="gtm-init" strategy="afterInteractive">
+    <Script id="gtm-init" strategy="lazyOnload">
       {`
         (function(w,d,s,l,i){
           w[l]=w[l]||[];
