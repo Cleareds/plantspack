@@ -294,7 +294,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
                   <div className="aspect-[16/10] bg-surface-container">
                     <PlaceImage
                       src={p.main_image_url || null}
-                      alt={p.name}
+                      alt={`${p.name}${p.city ? ` — vegan place in ${p.city}` : ''}`}
                       category={p.category || 'eat'}
                       className="w-full h-full object-cover"
                     />
