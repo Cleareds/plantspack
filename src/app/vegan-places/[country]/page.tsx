@@ -35,7 +35,7 @@ interface PageProps {
 
 async function getCityScores(): Promise<any[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
     if (!res.ok) return []
     const data = await res.json()
@@ -45,7 +45,7 @@ async function getCityScores(): Promise<any[]> {
 
 async function fetchCountryPlaces(country: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://plantspack.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
     // 3000 covers every country in our DB except the US — keeps "All N places
     // in <country>" honest. Paid Vercel/Supabase tiers absorb the bigger SSR
     // payload; the bottleneck is render, and CityPlacesList paginates client-
@@ -97,8 +97,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const fvDesc = `Manually verified directory of ${totalFv} fully vegan ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName}: restaurants, cafés, bakeries, sanctuaries and stores. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
 
   const canonical = isFullyVeganMode
-    ? `https://plantspack.com/vegan-places/${country}/fully-vegan`
-    : `https://plantspack.com/vegan-places/${country}`
+    ? `https://www.plantspack.com/vegan-places/${country}/fully-vegan`
+    : `https://www.plantspack.com/vegan-places/${country}`
 
   return {
     title,
@@ -177,9 +177,14 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
       cities: sortedInRegion.map((c: any) => ({ city: c.name, city_slug: c.slug, place_count: c.count })),
     }
   }).filter(rc => rc.totalPlaces > 0)
-  const unassignedCities = regions.length > 0
+  // Minimum 5 places for a city to appear in the country page grid —
+  // matches the City Ranks threshold and keeps single-place imports
+  // (one OSM hit in a small town) out of the "Other cities" block.
+  const MIN_CITY_PLACES = 5
+  const unassignedCities = (regions.length > 0
     ? cities.filter((c: any) => !cityToRegion.has(c.name))
     : cities
+  ).filter((c: any) => (c.count ?? 0) >= MIN_CITY_PLACES)
   const totalPlaces = cities.reduce((sum: number, c: any) => sum + c.count, 0)
   const totalFv = cities.reduce((sum: number, c: any) => sum + (c.stats?.fullyVegan || 0), 0)
 
@@ -209,6 +214,33 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
   countryStats.sampleNames = countryStats.sampleNames.slice(0, 5)
   const sceneDescription = generateCountryDescription(countryName, countryStats)
 
+  // Freshness signal for FV mode — mirrors the city page implementation so
+  // /vegan-places/<country>/fully-vegan carries the same verification copy
+  // and ItemList JSON-LD that AI search systems can quote.
+  const fvSet: any[] = isFullyVeganMode ? places : []
+  const fvLastVerified = fvSet
+    .map((p: any) => p.last_verified_at)
+    .filter((d: any): d is string => !!d)
+    .sort()
+    .reverse()[0] || null
+  const fvAdminReviewed = fvSet.filter((p: any) => (p.verification_level ?? 0) >= 3).length
+  const formatVerifiedDate = (d: string) =>
+    new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+
+  const fvItemListJsonLd = isFullyVeganMode && fvSet.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `100% Vegan Places in ${countryName}`,
+    description: `Manually verified 100% vegan venues in ${countryName}.`,
+    numberOfItems: fvSet.length,
+    itemListElement: fvSet.slice(0, 200).map((p: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://www.plantspack.com/place/${p.slug || p.id}`,
+      name: p.name,
+    })),
+  } : null
+
   return (
     <div className="min-h-screen bg-surface">
       <script
@@ -217,12 +249,18 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           __html: JSON.stringify(
             buildBreadcrumbs([
               HOME_CRUMB,
-              { name: 'Vegan Places', url: 'https://plantspack.com/vegan-places' },
-              { name: countryName, url: `https://plantspack.com/vegan-places/${country}` },
+              { name: 'Vegan Places', url: 'https://www.plantspack.com/vegan-places' },
+              { name: countryName, url: `https://www.plantspack.com/vegan-places/${country}` },
             ]),
           ),
         }}
       />
+      {fvItemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(fvItemListJsonLd) }}
+        />
+      )}
       <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
@@ -336,7 +374,18 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             <h2 className="text-lg font-semibold text-on-surface mb-4">
               All places in {countryName}
             </h2>
-            <CityPlacesList places={places} />
+            {isFullyVeganMode && (
+              <section className="mb-6 rounded-2xl bg-emerald-50 ghost-border border-emerald-100/80 p-5 text-sm leading-relaxed text-on-surface">
+                <h3 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is verified</h3>
+                <p className="mb-2">
+                  Every venue here was opened on its own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs), and confirmed currently open before being tagged 100% vegan. {fvAdminReviewed} of {fvSet.length} entries are at the highest verification tier (admin-reviewed){fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}.
+                </p>
+                <p className="text-xs text-on-surface-variant">
+                  Full audit methodology: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>. Found a place we have classified wrong, or know of a fully vegan venue in {countryName} that should be here? Use Suggest Correction on any place page or write to <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.
+                </p>
+              </section>
+            )}
+            <CityPlacesList places={places} allPlaces={allRawPlaces} />
           </div>
         )}
 
