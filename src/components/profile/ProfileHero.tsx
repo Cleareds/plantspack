@@ -141,7 +141,6 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
       <div className="mt-4 pt-4 border-t border-outline-variant/15">
         <div className="flex flex-wrap gap-2">
           {stats.map(({ key, count, label, icon: Icon }) => {
-            const isFollowLink = (key === 'followers' || key === 'following') && count > 0
             const inner = (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-surface-container-low/60 hover:bg-surface-container-low transition-colors text-sm">
                 <Icon className="h-3.5 w-3.5 text-primary" />
@@ -149,7 +148,17 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
                 <span className="text-on-surface-variant">{label}</span>
               </span>
             )
-            if (isFollowLink) {
+            // When viewing any profile, stats with count > 0 always link to
+            // a sub-page that lists the underlying records. Callers can still
+            // pass onStatClick to intercept (e.g. swap to an inline panel).
+            if (count > 0) {
+              if (onStatClick) {
+                return (
+                  <button key={key} onClick={() => onStatClick(key)} className="text-left">
+                    {inner}
+                  </button>
+                )
+              }
               return (
                 <Link
                   key={key}
@@ -158,13 +167,6 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
                 >
                   {inner}
                 </Link>
-              )
-            }
-            if (onStatClick && count > 0) {
-              return (
-                <button key={key} onClick={() => onStatClick(key)} className="text-left">
-                  {inner}
-                </button>
               )
             }
             return <div key={key}>{inner}</div>
