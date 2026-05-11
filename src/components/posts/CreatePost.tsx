@@ -6,6 +6,7 @@ import {supabase} from '@/lib/supabase'
 import {Image as ImageIcon, Globe, Users, Send, X, MapPin, Video} from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import VideoUploader from '../ui/VideoUploader'
+import EmojiPickerButton from '../ui/EmojiPickerButton'
 import LinkPreview, {extractUrls} from './LinkPreview'
 import MentionAutocomplete from './MentionAutocomplete'
 import LocationPicker from './LocationPicker'
@@ -1163,6 +1164,17 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     <Video className="h-5 w-5"/>
                                     <span className="text-sm">Video</span>
                                 </button>
+
+                                <EmojiPickerButton
+                                    textareaRef={textareaRef}
+                                    value={content}
+                                    onChange={(next) => {
+                                        if (maxChars === -1 || next.length <= maxChars) {
+                                            setContent(next)
+                                            setCharCount(next.length)
+                                        }
+                                    }}
+                                />
 
                                 <button
                                     type="button"

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Star } from 'lucide-react'
 import ReviewReactions from '@/components/reactions/ReviewReactions'
 import PlaceImage from '@/components/places/PlaceImage'
+import VideoPlayer from '@/components/ui/VideoPlayer'
 
 interface ReviewFeedCardData {
   id: string
@@ -12,6 +13,7 @@ interface ReviewFeedCardData {
   rating: number
   content: string
   images: string[] | null
+  video_url?: string | null
   created_at: string
   edited_at: string | null
   users: {
@@ -128,6 +130,13 @@ export default function ReviewFeedCard({ review }: Props) {
             {truncated && <span className="text-primary font-medium ml-1 group-hover:underline">Read more</span>}
           </p>
         </Link>
+      )}
+
+      {/* Review video */}
+      {review.video_url && (
+        <div className="mb-3">
+          <VideoPlayer src={review.video_url} variant="review" />
+        </div>
       )}
 
       {/* Review images */}

@@ -11,6 +11,7 @@ import Comments from './Comments'
 import SharePost from './SharePost'
 import EditPost from './EditPost'
 import ImageSlider from '../ui/ImageSlider'
+import VideoPlayer from '../ui/VideoPlayer'
 import LinkPreview, { extractUrls } from './LinkPreview'
 import LinkifiedText from '../ui/LinkifiedText'
 import ExpandablePostContent from './ExpandablePostContent'
@@ -708,18 +709,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
             {post.video_urls && post.video_urls.length > 0 && (
               <div className="mt-3 space-y-3">
                 {post.video_urls.map((videoUrl, index) => (
-                  <div key={index} className="relative">
-                    <div className="relative bg-surface-container-low rounded-lg overflow-hidden aspect-video">
-                      <video
-                        src={videoUrl}
-                        className="w-full h-full object-cover"
-                        controls
-                        preload="metadata"
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                    </div>
-                  </div>
+                  <VideoPlayer key={index} src={videoUrl} />
                 ))}
               </div>
             )}

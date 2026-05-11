@@ -30,7 +30,7 @@ export default function MentionAutocomplete({
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (searchQuery.length < 3) {
+    if (searchQuery.length < 1) {
       setUsers([])
       return
     }
@@ -84,19 +84,24 @@ export default function MentionAutocomplete({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [users, selectedIndex, onSelect, onClose])
 
-  if (searchQuery.length < 3) {
+  if (searchQuery.length < 1) {
     return null
+  }
+
+  // Coordinates come from getBoundingClientRect() (viewport-relative),
+  // so the popover must be `fixed` rather than `absolute`.
+  const popoverStyle = {
+    position: 'fixed' as const,
+    top: `${cursorPosition.top + 24}px`,
+    left: `${cursorPosition.left}px`,
   }
 
   if (loading) {
     return (
       <div
         ref={containerRef}
-        className="absolute z-50 bg-white border border-outline-variant rounded-lg shadow-lg p-3 min-w-[200px]"
-        style={{
-          top: `${cursorPosition.top + 24}px`,
-          left: `${cursorPosition.left}px`,
-        }}
+        className="z-50 bg-white border border-outline-variant rounded-lg shadow-lg p-3 min-w-[200px]"
+        style={popoverStyle}
       >
         <p className="text-sm text-outline">Searching...</p>
       </div>
@@ -107,11 +112,8 @@ export default function MentionAutocomplete({
     return (
       <div
         ref={containerRef}
-        className="absolute z-50 bg-white border border-outline-variant rounded-lg shadow-lg p-3 min-w-[200px]"
-        style={{
-          top: `${cursorPosition.top + 24}px`,
-          left: `${cursorPosition.left}px`,
-        }}
+        className="z-50 bg-white border border-outline-variant rounded-lg shadow-lg p-3 min-w-[200px]"
+        style={popoverStyle}
       >
         <p className="text-sm text-outline">No users found</p>
       </div>
@@ -121,15 +123,15 @@ export default function MentionAutocomplete({
   return (
     <div
       ref={containerRef}
-      className="absolute z-50 bg-white border border-outline-variant rounded-lg shadow-lg overflow-hidden min-w-[250px] max-h-[200px] overflow-y-auto"
-      style={{
-        top: `${cursorPosition.top + 24}px`,
-        left: `${cursorPosition.left}px`,
-      }}
+      className="z-50 bg-white border border-outline-variant rounded-lg shadow-lg overflow-hidden min-w-[250px] max-h-[200px] overflow-y-auto"
+      style={popoverStyle}
     >
       {users.map((user, index) => (
         <button
           key={user.id}
+          // preventDefault on mousedown keeps the textarea focused so the
+          // mention range doesn't collapse before the click handler fires.
+          onMouseDown={(e) => e.preventDefault()}
           onClick={() => onSelect(user.username)}
           className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-colors ${
             index === selectedIndex

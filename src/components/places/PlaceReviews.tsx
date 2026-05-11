@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { track } from '@/lib/analytics'
 import { useAuth } from '@/lib/auth'
@@ -13,6 +13,8 @@ import ReviewReactions from '../reactions/ReviewReactions'
 import StarRating from './StarRating'
 import ImageUploader from '../ui/ImageUploader'
 import VideoUploader from '../ui/VideoUploader'
+import VideoPlayer from '../ui/VideoPlayer'
+import EmojiPickerButton from '../ui/EmojiPickerButton'
 import LinkifiedText from '../ui/LinkifiedText'
 
 type Review = {
@@ -56,6 +58,7 @@ export default function PlaceReviews({
   const [page, setPage] = useState(0)
   const [newRating, setNewRating] = useState(0)
   const [newContent, setNewContent] = useState('')
+  const reviewTextareaRef = useRef<HTMLTextAreaElement>(null)
   const [submitting, setSubmitting] = useState(false)
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
   const [blockedUserIds, setBlockedUserIds] = useState<string[]>([])
@@ -349,6 +352,7 @@ export default function PlaceReviews({
                 Review
               </label>
               <textarea
+                ref={reviewTextareaRef}
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 placeholder="Share your experience..."
@@ -448,6 +452,13 @@ export default function PlaceReviews({
                     <Video className="h-4 w-4" />
                     <span>{videoUrl ? '1/1' : 'Video'}</span>
                   </button>
+                  <EmojiPickerButton
+                    textareaRef={reviewTextareaRef}
+                    value={newContent}
+                    onChange={(next) => {
+                      if (next.length <= 500) setNewContent(next)
+                    }}
+                  />
                 </div>
                 <div className="flex gap-2">
                   {editingReviewId && (
@@ -619,11 +630,7 @@ export default function PlaceReviews({
                       {/* Review video */}
                       {review.video_url && (
                         <div className="mb-3">
-                          <video
-                            src={review.video_url}
-                            controls
-                            className="max-h-60 rounded-md border border-outline-variant"
-                          />
+                          <VideoPlayer src={review.video_url} variant="review" />
                         </div>
                       )}
 

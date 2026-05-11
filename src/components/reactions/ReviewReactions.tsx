@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Heart, Lightbulb, Sparkles, Brain } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
+import LikersPopover from '@/components/ui/LikersPopover'
 
 export type ReactionType = 'like' | 'helpful' | 'inspiring' | 'thoughtful'
 
@@ -218,7 +219,7 @@ export default function ReviewReactions({
         const isActive = userReactions[reactionType]
         const isLoading = loading === reactionType
 
-        return (
+        const button = (
           <button
             key={reactionType}
             onClick={() => handleReaction(reactionType)}
@@ -238,6 +239,20 @@ export default function ReviewReactions({
             )}
           </button>
         )
+
+        if (reactionType === 'like' && count > 0) {
+          return (
+            <LikersPopover
+              key={reactionType}
+              entityType="review"
+              entityId={reviewId}
+              count={count}
+            >
+              {button}
+            </LikersPopover>
+          )
+        }
+        return button
       })}
     </div>
   )

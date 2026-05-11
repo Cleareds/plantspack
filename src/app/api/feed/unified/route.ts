@@ -53,7 +53,7 @@ const POST_FIELDS = `
 `
 
 const REVIEW_FIELDS = `
-  id, user_id, place_id, rating, content, images, created_at, edited_at, deleted_at,
+  id, user_id, place_id, rating, content, images, video_url, created_at, edited_at, deleted_at,
   users!inner(id, username, first_name, last_name, avatar_url, subscription_tier, is_banned),
   place:place_id(id, name, slug, city, country, category, main_image_url, images, vegan_level, average_rating, review_count),
   place_review_reactions(id, reaction_type, user_id)
