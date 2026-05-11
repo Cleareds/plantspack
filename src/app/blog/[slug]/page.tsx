@@ -69,7 +69,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     article.content.length > 200
       ? article.content.replace(/\s+/g, ' ').slice(0, 197) + '…'
       : article.content.replace(/\s+/g, ' ')
-  const image = article.image_url || article.images?.[0] || null
+  // Resolution order for the OG / Twitter share image:
+  //   1. image_url (explicit hero set in admin)
+  //   2. images[0] (first attached image from the structured field)
+  //   3. first inline markdown image in the content (![alt](url))
+  // The third step makes share-card thumbnails work even when the author
+  // just pastes a markdown article without setting image_url explicitly.
+  const inlineImageMatch = article.content.match(/!\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/)
+  const image = article.image_url || article.images?.[0] || inlineImageMatch?.[1] || null
 
   return {
     title: `${title} — PlantsPack`,
