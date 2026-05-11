@@ -79,6 +79,24 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
   const clearSearch = () => { setQuery(''); setIsOpen(false); inputRef.current?.focus() }
 
+  // Enter / "View all results" → /search page. Preserves the typed
+  // query so the results page can show the user exactly what they
+  // searched for (and so synonym/intent normalization can act on it).
+  const submitToSearchPage = useCallback(() => {
+    const trimmed = query.trim()
+    if (trimmed.length < 2) return
+    if (trimmed.length >= 2) {
+      logSearchClick({
+        q: trimmed,
+        result_count: cities.length + countries.length + places.length + recipes.length,
+        clicked_slug: `/search?q=${encodeURIComponent(trimmed)}`,
+        clicked_kind: null,
+      })
+    }
+    setIsOpen(false)
+    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
+  }, [query, cities.length, countries.length, places.length, recipes.length, router])
+
   const totalResults = cities.length + countries.length + places.length + recipes.length
 
   const handleResultClick = useCallback((item: RecentSearch) => {
@@ -102,11 +120,16 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
   return (
     <div ref={searchRef} className={`relative w-full ${className}`}>
-      <div className="w-full">
+      <form
+        className="w-full"
+        onSubmit={(e) => { e.preventDefault(); submitToSearchPage() }}
+        role="search"
+        aria-label="Search PlantsPack"
+      >
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
         <input
           ref={inputRef}
-          type="text"
+          type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={handleFocus}
@@ -114,12 +137,12 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
           className="w-full pl-10 pr-10 py-2 bg-surface-container-low border-0 ghost-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent placeholder-outline text-sm"
         />
         {query && (
-          <button onClick={clearSearch}
+          <button type="button" onClick={clearSearch}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors">
             <X className="h-4 w-4" />
           </button>
         )}
-      </div>
+      </form>
 
       {isOpen && (
         <div className="sm:min-w-[420px] absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest glass-float shadow-ambient rounded-lg z-50 max-h-[28rem] overflow-y-auto">
@@ -288,6 +311,20 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                 </div>
               )}
             </div>
+          )}
+
+          {/* "View all results" footer — visible whenever the user has
+              typed something searchable. Submits to /search?q=… so
+              they get the full ranked result page with facet chips. */}
+          {query.length >= 2 && !loading && (
+            <button
+              type="button"
+              onMouseDown={(e) => { e.preventDefault(); submitToSearchPage() }}
+              className="w-full flex items-center justify-center gap-2 px-3 py-3 text-sm font-medium text-primary border-t border-outline-variant/10 bg-surface-container-low/40 hover:bg-surface-container-low transition-colors"
+            >
+              <Search className="h-3.5 w-3.5" />
+              {hasResults ? `View all results for "${query}"` : `Search "${query}" anyway`}
+            </button>
           )}
         </div>
       )}
