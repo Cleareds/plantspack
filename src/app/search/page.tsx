@@ -5,6 +5,7 @@ import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import PlaceImage from '@/components/places/PlaceImage'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 import { MapPin, ChefHat } from 'lucide-react'
+import { normalizeQuery } from '@/lib/search/normalize'
 
 // 60s SSR cache + SWR. Search-result pages should be indexable but not
 // over-cached — content changes as places get added or archived.
@@ -77,28 +78,6 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   }
 }
 
-// Heuristic facet detector — used purely to surface visible "chips" to
-// the user (e.g. when they search "vegan bakery berlin" we want to show
-// that Berlin and bakery are being interpreted as filters). The actual
-// RPC handles ranking; this is UX feedback.
-function detectFacets(q: string): { city?: string; category?: string; vl?: string } {
-  const lowered = q.toLowerCase()
-  const facets: { city?: string; category?: string; vl?: string } = {}
-  const categoryHints: Record<string, string> = {
-    bakery: 'eat', café: 'eat', cafe: 'eat', restaurant: 'eat', diner: 'eat',
-    pizzeria: 'eat', ramen: 'eat', burger: 'eat',
-    hotel: 'hotel', stay: 'hotel', 'b&b': 'hotel', hostel: 'hotel',
-    shop: 'store', store: 'store', market: 'store', grocery: 'store',
-    sanctuary: 'organisation',
-  }
-  for (const [word, cat] of Object.entries(categoryHints)) {
-    if (lowered.includes(word)) { facets.category = cat; break }
-  }
-  if (/(100% vegan|fully vegan)/.test(lowered)) facets.vl = 'fully_vegan'
-  else if (/mostly vegan/.test(lowered)) facets.vl = 'mostly_vegan'
-  return facets
-}
-
 async function runSearch(q: string, vl: string | null, cat: string | null) {
   if (!q || q.length < 2) return { places: [] as PlaceRow[], cities: [] as CityRow[], recipes: [] as RecipeRow[] }
   const sb = createAdminClient()
@@ -117,11 +96,19 @@ async function runSearch(q: string, vl: string | null, cat: string | null) {
 export default async function SearchPage({ searchParams }: PageProps) {
   const sp = await searchParams
   const q = (sp.q || '').trim()
-  const vl = sp.vl || null
-  const cat = sp.cat || null
 
-  const facets = q ? detectFacets(q) : {}
-  const { places, cities, recipes } = await runSearch(q, vl, cat)
+  // Normalize: pulls modifiers out of the query, applies synonyms,
+  // and exposes the inferred filters as facet chips below the search
+  // bar. URL ?vl / ?cat still win over inferred values. The query the
+  // user sees stays as they typed it; only the RPC sees the normalized
+  // form.
+  const normalized = q ? normalizeQuery(q, { existingVl: sp.vl, existingCat: sp.cat }) : { q: '', vl: undefined as any, cat: undefined as any }
+  const rpcQ = normalized.q || q
+  const vl = (sp.vl ?? normalized.vl) || null
+  const cat = (sp.cat ?? normalized.cat) || null
+
+  const facets = { category: normalized.cat, vl: normalized.vl }
+  const { places, cities, recipes } = await runSearch(rpcQ, vl, cat)
 
   // ItemList JSON-LD for AI search / Google ItemList preview.
   const itemListJsonLd = places.length > 0 ? {
