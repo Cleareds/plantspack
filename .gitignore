@@ -107,3 +107,8 @@ osm-*.json
 
 # Local notes / scratch files
 backlinks-catalog.html
+
+# Local-only scratch scripts (started with _) — used for one-off DB
+# audits, dedup runs, smoke tests. Never meant to ship.
+scripts/_*.ts
+scripts/_*.js
