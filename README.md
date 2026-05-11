@@ -1,6 +1,28 @@
 # 🌱 PlantsPack
 
-A modern social network for the plant-based community.
+**[plantspack.com](https://www.plantspack.com)** — a free, ad-free directory of
+50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries,
+with city-by-city vegan-friendliness rankings, community reviews, and a manually
+verified "fully vegan" tier where each venue is hand-checked against its own menu.
+
+No paid listings, no ads, no algorithmic recommendations sold to the highest
+bidder. The project is community-funded; 50% of profit goes to animal welfare
+causes.
+
+Built with Next.js 15 (App Router) on top of Supabase / PostgreSQL, with PostGIS
+for geospatial queries and Postgres full-text search for the autocomplete +
+results page.
+
+**Links:** [Website](https://www.plantspack.com) ·
+[About](https://www.plantspack.com/about) ·
+[Methodology](https://www.plantspack.com/methodology) ·
+[Roadmap](https://www.plantspack.com/roadmap) ·
+[Blog](https://www.plantspack.com/blog)
+
+**Topics:** vegan · directory · plant-based · travel · food · maps · city
+rankings · Next.js · Supabase · PostgreSQL · PostGIS
+
+---
 
 ## 🚀 Quick Start
 
