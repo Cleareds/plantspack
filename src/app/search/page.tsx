@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import PlaceImage from '@/components/places/PlaceImage'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
-import { MapPin, ChefHat } from 'lucide-react'
+import { MapPin, ChefHat, Search } from 'lucide-react'
 import { normalizeQuery } from '@/lib/search/normalize'
 
 // 60s SSR cache + SWR. Search-result pages should be indexable but not
@@ -207,14 +207,35 @@ export default async function SearchPage({ searchParams }: PageProps) {
         </div>
       )}
 
-      <form className="mb-8" method="get" action="/search">
+      {/* Prominent search field. Pre-fills with the current query so
+          users can refine in place. Visible search icon + visible submit
+          button so it reads as "search" rather than "input with a value
+          in it". Sized larger than the TopBar so it's the obvious focus
+          on the results page. */}
+      <form
+        method="get"
+        action="/search"
+        role="search"
+        aria-label="Refine search"
+        className="relative mb-8 max-w-3xl"
+      >
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant pointer-events-none" aria-hidden />
         <input
+          type="search"
           name="q"
           defaultValue={q}
-          placeholder="Find vegan ramen in Tokyo, bakery in Berlin, Bodhi Leuven..."
-          className="w-full px-4 py-3 bg-surface-container-low rounded-lg ghost-border focus:ring-2 focus:ring-primary text-base"
+          placeholder="Search vegan places, cities, recipes..."
+          className="w-full pl-12 pr-28 py-3.5 rounded-2xl bg-surface-container-low ghost-border text-base text-on-surface placeholder-on-surface-variant focus:ring-2 focus:ring-primary focus:outline-none transition-shadow"
           aria-label="Search PlantsPack"
+          autoComplete="off"
         />
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          <Search className="h-3.5 w-3.5" aria-hidden />
+          Search
+        </button>
       </form>
 
       {!q && (
