@@ -64,6 +64,10 @@ export const EXCLUDED_CHAINS = new Set([
   "t.g.i. friday's", 'fridays', 'harvester', 'hungry horse',
   "nando's", 'nandos', 'max hamburgare', 'max',
   'pizzabakeren', 'papa murphys', "papa murphy's",
+  // Coffee chains: the dairy-default menu and the brand's positioning don't
+  // belong here even though the Platonic form (coffee) is plant-based.
+  // (User decision, 2026-05-11 — archived 251 OSM-imported rows in one go.)
+  'starbucks', 'starbucks coffee', 'starbucks reserve',
 ]);
 
 // Bilingual / administrative city name overrides
