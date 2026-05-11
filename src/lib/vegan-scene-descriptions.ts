@@ -462,7 +462,24 @@ export function generateCityMetaDescription(
   if (shops) mix.push(`${shops} ${shops === 1 ? 'shop' : 'shops'}`)
   if (stays) mix.push(`${stays} ${stays === 1 ? 'stay' : 'stays'}`)
   const mixStr = mix.length > 1 ? ` Includes ${mix.slice(0, 3).join(', ')}.` : ''
-  const topCuisine = cuisines && cuisines.length ? ` ${cuisines.slice(0, 2).join(', ')} cuisine.` : ''
+  // Sanitise the cuisine list before stitching it into the meta description:
+  // - drop dish-type values that read awkwardly as "cuisines" (cake, burger,
+  //   sandwich, etc. — these are categories on OSM but not cuisines).
+  // - drop entries that already end in "cuisine" so we don't render
+  //   "local cuisine cuisine." in SERPs.
+  // - drop generic placeholders like "international" / "local" / "regional"
+  //   that add no info to a SERP description.
+  const DISH_TYPE_BLOCKLIST = new Set([
+    'cake', 'burger', 'sandwich', 'ice cream', 'ice_cream', 'pizza',
+    'noodle', 'kebab', 'donut', 'doughnut', 'bagel', 'taco',
+    'international', 'local', 'regional', 'fusion', 'cafe', 'coffee_shop',
+  ])
+  const cleanCuisines = (cuisines || [])
+    .filter(c => c && !DISH_TYPE_BLOCKLIST.has(c.toLowerCase()))
+    .filter(c => !/cuisine$/i.test(c))
+  const topCuisine = cleanCuisines.length
+    ? ` ${cleanCuisines.slice(0, 2).join(', ')} cuisine.`
+    : ''
   const sample = sampleNames && sampleNames.length
     ? ` Try ${sampleNames.slice(0, 2).join(' or ')}.`
     : ''

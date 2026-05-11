@@ -70,6 +70,7 @@ const DESTINATIONS: Record<string, Destination[]> = {
     { city: 'Athens', country: 'Greece', blurb: '140 vegan and vegan-friendly places — Exarcheia and Koukaki are the densest. Many tavernas keep nistisima (fasting) menus year-round, all vegan.' },
     { city: 'Santorini', country: 'Greece', blurb: 'Tomatokeftedes and fava are local specialities and naturally vegan. Oia and Fira both have dedicated plant-based menus now.' },
     { city: 'Mykonos', country: 'Greece', blurb: 'Beyond the party reputation, Mykonos Town and Ano Mera have a quiet vegan scene catering to the wellness retreat circuit.' },
+    { city: 'Naxos', country: 'Greece', blurb: 'Quieter Cyclades alternative — Naxos Town has a small but real vegan scene and the island\'s farms supply much of the produce.' },
     { city: 'Corfu', country: 'Greece', blurb: 'Venetian-influenced cuisine with strong olive-oil and vegetable traditions — Corfu Town has more vegan spots than you\'d expect.' },
     { city: 'Heraklion', country: 'Greece', blurb: 'Cretan cuisine is one of the most plant-forward in the Mediterranean. Heraklion is the gateway to a week of easy vegan eating.' },
   ],
@@ -90,6 +91,7 @@ const DESTINATIONS: Record<string, Destination[]> = {
     { city: 'Istanbul', country: 'Turkey', blurb: '76 spots — Cihangir and Kadıköy lead the vegan scene. Turkish breakfast spreads (kahvaltı) work brilliantly vegan with the right place.' },
     { city: 'Antalya', country: 'Turkey', blurb: 'Mediterranean coast base with a growing wellness-driven vegan scene in Kaleiçi (Old Town) and Konyaaltı.' },
     { city: 'Kas', country: 'Turkey', blurb: 'Small Lycian-coast town with a disproportionately strong vegan offering — diving, hiking, and proper plant-based cafes.' },
+    { city: 'Fethiye', country: 'Turkey', blurb: 'Turquoise Coast hub with a relaxed expat-driven plant-based scene. Çalış Beach and Old Town both have proper vegan options.' },
   ],
 }
 
