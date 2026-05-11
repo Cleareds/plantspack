@@ -145,6 +145,7 @@ export default function RootLayout({
                     'https://www.facebook.com/profile.php?id=61583784658664',
                     'https://www.wikidata.org/wiki/Q139742042',
                     'https://alternativeto.net/software/plantspack/',
+                    'https://github.com/Cleareds/plantspack',
                   ],
                 },
                 // WebSite ties all pages to the brand identity and lets
