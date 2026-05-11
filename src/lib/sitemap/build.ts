@@ -10,7 +10,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
-const SITE_URL = 'https://plantspack.com'
+const SITE_URL = 'https://www.plantspack.com'
 
 export type SegmentId = 'priority' | 'content' | 'thin'
 
@@ -190,6 +190,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: SITE_URL, changeFreq: 'daily', priority: 1.0 },
       { url: `${SITE_URL}/map`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/vegan-places`, changeFreq: 'daily', priority: 0.9 },
+      { url: `${SITE_URL}/vegan-summer-destinations`, changeFreq: 'weekly', priority: 0.85 },
       { url: `${SITE_URL}/recipes`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/events`, changeFreq: 'daily', priority: 0.9 },
       { url: `${SITE_URL}/packs`, changeFreq: 'daily', priority: 0.8 },
@@ -218,26 +219,39 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     // we mirror that here to keep the sitemap and the per-page directive in
     // agreement.
     const cityCountryCounts = new Map<string, number>()
+    // Track fully_vegan counts per country and per city so we only emit
+    // /fully-vegan URLs when there's at least one verified FV venue.
+    const countryFvCounts = new Map<string, number>()
+    const cityFvCounts = new Map<string, number>()
     for (const p of places) {
       if (!p.country) continue
       const cs = slugifyCityOrCountry(p.country)
       if (!cs) continue
       countries.add(cs)
+      const isFv = p.vegan_level === 'fully_vegan'
+      if (isFv) countryFvCounts.set(cs, (countryFvCounts.get(cs) ?? 0) + 1)
       if (p.city) {
         const ct = slugifyCityOrCountry(p.city)
         if (ct) {
           const k = `${cs}/${ct}`
           cityCountry.add(k)
           cityCountryCounts.set(k, (cityCountryCounts.get(k) ?? 0) + 1)
+          if (isFv) cityFvCounts.set(k, (cityFvCounts.get(k) ?? 0) + 1)
         }
       }
     }
     for (const country of countries) {
       entries.push({ url: `${SITE_URL}/vegan-places/${country}`, changeFreq: 'daily', priority: 0.85 })
+      if ((countryFvCounts.get(country) ?? 0) > 0) {
+        entries.push({ url: `${SITE_URL}/vegan-places/${country}/fully-vegan`, changeFreq: 'weekly', priority: 0.9 })
+      }
     }
     for (const cc of cityCountry) {
       if ((cityCountryCounts.get(cc) ?? 0) < 5) continue
       entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, changeFreq: 'daily', priority: 0.9 })
+      if ((cityFvCounts.get(cc) ?? 0) > 0) {
+        entries.push({ url: `${SITE_URL}/vegan-places/${cc}/fully-vegan`, changeFreq: 'weekly', priority: 0.95 })
+      }
     }
     // Region landing pages (Belgium today; generic for any seeded country).
     const { data: regionRows } = await sb

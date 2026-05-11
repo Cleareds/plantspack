@@ -102,6 +102,14 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
+                  href="/vegan-summer-destinations"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Summer Destinations 2026
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/support"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
