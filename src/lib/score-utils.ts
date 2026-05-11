@@ -20,11 +20,15 @@ export interface CityScore {
 // jumping to the next letter. Added after user feedback on Lemmy that
 // C and C+ should be distinguishable.
 export function getGradeColor(grade: string): string {
-  if (grade.startsWith('A')) return 'text-emerald-500'
-  if (grade.startsWith('B')) return 'text-green-500'
-  if (grade.startsWith('C')) return 'text-yellow-500'
-  if (grade.startsWith('D')) return 'text-orange-500'
-  return 'text-red-500'
+  // Bumped 500 -> 600 in 2026-05 for WCAG AA contrast. yellow-500
+  // on white fails even at large text (1.7:1); the other 500s pass
+  // marginally at large size but fail at body-text size. 600 reads
+  // as the same hue, just darker, and crosses the AA threshold.
+  if (grade.startsWith('A')) return 'text-emerald-600'
+  if (grade.startsWith('B')) return 'text-green-600'
+  if (grade.startsWith('C')) return 'text-amber-600'
+  if (grade.startsWith('D')) return 'text-orange-600'
+  return 'text-red-600'
 }
 
 export function getScoreBarColor(score: number): string {

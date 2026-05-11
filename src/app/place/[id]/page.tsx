@@ -465,19 +465,19 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               {/* Vegan + Pet badges */}
               <div className="absolute top-8 left-8 flex gap-2 z-10">
                 {(place as any).vegan_level === 'fully_vegan' && (
-                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-emerald-600 text-white shadow">100% Vegan</span>
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-emerald-700 text-white shadow">100% Vegan</span>
                 )}
                 {(place as any).vegan_level === 'mostly_vegan' && (
-                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-teal-600 text-white shadow">Mostly Vegan</span>
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-teal-700 text-white shadow">Mostly Vegan</span>
                 )}
                 {(place as any).vegan_level === 'vegan_friendly' && (
-                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-amber-500 text-white shadow">Vegan-Friendly</span>
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-amber-600 text-white shadow">Vegan-Friendly</span>
                 )}
                 {(place as any).vegan_level === 'vegan_options' && (
                   <span className="px-2 py-1 rounded-md text-xs font-bold bg-stone-400 text-white shadow">Has Vegan Options</span>
                 )}
                 {place.is_pet_friendly && (
-                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-orange-500 text-white shadow">🐾 Pet-Friendly</span>
+                  <span className="px-2 py-1 rounded-md text-xs font-bold bg-orange-600 text-white shadow">🐾 Pet-Friendly</span>
                 )}
               </div>
             </div>

@@ -91,8 +91,13 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
             )}
           </div>
         </div>
-        <button onClick={() => setDismissed(true)} className="text-on-surface-variant/40 hover:text-on-surface-variant flex-shrink-0">
-          <X className="h-3.5 w-3.5" />
+        <button
+          onClick={() => setDismissed(true)}
+          aria-label="Dismiss"
+          type="button"
+          className="text-on-surface-variant/70 hover:text-on-surface-variant flex-shrink-0"
+        >
+          <X className="h-3.5 w-3.5" aria-hidden />
         </button>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -133,7 +138,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
           <Leaf className="h-3 w-3" /> Few vegan options only
         </button>
       </div>
-      <p className="text-[10px] text-on-surface-variant/50 mt-2">Your feedback helps keep our data accurate</p>
+      <p className="text-[10px] text-on-surface-variant/80 mt-2">Your feedback helps keep our data accurate</p>
     </div>
   )
 }
