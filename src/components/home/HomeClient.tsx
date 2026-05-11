@@ -20,6 +20,7 @@ import { supabase } from '@/lib/supabase'
 import PlaceImage from '@/components/places/PlaceImage'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { getCityImage } from '@/lib/city-images'
 
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
@@ -131,7 +132,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
     || ''
   )
   const [cityImageUrl, setCityImageUrl] = useState<string | null>(
-    (initialLocation && serverCityImages[`${initData?.userCityScore?.city || initialLocation.city}|||${initData?.userCityScore?.country || initialLocation.country}`]) || null
+    (initialLocation && getCityImage(serverCityImages, initData?.userCityScore?.city || initialLocation.city, initData?.userCityScore?.country || initialLocation.country)) || null
   )
   const [cityImageFailed, setCityImageFailed] = useState(false)
 
@@ -241,7 +242,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
       if (data.userCityScore) { setUserCity(data.userCityScore.city); setUserCountry(data.userCityScore.country) }
       else if (data.nearbyPlaces?.[0]) { setUserCity(data.nearbyPlaces[0].city); setUserCountry(data.nearbyPlaces[0].country) }
       else if (city) { setUserCity(city); setUserCountry(country) }
-      const imgUrl = serverCityImages[`${data.userCityScore?.city || city}|||${data.userCityScore?.country || country}`] || null
+      const imgUrl = getCityImage(serverCityImages, data.userCityScore?.city || city, data.userCityScore?.country || country) || null
       if (imgUrl) setCityImageUrl(imgUrl)
     }
 
@@ -723,7 +724,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {topCities.map(city => {
-                    const img = serverCityImages[`${city.city}|||${city.country}`]
+                    const img = getCityImage(serverCityImages, city.city, city.country)
                     return (
                       <Link key={city.city} href={`/vegan-places/${slugifyCityOrCountry(city.country)}/${slugifyCityOrCountry(city.city)}`}
                         prefetch={false}
