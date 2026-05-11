@@ -72,6 +72,9 @@ export default function Sidebar() {
         {!user && (
           <Link
             href="/auth"
+            data-event="cta_click_signup"
+            data-cta="sign_in"
+            data-from="sidebar"
             className="w-full block text-center bg-primary text-on-primary-btn py-4 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-primary/10 hover:opacity-90 transition-all"
           >
             Sign In

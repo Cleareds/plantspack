@@ -979,12 +979,18 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
               href="/auth"
+              data-event="cta_click_signup"
+              data-cta="sign_in"
+              data-from="home_guest_banner"
               className="inline-flex items-center gap-2 px-4 py-2 bg-white text-on-surface rounded-xl text-sm font-semibold hover:bg-white/90 transition-colors"
             >
               Sign in
             </Link>
             <Link
               href="/auth?mode=signup"
+              data-event="cta_click_signup"
+              data-cta="create_account"
+              data-from="home_guest_banner"
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm text-white rounded-xl text-sm font-medium border border-white/30 hover:bg-white/25 transition-colors"
             >
               Create free account

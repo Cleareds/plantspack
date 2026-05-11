@@ -102,6 +102,26 @@ export function track(eventName: string, properties?: Record<string, string | nu
 }
 
 /**
+ * Push an event to GTM's dataLayer. GTM picks it up via a Custom Event
+ * trigger and forwards to GA4 (or any other configured destination).
+ * Use this for events the marketing team should be able to redirect
+ * without a code deploy — e.g. sign_up, cta_click_signup.
+ *
+ * Falls back to a no-op if dataLayer isn't initialised yet (script not
+ * loaded, consent withheld, dev mode). Safe to call anywhere.
+ */
+export function pushDataLayerEvent(
+  event: string,
+  params?: Record<string, string | number | boolean | null | undefined>,
+): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({ event, ...(params || {}) })
+  } catch {}
+}
+
+/**
  * Track user timing for performance monitoring
  * @param name - Timing variable name
  * @param value - Time in milliseconds

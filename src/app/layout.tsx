@@ -8,6 +8,8 @@ import "./globals.css";
 import ClientProviders from "@/components/providers/ClientProviders";
 import AppShell from "@/components/layout/AppShell";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import GoogleTagManager from "@/components/analytics/GoogleTagManager";
+import MicrosoftClarity from "@/components/analytics/MicrosoftClarity";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 import NavigationProgress from "@/components/layout/NavigationProgress";
 
@@ -173,7 +175,22 @@ export default function RootLayout({
         />
       </head>
       <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
+        {/*
+          GTM noscript fallback — only renders + executes for visitors with
+          JS disabled (every other browser ignores <noscript>). Zero perf
+          cost in the JS path: the iframe is never instantiated.
+        */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-MJG3ZGS6"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         <GoogleAnalytics />
+        <GoogleTagManager />
+        <MicrosoftClarity />
         <NavigationProgress />
         <Suspense fallback={null}>
           <PageViewTracker />

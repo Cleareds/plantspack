@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { Tables } from './supabase'
+import { pushDataLayerEvent } from './analytics'
 
 type UserProfile = Tables<'users'> & { role?: string; is_banned?: boolean }
 
@@ -165,9 +166,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false)
         setInitialized(true)
         setAuthReady(true)
-        
+
         if (session?.user) {
           sessionStorage.setItem('auth-status', 'authenticated')
+          // Fire sign_up vs login to the dataLayer. SIGNED_IN fires for both
+          // fresh signups and returning logins; distinguish by comparing
+          // created_at to last_sign_in_at (within 60s = fresh signup, esp.
+          // useful for OAuth where we don't see a separate signUp call).
+          if (event === 'SIGNED_IN') {
+            const u: any = session.user
+            const provider = u.app_metadata?.provider || 'email'
+            const createdMs = u.created_at ? Date.parse(u.created_at) : 0
+            const lastSignInMs = u.last_sign_in_at ? Date.parse(u.last_sign_in_at) : 0
+            const isFresh = createdMs && Math.abs(lastSignInMs - createdMs) < 60_000
+            pushDataLayerEvent(isFresh ? 'sign_up' : 'login', { method: provider })
+          }
           loadUserProfile(session.user.id).catch(error => {
             console.error('Profile loading failed:', error)
           })
@@ -207,6 +220,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         return { data, error }
       }
+
+      // sign_up event is fired centrally from the onAuthStateChange listener
+      // so it covers email + OAuth signups uniformly (isFresh check there).
 
       // If email confirmation is enabled, data.user exists but data.session is null
       // If email confirmation is disabled, both exist

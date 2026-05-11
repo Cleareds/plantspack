@@ -56,6 +56,9 @@ export default function BottomNav() {
       ) : (
         <Link
           href="/auth"
+          data-event="cta_click_signup"
+          data-cta="sign_in"
+          data-from="bottomnav"
           className="flex flex-col items-center justify-center px-1 py-2 text-on-surface-variant opacity-80 transition-all"
         >
           <span className="material-symbols-outlined text-2xl">login</span>

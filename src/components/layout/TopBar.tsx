@@ -71,6 +71,9 @@ export default function TopBar() {
           {!user && (
             <Link
               href="/auth"
+              data-event="cta_click_signup"
+              data-cta="sign_in"
+              data-from="topbar"
               className="hidden sm:inline-flex bg-primary text-on-primary px-5 py-2.5 rounded-full font-bold text-sm hover:opacity-90 transition-all"
             >
               Sign In
