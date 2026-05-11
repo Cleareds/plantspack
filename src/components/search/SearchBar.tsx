@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Search, X, MapPin, Loader2, Globe, Plus, Clock, ChefHat } from 'lucide-react'
-import { useSearch } from '@/hooks/useSearch'
+import { useSearch, logSearchClick } from '@/hooks/useSearch'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -79,11 +79,22 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
   const clearSearch = () => { setQuery(''); setIsOpen(false); inputRef.current?.focus() }
 
+  const totalResults = cities.length + countries.length + places.length + recipes.length
+
   const handleResultClick = useCallback((item: RecentSearch) => {
     saveRecentSearch(item)
+    // Fire-and-forget analytics — captures which query led to which click.
+    if (query.length >= 2) {
+      logSearchClick({
+        q: query,
+        result_count: totalResults,
+        clicked_slug: item.href,
+        clicked_kind: item.type === 'country' ? 'city' : item.type,
+      })
+    }
     setIsOpen(false)
     setQuery('')
-  }, [])
+  }, [query, totalResults])
 
   const hasResults = cities.length > 0 || countries.length > 0 || places.length > 0 || recipes.length > 0
   const showNoResults = query.length >= 2 && !loading && !hasResults

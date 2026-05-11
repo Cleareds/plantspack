@@ -146,16 +146,23 @@ export default function RootLayout({
                   ],
                 },
                 // WebSite ties all pages to the brand identity and lets
-                // Google build rich site-name + hierarchy in SERPs. We're
-                // intentionally NOT including SearchAction — we don't have a
-                // dedicated /search results page (yet); adding it would lie
-                // to Google and degrade trust. Add later if we build one.
+                // Google build rich site-name + hierarchy in SERPs. The
+                // SearchAction now points at /search?q=… — added once that
+                // route went live in the search-overhaul work.
                 {
                   '@type': 'WebSite',
                   '@id': 'https://www.plantspack.com/#website',
                   url: 'https://www.plantspack.com',
                   name: 'PlantsPack',
                   publisher: { '@id': 'https://www.plantspack.com/#organization' },
+                  potentialAction: {
+                    '@type': 'SearchAction',
+                    target: {
+                      '@type': 'EntryPoint',
+                      urlTemplate: 'https://www.plantspack.com/search?q={search_term_string}',
+                    },
+                    'query-input': 'required name=search_term_string',
+                  },
                 },
               ],
             }),
