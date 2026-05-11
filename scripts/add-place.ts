@@ -43,13 +43,24 @@ const supabase = createClient(
 const args = new Set(process.argv.slice(2))
 const DRY_RUN = args.has('--dry-run')
 const PENDING = args.has('--pending')
+// --ai-verified marks the row as verification_level=2, method='ai_verified'
+// (not 3/admin_review). Used by batch imports where the source is a curated
+// CSV / external audit but Claude has not personally verified each one.
+const AI_VERIFIED = args.has('--ai-verified')
+// --imported marks the row as verification_level=2, method='imported'. Used
+// by batch imports from vegan-first external sources (curated blogs,
+// existing directories like VegGuide). The DB CHECK constraint on
+// (vegan_level=fully_vegan, verification_method) forbids 'ai_verified' for
+// FV rows but allows 'imported', so this is the right flag for blog-batch
+// FV imports that should still land at level=2 (needs admin confirm).
+const IMPORTED = args.has('--imported')
 
 interface PlacePayload {
   name: string
   city: string
   country: string
   category: 'eat' | 'hotel' | 'store' | 'organisation' | 'event'
-  vegan_level: 'fully_vegan' | 'vegan_friendly'
+  vegan_level: 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options'
   description?: string
   subcategory?: string
   address?: string
@@ -438,8 +449,8 @@ async function main() {
     // admin to add a specific place after manual confirmation). Mark them as
     // admin_review at level 3 so the public verification footer reads
     // "Confirmed - Admin-reviewed" instead of "Confirmed - Imported".
-    verification_level: PENDING ? 1 : 3,
-    verification_method: PENDING ? null : 'admin_review',
+    verification_level: PENDING ? 1 : (IMPORTED || AI_VERIFIED ? 2 : 3),
+    verification_method: PENDING ? null : (IMPORTED ? 'imported' : (AI_VERIFIED ? 'ai_verified' : 'admin_review')),
     last_verified_at: PENDING ? null : new Date().toISOString(),
     source,
     source_id,

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
+import SummerHubFooterCta from '@/components/home/SummerHubFooterCta'
 
 // Revalidate daily so editorial copy + counts stay fresh through the
 // summer travel season without re-deploying. Index lookups happen at
@@ -266,25 +267,10 @@ export default async function VeganSummerDestinationsPage() {
           </section>
         ))}
 
-        {/* Footer CTA */}
-        <section className="mt-12 rounded-2xl bg-primary/8 px-6 py-8 md:px-10 md:py-12 text-center">
-          <h2 className="font-headline text-2xl font-bold text-on-surface mb-3">
-            Found a great vegan spot on your trip?
-          </h2>
-          <p className="text-on-surface-variant max-w-xl mx-auto mb-5">
-            Help future travellers by adding it. Every entry on PlantsPack is free —
-            we don&apos;t take paid listings, and we don&apos;t run ads.
-          </p>
-          <Link
-            href="/auth?mode=signup"
-            data-event="cta_click_signup"
-            data-cta="create_account"
-            data-from="summer_hub_footer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary-btn rounded-xl text-sm font-bold hover:opacity-90 transition-all"
-          >
-            Create a free account
-          </Link>
-        </section>
+        {/* Context-aware footer CTA: logged-out gets the create-account
+            framing; logged-in users get a direct "Add a place" with a
+            summer-curation hint. */}
+        <SummerHubFooterCta />
       </div>
     </div>
   )
