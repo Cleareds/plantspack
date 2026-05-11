@@ -451,9 +451,12 @@ export function generateCityMetaDescription(
   const restaurants = categories.eat || 0
   const shops = categories.store || 0
   const stays = categories.hotel || 0
+  // Suppress the ", country" tail when the caller intentionally passes an
+  // empty country (city == country case — Guatemala, Luxembourg, Singapore).
+  const loc = countryName ? `${cityName}, ${countryName}` : cityName
   const head = total > 1
-    ? `${total} vegan and vegan-friendly places in ${cityName}, ${countryName}${fvPart}.`
-    : `Vegan places in ${cityName}, ${countryName}.`
+    ? `${total} vegan and vegan-friendly places in ${loc}${fvPart}.`
+    : `Vegan places in ${loc}.`
   const mix: string[] = []
   if (restaurants) mix.push(`${restaurants} ${restaurants === 1 ? 'restaurant' : 'restaurants'}`)
   if (shops) mix.push(`${shops} ${shops === 1 ? 'shop' : 'shops'}`)

@@ -127,7 +127,18 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   })
   const sampleNames = places.slice(0, 6).map((p: Place) => p.name)
 
-  const metaDesc = generateCityMetaDescription(cityName, countryName, {
+  // SERP location label. When city == country (e.g. Guatemala City in
+  // Guatemala, Singapore in Singapore, Luxembourg in Luxembourg) the
+  // doubled name "Guatemala, Guatemala" reads as a typo in SERPs and
+  // tanks CTR. Render just the name in that case.
+  const sameNameLoc = cityName.toLowerCase() === countryName.toLowerCase()
+  const locLabel = sameNameLoc ? cityName : `${cityName}, ${countryName}`
+
+  // Suppress the country argument in the meta-description generator when
+  // it doubles the city — otherwise the description reads
+  // "2 vegan places in Guatemala, Guatemala..." which compounds the
+  // SERP weirdness alongside the title fix above.
+  const metaDesc = generateCityMetaDescription(cityName, sameNameLoc ? '' : countryName, {
     total: places.length,
     categories: { eat, store, hotel },
     cuisines: Array.from(cuisineSet).slice(0, 6),
@@ -136,11 +147,22 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     petFriendly: pet,
   })
 
-  const title = isFullyVeganMode
-    ? `100% Vegan in ${cityName}, ${countryName} — ${places.length} Verified Spots | PlantsPack`
+  // Drop the "— N Spots" suffix when the count is small enough to look
+  // anaemic in SERP (under 10). The page still indexes (>=5 places passes
+  // the thin-content gate) but the title now sells the destination, not
+  // the small count.
+  const showCount = allPlaces.length >= 10
+  const countSuffix = showCount
+    ? fv > 0
+      ? ` — ${allPlaces.length} Spots (${fv} Fully Vegan)`
+      : ` — ${allPlaces.length} Spots`
     : fv > 0
-      ? `Vegan Places in ${cityName}, ${countryName} — ${allPlaces.length} Spots (${fv} Fully Vegan) | PlantsPack`
-      : `Vegan Places in ${cityName}, ${countryName} — ${allPlaces.length} Spots | PlantsPack`
+      ? ` (${fv} Fully Vegan)`
+      : ''
+
+  const title = isFullyVeganMode
+    ? `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | PlantsPack`
+    : `Vegan Places in ${locLabel}${countSuffix} | PlantsPack`
 
   // FV-mode-specific meta description that emphasises hand-verification
   const fvDesc = `Manually verified directory of ${places.length} fully vegan ${places.length === 1 ? 'venue' : 'venues'} in ${cityName}, ${countryName}. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
@@ -171,7 +193,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         ? { index: false, follow: true }
         : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     openGraph: {
-      title: isFullyVeganMode ? `100% Vegan in ${cityName}, ${countryName}` : `Vegan Places in ${cityName}, ${countryName}`,
+      title: isFullyVeganMode ? `100% Vegan in ${locLabel}` : `Vegan Places in ${locLabel}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
@@ -186,7 +208,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     ...(cityImgUrl ? {
       twitter: {
         card: 'summary_large_image' as const,
-        title: `Vegan Places in ${cityName}, ${countryName}`,
+        title: `Vegan Places in ${locLabel}`,
         description: metaDesc,
         images: [cityImgUrl],
       },

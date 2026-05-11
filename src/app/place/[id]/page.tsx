@@ -136,11 +136,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     }
   }
 
+  // Category label without the "Vegan" prefix; the prefix comes from
+  // veganTag (Fully Vegan / Vegan-Friendly) so combining the two no longer
+  // produces "Vegan-Friendly Vegan Restaurant" duplication in SERP titles.
   const categoryLabel: Record<string, string> = {
-    eat: 'Vegan Restaurant', store: 'Vegan Store', hotel: 'Vegan-Friendly Stay',
-    event: 'Vegan Event', organisation: 'Vegan Organisation', other: 'Vegan-Friendly Place',
+    eat: 'Restaurant', store: 'Store', hotel: 'Stay',
+    event: 'Event', organisation: 'Organisation', other: 'Place',
   }
-  const cat = categoryLabel[place.category] || 'Vegan-Friendly Place'
+  const cat = categoryLabel[place.category] || 'Place'
   const veganTag = (place as any).vegan_level === 'fully_vegan' ? 'Fully Vegan' : 'Vegan-Friendly'
   const location = [place.city, place.country].filter(Boolean).join(', ')
   const rating = place.average_rating > 0 ? ` · ⭐ ${place.average_rating.toFixed(1)}` : ''
@@ -158,13 +161,24 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const addressLine = place.address ? ` ${place.address}.` : ''
   const fallbackDesc = `${place.name} is a ${veganTag.toLowerCase()} ${cat.toLowerCase()}${location ? ` in ${location}` : ''}.${cuisineStr}${addressLine}${ratingText}`.trim()
 
-  // Prefer real description if long enough; otherwise augment with fallback
+  // Prefer real description if long enough; otherwise augment with fallback.
+  // Skip the raw description entirely when it is dominantly non-Latin
+  // (Hebrew, Arabic, CJK, Cyrillic, etc.) because the rest of the metadata
+  // is English — a SERP description in a different script from the title
+  // tanks CTR in both audiences (English readers can't parse it; native
+  // speakers see English title and assume mismatch). Threshold: 30% or
+  // more of the description's letters are outside Latin → fall back.
   const rawDesc = (sanitizeDescription(place.description) || '').trim()
+  const letters = rawDesc.match(/\p{L}/gu) || []
+  const nonLatinShare = letters.length
+    ? letters.filter(c => !/[A-Za-zÀ-ÿ]/.test(c)).length / letters.length
+    : 0
+  const usableRaw = nonLatinShare < 0.3 ? rawDesc : ''
   let description: string
-  if (rawDesc.length >= 100) {
-    description = rawDesc.length > 160 ? rawDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : rawDesc
-  } else if (rawDesc.length > 0) {
-    const combined = `${rawDesc} ${fallbackDesc}`.trim()
+  if (usableRaw.length >= 100) {
+    description = usableRaw.length > 160 ? usableRaw.slice(0, 157).replace(/\s+\S*$/, '') + '…' : usableRaw
+  } else if (usableRaw.length > 0) {
+    const combined = `${usableRaw} ${fallbackDesc}`.trim()
     description = combined.length > 160 ? combined.slice(0, 157).replace(/\s+\S*$/, '') + '…' : combined
   } else {
     description = fallbackDesc.length > 160 ? fallbackDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : fallbackDesc
