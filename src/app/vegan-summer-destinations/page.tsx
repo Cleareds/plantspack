@@ -192,23 +192,10 @@ export default async function VeganSummerDestinationsPage() {
               </>
             )}
           </p>
-          <div className="flex flex-wrap gap-3 mt-6">
-            <Link
-              href="/auth?mode=signup"
-              data-event="cta_click_signup"
-              data-cta="create_account"
-              data-from="summer_hub_hero"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary-btn rounded-xl text-sm font-bold hover:opacity-90 transition-all"
-            >
-              Save these destinations
-            </Link>
-            <Link
-              href="/map"
-              className="inline-flex items-center gap-2 px-5 py-2.5 ghost-border text-on-surface rounded-xl text-sm font-medium hover:bg-on-surface/5 transition-all"
-            >
-              Open map view
-            </Link>
-          </div>
+          {/* Intentionally no hero CTAs — the destination cards below are the
+              natural action. Forced CTAs at the top of an editorial hub feel
+              salesy and the alternatives ("save destinations", "open map")
+              promised features that don't apply to this page. */}
         </div>
       </section>
 
