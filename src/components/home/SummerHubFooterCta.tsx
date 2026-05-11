@@ -12,7 +12,7 @@ const AddPlaceModal = dynamic(() => import('@/components/places/AddPlaceModal'),
  * Context-aware CTA at the foot of /vegan-summer-destinations.
  *
  * Logged-out visitors get the value-prop framing (create an account to
- * contribute). Logged-in users — who already have the add-place ability —
+ * contribute). Logged-in users - who already have the add-place ability -
  * get a direct prompt to add a venue, with the hint that mentioning
  * "great summer location" in the description helps editorial curate it
  * into the next edition of the hub.
@@ -29,7 +29,7 @@ export default function SummerHubFooterCta() {
         </h2>
         <p className="text-on-surface-variant max-w-xl mx-auto mb-3">
           Add it to PlantsPack and mention &quot;great summer location&quot;
-          in the description — we&apos;ll consider it for next edition of
+          in the description - we&apos;ll consider it for next edition of
           this Mediterranean summer guide.
         </p>
         <p className="text-on-surface-variant max-w-xl mx-auto mb-5 text-sm">
@@ -53,7 +53,7 @@ export default function SummerHubFooterCta() {
         Found a great vegan spot on your trip?
       </h2>
       <p className="text-on-surface-variant max-w-xl mx-auto mb-5">
-        Help future travellers by adding it. Every entry on PlantsPack is free —
+        Help future travellers by adding it. Every entry on PlantsPack is free -
         we don&apos;t take paid listings, and we don&apos;t run ads.
       </p>
       <Link
