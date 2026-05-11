@@ -19,6 +19,7 @@ import { supabase } from '@/lib/supabase'
 // getGradeColor + getScoreBarColor are defined locally below.
 import PlaceImage from '@/components/places/PlaceImage'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
+import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
@@ -448,7 +449,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               // Only build the link if we actually have both city + country —
               // without them the /vegan-places/[country]/[city] route 404s.
               const heroHref = heroCity && heroCountry
-                ? `/vegan-places/${heroCountry.toLowerCase().replace(/\s+/g, '-')}/${heroCity.toLowerCase().replace(/\s+/g, '-')}`
+                ? `/vegan-places/${slugifyCityOrCountry(heroCountry)}/${slugifyCityOrCountry(heroCity)}`
                 : null
               return (
               <div className="bg-surface-container-lowest rounded-2xl editorial-shadow overflow-hidden">
@@ -537,8 +538,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {followedCities.map(c => {
-                    const countrySlug = c.country.toLowerCase().replace(/\s+/g, '-')
-                    const citySlug = c.city.toLowerCase().replace(/\s+/g, '-')
+                    const countrySlug = slugifyCityOrCountry(c.country)
+                    const citySlug = slugifyCityOrCountry(c.city)
                     return (
                       <Link
                         key={`${c.city}-${c.country}`}
@@ -724,7 +725,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                   {topCities.map(city => {
                     const img = serverCityImages[`${city.city}|||${city.country}`]
                     return (
-                      <Link key={city.city} href={`/vegan-places/${city.country.toLowerCase().replace(/\s+/g, '-')}/${city.city.toLowerCase().replace(/\s+/g, '-')}`}
+                      <Link key={city.city} href={`/vegan-places/${slugifyCityOrCountry(city.country)}/${slugifyCityOrCountry(city.city)}`}
                         prefetch={false}
                         className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
                         {img && (
