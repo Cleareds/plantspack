@@ -12,7 +12,12 @@
  */
 
 const SITE_URL = 'https://www.plantspack.com'
-const SEGMENTS = ['priority', 'content', 'thin'] as const
+// The 'thin' segment was retired 2026-05-11. After the main_image_url
+// backfill, every active place qualifies as at least 'content', so the
+// thin sitemap was rendering with zero <url> entries and triggering
+// "missing required url tag" errors in Google Search Console. The
+// route at /sitemap/thin.xml now returns 410 Gone for legacy crawlers.
+const SEGMENTS = ['priority', 'content'] as const
 
 export function GET() {
   const now = new Date().toISOString()
