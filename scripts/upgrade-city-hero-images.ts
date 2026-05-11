@@ -142,7 +142,10 @@ async function main() {
       const slug = slugForKey(key)
       if (buf.length < 60_000) { kept++; await new Promise(r => setTimeout(r, 700)); continue }
 
-      const { error } = await sb.storage.from(BUCKET).upload(`${slug}.jpg`, buf, { contentType: 'image/jpeg', upsert: true, cacheControl: '3600' })
+      // URLs include a ?v=<id> cache-buster (added below), so we can safely
+      // cache the bytes for a year. The previous 3600s default forced every
+      // browser back to Supabase every hour and tanked homepage LCP.
+      const { error } = await sb.storage.from(BUCKET).upload(`${slug}.jpg`, buf, { contentType: 'image/jpeg', upsert: true, cacheControl: '31536000' })
       if (error) { failed++; console.log(`  [${i + 1}/${keys.length}] ${cityClean} - upload err: ${error.message}`); continue }
       upgraded++
       const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(`${slug}.jpg`)

@@ -17,7 +17,9 @@ import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
 // getGradeColor + getScoreBarColor are defined locally below.
+import Image from 'next/image'
 import PlaceImage from '@/components/places/PlaceImage'
+import SmartImg from '@/components/ui/SmartImg'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { getCityImage } from '@/lib/city-images'
@@ -463,12 +465,28 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                   heroHref ? (
                     <Link href={heroHref} className="block relative h-32 overflow-hidden group" aria-label={`Explore vegan places in ${heroCity}`}>
                       {/* LCP element on home — must be discoverable + high priority. */}
-                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover transition-transform group-hover:scale-[1.02]" fetchPriority="high" loading="eager" decoding="sync" onError={() => setCityImageFailed(true)} />
+                      <Image
+                        src={cityImageUrl}
+                        alt={heroCity}
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, 720px"
+                        className="object-cover transition-transform group-hover:scale-[1.02]"
+                        onError={() => setCityImageFailed(true)}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
                     </Link>
                   ) : (
                     <div className="relative h-32 overflow-hidden">
-                      <img src={cityImageUrl} alt={heroCity} className="w-full h-full object-cover" fetchPriority="high" loading="eager" decoding="sync" onError={() => setCityImageFailed(true)} />
+                      <Image
+                        src={cityImageUrl}
+                        alt={heroCity}
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, 720px"
+                        className="object-cover"
+                        onError={() => setCityImageFailed(true)}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 to-transparent" />
                     </div>
                   )
@@ -736,7 +754,14 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                         className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
                         {img && (
                           <div className="relative h-20 overflow-hidden">
-                            <img src={img} alt={city.city} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                            <Image
+                              src={img}
+                              alt={city.city}
+                              fill
+                              sizes="(max-width: 640px) 50vw, 200px"
+                              className="object-cover"
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                            />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                             <span className={`absolute bottom-1 right-2 text-lg font-black drop-shadow-md ${city.grade.startsWith('A') ? 'text-emerald-400' : city.grade === 'B' ? 'text-green-400' : city.grade === 'C' ? 'text-yellow-300' : 'text-orange-300'}`}>{city.grade}</span>
                           </div>
@@ -830,7 +855,7 @@ function PostRow({ post }: { post: CompactPost }) {
   return (
     <Link href={postUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
-        {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1 flex-wrap">
             {post.is_pinned && (
@@ -844,7 +869,7 @@ function PostRow({ post }: { post: CompactPost }) {
               </span>
             )}
             {u?.avatar_url ? (
-              <img src={u.avatar_url} alt="" className="w-4 h-4 rounded-full object-cover" />
+              <SmartImg src={u.avatar_url} alt="" width={16} height={16} className="w-4 h-4 rounded-full object-cover" />
             ) : (
               <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
                 {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
@@ -882,14 +907,14 @@ function ReviewRow({ review }: { review: CompactReview }) {
   return (
     <Link href={placeUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border border-l-2 border-l-amber-300/70 hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
-        {thumb && <img src={thumb} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1 flex-wrap">
             <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
               <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Review
             </span>
             {u?.avatar_url ? (
-              <img src={u.avatar_url} alt="" className="w-4 h-4 rounded-full object-cover" />
+              <SmartImg src={u.avatar_url} alt="" width={16} height={16} className="w-4 h-4 rounded-full object-cover" />
             ) : (
               <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
                 {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
@@ -960,13 +985,13 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
     >
       <div className="relative h-48 md:h-56 w-full">
         {heroImg ? (
-          <img
+          <Image
             src={heroImg}
             alt={`Vegan places in ${pick.city}, ${pick.country}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            fetchPriority="high"
-            loading="eager"
-            decoding="sync"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 960px"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 silk-gradient" />

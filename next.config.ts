@@ -70,6 +70,15 @@ const nextConfig: NextConfig = {
     // Use AVIF + WebP where the browser supports it. Roughly halves image
     // bytes vs raw JPEG for typical restaurant hero photos.
     formats: ['image/avif', 'image/webp'],
+    // Cache optimized variants in Vercel's image CDN for 1 year. The
+    // source URLs already include cache-busting `?v=<id>` tokens whenever
+    // we rotate an image, so immutable + 1y is safe.
+    minimumCacheTTL: 31536000,
+    // Narrow the breakpoints Next/Image generates for srcset. Default
+    // emits 8 device sizes × 8 image sizes = a lot of variants. Our LCP
+    // hero (city banner) and below-fold tiles only need a handful.
+    deviceSizes: [360, 640, 750, 1080, 1280, 1920],
+    imageSizes: [32, 48, 64, 96, 128, 168, 256, 384],
   },
 
   // Exclude mobileapp folder from Next.js compilation

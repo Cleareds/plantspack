@@ -7,6 +7,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
 import PlaceImage from '@/components/places/PlaceImage'
+import SmartImg from '@/components/ui/SmartImg'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
@@ -342,12 +343,23 @@ export default async function Home() {
               return (
                 <li key={p.slug} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
                   <Link href={`/place/${p.slug}`} prefetch={false} className="block">
-                    <PlaceImage
-                      src={image}
-                      alt={`${p.name}${p.city ? ` — vegan ${(p.category === 'eat' ? 'restaurant' : p.category)} in ${p.city}` : ''}`}
-                      category={p.category}
-                      className="w-full h-28 object-cover"
-                    />
+                    {image ? (
+                      <SmartImg
+                        src={image}
+                        alt={`${p.name}${p.city ? ` — vegan ${(p.category === 'eat' ? 'restaurant' : p.category)} in ${p.city}` : ''}`}
+                        width={300}
+                        height={112}
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
+                        className="w-full h-28 object-cover"
+                      />
+                    ) : (
+                      <PlaceImage
+                        src={null}
+                        alt={`${p.name}${p.city ? ` — vegan ${(p.category === 'eat' ? 'restaurant' : p.category)} in ${p.city}` : ''}`}
+                        category={p.category}
+                        className="w-full h-28 object-cover"
+                      />
+                    )}
                     <div className="p-3">
                       <p className="font-medium text-sm text-on-surface truncate">{p.name}</p>
                       <p className="text-xs text-on-surface-variant truncate mt-0.5">
