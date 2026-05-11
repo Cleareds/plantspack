@@ -333,8 +333,12 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-6">
         <div className="xl:flex xl:gap-6">
           <div className="flex-1 min-w-0 space-y-6">
-            {/* Value prop */}
-            {user ? (
+            {/* Value prop. Gated on isSignedIn (server-resolved) rather than
+                `user` from useAuth (client-resolved) so the SSR'd HTML matches
+                what each visitor will actually see. Eliminates the flicker
+                where signed-in users got the guest banner painted first then
+                swapped to "Hello, X" after hydration. */}
+            {isSignedIn ? (
               <h1 className="text-2xl font-headline font-bold text-on-surface tracking-tight">
                 Hello, {profile?.first_name || profile?.username || 'Friend'}!
               </h1>
@@ -440,7 +444,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 against the admin user (37K+), which is misleading and the
                 metric isn't meaningful for other users yet. Revisit when we
                 track genuine user-contributed places separately. */}
-            {user && stats && (
+            {isSignedIn && stats && (
               <p className="text-xs text-on-surface-variant">
                 Together we&apos;ve mapped <strong className="text-on-surface">{stats.totalPlaces.toLocaleString()}</strong> places.
                 {userContributions !== null && userContributions === 0 && (
@@ -802,15 +806,21 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
             <div className="xl:max-h-[calc(100vh-180px)] xl:overflow-y-auto">
               <ActivityList items={recentActivity && recentActivity.length > 0 ? recentActivity : recentPosts.map(p => ({ type: 'post' as const, created_at: p.created_at, data: p }))} />
             </div>
-            {user && (
+            {isSignedIn && (
               <button onClick={() => setIsCreatePostOpen(true)}
                 className="w-full flex items-center justify-center gap-2 silk-gradient text-on-primary-btn px-4 py-2.5 rounded-xl font-medium text-sm hover:opacity-90 transition-all mt-4">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit_square</span>
                 Create Post
               </button>
             )}
-            {!user && (
-              <Link href="/auth" className="block w-full text-center bg-primary text-on-primary-btn py-3 rounded-xl font-medium text-sm mt-4">
+            {!isSignedIn && (
+              <Link
+                href="/auth"
+                data-event="cta_click_signup"
+                data-cta="sign_in"
+                data-from="home_sidebar_contribute"
+                className="block w-full text-center bg-primary text-on-primary-btn py-3 rounded-xl font-medium text-sm mt-4"
+              >
                 Sign In to Contribute
               </Link>
             )}

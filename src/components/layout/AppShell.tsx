@@ -13,6 +13,12 @@ function useGeolocation() {
 
   useEffect(() => {
     if (typeof window === 'undefined' || !navigator.geolocation) return
+    // Path A: anonymous visitors get a fully static home with no
+    // location-aware content. Asking them to "enable location" is a
+    // dark-pattern prompt for a feature they don't get. Only signed-in
+    // users see this banner and the subsequent geolocation prompts.
+    // `auth-status` is written by the AuthProvider on every state change.
+    if (sessionStorage.getItem('auth-status') !== 'authenticated') return
     // Use localStorage for persistence across tabs/reloads
     if (localStorage.getItem('geo_resolved')) return
 
