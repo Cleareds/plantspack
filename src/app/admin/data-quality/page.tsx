@@ -383,6 +383,12 @@ export default function DataQualityPage() {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/admin/data-quality/summer-hub"
+            className="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-sm font-medium"
+          >
+            Summer Hub audit →
+          </Link>
+          <Link
             href="/admin/data-quality/belgium"
             className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium"
           >

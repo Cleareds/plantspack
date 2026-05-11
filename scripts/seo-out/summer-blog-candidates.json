@@ -1,0 +1,810 @@
+{
+  "generated_at": "2026-05-11T19:46:29.550Z",
+  "summary": {
+    "Croatia :: Hvar": {
+      "new": 6,
+      "dupes": 0,
+      "fv": 1
+    },
+    "Croatia :: Korčula": {
+      "new": 3,
+      "dupes": 0,
+      "fv": 1
+    },
+    "Croatia :: Bol": {
+      "new": 1,
+      "dupes": 0,
+      "fv": 0
+    },
+    "Croatia :: Vis": {
+      "new": 1,
+      "dupes": 0,
+      "fv": 1
+    },
+    "Croatia :: Dubrovnik": {
+      "new": 1,
+      "dupes": 0,
+      "fv": 0
+    },
+    "Croatia :: Split": {
+      "new": 3,
+      "dupes": 3,
+      "fv": 0
+    },
+    "Croatia :: Zagreb": {
+      "new": 0,
+      "dupes": 1,
+      "fv": 0
+    },
+    "Greece :: Naxos": {
+      "new": 6,
+      "dupes": 0,
+      "fv": 0
+    },
+    "Greece :: Santorini": {
+      "new": 7,
+      "dupes": 2,
+      "fv": 3
+    },
+    "Greece :: Mykonos": {
+      "new": 4,
+      "dupes": 2,
+      "fv": 0
+    },
+    "Italy :: Amalfi Coast": {
+      "new": 7,
+      "dupes": 0,
+      "fv": 1
+    },
+    "Italy :: Capri": {
+      "new": 6,
+      "dupes": 0,
+      "fv": 0
+    },
+    "Spain :: Ibiza": {
+      "new": 10,
+      "dupes": 1,
+      "fv": 5
+    },
+    "Portugal :: Faro": {
+      "new": 2,
+      "dupes": 3,
+      "fv": 1
+    },
+    "Portugal :: Lagos": {
+      "new": 0,
+      "dupes": 1,
+      "fv": 0
+    },
+    "Portugal :: Albufeira": {
+      "new": 1,
+      "dupes": 0,
+      "fv": 0
+    },
+    "Portugal :: Tavira": {
+      "new": 1,
+      "dupes": 0,
+      "fv": 1
+    },
+    "Portugal :: Funchal": {
+      "new": 0,
+      "dupes": 2,
+      "fv": 0
+    },
+    "Turkey :: Bodrum": {
+      "new": 2,
+      "dupes": 0,
+      "fv": 2
+    },
+    "Turkey :: Antalya": {
+      "new": 3,
+      "dupes": 1,
+      "fv": 3
+    },
+    "Turkey :: Kas": {
+      "new": 0,
+      "dupes": 1,
+      "fv": 0
+    }
+  },
+  "new_candidates": [
+    {
+      "name": "The Green House",
+      "city": "Hvar",
+      "country": "Croatia",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "europe-yachts.com",
+      "notes": "Burgers, smoothie bowls, locally sourced"
+    },
+    {
+      "name": "Green Goodness Hvar",
+      "city": "Hvar",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "search summary",
+      "notes": "Juice bar, sandwiches"
+    },
+    {
+      "name": "Fig Cafe Bar",
+      "city": "Hvar",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "figrestaurants.com",
+      "website": "http://figrestaurants.com/hvar",
+      "notes": "Mediterranean, vegan options"
+    },
+    {
+      "name": "Kebab Factory",
+      "city": "Hvar",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "plantishsara.com"
+    },
+    {
+      "name": "Vintage Bar",
+      "city": "Hvar",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "plantishsara.com"
+    },
+    {
+      "name": "Coffee Kojo",
+      "city": "Hvar",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "plantishsara.com",
+      "notes": "Stari Grad, Hvar island"
+    },
+    {
+      "name": "Adio Mare Vegan",
+      "city": "Korčula",
+      "country": "Croatia",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "europe-yachts.com",
+      "notes": "Plant-based Dalmatian dishes"
+    },
+    {
+      "name": "Konoba Mareta",
+      "city": "Korčula",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "search summary",
+      "notes": "75% local eco-farm produce"
+    },
+    {
+      "name": "Aterina",
+      "city": "Korčula",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "search summary"
+    },
+    {
+      "name": "Oliva Verde",
+      "city": "Bol",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "europe-yachts.com",
+      "notes": "Brač island; hearty stews + salads"
+    },
+    {
+      "name": "Plantae Vegan",
+      "city": "Vis",
+      "country": "Croatia",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "europe-yachts.com",
+      "notes": "Gourmet, sustainably sourced"
+    },
+    {
+      "name": "Green & Purple's Vegan & Veggie",
+      "city": "Dubrovnik",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "europe-yachts.com"
+    },
+    {
+      "name": "Marta's Veggie Fusion",
+      "city": "Split",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "europe-yachts.com",
+      "notes": "Vegan sushi, fusion"
+    },
+    {
+      "name": "To Je Tako",
+      "city": "Split",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "plantishsara.com"
+    },
+    {
+      "name": "Kitchen Bar Garden",
+      "city": "Split",
+      "country": "Croatia",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "plantishsara.com"
+    },
+    {
+      "name": "Boulamatsis",
+      "city": "Naxos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "address": "Naxos 843 00",
+      "cuisine": "Greek taverna"
+    },
+    {
+      "name": "Gemma Naxian Bistro",
+      "city": "Naxos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "address": "Naxos 843 00",
+      "cuisine": "International/Greek"
+    },
+    {
+      "name": "Juicy Girl",
+      "city": "Naxos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "address": "Sokratous Papavasiliou, Naxos 843 00",
+      "cuisine": "Smoothies, juices"
+    },
+    {
+      "name": "Scirocco Restaurant",
+      "city": "Naxos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://scirocco-naxos.gr",
+      "address": "Plateia Petroi Evipaioi, Naxos 843 00"
+    },
+    {
+      "name": "Hug Me Naxos",
+      "city": "Naxos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "address": "Ανώνυμος 11, Naxos 843 00",
+      "cuisine": "Café/brunch"
+    },
+    {
+      "name": "Heavens Café",
+      "city": "Naxos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "address": "Ioannou Paparigopoulou, Naxos"
+    },
+    {
+      "name": "Veganissimo",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://veganissimo.gr/",
+      "address": "Dekigala, Thira 847 00"
+    },
+    {
+      "name": "Good Mood Food",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "address": "25is Martiou, Fira"
+    },
+    {
+      "name": "Stolen Fruit",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://stolenfruit.gr/",
+      "address": "25is Martiou, Fira"
+    },
+    {
+      "name": "Aktaion Restaurant",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://www.aktaionsantorini.com/",
+      "address": "Firostefani"
+    },
+    {
+      "name": "Melina's Tavern",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://melinastavernsantorini.com/",
+      "address": "Akrotiri 847 00"
+    },
+    {
+      "name": "Oia Gefsis",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "oiagefsis.com",
+      "website": "https://oiagefsis.com/vegan-menu/",
+      "address": "Oia",
+      "notes": "Full vegan menu, Cycladic cooking"
+    },
+    {
+      "name": "Ethos Vegan Suites",
+      "city": "Santorini",
+      "country": "Greece",
+      "vegan_level": "fully_vegan",
+      "category": "hotel",
+      "source_blog": "veggiesabroad.com",
+      "address": "Fira 847 00"
+    },
+    {
+      "name": "Nice n' Easy",
+      "city": "Mykonos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://www.niceneasy.gr/mykonos",
+      "address": "Little Venice, Mikonos"
+    },
+    {
+      "name": "Appaloosa",
+      "city": "Mykonos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://appaloosa-mykonos.com/",
+      "address": "Ano Mera Road, Mykonos"
+    },
+    {
+      "name": "Promenade",
+      "city": "Mykonos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://promenademykonos.com/",
+      "address": "THIRIDA 601, Mikonos"
+    },
+    {
+      "name": "Bowl Mykonos",
+      "city": "Mykonos",
+      "country": "Greece",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "veggiesabroad.com",
+      "website": "https://www.bowl-mykonos.com/",
+      "address": "Ornos 846 00"
+    },
+    {
+      "name": "Sensi Restaurant",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "vegnews.com",
+      "website": "https://sensiamalfi.it/",
+      "notes": "Amalfi town; creative vegan plates"
+    },
+    {
+      "name": "Collina Bakery",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "vegnews.com",
+      "website": "https://www.collinabakery.com/",
+      "notes": "Positano"
+    },
+    {
+      "name": "Casa Angelina",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "hotel",
+      "source_blog": "vegnews.com",
+      "website": "https://www.casangelina.com/",
+      "notes": "Praiano"
+    },
+    {
+      "name": "Un Piano Nel Cielo",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "vegnews.com",
+      "notes": "Praiano; Casa Angelina rooftop"
+    },
+    {
+      "name": "Da Gabrisa",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "notes": "Positano; complete plant-based menu"
+    },
+    {
+      "name": "A'Marenna",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Via Torquato Tasso, 23, 80067 Sorrento",
+      "cuisine": "Panini"
+    },
+    {
+      "name": "N'Hambù",
+      "city": "Amalfi Coast",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Piazza Angelina Lauro, 38, 80067 Sorrento",
+      "cuisine": "Burgers"
+    },
+    {
+      "name": "Ziqù Restaurant at Hotel Villa Marina",
+      "city": "Capri",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Via Marina Grande, 191, 80073 Capri"
+    },
+    {
+      "name": "Bar Il Gabbiano",
+      "city": "Capri",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "76 Via Cristoforo Colombo, Capri",
+      "cuisine": "Café"
+    },
+    {
+      "name": "Da Paolino",
+      "city": "Capri",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Via Palazzo a Mare, Capri",
+      "cuisine": "Italian"
+    },
+    {
+      "name": "La Campannina",
+      "city": "Capri",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Via le Botteghe, 14, Capri"
+    },
+    {
+      "name": "La Terrazza di Venere",
+      "city": "Capri",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Via Federico Serena, 3, Capri"
+    },
+    {
+      "name": "Le Grottelle",
+      "city": "Capri",
+      "country": "Italy",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "compassionatesnob.com",
+      "address": "Via Arco Naturale, 3, Capri"
+    },
+    {
+      "name": "Wild Beets",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "website": "https://wildbeets.com",
+      "notes": "Santa Gertrudis"
+    },
+    {
+      "name": "Eat Is Life",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "notes": "Ibiza Town"
+    },
+    {
+      "name": "Passion Marina",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "website": "https://passioncafe.com/marina/",
+      "notes": "Talamanca"
+    },
+    {
+      "name": "La Paloma",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "notes": "Sant Llorenç de Balàfia"
+    },
+    {
+      "name": "Aubergine",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "website": "https://aubergineibiza.com"
+    },
+    {
+      "name": "Vegan Telesup",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "notes": "Ibiza Town"
+    },
+    {
+      "name": "MIKASA",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "website": "https://mikasaibiza.com/mikasa-restaurant/"
+    },
+    {
+      "name": "Sa Gulita",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "website": "https://sagulitaibiza.com",
+      "notes": "Sant Jordi"
+    },
+    {
+      "name": "Plant Veggie Bistrot",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "notes": "Cap Martinet"
+    },
+    {
+      "name": "Kasa Sukha",
+      "city": "Ibiza",
+      "country": "Spain",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "magic-ibiza.com",
+      "notes": "Santa Eulalia"
+    },
+    {
+      "name": "Mel & Limão",
+      "city": "Faro",
+      "country": "Portugal",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "thenomadicvegan.com"
+    },
+    {
+      "name": "Vida Leve",
+      "city": "Faro",
+      "country": "Portugal",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "thenomadicvegan.com",
+      "notes": "Açaí bowls"
+    },
+    {
+      "name": "The Veggie Café Albufeira",
+      "city": "Albufeira",
+      "country": "Portugal",
+      "vegan_level": "vegan_friendly",
+      "category": "eat",
+      "source_blog": "idealista.pt"
+    },
+    {
+      "name": "Veganices",
+      "city": "Tavira",
+      "country": "Portugal",
+      "vegan_level": "fully_vegan",
+      "category": "store",
+      "source_blog": "idealista.pt",
+      "notes": "Grocery + café"
+    },
+    {
+      "name": "Vegan a la Turca",
+      "city": "Bodrum",
+      "country": "Turkey",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "dailysabah.com",
+      "notes": "Bodrum's oldest vegan cafe (2018)"
+    },
+    {
+      "name": "Bodrum Botanicals Health Shop & Cafe",
+      "city": "Bodrum",
+      "country": "Turkey",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "dailysabah.com",
+      "notes": "Konacık district"
+    },
+    {
+      "name": "All Vegan",
+      "city": "Antalya",
+      "country": "Turkey",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "dailysabah.com",
+      "notes": "Çıralı"
+    },
+    {
+      "name": "Ch'i for Life",
+      "city": "Antalya",
+      "country": "Turkey",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "dailysabah.com",
+      "notes": "Muratpaşa District"
+    },
+    {
+      "name": "Marimor Kitchen",
+      "city": "Antalya",
+      "country": "Turkey",
+      "vegan_level": "fully_vegan",
+      "category": "eat",
+      "source_blog": "dailysabah.com",
+      "notes": "Konyaaltı"
+    }
+  ],
+  "duplicates": [
+    {
+      "name": "Maka Maka",
+      "city": "Split",
+      "country": "Croatia",
+      "matched_existing": "maka maka"
+    },
+    {
+      "name": "Barakokula",
+      "city": "Split",
+      "country": "Croatia",
+      "matched_existing": "barakokula"
+    },
+    {
+      "name": "Pandora Greenbox",
+      "city": "Split",
+      "country": "Croatia",
+      "matched_existing": "pandora greenbox"
+    },
+    {
+      "name": "Oaza Joyful Kitchen",
+      "city": "Zagreb",
+      "country": "Croatia",
+      "matched_existing": "oaza joyful kitchen"
+    },
+    {
+      "name": "FalafeLAND",
+      "city": "Santorini",
+      "country": "Greece",
+      "matched_existing": "falafeland"
+    },
+    {
+      "name": "Karma Greek",
+      "city": "Santorini",
+      "country": "Greece",
+      "matched_existing": "karma"
+    },
+    {
+      "name": "Rhino Vegan Street Food",
+      "city": "Mykonos",
+      "country": "Greece",
+      "matched_existing": "rhino"
+    },
+    {
+      "name": "Koukoumi Vegan Hotel",
+      "city": "Mykonos",
+      "country": "Greece",
+      "matched_existing": "koukoumi"
+    },
+    {
+      "name": "Simbiosis",
+      "city": "Ibiza",
+      "country": "Spain",
+      "matched_existing": "simbiosis"
+    },
+    {
+      "name": "Outro Lado",
+      "city": "Faro",
+      "country": "Portugal",
+      "matched_existing": "outro lado"
+    },
+    {
+      "name": "Vegan Box",
+      "city": "Faro",
+      "country": "Portugal",
+      "matched_existing": "vegan box"
+    },
+    {
+      "name": "Vila Adentro",
+      "city": "Faro",
+      "country": "Portugal",
+      "matched_existing": "vila adentro"
+    },
+    {
+      "name": "Estudio Vegetariano",
+      "city": "Lagos",
+      "country": "Portugal",
+      "matched_existing": "estudio vegetariano"
+    },
+    {
+      "name": "Fala Fala Vegetarian Restaurant",
+      "city": "Funchal",
+      "country": "Portugal",
+      "matched_existing": "fala fala"
+    },
+    {
+      "name": "Mundo Vegan",
+      "city": "Funchal",
+      "country": "Portugal",
+      "matched_existing": "mundo vegan"
+    },
+    {
+      "name": "Level",
+      "city": "Antalya",
+      "country": "Turkey",
+      "matched_existing": "level"
+    },
+    {
+      "name": "Pişekar",
+      "city": "Kas",
+      "country": "Turkey",
+      "matched_existing": "pisekar"
+    }
+  ]
+}
