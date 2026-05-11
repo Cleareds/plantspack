@@ -143,6 +143,7 @@ export default function RootLayout({
                     'https://x.com/plantspackX',
                     'https://www.instagram.com/plants.pack/',
                     'https://www.facebook.com/profile.php?id=61583784658664',
+                    'https://www.wikidata.org/wiki/Q139742042',
                   ],
                 },
                 // WebSite ties all pages to the brand identity and lets
