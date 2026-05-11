@@ -6,7 +6,7 @@ import {supabase} from '@/lib/supabase'
 import {Image as ImageIcon, Globe, Users, Send, X, MapPin, Video} from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import VideoUploader from '../ui/VideoUploader'
-import EmojiPickerButton from '../ui/EmojiPickerButton'
+import EditorToolbar from '../ui/EditorToolbar'
 import LinkPreview, {extractUrls} from './LinkPreview'
 import MentionAutocomplete from './MentionAutocomplete'
 import LocationPicker from './LocationPicker'
@@ -634,6 +634,17 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             className="w-full px-3 py-2 mb-2 bg-surface-container-low border-0 rounded-lg text-sm font-medium focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border placeholder:text-outline"
                         />
                         <div className="relative pr-[16px]">
+                            <EditorToolbar
+                                textareaRef={textareaRef}
+                                value={content}
+                                onChange={(next) => {
+                                    if (maxChars === -1 || next.length <= maxChars) {
+                                        setContent(next)
+                                        setCharCount(next.length)
+                                    }
+                                }}
+                                className="mb-1.5"
+                            />
               <textarea
                   ref={textareaRef}
                   value={content}
@@ -1164,17 +1175,6 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                     <Video className="h-5 w-5"/>
                                     <span className="text-sm">Video</span>
                                 </button>
-
-                                <EmojiPickerButton
-                                    textareaRef={textareaRef}
-                                    value={content}
-                                    onChange={(next) => {
-                                        if (maxChars === -1 || next.length <= maxChars) {
-                                            setContent(next)
-                                            setCharCount(next.length)
-                                        }
-                                    }}
-                                />
 
                                 <button
                                     type="button"
