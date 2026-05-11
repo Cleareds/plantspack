@@ -20,10 +20,17 @@ export default function VideoPlayer({ src, className = '', variant = 'feed' }: V
   // Append the first-frame hint, but only if it doesn't already have a fragment.
   const posterSrc = src.includes('#') ? src : `${src}#t=0.1`
 
+  // Cap the feed-variant width so videos do not balloon to the full post
+  // width on desktop. Mobile viewports are already narrow enough that this
+  // is invisible. Event posts surfaced the issue: a 16:9 enforced ratio on
+  // a 700px-wide post produced a 700×394 box that dwarfed the rest of the
+  // card; portrait videos got huge black side-bars inside that box. Capping
+  // at max-w-xl (~36rem / 576px) keeps the video card a reasonable
+  // proportion of the post on desktop while preserving full-bleed on mobile.
   const wrapperClass =
     variant === 'review'
       ? 'relative bg-surface-container-low rounded-md border border-outline-variant overflow-hidden aspect-video max-w-md'
-      : 'relative bg-surface-container-low rounded-lg overflow-hidden aspect-video'
+      : 'relative bg-surface-container-low rounded-lg overflow-hidden aspect-video max-w-xl mx-auto'
 
   return (
     <div className={`${wrapperClass} ${className}`}>
