@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { normalizeQuery } from '@/lib/search/normalize'
 
 // 10s edge cache + 60s SWR. Search queries repeat heavily across users
 // ("vegan bakery berlin", "bodhi"…), so even short caching cuts Supabase
@@ -8,13 +9,22 @@ export const revalidate = 10
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url)
-  const q = (url.searchParams.get('q') || '').trim()
-  if (q.length < 2) {
-    return NextResponse.json({ q, places: [], cities: [], recipes: [] })
+  const rawQ = (url.searchParams.get('q') || '').trim()
+  if (rawQ.length < 2) {
+    return NextResponse.json({ q: rawQ, places: [], cities: [], recipes: [] })
   }
 
-  const vl   = url.searchParams.get('vl')   || null
-  const cat  = url.searchParams.get('cat')  || null
+  // Synonym + intent normalization: pull "100% vegan" -> vl filter,
+  // map "roma" -> "Rome", "nyc" -> "New York", etc. URL ?vl / ?cat
+  // params always win over inferred ones (the user clicked a chip).
+  const normalized = normalizeQuery(rawQ, {
+    existingVl: url.searchParams.get('vl'),
+    existingCat: url.searchParams.get('cat'),
+  })
+  const q = normalized.q || rawQ
+  const vl = normalized.vl || null
+  const cat = normalized.cat || null
+
   const near = url.searchParams.get('near') || ''
   let nearLat: number | null = null
   let nearLng: number | null = null
@@ -40,7 +50,9 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(
     {
-      q,
+      q: rawQ,
+      normalized_q: q,
+      inferred: { vl: normalized.vl || null, cat: normalized.cat || null },
       places:  placesRes.data  || [],
       cities:  citiesRes.data  || [],
       recipes: recipesRes.data || [],
