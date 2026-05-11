@@ -112,3 +112,18 @@ backlinks-catalog.html
 # audits, dedup runs, smoke tests. Never meant to ship.
 scripts/_*.ts
 scripts/_*.js
+
+# Local-only reference docs moved out of the public repo root
+# (commit 2026-05-11). Kept on disk under docs/ for personal reference;
+# never tracked.
+docs/ANALYTICS.md
+docs/AUTH_SETUP.md
+docs/AUTH_TESTING_GUIDE.md
+docs/CUSTOM_GPT_SETUP.md
+docs/EMAIL_CONFIRMATION_SETUP.md
+docs/HOW_TO_VIEW_WEBHOOK_LOGS.md
+docs/NOTIFICATION_SYSTEM.md
+docs/OPENAI_SECURITY.md
+docs/PACKS_FEATURE_PLAN.md
+docs/SUPABASE_AUTH_CONFIG.md
+docs/UPTIME_MONITORING.md
