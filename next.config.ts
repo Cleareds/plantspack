@@ -361,6 +361,9 @@ const nextConfig: NextConfig = {
       { source: '/vegan-places/vietnam/ph%C3%BA-qu%E1%BB%91c', destination: '/vegan-places/vietnam/phu-quoc', permanent: true },
       { source: '/vegan-places/vietnam/bu%C3%B4n-ma-thu%E1%BB%99t', destination: '/vegan-places/vietnam/buon-ma-thuot', permanent: true },
       { source: '/vegan-places/vietnam/ph%C6%B0%E1%BB%9Dng-m%C5%A9i-n%C3%A9', destination: '/vegan-places/vietnam/mui-ne', permanent: true },
+
+      // Place slug redirects (wrong-place corrections etc.)
+      { source: '/place/de-groenendijk-bornem', destination: '/place/groenendijk-weert-bornem', permanent: true },
     ]
   },
 };
