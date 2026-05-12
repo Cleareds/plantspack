@@ -995,22 +995,23 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
     >
       <div className="relative h-48 md:h-56 w-full">
         {heroImg ? (
-          // Plain <img> here, not next/image. The Next.js Image component
-          // with `fill + priority` was failing to emit fetchpriority=high
-          // and loading=eager on the rendered <img> in Next 16.2.x (only
-          // the <link rel=preload> was added), and this is the homepage's
-          // LCP element. Plain img + explicit attributes guarantees both
-          // are present so the browser prioritises it. The source is
-          // already pre-sized to 1600px by upgrade-city-hero-images.ts so
-          // we don't lose much by skipping next/image's resizer here.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          // Reverted from plain <img> to next/image. The plain-img variant
+          // (intended to force fetchpriority=high on the LCP element) was
+          // shipping the full 1600px / ~700KB source image to displays as
+          // narrow as 701px. Next/image with `priority` emits the
+          // <link rel="preload"> in <head> which is what modern browsers
+          // actually use for LCP prioritisation - the missing img-level
+          // fetchpriority attribute matters only on legacy browsers that
+          // don't support preload. The win on byte-count (~700KB ->
+          // ~80-150KB via responsive srcset + WebP/AVIF negotiation) is
+          // worth the trade.
+          <Image
             src={heroImg}
             alt={`Vegan places in ${pick.city}, ${pick.country}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            fetchPriority="high"
-            loading="eager"
-            decoding="sync"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 960px"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 silk-gradient" />
