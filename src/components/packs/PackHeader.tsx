@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { PackWithStats } from '@/types/packs'
 import Link from 'next/link'
-import { Users, FileText, Crown, Settings, Globe, Facebook, Twitter, Instagram, Music2, Check, BadgeCheck, MapPin } from 'lucide-react'
+import { Users, FileText, Crown, Settings, Globe, Music2, Check, BadgeCheck, MapPin } from 'lucide-react'
+import { Facebook, Twitter, Instagram } from '@/components/ui/BrandIcons'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 

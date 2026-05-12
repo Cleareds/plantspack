@@ -12,6 +12,7 @@ import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import MicrosoftClarity from "@/components/analytics/MicrosoftClarity";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 import NavigationProgress from "@/components/layout/NavigationProgress";
+import MaterialSymbolsSwap from "@/components/layout/MaterialSymbolsSwap";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -124,13 +125,14 @@ export default function RootLayout({
           Defer the Material Symbols stylesheet so it doesn't block first
           paint. The print-media trick: browsers fetch print stylesheets
           at low priority and don't apply them to screen rendering until
-          the onload swap. ~150ms render-block win on mobile.
+          we flip media to "all" post-hydration. ~150ms render-block win
+          on mobile.
 
-          React 19 JSX strips the `onload` string attribute (it expects a
-          function), so we emit the swap script via dangerouslySetInnerHTML
-          attached to the <link> next to it. The <noscript> fallback covers
-          users with JS disabled or with extensions that block inline
-          scripts.
+          The swap runs from <MaterialSymbolsSwap/> in <body> via useEffect
+          — doing it inline in <head> would mutate the DOM before React
+          hydrates and trip a hydration mismatch on the <link>'s `media`
+          attribute. <noscript> fallback restores blocking-load for users
+          with JS disabled.
         */}
         <link
           rel="stylesheet"
@@ -139,11 +141,6 @@ export default function RootLayout({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...({ id: 'msym-stylesheet' } as any)}
           crossOrigin="anonymous"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){var l=document.getElementById('msym-stylesheet');if(l){l.media='all';}})();`,
-          }}
         />
         <noscript>
           {/* eslint-disable-next-line @next/next/no-css-tags */}
@@ -228,6 +225,7 @@ export default function RootLayout({
         <GoogleTagManager />
         <MicrosoftClarity />
         <NavigationProgress />
+        <MaterialSymbolsSwap />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>
