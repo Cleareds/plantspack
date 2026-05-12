@@ -886,8 +886,8 @@ function PostRow({ post }: { post: CompactPost }) {
               </div>
             )}
             <span className="text-[10px] font-medium text-on-surface-variant truncate">{u?.first_name || u?.username}</span>
-            <span className="text-[10px] text-on-surface-variant/80">·</span>
-            <span className="text-[10px] text-on-surface-variant/80" suppressHydrationWarning>{timeAgo(post.created_at)}</span>
+            <span className="text-[10px] text-on-surface-variant">·</span>
+            <span className="text-[10px] text-on-surface-variant" suppressHydrationWarning>{timeAgo(post.created_at)}</span>
           </div>
           <p className="text-xs text-on-surface leading-relaxed">
             {truncated}
@@ -931,8 +931,8 @@ function ReviewRow({ review }: { review: CompactReview }) {
               </div>
             )}
             <span className="text-[10px] font-medium text-on-surface-variant truncate">{u?.first_name || u?.username}</span>
-            <span className="text-[10px] text-on-surface-variant/80">·</span>
-            <span className="text-[10px] text-on-surface-variant/80" suppressHydrationWarning>{timeAgo(review.created_at)}</span>
+            <span className="text-[10px] text-on-surface-variant">·</span>
+            <span className="text-[10px] text-on-surface-variant" suppressHydrationWarning>{timeAgo(review.created_at)}</span>
           </div>
           <div className="flex items-center gap-1 mb-1" aria-label={`${review.rating} stars`}>
             {[1, 2, 3, 4, 5].map(i => (

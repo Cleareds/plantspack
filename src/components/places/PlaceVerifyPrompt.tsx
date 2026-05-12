@@ -138,7 +138,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
           <Leaf className="h-3 w-3" /> Few vegan options only
         </button>
       </div>
-      <p className="text-[10px] text-on-surface-variant/80 mt-2">Your feedback helps keep our data accurate</p>
+      <p className="text-[10px] text-on-surface-variant mt-2">Your feedback helps keep our data accurate</p>
     </div>
   )
 }

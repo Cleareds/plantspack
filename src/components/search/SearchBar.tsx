@@ -265,7 +265,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                             // same city (Flower Burger Roma Alessandria vs
                             // Roma Gracchi, multiple LPQ etc.) are visibly
                             // distinct in the dropdown.
-                            <p className="text-[10px] text-on-surface-variant/80 truncate">
+                            <p className="text-[10px] text-on-surface-variant truncate">
                               {place.address.split(',').slice(0, 2).join(',').trim()}
                             </p>
                           )}

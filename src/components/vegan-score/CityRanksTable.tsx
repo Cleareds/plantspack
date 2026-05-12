@@ -261,7 +261,7 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                         {isTop ? (
                           <span className="text-xs">🏆</span>
                         ) : (
-                          <span className="text-on-surface-variant/80 text-xs font-medium">{sortKey === 'score' && sortDir === 'desc' ? displayRank : origRank}</span>
+                          <span className="text-on-surface-variant text-xs font-medium">{sortKey === 'score' && sortDir === 'desc' ? displayRank : origRank}</span>
                         )}
                       </td>
                       <td className="px-3 py-2.5">
@@ -332,7 +332,7 @@ export default function CityRanksTable({ scores, cityImages = {} }: CityRanksTab
                         {isTop ? (
                           <span className="text-sm">🏆</span>
                         ) : (
-                          <span className="text-xs font-bold text-on-surface-variant/80">#{displayRank}</span>
+                          <span className="text-xs font-bold text-on-surface-variant">#{displayRank}</span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">

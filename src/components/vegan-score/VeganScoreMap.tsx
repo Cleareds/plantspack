@@ -337,7 +337,7 @@ export default function VeganScoreMap() {
                       } hover:bg-primary/5`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-bold w-4 ${isTop ? 'text-primary' : 'text-on-surface-variant/80'}`}>
+                        <span className={`text-[10px] font-bold w-4 ${isTop ? 'text-primary' : 'text-on-surface-variant'}`}>
                           {isTop ? '🏆' : `#${i + 1}`}
                         </span>
                         <div className="flex-1 min-w-0">

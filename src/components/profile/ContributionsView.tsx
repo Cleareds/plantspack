@@ -114,7 +114,7 @@ export default function ContributionsView({ username, type }: Props) {
         </div>
       ) : rows.length === 0 ? (
         <div className="py-12 text-center">
-          <AlertCircle className="w-8 h-8 mx-auto text-on-surface-variant/80" />
+          <AlertCircle className="w-8 h-8 mx-auto text-on-surface-variant" />
           <p className="mt-3 text-on-surface-variant">{EMPTY[type]}</p>
         </div>
       ) : (
