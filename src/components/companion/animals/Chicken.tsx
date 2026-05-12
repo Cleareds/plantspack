@@ -1,67 +1,61 @@
 /**
- * Hand-drawn SVG chicken for the companion POC.
+ * Chicken companion - side profile, thin green line, minimal detail.
  *
- * Animation is pure CSS (defined in CompanionClient.module.css):
- *   - body: gentle vertical bob
- *   - head: independent slow bob
- *   - eye: occasional blink (scaleY)
- *   - tail: subtle wag
- *
- * Stays close to the logo's organic single-color silhouette aesthetic
- * but with a creamy body fill so the animal reads as a character, not
- * a logo glyph.
+ * A rounded body, smaller head set forward and high, simple comb,
+ * triangular beak, soft tail plume. Two visible legs (chickens are
+ * bipedal, so no "back legs" in side view).
  */
+import { VIEW_BOX, LINE, FILL_GREEN } from './_shared'
+
 export default function Chicken() {
   return (
     <svg
-      viewBox="0 0 200 200"
+      viewBox={VIEW_BOX}
       role="img"
       aria-label="Chicken companion"
       style={{ width: '100%', height: '100%', overflow: 'visible' }}
     >
-      <g className="companion-body">
+      <g className="companion-body" {...LINE}>
         {/* legs */}
-        <g stroke="#0a6b1e" strokeWidth="3" strokeLinecap="round">
-          <line x1="85" y1="160" x2="83" y2="180" />
-          <line x1="115" y1="160" x2="117" y2="180" />
-          <path d="M77 180 L83 180 L80 184 Z" fill="#fc0" stroke="none" />
-          <path d="M113 180 L119 180 L116 184 Z" fill="#fc0" stroke="none" />
-        </g>
-        {/* tail feathers */}
-        <g className="companion-tail" style={{ transformOrigin: '60px 130px' }}>
-          <path d="M62 130 Q40 110 45 95 Q55 105 65 120 Z" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2" />
-        </g>
-        {/* body */}
-        <ellipse cx="100" cy="130" rx="46" ry="38" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2.5" />
-        {/* wing */}
-        <path d="M95 115 Q120 125 105 152 Q88 142 95 115 Z" fill="#f7f4ea" stroke="#0a6b1e" strokeWidth="2" />
+        <path d="M108 138 L106 168" />
+        <path d="M140 138 L142 168" />
+        {/* feet (3 toes each) */}
+        <path d="M100 168 L106 168 M106 168 L104 172 M106 168 L108 172 M106 168 L110 172" />
+        <path d="M136 168 L142 168 M142 168 L140 172 M142 168 L144 172 M142 168 L146 172" />
+        {/* body — rounded oval with subtle tail plume on the left */}
+        <path d="
+          M 70 130
+          C 60 122 60 108 72 102
+          C 84 92 100 92 116 96
+          C 132 100 148 102 156 116
+          C 160 128 152 138 140 140
+          L 108 140
+          C 88 140 78 138 70 130 Z
+        " />
+        {/* tail feathers (3 soft arcs) */}
+        <path d="M 70 112 Q 56 100 50 86" />
+        <path d="M 66 118 Q 50 110 46 96" />
+        <path d="M 72 124 Q 56 122 50 114" />
+        {/* wing line on body */}
+        <path d="M 92 116 Q 110 122 124 116" />
       </g>
-      <g className="companion-head" style={{ transformOrigin: '135px 95px' }}>
+      <g className="companion-head" style={{ transformOrigin: '156px 90px', transformBox: 'fill-box' }}>
         {/* head */}
-        <circle cx="135" cy="90" r="28" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2.5" />
-        {/* comb */}
-        <path
-          d="M124 62 Q128 50 132 60 Q136 50 140 60 Q144 50 148 62 Z"
-          fill="#e74c3c"
-          stroke="#0a6b1e"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
+        <path d="
+          M 144 102
+          C 142 90 150 80 162 78
+          C 174 76 184 82 186 92
+          C 188 102 180 110 170 110
+          C 158 110 148 108 144 102 Z
+        " {...LINE} />
+        {/* comb (3 bumps) */}
+        <path d="M 156 76 Q 158 70 162 74 Q 164 68 168 74 Q 170 68 174 76" {...LINE} />
+        {/* beak (triangle) */}
+        <path d="M 186 90 L 196 92 L 186 96 Z" {...LINE} />
         {/* wattle */}
-        <path d="M148 100 Q156 104 150 112 Z" fill="#e74c3c" stroke="#0a6b1e" strokeWidth="1.5" />
-        {/* beak */}
-        <polygon
-          points="160,88 172,90 160,94"
-          fill="#fc0"
-          stroke="#0a6b1e"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-        />
-        {/* eye — animation target */}
-        <g className="companion-eye" style={{ transformOrigin: '141px 84px' }}>
-          <circle cx="141" cy="84" r="3.5" fill="#0a6b1e" />
-          <circle cx="142" cy="83" r="1" fill="#fefdf8" />
-        </g>
+        <path d="M 184 100 Q 188 106 184 110" {...LINE} />
+        {/* eye */}
+        <ellipse cx="172" cy="92" rx="1.6" ry="2.2" {...FILL_GREEN} />
       </g>
     </svg>
   )

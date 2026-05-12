@@ -1,62 +1,64 @@
 /**
- * Hand-drawn SVG cow companion. White body with soft black spots,
- * a tail tuft that swishes, ears that flick.
+ * Cow companion - side profile, thin green line. Rectangular body,
+ * small horns, floppy ear, simple muzzle, long tail with tuft.
  */
+import { VIEW_BOX, LINE, FILL_GREEN } from './_shared'
+
 export default function Cow() {
   return (
     <svg
-      viewBox="0 0 200 200"
+      viewBox={VIEW_BOX}
       role="img"
       aria-label="Cow companion"
       style={{ width: '100%', height: '100%', overflow: 'visible' }}
     >
-      <g className="companion-body">
+      <g className="companion-body" {...LINE}>
         {/* legs */}
-        <g fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2">
-          <rect x="72" y="152" width="11" height="26" rx="2" />
-          <rect x="118" y="152" width="11" height="26" rx="2" />
-        </g>
+        <path d="M72 130 L70 168" />
+        <path d="M100 130 L98 168" />
+        <path d="M148 130 L150 168" />
+        <path d="M170 130 L172 168" />
         {/* hooves */}
-        <g fill="#2c2118" stroke="none">
-          <rect x="71" y="176" width="13" height="4" rx="1" />
-          <rect x="117" y="176" width="13" height="4" rx="1" />
-        </g>
-        {/* tail */}
-        <g className="companion-tail" style={{ transformOrigin: '50px 130px' }}>
-          <line x1="50" y1="130" x2="38" y2="148" stroke="#0a6b1e" strokeWidth="2.5" strokeLinecap="round" />
-          <ellipse cx="36" cy="151" rx="5" ry="6" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2" />
-        </g>
-        {/* body */}
-        <ellipse cx="100" cy="130" rx="50" ry="32" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2.5" />
-        {/* spots */}
-        <ellipse cx="85" cy="120" rx="10" ry="7" fill="#2c2118" />
-        <ellipse cx="120" cy="138" rx="12" ry="8" fill="#2c2118" />
-        <ellipse cx="105" cy="148" rx="6" ry="4" fill="#2c2118" />
+        <path d="M66 168 L76 168 M70 168 L70 172" />
+        <path d="M94 168 L104 168 M98 168 L98 172" />
+        <path d="M144 168 L154 168 M150 168 L150 172" />
+        <path d="M166 168 L176 168 M172 168 L172 172" />
+        {/* body - longer, more rectangular than pig */}
+        <path d="
+          M 56 116
+          C 56 100 70 90 90 88
+          C 110 86 132 88 152 92
+          C 162 94 168 100 170 110
+          L 170 130
+          L 64 130
+          C 56 128 54 122 56 116 Z
+        " />
+        {/* tail (long, curving down on left, with tuft) */}
+        <path d="M 56 110 q -10 8 -8 30" />
+        <ellipse cx="47" cy="142" rx="3.5" ry="5" />
+        <path d="M 47 137 q 1 -2 0 -3 M 47 147 q 1 2 0 3 M 44 144 q -2 1 -3 0 M 50 144 q 2 1 3 0" />
       </g>
-      <g className="companion-head" style={{ transformOrigin: '150px 105px' }}>
-        {/* head */}
-        <ellipse cx="150" cy="105" rx="26" ry="28" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2.5" />
-        {/* ears */}
-        <ellipse cx="128" cy="92" rx="6" ry="9" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2" transform="rotate(-25 128 92)" />
-        <ellipse cx="172" cy="92" rx="6" ry="9" fill="#fefdf8" stroke="#0a6b1e" strokeWidth="2" transform="rotate(25 172 92)" />
-        {/* horns */}
-        <path d="M134 84 Q132 78 136 76" fill="none" stroke="#0a6b1e" strokeWidth="2.5" strokeLinecap="round" />
-        <path d="M166 84 Q168 78 164 76" fill="none" stroke="#0a6b1e" strokeWidth="2.5" strokeLinecap="round" />
-        {/* snout (muzzle area) */}
-        <ellipse cx="150" cy="118" rx="16" ry="11" fill="#f5b7c4" stroke="#0a6b1e" strokeWidth="2" opacity="0.75" />
-        <circle cx="144" cy="118" r="1.5" fill="#0a6b1e" />
-        <circle cx="156" cy="118" r="1.5" fill="#0a6b1e" />
-        {/* eyes */}
-        <g className="companion-eye" style={{ transformOrigin: '143px 100px' }}>
-          <circle cx="143" cy="100" r="3" fill="#0a6b1e" />
-          <circle cx="144" cy="99" r="1" fill="#fefdf8" />
-        </g>
-        <g className="companion-eye" style={{ transformOrigin: '157px 100px' }}>
-          <circle cx="157" cy="100" r="3" fill="#0a6b1e" />
-          <circle cx="158" cy="99" r="1" fill="#fefdf8" />
-        </g>
-        {/* forehead tuft */}
-        <path d="M148 82 q2 -6 4 0" fill="none" stroke="#0a6b1e" strokeWidth="2" strokeLinecap="round" />
+      <g className="companion-head" style={{ transformOrigin: '180px 110px', transformBox: 'fill-box' }}>
+        {/* head + muzzle (rounded rectangle, lower than back line) */}
+        <path d="
+          M 168 104
+          C 170 92 184 86 196 90
+          C 208 94 212 104 208 114
+          C 204 124 192 126 184 122
+          L 178 118
+          C 172 116 170 110 168 104 Z
+        " {...LINE} />
+        {/* horn (single visible horn, simple curve) */}
+        <path d="M 188 88 Q 186 82 192 80" {...LINE} />
+        <path d="M 196 88 Q 198 82 202 84" {...LINE} />
+        {/* ear */}
+        <path d="M 200 92 Q 208 88 210 96 Q 206 100 200 98" {...LINE} />
+        {/* muzzle line */}
+        <path d="M 200 112 Q 206 114 210 110" {...LINE} />
+        {/* nostril */}
+        <ellipse cx="206" cy="113" rx="0.9" ry="0.5" {...FILL_GREEN} />
+        {/* eye */}
+        <ellipse cx="194" cy="98" rx="1.6" ry="2.2" {...FILL_GREEN} />
       </g>
     </svg>
   )

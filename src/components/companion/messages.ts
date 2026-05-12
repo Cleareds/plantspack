@@ -7,7 +7,7 @@
  * disturbing the UI layer.
  */
 
-export type Species = 'chicken' | 'pig' | 'cow'
+export type Species = 'chicken' | 'pig' | 'cow' | 'lamb'
 
 export interface CompanionContext {
   // Optional real data the companion can reference. The UI can fetch these
@@ -56,6 +56,16 @@ const TEMPLATES: Record<Species, Template[]> = {
     { weight: 4, fn: (c) => c.userCity ? `${c.userCity}, hm? I'd visit if I could.` : null },
     { weight: 4, fn: (c) => c.topCityToday ? `${c.topCityToday} is the top vegan city today. Curious.` : null },
   ],
+  lamb: [
+    { weight: 3, fn: () => 'Baa. I trust you. Show me a new place?' },
+    { weight: 3, fn: () => 'Wool is warm. Kindness is warmer.' },
+    { weight: 2, fn: () => 'I follow gentle humans. That is you, right?' },
+    { weight: 2, fn: () => 'Did you know lambs recognise their humans by voice?' },
+    { weight: 4, fn: (c) => c.totalPlaces ? `${c.totalPlaces.toLocaleString()} places. So many friends to make.` : null },
+    { weight: 4, fn: (c) => c.newPlacesThisWeek && c.newPlacesThisWeek > 0 ? `${c.newPlacesThisWeek} new places this week. The meadow grows.` : null },
+    { weight: 4, fn: (c) => c.userCity ? `Is ${c.userCity} peaceful today?` : null },
+    { weight: 4, fn: (c) => c.topCityToday ? `Folks are flocking to ${c.topCityToday} today.` : null },
+  ],
 }
 
 export function pickMessage(species: Species, ctx: CompanionContext): string {
@@ -85,6 +95,7 @@ export const SPECIES_LABEL: Record<Species, string> = {
   chicken: 'Chicken',
   pig: 'Pig',
   cow: 'Cow',
+  lamb: 'Lamb',
 }
 
-export const SPECIES_ORDER: Species[] = ['chicken', 'pig', 'cow']
+export const SPECIES_ORDER: Species[] = ['chicken', 'pig', 'cow', 'lamb']

@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth'
 import Chicken from './animals/Chicken'
 import Pig from './animals/Pig'
 import Cow from './animals/Cow'
+import Lamb from './animals/Lamb'
 import {
   type Species,
   type CompanionContext,
@@ -70,6 +71,7 @@ const ANIMALS: Record<Species, () => ReactElement> = {
   chicken: Chicken,
   pig: Pig,
   cow: Cow,
+  lamb: Lamb,
 }
 
 const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
@@ -86,6 +88,7 @@ const SPECIES_DEFAULT_NAMES: Record<Species, string[]> = {
   chicken: ['Pip', 'Henrietta', 'Goldie', 'Coco', 'Maple'],
   pig: ['Truffle', 'Pearl', 'Hammond', 'Olive', 'Beans'],
   cow: ['Daisy', 'Buttercup', 'Clover', 'Patch', 'Moo'],
+  lamb: ['Wooly', 'Cotton', 'Sage', 'Clover', 'Willow'],
 }
 
 function pickDefaultName(species: Species, existingNames: string[]): string {
