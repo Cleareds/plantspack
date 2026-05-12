@@ -9,7 +9,6 @@ import ClientProviders from "@/components/providers/ClientProviders";
 import AppShell from "@/components/layout/AppShell";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
-import MicrosoftClarity from "@/components/analytics/MicrosoftClarity";
 import PageViewTracker from "@/components/analytics/PageViewTracker";
 import NavigationProgress from "@/components/layout/NavigationProgress";
 import MaterialSymbolsSwap from "@/components/layout/MaterialSymbolsSwap";
@@ -223,7 +222,6 @@ export default function RootLayout({
         </noscript>
         <GoogleAnalytics />
         <GoogleTagManager />
-        <MicrosoftClarity />
         <NavigationProgress />
         <MaterialSymbolsSwap />
         <Suspense fallback={null}>

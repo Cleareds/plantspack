@@ -763,7 +763,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                               alt={city.city}
                               fill
                               sizes="(max-width: 640px) 50vw, 200px"
-                              quality={55}
+                              quality={50}
                               className="object-cover"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                             />

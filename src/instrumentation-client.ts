@@ -23,8 +23,20 @@ if (typeof window !== 'undefined') {
 const initOptions = {
   dsn: "https://75f5c58e2777ced9c1613bcf3d1aa463@o4510374990118912.ingest.de.sentry.io/4510374991364176",
 
-  // Sample 10% of transactions in production to reduce costs
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1,
+  // Disable BrowserTracing + Replay + Profiling at config time. @sentry/nextjs
+  // v10 enables all three by default, contributing ~60 KB of unused JS per
+  // PageSpeed (Lighthouse audit). We don't consume traces in Sentry's UI and
+  // never enabled Replay sessions. Setting both sample rates to 0 prevents
+  // the runtime instrumentation from firing; trimming the integrations list
+  // additionally lets bundlers tree-shake the implementations.
+  integrations: (defaults: any[]) =>
+    defaults.filter(
+      (i) =>
+        !['BrowserTracing', 'Replay', 'BrowserProfiling', 'BrowserSession'].includes(i?.name)
+    ),
+  tracesSampleRate: 0,
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 0,
 
   // Enable logs only in development
   enableLogs: process.env.NODE_ENV !== 'production',
