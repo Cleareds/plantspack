@@ -193,7 +193,10 @@ export default function CompanionClient() {
     )
   }, [active?.id, active?.species, context])
 
-  async function updateActive(patch: { species?: Species; name?: string }) {
+  // Name is the only mutable field after adoption. Species is locked at
+  // adoption time and never changes. If we ever need species migration
+  // (e.g. for moderation), that gets its own admin-only path.
+  async function updateActive(patch: { name?: string }) {
     if (!active || !user) return
     const next = { ...active, ...patch }
     setAllCompanions((prev) => prev.map((c) => (c.id === active.id ? next : c)))
@@ -201,7 +204,6 @@ export default function CompanionClient() {
     const { error } = await supabase
       .from('companions')
       .update({
-        ...(patch.species ? { species: patch.species } : {}),
         ...(patch.name ? { name: patch.name } : {}),
       })
       .eq('id', active.id)
@@ -435,7 +437,9 @@ export default function CompanionClient() {
         </div>
       )}
 
-      {/* Active companion edit */}
+      {/* Active companion edit: name only. Species is locked at adoption -
+          a chicken stays a chicken for life. Picking a species is part of
+          adopting, not part of caring for an existing companion. */}
       {active && activeStage?.isAlive && (
         <div className="mt-6 space-y-5">
           <div>
@@ -460,27 +464,6 @@ export default function CompanionClient() {
               }}
               className="w-full max-w-xs px-3 py-2 rounded-lg ghost-border bg-surface-container-lowest text-sm focus:outline-none focus:border-primary/40"
             />
-          </div>
-          <div>
-            <span className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wide mb-2">Look</span>
-            <div className="flex flex-wrap gap-2">
-              {SPECIES_ORDER.map((sp) => {
-                const a = active.species === sp
-                return (
-                  <button
-                    key={sp}
-                    type="button"
-                    onClick={() => updateActive({ species: sp })}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      a ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-lowest text-on-surface ghost-border hover:border-primary/30'
-                    }`}
-                    aria-pressed={a}
-                  >
-                    {SPECIES_LABEL[sp]}
-                  </button>
-                )
-              })}
-            </div>
           </div>
         </div>
       )}
