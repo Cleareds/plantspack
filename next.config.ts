@@ -126,26 +126,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Static SVG/PNG/ICO assets in /public — they're versioned via the
-        // ?dpl=<deploymentId> query the Next runtime appends, so we can
-        // cache them aggressively. Was defaulting to max-age=10 which gave
-        // Lighthouse a "TTL too short" warning on every page load.
-        source: '/:path*.svg',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-      },
-      {
-        source: '/:path*.png',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-      },
-      {
-        source: '/:path*.ico',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
-      },
-      {
-        source: '/:path*.webmanifest',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400' }],
-      },
-      {
         // Public-read API routes (place/city/content data) — safe to cache briefly
         source: '/api/places/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
@@ -246,6 +226,19 @@ const nextConfig: NextConfig = {
             value: 'public, max-age=10, stale-while-revalidate=59',
           },
         ],
+      },
+      {
+        // Static assets in /public are versioned via the ?dpl=<deploymentId>
+        // query Next.js appends to every URL — safe to cache for a year.
+        // Placed AFTER the public-pages catch-all so duplicate Cache-Control
+        // keys resolve in favour of this rule (Next.js header merge: later
+        // matching rule wins for the same key).
+        source: '/:filename(.+\\.(?:svg|png|jpg|jpeg|ico|webp|avif))',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+      {
+        source: '/:filename(.+\\.webmanifest)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400' }],
       },
     ]
   },
