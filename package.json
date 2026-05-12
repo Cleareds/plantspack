@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:test": "next dev",
+    "prebuild": "node scripts/strip-next-polyfills.js",
     "build": "next build",
     "analyze": "ANALYZE=true next build --webpack",
     "start": "next start",
@@ -30,7 +31,8 @@
     "test:fast": "playwright test --project=chromium --workers=1 --reporter=list",
     "test:setup": "npm run db:start && npm run db:seed",
     "test:teardown": "npm run db:stop",
-    "test:clean": "bash scripts/clean-test-artifacts.sh"
+    "test:clean": "bash scripts/clean-test-artifacts.sh",
+    "postinstall": "node scripts/strip-next-polyfills.js"
   },
   "browserslist": [
     "Chrome >= 113",
