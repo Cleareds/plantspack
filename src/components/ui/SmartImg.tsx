@@ -10,6 +10,7 @@ interface SmartImgProps {
   className?: string
   priority?: boolean
   sizes?: string
+  quality?: number
   unoptimizedHosts?: string[]
 }
 
@@ -50,6 +51,7 @@ export default function SmartImg({
   className,
   priority,
   sizes,
+  quality,
 }: SmartImgProps) {
   if (isOptimizable(src)) {
     return (
@@ -61,6 +63,7 @@ export default function SmartImg({
         className={className}
         priority={priority}
         sizes={sizes}
+        quality={quality}
         loading={priority ? 'eager' : 'lazy'}
       />
     )

@@ -373,6 +373,7 @@ export default async function Home() {
                         width={300}
                         height={112}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
+                        quality={55}
                         className="w-full h-28 object-cover"
                       />
                     ) : (

@@ -866,7 +866,7 @@ function PostRow({ post }: { post: CompactPost }) {
   return (
     <Link href={postUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
-        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} quality={55} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1 flex-wrap">
             {post.is_pinned && (
@@ -880,7 +880,7 @@ function PostRow({ post }: { post: CompactPost }) {
               </span>
             )}
             {u?.avatar_url ? (
-              <SmartImg src={u.avatar_url} alt="" width={16} height={16} className="w-4 h-4 rounded-full object-cover" />
+              <SmartImg src={u.avatar_url} alt="" width={16} height={16} quality={55} className="w-4 h-4 rounded-full object-cover" />
             ) : (
               <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
                 {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
@@ -918,14 +918,14 @@ function ReviewRow({ review }: { review: CompactReview }) {
   return (
     <Link href={placeUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border border-l-2 border-l-amber-300/70 hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
-        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} quality={55} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1 flex-wrap">
             <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
               <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Review
             </span>
             {u?.avatar_url ? (
-              <SmartImg src={u.avatar_url} alt="" width={16} height={16} className="w-4 h-4 rounded-full object-cover" />
+              <SmartImg src={u.avatar_url} alt="" width={16} height={16} quality={55} className="w-4 h-4 rounded-full object-cover" />
             ) : (
               <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
                 {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
