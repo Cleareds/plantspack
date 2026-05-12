@@ -16,22 +16,23 @@ import {
 import styles from './CompanionClient.module.css'
 
 /**
- * Companion POC (admin-only).
+ * Companion POC, admin-only for now.
  *
- * Persistence: Supabase `companions` table with RLS. Each user has at
- * most one companion (UNIQUE on user_id). Reads/writes are scoped to
- * auth.uid() so even if this route is ever opened to all users, no one
- * can read another person's companion row.
+ * Lifecycle model:
+ *   - Each companion has a fixed lifespan_days (default 50).
+ *   - "Alive" = ageDays < lifespan_days. Passed companions stay in the
+ *     DB for history but don't count against the concurrency cap.
+ *   - Stage is proportional to lifespan: baby <20%, juvenile 20-60%,
+ *     adult 60-100%. Means stage thresholds scale automatically if
+ *     we ever ship longer-lived tiers.
  *
- * Local state mirrors the DB row plus an in-memory `message` string
- * that's rolled client-side from non-AI templates.
+ * Concurrency:
+ *   - Admin: 3 simultaneous alive companions
+ *   - Everyone else (when feature opens): 1
+ *   - Once a companion passes, that slot frees up.
  *
- * Growth model: stage is derived from created_at in app code, not
- * stored. baby -> juvenile -> adult thresholds live in stageFromAge()
- * below so they're easy to iterate without a migration.
- *
- * Naming rule: this product is *always* called "companion", never
- * "pet". User-facing copy + internal identifiers respect that.
+ * Naming: this product is always "companion", never "pet". Internal
+ * types, DB rows, UI copy.
  */
 
 interface CompanionRow {
@@ -40,23 +41,29 @@ interface CompanionRow {
   species: Species
   name: string
   created_at: string
+  lifespan_days: number
 }
 
-type Stage = 'baby' | 'juvenile' | 'adult'
+type Stage = 'baby' | 'juvenile' | 'adult' | 'passed'
 
 interface StageInfo {
   stage: Stage
-  label: string
   ageDays: number
-  nextStageAt: number | null
+  daysRemaining: number
+  isAlive: boolean
+  scale: number // visual scale to give a sense of growth without new art
 }
 
-function stageFromAge(createdAt: string): StageInfo {
+function stageFromAge(createdAt: string, lifespanDays: number): StageInfo {
   const ms = Date.now() - new Date(createdAt).getTime()
   const ageDays = Math.max(0, Math.floor(ms / (24 * 60 * 60 * 1000)))
-  if (ageDays < 7) return { stage: 'baby', label: 'baby', ageDays, nextStageAt: 7 }
-  if (ageDays < 30) return { stage: 'juvenile', label: 'juvenile', ageDays, nextStageAt: 30 }
-  return { stage: 'adult', label: 'adult', ageDays, nextStageAt: null }
+  const isAlive = ageDays < lifespanDays
+  const daysRemaining = Math.max(0, lifespanDays - ageDays)
+  if (!isAlive) return { stage: 'passed', ageDays, daysRemaining: 0, isAlive: false, scale: 1 }
+  const pct = lifespanDays > 0 ? ageDays / lifespanDays : 0
+  if (pct < 0.2) return { stage: 'baby', ageDays, daysRemaining, isAlive: true, scale: 0.7 }
+  if (pct < 0.6) return { stage: 'juvenile', ageDays, daysRemaining, isAlive: true, scale: 0.85 }
+  return { stage: 'adult', ageDays, daysRemaining, isAlive: true, scale: 1 }
 }
 
 const ANIMALS: Record<Species, () => ReactElement> = {
@@ -65,19 +72,52 @@ const ANIMALS: Record<Species, () => ReactElement> = {
   cow: Cow,
 }
 
-const DEFAULT_NAME = 'Mira'
-const DEFAULT_SPECIES: Species = 'chicken'
+const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
+const DEFAULT_LIFESPAN_DAYS = 50
+
+function getMaxCompanions(userId: string): number {
+  // For now, only admin can use this feature, and admin gets 3 slots.
+  // When/if this opens to all users, free tier = 1, paid tiers TBD.
+  if (userId === ADMIN_ID) return 3
+  return 1
+}
+
+const SPECIES_DEFAULT_NAMES: Record<Species, string[]> = {
+  chicken: ['Pip', 'Henrietta', 'Goldie', 'Coco', 'Maple'],
+  pig: ['Truffle', 'Pearl', 'Hammond', 'Olive', 'Beans'],
+  cow: ['Daisy', 'Buttercup', 'Clover', 'Patch', 'Moo'],
+}
+
+function pickDefaultName(species: Species, existingNames: string[]): string {
+  const pool = SPECIES_DEFAULT_NAMES[species].filter((n) => !existingNames.includes(n))
+  const list = pool.length ? pool : SPECIES_DEFAULT_NAMES[species]
+  return list[Math.floor(Math.random() * list.length)]
+}
 
 export default function CompanionClient() {
   const { user } = useAuth()
-  const [row, setRow] = useState<CompanionRow | null>(null)
+  const [allCompanions, setAllCompanions] = useState<CompanionRow[]>([])
+  const [activeId, setActiveId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [context, setContext] = useState<CompanionContext>({})
-  const [message, setMessage] = useState<string>('')
+  const [messageByCompanion, setMessageByCompanion] = useState<Record<string, string>>({})
 
-  // Initial fetch: read the user's companion row, or insert a default
-  // one if they don't have one yet. This is the "first visit" flow.
+  // Adoption-flow state
+  const [adoptOpen, setAdoptOpen] = useState(false)
+  const [adoptSpecies, setAdoptSpecies] = useState<Species>('chicken')
+  const [adoptName, setAdoptName] = useState('')
+
+  const maxSlots = user ? getMaxCompanions(user.id) : 1
+
+  const alive = useMemo(
+    () => allCompanions.filter((c) => stageFromAge(c.created_at, c.lifespan_days).isAlive),
+    [allCompanions],
+  )
+  const slotsFree = Math.max(0, maxSlots - alive.length)
+  const active = useMemo(() => alive.find((c) => c.id === activeId) || alive[0] || null, [alive, activeId])
+
+  // Initial load
   useEffect(() => {
     if (!user) return
     let cancelled = false
@@ -85,46 +125,34 @@ export default function CompanionClient() {
       setLoading(true)
       const { data, error } = await supabase
         .from('companions')
-        .select('id, user_id, species, name, created_at')
+        .select('id, user_id, species, name, created_at, lifespan_days')
         .eq('user_id', user.id)
-        .maybeSingle()
+        .order('created_at', { ascending: true })
       if (cancelled) return
       if (error) {
         setSaveError(error.message)
         setLoading(false)
         return
       }
-      if (data) {
-        setRow(data as CompanionRow)
-        setLoading(false)
-        return
-      }
-      // No companion yet — adopt a default. The created_at on this row
-      // starts the growth clock.
-      const { data: inserted, error: insErr } = await supabase
-        .from('companions')
-        .insert({
-          user_id: user.id,
-          species: DEFAULT_SPECIES,
-          name: DEFAULT_NAME,
-        })
-        .select('id, user_id, species, name, created_at')
-        .single()
-      if (cancelled) return
-      if (insErr) {
-        setSaveError(insErr.message)
-      } else if (inserted) {
-        setRow(inserted as CompanionRow)
-      }
+      setAllCompanions((data || []) as CompanionRow[])
       setLoading(false)
     })()
     return () => { cancelled = true }
   }, [user])
 
-  // Pull a small slice of platform data so the companion can reference
-  // real numbers. Fires after mount; never blocks initial render.
+  // Default active = first alive companion
   useEffect(() => {
-    if (!row) return
+    if (!activeId && alive.length > 0) {
+      setActiveId(alive[0].id)
+    } else if (activeId && !alive.find((c) => c.id === activeId)) {
+      // The active companion passed during the session — fall back.
+      setActiveId(alive[0]?.id ?? null)
+    }
+  }, [alive, activeId])
+
+  // Pull platform context once; messages use it across all companions.
+  useEffect(() => {
+    if (!user) return
     let cancelled = false
     ;(async () => {
       try {
@@ -150,28 +178,25 @@ export default function CompanionClient() {
           : null
         setContext({ totalPlaces: totalPlaces ?? undefined, newPlacesThisWeek, topCityToday, userCity })
       } catch {
-        /* swallow — companion still works without platform data */
+        /* non-fatal */
       }
     })()
     return () => { cancelled = true }
-  }, [row])
+  }, [user])
 
-  // Roll a fresh message whenever the species or context changes.
+  // Roll a message for the active companion when its species or the
+  // shared platform context changes.
   useEffect(() => {
-    if (!row) return
-    setMessage(pickMessage(row.species, context))
-  }, [row?.species, context])
+    if (!active) return
+    setMessageByCompanion((prev) =>
+      prev[active.id] ? prev : { ...prev, [active.id]: pickMessage(active.species, context) },
+    )
+  }, [active?.id, active?.species, context])
 
-  const Animal = useMemo(() => (row ? ANIMALS[row.species] : null), [row?.species])
-  const stageInfo = useMemo(() => (row ? stageFromAge(row.created_at) : null), [row?.created_at])
-
-  // Optimistic update: mutate local state instantly, fire-and-forget
-  // the DB write. RLS guarantees only this user's row can be touched
-  // even if the client lies.
-  async function update(patch: { species?: Species; name?: string }) {
-    if (!row || !user) return
-    const next = { ...row, ...patch }
-    setRow(next)
+  async function updateActive(patch: { species?: Species; name?: string }) {
+    if (!active || !user) return
+    const next = { ...active, ...patch }
+    setAllCompanions((prev) => prev.map((c) => (c.id === active.id ? next : c)))
     setSaveError(null)
     const { error } = await supabase
       .from('companions')
@@ -179,13 +204,44 @@ export default function CompanionClient() {
         ...(patch.species ? { species: patch.species } : {}),
         ...(patch.name ? { name: patch.name } : {}),
       })
-      .eq('user_id', user.id)
+      .eq('id', active.id)
     if (error) {
-      // Roll back local state if the DB rejected the write.
-      setRow(row)
+      // Roll back local state on DB error
+      setAllCompanions((prev) => prev.map((c) => (c.id === active.id ? active : c)))
       setSaveError(error.message)
     }
   }
+
+  async function adopt() {
+    if (!user) return
+    const trimmedName = adoptName.trim() || pickDefaultName(adoptSpecies, alive.map((c) => c.name))
+    setSaveError(null)
+    const { data, error } = await supabase
+      .from('companions')
+      .insert({
+        user_id: user.id,
+        species: adoptSpecies,
+        name: trimmedName,
+        lifespan_days: DEFAULT_LIFESPAN_DAYS,
+      })
+      .select('id, user_id, species, name, created_at, lifespan_days')
+      .single()
+    if (error) {
+      setSaveError(error.message)
+      return
+    }
+    if (data) {
+      const newRow = data as CompanionRow
+      setAllCompanions((prev) => [...prev, newRow])
+      setActiveId(newRow.id)
+      setAdoptOpen(false)
+      setAdoptName('')
+    }
+  }
+
+  const ActiveAnimal = active ? ANIMALS[active.species] : null
+  const activeStage = active ? stageFromAge(active.created_at, active.lifespan_days) : null
+  const activeMessage = active ? messageByCompanion[active.id] : ''
 
   if (!user) {
     return (
@@ -197,55 +253,190 @@ export default function CompanionClient() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      <div className="mb-6">
-        <h1 className="text-2xl font-headline font-bold text-on-surface">Companion</h1>
-        <p className="text-sm text-on-surface-variant mt-1">
-          Admin POC. Non-AI: tap your companion for a thought. Free tier only for now.
-        </p>
+      <div className="mb-6 flex items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-headline font-bold text-on-surface">Companions</h1>
+          <p className="text-sm text-on-surface-variant mt-1">
+            Admin POC. Non-AI. Each companion lives {DEFAULT_LIFESPAN_DAYS} days.
+          </p>
+        </div>
+        <div className="text-xs text-on-surface-variant text-right">
+          <p className="font-medium">{alive.length} / {maxSlots} slots</p>
+          {slotsFree > 0 && (
+            <p className="text-primary">{slotsFree} free</p>
+          )}
+        </div>
       </div>
 
+      {/* Carousel: thumbnails for each alive companion + an empty adopt slot */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {alive.map((c) => {
+          const Sp = ANIMALS[c.species]
+          const isActive = active?.id === c.id
+          return (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setActiveId(c.id)}
+              aria-pressed={isActive}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-colors ghost-border ${
+                isActive
+                  ? 'border-primary/40 bg-primary/5'
+                  : 'bg-surface-container-lowest hover:border-primary/20'
+              }`}
+            >
+              <span className="block w-7 h-7"><Sp /></span>
+              <span className="font-medium text-on-surface">{c.name}</span>
+            </button>
+          )
+        })}
+        {slotsFree > 0 && !adoptOpen && (
+          <button
+            type="button"
+            onClick={() => {
+              setAdoptOpen(true)
+              setAdoptSpecies('chicken')
+              setAdoptName(pickDefaultName('chicken', alive.map((c) => c.name)))
+            }}
+            className="px-3 py-2 rounded-xl text-sm font-medium ghost-border text-primary hover:border-primary/40"
+          >
+            + Adopt
+          </button>
+        )}
+      </div>
+
+      {/* Adoption form */}
+      {adoptOpen && (
+        <div className="mb-6 bg-primary/5 ghost-border rounded-2xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-on-surface">Adopt a new companion</h2>
+            <button
+              type="button"
+              onClick={() => { setAdoptOpen(false); setAdoptName('') }}
+              className="text-xs text-on-surface-variant hover:text-on-surface"
+            >
+              cancel
+            </button>
+          </div>
+          <div>
+            <span className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wide mb-2">Species</span>
+            <div className="flex flex-wrap gap-2">
+              {SPECIES_ORDER.map((sp) => {
+                const sel = adoptSpecies === sp
+                return (
+                  <button
+                    key={sp}
+                    type="button"
+                    onClick={() => {
+                      setAdoptSpecies(sp)
+                      setAdoptName(pickDefaultName(sp, alive.map((c) => c.name)))
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      sel ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-lowest text-on-surface ghost-border hover:border-primary/30'
+                    }`}
+                    aria-pressed={sel}
+                  >
+                    {SPECIES_LABEL[sp]}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div>
+            <label htmlFor="adopt-name" className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wide mb-1">Name</label>
+            <input
+              id="adopt-name"
+              type="text"
+              value={adoptName}
+              maxLength={32}
+              placeholder={pickDefaultName(adoptSpecies, alive.map((c) => c.name))}
+              onChange={(e) => setAdoptName(e.target.value)}
+              className="w-full max-w-xs px-3 py-2 rounded-lg ghost-border bg-surface-container-lowest text-sm focus:outline-none focus:border-primary/40"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={adopt}
+            className="px-5 py-2.5 rounded-full bg-primary text-on-primary-btn text-sm font-bold hover:opacity-90 transition-opacity"
+          >
+            Welcome them home
+          </button>
+        </div>
+      )}
+
+      {/* Active companion stage */}
       <div className="bg-surface-container-lowest ghost-border rounded-2xl p-6 md:p-8">
-        {loading || !row || !Animal ? (
+        {loading ? (
           <div className="text-center text-sm text-on-surface-variant py-12">Waking up…</div>
+        ) : !active || !ActiveAnimal || !activeStage ? (
+          <div className="text-center py-12">
+            <p className="text-sm text-on-surface-variant mb-4">No companions yet.</p>
+            {!adoptOpen && (
+              <button
+                type="button"
+                onClick={() => {
+                  setAdoptOpen(true)
+                  setAdoptSpecies('chicken')
+                  setAdoptName(pickDefaultName('chicken', []))
+                }}
+                className="px-5 py-2.5 rounded-full bg-primary text-on-primary-btn text-sm font-bold hover:opacity-90"
+              >
+                Adopt your first companion
+              </button>
+            )}
+          </div>
         ) : (
           <>
-            <div className={`${styles.bubble} ${!message ? styles.empty : ''}`} aria-live="polite">
-              {message || `${row.name} is thinking…`}
+            <div className={`${styles.bubble} ${!activeMessage ? styles.empty : ''}`} aria-live="polite">
+              {activeMessage || `${active.name} is thinking…`}
             </div>
             <button
               type="button"
-              onClick={() => setMessage(pickMessage(row.species, context))}
+              onClick={() => setMessageByCompanion((p) => ({ ...p, [active.id]: pickMessage(active.species, context) }))}
               className={styles.stage}
-              aria-label={`Tap ${row.name} to talk`}
-              style={{ display: 'block', background: 'transparent', border: 0, cursor: 'pointer', padding: 0 }}
+              aria-label={`Tap ${active.name} to talk`}
+              style={{
+                display: 'block',
+                background: 'transparent',
+                border: 0,
+                cursor: 'pointer',
+                padding: 0,
+                transform: `scale(${activeStage.scale})`,
+                transformOrigin: 'center bottom',
+                transition: 'transform 600ms ease-in-out',
+              }}
             >
-              <Animal />
+              <ActiveAnimal />
             </button>
             <p className="text-center text-xs text-on-surface-variant mt-2">tap to talk</p>
           </>
         )}
       </div>
 
-      {row && stageInfo && (
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+      {/* Active companion stats */}
+      {active && activeStage && (
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
           <div className="bg-surface-container-lowest ghost-border rounded-xl p-3">
             <p className="text-[10px] uppercase tracking-wide text-on-surface-variant">Stage</p>
-            <p className="text-base font-semibold text-on-surface capitalize">{stageInfo.label}</p>
+            <p className="text-base font-semibold text-on-surface capitalize">{activeStage.stage}</p>
           </div>
           <div className="bg-surface-container-lowest ghost-border rounded-xl p-3">
             <p className="text-[10px] uppercase tracking-wide text-on-surface-variant">Age</p>
-            <p className="text-base font-semibold text-on-surface">{stageInfo.ageDays}d</p>
+            <p className="text-base font-semibold text-on-surface">{activeStage.ageDays}d</p>
           </div>
           <div className="bg-surface-container-lowest ghost-border rounded-xl p-3">
-            <p className="text-[10px] uppercase tracking-wide text-on-surface-variant">Next stage</p>
-            <p className="text-base font-semibold text-on-surface">
-              {stageInfo.nextStageAt === null ? '—' : `${stageInfo.nextStageAt - stageInfo.ageDays}d`}
-            </p>
+            <p className="text-[10px] uppercase tracking-wide text-on-surface-variant">Days left</p>
+            <p className="text-base font-semibold text-on-surface">{activeStage.daysRemaining}d</p>
+          </div>
+          <div className="bg-surface-container-lowest ghost-border rounded-xl p-3">
+            <p className="text-[10px] uppercase tracking-wide text-on-surface-variant">Lifespan</p>
+            <p className="text-base font-semibold text-on-surface">{active.lifespan_days}d</p>
           </div>
         </div>
       )}
 
-      {row && (
+      {/* Active companion edit */}
+      {active && activeStage?.isAlive && (
         <div className="mt-6 space-y-5">
           <div>
             <label htmlFor="companion-name" className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wide mb-1">
@@ -254,36 +445,36 @@ export default function CompanionClient() {
             <input
               id="companion-name"
               type="text"
-              value={row.name}
+              value={active.name}
               maxLength={32}
-              onChange={(e) => setRow({ ...row, name: e.target.value })}
+              onChange={(e) =>
+                setAllCompanions((prev) => prev.map((c) => (c.id === active.id ? { ...c, name: e.target.value } : c)))
+              }
               onBlur={() => {
-                const trimmed = row.name.trim()
-                if (trimmed && trimmed !== DEFAULT_NAME) update({ name: trimmed })
-                else if (!trimmed) setRow({ ...row, name: DEFAULT_NAME })
+                const trimmed = active.name.trim()
+                if (trimmed) updateActive({ name: trimmed })
+                else
+                  setAllCompanions((prev) =>
+                    prev.map((c) => (c.id === active.id ? { ...c, name: pickDefaultName(c.species, []) } : c)),
+                  )
               }}
               className="w-full max-w-xs px-3 py-2 rounded-lg ghost-border bg-surface-container-lowest text-sm focus:outline-none focus:border-primary/40"
             />
           </div>
-
           <div>
-            <span className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wide mb-2">
-              Look
-            </span>
+            <span className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wide mb-2">Look</span>
             <div className="flex flex-wrap gap-2">
               {SPECIES_ORDER.map((sp) => {
-                const active = row.species === sp
+                const a = active.species === sp
                 return (
                   <button
                     key={sp}
                     type="button"
-                    onClick={() => update({ species: sp })}
+                    onClick={() => updateActive({ species: sp })}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      active
-                        ? 'bg-primary text-on-primary-btn'
-                        : 'bg-surface-container-lowest text-on-surface ghost-border hover:border-primary/30'
+                      a ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-lowest text-on-surface ghost-border hover:border-primary/30'
                     }`}
-                    aria-pressed={active}
+                    aria-pressed={a}
                   >
                     {SPECIES_LABEL[sp]}
                   </button>
@@ -291,18 +482,18 @@ export default function CompanionClient() {
               })}
             </div>
           </div>
-
-          {saveError && (
-            <p className="text-xs text-red-600 bg-red-50 ghost-border rounded-lg px-3 py-2">
-              Save failed: {saveError}
-            </p>
-          )}
-
-          <p className="text-[11px] text-on-surface-variant max-w-md leading-relaxed">
-            Companion persists in the `companions` Supabase table (RLS-scoped to your user_id). Growth is derived from the row's created_at on each visit.
-          </p>
         </div>
       )}
+
+      {saveError && (
+        <p className="mt-4 text-xs text-red-600 bg-red-50 ghost-border rounded-lg px-3 py-2">
+          Save failed: {saveError}
+        </p>
+      )}
+
+      <p className="mt-6 text-[11px] text-on-surface-variant max-w-md leading-relaxed">
+        Companions are stored in Supabase (RLS-scoped to your user). After {DEFAULT_LIFESPAN_DAYS} days each one passes and frees its slot; their row stays in the DB for history.
+      </p>
     </div>
   )
 }
