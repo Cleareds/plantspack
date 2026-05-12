@@ -66,6 +66,15 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**.squarespace-cdn.com' },
       { protocol: 'https', hostname: '**.shopifycdn.com' },
       { protocol: 'https', hostname: '**.unsplash.com' },
+      // Audit 2026-05-13 of remaining external place images: ~170
+      // place rows still hosted on these CDNs (Facebook/Instagram
+      // user-content + Cloudinary). Adding them to remotePatterns
+      // lets Next/Image optimise + WebP/AVIF the responses instead
+      // of falling back to raw <img>.
+      { protocol: 'https', hostname: '**.fbcdn.net' },
+      { protocol: 'https', hostname: '**.cdninstagram.com' },
+      { protocol: 'https', hostname: '**.cloudinary.com' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
     // Use AVIF + WebP where the browser supports it. Roughly halves image
     // bytes vs raw JPEG for typical restaurant hero photos.
