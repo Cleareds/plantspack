@@ -101,9 +101,17 @@ export default function RootLayout({
           tile.openstreetmap.org on purpose — that origin is only needed
           after CityMap lazy-mounts; warming it would defeat the deferral.
         */}
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/*
+          Preconnect only for the two origins on the critical path of every
+          first paint: Supabase storage (LCP city-hero image + place images)
+          and Google Fonts gstatic (icon font). Was three preconnects;
+          Lighthouse audit flagged >3 as too many. lh3.googleusercontent.com
+          is demoted to dns-prefetch — only used for signed-in user avatars
+          (never on guest first paint, never the LCP element).
+        */}
         <link rel="preconnect" href="https://mfeelaqjbtnypoojhfjp.supabase.co" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://lh3.googleusercontent.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
         {/*
           Material Symbols Outlined: narrowed from the full variable axis
           range (opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200) to a

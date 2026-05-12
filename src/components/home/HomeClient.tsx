@@ -1010,6 +1010,7 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
             alt={`Vegan places in ${pick.city}, ${pick.country}`}
             fill
             priority
+            fetchPriority="high"
             sizes="(max-width: 768px) 100vw, 960px"
             className="object-cover"
           />
