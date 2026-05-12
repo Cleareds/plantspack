@@ -82,33 +82,6 @@ interface Place {
 }
 
 // Map our { Mon: "10:00-18:00", ... } shape to schema.org openingHoursSpecification.
-const DAYS_MAP: Record<string, string> = {
-  monday: 'Monday', mon: 'Monday',
-  tuesday: 'Tuesday', tue: 'Tuesday',
-  wednesday: 'Wednesday', wed: 'Wednesday',
-  thursday: 'Thursday', thu: 'Thursday',
-  friday: 'Friday', fri: 'Friday',
-  saturday: 'Saturday', sat: 'Saturday',
-  sunday: 'Sunday', sun: 'Sunday',
-}
-function buildOpeningHoursSpec(hours: Record<string, string> | null) {
-  if (!hours) return undefined
-  const out: any[] = []
-  for (const [k, v] of Object.entries(hours)) {
-    if (!v || v.toLowerCase() === 'closed') continue
-    const day = DAYS_MAP[k.toLowerCase()] ?? k
-    const m = v.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/)
-    if (!m) continue
-    out.push({
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: `https://schema.org/${day}`,
-      opens: m[1],
-      closes: m[2],
-    })
-  }
-  return out.length ? out : undefined
-}
-
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { country, city } = await params
   const { level } = (await searchParams) || {}
@@ -217,14 +190,20 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 }
 
 // JSON-LD structured data for SEO. Each place renders as a typed schema.org
-// entity (Restaurant / Store / LodgingBusiness) with everything Google
-// supports: PostalAddress (structured), telephone, openingHoursSpecification,
-// image, description, aggregateRating, servesCuisine. Cap at top 50 by
-// review_count to keep payload size reasonable.
+// entity (Restaurant / Store / LodgingBusiness) with the minimal fields
+// that drive rich results (name, image, geo, aggregateRating) - extras
+// like description / phone / hours live on the place's own page where
+// Google can crawl them once instead of paying for them on every city
+// listing page.
 function generateJsonLd(places: Place[], cityName: string, countryName: string) {
+  // Top 20, not 50 - this JSON-LD is inlined as <script> and ALSO
+  // re-serialized into React's RSC Flight payload, so every byte
+  // doubles. Berlin city page was ~85 KB just from this block.
+  // Top 20 still gives Google a meaningful ItemList for ranking
+  // without dragging the page weight.
   const top = [...places]
     .sort((a, b) => (b.review_count || 0) - (a.review_count || 0) || (b.average_rating || 0) - (a.average_rating || 0))
-    .slice(0, 50)
+    .slice(0, 20)
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -233,9 +212,13 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
     itemListElement: top.map((place, i) => {
       const placeUrl = place.slug ? `https://www.plantspack.com/place/${place.slug}` : undefined
       const image = place.main_image_url || place.images?.[0] || undefined
-      const hoursSpec = buildOpeningHoursSpec(place.opening_hours)
-      const servesCuisine = (place.cuisine_types || []).filter(c => c && c !== 'regional' && c !== 'yes').map(c => c.replace(/_/g, ' '))
       const itemType = place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant'
+      // Minimal Restaurant/Store entity: only fields that drive rich
+      // results (aggregateRating, geo) or are required for valid markup
+      // (name, address with locality). Description / streetAddress /
+      // telephone / openingHoursSpecification / servesCuisine all live
+      // on the place's own page where Google crawls them once - they
+      // don't need to ship inline for every city page.
       return {
         '@type': 'ListItem',
         position: i + 1,
@@ -244,11 +227,9 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
           '@type': itemType,
           '@id': placeUrl,
           name: place.name,
-          ...(place.description ? { description: place.description } : {}),
           ...(image ? { image } : {}),
           address: {
             '@type': 'PostalAddress',
-            ...(place.address ? { streetAddress: place.address } : {}),
             addressLocality: cityName,
             addressCountry: countryName,
           },
@@ -257,9 +238,6 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
             latitude: place.latitude,
             longitude: place.longitude,
           },
-          ...(place.phone ? { telephone: place.phone } : {}),
-          ...(hoursSpec ? { openingHoursSpecification: hoursSpec } : {}),
-          ...(servesCuisine.length && itemType === 'Restaurant' ? { servesCuisine } : {}),
           ...(place.average_rating > 0 ? {
             aggregateRating: {
               '@type': 'AggregateRating',
@@ -269,8 +247,6 @@ function generateJsonLd(places: Place[], cityName: string, countryName: string) 
               worstRating: 1,
             },
           } : {}),
-          ...(place.website ? { url: place.website } : {}),
-          ...(placeUrl ? { sameAs: placeUrl } : {}),
         },
       }
     }),
