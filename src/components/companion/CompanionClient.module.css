@@ -1,0 +1,98 @@
+/* All animations are pure CSS transforms — GPU-accelerated, no layout
+ * thrashing, no JS in the animation loop. The companion is admin-only
+ * so this CSS only ships in the /admin/companion route's chunk and
+ * never reaches non-admin users.
+ *
+ * `prefers-reduced-motion` gracefully disables all animation for users
+ * with that OS preference set. Web accessibility default. */
+
+.stage {
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.stage :global(.companion-body) {
+  animation: companion-bob 4s ease-in-out infinite;
+  transform-origin: 100px 130px;
+  transform-box: fill-box;
+}
+
+.stage :global(.companion-head) {
+  animation: companion-head-bob 5.3s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+.stage :global(.companion-eye) {
+  animation: companion-blink 5.7s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+.stage :global(.companion-tail) {
+  animation: companion-wag 2.7s ease-in-out infinite;
+  transform-box: fill-box;
+}
+
+@keyframes companion-bob {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.02); }
+}
+
+@keyframes companion-head-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35% { transform: translateY(-2px) rotate(-3deg); }
+  70% { transform: translateY(-2px) rotate(3deg); }
+}
+
+@keyframes companion-blink {
+  0%, 88%, 100% { transform: scaleY(1); }
+  92%, 96% { transform: scaleY(0.1); }
+}
+
+@keyframes companion-wag {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(10deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage :global(.companion-body),
+  .stage :global(.companion-head),
+  .stage :global(.companion-eye),
+  .stage :global(.companion-tail) {
+    animation: none;
+  }
+}
+
+/* Speech bubble — a soft cloud anchored above the stage. */
+.bubble {
+  position: relative;
+  background: #fefdf8;
+  border: 1.5px solid #0a6b1e;
+  border-radius: 18px;
+  padding: 12px 16px;
+  max-width: 320px;
+  margin: 0 auto 12px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #2c2118;
+  box-shadow: 0 4px 12px -6px rgba(10, 107, 30, 0.18);
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: #fefdf8;
+  border-right: 1.5px solid #0a6b1e;
+  border-bottom: 1.5px solid #0a6b1e;
+}
+
+.bubble.empty {
+  color: #5e544a;
+  font-style: italic;
+}
