@@ -8,7 +8,6 @@ import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
 import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
-import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
 export interface FollowedCity {
@@ -276,7 +275,22 @@ export default async function Home() {
   ])
   const topCities = getTopCitiesFromHome(initialLocation)
 
-  const cityImages = getCityImages()
+  // Only ship images for cities actually rendered on the homepage.
+  // The full city-images.json is ~1800 entries; serializing it into the
+  // HomeClient prop bloats the SSR HTML by ~250KB and triggers Lighthouse
+  // "total network data" warnings. Filter to the union of: top cities,
+  // initial location, and followed cities — typically ~8-15 entries.
+  const allCityImages = getCityImages()
+  const neededKeys = new Set<string>()
+  for (const tc of topCities) neededKeys.add(`${tc.city}|||${tc.country}`)
+  if (initialLocation?.city && initialLocation?.country) {
+    neededKeys.add(`${initialLocation.city}|||${initialLocation.country}`)
+  }
+  for (const fc of followedCities) neededKeys.add(`${fc.city}|||${fc.country}`)
+  const cityImages: Record<string, string> = {}
+  for (const key of neededKeys) {
+    if (allCityImages[key]) cityImages[key] = allCityImages[key]
+  }
 
   // Normalize users from array (Supabase join) to single object
   const normalizedPosts = recentPosts.map((p: any) => ({
@@ -337,8 +351,6 @@ export default async function Home() {
           <h2 className="text-xl font-semibold text-on-surface mb-4">Featured vegan places</h2>
           <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {featuredPlaces.map((p: any) => {
-              const countrySlug = p.country ? slugifyCityOrCountry(p.country) : ''
-              const citySlug = p.city ? slugifyCityOrCountry(p.city) : ''
               const image = p.main_image_url || p.images?.[0] || null
               return (
                 <li key={p.slug} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
@@ -363,17 +375,7 @@ export default async function Home() {
                     <div className="p-3">
                       <p className="font-medium text-sm text-on-surface truncate">{p.name}</p>
                       <p className="text-xs text-on-surface-variant truncate mt-0.5">
-                        {p.city && citySlug && countrySlug ? (
-                          <Link
-                            href={`/vegan-places/${countrySlug}/${citySlug}`}
-                            className="hover:text-primary"
-                          >
-                            {p.city}
-                          </Link>
-                        ) : (
-                          p.city
-                        )}
-                        {p.country ? `, ${p.country}` : ''}
+                        {p.city}{p.country ? `, ${p.country}` : ''}
                       </p>
                       <p className="text-[11px] text-on-surface-variant mt-0.5">
                         {VEGAN_LEVEL_LABEL[p.vegan_level ?? ''] ?? 'Vegan-Friendly'}

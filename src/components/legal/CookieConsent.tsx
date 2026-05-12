@@ -91,7 +91,7 @@ export default function CookieConsent() {
                 We use cookies to enhance your experience, analyze site traffic, and for marketing purposes.
                 You can customize your preferences or accept all cookies.{' '}
                 <Link href="/legal/privacy" className="text-primary hover:text-primary underline">
-                  Learn more
+                  Learn more about our privacy policy
                 </Link>
               </p>
             </div>

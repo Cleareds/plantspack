@@ -36,7 +36,7 @@ export default function Sidebar() {
         />
         <div className="flex flex-col">
           <span className="font-headline font-extrabold text-primary text-lg tracking-tight leading-tight">Plants Pack</span>
-          <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">vegan syndicate</span>
+          <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">vegan syndicate</span>
         </div>
       </Link>
 

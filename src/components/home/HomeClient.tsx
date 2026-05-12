@@ -763,6 +763,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                               alt={city.city}
                               fill
                               sizes="(max-width: 640px) 50vw, 200px"
+                              quality={55}
                               className="object-cover"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                             />
@@ -1012,6 +1013,7 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
             priority
             fetchPriority="high"
             sizes="(max-width: 768px) 100vw, 960px"
+            quality={60}
             className="object-cover"
           />
         ) : (
