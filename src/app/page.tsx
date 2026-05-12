@@ -64,8 +64,19 @@ async function getFeaturedPlaces() {
     .gte('average_rating', 4.0)
     .order('review_count', { ascending: false })
     .order('average_rating', { ascending: false })
-    .limit(12)
-  return data || []
+    .limit(24)
+  // Restrict featured cards to places whose main image is already rehosted
+  // to Supabase. External images (restaurant websites etc.) bypass
+  // Next/Image optimization and get flagged in PageSpeed for
+  // "Serve images in modern formats / Increase compression" — they're
+  // typically 100-150 KB unoptimized JPGs. Limiting to Supabase URLs
+  // also lets the existing place-image rehost pipeline graduate places
+  // into the carousel as it processes them.
+  const onSupabase = (data || []).filter((p: any) => {
+    const src = p.main_image_url || p.images?.[0] || ''
+    return typeof src === 'string' && src.includes('supabase.co')
+  })
+  return onSupabase.slice(0, 12)
 }
 
 /**

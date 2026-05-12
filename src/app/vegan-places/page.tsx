@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPin, Globe, ArrowRight, TrendingUp } from 'lucide-react'
 import { getCountries } from '@/lib/directory-queries'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -166,7 +167,14 @@ export default async function VeganPlacesPage() {
                     className="group rounded-xl overflow-hidden ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5 bg-surface-container-lowest">
                     {img ? (
                       <div className="relative h-24 overflow-hidden">
-                        <img src={img} alt={country.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                        <Image
+                          src={img}
+                          alt={country.name}
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+                          quality={55}
+                          className="object-cover group-hover:scale-105 transition-transform"
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                         <p className="absolute bottom-2 left-2.5 text-white font-semibold text-sm drop-shadow">{country.name}</p>
                       </div>
@@ -216,7 +224,15 @@ export default async function VeganPlacesPage() {
                       <Link key={country.slug} href={`/vegan-places/${country.slug}`} prefetch={false}
                         className="group flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5">
                         {img ? (
-                          <img src={img} alt={country.name} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                          <Image
+                            src={img}
+                            alt={country.name}
+                            width={56}
+                            height={56}
+                            sizes="56px"
+                            quality={55}
+                            className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                          />
                         ) : (
                           <div className="w-14 h-14 rounded-lg bg-surface-container-low flex items-center justify-center text-lg flex-shrink-0">🌍</div>
                         )}

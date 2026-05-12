@@ -79,6 +79,11 @@ const nextConfig: NextConfig = {
     // hero (city banner) and below-fold tiles only need a handful.
     deviceSizes: [360, 640, 750, 1080, 1280, 1920],
     imageSizes: [32, 48, 64, 96, 128, 168, 256, 384],
+    // Next 16 requires non-default quality values to be allow-listed,
+    // otherwise <Image quality={n}/> silently falls back to 75. Listing
+    // the lower tiers we use for tiles/heroes so the Lighthouse
+    // "Increase compression" audits actually take effect.
+    qualities: [50, 55, 60, 65, 75],
   },
 
   // Exclude mobileapp folder from Next.js compilation

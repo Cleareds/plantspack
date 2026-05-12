@@ -25,6 +25,7 @@ export default function BottomNav() {
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
             aria-current={isActive ? 'page' : undefined}
             aria-label={item.label}
             className={`flex flex-col items-center justify-center px-1 py-2 ${
@@ -44,6 +45,7 @@ export default function BottomNav() {
       {user && username ? (
         <Link
           href={`/profile/${username}`}
+          prefetch={false}
           aria-current={pathname?.startsWith('/profile') ? 'page' : undefined}
           aria-label="Profile"
           className={`flex flex-col items-center justify-center px-1 py-2 ${
@@ -56,6 +58,7 @@ export default function BottomNav() {
       ) : (
         <Link
           href="/auth"
+          prefetch={false}
           data-event="cta_click_signup"
           data-cta="sign_in"
           data-from="bottomnav"
