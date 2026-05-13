@@ -1,520 +1,336 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/lib/auth'
 import Link from 'next/link'
-import { Vote, Send, CheckCircle, Lock } from 'lucide-react'
+import { CheckCircle, Lock, ThumbsUp, MapPin, Sparkles, Heart, ArrowLeft } from 'lucide-react'
 
-type ColumnKey = 'now' | 'next' | 'later'
-type StatusKey = 'shipped' | 'in-development' | 'ongoing' | 'planned' | 'exploring'
+/**
+ * Public roadmap with supporter-gated voting.
+ *
+ * Two sections:
+ *   - Features: what gets built next on the platform
+ *   - Coverage: which countries/cities get the next deep audit pass
+ *
+ * Voting is supporter-only and toggle-able (click a second time to
+ * un-vote). Anyone signed in can SEE the totals; only supporters can
+ * cast votes. Non-supporters see a lock + CTA to /support.
+ *
+ * The data is hard-coded here because the list is curated. When/if
+ * supporter count grows past hand-curation, the source of truth
+ * moves to a Supabase table; this file is structured so swapping
+ * the items array for a fetch is a one-place change.
+ */
 
-interface RoadmapFeature {
+type Status = 'shipped' | 'in-development' | 'ongoing' | 'planned' | 'exploring'
+
+interface VoteItem {
   id: string
+  category: 'feature' | 'coverage'
   label: string
   description: string
-  status: StatusKey
-  quarter: string
-  column: ColumnKey
+  status: Status
+  quarter?: string
+  votable: boolean // shipped items are visible but locked
 }
 
-const ROADMAP_FEATURES: RoadmapFeature[] = [
-  // Now — Shipped / In Progress
-  {
-    id: 'packs',
-    label: 'Packs',
-    description: 'Save and organise places into personal collections - your vegan favourites, bucket lists, and city guides',
-    status: 'shipped',
-    quarter: 'Q1 2026',
-    column: 'now',
-  },
-  {
-    id: 'trips',
-    label: 'Trips & Check-ins',
-    description: 'Log places you\'ve visited, track your vegan travels, and build a personal history of discoveries',
-    status: 'shipped',
-    quarter: 'Q1 2026',
-    column: 'now',
-  },
-  {
-    id: 'social-feed',
-    label: 'Community & Social Feed',
-    description: 'Follow other plant-based travellers, share posts, comment, and discover places through your community',
-    status: 'shipped',
-    quarter: 'Q1 2026',
-    column: 'now',
-  },
-  {
-    id: 'mobile-app',
-    label: 'iOS & Android App',
-    description: 'Native mobile applications for iPhone, iPad, and Android devices',
-    status: 'in-development',
-    quarter: 'Q2 2026',
-    column: 'now',
-  },
-  {
-    id: 'fixes-stability',
-    label: 'Bug Fixes & Stability',
-    description: 'Continuous improvements to platform reliability and performance',
-    status: 'ongoing',
-    quarter: 'Ongoing',
-    column: 'now',
-  },
+const ITEMS: VoteItem[] = [
+  // ---------------- Features ----------------
+  { id: 'packs', category: 'feature', label: 'Packs', description: 'Save and organise places into personal collections — your favourites, bucket lists, city guides.', status: 'shipped', quarter: 'Q1 2026', votable: false },
+  { id: 'trips', category: 'feature', label: 'Trips & Check-ins', description: 'Log places you have visited, build a personal history of vegan travels.', status: 'shipped', quarter: 'Q1 2026', votable: false },
+  { id: 'social-feed', category: 'feature', label: 'Community feed', description: 'Follow other plant-based travellers, share posts, discover places through your community.', status: 'shipped', quarter: 'Q1 2026', votable: false },
+  { id: 'companion', category: 'feature', label: 'Companion (vegan platform guide)', description: 'A non-AI companion that surfaces personalised picks from your follows and pinned city.', status: 'in-development', votable: true },
+  { id: 'mobile-app', category: 'feature', label: 'iOS & Android app', description: 'Native mobile wrapper around the platform with offline + push.', status: 'planned', votable: true },
+  { id: 'recipe-collection', category: 'feature', label: 'Recipe collection (vegan creators)', description: 'Curated recipes from 100% vegan creators with proper attribution.', status: 'planned', votable: true },
+  { id: 'event-calendar', category: 'feature', label: 'Event calendar', description: 'Local + travel-worthy vegan events. Notifications for cities you follow.', status: 'planned', votable: true },
+  { id: 'browser-extension', category: 'feature', label: 'Browser extension', description: 'Right-click any place on Google Maps to add it to PlantsPack.', status: 'exploring', votable: true },
+  { id: 'internal-messaging', category: 'feature', label: 'Direct messages', description: 'Private DMs between members so trip planning + place tips stay on-platform.', status: 'exploring', votable: true },
+  { id: 'better-packs', category: 'feature', label: 'Pack collaborations', description: 'Co-build a Pack with friends; shared trip planning.', status: 'exploring', votable: true },
+  { id: 'improve-notifications', category: 'feature', label: 'Smarter notifications', description: 'Tunable digest for new places in your follows / friends activity.', status: 'planned', votable: true },
+  { id: 'fixes-stability', category: 'feature', label: 'Quality & stability work', description: 'Ongoing: faster pages, fewer bugs, better mobile UX.', status: 'ongoing', votable: true },
 
-  // Next — Q2–Q3 2026
-  {
-    id: 'push-notifications',
-    label: 'Push Notifications',
-    description: 'Mobile and web alerts for activity, mentions, and updates',
-    status: 'planned',
-    quarter: 'Q2 2026',
-    column: 'next',
-  },
-  {
-    id: 'better-packs',
-    label: 'Better Pack Management',
-    description: 'Richer tools for organizing, discovering, and managing packs',
-    status: 'planned',
-    quarter: 'Q2 2026',
-    column: 'next',
-  },
-  {
-    id: 'internal-messaging',
-    label: 'Direct Messaging',
-    description: 'Private conversations between users within PlantsPack',
-    status: 'planned',
-    quarter: 'Q3 2026',
-    column: 'next',
-  },
-  {
-    id: 'search',
-    label: 'Smarter Search',
-    description: 'Better relevance, filters by category, location, and date — plus improved hashtag and user discovery',
-    status: 'planned',
-    quarter: 'Q3 2026',
-    column: 'next',
-  },
-  {
-    id: 'places-improvements',
-    label: 'Places Improvements',
-    description: 'Richer place profiles, user reviews, photos, opening hours, and better vegan-friendly tagging',
-    status: 'planned',
-    quarter: 'Q2–Q3 2026',
-    column: 'next',
-  },
-  {
-    id: 'feed-relevancy',
-    label: 'Feed Relevancy Algorithm',
-    description: 'Smarter feed ranking based on your interests, interactions, and the communities you follow',
-    status: 'planned',
-    quarter: 'Q3 2026',
-    column: 'next',
-  },
-
-  // Later — Q4 2026+
-  {
-    id: 'veg-points',
-    label: 'Veg Points',
-    description: 'Reward system for engagement and contributions to the community',
-    status: 'exploring',
-    quarter: 'Q4 2026',
-    column: 'later',
-  },
-  {
-    id: 'improve-ai',
-    label: 'Smarter Content Moderation',
-    description: 'Fewer false positives and improved accuracy in AI content review',
-    status: 'exploring',
-    quarter: 'Q4 2026',
-    column: 'later',
-  },
-  {
-    id: 'community-events',
-    label: 'Community Events',
-    description: 'Vegan meetups, challenges, and shared goals within PlantsPack',
-    status: 'exploring',
-    quarter: 'Q4 2026+',
-    column: 'later',
-  },
-  {
-    id: 'profile-badges',
-    label: 'Profile Badges & Achievements',
-    description: 'Milestone rewards for activity and contributions',
-    status: 'exploring',
-    quarter: 'Q4 2026+',
-    column: 'later',
-  },
-  {
-    id: 'multilanguage',
-    label: 'Multilanguage Support',
-    description: 'Full UI and content translation for key languages, making PlantsPack accessible to a global community',
-    status: 'exploring',
-    quarter: 'Q4 2026+',
-    column: 'later',
-  },
+  // ---------------- Coverage ----------------
+  { id: 'expand-germany-tier2', category: 'coverage', label: 'Germany tier-2 cities', description: 'Düsseldorf, Cologne, Stuttgart, Hamburg — deep audit + verified fully-vegan promotions.', status: 'planned', votable: true },
+  { id: 'expand-brazil', category: 'coverage', label: 'Brazil — São Paulo + Rio in depth', description: 'Top-rated venues verified, neighbourhood coverage, PT-friendly metadata.', status: 'planned', votable: true },
+  { id: 'expand-netherlands-beyond-amsterdam', category: 'coverage', label: 'Netherlands beyond Amsterdam', description: 'Utrecht, Rotterdam, The Hague, Groningen — all need a proper audit.', status: 'planned', votable: true },
+  { id: 'expand-greece', category: 'coverage', label: 'Greece (Athens + Thessaloniki + islands)', description: 'Full Greece pass with travel-intent search optimisation.', status: 'planned', votable: true },
+  { id: 'expand-austria-portugal', category: 'coverage', label: 'Austria + Portugal tier-2 cities', description: 'Vienna, Graz, Salzburg, Porto — verified venues + city scoring.', status: 'planned', votable: true },
+  { id: 'expand-eastern-europe', category: 'coverage', label: 'Eastern Europe expansion', description: 'Warsaw, Prague, Budapest, Bucharest — vegan scene is growing fast.', status: 'exploring', votable: true },
+  { id: 'expand-uk-tier2', category: 'coverage', label: 'UK tier-2 cities', description: 'Brighton, Bristol, Manchester, Edinburgh — beyond London-only coverage.', status: 'exploring', votable: true },
+  { id: 'expand-spain-tier2', category: 'coverage', label: 'Spain tier-2 cities', description: 'Valencia, Seville, Granada, Bilbao — local audit + Spanish metadata.', status: 'exploring', votable: true },
 ]
 
-const STATUS_CONFIG: Record<StatusKey, { label: string; bg: string; text: string; dot: string }> = {
-  'shipped': {
-    label: 'Shipped',
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-700',
-    dot: 'bg-emerald-500',
-  },
-  'in-development': {
-    label: 'In Development',
-    bg: 'bg-blue-50',
-    text: 'text-blue-700',
-    dot: 'bg-blue-500',
-  },
-  'ongoing': {
-    label: 'Ongoing',
-    bg: 'bg-primary-container/20',
-    text: 'text-primary',
-    dot: 'bg-primary',
-  },
-  'planned': {
-    label: 'Planned',
-    bg: 'bg-purple-50',
-    text: 'text-purple-700',
-    dot: 'bg-purple-500',
-  },
-  'exploring': {
-    label: 'Exploring',
-    bg: 'bg-surface-container-low',
-    text: 'text-on-surface-variant',
-    dot: 'bg-outline',
-  },
+const STATUS_BADGE: Record<Status, { label: string; cls: string }> = {
+  shipped: { label: 'Shipped', cls: 'bg-emerald-100 text-emerald-800' },
+  'in-development': { label: 'In progress', cls: 'bg-blue-100 text-blue-800' },
+  ongoing: { label: 'Ongoing', cls: 'bg-amber-100 text-amber-800' },
+  planned: { label: 'Planned', cls: 'bg-purple-100 text-purple-800' },
+  exploring: { label: 'Exploring', cls: 'bg-slate-200 text-slate-700' },
 }
-
-const COLUMNS: { key: ColumnKey; title: string; subtitle: string; headerBg: string; headerText: string }[] = [
-  {
-    key: 'now',
-    title: 'Now',
-    subtitle: 'Shipped & In Progress',
-    headerBg: 'bg-primary',
-    headerText: 'text-white',
-  },
-  {
-    key: 'next',
-    title: 'Next',
-    subtitle: 'Q2–Q3 2026',
-    headerBg: 'bg-purple-600',
-    headerText: 'text-white',
-  },
-  {
-    key: 'later',
-    title: 'Later',
-    subtitle: 'Q4 2026 and beyond',
-    headerBg: 'bg-outline',
-    headerText: 'text-white',
-  },
-]
 
 export default function RoadmapPage() {
   const { user, profile } = useAuth()
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const [votes, setVotes] = useState<Record<string, number>>({})
-  const [hasVoted, setHasVoted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
+  const [userVotes, setUserVotes] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
+  const [pending, setPending] = useState<Set<string>>(new Set())
+  const [error, setError] = useState<string | null>(null)
 
-  // Suggestion form state
-  const [suggestion, setSuggestion] = useState('')
-  const [submittingSuggestion, setSubmittingSuggestion] = useState(false)
-  const [suggestionSuccess, setSuggestionSuccess] = useState(false)
-  const [suggestionError, setSuggestionError] = useState('')
+  // subscription_tier isn't in the generated UserProfile type — cast.
+  // Matches the pattern used in src/components/places/PlaceEditButton.tsx.
+  const tier = (profile as { subscription_tier?: string } | null)?.subscription_tier
+  const isSupporter = tier === 'medium' || tier === 'premium'
 
-  // All authenticated users can vote (paywalls removed)
-  const canVote = !!user
-
-  useEffect(() => {
-    fetchVotes()
-  }, [])
-
-  const fetchVotes = async () => {
+  const fetchVotes = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/roadmap/votes')
-      const data = await response.json()
-
-      if (response.ok) {
-        setVotes(data.votes || {})
-        setHasVoted(data.hasVoted || false)
+      const r = await fetch('/api/roadmap/votes')
+      const d = await r.json()
+      if (r.ok) {
+        setVotes(d.votes || {})
+        setUserVotes(new Set<string>(d.userVotes || []))
       }
-    } catch (error) {
-      console.error('Error fetching votes:', error)
+    } catch (e) {
+      console.error(e)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const handleVote = async () => {
-    if (!canVote || selectedFeatures.length === 0) return
+  useEffect(() => {
+    fetchVotes()
+  }, [fetchVotes])
 
-    try {
-      setSubmitting(true)
-      const response = await fetch('/api/roadmap/votes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ features: selectedFeatures })
-      })
-
-      if (response.ok) {
-        await fetchVotes()
-        setSelectedFeatures([])
-      }
-    } catch (error) {
-      console.error('Error submitting votes:', error)
-    } finally {
-      setSubmitting(false)
+  const toggleVote = async (id: string) => {
+    if (!user) return
+    if (!isSupporter) {
+      setError('Voting is a supporter perk. Join from /support to cast your vote.')
+      return
     }
-  }
+    if (pending.has(id)) return
+    setError(null)
+    setPending((prev) => new Set(prev).add(id))
 
-  const handleSuggestion = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!suggestion.trim()) return
+    // Optimistic
+    const wasVoted = userVotes.has(id)
+    const nextUserVotes = new Set(userVotes)
+    if (wasVoted) nextUserVotes.delete(id)
+    else nextUserVotes.add(id)
+    setUserVotes(nextUserVotes)
+    setVotes((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] || 0) + (wasVoted ? -1 : 1)) }))
 
     try {
-      setSubmittingSuggestion(true)
-      setSuggestionError('')
-      setSuggestionSuccess(false)
-
-      const response = await fetch('/api/contact', {
+      const r = await fetch('/api/roadmap/votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: profile?.first_name && profile?.last_name
-            ? `${profile.first_name} ${profile.last_name}`
-            : profile?.username || 'Anonymous',
-          email: user?.email || 'no-email@provided.com',
-          subject: 'Roadmap Suggestion',
-          message: suggestion
+        body: JSON.stringify({ id }),
+      })
+      if (!r.ok) {
+        // Roll back
+        setUserVotes((prev) => {
+          const next = new Set(prev)
+          if (wasVoted) next.add(id)
+          else next.delete(id)
+          return next
         })
-      })
-
-      if (response.ok) {
-        setSuggestionSuccess(true)
-        setSuggestion('')
-      } else {
-        setSuggestionError('Failed to send suggestion. Please try again.')
+        setVotes((prev) => ({ ...prev, [id]: Math.max(0, (prev[id] || 0) + (wasVoted ? 1 : -1)) }))
+        const data = await r.json().catch(() => ({}))
+        setError(data.error || 'Failed to record vote')
       }
-    } catch (error) {
-      setSuggestionError('An error occurred. Please try again.')
     } finally {
-      setSubmittingSuggestion(false)
+      setPending((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
     }
   }
 
-  const toggleFeature = (featureId: string) => {
-    if (!canVote) return
+  const features = ITEMS.filter((i) => i.category === 'feature')
+  const coverage = ITEMS.filter((i) => i.category === 'coverage')
 
-    setSelectedFeatures(prev =>
-      prev.includes(featureId)
-        ? prev.filter(id => id !== featureId)
-        : [...prev, featureId]
-    )
-  }
-
-  const totalVotes = Object.values(votes).reduce((sum, count) => sum + count, 0)
+  const sortedByVotes = (list: VoteItem[]) =>
+    [...list].sort((a, b) => {
+      if (!a.votable && b.votable) return -1
+      if (a.votable && !b.votable) return 1
+      return (votes[b.id] || 0) - (votes[a.id] || 0)
+    })
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-6">
-          <h1 className="text-4xl font-bold text-on-surface mb-4">Roadmap</h1>
-          <p className="text-xl text-on-surface-variant mb-3">
-            Help shape the future of PlantsPack. Vote for features, suggest ideas, and decide what we build next.
-          </p>
-          <p className="text-sm text-outline italic">
-            Estimated dates are indicative and may shift based on community votes and priorities.
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <Link href="/support" className="inline-flex items-center text-sm text-on-surface-variant hover:text-on-surface mb-6">
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back to Support
+        </Link>
+
+        <div className="mb-8">
+          <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-2">
+            Roadmap
+          </h1>
+          <p className="text-on-surface-variant max-w-2xl">
+            What we are building next and where we are expanding coverage. Supporters vote — the most-voted items rise to the top of our queue.
           </p>
         </div>
 
-        {/* Voting Access Info */}
-        {!user && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-            <p className="text-blue-900">
-              <Link href="/auth" className="font-semibold underline hover:text-blue-700">
-                Sign in
-              </Link>{' '}
-              to vote for features and help shape PlantsPack&apos;s future.
+        {/* Supporter status banner */}
+        {!user ? (
+          <div className="rounded-2xl ghost-border bg-surface-container-lowest p-4 mb-8 flex items-center gap-3">
+            <Lock className="h-5 w-5 text-on-surface-variant shrink-0" />
+            <p className="text-sm text-on-surface-variant flex-1">
+              <Link href="/auth" className="text-primary font-medium hover:underline">Sign in</Link> to see vote counts. Voting requires supporter status.
+            </p>
+          </div>
+        ) : !isSupporter ? (
+          <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-4 mb-8 flex items-center gap-3">
+            <Heart className="h-5 w-5 text-primary shrink-0" />
+            <p className="text-sm text-on-surface flex-1">
+              Voting is a supporter perk. <Link href="/support" className="text-primary font-bold hover:underline">Become a supporter for €3/month</Link> to influence what gets built next.
+            </p>
+          </div>
+        ) : (
+          <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-4 mb-8 flex items-center gap-3">
+            <CheckCircle className="h-5 w-5 text-emerald-700 shrink-0" />
+            <p className="text-sm text-emerald-900 flex-1">
+              You are a supporter — your votes count. Click any item below to vote or un-vote.
             </p>
           </div>
         )}
 
-        {/* 3-Column Timeline */}
-        {loading ? (
-          <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8 mb-6">
-            <p className="text-on-surface-variant">Loading votes...</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {COLUMNS.map(col => {
-              const features = ROADMAP_FEATURES.filter(f => f.column === col.key)
-              return (
-                <div key={col.key} className="flex flex-col">
-                  {/* Column header */}
-                  <div className={`${col.headerBg} rounded-t-lg px-4 py-3`}>
-                    <h2 className={`text-lg font-bold ${col.headerText}`}>{col.title}</h2>
-                    <p className={`text-sm ${col.headerText} opacity-80`}>{col.subtitle}</p>
-                  </div>
-
-                  {/* Feature cards */}
-                  <div className="flex flex-col gap-3 p-3 bg-surface-container-low rounded-b-lg flex-1">
-                    {features.map(feature => {
-                      const voteCount = votes[feature.id] || 0
-                      const percentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0
-                      const isSelected = selectedFeatures.includes(feature.id)
-                      const statusConf = STATUS_CONFIG[feature.status]
-
-                      return (
-                        <div
-                          key={feature.id}
-                          className={`bg-surface-container-lowest rounded-lg border p-4 transition-all ${
-                            canVote && !hasVoted
-                              ? 'border-outline-variant/15 hover:border-primary-container cursor-pointer'
-                              : 'border-outline-variant/15'
-                          } ${isSelected ? 'border-primary ring-1 ring-primary' : ''}`}
-                          onClick={() => canVote && !hasVoted && toggleFeature(feature.id)}
-                        >
-                          {/* Card top row */}
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <div className="flex items-start gap-2 flex-1 min-w-0">
-                              {/* Checkbox / Lock */}
-                              {canVote ? (
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() => toggleFeature(feature.id)}
-                                  disabled={hasVoted}
-                                  onClick={e => e.stopPropagation()}
-                                  className="mt-0.5 h-4 w-4 text-primary rounded focus:ring-primary disabled:opacity-50 flex-shrink-0"
-                                />
-                              ) : (
-                                <div className="group relative flex-shrink-0 mt-0.5">
-                                  <Lock className="h-4 w-4 text-outline" />
-                                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10">
-                                    <div className="bg-on-surface text-white text-xs rounded px-2 py-1 whitespace-nowrap">
-                                      Sign in to vote
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                              <span className="font-semibold text-on-surface text-sm leading-tight">{feature.label}</span>
-                            </div>
-                          </div>
-
-                          <p className="text-xs text-outline mb-3 ml-6">{feature.description}</p>
-
-                          {/* Status badge + quarter */}
-                          <div className="flex items-center gap-2 mb-3 ml-6 flex-wrap">
-                            <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${statusConf.bg} ${statusConf.text}`}>
-                              <span className={`h-1.5 w-1.5 rounded-full ${statusConf.dot}`} />
-                              {statusConf.label}
-                            </span>
-                            <span className="text-xs text-outline">{feature.quarter}</span>
-                          </div>
-
-                          {/* Vote bar */}
-                          <div className="ml-6">
-                            <div className="flex items-center justify-between text-xs mb-1">
-                              <span className="text-outline">{voteCount} vote{voteCount !== 1 ? 's' : ''}</span>
-                              <span className="text-outline">{percentage.toFixed(1)}%</span>
-                            </div>
-                            <div className="w-full bg-surface-container-low rounded-full h-1.5">
-                              <div
-                                className="bg-primary h-1.5 rounded-full transition-all duration-300"
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )
-            })}
+        {error && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 mb-6 text-sm text-red-800">
+            {error}
           </div>
         )}
 
-        {/* Submit Vote / Already Voted */}
-        {!loading && canVote && (
-          <div className="mb-6">
-            {!hasVoted ? (
-              <button
-                onClick={handleVote}
-                disabled={submitting || selectedFeatures.length === 0}
-                className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <Vote className="h-4 w-4" />
-                {submitting ? 'Submitting...' : `Submit Vote${selectedFeatures.length > 0 ? ` (${selectedFeatures.length} selected)` : ''}`}
-              </button>
-            ) : (
-              <div className="bg-primary-container/20 border border-primary-container rounded-lg p-4 flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                <p className="text-primary">You've already voted! Thank you for your input.</p>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Features section */}
+        <Section
+          title="Features"
+          subtitle="What we build next"
+          icon={<Sparkles className="h-5 w-5 text-primary" />}
+          items={sortedByVotes(features)}
+          votes={votes}
+          userVotes={userVotes}
+          pending={pending}
+          loading={loading}
+          canVote={isSupporter}
+          isSignedIn={!!user}
+          onVote={toggleVote}
+        />
 
-        {/* Suggestions Form */}
-        <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <Send className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold text-on-surface">Suggest Other Improvements</h2>
-          </div>
+        <div className="h-10" />
 
-          {suggestionSuccess && (
-            <div className="mb-6 bg-primary-container/20 border border-primary-container rounded-lg p-4 flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-primary" />
-              <p className="text-primary">Thank you! Your suggestion has been sent to our team.</p>
-            </div>
-          )}
+        {/* Coverage section */}
+        <Section
+          title="Coverage"
+          subtitle="Where we expand the directory next"
+          icon={<MapPin className="h-5 w-5 text-primary" />}
+          items={sortedByVotes(coverage)}
+          votes={votes}
+          userVotes={userVotes}
+          pending={pending}
+          loading={loading}
+          canVote={isSupporter}
+          isSignedIn={!!user}
+          onVote={toggleVote}
+        />
 
-          {suggestionError && (
-            <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-red-800">{suggestionError}</p>
-            </div>
-          )}
-
-          <form onSubmit={handleSuggestion} className="space-y-4">
-            <div>
-              <label htmlFor="suggestion" className="block text-sm font-medium text-on-surface-variant mb-2">
-                Your Suggestion
-              </label>
-              <textarea
-                id="suggestion"
-                value={suggestion}
-                onChange={(e) => setSuggestion(e.target.value)}
-                rows={6}
-                className="w-full px-4 py-3 border border-outline-variant/15 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Share your ideas for improving PlantsPack..."
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={submittingSuggestion || !suggestion.trim()}
-              className="w-full silk-gradient hover:opacity-90 text-on-primary font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              <Send className="h-4 w-4" />
-              {submittingSuggestion ? 'Sending...' : 'Send Suggestion'}
-            </button>
-          </form>
-
-          <p className="mt-4 text-sm text-on-surface-variant">
-            Your suggestion will be sent to{' '}
-            <a href="mailto:hello@plantspack.com" className="text-primary hover:text-primary-container font-semibold">
-              hello@plantspack.com
-            </a>
-          </p>
-        </div>
+        <p className="text-center text-xs text-on-surface-variant mt-12 max-w-md mx-auto">
+          Missing something obvious? <Link href="/contact" className="underline">Tell us</Link> — we curate this list and add new items roughly monthly.
+        </p>
       </div>
     </div>
+  )
+}
+
+function Section(props: {
+  title: string
+  subtitle: string
+  icon: React.ReactNode
+  items: VoteItem[]
+  votes: Record<string, number>
+  userVotes: Set<string>
+  pending: Set<string>
+  loading: boolean
+  canVote: boolean
+  isSignedIn: boolean
+  onVote: (id: string) => void
+}) {
+  const { title, subtitle, icon, items, votes, userVotes, pending, loading, canVote, isSignedIn, onVote } = props
+  return (
+    <section>
+      <div className="flex items-center gap-3 mb-4">
+        {icon}
+        <div>
+          <h2 className="font-bold text-xl text-on-surface">{title}</h2>
+          <p className="text-xs text-on-surface-variant">{subtitle}</p>
+        </div>
+      </div>
+
+      <ul className="space-y-2">
+        {items.map((item) => {
+          const count = votes[item.id] || 0
+          const voted = userVotes.has(item.id)
+          const isPending = pending.has(item.id)
+          const status = STATUS_BADGE[item.status]
+          return (
+            <li
+              key={item.id}
+              className="bg-surface-container-lowest ghost-border rounded-xl p-4 flex items-start gap-4"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <h3 className="font-semibold text-on-surface">{item.label}</h3>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${status.cls}`}>
+                    {status.label}
+                  </span>
+                  {item.quarter && (
+                    <span className="text-[10px] text-on-surface-variant">{item.quarter}</span>
+                  )}
+                </div>
+                <p className="text-sm text-on-surface-variant leading-relaxed">{item.description}</p>
+              </div>
+              <div className="flex flex-col items-stretch gap-1 min-w-[88px]">
+                <button
+                  type="button"
+                  onClick={() => onVote(item.id)}
+                  disabled={!item.votable || isPending || (!isSignedIn) || loading}
+                  aria-pressed={voted}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold transition-colors disabled:cursor-not-allowed ${
+                    !item.votable
+                      ? 'bg-surface-container-low text-on-surface-variant'
+                      : voted
+                      ? 'bg-primary text-on-primary-btn'
+                      : canVote
+                      ? 'bg-surface-container-low text-on-surface hover:bg-primary/10 hover:text-primary'
+                      : 'bg-surface-container-low text-on-surface-variant'
+                  }`}
+                  title={
+                    !item.votable
+                      ? 'Already shipped'
+                      : !isSignedIn
+                      ? 'Sign in to vote'
+                      : !canVote
+                      ? 'Supporters only'
+                      : voted
+                      ? 'Click to un-vote'
+                      : 'Click to vote'
+                  }
+                >
+                  {!item.votable ? (
+                    <CheckCircle className="h-4 w-4" />
+                  ) : !isSignedIn || !canVote ? (
+                    <Lock className="h-4 w-4" />
+                  ) : (
+                    <ThumbsUp className="h-4 w-4" />
+                  )}
+                  <span>{count}</span>
+                </button>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }
