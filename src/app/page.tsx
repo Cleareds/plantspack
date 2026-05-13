@@ -354,6 +354,33 @@ export default async function Home() {
         isSignedIn={isSignedIn}
       />
 
+      {/* Seasonal: Summer Destinations hub link. Renders May-September
+          only, comes off automatically when the season ends so the
+          homepage doesn't carry a stale travel banner in winter. */}
+      {(() => {
+        const m = new Date().getUTCMonth() // 0=Jan
+        const inSeason = m >= 4 && m <= 8 // May..September
+        if (!inSeason) return null
+        return (
+          <section className="max-w-6xl mx-auto px-4 md:px-8 pt-6">
+            <Link
+              href="/vegan-summer-destinations"
+              prefetch={false}
+              className="block rounded-2xl border-2 border-primary/30 bg-primary/5 px-5 py-4 hover:bg-primary/10 transition-colors"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-[10px] uppercase tracking-widest text-primary font-bold mb-1">Summer 2026 · Mediterranean</p>
+                  <p className="font-semibold text-on-surface">Plan your vegan summer — 29 destinations</p>
+                  <p className="text-xs text-on-surface-variant mt-0.5">Italy, Spain, Greece, Portugal, Croatia, Turkey. Every destination has 5+ verified places.</p>
+                </div>
+                <span className="text-primary text-lg shrink-0">→</span>
+              </div>
+            </Link>
+          </section>
+        )
+      })()}
+
       {/* Featured Places — SSR plain-HTML links, visible to Googlebot without JS.
           Purpose is purely to shorten the click-depth from home → place pages
           (previously 4 clicks via country → city → list → place). */}

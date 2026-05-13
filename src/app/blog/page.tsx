@@ -109,6 +109,38 @@ export default async function BlogIndex() {
           </p>
         </header>
 
+        {/* Seasonal: Summer Destinations hub featured at the top of
+            the blog index. Same May-September gate as the homepage
+            banner so it disappears automatically after the season. */}
+        {(() => {
+          const m = new Date().getUTCMonth()
+          const inSeason = m >= 4 && m <= 8
+          if (!inSeason) return null
+          return (
+            <Link
+              href="/vegan-summer-destinations"
+              className="group block mb-10 rounded-2xl border-2 border-primary/30 bg-primary/5 overflow-hidden hover:bg-primary/10 transition-colors"
+            >
+              <div className="grid md:grid-cols-5 gap-0">
+                <div className="md:col-span-3 p-6 flex flex-col justify-center">
+                  <p className="text-[10px] uppercase tracking-widest text-primary font-bold mb-2">
+                    Featured guide · Summer 2026
+                  </p>
+                  <h2 className="font-headline font-bold text-2xl md:text-3xl text-on-surface mb-3 group-hover:text-primary transition-colors">
+                    Vegan Summer Destinations in Europe
+                  </h2>
+                  <p className="text-on-surface-variant text-base leading-relaxed">
+                    29 Mediterranean destinations across Italy, Spain, Greece, Portugal, Croatia and Turkey — every one with at least 5 verified vegan or vegan-friendly places.
+                  </p>
+                </div>
+                <div className="md:col-span-2 hidden md:flex items-center justify-center p-8 text-6xl">
+                  ☀️
+                </div>
+              </div>
+            </Link>
+          )
+        })()}
+
         {articles.length === 0 ? (
           <div className="text-center py-16 bg-surface-container-lowest rounded-2xl ghost-border">
             <p className="text-on-surface-variant">No articles yet. Stay tuned.</p>
