@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { loadCityImages } from '@/lib/city-images-server'
+import { getCityImage } from '@/lib/city-images'
 
 // Article list needs to refresh quickly when a new post is published but
 // shouldn't hammer the DB. 1h ISR is plenty for a blog index.
@@ -88,8 +91,24 @@ async function getArticles(): Promise<ArticleRow[]> {
   return (data as any[]) || []
 }
 
+// Visually distinct Mediterranean cities for the seasonal collage:
+// Santorini (white + blue), Dubrovnik (terracotta walled city),
+// Lisbon (yellow trams + ochre buildings), Barcelona (Gothic +
+// Sagrada). Picked for variety across countries + visual hooks so
+// the collage reads as "Mediterranean summer" at a glance.
+const COLLAGE_CITIES: Array<[string, string]> = [
+  ['Santorini', 'Greece'],
+  ['Dubrovnik', 'Croatia'],
+  ['Lisbon', 'Portugal'],
+  ['Barcelona', 'Spain'],
+]
+
 export default async function BlogIndex() {
   const articles = await getArticles()
+  const cityImages = loadCityImages()
+  const collage = COLLAGE_CITIES
+    .map(([city, country]) => ({ city, country, src: getCityImage(cityImages, city, country) }))
+    .filter((c) => c.src)
 
   const breadcrumbs = buildBreadcrumbs([
     HOME_CRUMB,
@@ -133,9 +152,35 @@ export default async function BlogIndex() {
                     29 Mediterranean destinations across Italy, Spain, Greece, Portugal, Croatia and Turkey — every one with at least 5 verified vegan or vegan-friendly places.
                   </p>
                 </div>
-                <div className="md:col-span-2 hidden md:flex items-center justify-center p-8 text-6xl">
-                  ☀️
-                </div>
+                {/* 2x2 collage of Mediterranean summer cities. Pulls from the
+                    existing optimised city heroes (already resized to 1280px
+                    WebP and cached on Supabase), routed through /_next/image
+                    so each ~100px thumbnail downloads ~5-15 KB instead of the
+                    full source. Falls back to silk-gradient if any city image
+                    is missing. */}
+                {collage.length === 4 ? (
+                  <div className="md:col-span-2 hidden md:grid grid-cols-2 gap-1 p-3">
+                    {collage.map(({ city, country, src }) => (
+                      <div
+                        key={`${city}-${country}`}
+                        className="relative aspect-square overflow-hidden rounded-lg"
+                      >
+                        <Image
+                          src={src!}
+                          alt={`${city}, ${country}`}
+                          fill
+                          sizes="120px"
+                          quality={55}
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="md:col-span-2 hidden md:block relative overflow-hidden">
+                    <div className="absolute inset-0 silk-gradient" />
+                  </div>
+                )}
               </div>
             </Link>
           )
