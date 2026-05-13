@@ -58,6 +58,10 @@ const ITEMS: VoteItem[] = [
   { id: 'expand-eastern-europe', category: 'coverage', label: 'Eastern Europe expansion', description: 'Warsaw, Prague, Budapest, Bucharest — vegan scene is growing fast.', status: 'exploring', votable: true },
   { id: 'expand-uk-tier2', category: 'coverage', label: 'UK tier-2 cities', description: 'Brighton, Bristol, Manchester, Edinburgh — beyond London-only coverage.', status: 'exploring', votable: true },
   { id: 'expand-spain-tier2', category: 'coverage', label: 'Spain tier-2 cities', description: 'Valencia, Seville, Granada, Bilbao — local audit + Spanish metadata.', status: 'exploring', votable: true },
+  // Shipped coverage milestones — proof we deliver. Live at the
+  // bottom of the Coverage column thanks to the votable=false sink.
+  { id: 'coverage-belgium-blog', category: 'coverage', label: 'Belgium — full guide + blog post', description: 'In-depth Belgium coverage: every Belgian city with 5+ places audited, plus a written guide to the vegan scene published on the blog.', status: 'shipped', quarter: 'Q2 2026', votable: false },
+  { id: 'coverage-belgium-fully-vegan', category: 'coverage', label: '100% vegan places in Belgium verified', description: 'Every fully-vegan venue in Belgium reviewed and confirmed 100% vegan against menu + website checks. No mistakenly-tagged spots remain.', status: 'shipped', quarter: 'Q2 2026', votable: false },
 ]
 
 const STATUS_BADGE: Record<Status, { label: string; cls: string }> = {
