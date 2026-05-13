@@ -264,19 +264,53 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
             </button>
           </div>
 
-          {/* What supporters get */}
+          {/* Free vs Supporter — clear side-by-side. Replacing the
+              earlier chip list which was honest but felt incidental. */}
           <div className="mt-10 pt-8 border-t border-outline-variant/10">
-            <p className="text-center text-sm font-medium text-on-surface-variant mb-4">What supporters get:</p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {['Supporter badge', 'Direct edit access to all places', 'Discuss and vote on platform\'s future', 'Our eternal gratitude'].map((perk) => (
-                <div key={perk} className="flex items-center gap-2">
-                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Check className="h-3 w-3 text-primary" />
-                  </div>
-                  <span className="text-sm text-on-surface-variant">{perk}</span>
-                </div>
-              ))}
+            <p className="text-center text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-6">What you get</p>
+            <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <div className="rounded-2xl p-5 bg-surface-container-low ghost-border">
+                <h3 className="font-bold text-base text-on-surface mb-3">Free, forever</h3>
+                <ul className="space-y-2 text-sm text-on-surface-variant">
+                  {[
+                    'Browse 50,000+ vegan places worldwide',
+                    'See city rankings, ratings, reviews',
+                    'Add places, write reviews, follow cities',
+                    'No ads, no paid listings, no tracking-for-sale',
+                  ].map((perk) => (
+                    <li key={perk} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-on-surface-variant/70 mt-0.5 shrink-0" />
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-2xl p-5 bg-primary/5 border-2 border-primary/40 relative">
+                <span className="absolute -top-3 left-5 bg-primary text-on-primary-btn text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                  €3 / month
+                </span>
+                <h3 className="font-bold text-base text-on-surface mb-3">Supporter — everything in Free, plus</h3>
+                <ul className="space-y-2 text-sm text-on-surface">
+                  {[
+                    'Direct edit access to any place — fix opening hours, add photos, correct details without waiting for moderation',
+                    'Supporter badge visible on your profile, posts, and reviews',
+                    'Your name on the public Supporters wall (below)',
+                    'First access to new features as they ship',
+                    'Cancel anytime; no lock-in',
+                  ].map((perk) => (
+                    <li key={perk} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
+            <p className="text-center text-[11px] text-on-surface-variant mt-6 max-w-md mx-auto leading-relaxed">
+              Supporter revenue funds servers, development, and platform growth.
+              Long-term goal: a transparent split with verified animal sanctuaries —
+              we will publish the exact ratio and recipients once that's set up.
+            </p>
           </div>
         </div>
 
