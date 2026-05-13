@@ -39,10 +39,10 @@ const ITEMS: VoteItem[] = [
   { id: 'packs', category: 'feature', label: 'Packs', description: 'Save and organise places into personal collections — your favourites, bucket lists, city guides.', status: 'shipped', quarter: 'Q1 2026', votable: false },
   { id: 'trips', category: 'feature', label: 'Trips & Check-ins', description: 'Log places you have visited, build a personal history of vegan travels.', status: 'shipped', quarter: 'Q1 2026', votable: false },
   { id: 'social-feed', category: 'feature', label: 'Community feed', description: 'Follow other plant-based travellers, share posts, discover places through your community.', status: 'shipped', quarter: 'Q1 2026', votable: false },
-  { id: 'companion', category: 'feature', label: 'Companion (vegan platform guide)', description: 'A non-AI companion that surfaces personalised picks from your follows and pinned city.', status: 'in-development', votable: true },
+  { id: 'recipe-collection', category: 'feature', label: 'Recipe collection (vegan creators)', description: 'Curated recipes from 100% vegan creators with proper attribution.', status: 'shipped', quarter: 'Q2 2026', votable: false },
+  { id: 'event-calendar', category: 'feature', label: 'Event calendar', description: 'Local + travel-worthy vegan events. Notifications for cities you follow.', status: 'shipped', quarter: 'Q2 2026', votable: false },
+  { id: 'companion', category: 'feature', label: 'Companion (vegan platform guide)', description: 'A non-AI companion that surfaces personalised picks from your follows and pinned city.', status: 'planned', votable: true },
   { id: 'mobile-app', category: 'feature', label: 'iOS & Android app', description: 'Native mobile wrapper around the platform with offline + push.', status: 'planned', votable: true },
-  { id: 'recipe-collection', category: 'feature', label: 'Recipe collection (vegan creators)', description: 'Curated recipes from 100% vegan creators with proper attribution.', status: 'planned', votable: true },
-  { id: 'event-calendar', category: 'feature', label: 'Event calendar', description: 'Local + travel-worthy vegan events. Notifications for cities you follow.', status: 'planned', votable: true },
   { id: 'browser-extension', category: 'feature', label: 'Browser extension', description: 'Right-click any place on Google Maps to add it to PlantsPack.', status: 'exploring', votable: true },
   { id: 'internal-messaging', category: 'feature', label: 'Direct messages', description: 'Private DMs between members so trip planning + place tips stay on-platform.', status: 'exploring', votable: true },
   { id: 'better-packs', category: 'feature', label: 'Pack collaborations', description: 'Co-build a Pack with friends; shared trip planning.', status: 'exploring', votable: true },
@@ -149,10 +149,13 @@ export default function RoadmapPage() {
   const features = ITEMS.filter((i) => i.category === 'feature')
   const coverage = ITEMS.filter((i) => i.category === 'coverage')
 
+  // Votable (open) items rise to the top so the active queue is what
+  // visitors see first; shipped items sink to the bottom as a
+  // "what's already done" reference.
   const sortedByVotes = (list: VoteItem[]) =>
     [...list].sort((a, b) => {
-      if (!a.votable && b.votable) return -1
-      if (a.votable && !b.votable) return 1
+      if (a.votable && !b.votable) return -1
+      if (!a.votable && b.votable) return 1
       return (votes[b.id] || 0) - (votes[a.id] || 0)
     })
 
@@ -203,37 +206,37 @@ export default function RoadmapPage() {
           </div>
         )}
 
-        {/* Features section */}
-        <Section
-          title="Features"
-          subtitle="What we build next"
-          icon={<Sparkles className="h-5 w-5 text-primary" />}
-          items={sortedByVotes(features)}
-          votes={votes}
-          userVotes={userVotes}
-          pending={pending}
-          loading={loading}
-          canVote={isSupporter}
-          isSignedIn={!!user}
-          onVote={toggleVote}
-        />
-
-        <div className="h-10" />
-
-        {/* Coverage section */}
-        <Section
-          title="Coverage"
-          subtitle="Where we expand the directory next"
-          icon={<MapPin className="h-5 w-5 text-primary" />}
-          items={sortedByVotes(coverage)}
-          votes={votes}
-          userVotes={userVotes}
-          pending={pending}
-          loading={loading}
-          canVote={isSupporter}
-          isSignedIn={!!user}
-          onVote={toggleVote}
-        />
+        {/* Two columns on desktop, stacked on mobile. Each column is
+            independently scrollable in content height so a long Coverage
+            list doesn't drag the Features column down visually. */}
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-start">
+          <Section
+            title="Features"
+            subtitle="What we build next"
+            icon={<Sparkles className="h-5 w-5 text-primary" />}
+            items={sortedByVotes(features)}
+            votes={votes}
+            userVotes={userVotes}
+            pending={pending}
+            loading={loading}
+            canVote={isSupporter}
+            isSignedIn={!!user}
+            onVote={toggleVote}
+          />
+          <Section
+            title="Coverage"
+            subtitle="Where we expand the directory next"
+            icon={<MapPin className="h-5 w-5 text-primary" />}
+            items={sortedByVotes(coverage)}
+            votes={votes}
+            userVotes={userVotes}
+            pending={pending}
+            loading={loading}
+            canVote={isSupporter}
+            isSignedIn={!!user}
+            onVote={toggleVote}
+          />
+        </div>
 
         <p className="text-center text-xs text-on-surface-variant mt-12 max-w-md mx-auto">
           Missing something obvious? <Link href="/contact" className="underline">Tell us</Link> — we curate this list and add new items roughly monthly.
