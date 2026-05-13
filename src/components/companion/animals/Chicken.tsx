@@ -1,13 +1,28 @@
 /**
- * Chicken companion - side profile, thin green line, minimal detail.
+ * Chicken companion. Side profile, thin green line, minimal detail.
+ *
+ * Two visual variants:
+ *   - baby: renders ChickenBaby (user-supplied fluffy chick artwork)
+ *   - juvenile / adult: the line-drawn rooster below
  *
  * A rounded body, smaller head set forward and high, simple comb,
  * triangular beak, soft tail plume. Two visible legs (chickens are
  * bipedal, so no "back legs" in side view).
  */
 import { VIEW_BOX, LINE, FILL_GREEN } from './_shared'
+import type { Stage } from '../messages'
+import ChickenBaby from './ChickenBaby'
 
-export default function Chicken() {
+interface ChickenProps {
+  stage?: Stage
+}
+
+export default function Chicken({ stage }: ChickenProps = {}) {
+  if (stage === 'baby') return <ChickenBaby />
+  return <ChickenAdult />
+}
+
+function ChickenAdult() {
   return (
     <svg
       viewBox={VIEW_BOX}

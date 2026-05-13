@@ -9,6 +9,7 @@ import Cow from './animals/Cow'
 import Lamb from './animals/Lamb'
 import {
   type Species,
+  type Stage,
   type CompanionContext,
   SPECIES_LABEL,
   SPECIES_ORDER,
@@ -45,7 +46,6 @@ interface CompanionRow {
   lifespan_days: number
 }
 
-type Stage = 'baby' | 'juvenile' | 'adult' | 'passed'
 
 interface StageInfo {
   stage: Stage
@@ -67,7 +67,9 @@ function stageFromAge(createdAt: string, lifespanDays: number): StageInfo {
   return { stage: 'adult', ageDays, daysRemaining, isAlive: true, scale: 1 }
 }
 
-const ANIMALS: Record<Species, () => ReactElement> = {
+// Each animal accepts an optional stage prop so it can render
+// per-stage artwork (e.g. baby chicken renders the fluffy chick).
+const ANIMALS: Record<Species, (props: { stage?: Stage }) => ReactElement> = {
   chicken: Chicken,
   pig: Pig,
   cow: Cow,
@@ -278,6 +280,7 @@ export default function CompanionClient() {
         {alive.map((c) => {
           const Sp = ANIMALS[c.species]
           const isActive = active?.id === c.id
+          const thumbStage = stageFromAge(c.created_at, c.lifespan_days).stage
           return (
             <button
               key={c.id}
@@ -290,7 +293,7 @@ export default function CompanionClient() {
                   : 'bg-surface-container-lowest hover:border-primary/20'
               }`}
             >
-              <span className="block w-7 h-7"><Sp /></span>
+              <span className="block w-7 h-7"><Sp stage={thumbStage} /></span>
               <span className="font-medium text-on-surface">{c.name}</span>
             </button>
           )
@@ -411,7 +414,7 @@ export default function CompanionClient() {
                 transition: 'transform 600ms ease-in-out',
               }}
             >
-              <ActiveAnimal />
+              <ActiveAnimal stage={activeStage.stage} />
             </button>
             <p className="text-center text-xs text-on-surface-variant mt-2">tap to talk</p>
           </>

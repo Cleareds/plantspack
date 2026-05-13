@@ -8,7 +8,9 @@
  */
 import { VIEW_BOX, LINE, FILL_GREEN } from './_shared'
 
-export default function Lamb() {
+interface AnimalProps { stage?: import('../messages').Stage }
+
+export default function Lamb(_props: AnimalProps = {}) {
   return (
     <svg
       viewBox={VIEW_BOX}

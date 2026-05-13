@@ -9,6 +9,10 @@
 
 export type Species = 'chicken' | 'pig' | 'cow' | 'lamb'
 
+// Per-companion lifecycle stage. Exported so animal components can
+// vary their artwork by stage (baby chicken renders ChickenBaby etc).
+export type Stage = 'baby' | 'juvenile' | 'adult' | 'passed'
+
 export interface CompanionContext {
   // Optional real data the companion can reference. The UI can fetch these
   // async after mount and re-roll messages once available.

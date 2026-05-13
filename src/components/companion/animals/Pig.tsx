@@ -4,7 +4,9 @@
  */
 import { VIEW_BOX, LINE, FILL_GREEN } from './_shared'
 
-export default function Pig() {
+interface AnimalProps { stage?: import('../messages').Stage }
+
+export default function Pig(_props: AnimalProps = {}) {
   return (
     <svg
       viewBox={VIEW_BOX}
