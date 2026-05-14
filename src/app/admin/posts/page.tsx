@@ -51,7 +51,7 @@ export default function PostsManagement() {
   const [totalPosts, setTotalPosts] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterPrivacy, setFilterPrivacy] = useState<'all' | 'public' | 'friends' | 'private'>('all')
+  const [filterPrivacy, setFilterPrivacy] = useState<'all' | 'public' | 'friends' | 'private' | 'draft'>('all')
   const [showDeleted, setShowDeleted] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [expandedPost, setExpandedPost] = useState<string | null>(null)
@@ -137,6 +137,7 @@ export default function PostsManagement() {
       public: { icon: <Globe className="h-3 w-3" />, cls: 'bg-primary-container/30 text-primary', label: 'Public' },
       friends: { icon: <Users className="h-3 w-3" />, cls: 'bg-blue-100 text-blue-800', label: 'Friends' },
       private: { icon: <Lock className="h-3 w-3" />, cls: 'bg-surface-container text-on-surface', label: 'Private' },
+      draft: { icon: <Lock className="h-3 w-3" />, cls: 'bg-amber-100 text-amber-900', label: 'Draft' },
     }
     const p = map[privacy] || map.private
     return (
@@ -181,6 +182,7 @@ export default function PostsManagement() {
               <option value="public">Public</option>
               <option value="friends">Friends</option>
               <option value="private">Private</option>
+              <option value="draft">Draft</option>
             </select>
           </div>
 

@@ -24,6 +24,27 @@ const CITY_REDIRECTS: Record<string, Record<string, string>> = {
     'frankfurt': 'frankfurt-am-main',
     'halle': 'halle-saale',
   },
+  // GSC 2026-05-14 export: 15 apex-domain 404s on /vegan-places paths
+  // with the city listed under the wrong country, plus "city-of-X" and
+  // "-district" suffix patterns. Specific known cases below; the apex
+  // -> www middleware redirect handles the duplicate-domain issue, and
+  // these handle the in-URL country/city normalisation.
+  thailand: {
+    'mae-sai-district': 'mae-sai',
+  },
+  indonesia: {
+    'city-of-medan': 'medan',
+  },
+  'united-kingdom': {
+    'city-of-westminster': 'westminster',
+  },
+}
+
+// Cities in the wrong country in the URL. Cross-country 301 to the
+// canonical country/city pair. Innsbruck is Austrian; legacy imports
+// or external links sometimes filed it under Germany.
+const CROSS_COUNTRY_CITY_REDIRECTS: Record<string, { country: string; city: string }> = {
+  'germany/innsbruck': { country: 'austria', city: 'innsbruck' },
 }
 import { Globe, MapPin } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
@@ -374,6 +395,11 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   }
 
   if (COUNTRY_REDIRECTS[country]) redirect(`/vegan-places/${COUNTRY_REDIRECTS[country]}/${city}${isFullyVeganMode ? '/fully-vegan' : ''}`)
+  // Wrong-country redirect (e.g. Innsbruck filed under Germany should
+  // be Austria). Runs before the same-country alias redirect so the
+  // country is fixed first.
+  const crossCountry = CROSS_COUNTRY_CITY_REDIRECTS[`${country}/${city}`]
+  if (crossCountry) redirect(`/vegan-places/${crossCountry.country}/${crossCountry.city}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const cityAlias = CITY_REDIRECTS[country]?.[city]
   if (cityAlias) redirect(`/vegan-places/${country}/${cityAlias}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const [{ places: allPlaces, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([

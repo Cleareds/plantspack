@@ -60,9 +60,23 @@ function isPublicReadOnly(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // Apex -> www 301 redirect. Without this, Google indexes both
+  // plantspack.com/X and www.plantspack.com/X as separate URLs and we
+  // bleed crawl budget: GSC 2026-05-14 export showed 80 "crawled-not-
+  // indexed" and 128 "404" errors were apex-domain URLs that should
+  // have redirected. One single fix collapses 208 reported errors.
+  const host = request.headers.get('host') || ''
+  if (host === 'plantspack.com') {
+    const url = request.nextUrl.clone()
+    url.host = 'www.plantspack.com'
+    url.protocol = 'https:'
+    return NextResponse.redirect(url, 301)
+  }
+
   // Serve 410 before auth logic runs - cheaper, and we don't need session
   // state for a gone page.
-  const pathname = request.nextUrl.pathname
   if (GONE_RECIPES.has(pathname)) {
     return goneResponse()
   }
