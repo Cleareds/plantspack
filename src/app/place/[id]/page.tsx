@@ -299,6 +299,37 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     morePlacesInCity = siblings || []
   }
 
+  // "Other vegan cities in {country}" — SSR internal links from each
+  // place page to 3 sibling cities in the same country. Addresses the
+  // GSC "Discovered – not indexed" bucket by densifying the link
+  // graph: every place becomes a 3-way hub (its own city + 3 sibling
+  // cities + the country page).
+  let nearbyCities: Array<{ city: string; count: number }> = []
+  if (place.city && place.country) {
+    const { createAdminClient } = await import('@/lib/supabase-admin')
+    const admin = createAdminClient()
+    // Top 3 cities in the same country by place count, excluding
+    // the current city. Threshold of 5 places matches the project's
+    // city-page minimum (no thin link targets).
+    const { data: countryCityRows } = await admin
+      .from('places')
+      .select('city')
+      .eq('country', place.country)
+      .is('archived_at', null)
+      .not('city', 'is', null)
+      .neq('city', place.city)
+    const counts: Record<string, number> = {}
+    for (const r of countryCityRows || []) {
+      const c = (r as { city: string | null }).city
+      if (c) counts[c] = (counts[c] || 0) + 1
+    }
+    nearbyCities = Object.entries(counts)
+      .filter(([, n]) => n >= 5)
+      .map(([city, count]) => ({ city, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3)
+  }
+
   // JSON-LD for LocalBusiness
   const placeSchemaType = place.category === 'hotel' ? 'LodgingBusiness' : place.category === 'store' ? 'Store' : 'Restaurant'
   const placeJsonLd = {
@@ -854,6 +885,40 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   className="text-primary hover:underline"
                 >
                   All vegan places in {place.city} →
+                </Link>
+              </p>
+            </div>
+          )}
+
+          {/* Other vegan cities in this country — SSR internal links to
+              sibling city pages in the same country. Compounds with the
+              "More places in {city}" block above to flatten the link
+              graph: place → siblings + place → cities + place → country.
+              Each place is a 3-way crawl hub. */}
+          {nearbyCities.length > 0 && place.country && (
+            <div className="p-6 border-t border-outline-variant/10">
+              <h2 className="text-lg font-semibold text-on-surface mb-4">
+                Other vegan cities in {place.country}
+              </h2>
+              <ul className="flex flex-wrap gap-2">
+                {nearbyCities.map((nc) => (
+                  <li key={nc.city}>
+                    <Link
+                      href={`/vegan-places/${slugifyCityOrCountry(place.country || '')}/${slugifyCityOrCountry(nc.city)}`}
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-surface-container-lowest ghost-border hover:border-primary/30 text-sm transition-colors"
+                    >
+                      <span className="font-medium text-on-surface">{nc.city}</span>
+                      <span className="text-[11px] text-on-surface-variant">{nc.count} places</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-xs text-on-surface-variant mt-3">
+                <Link
+                  href={`/vegan-places/${slugifyCityOrCountry(place.country || '')}`}
+                  className="text-primary hover:underline"
+                >
+                  All vegan places in {place.country} →
                 </Link>
               </p>
             </div>
