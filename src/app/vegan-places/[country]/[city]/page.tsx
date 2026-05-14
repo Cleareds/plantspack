@@ -38,6 +38,7 @@ import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
+import { getCityIntro } from '@/lib/city-intros'
 import { getRegionForCity, getRegionCityStats } from '@/lib/regions'
 import { createAdminClient } from '@/lib/supabase-admin'
 
@@ -477,6 +478,9 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   const rankedCuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).map(([k]) => k)
   cityStats.cuisines = filterCuisinesForDisplay(rankedCuisines).slice(0, 5)
   const sceneDescription = generateCityDescription(cityName, countryName, cityStats)
+  // Top-100 cities also get a longer auto-generated, data-grounded intro
+  // (public/data/city-intros.json). Null for cities not in the top 100.
+  const cityIntro = !isFullyVeganMode ? getCityIntro(cityName, countryName) : null
 
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
   categories.sort()
@@ -635,6 +639,9 @@ export default async function CityPage({ params, searchParams }: PageProps) {
           </p>
           {sceneDescription && (
             <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
+          )}
+          {cityIntro && (
+            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-3">{cityIntro}</p>
           )}
           <div className="flex flex-wrap gap-3">
             <Link
