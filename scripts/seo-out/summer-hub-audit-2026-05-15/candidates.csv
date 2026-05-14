@@ -1,0 +1,929 @@
+id,name,city,country,vegan_level,is_verified,website
+09ea2232-785a-457d-ad4d-dc2df72d1d79,Barakokula,Split,Croatia,fully_vegan,false,https://barakokula-plant-based.eatbu.com
+201b9669-56d1-43ae-9aec-c5a4e03c6440,Vegan Sailing,Split,Croatia,fully_vegan,true,https://www.vegansailing.eu
+27d5bf3c-4493-4f96-bd33-a1b67a6de158,Biomania Street Food,Bol,Croatia,fully_vegan,false,https://biomania.hr
+40c94ed4-9087-42c0-8838-a39c24fb0006,Plantae Vegan,Vis,Croatia,fully_vegan,true,
+43bc7fa7-e522-4f2b-986c-67a7aca8d471,Simple green,Zagreb,Croatia,fully_vegan,false,https://www.simplegreenbyjelena.com/
+76e9628a-c208-4825-abe7-ef399316c730,Nishta,Dubrovnik,Croatia,fully_vegan,false,https://www.nishtarestaurant.com/
+7f9e3dfa-68d3-4713-8e47-ad3caaae1122,The Green House,Hvar,Croatia,fully_vegan,true,
+8755d72b-ed38-47b9-9d0a-49e7daee5e91,OPG Natura škoj,Vodice,Croatia,fully_vegan,false,https://naturaskoj.com/
+ad623329-485e-42e4-a01f-50acd2b3ea1e,Natural,Split,Croatia,fully_vegan,false,https://www.natural.hr
+b121f2fa-fdb2-428f-a1d0-06079ba760ca,Vegehop,Zagreb,Croatia,fully_vegan,false,https://www.vegehop.hr/
+dcb8bdc5-b273-4fea-81be-6d0724f35bfa,Adio Mare Vegan,Korčula,Croatia,fully_vegan,true,
+e95fbf55-a1b2-46ce-886f-6a221eeaaab7,Zelena,Pula,Croatia,fully_vegan,false,http://www.zdravozelena.hr
+faeab079-8d8a-40f8-80ff-1f33fc4407a3,Zrno bio bistro,Zagreb,Croatia,fully_vegan,false,https://zrnobiobistro.hr/
+0220d32f-db2d-4c46-b05b-5759cbe25ed6,Venn Canteen,Porto,Portugal,fully_vegan,false,https://venncanteen.com/
+065c80c0-158e-4935-967a-75f35a9d3a49,Ao 26 Vegan Food Project,Lisbon,Portugal,fully_vegan,false,https://letsumai.com/widget/26-vegan-food-project
+0982b963-c257-4696-ae1f-7f9404e051ea,Gira.sol,Tomar,Portugal,fully_vegan,false,
+0d1cd938-c518-4a64-a43c-c4a121accc68,A Padoca,Porto,Portugal,fully_vegan,false,https://apadoca.pt/en/
+0f0c47c8-43bd-4a33-b27f-5b1a3b222ad6,The Green Affair,Lisbon,Portugal,fully_vegan,false,
+10a8e6c6-3bc8-49f7-9029-8f37c6458832,Vegana Burgers,Lisbon,Portugal,fully_vegan,false,
+12676cbe-d83b-4c58-80bb-c0daa5926d5d,O Macrobiótico,Porto,Portugal,fully_vegan,false,http://www.omacrobiotico.com
+14bcd0ee-3295-4b98-afbb-3d75f290f222,Da Vinci Cowork Cafe,Portimao,Portugal,fully_vegan,false,https://linktr.ee/davincicoworkcafe
+14cee650-dd7a-4be3-a9ee-840142fee4b1,Porto Vegan,Porto,Portugal,fully_vegan,false,https://www.facebook.com/oportovegan/
+16b7bffc-8390-4371-8e51-679eb729131e,Veganeats Caffe,Lisbon,Portugal,fully_vegan,false,
+17d690da-bdf8-4631-a5c6-2b4b68656bfb,Paladares Vegan,Braga,Portugal,fully_vegan,false,
+1f40ebad-09c6-4bf2-ba28-72ffdf43fe1f,nae vegan shoes,,Portugal,fully_vegan,false,https://www.nae-vegan.com
+1fdaebb1-8634-4a30-933a-307d5aa38f8e,Capuchinho Verde,Porto,Portugal,fully_vegan,false,https://capuchinhoverde.com/
+251029f5-9ea6-41ef-8b09-7ff576203166,Fast Vegan,Castelo Branco,Portugal,fully_vegan,false,
+29cd0b5a-3824-4c46-bffc-33e90abd4728,Moagem,Aljezur,Portugal,fully_vegan,false,https://moagemaljezur.wixsite.com/moagemaljezur
+2ad3c7aa-d713-48f5-9cc6-7e9db8914268,Baomerang,Vila Nova de Gaia,Portugal,fully_vegan,false,https://baomerang.eatbu.com/
+2bc90d0f-30cc-4418-8817-afa8860ef0cd,EasyGreen Vegan Foodstore & Snack Bar,Porto,Portugal,fully_vegan,false,https://www.easygreen.pt/
+2ec4f9a4-affe-4da9-a2af-efd4f2379253,Kong - Food Made With Compassion,Lisbon,Portugal,fully_vegan,false,https://www.kongvegan.com/
+309c9b59-c3d2-4967-a5cd-f4ecdb07984e,Lisbon Vegan,Lisbon,Portugal,fully_vegan,false,
+34955dc9-f089-42c8-8821-837bc28b0ead,Mundo Vegan,Funchal,Portugal,fully_vegan,false,
+3706cbc9-fc7b-4779-824b-d5c4207f31a6,Vegan Story,Lisbon,Portugal,fully_vegan,false,
+37fb9a71-b52c-477c-af69-aba92b4e206b,Gomásio,Guimaraes,Portugal,fully_vegan,false,
+425c5189-7c89-42b9-8dd1-eacf463af399,Kind Kitchen,Porto,Portugal,fully_vegan,false,https://www.kindkitchen.pt
+4342876c-37c1-4285-9862-7797328f6762,Motherburger,Lisbon,Portugal,fully_vegan,false,https://www.motherburger.pt/
+48308a1e-eaf2-4fe3-90cb-dc5213dfdfab,Musgo,Aveiro,Portugal,fully_vegan,false,
+5280ebaa-c674-41b3-94ca-c1ce9cdcb896,Vrasserie,Porto,Portugal,fully_vegan,false,https://www.vrasserie.com/
+54ff69ff-5ca5-41c0-b65e-036990a79ad4,Hibiscus,Braga,Portugal,fully_vegan,false,
+56f22b67-e88d-43fd-afb1-3aaffed67187,Fresh No Meat No Fish,Lourinha,Portugal,fully_vegan,false,
+5826571f-8bf3-4ddf-9b0d-10627689b959,Lupin Snack Bar,Porto,Portugal,fully_vegan,false,https://www.happycow.net/reviews/lupin-snack-bar-porto-
+6166c060-5b43-4eda-9bcc-c2082b9b56c7,Jardim das Cerejas,Lisbon,Portugal,fully_vegan,false,http://www.jardimdascerejas.com
+61a30142-04ca-4b17-a895-3a8c173af405,Veganices,Tavira,Portugal,fully_vegan,true,
+61d45a23-f38a-4b07-be43-2abd26aebd8d,Happy Food,Porto,Portugal,fully_vegan,false,https://www.happyfood.pt/
+67ecb957-bac6-48ec-9eb7-a4e9979c85d1,A Minha Avó,Lisbon,Portugal,fully_vegan,false,
+6ec09242-fb84-4362-a89d-e99a4f56253d,Shanti Vegetariano,Braga,Portugal,fully_vegan,false,
+70f30579-5004-4539-9684-9318bda35c60,Fangas Veg,Coimbra,Portugal,fully_vegan,false,
+767c15f9-19be-49fb-ab0f-15e338a9c0d0,Porto Vegans,Porto,Portugal,fully_vegan,false,https://www.instagram.com/porto_vegans/
+7aa15e99-7fc4-43f4-b7b4-a05d5d9062b1,Vegan Box,Faro,Portugal,fully_vegan,false,
+7b2d27fc-f02c-4516-9644-45f03f057895,Outro Lado,Faro,Portugal,fully_vegan,false,https://restoutrolado.eatbu.com/
+81601f15-e9c3-42ac-b5a7-10d90fd2e553,GAIA Loja Restaurante,Rogil,Portugal,fully_vegan,false,
+85219302-d3f1-4333-904f-bb8ac7390b9b,daTerra - Campus São João,Porto,Portugal,fully_vegan,false,https://www.daterra.pt/
+868d37b6-be55-4202-a68d-6c5b6874634b,Sapato Verde,Cascais,Portugal,fully_vegan,false,https://www.sapatoverde.pt
+89c7f0f5-740e-401c-a077-314270d15559,Semente,Braga,Portugal,fully_vegan,false,
+8fdca036-47db-49f8-be90-dfd94903b256,Couve - Shoes & Vegan Goods,Lisbon,Portugal,fully_vegan,false,https://www.couve.pt/
+92a5c92f-6d38-418b-a6f4-1f8ea22c689c,Sugar Rabbit Kaffé,Albufeira,Portugal,fully_vegan,false,https://www.sugarrabbitkaffe.com
+94870f84-6142-452d-93ea-a5635de0886d,Prema,Viseu,Portugal,fully_vegan,false,
+99b79ddf-d399-4438-a564-80b704244215,daTerra - Foz do Douro,Porto,Portugal,fully_vegan,false,https://www.daterra.pt/
+9e57e5e6-f711-4b80-bc03-8c84338deb87,Legumi Sushi Vegan,Lisbon,Portugal,fully_vegan,false,https://www.legumisushivegan.com/en/
+a4e8bf19-8896-4f03-a770-7c068a2b1bd3,Ki,Aveiro,Portugal,fully_vegan,false,http://www.kimacrobiotico.com/
+a94d0039-72a2-46af-9670-f044754d5d87,The Food Temple,Lisbon,Portugal,fully_vegan,false,https://www.facebook.com/FoodTemple
+abd19404-faa2-4087-bd43-9fb18e008428,Soul - Alimentação Saudável e do Bem,Braga,Portugal,fully_vegan,false,
+ae3af3c4-ba5e-4a3b-8f99-5f66c2f2dc4c,Organi Chiado,Lisbon,Portugal,fully_vegan,false,https://organi.pt
+b0a57677-ade3-4e1b-ac60-01eada2f2420,Porto Vegan Market,Porto,Portugal,fully_vegan,false,https://www.agenda-porto.pt/en/evento/porto-vegan-market/
+b5ecb4ab-16c0-42f7-a921-adc252c42ee0,MNT Vegan Café,Porto,Portugal,fully_vegan,false,https://www.ubereats.com/pt-en/store/mtn-vegan-cafe/DX4Ou6Y8VV65T0jI3Lt1TQ
+b7b585a7-a68e-4c39-964b-a4a5a927df53,Verde Hut,Porto,Portugal,fully_vegan,false,https://www.instagram.com/verde_hut/
+ba0b2472-4aa2-4043-b970-3ed248a85a3a,GAL Cafe,Lisbon,Portugal,fully_vegan,false,https://galcafe.net/
+bbed1c6b-09f5-400d-aa66-8ca0a5696394,"Green Beans, Mercado Vegan",Lisbon,Portugal,fully_vegan,false,https://www.greenbeans.pt
+c7814933-ec5d-4647-8f78-bd9cf1644154,Veganaria Madeira,Ponta do Sol,Portugal,fully_vegan,false,
+caed560c-85c2-405f-b060-7d89b856cc2e,Ongo,Porto,Portugal,fully_vegan,false,https://www.instagram.com/ongo.kitchen/
+cddabc41-5fdf-43cd-8b7b-a28047bcf704,Vegan Junkies,Lisbon,Portugal,fully_vegan,false,http://www.veganjunkies.pt/
+d1ba6844-84e7-48ef-93b0-b12a50545b0e,O Botanista,Lisbon,Portugal,fully_vegan,false,
+d597587b-67ff-4f8b-aa41-778322187df0,Mel & Limão,Faro,Portugal,fully_vegan,true,
+d7e4bf76-65d4-4b26-9870-6081eedf0381,Raiz o Vegetariano do Bairro,Aveiro,Portugal,fully_vegan,false,https://oraiz.pt/
+e2a048a7-4861-4e11-96b8-f6547314c058,Green Beans,Lisbon,Portugal,fully_vegan,false,https://www.greenbeans.pt/
+e3c84a1d-5800-46b1-a879-9b04c8135f16,Graça 77,Lisbon,Portugal,fully_vegan,false,https://graca77.eatbu.com
+e481a0ec-123c-47bf-bdac-95edb921aad6,HalfArroba - Mercearia dos Sentidos,Viseu,Portugal,fully_vegan,false,https://halfarroba.com
+e5cd8cff-70a5-4d17-8b20-f20b818a974b,Vegan Nata Chiado,Lisbon,Portugal,fully_vegan,false,https://www.vegannata.pt/
+ef2dc486-eb6b-4f7f-a308-7d5df5be41d0,Odete Bakery,Porto,Portugal,fully_vegan,false,
+f058ab66-b7c4-411f-a6ee-20ddcdda5792,daTerra,Porto,Portugal,fully_vegan,false,https://www.daterra.pt
+f619d346-7161-4bdf-a64b-0f8c0bc9a504,Vegana by Tentúgal,Porto,Portugal,fully_vegan,false,
+f680e630-0507-4255-a91c-17fae74759ba,Jardineiro - Vegan Kitchen,Porto,Portugal,fully_vegan,false,https://jardinsdoporto.pt/en/jardineiro-kitchen
+f6c33e47-aed0-497b-9e27-6a5724fa0868,Escolha Natura,Lisbon,Portugal,fully_vegan,false,http://www.escolhanatura.com
+f7b48296-648b-4d0b-b165-2cd47f275109,daTerra Matosinhos,Matosinhos,Portugal,fully_vegan,false,https://www.daterra.pt/
+0369de9d-a619-4886-af93-d6ca57fa9d39,Falafel Veggie,Istanbul,Turkey,fully_vegan,false,
+1f21e321-6601-43fe-b567-446ba49337cc,Juicery,Istanbul,Turkey,fully_vegan,false,https://juicery.bademsoft.com/en/menu-tr-english-2/
+22a21351-27bb-47b0-82c4-1635e6af8a70,Bodrum Botanicals Health Shop & Cafe,Bodrum,Turkey,fully_vegan,true,
+3049af3f-a483-4b03-a980-e7065eb909a8,Loving Hut,Besiktas,Turkey,fully_vegan,false,
+316da9c7-6d50-4468-a074-799b5004b22a,Vegan Dukkan Lokanta,Beyoğlu,Turkey,fully_vegan,false,https://vegandukkanlokanta.com/
+38832b7e-c37d-4aa8-9de3-3e6b8bf07646,240 Derece,Istanbul,Turkey,fully_vegan,false,
+3cb16ad2-a457-402a-8987-2c623c7fcbae,Semsür Çiğköfte,Istanbul,Turkey,fully_vegan,false,
+46c8a7c5-a32b-4ea9-92eb-566ebcf58a3a,Asian vegan kitchen,Beyoğlu,Turkey,fully_vegan,false,
+4f719d85-cedf-4991-a42d-cabdc7e708cd,Vegan Masa,Kadikoy,Turkey,fully_vegan,false,https://allzinapp.com/veganmasakadikoy
+504c9921-ef83-4de5-ad81-5af718a80015,Vegan Masa,Istanbul,Turkey,fully_vegan,false,https://allzinapp.com/veganmasa
+52e202cd-a199-41c3-a846-4cc04280de18,Vegan BellaVista Hostel,Istanbul,Turkey,fully_vegan,false,https://bellavistahostel.org
+6a9c0882-58fa-401c-a80a-09db3a73f12c,Level,Antalya,Turkey,fully_vegan,false,https://levelkaleici.com/
+71e55bfe-db70-4a68-8b2a-43223991ddaa,Mahatma Vegan Cafe,Kadikoy,Turkey,fully_vegan,false,
+74c59ce1-ed03-4940-b27e-4172607c3b68,Ch'i for Life,Antalya,Turkey,fully_vegan,true,
+799e0b1d-ca3c-498f-a87e-8160e42a3a10,Vegan a la Turca,Bodrum,Turkey,fully_vegan,true,
+9976bbf9-93f6-4b28-b7af-185154e28ec3,Vegan Community Kitchen,Istanbul,Turkey,fully_vegan,false,
+9e560b21-4f8e-4cfd-9ea1-79083a11aee1,Vegan Food Cartel,Istanbul,Turkey,fully_vegan,false,https://www.veganfoodcartel.com/
+af050072-b704-4a69-8a2c-827cc33dab64,Vatka Coffe & Vegan,Istanbul,Turkey,fully_vegan,false,
+b2ed9269-cb90-4297-8f2c-c04fb4eaa7af,240 Derece,Istanbul,Turkey,fully_vegan,false,
+ba2de34b-e321-4ed0-bf6a-ee2450fd0fb2,Vegan Store & Cafe,Beyoğlu,Turkey,fully_vegan,false,https://vegandukkanlokanta.com/
+ca0e8925-6274-472f-a543-5967aeb42254,Vegan Istanbul,Beyoğlu,Turkey,fully_vegan,false,
+cd8605f7-3f9e-44ca-b6d2-f7561ff5726f,All Vegan,Antalya,Turkey,fully_vegan,true,
+cdd7d64a-2fe9-4e35-8d1c-2c365f4c993b,Vegan Community Kitchen Express,Beyoğlu,Turkey,fully_vegan,false,
+d3ed1d13-225e-4a10-b727-76762cdfadc9,Vegan Community Kitchen,Beyoğlu,Turkey,fully_vegan,false,
+d64775c1-de12-4022-9074-a2a880dc8d57,Vegan Community Kitchen Express,Istanbul,Turkey,fully_vegan,false,
+e33cf363-0944-4b2d-a70b-afb6a10e439c,Marimor Kitchen,Antalya,Turkey,fully_vegan,true,http://www.marimor.com.tr
+e378657d-ada9-468e-9077-fc7f5dedb9a6,Junk Vegan,Ankara,Turkey,fully_vegan,false,
+8e792ee4-1b33-4341-935a-ae72f60b4d25,Plante Lab,Catania,Italy,fully_vegan,false,https://www.plante.it/
+01375a4f-3881-42df-b984-97038390d73b,Cortese - The raw patisserie,Florence,Italy,fully_vegan,false,https://cortesecafe.com/
+e8c84515-69fe-4894-b379-3fa2c3ac5e11,Giumella Gastronomia Vegana,Florence,Italy,fully_vegan,false,http://www.giumellavegan.it/
+a45b49c4-609a-43fa-916f-4d03241e51da,Il vegetariano e vegano Marcella Bianchi,Florence,Italy,fully_vegan,false,
+71b04765-de6f-4bcc-89c9-f016b13d0aa4,#RAW,Florence,Italy,fully_vegan,false,https://rawveganfirenze.com
+b86923a0-2c29-4517-a93b-dcd5e8f66b0b,Santo Falafel,Florence,Italy,fully_vegan,false,https://santofalafelfirenze.it/
+dcac028d-d1e2-4eb5-817c-318c198b14ae,Dolce Vegan,Florence,Italy,fully_vegan,false,https://www.dolcevegan.it
+44fc1063-3d7b-4f99-b55e-e544af166b1d,Nirvana,Florence,Italy,fully_vegan,false,https://www.nirvanaristorante.it/
+82c71018-0b96-4a17-8e80-3aaa31c2c34a,VeganArt,Naples,Italy,fully_vegan,false,https://www.veganartnapoli.com
+5f788624-bf50-4e46-b85b-585c06f24671,Arrecrià,Naples,Italy,fully_vegan,false,https://www.arrecriabistrot.it/
+a821b227-85b4-4174-99c5-75e6943a92f7,Haiku,Palermo,Italy,fully_vegan,false,http://www.haikupalermo.it
+f256c7ea-05b2-48d1-9d54-0819fe134166,Teco,Palermo,Italy,fully_vegan,false,
+03bac3e3-4720-4ae5-aa03-40808966dffe,Buddy Veggy Restaurant Cafè,Rome,Italy,fully_vegan,false,https://buddyroma.com/en/
+18a4056e-3fb6-46f3-9a26-a49a82f359cf,écru,Rome,Italy,fully_vegan,false,https://www.ecrurawfood.it/en/homepage-en/
+68501e17-bec1-422d-a7c3-3fe0f348d392,Otaleg,Rome,Italy,fully_vegan,false,http://www.otaleg.com/IT/Home
+60c03dc4-ba1f-42b9-a280-6290e98576f6,REWILD,Rome,Italy,fully_vegan,false,https://www.facebook.com/pages/Rome-Italy/REWILD-cruelty-free-club/108488255953?v=feed&story_fbid=158883050953
+96c6502e-3ce3-4fec-82d4-8175d009a3f9,Fratelli Piermattei,Rome,Italy,fully_vegan,false,
+a80c007d-b865-4623-ad78-71bedb3deef4,Passione Vegana,Rome,Italy,fully_vegan,false,
+98ffb253-3863-4c0c-9293-f545ddebcc46,Le Bistrot,Rome,Italy,fully_vegan,false,
+9cc5d7aa-c9a0-4ea8-a085-bfb34bbdb8d0,Impact Food,Rome,Italy,fully_vegan,false,https://www.impactcorp.it/impact-food/
+eb5d45a9-7a6d-4451-a174-24eb51fae8bb,Ops!,Rome,Italy,fully_vegan,false,https://www.opsveg.com/
+f51239b0-c569-4fea-964f-b5dda417335a,Vegustibus,Rome,Italy,fully_vegan,false,https://www.instagram.com/vegustibus_garbatella/
+800e60f3-f737-4f90-ab12-8102a12be1b0,Rifugio romano,Rome,Italy,fully_vegan,false,http://rifugioromano.com/
+74ee42a3-a312-4652-9a45-33a2d506c7ed,Flower Burger Roma Alessandria,Rome,Italy,fully_vegan,false,https://www.flowerburger.it/negozi/flower-burger-roma-alessandria/
+85f36fed-023e-4f03-9a79-9ff634465c20,Romeow Cat Bistrot,Rome,Italy,fully_vegan,false,https://www.romeowcatbistrot.com/
+9012d1ea-f040-41bc-bffc-7cb4dda0e5f9,Julietta Pastry & Lab,Rome,Italy,fully_vegan,false,https://juliettapastryandlab.it/
+abfb97cc-9d57-47f3-994a-e32fff12ccf3,BiOsteria Saltatempo,Rome,Italy,fully_vegan,false,https://www.lsa100celle.org/biosteria-saltatempo/
+c0c6a686-6a3f-4bd7-9d18-82c5a47b7af9,Flower Burger Roma Gracchi,Rome,Italy,fully_vegan,false,https://www.flowerburger.it/negozi/flower-burger-roma-gracchi/
+2675f97f-c18c-45d8-a754-b80104d4d1f0,Desoriente,Barcelona,Spain,fully_vegan,false,https://desoriente.com/
+65c6a52d-08eb-496a-9e8d-468d45e49bec,Mad Mad Vegan - Barcelona,Barcelona,Spain,fully_vegan,false,https://madmadvegan.com/
+c60d995f-e515-4ee8-9b65-1ec16ec6e48d,Restaurant Miquetes Màgiques,Barcelona,Spain,fully_vegan,false,https://www.miquetes.net/
+277f1f1b-abf6-4e62-bee1-be66ac17311d,Velada,Barcelona,Spain,fully_vegan,false,https://www.veladabcn.com/
+3a12ab00-fffc-44c4-b0e1-709170d2e480,Vrutal,Barcelona,Spain,fully_vegan,false,https://www.vrutal.es
+2d934c90-f78b-41fc-a325-d069fa68dee7,Vegan Mount,Barcelona,Spain,fully_vegan,false,https://veganmount.es/menu-vegan-mount
+f2978feb-dd64-429b-8f5a-6121c4908418,Chök,Barcelona,Spain,fully_vegan,false,http://www.chokbarcelona.com/
+3248385b-a434-4cb9-aa10-0d387cc2df40,La Petita Vegana,Barcelona,Spain,fully_vegan,false,
+1018f3d2-37ad-46f2-9e80-aa59cb6b14c3,La Capritxeria,Barcelona,Spain,fully_vegan,false,
+1571fdb3-ac77-4b25-81bf-8cae6a1d1611,La Perra Verde,Barcelona,Spain,fully_vegan,false,
+ec288e5e-8111-4c34-8800-85b1fed1a6fe,CatBar,Barcelona,Spain,fully_vegan,false,https://catbarcat.wixsite.com/menu
+02aa26b0-ff45-47fa-9a44-4e0163d38cdb,Pötstot,Barcelona,Spain,fully_vegan,false,https://www.potstot.com/
+7b83cffb-1187-4864-a92c-25149e7b58d3,Grans de la Terra,Barcelona,Spain,fully_vegan,false,https://gransdelaterra.com/
+2e842747-fb26-40f7-b82c-f7867b140289,Chök,Barcelona,Spain,fully_vegan,false,http://www.chokbarcelona.com
+82bfc9d3-dcf2-47d5-ab1d-6ce54dc232bb,The Livingfood,Barcelona,Spain,fully_vegan,false,http://www.thelivingfood.com
+140c35f0-a48f-42cd-9022-66cb8b5bc421,Falafel Of Shani,Barcelona,Spain,fully_vegan,false,https://www.falafelboqueria.com/
+18c4e93d-e243-4ba0-885c-3f8826e28753,Maoz,Barcelona,Spain,fully_vegan,false,http://www.maozusa.com/restaurants/locations/barcelona
+76ebb6a8-1461-4415-93dc-c931e25583dc,Santa Clara,Barcelona,Spain,fully_vegan,false,http://forndepasantaclara.multiespaciosweb.com
+c63de601-d62f-4ac6-8301-d685d59879e5,V Market,Barcelona,Spain,fully_vegan,false,https://vmarket.hiboutik.com/
+7a307e9b-48b5-48e7-8777-0c23e783c2b8,Chök,Barcelona,Spain,fully_vegan,false,http://www.chokbarcelona.com/
+c6856727-735b-455e-8746-8ddc539140c7,Veganashi,Barcelona,Spain,fully_vegan,false,https://www.veganashi.es
+a78cf479-2dd0-417b-a2a6-b9af5704cd71,Vacka,Barcelona,Spain,fully_vegan,false,http://vackabcn.es/
+0e6a9e72-d07d-4083-ae2f-40c13f28c515,The Vegan Corner,Barcelona,Spain,fully_vegan,false,https://vegancornerbcn.com/
+eb697ada-0045-4fc9-a5c9-7e90c9caf074,Mundo Vegan,Barcelona,Spain,fully_vegan,false,https://www.mundoveganbarcelona.com/
+e1e310f5-c006-4467-b476-fb98f0ff95ad,Blu Bar,Barcelona,Spain,fully_vegan,false,https://blubar.es/
+25c05adc-9b5b-473f-a676-a0ec63d5011b,Cat Bar,Barcelona,Spain,fully_vegan,false,https://www.facebook.com/CatBarCAT
+261d5f66-2288-4e7f-a52c-89efef467ed6,Hanai,Barcelona,Spain,fully_vegan,false,https://hanaivegana.com/
+c46a71a9-b04a-4d66-97fc-07d2fe2dd5e1,Asante Cafe,Barcelona,Spain,fully_vegan,false,http://asantecafe.com
+6df0bdbe-c343-43b5-988d-f6e4a43f6986,Santoni,Barcelona,Spain,fully_vegan,false,
+3a336616-365f-4741-82c1-537b705e75e2,Natury,Barcelona,Spain,fully_vegan,false,https://naturycakes.com/
+c324d9c7-dfa7-43b8-9545-1bcf431ecfb3,Bar Celoneta Sangria Bar,Barcelona,Spain,fully_vegan,false,http://www.bar-celoneta.es/
+b6090e49-2bcf-44a2-83f1-fc167b9725cf,Mango and Caoba,Barcelona,Spain,fully_vegan,false,https://www.instagram.com/p/DGDrx4PNHf5/
+f443a79d-2a76-4fa0-962f-f96483b161fb,Santa Vegana,Barcelona,Spain,fully_vegan,false,https://santa-vegana.placejoys.com/
+799fabe8-6e2e-4e43-9b9a-5716ff8f11ae,Morgentau,Barcelona,Spain,fully_vegan,false,https://morgentau.es/en/
+91496728-5104-4270-a445-710dbaf3eb2a,Areca Bakery,Barcelona,Spain,fully_vegan,false,https://arecabakery.com/
+e48ef4dc-a1b4-4e4a-a831-61e279ce4438,Frolis,Barcelona,Spain,fully_vegan,false,
+4199839b-35dc-4337-b7c7-8649ad4b00b7,PASTAn,Barcelona,Spain,fully_vegan,false,
+55196d81-f19b-40e0-9f98-8aa4ed29a233,"Good Shit, Vegan Kebabs",Barcelona,Spain,fully_vegan,false,https://goodshitvegan.com/
+92e3544c-55ee-4bd9-83b4-2e8c5519b86b,Tonka,Barcelona,Spain,fully_vegan,false,
+26bdf78f-020c-448b-9c0f-2f6dd43f602f,Simbiosis,Ibiza,Spain,fully_vegan,false,https://sites.google.com/view/simbiosisibiza/home
+dab7085f-7929-49df-a30d-6104cb4efeae,Aymat Vegano,Madrid,Spain,fully_vegan,false,https://aymatvegan.com/
+e234130b-672f-44fd-be73-9b5815c51243,Don Gato Bar,Madrid,Spain,fully_vegan,false,https://www.instagram.com/dongatomadrid/
+c402b4d4-3a31-4a98-b178-02e491a38082,La Alpargata bar vegano,Madrid,Spain,fully_vegan,false,
+11212bd8-f257-49a0-854d-9b05e0f592ef,La Cotidiana | casa de comidas,Madrid,Spain,fully_vegan,false,https://lacotidiana.es
+cf1789d1-0432-43e0-a30b-0184035538f6,Restaurante Vegania,Madrid,Spain,fully_vegan,false,https://www.vegania.com
+7ef91b41-b1a0-4862-9633-ec0d1c5b93f6,Pura Vida Vegan Bar,Madrid,Spain,fully_vegan,false,https://www.santaypura.es
+aaf13980-ba07-42e6-b5f7-619a158b5122,Hakuna matata veggie,Madrid,Spain,fully_vegan,false,
+39a3ef78-b73f-4e70-b8f4-c054dd198c42,Mad Mad Vegan,Madrid,Spain,fully_vegan,false,https://madmadvegan.com/
+0631b7ae-da76-4fbf-9c00-db4fa2b45063,Vegania Veggie Bar Carabanchel,Madrid,Spain,fully_vegan,false,https://vegania.com/
+75df17f2-3029-40ab-9aa0-167fad8c5f1e,Bite Me Café,Madrid,Spain,fully_vegan,false,https://bitememadrid.com/
+85278ac7-4335-4233-ae52-dbaaba456b5c,La Encomienda,Madrid,Spain,fully_vegan,false,https://laencomienda.es
+8844cfc2-5c0e-4390-b0a6-7550196da7fc,shlen,Madrid,Spain,fully_vegan,false,https://shlen.es/
+9c144948-416a-42c7-92fb-5760d84706bf,Veguiterráneo - Catering y restaurante,Madrid,Spain,fully_vegan,false,https://www.veguiterraneo.es/
+fc1068b0-8c69-4b33-ab50-81618c44b6f8,Cookaluzka,Madrid,Spain,fully_vegan,false,https://www.cookaluzka.com
+1c693129-090e-489e-bf19-cdf09ef949dd,Frutas Prohibidas,Madrid,Spain,fully_vegan,false,https://www.frutasprohibidas.com/
+c75eba68-7fa5-481c-9bea-8adb87c7237a,Viva Chapata,Madrid,Spain,fully_vegan,false,https://vivachapata.es/
+e64dbb0a-04dc-4694-9ad0-7518d5993a31,Masa Madre,Madrid,Spain,fully_vegan,false,https://masamadrevegan.com
+e3bbe880-4e23-45eb-b783-2f25d7799637,Los andenes,Madrid,Spain,fully_vegan,false,https://puertadetoledo.losandenesvegan.com/
+feb4c563-e6b4-4a2c-b45a-c9d5948f404f,Vida La Vida,Madrid,Spain,fully_vegan,false,https://www.vivalavida.vg
+993fdea7-1db8-45fb-8462-1e17f9746695,Santa y Pura,Madrid,Spain,fully_vegan,false,https://santaypura.es/
+c8695af0-1014-41e4-ad83-5acff94975c0,Doxa Plant Based,Madrid,Spain,fully_vegan,false,
+7b2cc443-8c74-4da4-a5f9-b51b27bbbea7,Mudrá,Madrid,Spain,fully_vegan,false,https://mudramadrid.com/;https://mudramadrid.com
+ac5c54bc-cd24-4ca6-8d6c-d74f35eac3e5,B13 bar,Madrid,Spain,fully_vegan,false,http://www.b13bar.com
+990d7e19-627d-412e-ba33-7d1e9299a4f4,VEGA,Madrid,Spain,fully_vegan,false,https://luna.govega.es/
+5efeb643-0b85-4971-9654-00eb8f7f5efb,Choose Restaurante Vegano,Madrid,Spain,fully_vegan,false,http://chooseristorante.com/
+9fb8eb94-4929-4a5a-a56e-0842476d2515,The Vegan Store,Madrid,Spain,fully_vegan,false,https://www.veganstore.es
+45d1e310-67d0-4fa0-b4f6-6bf493aefb7f,Distrito Vegano Invernadero,Madrid,Spain,fully_vegan,false,
+467dc6ae-840b-488d-bb9e-d994dd5ae942,VegAmazing Doughnuts,Madrid,Spain,fully_vegan,false,https://www.cafeteriavegamazing.es/
+6c8cb23c-2040-4cf7-a545-787a5af1c3cc,Pizzie & Dixie,Madrid,Spain,fully_vegan,false,https://pizzidixie.com/
+78527c72-7b60-459c-a1d1-954bbaa85c96,VEGA Álamo,Madrid,Spain,fully_vegan,false,https://alamo.govega.es/
+7a1fc568-dc22-4298-8039-2c9820e7c6c9,Punto Vegano,Madrid,Spain,fully_vegan,false,https://restaurantepuntovegano.com/
+8e603939-b504-44fc-a6c9-405044ed431e,Plantamientos,Madrid,Spain,fully_vegan,false,https://mercadosantamariadelacabeza.es/directorio-del-mercado/comida-preparada/bar-plantamientos
+956b7e34-70ed-4c79-94c8-4ac5dcd47c41,The Vegan Roll,Madrid,Spain,fully_vegan,false,https://theveganroll.com/
+97ce9628-5e8e-47c9-a5da-04ee7fa7a9ba,Freedom Pizza,Madrid,Spain,fully_vegan,false,https://freedomcakes.es/freedom-pizza/
+993ae32d-d170-4354-abc1-6e0af18e29d0,Los Andenes,Madrid,Spain,fully_vegan,false,https://losandenesvegan.com/
+a1ccd5e3-1f4e-47c4-848a-363cd84385bf,Delish Vegan Doughnuts,Madrid,Spain,fully_vegan,false,https://delishvegan.com/
+b2381bb5-eafb-4d9a-8420-ee1043503dd8,Mad Mad Vegan,Madrid,Spain,fully_vegan,false,https://madmadvegan.com
+bc0ea1de-fdfb-4fec-a95d-370e1b9e7574,La Oveja Negra - Taberna Vegana,Madrid,Spain,fully_vegan,false,https://ovejanegravegana.com/es/
+036b3241-f2fa-4572-bdf4-aa6e96cb0bdc,Thunder,Madrid,Spain,fully_vegan,false,https://www.thunderveganfood.com/
+6ebf7495-6dbc-485c-a7a8-0dbc03ec2a39,Musgo,Madrid,Spain,fully_vegan,false,
+924fe236-a25c-413f-8c18-99edc3904fec,Fantastic V,Madrid,Spain,fully_vegan,false,
+92e9a8f3-c941-4257-be19-564b2f1a8991,Dolce&Vegana,Madrid,Spain,fully_vegan,false,
+e57c5084-59fc-434b-8622-f5d9a34be276,Yantén Veggie Bar,Madrid,Spain,fully_vegan,false,
+c49965fc-8cbe-427f-96e9-00a4e6f14bf1,Vegan Bistró,Palma de Mallorca,Spain,fully_vegan,false,https://veganbistro.es/
+71e6f7cc-c1b3-4a2d-8cbf-524b2cda5549,La Mujer de Verde,Palma de Mallorca,Spain,fully_vegan,false,https://lamujerdeverde.com/
+d25b26a6-6e81-4b5a-b9d0-ee1d2c2e9581,La Pajarita,Santa Cruz de Tenerife,Spain,fully_vegan,false,
+479406d5-9f70-4af3-bdbe-d53216ee075f,Umami Good Food,Santa Cruz de Tenerife,Spain,fully_vegan,false,https://umamigoodfood.com/
+638cbf2b-7e40-430a-a822-79b2f5918b6d,Sweet Paradise,Santa Cruz de Tenerife,Spain,fully_vegan,false,http://gofund.me/6086d950
+0cb96aaf-4175-4e97-ba34-fd4183f804ef,The Nature,Valencia,Spain,fully_vegan,false,
+dbb3e901-5943-4ea3-8999-61ef4d47739f,Mestiza,Valencia,Spain,fully_vegan,false,
+23254e5a-053c-46dd-b06a-4ea0af4c21bc,Khambú,Valencia,Spain,fully_vegan,false,https://khambu.com/
+c7849bff-4a7e-49b1-9810-bcf37bb22d5e,Café Madrigal,Valencia,Spain,fully_vegan,false,https://madrigal.cafe/
+0e9655a4-3a31-4d5b-a513-09ba346a598c,Vegetas,Valencia,Spain,fully_vegan,false,
+ee42b0e4-e168-4d7d-8d7d-cb35bd361254,Restaurante Amberes,Valencia,Spain,fully_vegan,false,https://www.restauranteamberes.com/
+8d5a90f6-fa2b-4b02-991c-18fecf9c1c6f,Bio Restaurant Tarta de Zanahoria,Valencia,Spain,fully_vegan,false,http://www.tartadezanahoria.com/
+8e6b62ec-a41e-4fa2-914f-9ab0d80e3358,Unsushi,Valencia,Spain,fully_vegan,false,https://unsushi.es
+b68604b3-ff9b-47fd-85d2-618e5ace76be,Khambú - Ruzafa,Valencia,Spain,fully_vegan,false,https://khambu.com/
+c37bcfb0-deaa-4db0-8623-2a8ffb7ae434,Jardín Urbano,Valencia,Spain,fully_vegan,false,https://jardinurbano.club
+58f648b3-78df-4123-9df7-cbd4ebbef4b5,CSOA l'Horta,Valencia,Spain,fully_vegan,false,https://horta.noblogs.org/
+9f6d6846-338b-4d89-8cba-84a639e471c0,Prasad Take Away,Valencia,Spain,fully_vegan,false,https://comidasparallevarprasad.com/
+b755d7ea-cdda-438a-b2c7-eaa8e26c6300,Almalibre Açaí House El Carmen,Valencia,Spain,fully_vegan,false,https://www.almalibreacaihouse.com/valencia
+32eec0b5-c4e7-4128-8ec1-9e505e5bece1,La Tavernaire,Valencia,Spain,fully_vegan,false,
+4662bfff-33f3-4243-9f69-8179c4ccb61c,Frankie,Athens,Greece,fully_vegan,false,https://www.frankierestaurant.gr
+37465d0b-b558-415f-908e-c503dfd9b26e,Veganaki,Athens,Greece,fully_vegan,false,https://veganaki.gr/
+0bc30e94-9319-40d3-8254-2e26de5cd7a6,Holy Llama,Athens,Greece,fully_vegan,false,https://holyllama.gr/
+bcdbf920-4405-4724-b671-3deb18ad4bcd,Kampos,Athens,Greece,fully_vegan,false,
+9b59d54b-06d4-4b5b-b652-7c77a09b3d3c,Hubits,Athens,Greece,fully_vegan,false,https://hubits.gr
+ed8393f7-6af5-40d5-8bb2-e928d3094ec5,Mama Tierra Acropolis,Athens,Greece,fully_vegan,false,https://mamatierra.gr
+1d276b06-5610-41c5-91b2-a3c9187ba6db,Winners Vegan,Athens,Greece,fully_vegan,false,https://www.nikiathenshotel.com/winners-vegan-restaurant
+9b21f2ff-c430-415b-8a47-90c72b67eb29,Cats & Monsters,Athens,Greece,fully_vegan,false,
+f71227b8-2910-4c0e-af84-2d856360f15c,Happy Blender,Athens,Greece,fully_vegan,false,https://happyblender.gr/
+06a4e56d-4caf-4c44-86b6-be8f85ad78b9,The Vegan Vandal,Athens,Greece,fully_vegan,false,https://theveganvandal.com
+acc5aa82-7cf0-448f-973d-f79356a233b3,Early Bites,Athens,Greece,fully_vegan,false,
+d04e6de2-8bdc-4e96-b7c3-1dcfb47a1dcf,Handwich Athens,Athens,Greece,fully_vegan,false,
+f85187ff-29eb-4384-9187-8071f951eec0,The Οthers,Athens,Greece,fully_vegan,false,
+d49f04d3-6065-4212-82c7-f07e34e45cb7,Vegan carousel,Athens,Greece,fully_vegan,false,
+4e161e2c-cf35-43bf-a639-8cba179702ad,Troo Food,Athens,Greece,fully_vegan,false,https://shop.troofood.gr/
+2b18d53a-54c6-4fa1-9cbb-4ef2e194a800,Groceristas,Athens,Greece,fully_vegan,false,http://www.groceristas.com
+6bbe1282-d299-4ada-8927-440df66a17c7,Peas vegan,Athens,Greece,fully_vegan,false,http://peas.gr/en/menu-list-2/
+e90aacb2-b3da-4abe-846f-ad8c766be9b6,Vegan Beat Athens,Athens,Greece,fully_vegan,false,
+674e4c36-aa39-4911-8cf3-6f2f0c228542,Plan(e)t Ice Cream,Athens,Greece,fully_vegan,false,https://www.planetfoods.eu/
+6f7febc8-488f-4045-884b-2f93ae134073,Life Roots,Athens,Greece,fully_vegan,false,https://liferoots.gr
+aa26b0f3-8b08-48d7-88d4-c6d282ff844d,Mama Tierra,Athens,Greece,fully_vegan,false,https://mamatierra.gr/
+b03132c5-8198-42f2-979f-3c2cf9e00f8f,Άννα,Athens,Greece,fully_vegan,false,
+51b120d9-5128-4132-bdc0-714e9c5f9f01,Mother,Athens,Greece,fully_vegan,false,
+ce0a9ef7-b9a6-412b-9010-676ecdb800a4,Bamboo Vegan,Athens,Greece,fully_vegan,false,https://bamboovegan.com
+63e18c92-3cbe-432b-be98-97d4006594a6,Athens Vegan Burgers,Athens,Greece,fully_vegan,false,
+874eb2d0-4a19-4a80-953f-baf59a2bb07d,Veganato,Heraklion,Greece,fully_vegan,false,http://veganato.gr
+973913bb-d0a8-4c2f-bb06-dcbf5ad0b646,Rhino,Mykonos,Greece,fully_vegan,false,https://rhinomykonos.gr/
+b4ff4aab-1e94-4ade-a823-09b88e87c0a7,Koukoumi,Mykonos,Greece,fully_vegan,false,https://koukoumihotel.com/
+08b6d21c-77ca-4bd5-86ac-0cde48be3fb1,Rhino,Mykonos,Greece,fully_vegan,false,https://rhinomykonos.gr/
+ce803a6a-a87e-483f-ab09-64e18eba088c,Koukoumi Vegan Boutique Hotel,Mykonos,Greece,fully_vegan,false,https://www.koukoumihotel.com
+211de95d-b2a9-486c-977d-93def861f32a,Mod,Santorini,Greece,fully_vegan,false,https://modsantorini.com/
+357a3a2a-5e80-461f-b054-c33d2250c60f,Karma,Santorini,Greece,fully_vegan,false,https://karma.bz/
+2350fbdf-72c6-4119-a601-d18096391a4d,BioMania,Zagreb,Croatia,mostly_vegan,false,https://biomania.hr/locations/biomania-zagreb/
+0ad794bf-d47b-41e2-a0d6-2760aba52946,Rotas da ilha verde,Ponta Delgada,Portugal,mostly_vegan,false,https://www.rotasdailhaverde.com/
+2c45b190-a0b9-4a98-aeec-f4d426aae916,Miss Saigon,Lisbon,Portugal,mostly_vegan,false,https://restaurantemisssaigon.blogspot.com
+2c9bde2c-e3d4-4fe9-b5eb-2aed2cd4454f,Ananda Café,Fundao,Portugal,mostly_vegan,false,
+316b5ee1-2f8a-4523-a1af-d29354602cbc,Divino Grão,Braga,Portugal,mostly_vegan,false,https://divinograo.eatbu.com/
+3cf1ed8d-f508-4659-a734-34998a867a9c,Azulejo Vegan Studio,Lisbon,Portugal,mostly_vegan,false,https://www.azulejovegan.com
+4a0e5208-51e6-48f3-9066-93832e8097da,Power Foods,Lisbon,Portugal,mostly_vegan,false,https://www.powerfoods.pt
+6a848178-48d9-4d58-8a4b-0c9329e08f6f,Pausa Útil,Braga,Portugal,mostly_vegan,false,https://pausautil.eatbu.com/
+82d61c13-935a-4583-a625-761265fb0d8b,O Oriente no Porto,Porto,Portugal,mostly_vegan,false,https://www.orientenoporto.com
+bdc23af7-1349-4e12-8fd5-58d4988c1cf7,Plant Base,Lisbon,Portugal,mostly_vegan,false,https://plantbase.eatbu.com/?lang=pt
+e36af604-94f1-406f-8dff-3abb9907d0b0,Tanah Vegan,Cascais,Portugal,mostly_vegan,false,
+03115d1f-7e4a-4eb5-b6a3-ff35b115a5a6,Sultan Somati Restaurant,Konya,Turkey,mostly_vegan,false,https://www.sultansomati.com.tr
+58b76586-69e1-4d95-8cbb-f80deab23716,180 Coffee & Bakery,Istanbul,Turkey,mostly_vegan,false,
+593aef75-4112-49db-95f0-242973ac78bd,ARDIÇ ŞARKÜTERİ,Fethiye,Turkey,mostly_vegan,false,
+5a091f36-ddaa-4d66-a192-07ae99d49d20,Olympos Orange Restaurant,Kumluca,Turkey,mostly_vegan,false,
+60ccca2a-85e0-43a3-a7aa-dbafbb068724,Patato,Istanbul,Turkey,mostly_vegan,false,
+86b3b23c-de3f-4843-bd95-00698db9a911,Mezecim,Mentese,Turkey,mostly_vegan,false,
+9e4f982c-b72f-4056-896b-fb1b6974d54e,Göveçte Yöresel Yemekler,Konak,Turkey,mostly_vegan,false,
+cd4dc930-b9e4-43ba-861d-7c08d35088af,Ara Sokak Pub / Vegan Taş Fırın,Ankara,Turkey,mostly_vegan,false,
+ce7010b4-2959-4c52-9d05-6ccb8a3bc346,INIIS,Izmit,Turkey,mostly_vegan,false,
+e0335f7e-7a00-44cb-b8b1-3cd209799423,Mutlu Mutfak - meze & vegetarian,Bodrum,Turkey,mostly_vegan,false,
+f01beb5b-312d-4e0a-8ac2-5eca1a7bb1cf,Govinda Istanbul,Istanbul,Turkey,mostly_vegan,false,https://www.govindaistanbul.net
+02498eae-7feb-47e3-b087-7e76f3ceafe3,Konoba Mareta,Korčula,Croatia,vegan_friendly,true,
+0429d0e1-bf65-4067-aec7-8f1d6ff0b609,Grom,Sibenik,Croatia,vegan_friendly,false,
+0b80767b-4ee2-4bdf-a05d-554f6decd7dd,Submarine,Rijeka,Croatia,vegan_friendly,false,https://submarineburger.com
+0e35000c-a87b-4d06-be60-004f1554309a,Arsana,Omis,Croatia,vegan_friendly,false,
+145a3aa3-2ee6-40bd-acdc-990c659037da,Falafel etc.,Zagreb,Croatia,vegan_friendly,false,https://falafeletc.com.hr/
+19a3067e-ae68-434c-8208-221fb6fdafa2,Soul Kitchen,Split,Croatia,vegan_friendly,false,https://soulkitchen.restaurant
+19b7e5a0-3119-4da6-8c2b-c7bc95ea2d6e,Restoran Agora,Dubrovnik,Croatia,vegan_friendly,false,https://www.hotelperladubrovnik.com/restaurant-agora/
+19d811ca-f3af-4d06-9d50-2eff30dc0deb,To Je Tako,Split,Croatia,vegan_friendly,true,https://www.tojetako.com/
+1ccc5654-1fa9-4ab0-aac5-47f689f69992,Koya,Rijeka,Croatia,vegan_friendly,false,https://www.koya-rijeka.com/
+1f18b2c1-ce54-4f35-b15d-89caf1b0816f,Voćni trg,Split,Croatia,vegan_friendly,false,
+207114ed-a6b8-4a2d-bda7-714d6a8e44bc,Konoba Kala,Povlja,Croatia,vegan_friendly,false,
+21a2112a-2195-4b0e-811c-6b79b6d9613d,Plac Kitchen & Grill,Zagreb,Croatia,vegan_friendly,false,https://plac-zagreb.com/
+35fa6653-68c0-420b-b2b6-accb2fc46416,Fig,Split,Croatia,vegan_friendly,false,http://figrestaurants.com/split
+36402191-f64e-4b4b-8784-b972fbc6bdd3,Ankora,Cavtat,Croatia,vegan_friendly,false,
+39f77890-87b8-4fd1-90a6-9a503dcd7458,Silk,Zagreb,Croatia,vegan_friendly,false,https://silkizakaya.com/hr/zagreb
+3bff2438-2fb7-42f0-838a-3bc16443665b,le Belle Vie,Vodice,Croatia,vegan_friendly,false,
+3d0eeb56-4cf6-4463-ab9e-69ba8462dc35,Bistro Antonia,Porec,Croatia,vegan_friendly,false,
+3f622020-60a3-4d01-bb2a-f7f3f359a668,Submarine Burger,Varazdin,Croatia,vegan_friendly,false,https://submarineburger.com/
+444c1624-5efd-4e2d-9906-fd0f942b70a4,Pedro pite,Zagreb,Croatia,vegan_friendly,false,https://pedro-pite.com/
+45128608-8443-4338-b559-4a32dd87c925,Kebab Factory,Hvar,Croatia,vegan_friendly,true,
+460fe536-c133-4ace-bdb5-1ec899b90a34,Bòkār Dubrovnik,Dubrovnik,Croatia,vegan_friendly,false,
+4bb4f77b-a932-41c2-8da1-d6d89d27977b,urban garden,Opatija,Croatia,vegan_friendly,false,
+52be1952-55e5-4577-8403-880751cf4592,Restoran Cocktail - Dvorana za svecanosti,Sisak,Croatia,vegan_friendly,false,https://cocktail.hr/
+5a52c9cf-ed7b-42e4-89cf-89370bfc9d29,Aterina,Korčula,Croatia,vegan_friendly,true,
+5aa90709-b1cb-45c1-a251-c55ff0cd8e69,Oliva Verde,Bol,Croatia,vegan_friendly,true,
+5c7d40b7-a3fe-4138-b8a4-dbe965795b41,Pizzeria & Villa,Opcina Milna,Croatia,vegan_friendly,false,
+5c970313-8f1b-4904-8697-a3af30bfcb24,Grabrova,Jadranovo,Croatia,vegan_friendly,false,
+61eb8cd7-56eb-4ccc-9934-d2d72c1c4c4c,Broom44,Zagreb,Croatia,vegan_friendly,false,
+64f4ffa5-70c3-4bc8-a89d-a1d7129cb544,Fish House Zadar,Zadar,Croatia,vegan_friendly,false,
+65d88058-a1c2-41c1-8c5d-d7d1791502f5,Fresh sandwiches & salads,Pula,Croatia,vegan_friendly,false,
+6d58e590-e137-4662-84ed-9fcd1f1666c7,Caffe Bar Smile,Makarska,Croatia,vegan_friendly,false,
+6d99855d-37c8-4442-a8ea-2c4b2531043c,Urban & Veggie,Dubrovnik,Croatia,vegan_friendly,false,https://urbanveggie.restaurant/
+6ff20fed-46ac-4536-a2d2-0ecbb2aa15f9,Restaurant Uspinjaca,Zagreb,Croatia,vegan_friendly,false,https://restoran-uspinjaca.eatbu.com
+7b395a60-8ed1-4583-920b-3d5aa420f046,Otto street food,Dubrovnik,Croatia,vegan_friendly,false,
+7cc1be7e-fb8b-4a09-95b3-311f315bb9e1,Aroma Gelato Experience,Pula,Croatia,vegan_friendly,false,https://aroma-gelatoexperience.com
+82d17f5e-c74d-4fdc-a94f-118597d031be,Himalaya Curry Nepali,Zagreb,Croatia,vegan_friendly,false,
+875b2549-815f-4516-9191-7845245ac6cf,Vege&dobro,Zagreb,Croatia,vegan_friendly,false,https://www.vege-dobro.com/
+93492de8-1f45-407a-99ec-988ca939a60c,Korinjak,Veli Iz,Croatia,vegan_friendly,false,https://korinjak.com/
+953eb6e3-cf31-484d-8a08-e3e58690ae43,Banova Villa,Rab,Croatia,vegan_friendly,false,
+95d64805-3cea-4f20-bac4-433362b50d5a,Submarine Burger,Split,Croatia,vegan_friendly,false,https://submarineburger.com/lokacija/split-hr/
+9722ef43-d22d-4d47-816e-42fbb8e72397,Artha,Porec,Croatia,vegan_friendly,false,
+989aa6c2-2947-4fdf-aea3-462e236a31a9,Coffee Kojo,Hvar,Croatia,vegan_friendly,true,
+991d1fff-1b79-4d3f-bb68-e2974821a279,Kitchen Bar Garden,Split,Croatia,vegan_friendly,true,
+9a8bae8e-3400-4163-8018-097a73a19543,BEKIND,Zagreb,Croatia,vegan_friendly,false,http://bekind.hr
+a0262277-10f8-4b1e-ad3e-e93d7190b16b,Bistro Paris Kalorija,Rijeka,Croatia,vegan_friendly,false,
+a07147e5-7a7c-40c0-a7a6-7ed970c88971,MC CHEVAP,Kukuljanovo,Croatia,vegan_friendly,false,
+a509eeee-062c-424d-969f-fe304736ec52,Ice Box,Porec,Croatia,vegan_friendly,false,
+a9269b53-f95b-480e-8b4b-cee2649c9647,Bubalus Burger Bar,Trogir,Croatia,vegan_friendly,false,https://bubalus-burger-bar.eatbu.hr/
+ab1c05cb-6eca-48bb-a17a-eaa53e835ecc,Filteraj specialty coffee & shop,Zagreb,Croatia,vegan_friendly,false,https://filteraj.com/
+af5550a1-3a40-4411-b0b3-029e394daa30,Marvelus,Rovinj,Croatia,vegan_friendly,false,
+b2781ad9-a33d-42c9-ad9e-dcd9f013ec58,Gelateria pumparela,Split,Croatia,vegan_friendly,false,
+b8b76176-59be-4fcf-866e-8fc24459e9de,Pyr,Zagreb,Croatia,vegan_friendly,false,http://www.pyr-centar.com
+b9dc7bf4-b494-4751-99f8-a3ab38c13662,Aroma Gelato Experience,Pula,Croatia,vegan_friendly,false,https://aroma-gelatoexperience.com/
+bf6f9298-f680-4577-8a5f-850198172677,Pandora Greenbox,Split,Croatia,vegan_friendly,false,
+c1bf5bc2-2cab-4d88-9f93-b1f5e74a2e4c,Salt - Gluten Free House,Split,Croatia,vegan_friendly,false,
+c353eed0-830d-4091-9262-f1b1b8a74a61,Mint,Premantura,Croatia,vegan_friendly,false,
+c74213d0-937d-424d-a2e3-d36bca3ba564,Sereny,Pula,Croatia,vegan_friendly,false,
+c7a0eb1f-d322-4700-b6e7-52e42c00606e,Capo Fronte,Rab,Croatia,vegan_friendly,false,
+c8a5b802-ac21-4827-8b09-b73a3f9cd139,Fig Cafe Bar,Hvar,Croatia,vegan_friendly,true,http://figrestaurants.com/hvar
+c950e2a3-8b58-48c8-bc54-d3aaaa064d12,Veganko,Zagreb,Croatia,vegan_friendly,false,
+d3240275-9a46-411e-8700-d92b06a239f5,OAZA Joyful Kitchen,Zagreb,Croatia,vegan_friendly,false,
+d466f1bb-9d27-481e-8c3e-4024db2d460b,Green Goodness Hvar,Hvar,Croatia,vegan_friendly,true,
+dcce4d12-9186-42db-a06b-d4498dddaf13,Gelateria Jadran,Punat,Croatia,vegan_friendly,false,
+e0c1d6f9-907d-4389-a409-5af658a8a8d3,Vege Fast Food,Split,Croatia,vegan_friendly,false,https://vege-fast-food.business.site/
+e10145e0-71c0-4851-8513-023f8a7321b5,"Bistro ""Janjče istok""",Ramljani,Croatia,vegan_friendly,false,
+e1a32dc7-4cac-4fac-8eba-0cd2ef5181b7,Histria Aromatica,Golas,Croatia,vegan_friendly,false,https://www.histriaaromatica.hr/
+e3ff6a08-a291-44dd-8644-b2db5c15b821,Marta's Veggie Fusion,Split,Croatia,vegan_friendly,true,
+e573dbe3-70fa-4b39-9708-cb6f407f1c3f,Passarola Restaurant,Hvar,Croatia,vegan_friendly,false,https://restaurant-passarola.eu/
+e69c86b7-c98e-406e-af51-a618cdb94400,Maka maka,Split,Croatia,vegan_friendly,false,
+e82678df-43f6-4d71-a6d0-1f01797c6bdd,aROMA Gelato Experience,Bol,Croatia,vegan_friendly,false,
+eafc19b9-a968-4a45-9faa-7e9b972797fa,VegeDub,Dubrovnik,Croatia,vegan_friendly,false,https://www.vegedub.com/
+eb6fde9f-d6a4-47b1-bb00-d86db915868a,Čok,Novigrad,Croatia,vegan_friendly,false,
+ef3ab6d6-b651-4c35-ae64-b6fd8d86ba64,She Bistro,Sibenik,Croatia,vegan_friendly,false,https://www.shebenik.com/
+efc5caa9-c05d-40d7-9b77-cd00c8de6d5a,Street Food Two,Pula,Croatia,vegan_friendly,false,https://drive.google.com/drive/mobile/folders/1pc1pIFfy-vQKkkI5pAbZ8EX_gH9y4LmE?usp=sharing
+f0cfec0b-3309-44fb-8b7f-67e06709cac8,Roma gelato experience,Rijeka,Croatia,vegan_friendly,false,
+f1d5f072-2e5e-471f-b365-814a41ac1d3f,Vintage Bar,Hvar,Croatia,vegan_friendly,true,
+f1f2f696-0f8c-4a1a-8000-b3f2a15cf7ab,Pirkotova Lula ex. Bane,Komiza,Croatia,vegan_friendly,false,
+f2db82a1-0e54-4902-a448-f1e4f13180fb,Green & Purple's Vegan & Veggie,Dubrovnik,Croatia,vegan_friendly,true,
+f6d4868e-cabf-4c7a-b5e7-2b25ca171095,Lumina Board Restaurant,Rovinj,Croatia,vegan_friendly,false,
+fb341f2f-a08b-4402-8bd8-07dc8bd8fd29,Bistro Pizzeria ĐIR,Novi Vinodolski,Croatia,vegan_friendly,false,https://pizzeria-dir.eatbu.hr/
+0137efb1-67a0-4234-a340-f0c4c37946e3,Bio.tequim,Tavira,Portugal,vegan_friendly,false,
+02416b61-598b-47b7-a8be-05624805e65e,Tasquinha Castreja,Castro Laboreiro e Lamas de Mouro,Portugal,vegan_friendly,false,
+03b15fd5-3685-4c17-8077-e9d412609cb7,Saga,Lisbon,Portugal,vegan_friendly,false,
+041b0dc3-2beb-418c-9f5f-6b9fcf2c34ee,Olá,Matosinhos,Portugal,vegan_friendly,false,
+04bde403-732d-49e8-b0e9-6eda5aeb7236,Pimpinela's,Santa Cruz,Portugal,vegan_friendly,false,
+05b732b6-58ce-4a61-98c0-2236b527b181,Dona Sardinha,Mealhada,Portugal,vegan_friendly,false,
+0624e512-ebe0-4b78-8333-21655dece29e,Louvre Michaelense,Ponta Delgada,Portugal,vegan_friendly,false,https://www.facebook.com/louvremichaelense/timeline
+072feacd-2f80-458f-90c1-5ac1b98cbcea,A Colmeia,Lisbon,Portugal,vegan_friendly,false,https://restaurante-a-colmeia.webnode.pt
+07462f89-2732-4ddb-abe5-88ed4647ad48,HotDog Divinal,Lisbon,Portugal,vegan_friendly,false,
+07ecf14b-196e-4824-99fc-f2b1bf0ea58c,Church LX,Lisbon,Portugal,vegan_friendly,false,
+0878fadf-3e1a-4348-b9ec-d9c70ff4c1a9,Fava Tonka,Leça da Palmeira,Portugal,vegan_friendly,false,https://www.favatonka.pt/
+0a1a71fb-ab14-43a3-ad35-da4db6fe0a50,BouBou's Sandwich Club,Lisbon,Portugal,vegan_friendly,false,
+0a78748d-8c1d-437d-a4ab-34d9cad6fd6f,Xô Pinheiro Food & Drinks,Marco,Portugal,vegan_friendly,false,
+0cca057d-804f-4d90-a671-f984b64dfd0a,Giovanni,Lagos,Portugal,vegan_friendly,false,
+0d6681e0-f68f-4fb6-bfff-85700dfc93ce,Botellini,Caldas da Rainha,Portugal,vegan_friendly,false,http://www.botellini.pt
+0d6eac7d-d387-4de4-bf06-8284bb07bf63,Izzy's Market,Vila do Bispo,Portugal,vegan_friendly,false,https://izzys-market-vegetarian-boutique.negocio.site/
+0e1f55a6-978a-4e7d-9f58-b357886b0003,Adão,Faro,Portugal,vegan_friendly,false,
+0f70e5bf-3eb0-47bd-9be6-507008aecad6,Tiamat Lounge,Paco de Arcos,Portugal,vegan_friendly,false,https://www.tiamatlounge.com
+0f70fe4c-3e58-44c8-a7f8-cd0e1f55be04,Green Pepper,Carnaxide,Portugal,vegan_friendly,false,https://www.greenpepper.com.pt
+0f8f91c0-6fec-40cd-883a-d573d123b9ab,Kulea,Lisbon,Portugal,vegan_friendly,false,
+101b85a2-e262-4e7d-aca8-359a1499d8be,Yummy Restaurante,Ponta Delgada,Portugal,vegan_friendly,false,
+10c5e19a-f2a1-4200-b6bd-f20731a25df5,Vila Bela,Machico,Portugal,vegan_friendly,false,
+10e55393-4bb3-4a2f-99a4-1fdb03873fcb,Calmaria,Viana do Castelo,Portugal,vegan_friendly,false,
+1228e73a-8f36-4798-a47f-d19a310f35cc,Bosque,Castelo da Maia,Portugal,vegan_friendly,false,http://www.obosque.pt
+1260b359-0d80-4e11-a4c5-1bd4edf8c8a5,Mama & Papá,Vila Nova de Gaia,Portugal,vegan_friendly,false,
+12c07eda-1b12-4e44-8b1e-a5013e95aaf0,Pequeno Café e Bistrô - Arroios,Lisbon,Portugal,vegan_friendly,false,
+1419eb14-b3cf-4817-8b62-e86661fd244b,Jennie & Carmie,Viana do Castelo,Portugal,vegan_friendly,false,https://jennyandcarmie.com
+15c7279b-8e70-49d1-926c-a00f2c07cea1,Museu Café,Funchal,Portugal,vegan_friendly,false,
+16885c60-41c9-4cca-adb2-ba1548bd1af5,Casa da Horta,Porto,Portugal,vegan_friendly,false,https://casadahorta.weebly.com/
+169ba7f3-cc98-48db-92dc-cbe3dca935b3,Horácio,Lisbon,Portugal,vegan_friendly,false,
+16ebcdf8-96b0-4e94-a0b8-5337ca098316,Alecrim,Aljezur,Portugal,vegan_friendly,false,
+17d1919f-9735-4f15-ae92-10819d843917,Sanskar Nepal,Lisbon,Portugal,vegan_friendly,false,
+17ee3392-0af6-46ed-b498-dea1c52a2851,Bubbles & Bites,Cascais,Portugal,vegan_friendly,false,
+18048fa7-b923-45f8-ab9b-5053458915ca,Love Burgau,Budens,Portugal,vegan_friendly,false,
+19317eac-9bc8-47dd-9a75-b23b9476a3f4,Dona Flor,Alcantara,Portugal,vegan_friendly,false,
+19a30960-76ff-4175-b385-179311c5e221,A Mesa - Tasca Vegetariana,Guimaraes,Portugal,vegan_friendly,false,
+1a40b296-bb60-411f-90fd-3f0ec8f3c5fd,Chá Chá Chá,Olhao,Portugal,vegan_friendly,false,
+1b28f5ea-71b4-4aa0-a1e3-ce6d7daf45b3,Plantacao da Ananas dos Acores,Ponta Delgada,Portugal,vegan_friendly,false,https://ananasdosacores.pt/ementa/
+1c715ef5-51fb-43e2-a017-7113be254db4,French Fries Factory,Porto,Portugal,vegan_friendly,false,https://www.instagram.com/french_fries_factory_porto/
+1cdbfe29-2650-4298-9742-d61ea76dd31e,Olives,Funchal,Portugal,vegan_friendly,false,
+1d0cb327-2c82-4548-8cdb-7830497cb96c,Restaurante Dos Artistas,Lagos,Portugal,vegan_friendly,false,https://www.artistasrestaurant.com/restaurant/a-la-carte.html
+1dcd82b4-b60d-42af-a77c-ab50b6ab6690,Folias de Baco,Porto,Portugal,vegan_friendly,false,
+1f57310a-256c-47b5-bd03-943b817fb4e8,veg&tal,Sines,Portugal,vegan_friendly,false,
+1f74198a-034a-4012-b528-bee72172b223,Bem Me Quer,Lisbon,Portugal,vegan_friendly,false,https://www.bemmequer.web.pt
+204c2aaa-efe4-4cc7-a617-55ed6227f194,Armando's,Porto Moniz,Portugal,vegan_friendly,false,
+2081ce86-1245-46ce-8545-16bf571d6b79,Mafra Açai,Mafra,Portugal,vegan_friendly,false,
+20a707dc-2e43-41ce-87f0-afe7005a4f70,Leo,Lisbon,Portugal,vegan_friendly,false,https://leorestaurante.com/
+20c02647-367c-4310-af04-10c82069e6e5,Dear Rose,Ericeira,Portugal,vegan_friendly,false,
+210c4362-8443-4f30-8383-e4a81ea575e9,Andorinha do Mar,Vila do Bispo,Portugal,vegan_friendly,false,
+213b70b0-07fb-429c-8ab1-6c15b9f2a1cf,Pet & Tea,Coimbra,Portugal,vegan_friendly,false,
+214ffdf1-a281-498a-9979-277560f70c75,Modi - Gelateria Italiana,Matosinhos,Portugal,vegan_friendly,false,
+21bd80d0-68ec-423e-a140-98ba4e577aa9,Leaves Cafe Portugal,Cotovia,Portugal,vegan_friendly,false,
+21d798ae-f36f-48eb-9c8d-34064fb3bd5d,The Primal House,Aveiro,Portugal,vegan_friendly,false,
+21e3241a-b753-489d-8a14-860637cb763e,Figo de Pita,Olhao,Portugal,vegan_friendly,false,
+222d5528-6e0d-4e4d-aab6-6dd1ba4cd94a,Ink Cafe,Lisbon,Portugal,vegan_friendly,false,
+2252e51a-fd03-4740-8b6f-a878b80102c3,Eclipse - Pizzaria e Gelataria,Bucelas,Portugal,vegan_friendly,false,
+22b5eeae-cb23-4ace-8d42-26d5317023a0,Baía Cultural Bar,Alcobaca,Portugal,vegan_friendly,false,
+24fd0baa-cbc8-4bbc-b6a6-95768e25573b,Quinta dos Sabores,Rabo de Peixe,Portugal,vegan_friendly,false,https://quintadossabores3.wixsite.com/oficial
+2548c35f-2e6e-43af-ba21-b020e6bb2efd,Guria!,Braga,Portugal,vegan_friendly,false,
+26b919a5-8de6-4c9a-a136-456b272d14b8,Turmeric,Porto,Portugal,vegan_friendly,false,
+2803deb5-2a93-4c4c-bdab-68a3f430113f,My'oMeu,Faro,Portugal,vegan_friendly,false,https://myomeu.eatbu.com/
+28a2c30b-8a69-4a52-b4fe-d654aad33c42,Honest Greens,Lisbon,Portugal,vegan_friendly,false,https://honestgreens.com/
+29c167e6-9997-4e89-8cca-72e01209ec18,Cozinha de Sónia,Portimao,Portugal,vegan_friendly,false,
+2d4d4f0b-6df6-48bc-9da3-405f68e27b05,Essencia - Restaurante Vegetariano,Porto,Portugal,vegan_friendly,false,http://www.essenciarestaurantevegetariano.com/
+3005c36a-2d09-439d-bb6d-7b5c6e17d920,Restaurante Pingo Doce,Aveiro,Portugal,vegan_friendly,false,
+31170379-3378-4b6c-a16f-4ed101729570,Mr. Pizza Braga II,Braga,Portugal,vegan_friendly,false,https://www.mrpizza.pt
+334c8011-4285-4d78-b622-865d061bf77e,Jardim Bambú,Guimaraes,Portugal,vegan_friendly,false,
+33d0ce80-5251-4318-84d7-c89b62d67a56,Così,Coimbra,Portugal,vegan_friendly,false,
+34479f08-670f-48fa-addf-d9eb4df851e4,Gosto Superior,Braga,Portugal,vegan_friendly,false,
+347cf6ef-8924-4176-8a55-5a21bf97f9b2,Café Calcinha,Loule,Portugal,vegan_friendly,false,
+34b983c2-70b5-4473-8e18-15a8e1b8cf93,Paraíso Do Mar,Aljezur,Portugal,vegan_friendly,false,
+372701fc-87cd-43b1-9625-45c24b3b2daa,Club Life,Porto,Portugal,vegan_friendly,false,
+378a7a8a-a71d-4a28-a8fb-6377917efdca,Entropia,Porto,Portugal,vegan_friendly,false,
+385fdb6b-68dc-4756-97c8-0bc84af1138e,Fala Fala Vege Food,Funchal,Portugal,vegan_friendly,false,
+38d6e5b6-74b7-4711-a976-2016104300ce,O Canteiro,Setubal,Portugal,vegan_friendly,false,
+39952571-376d-4879-b437-a2c28aec34cf,Garden Braga,Braga,Portugal,vegan_friendly,false,
+3b062d83-4adb-4194-bdae-e771d2241cc6,Bio Restaurante Vegetariano,Lisbon,Portugal,vegan_friendly,false,
+3b321495-1c49-4ffa-a259-799a40da411e,Terra Restaurante Natural,Lisbon,Portugal,vegan_friendly,false,https://www.restauranteterra.pt
+3b60fda7-cfae-493d-b4c1-58a1e3aeb9a3,The Green Room,Lagos,Portugal,vegan_friendly,false,
+3b70ad3b-61f9-41f4-b7ac-ac6867d2b912,"Amanti Praia do Vau - Pizza, Pasta & Ice Cream",Portimao,Portugal,vegan_friendly,false,https://amanti.pt/
+3be9e09b-f87f-4580-af7b-b278ac12d2e8,Cozinha Consciente,Coimbra,Portugal,vegan_friendly,false,http://www.cozinhaconsciente.pt/
+3cfda70a-b94f-412f-8235-44ac45cc49f4,"Jacafé - Coffee, Craft Beer & Yummy Snacks",Funchal,Portugal,vegan_friendly,false,https://www.jacahostel.com
+3e270670-4f40-43b3-a67a-309a88ee6c44,Miradouro do Castelo,Castro Laboreiro e Lamas de Mouro,Portugal,vegan_friendly,false,
+3fa3db8a-53ab-43bd-9dff-285e4cbfa610,o gambuzino,Lisbon,Portugal,vegan_friendly,false,
+41e7923f-e4e3-4ed1-bdce-c70f4299a294,Pizzeria Italiana La Fornace,Costa da Caparica,Portugal,vegan_friendly,false,
+42102d44-9759-475d-9c53-b8e0a89ba833,Gorilla,Lagos,Portugal,vegan_friendly,false,https://www.gorillalagos.com/
+4281c936-feef-41ad-b02a-7565e100c229,Horta,Funchal,Portugal,vegan_friendly,false,
+42d2e47c-ddcd-4ded-a222-b077eb3a2bb2,ASÖKA - Naturally Elevated,Cascais,Portugal,vegan_friendly,false,http://asoka.pt
+443bd464-3b4b-4ab5-b4c7-71c98be3c404,Bresca,Coimbra,Portugal,vegan_friendly,false,https://bresca.es/pt
+450d98ac-81cf-4b10-8f3a-a6a574145a0a,Folha Verde,Lisbon,Portugal,vegan_friendly,false,
+4646546b-f591-40f2-aaa0-a0c0b2c52224,P25,Braga,Portugal,vegan_friendly,false,
+46689dd6-cdf0-4208-b6b9-71980995eff9,Cultura dos Sabores,Porto,Portugal,vegan_friendly,false,https://www.happycow.net/reviews/cultura-dos-sabores-porto-
+4782dd0e-bfab-4755-b024-d80288bfa117,Chelsea Coffee & Brunch,Faro,Portugal,vegan_friendly,false,
+4800398b-7a80-40b7-8be0-bfb34a8c59b1,House of Wonders,Cascais,Portugal,vegan_friendly,false,
+487c5ccb-9612-4858-82a7-79ddf5788235,Terra a Terra,Lourinha,Portugal,vegan_friendly,false,
+4a7c70c4-d84a-4304-a924-a09e43ed2562,Chef Guru,Funchal,Portugal,vegan_friendly,false,
+4ae39ea5-76c9-4bbf-9b22-212568ff4db8,Amigos Indian Restaurant,Chaves,Portugal,vegan_friendly,false,
+4aeec98c-0a21-450f-8251-04cd3a2be238,Honest Greens,Lisbon,Portugal,vegan_friendly,false,https://honestgreens.com/
+4c4a7cbe-67e8-48a9-b9f1-677516b7c355,Hamburgueria D'Avo Ana,Castelo da Maia,Portugal,vegan_friendly,false,
+4cf9cba0-3616-4f11-8661-44a88ab1a75c,Sushi Alentejano,Beja,Portugal,vegan_friendly,false,https://www.facebook.com/sushialentejano/
+4d03dc46-921f-4475-96b1-74f495be9cc5,Tapas do Mundo,Portimao,Portugal,vegan_friendly,false,https://tapasdomundo.com/
+4fdbeac3-4215-4d17-90f6-9fc839dd3fc6,Mogno,Olhao,Portugal,vegan_friendly,false,https://www.mogno.pt/
+4ffb463d-fef8-4f82-a0a0-951df919ffe0,Sardinha,Peniche,Portugal,vegan_friendly,false,http://www.restauranteasardinha.com
+502b3967-8db0-44a1-a34d-b73b66aedbf4,Friends Pub & Hamburgueria,Costa da Caparica,Portugal,vegan_friendly,false,
+513e55c7-cb71-444f-b113-3ffb312b3378,Wok to Walk,Lisbon,Portugal,vegan_friendly,false,
+51869e1c-8c3d-4192-ba05-4c0f1147fd57,A Venda,Faro,Portugal,vegan_friendly,false,https://www.facebook.com/avendafaro
+51d2dc81-f601-4924-a099-a03af89c5adc,Nicolau,Porto,Portugal,vegan_friendly,false,
+5250068c-232c-4ef5-97f5-0cb91f454c3e,Intz48,Ponta Delgada (Sao Miguel),Portugal,vegan_friendly,false,https://intz48pt.wixsite.com/coffee-shop
+5292300a-8d2f-4ac4-bdf6-7484e5a1785b,Armazem Integral,Portimao,Portugal,vegan_friendly,false,https://armazemintegral.pt
+52bb8f91-aff5-4806-a936-a24a7301d252,UMa Canteen,Funchal,Portugal,vegan_friendly,false,
+52d63c4e-abf2-49ce-9e7a-cab87d67e4c9,Laundry Lounge Sagres,Sagres,Portugal,vegan_friendly,false,https://laundryloungesagres.com/
+54717ec6-0017-4dd9-bdeb-7b624f232e29,Hoy!,Lisbon,Portugal,vegan_friendly,false,
+54ff592e-50aa-4a6d-8db5-7b9b7e919481,Terrasse,Nazare,Portugal,vegan_friendly,false,
+554c8429-fbbc-4034-850c-53e4bae64d0a,Gusto Taberu,Lisbon,Portugal,vegan_friendly,false,
+55516146-91d5-49fc-bf80-42ddce7180a9,El-Rei dom Frango,Lisbon,Portugal,vegan_friendly,false,
+5565353d-d94a-4f39-aed5-6d4fe3b9355f,Marie e Oli`s,Armacao de Pera,Portugal,vegan_friendly,false,
+55b91705-0acf-438c-a210-9b3b702fcbc4,True Food,Faro,Portugal,vegan_friendly,false,
+56f38e6b-c213-4d6c-8a98-0609d1b3edf5,Amora Silvestre,Castelo Branco,Portugal,vegan_friendly,false,https://www.instagram.com/amora_silvestre_veggie/
+5a14a300-613a-4221-981d-0532de333c3c,Jardim dos Sentidos,Lisbon,Portugal,vegan_friendly,false,https://www.jardimdosentidos.com
+5a1aed26-46da-4d9c-baf9-f088d9279d60,Mesa Café,Sao Joao da Madeira,Portugal,vegan_friendly,false,
+5ad341c8-292c-4a0a-aa01-f723cf885152,Alfarroba Café,Albufeira,Portugal,vegan_friendly,false,http://www.alfarrobacafe.com/
+5b0793be-bc62-4578-bcc9-5ec558216ff8,Citrus - Coffee & Healthy Food,Caldas da Rainha,Portugal,vegan_friendly,false,
+5b13eef6-a197-4d8f-a569-5b8c8afeebc2,Pôr do Sal,Biscoitos,Portugal,vegan_friendly,false,
+5bc12022-1be5-4e64-b1f0-ab80ccbe4901,Wok to Walk,Porto,Portugal,vegan_friendly,false,
+5c487eb6-5163-480e-a31f-2d87b39dcb6f,Arco-Íris - Vegeteriano & Macrobiótico,Lisbon,Portugal,vegan_friendly,false,
+5cb1fc1d-db4a-46b3-bae9-a68fe607bd19,Super Juice,Portimao,Portugal,vegan_friendly,false,https://www.rochasuperjuice.com/
+5d369f92-f7a8-4189-8200-15e9b254dc90,Tasca da Ribeira,Peniche,Portugal,vegan_friendly,false,
+5d6eb18e-4165-4d61-bfbe-78c4de4099d9,Abigail's vegetarian cafe,Lagos,Portugal,vegan_friendly,false,https://abigailsportugal.com/
+5dcd81de-1905-40f9-bce6-9af39a65c38f,Quatro Quintas,Calheta,Portugal,vegan_friendly,false,
+5e239078-298d-46a0-9c9d-ef5e2b018a55,Veganicelos,Setubal,Portugal,vegan_friendly,false,https://www.happycow.net/reviews/veganicelos-setubal-299531
+5eabe922-34f4-4f70-9ec2-9c69979131c0,o giro,Ponta Delgada (Sao Miguel),Portugal,vegan_friendly,false,https://www.facebook.com/restauranteogiro#
+5f21b95e-e0f7-4184-9b03-9334ada97c57,Mid Town Ramen,Braga,Portugal,vegan_friendly,false,
+5f4596ad-680d-4bed-8dc3-f81fd4b69198,Puro,Lisbon,Portugal,vegan_friendly,false,
+62ad7e48-03ee-4ab4-b03d-6b3808fdaacd,Häagen-Dazs,Portimao,Portugal,vegan_friendly,false,
+6346b145-2489-40d1-9952-cb637d143262,Cantina CAAA,Guimaraes,Portugal,vegan_friendly,false,https://www.instagram.com/cantina.caaa
+66eca8de-3bf1-4ffb-acd0-979bd7e0a73c,Semente - Centro Macrobiotico Braga,Braga,Portugal,vegan_friendly,false,http://semente-cmb.com/default.htm
+6858f9a9-3f4c-45cb-ac05-49167c4d78a6,"Barbosa Kebab - Gelados Artesanais, Icecream",Espinho,Portugal,vegan_friendly,false,
+689c3ed7-a08e-4f98-8908-67847fb7cb93,Goji Comida Vegetariana,Lisbon,Portugal,vegan_friendly,false,
+68ecda29-64b6-4b97-a009-378fed973fb3,Calheiros,Albufeira,Portugal,vegan_friendly,false,https://www.calheirosrestaurante.com/
+6952c61a-bd85-408c-8f0b-2696496d33a0,H&R BURGER HOUSE,Paco de Arcos,Portugal,vegan_friendly,false,
+69b6f1c6-05c6-4bc6-851c-0bf68d07fc6f,Mimar Café,Lagos,Portugal,vegan_friendly,false,
+6af1038c-80e8-4720-9fbb-209d1ab7bb61,Loft [no.monte],Monte,Portugal,vegan_friendly,false,
+6b3aced8-a7a7-4ec0-8656-ae0e843df336,Mudano,Peniche,Portugal,vegan_friendly,false,
+6bc3f9d3-32a4-4a28-91a3-253ef61c0d44,Grao de Soja,Espinho,Portugal,vegan_friendly,false,
+6c498340-4d86-4ebb-af04-2ce5a1f6d5e5,Volta e Meia Restaurante Bar,Sintra,Portugal,vegan_friendly,false,
+6cd0b146-6363-49aa-824d-df927b549001,The Therapist,Lisbon,Portugal,vegan_friendly,false,https://thetherapist.pt/
+6ce938e3-3806-423c-98de-e79bc9a1d110,Alma Veg,Parede,Portugal,vegan_friendly,false,https://almaveg.eatbu.com
+6e865567-d320-4175-9866-f401535577d9,Kansha,Fatima,Portugal,vegan_friendly,false,
+6f93d3bf-e0c2-46e8-8602-60cca1d64838,Tachinho da Horta,Alhos Vedros,Portugal,vegan_friendly,false,
+716a03a6-0ab7-417c-957f-08c988195476,Roots,Aljezur,Portugal,vegan_friendly,false,
+717eb107-c58d-477c-bc8d-239ceaebd4d5,l'Osteria,Faro,Portugal,vegan_friendly,false,
+719f41b7-528f-4471-a912-62a2b702950b,Granos Espaço Vegetariano,Lisbon,Portugal,vegan_friendly,false,https://granos-espacovegetariano.com/
+72a99c91-370a-4df6-9fbd-c6b02b3d7bcf,Jacafé,Funchal,Portugal,vegan_friendly,false,https://www.jacahostel.com
+740d1e95-1656-4de6-9219-404743c573e6,Asim Doner Kebab,Faro,Portugal,vegan_friendly,false,
+757b28ab-58a7-414e-bf1d-41b01c10d679,Jardins do Porto,Porto,Portugal,vegan_friendly,false,https://jardinsdoporto.pt/
+76456906-aedd-471d-81ac-266131855131,Time To,Braga,Portugal,vegan_friendly,false,
+7660a3af-361f-41a5-bdd1-8e5ee09b8736,Citron,Lisbon,Portugal,vegan_friendly,false,
+76767914-e563-4418-88f8-9978ec728c80,Almaca Restaurante Vegetariano,Sintra,Portugal,vegan_friendly,false,https://www.almaca.pt
+774f6d29-e464-476a-95a1-9751787c6c96,Precipício,Calheta,Portugal,vegan_friendly,false,
+77e8ee95-5f18-4afd-8e5f-fa53e58e2b85,Olha que Dois,Lisbon,Portugal,vegan_friendly,false,
+78212265-e6d1-4d2e-84c8-6a3c40436319,Casa do Prego,Lagos,Portugal,vegan_friendly,false,
+793979e9-74da-4f2d-ad69-7da946bbdd3a,Vila Veggie,Vila Verde,Portugal,vegan_friendly,false,
+7c33b780-c6f7-4122-922e-0ecea5577b62,Pappa Lab,Braga,Portugal,vegan_friendly,false,
+7d22e673-e326-43f1-9c02-9aa2a591f42c,Indian Grill House,Costa da Caparica,Portugal,vegan_friendly,false,
+7d8b2b23-a158-4182-bff3-464ba47f6fa9,Koa,Costa da Caparica,Portugal,vegan_friendly,false,
+7dcdfd84-9d05-44cb-80ba-d7b42be3a227,Terrassa,Amarante,Portugal,vegan_friendly,false,https://terrassa.pt
+7e27c156-49ea-4053-a07f-f0821faec0b4,Salsa Verde,Evora,Portugal,vegan_friendly,false,https://www.salsa-verde.org/
+7f89e58b-4dae-4e9c-afe6-057ba6b0f9dc,Eat Thai Street Food,Braga,Portugal,vegan_friendly,false,https://www.eatthaistreetfood.pt/
+8076a487-ee79-4bf0-a9e0-6cbc5694efd2,Lost,Amora,Portugal,vegan_friendly,false,
+807a429f-ce70-45f6-813f-4a01b46c17ba,Café do Cais,Porto,Portugal,vegan_friendly,false,
+80959b6e-38ab-4c12-b48b-6fc75dbbf3f1,Tahladas,Machico,Portugal,vegan_friendly,false,
+83b0b678-e1e3-4965-a6e2-476482d83d3e,Vida Leve,Faro,Portugal,vegan_friendly,true,
+847734bb-1899-440e-9687-8d7edbf5656d,Momo Express,Lagos,Portugal,vegan_friendly,false,
+848f6aaf-ffef-4a38-84cd-f2ba6346ff28,Encci Carvoeiro,Lagoa e Carvoeiro,Portugal,vegan_friendly,false,https://www.encci.pt/
+84f5c686-5dbb-4ee3-afc0-3fae3337e58a,Oasis Restaurante Vegetariano,Lisbon,Portugal,vegan_friendly,false,
+8502e03b-d82d-4577-85b1-e2813653a4d9,Tataoim,Lisbon,Portugal,vegan_friendly,false,
+86c996ac-5555-4774-83d1-407308e0ce26,daTerra,Vila Nova de Gaia,Portugal,vegan_friendly,false,
+8726fecf-6b94-4b27-afef-1e114ab8aec6,Rose Stupa,Lisbon,Portugal,vegan_friendly,false,
+883c7299-e73c-4d66-bec3-1e1e7544b139,Polo Cultural,Lisbon,Portugal,vegan_friendly,false,
+888a948c-af0f-4dbe-a634-dc82af251e7a,Nautic Bar,Praia de Mira,Portugal,vegan_friendly,false,
+88a70569-f434-4359-9e53-cc57601004e7,Akmandu Nepalese Restaurant,Faro,Portugal,vegan_friendly,false,
+891e4dcf-952a-4a65-992e-27e142925d18,Umi Sushi,Peniche,Portugal,vegan_friendly,false,
+89bb5331-addb-4be1-8754-a277fc531301,Honest Greens,Lisbon,Portugal,vegan_friendly,false,https://honestgreens.com/
+8aea9a9a-1432-429f-8467-e7430b78681a,DaTerra - Parque das Nacoes,Lisbon,Portugal,vegan_friendly,false,https://www.facebook.com/daTerraVegetariano
+8aede56e-6d63-47bd-9502-1815ecc3960a,As Tílias,Fundao,Portugal,vegan_friendly,false,https://www.astilias.com/
+8b23a621-e2bb-44ca-8e67-05f5773912aa,D' Italia Pizzeria,Sagres,Portugal,vegan_friendly,false,https://www.sagresholidays.com/
+8cce90ef-836c-4d6e-a982-48a032f61276,Espaço da Rosa,Lisbon,Portugal,vegan_friendly,false,https://www.restaurante-espacodarosa.com
+8d16473f-1a30-4cff-8bf4-360b0ba213e3,quinta 7 nomes,Colares,Portugal,vegan_friendly,false,http://www.quinta7nomes.com/cafe.html
+8f380138-408f-4da0-b681-63123e6bf587,Cor de Tangerina,Guimaraes,Portugal,vegan_friendly,false,https://www.cordetangerina.pt/
+8f6a96cb-3a5f-4e68-9fa3-2f2f1b486efe,Kebab,Espinho,Portugal,vegan_friendly,false,
+8f701dbd-a73c-4740-86eb-fb1f2c9a352e,Balance Café,Portimao,Portugal,vegan_friendly,false,
+912acd2a-a78b-41cc-b72a-e71e948d1aa4,Quinta dos Afonsos,Gondomar,Portugal,vegan_friendly,false,
+913b7329-a1a4-4203-8a32-3e59f1e05964,Manah,Lisbon,Portugal,vegan_friendly,false,https://www.facebook.com/manah.lisboa/
+9181c4a1-abd4-4f1c-ac3d-656cb2361c26,O Burrito,Porto,Portugal,vegan_friendly,false,
+91dc4bd0-80c6-47d7-b223-06cfdd133355,Chicca's,Luz,Portugal,vegan_friendly,false,https://chiccasrestaurant.com/
+928eb888-9888-4fcc-bf96-8163d21c8d1f,Pisco,Vila do Bispo,Portugal,vegan_friendly,false,
+930bd140-081a-4b38-9cf9-a6db921ac94d,Vegetarian,Portimao,Portugal,vegan_friendly,false,
+9328b1fa-6abb-46b2-8cfc-b95bdd473399,Acucar Ao Quadrado,Tomar,Portugal,vegan_friendly,false,https://acucaraoquadrado.eatbu.com
+93382671-80d8-43be-b12e-3409be5e85d0,Café Nativa,Sao Luis (Garatuja),Portugal,vegan_friendly,false,
+933f6af0-eec6-44f1-bb8b-d083ec6d3cc3,Trigo Vermelho,Aljezur,Portugal,vegan_friendly,false,
+93aa0d2e-e322-472f-a051-691308db81b8,Hungry Biker,Porto,Portugal,vegan_friendly,false,
+93eef58f-1aee-4a53-a8f4-6eae4884d0a2,Paladar Zen,Lisbon,Portugal,vegan_friendly,false,https://www.paladarzen.pt
+93f30b7d-f07f-4db8-93c1-f8878ce74e43,Spaco's,Vila Praia de Ancora,Portugal,vegan_friendly,false,
+9484f04e-236a-41af-a531-e70a9e15f019,Veganada - Cowork Cafe Restaurant,Porto,Portugal,vegan_friendly,false,
+959c18c5-f09d-4c96-bfcb-d3563a02befb,Arco Iris,Lisbon,Portugal,vegan_friendly,false,
+95e458ea-f398-49bb-bc79-785a478d0e65,Kaju Brunch Restaurant,Coimbra,Portugal,vegan_friendly,false,
+95ef804d-823c-465c-88ac-3700de435245,São Lázaro,Lisbon,Portugal,vegan_friendly,false,
+96342f99-4af2-4095-b366-d4d925d8e58f,Tian Jie,Nazare,Portugal,vegan_friendly,false,
+9676272a-0881-411a-9d84-52255e689c1b,Imperial Dine,Vila Franca de Xira,Portugal,vegan_friendly,false,
+992dffa8-01e9-4c4b-8be8-162aba1b6701,Villa Craft,Sintra,Portugal,vegan_friendly,false,
+99dd5c94-be92-4014-84d1-8527973effeb,Fala Fala,Funchal,Portugal,vegan_friendly,false,
+9d057091-501a-4de3-ae5a-f8dbc4d3ad05,Sabores e Mar,Odemira,Portugal,vegan_friendly,false,
+9d33a148-9144-43bf-b977-3a40845803fb,Veramente,Lisbon,Portugal,vegan_friendly,false,https://veramente.pt
+9dea8a26-a2a4-4f22-abae-b292f84a7623,O Melhor Croissant Da Rua,Sesimbra,Portugal,vegan_friendly,false,https://omelhorcroissantdaminharua.com
+9f570b34-5843-4992-b275-515fe3b6b542,R2 - Snack-Bar Francesinhas Hamburgueres Gelados,Espinho,Portugal,vegan_friendly,false,
+a007dfd1-bed0-4bfa-80e2-92e67ec65cfe,Larica,Praia da Vitoria (Santa Cruz),Portugal,vegan_friendly,false,
+a28802c2-9ff4-405d-935b-5318ed143275,Ar'Terra,Odemira,Portugal,vegan_friendly,false,
+a2d5dc85-33ff-41dd-9eb3-ff7e2175e4d9,O Mercado,Costa da Caparica,Portugal,vegan_friendly,false,http://fb.com/omercadocc
+a3b834ee-c984-4548-a014-0e13dcb3591b,The Veggie Café Albufeira,Albufeira,Portugal,vegan_friendly,true,
+a3ef3f2d-fb1b-41c7-b43b-d313a9fa3289,Coupage 51,Porto,Portugal,vegan_friendly,false,
+a405758e-a0bb-4bf6-b88f-0adb9be4b1a3,Shahi Dawat,Porto,Portugal,vegan_friendly,false,
+a48b8997-df6d-4333-9723-5c61c612c028,O Açude,Coimbra,Portugal,vegan_friendly,false,
+a5717dc5-72de-4dbb-96ad-8926385ae8b6,Shiila's Place,Lisbon,Portugal,vegan_friendly,false,
+a62a4439-aa97-43f2-a2ce-4e1fca6460e4,Tapas 'n' Friends,Lisbon,Portugal,vegan_friendly,false,https://fullest.pt/en/espacos/tapas-n-friends-se/
+a637d704-f876-4da1-94b8-e29c72267b8b,Cozinha a la Carte,Maia,Portugal,vegan_friendly,false,https://cozinhaalacarte.com
+a71966e3-5cc6-486e-b91b-0142e4e07087,Apuro,Porto,Portugal,vegan_friendly,false,https://www.apurobar.pt/
+a727e811-ad4a-4e2e-ae4c-e06e7a7fbe86,A Grega,Ponta Delgada,Portugal,vegan_friendly,false,
+a7892cde-14d0-4980-91e5-931490448404,Hummus Junction,Setubal,Portugal,vegan_friendly,false,https://www.hummusjunction.pt
+a78c9184-ed81-435b-8da0-f855c849fe6b,Cantina da UMa,Funchal,Portugal,vegan_friendly,false,
+a7e21033-68ed-486c-9c74-21d3b7655de7,Sherpa Momo,Lisbon,Portugal,vegan_friendly,false,https://www.facebook.com/sherpamomo/
+a83288bb-c4ee-4c1a-a669-6f64c47eda39,Vale das Furnas,Povoacao,Portugal,vegan_friendly,false,
+a8b809df-68ba-4159-b40e-24a57a804462,Almadrava,Lisbon,Portugal,vegan_friendly,false,
+a8df3040-f136-4bf2-b1c9-95528b9f71c7,Mãe Terra,Portimao,Portugal,vegan_friendly,false,
+a8fd7bf3-775e-456e-8f88-f8e7ccec4557,"Museu Café - Lunch, Snacks & Coffee",Funchal,Portugal,vegan_friendly,false,
+a9ed2f82-4d07-4b71-92a1-ef0701035960,Restaurante Vegetariano PSI,Lisbon,Portugal,vegan_friendly,false,https://www.restaurante-psi.com
+aa5daddf-3423-4d64-b0f2-326ad367edbb,Hoko,Braga,Portugal,vegan_friendly,false,https://hokosushi.pt/
+abc32719-5059-4a2f-9aff-9396d51a0a2c,La Matta,Lisbon,Portugal,vegan_friendly,false,
+ac76bfce-2a07-44e0-b44c-168bf94ccfca,Restaurante O Baco,Ponta Delgada (Sao Miguel),Portugal,vegan_friendly,false,https://hotelpdl.com/pt/facilities-services/baco-restaurant
+ac8ea464-c783-4dea-80bd-947498ef1d05,Bao's,Braga,Portugal,vegan_friendly,false,https://www.baos.pt
+acf51037-8832-4728-8723-6530b4e5c3cc,Honest Greens Cais do Sodre,Lisbon,Portugal,vegan_friendly,false,https://honestgreens.com/
+ad030684-c19a-4233-afe6-d6ae684795c1,Cana Roca,Fazenda,Portugal,vegan_friendly,false,https://romenfrancesco.wixsite.com/cana-roca
+aed4d706-6e0b-4957-9ead-4bc713d7b643,Iguana Cafe,Albufeira e Olhos de Agua,Portugal,vegan_friendly,false,
+af237169-5108-45d2-ac66-43c07cd05387,Mr. Pizza Braga I,Braga,Portugal,vegan_friendly,false,https://www.mrpizza.pt
+af45dfc0-a771-4f6e-81a4-9d0bc7f9b1a1,Trullino cafe,Lisbon,Portugal,vegan_friendly,false,trullino.com
+af862a8b-3c28-4e9c-8736-51dd802abaef,Essencials Café & Ayurveda,Povoa de Varzim,Portugal,vegan_friendly,false,https://essencialsayurveda.com/
+b0bb30c9-fda8-44df-8f6e-fb8d41f8c714,Bosque,Sintra,Portugal,vegan_friendly,false,
+b21c88a1-2bbd-47c0-916e-dd9c2f964dc3,Luma,Viana do Castelo,Portugal,vegan_friendly,false,
+b2a7f6a1-2241-4cb5-bc4d-5d789eb8add0,Seiva,Matosinhos,Portugal,vegan_friendly,false,https://www.seivarestaurante.pt/en/
+b2e0b5fb-47b0-4e14-a223-3a28f1ace1df,Mani's Mo:Mo: & Restaurant,Faro,Portugal,vegan_friendly,false,
+b357d50c-aa7e-45ee-9322-c01d9b8264b0,Cantinho da Regina,Sesimbra,Portugal,vegan_friendly,false,
+b3a88475-086f-4e1a-9611-34fac4677242,Dallas Burger Club,Lisbon,Portugal,vegan_friendly,false,https://dallaslisboa.com
+b42975a7-282e-43e6-b62a-a0cd25792112,Take-away Armando's,Porto Moniz,Portugal,vegan_friendly,false,
+b47a6e43-383f-45ec-838a-dbb8f8906e1d,Cafe Raizes,Coimbra,Portugal,vegan_friendly,false,
+b48b6d2a-4cea-4264-a1e7-097f65c29a6d,Luadia Terapias,Lisbon,Portugal,vegan_friendly,false,
+b52f093b-72cb-439f-985e-56a75c1b44a5,Bio,Lisbon,Portugal,vegan_friendly,false,
+b5523ddf-8c0a-4105-833a-09cc1e5cbf21,Yeah Aveiro,Aveiro,Portugal,vegan_friendly,false,
+b5bff290-c513-419d-991c-8451317dbbe9,Green Burger,Lisbon,Portugal,vegan_friendly,false,
+b7f08b7c-6a0c-4882-97b4-ac22cf94629c,O Ninho,Lagos,Portugal,vegan_friendly,false,
+b8f7c075-080d-46ba-941d-81791b63a5e8,Raizes,Quarteira,Portugal,vegan_friendly,false,
+b8fd5130-8c33-4572-9fca-da0e9cc9613d,Salpicos Verdes,Paranhos,Portugal,vegan_friendly,false,
+b9aec757-c441-41d5-ad35-6fc6fef9cf47,"Casa de Chá ""O Poejo""",Sete Cidades,Portugal,vegan_friendly,false,http://quintadaqueiro.com/casa-de-cha-o-poejo/
+b9d5c8e5-ea77-4b85-895e-2c2bdc664525,Greenside,Coimbra,Portugal,vegan_friendly,false,
+bab33764-ce00-4291-8d71-940305e09db3,Esplanada do Bano,Vila Nova de Gaia,Portugal,vegan_friendly,false,
+bab70671-b09b-4256-aac8-9a036a3c07d9,Maia,Funchal,Portugal,vegan_friendly,false,
+bb61d659-1645-45dd-b57b-35ee3b661fd0,Espécie,Porto,Portugal,vegan_friendly,false,
+bc55a691-0cde-4597-a81f-2d6025b21506,Gangnam Korean Table BBQ,Coimbra,Portugal,vegan_friendly,false,
+bcda389d-01e5-425f-a71e-e4511581861d,The Folks,Lisbon,Portugal,vegan_friendly,false,
+bd0f54e1-46c7-4431-8519-1319f80c1b2b,Thai Phuket,Albufeira,Portugal,vegan_friendly,false,
+bd275908-6937-4a1b-b4ca-128089c0bca9,Garden Porto,Porto,Portugal,vegan_friendly,false,https://gardenporto.eatbu.com/
+be565547-2ab3-4c1c-a0de-a7adb1faf22a,Peloton Cafe & Cycling,Viana do Castelo,Portugal,vegan_friendly,false,https://linktr.ee/pelotoncafe
+be989a48-3a5d-4cab-9e21-9d91e16e65c3,Mela canela,Sintra,Portugal,vegan_friendly,false,
+bed132cc-efd8-4812-b0dc-d89ae30fc6dd,Restaurante Greenpepper,Lisbon,Portugal,vegan_friendly,false,http://www.greenpepper.pt
+bef86f2e-58e3-47ec-90d5-2ad09a165e28,Casanova,Porto,Portugal,vegan_friendly,false,https://www.happycow.net/reviews/casanova-porto-
+bf028253-ebf8-44e8-abe6-79d719882943,Root & Vine,Vila Nova de Gaia,Portugal,vegan_friendly,false,
+bf05cc86-e7f1-4ab4-a412-c72ae355165c,Greenstore 4u,Vila Verde,Portugal,vegan_friendly,false,
+bf2e7516-ee77-4db5-ad57-cb7827e8ed50,The Green Affair - Chiado,Lisbon,Portugal,vegan_friendly,false,
+bf890206-b235-4852-b143-e49257629446,Meraki - Vegetariano com Alma,Leiria,Portugal,vegan_friendly,false,
+bfbb533e-b083-49fe-a9d7-1101d371bb4d,PRANA Lounge & Bar,Santo Andre,Portugal,vegan_friendly,false,https://pranalounge.pt
+bfd27f9a-7481-47d2-800d-c95f224fcea2,Del Veg,Lisbon,Portugal,vegan_friendly,false,
+c0e766e6-f4d2-4496-a585-f3e5ae175502,Xexexe,Costa da Caparica,Portugal,vegan_friendly,false,https://www.facebook.com/xexexevegan/
+c186d51c-a370-45bc-93d3-3bbcd6d34624,Panda Cantina,Lisbon,Portugal,vegan_friendly,false,
+c193c014-545f-4b03-8db2-0fc79fd045f4,Mercado Bio,Madalena,Portugal,vegan_friendly,false,https://mercadobiopico.pt/
+c1b04050-80e5-4230-8097-214b322521dc,Continente Bom Dia,Almada,Portugal,vegan_friendly,false,https://feed.continente.pt/lojas/continente-bom-dia-cova-da-piedade
+c207b6a8-bcae-4c62-9fe1-ced5b6d7ec91,The Green Affair,Lisbon,Portugal,vegan_friendly,false,
+c2b56ad6-4ebc-40e0-88e1-bd11730be61e,Crema di Gelato,Lagos,Portugal,vegan_friendly,false,
+c3ce2b57-3460-4ff3-9719-b560ff986960,Cookie Club,Porto,Portugal,vegan_friendly,false,https://cookieclubporto.squarespace.com
+c4655f34-dfab-483c-9171-b587f718fa96,Então,Faro,Portugal,vegan_friendly,false,https://www.entao.pt/
+c469b1cb-a85a-45fe-b375-ec9d6665b6c8,Rituale,Loures,Portugal,vegan_friendly,false,https://rituale.pt/
+c492c7db-4765-4fac-b822-8c0baf2e5986,Emilia Brunch & Cocktails,Guimaraes,Portugal,vegan_friendly,false,https://emiliabrunchandcocktails.eatbu.com
+c4a9be94-86cc-41be-8dc9-6bef3b98a864,manjerica,Lisbon,Portugal,vegan_friendly,false,
+c583d662-48c2-4e38-92b3-c05c1ac26c36,Época Porto,Porto,Portugal,vegan_friendly,false,
+c5b5b77d-8677-4012-9506-f6cf9ea8b93b,Sabores do Curral,Câmara de Lobos,Portugal,vegan_friendly,false,
+c600adac-267b-4a4d-ad3c-67d33adc7948,Era uma vez um Talho,Paco de Arcos,Portugal,vegan_friendly,false,
+c63eca74-909b-452b-90c1-546afed1c867,Guara - Restaurant & Bakery,Vila Nova de Gaia,Portugal,vegan_friendly,false,
+c6a91040-011a-43c2-bc12-951194f6f230,Three Little Birds,Sagres,Portugal,vegan_friendly,false,https://www.tlb.pt/
+c789f49b-f669-46ab-884f-cccbdbca7eb4,Barbosa,Lagos,Portugal,vegan_friendly,false,https://barbosa-bar-kitchen.business.site/
+c8ccdecf-46cc-4cd5-9949-779620ad17ce,Os Tibetanos,Lisbon,Portugal,vegan_friendly,false,http://www.tibetanos.com
+c8f4a73e-33e6-4770-931d-0a919c3fec25,daTerra,Matosinhos,Portugal,vegan_friendly,false,https://www.daterra.pt
+c9d645d5-d04c-4332-b0e5-3bf2bb538ab3,Mare,Lagos,Portugal,vegan_friendly,false,
+c9eda46a-dce5-4789-934c-f5dc743edc4d,Honest Greens,Porto,Portugal,vegan_friendly,false,https://honestgreens.com/
+ca20ef27-2800-48db-a090-b50d0cce878c,Patuá,Lisbon,Portugal,vegan_friendly,false,
+ca9b0638-051f-4ca9-87c4-1308787f95dd,Green Pepper,Lisbon,Portugal,vegan_friendly,false,https://www.greenpepper.com.pt
+cb09b09a-dd0b-4f90-ab3d-e0f3bced985a,Portela,Lisbon,Portugal,vegan_friendly,false,
+cb1a6a6a-8a50-4aef-af01-f8c08979de75,Adega Sabino,Vila e Roussas,Portugal,vegan_friendly,false,
+cbe4274e-c5db-4186-882e-4e917804a337,Taberna & Merceiria Sebastião,Santarem,Portugal,vegan_friendly,false,
+ccf9aaec-7c6e-447c-bf37-88e7376cd6a8,tribo da terra,Beato,Portugal,vegan_friendly,false,https://tribodaterra.eatbu.com
+cd895aa6-2363-4d37-80ed-1e4b9614cd35,Maria Pic-nic,Ponta Delgada (Sao Miguel),Portugal,vegan_friendly,false,https://mariapicnicazores.com/store/cat/pic-nics/
+cf11aa60-af7b-41e1-9dd9-f11ce6342f5c,Chelsea,Faro,Portugal,vegan_friendly,false,
+cfbdbf14-f568-4115-a0e3-9622d785898f,Deguste by Pedro Pinto,Guimaraes,Portugal,vegan_friendly,false,
+d08be1f1-9ad2-4e67-bf96-c56b814a93bc,PSI Restaurante Vegetariano,Lisbon,Portugal,vegan_friendly,false,https://www.restaurante-psi.com
+d0d7cec9-0d63-40e6-910b-68f3a985f680,Bloom Bistro Cocktails,Lisbon,Portugal,vegan_friendly,false,https://bloom.com.pt/
+d0f518c9-f6ef-4a43-b8c5-3bee2a383dbb,daTerra,Faro,Portugal,vegan_friendly,false,https://www.daterra.pt/
+d127d7de-554f-4954-b1a1-8552205e3247,Nau Coffee,Coimbra,Portugal,vegan_friendly,false,
+d18b8cbd-c52b-4eec-9972-24158820cb54,Ye-Ye,Figueira da Foz,Portugal,vegan_friendly,false,
+d249f56f-ef12-4fec-8b22-dfa6878d8667,Pianissimo,Marco,Portugal,vegan_friendly,false,
+d2fbfa5d-06f1-4aa4-bc6c-e848df03a84a,Grains 864,Faro,Portugal,vegan_friendly,false,https://www.grainsbrewpub.com/
+d38d3e57-9387-4588-9707-693390b500af,Haagen Daz,Portimao,Portugal,vegan_friendly,false,
+d44c6edf-2e44-49f8-a899-3275103585e9,Gandhi Palace,Lisbon,Portugal,vegan_friendly,false,http://www.restaurantegandhipalace.com/
+d4852c18-9a85-4ff4-b4c3-6a4c7e1282bb,Espaço Nativa,Odemira,Portugal,vegan_friendly,false,
+d51e971a-92cf-4ff7-9d0a-8f0ffde8f038,Vila Adentro,Faro,Portugal,vegan_friendly,false,
+d6ae6dbf-fd5d-44bb-b032-8d09b403c759,Mãos de Horta,Castelo Branco,Portugal,vegan_friendly,false,
+d7be0185-2c41-42cd-abc3-de4d3e719e3a,Copenhagen Coffee Lab,Lisbon,Portugal,vegan_friendly,false,https://copenhagencoffeelab.com/cafes-portugal/
+d891408d-3bbb-4ab8-b913-8cc2b6c63285,Fini,Sesimbra,Portugal,vegan_friendly,false,
+d945450f-3948-4356-81e4-aea661b188e1,Vegifrut,Aveiro,Portugal,vegan_friendly,false,http://www.vegifrut.org
+da349cfd-7b56-4844-9ca7-c6708604eb09,Café Oliveirinha,Sagres,Portugal,vegan_friendly,false,
+db490686-3253-418e-9acb-9c23dcaece70,Maria Moledo,Moledo e Cristelo,Portugal,vegan_friendly,false,
+de1f4204-79d9-4ba6-bd94-8e67f8fbd1e2,O Sabor da Alegria,Figueira,Portugal,vegan_friendly,false,
+de1fdfee-6be0-4e5a-b0a5-360c1a0139a9,PREC - Processo Regenerativo Em Curso,Mertola,Portugal,vegan_friendly,false,https://m.facebook.com/PREC.Mertola
+de5ab317-0865-4b24-92c2-5962fa190945,As Marias,Soajo,Portugal,vegan_friendly,false,
+df25c950-147c-46df-9cb9-59a676d8b4c9,Insensato Cafe-Livraria,Tomar,Portugal,vegan_friendly,false,
+df72fad6-b6cf-4d49-9ed9-27693b0d3882,Route 33,Almada,Portugal,vegan_friendly,false,
+e2280688-dccf-435d-b38d-2b850dc94712,cantinho de mercado,Vila Nova de Milfontes,Portugal,vegan_friendly,false,http://cantinhomercado.com/
+e29c854b-0ba2-40e5-8aa6-f37fcc6c7c70,Vila Velha,Sagres,Portugal,vegan_friendly,false,https://www.vilavelha-sagres.com/
+e38348bc-4809-443c-b0d6-b50b29ff8ffa,Cafe Jardim,Ourem,Portugal,vegan_friendly,false,
+e4108083-9e0c-4f77-b52f-2d9e501f2455,Honest Greens,Lisbon,Portugal,vegan_friendly,false,https://honestgreens.com/
+e4b75895-ceb2-4463-be43-16d2cdee0e11,Anjo Verde,Braga,Portugal,vegan_friendly,false,
+e4ce9e22-8ea5-4ec3-a748-49ef197fdc24,Loft Brunch & Cocktails,Funchal,Portugal,vegan_friendly,false,
+e5ad02a8-8a42-4bf0-8b84-293b63f6aa1c,Villa Lounge,Paco de Arcos,Portugal,vegan_friendly,false,
+e5b789fd-cb7d-4094-8ae9-d20f66821550,frango.com,Porto,Portugal,vegan_friendly,false,
+e6a82eec-b74c-4eaf-8c76-3bf1ebf72e4f,"MEZE Brunch, Cocktails & Coffee",Braga,Portugal,vegan_friendly,false,https://meze-braga.eatbu.com
+e8343e9d-16cd-4fd8-a5d5-d5a43dcbfb8f,Maia Coffee Shop,Funchal,Portugal,vegan_friendly,false,
+ea1810d1-4aee-4f60-8533-0ce3ad72720b,O Jardim,Esposende,Portugal,vegan_friendly,false,
+ed207ba7-efe6-45f7-98e7-dd60a3722465,Sabor da Índia,Funchal,Portugal,vegan_friendly,false,https://www.sabordaindia.pt
+eddc77b5-5cb8-47bd-8345-14b9e86dedda,O Burrito,Coimbra,Portugal,vegan_friendly,false,
+eeb3210b-d0fe-4c9e-be6b-22954f500171,S. Pedro,Ponta Delgada,Portugal,vegan_friendly,false,https://www.restaurantesaopedro.com/
+eee9ccfa-78dd-4959-9f1c-5a26ad62ee1b,Aloha Cafe,Sesimbra,Portugal,vegan_friendly,false,
+ef82dd40-8326-4789-8f65-2215ae5acedf,Terra Viva,Espinho,Portugal,vegan_friendly,false,
+efabdade-d693-4047-92a9-557e0cfcdfec,Morada Brunch,Porto,Portugal,vegan_friendly,false,
+f191a216-ad36-4a59-9bc8-737690ffb94c,Eddine Gelados,Setubal,Portugal,vegan_friendly,false,
+f194a0e8-e716-449f-b131-f102438769a1,VietView,Porto,Portugal,vegan_friendly,false,https://vietview.pt
+f1bd03ba-c921-42eb-a1f5-f8714e665580,Juke Box,Lagos,Portugal,vegan_friendly,false,
+f1fc3450-a8dd-4931-98b3-4e0ed9a17388,Ananda Cafe - Espaco Vegetariano,Covilha,Portugal,vegan_friendly,false,
+f297ac38-e47b-430a-b93c-4bcddde01ece,Pizzaria Luzzo,Lagos,Portugal,vegan_friendly,false,
+f2999ef3-d3e4-4451-b1ea-a4b957736626,Veg-e-tal,Almada,Portugal,vegan_friendly,false,https://vegetal.pt/
+f50cc544-8a09-478b-b521-907588257576,Tahladas Restuarante & Pub,Machico,Portugal,vegan_friendly,false,
+f5539f91-df53-4793-839c-44db67517d92,Patua,Lisbon,Portugal,vegan_friendly,false,
+f5abd690-69a8-4944-be54-d9af73c7fcc0,Pizzeria Milano,Beja,Portugal,vegan_friendly,false,https://www.facebook.com/pages/Pizzaria-Milano/169565979767344
+f7f2378a-9825-4a9a-8beb-954471f38211,Real Portugese Cusine,Lagos,Portugal,vegan_friendly,false,
+f875b0bd-02ec-49e7-a6b4-e53f27dd3751,Amuní,Santa Cruz da Graciosa,Portugal,vegan_friendly,false,
+f8c1ecac-b781-4860-b52c-baa96ff3deb6,Chaparro Natura,Odeceixe,Portugal,vegan_friendly,false,
+f8d13908-03d5-492d-a13a-aaab1e3a067b,Casa do Capitao,Lisbon,Portugal,vegan_friendly,false,https://casa-capitao.com/
+f9195cff-4069-41d5-8c65-c276eacace88,My Green Pastry,Porto,Portugal,vegan_friendly,false,
+f9d57fd7-5df5-4e75-8018-ce6466d41a9a,Salus Brunch Garden,Sintra,Portugal,vegan_friendly,false,
+f9f655d1-629a-4746-8414-e96563b161cc,Vegana,Porto,Portugal,vegan_friendly,false,
+fa7946ea-6c93-447b-bcfd-97d3b73281dd,Yallah,Lisbon,Portugal,vegan_friendly,false,https://yallahlisboa.business.site/
+fba2175b-94a3-4d06-a6bc-51037c0eab81,Cafeteria Sical,Lisbon,Portugal,vegan_friendly,false,
+fbe79abe-f78f-41cd-be03-3b79b99b25ef,Local Avenida - Your Healthy Kitchen,Lisbon,Portugal,vegan_friendly,false,https://localkitchen.pt/
+fc0d5027-9e6d-4ec5-9f68-617f7bc24f70,Oasis,Lisbon,Portugal,vegan_friendly,false,
+fc745f22-ba67-49c2-b43b-03825255e5a1,The Food Temple,Lisbon,Portugal,vegan_friendly,false,https://www.thefoodtemple.com/
+fc965c2a-e10a-4c86-a3f5-4d84112bbf97,Estudio Vegetariano,Lagos,Portugal,vegan_friendly,false,https://estudiovegetariano.com
+fcac57e7-8b31-49d3-9ec6-d8ccadf55649,Michel,Ponta Delgada,Portugal,vegan_friendly,false,https://michelrestaurant.com/
+fd0efdcd-a4b0-4873-83f9-624b9ceac35c,Casa Madruga,Foz do Arelho,Portugal,vegan_friendly,false,
+fd28ae1d-0e3e-4b20-a460-62d9cd66fb5d,Panda Cantina,Lisbon,Portugal,vegan_friendly,false,
+fd63f251-369a-4506-8ea1-912b20fd0355,Honest Greens,Porto,Portugal,vegan_friendly,false,https://honestgreens.com/
+00009619-ed47-4881-a769-2b0435786ad7,Atilla Restaurant,Hatay,Turkey,vegan_friendly,false,
+029277ce-264a-4750-8545-521254d1bdcd,Kem Kum,Istanbul,Turkey,vegan_friendly,false,
+02c087ae-99d9-436e-a093-71d1e46b2db8,Fındık Ocağı Cafe & Bistro,Yomra,Turkey,vegan_friendly,false,
+03500b3c-84d8-4130-ba0e-ac110caf648c,Cafe Rail Mersin,Mersin,Turkey,vegan_friendly,false,http://www.caferail.com
+049dcd8d-ca31-48a0-8930-d786d00098b5,Nevmekan Selimiye,Uskudar,Turkey,vegan_friendly,false,https://tesislerimiz.uskudar.bel.tr/tr/main/pages/nevmekan-selimiye/156
+0a10e990-3b0b-42fe-842f-4445c94ead1f,Fıccın,Beyoğlu,Turkey,vegan_friendly,false,https://www.ficcin.com/
+0a843b4b-9b01-466d-96f0-fc058494d480,Ayse's Kitchen,Selçuk,Turkey,vegan_friendly,false,
+0b498d50-80ac-4bbe-833b-e57d98ba9ac3,Roka Cafe Kahvaltı,Beyoğlu,Turkey,vegan_friendly,false,
+0ea12ef4-9134-4e36-bc76-a61825ebb4b3,Akoğuz Çiftliği,Istanbul,Turkey,vegan_friendly,false,
+13de61ca-9323-49b2-992f-59cbc28cacd0,Ömer Aybak Adıyaman Çığköftecısı,Konyaalti,Turkey,vegan_friendly,false,
+1560adfd-23a9-4598-936c-3bb7d45a37bf,NUT HUNTER,Hatay,Turkey,vegan_friendly,false,https://www.trendyol.com/magaza/ol-ka-gida-m-428091?sst=0
+168f90c7-86cd-4f27-96a6-342fb4bfa0b9,Galata Kitchen,Beyoğlu,Turkey,vegan_friendly,false,http://www.galatamutfak.com
+1b0fac38-2aa7-4539-857e-4d7f96756f35,Oses Çiğköfte,Sultangazi,Turkey,vegan_friendly,false,
+1e44a007-097d-45a5-a9ea-9baf1fc77a1a,Dr. Falafel,Ankara,Turkey,vegan_friendly,false,
+22a5be34-8938-490f-b4d5-423afbfd0fe3,Garda Cafe,Istanbul,Turkey,vegan_friendly,false,http://www.gardacafe.net
+23b6c045-2225-4ee7-ad42-d69152fe3c83,Coffemania,Tatvan,Turkey,vegan_friendly,false,https://coffeemania.com/
+24749587-f31f-4693-8ef0-833ca11c358a,Juicery,Beyoğlu,Turkey,vegan_friendly,false,https://juicery.bademsoft.com/en/menu-tr-english-2/
+25a23fe7-e368-496c-ade1-4dee779087b8,Tarabya Balik Cayyolu,Ankara,Turkey,vegan_friendly,false,https://www.tarabyabalikcisi.com
+29878c65-cd68-4e8f-9ca5-cac7f14cb45d,Parsifal,Istanbul,Turkey,vegan_friendly,false,https://www.parsifalde.com
+29a91bfa-115e-41f2-80b6-db86cef1d3ce,Göveçte Yöresel Yemekler,Izmir,Turkey,vegan_friendly,false,
+2afa9ad6-0ba9-4904-8522-8719d7faf053,240 Derece,Istanbul,Turkey,vegan_friendly,false,
+2c5abfff-2573-4ac1-b987-04e800c04340,Acılım Çiğ Köfte,Kumluca,Turkey,vegan_friendly,false,
+2f8ceabe-d79c-4c9a-b971-78560b2a5237,Pesto Makarna Aydin,aydin,Turkey,vegan_friendly,false,www.pestomakarna.com
+2fc2e380-67cf-4bdf-92c5-4306b78e277b,Ferize Restaurant,Nevsehir,Turkey,vegan_friendly,false,www.ferize.com.tr
+33c9eea6-4010-43fe-9830-da7abb941bf0,Meshur Adiyaman Çigköftecisi Orhan Usta,Osmangazi,Turkey,vegan_friendly,false,
+35f981e8-d6f2-4c82-8e2e-190f66b13328,Glutensiz Kafe | Kaytur,Kayseri,Turkey,vegan_friendly,false,https://www.glutensizkaytur.com/
+36001af1-478c-4274-8139-9e85982dfb1a,Taksim Aktar,Beyoğlu,Turkey,vegan_friendly,false,
+36088706-ea0a-4f35-8d42-13bbd6f5a7ec,Falafel Zone,Beyoğlu,Turkey,vegan_friendly,false,http://falafelzone.blogspot.com
+36ee219d-6540-4da6-8116-052ec778185f,Magnolia,Yalova,Turkey,vegan_friendly,false,https://magnolia.yalova.com//
+3845046e-245c-4956-a48b-d2c9fecb00d6,Postane Cafe,Istanbul,Turkey,vegan_friendly,false,https://postane.co/mekanlar/cafe
+3a8f8693-1cae-4af9-8ec8-4eb647f5266a,Patato,Beyoğlu,Turkey,vegan_friendly,false,
+3c3953b1-d864-4b63-8c98-d26de4513978,Kulübe Moda,Istanbul,Turkey,vegan_friendly,false,
+3e82c856-e16c-4fb4-bb4c-76bf3f12817a,Ejder,Selçuk,Turkey,vegan_friendly,false,
+4045fba7-45ea-49b6-a051-b01b99fb60dd,Semsür Çiğköfte,Uskudar,Turkey,vegan_friendly,false,
+405246fa-6786-43cb-bb2f-a82c3fcd0757,Salkim sögüt,Çeşme,Turkey,vegan_friendly,false,
+42786949-5f8a-468b-bb36-402499cafca4,Community Kitchen,Beyoğlu,Turkey,vegan_friendly,false,
+458fc95e-f1ea-424e-aa01-39b55325be4f,Burger@,Ortaca,Turkey,vegan_friendly,false,
+46f54351-f3d5-4cf3-a8d0-5fa9194774ac,Altınşehir Burger King Popeyes Sbarro,Adiyaman,Turkey,vegan_friendly,false,https://www.tiklagelsin.com/
+4ae3bf10-5704-40a9-b2b9-879e62c193e1,Çiğköftem,Silivri,Turkey,vegan_friendly,false,
+4b3f723e-0525-43ee-b178-6b06ee120227,Jomo Lounge,Mersin,Turkey,vegan_friendly,false,https://jomomersin.com
+4b6c19fc-b8b8-4d1e-938f-600c17e6ca82,Çiğköftem,Şişli,Turkey,vegan_friendly,false,http://cigkoftem.com
+4cff1e9d-1373-434e-b9a0-2812ab61e803,Nevale Mutfak,Istanbul,Turkey,vegan_friendly,false,https://nevalemutfak.dijital.menu/
+4f6fafb7-f747-46b2-8f2c-617e13d2bc64,Kumin Saglikli Lezzetler,Istanbul,Turkey,vegan_friendly,false,
+4f847fd8-a75e-49da-adb5-6f6e0f6ea238,Charms Coffee,Antalya,Turkey,vegan_friendly,false,https://charmscoffee.com/menu/menu.pdf
+50d6f313-c38c-4d81-b29f-efa33049bee3,No:19 Dining,Beyoğlu,Turkey,vegan_friendly,false,http://no19dining.com/
+52355534-808b-47ea-9028-0d865ce36673,kafeNAsanat,Besiktas,Turkey,vegan_friendly,false,
+528dec46-33b8-4112-a5f5-2dac54c601af,Brops World Cuisine,Istanbul,Turkey,vegan_friendly,false,
+54135f45-6b64-4906-8658-298d07ead57e,Divan Restaurant,Aksu,Turkey,vegan_friendly,false,
+5684df6f-0d14-4ebc-a36c-05b40936374d,Vi Coffee & HealthyLiving,Şişli,Turkey,vegan_friendly,false,
+590932f5-b63a-49a8-a204-3b2623a3f078,Vera Beach Hotel,Mugla,Turkey,vegan_friendly,false,https://verabeachhotel.com/
+5951b61e-e14a-4b4e-a22f-8ea39d7bbb9f,Pizza Pan,Adana,Turkey,vegan_friendly,false,https://www.instagram.com/tr.pizzapan
+596d8274-8dfe-4415-abc4-437049b71e19,CigKofte Dunyasi,Adana,Turkey,vegan_friendly,false,http://www.cigkoftedunyasi.com
+5a47bfed-c970-41f6-a1ce-ad75879f81b1,Cigköfte M,Istanbul,Turkey,vegan_friendly,false,
+5a489b8d-8788-4ab5-9940-89fa6bdec0f3,Oburus Momus,Kas,Turkey,vegan_friendly,false,
+5c2849fe-108d-4b38-bb45-b3dccd614c23,TRIA ELEGANCE TERRACE RESTAURANT,Istanbul,Turkey,vegan_friendly,false,https://www.triahotelistanbul.com/
+6001d654-1d86-443e-b8d8-66410f51088f,Atlas Bikery Cafe,Mugla,Turkey,vegan_friendly,false,fethiyebike.com
+60b8ac04-3192-4a52-b8d0-421cd6467207,Oborus Momus,Kas,Turkey,vegan_friendly,false,
+624d0d64-e690-412c-a05c-5103e5f101e3,Çiğköftem,Istanbul,Turkey,vegan_friendly,false,
+6cfe2e22-c58e-4e50-9783-167d6d0bd8b3,Vitaminci 07,Antalya,Turkey,vegan_friendly,false,
+6f1305eb-104c-4662-8084-ac3b213bd3f5,Komagene,Armutlu,Turkey,vegan_friendly,false,
+6ff0c25c-8ccb-43ab-8484-d95496d4f748,Cigkoftem,Istanbul,Turkey,vegan_friendly,false,http://fbf.bz/b/bZa
+705667fe-e65d-4ce3-8e9f-767a1fc3f842,Çiğköftem,Silivri,Turkey,vegan_friendly,false,
+7220d171-9169-4d33-9bb8-262888538279,Gunes Bufe Kahvalti Evi,Datça,Turkey,vegan_friendly,false,http://datcagunesbufe.com/
+7226eef2-c7c5-4fd6-8d40-36856ed3159f,Cafe Berry,Beyoğlu,Turkey,vegan_friendly,false,
+72a5eb2d-03a9-425a-bb5b-87f14155ae8b,House of Memories,Uçhisar Beldesi,Turkey,vegan_friendly,false,
+78d693b0-4139-48ec-8dc0-8a3239c70711,Yemekhane,Sariyer,Turkey,vegan_friendly,false,
+79c90b7d-d95c-4f19-aa2a-b5c3e821dd8c,Hüda-i Çiğ Köfte,Osmangazi,Turkey,vegan_friendly,false,
+7b4c87cb-147c-4bea-a125-bb2cff5f0337,Galata Sahil Cafe,Beyoğlu,Turkey,vegan_friendly,false,
+7be0cc65-d1d9-4d50-a268-38829f2cbcff,Cigkoftem,Silivri,Turkey,vegan_friendly,false,
+7ccdcc4a-bc45-4485-9363-ad110582c603,Cakirgoz Cafe Restaurant,aydin,Turkey,vegan_friendly,false,
+7e700060-3081-4f2d-9dc7-92299279ddb5,Tahin,Istanbul,Turkey,vegan_friendly,false,https://tahin.com.tr/
+7e954c60-0eba-4d22-b449-31b7695ce135,Rize Sahin Tepesi Restaurant & Cafe,rize,Turkey,vegan_friendly,false,
+81e936b8-6df1-4f47-aaed-3b5ae89c25d9,Çiğköftem,Sivas,Turkey,vegan_friendly,false,http://www.cigkoftem.com
+8220ed20-2c46-4b5a-beee-bd7e08ee7ba5,Ambarli Roma Dondurma,Istanbul,Turkey,vegan_friendly,false,
+827ff4ad-2431-431f-951c-ce784f2588db,Istanbul,Serik,Turkey,vegan_friendly,false,
+86f931d4-915f-404e-89fb-1bad31796f4d,Gabo kitchen,Yenişehir,Turkey,vegan_friendly,false,
+8912fd2b-9f56-44ff-9365-f50b294241b7,Mezecim,Mugla,Turkey,vegan_friendly,false,
+8a6c9fa0-eef6-4d9e-80d6-41aaf0daca16,Byzantion Bistro & Restaurant,Istanbul,Turkey,vegan_friendly,false,http://www.byzantionbistro.com
+8a76431d-22c5-48da-a3e4-158eb95b5c77,life BOXtr,Kas,Turkey,vegan_friendly,false,
+8b5f3f8b-c4b9-4fa5-a124-6b8f181404b1,INIIS,Kocaeli,Turkey,vegan_friendly,false,
+8d52dcea-7b41-4dee-af29-719fc15067e7,Sabah Et Lokantasi,Mersin,Turkey,vegan_friendly,false,https://sabahlokantasi.com.tr/
+8f5101d9-24cd-43f0-a239-a2a0ba3d63cb,University Dining Hall,Sarıyer,Turkey,vegan_friendly,false,
+8f61d586-d50c-471d-80d9-ad50790e8863,Koska,Istanbul,Turkey,vegan_friendly,false,http://www.koska.com
+8fe7b5ce-aaec-4d17-9b3c-788569b7a65c,Gabo Kitchen Ankara,Ankara,Turkey,vegan_friendly,false,
+913c4549-87f5-4612-9c9a-159888c9b6ac,Nuri Restaurant,Hatay,Turkey,vegan_friendly,false,
+9884e074-8686-4f8a-8e3b-8444628dfaaf,Çiğköftem,Uşak,Turkey,vegan_friendly,false,
+9bac9212-c076-488f-81db-2832c90692a8,BURGAZ JEOTERMAL OTEL RESTORANT,Lüleburgaz,Turkey,vegan_friendly,false,
+9c082392-e1ef-41a8-9c55-09d978ae54e7,Çiğköftem,Trabzon,Turkey,vegan_friendly,false,
+a03fa099-53b7-4f94-bae6-3f71b0dd0c3f,Cute Gastro Pub,Izmir,Turkey,vegan_friendly,false,
+a0ee1f5a-2888-4305-9409-32c62ac5d842,Happu Antakya-Fine Food,Istanbul,Turkey,vegan_friendly,false,
+a26e2ab7-1afc-4c7b-b7a8-adfd86fbb0b3,Sisters & Harvest,Istanbul,Turkey,vegan_friendly,false,
+a41b204d-eeb5-4a1e-8c11-4a479c34351d,Cantinery,Istanbul,Turkey,vegan_friendly,false,https://www.cantinery.com/
+a481f12a-14be-430e-9ab6-02454f265970,Oses Cigkofte,Istanbul,Turkey,vegan_friendly,false,
+a90949ed-f1a2-4fa5-add9-1586d915751d,Love Cafe Alanya,Alanya,Turkey,vegan_friendly,false,
+a9c2a561-6af2-40ef-9dcc-e5bfbc3be843,Frontiere Istanbul,Istanbul,Turkey,vegan_friendly,false,https://www.frontiereistanbul.com/
+aa7b21d9-9efa-4d95-9b52-a80259197699,Vitamin 07,Antalya,Turkey,vegan_friendly,false,
+abe1275c-b625-42bc-8035-05aaa2a8ebe0,Hünkar Main Restaurant,Aksu,Turkey,vegan_friendly,false,
+acd4dbbc-d066-49cd-a19c-18de37a294ae,Wegain,Beyoğlu,Turkey,vegan_friendly,false,https://www.wegainn.com
+af1bdb8a-de00-4e1c-88a8-b507dd4d4f95,Ahmet-Hasan'ın Yeri,Mardin,Turkey,vegan_friendly,false,
+aff4b7cb-0fe4-43c6-b096-2c5c5e472687,Address Restaurant Cafe & Bar,Mugla,Turkey,vegan_friendly,false,
+b6edfcd0-5608-41ca-8314-a3f212bd96e2,MANDI SEBAM,Istanbul,Turkey,vegan_friendly,false,https://www.mandisebam.com/
+bbe71d75-6530-4f59-8e4d-6f4ece9a9cd2,Chef Coffee,Istanbul,Turkey,vegan_friendly,false,
+bdb5d23d-bf88-48fe-b8aa-702308916fc3,Destan Halk Lokantasi,Istanbul,Turkey,vegan_friendly,false,
+c045a5c4-e8fe-4bc5-9b29-616337e61f0e,Sabah Et Lokantasi Pozcu,Mersin,Turkey,vegan_friendly,false,https://sabahlokantasi.com.tr/
+c0b9c670-664c-42ab-ab1b-4a438dcd44ee,Adıyaman Subaşı Çiğköfte,Antalya,Turkey,vegan_friendly,false,
+c0ef3612-3c15-476f-bd7a-cf90b9e47d0d,180 Coffee & Bakery;180° Coffee Bakery,Istanbul,Turkey,vegan_friendly,false,
+c39371a1-7081-4f3f-ab17-40d5736577aa,BİM,Maltepe,Turkey,vegan_friendly,false,
+c4bd4163-4600-4ab4-ad65-894fd35cbc6a,pizza bulls,Istanbul,Turkey,vegan_friendly,false,
+c5e560ad-4d0a-4994-84f8-5d8ae1356bed,Lapanna Cookies & More,Istanbul,Turkey,vegan_friendly,false,
+c7da0355-608b-45a1-94d4-007464b0ef7f,Sushi-G Asian Restaurant & Market Sancaktepe,Istanbul,Turkey,vegan_friendly,false,
+c9670ca7-7338-4ecd-a4da-9bbfb4f10f22,Ferize Meyhane,Nevsehir,Turkey,vegan_friendly,false,https://www.ferize.com.tr
+d277562a-700c-4e95-8f14-677a49d0a053,Base,Kumluca,Turkey,vegan_friendly,false,http://basebungalows.com
+d2793cb7-4131-41f4-a99b-9c7bebe9ae8b,Gloria Jean's,Istanbul,Turkey,vegan_friendly,false,https://www.gloriajeans.com.tr/
+d32236ed-232a-4f18-818c-0baf7da0147b,Moston Cafe Restoran,Istanbul,Turkey,vegan_friendly,false,www.mostononline.com
+d8908971-6bc2-4fef-ac8c-7d34813d6a6b,Lezzeti İkram Restoran,Merkezefendi,Turkey,vegan_friendly,false,
+da01aacc-059f-4c65-bca7-400072ee394c,Çiğköftem,Çatalca,Turkey,vegan_friendly,false,
+dc517e03-0bf2-4088-aa3b-314e0b198374,fitty feed - clean eating,Istanbul,Turkey,vegan_friendly,false,
+de4a34ac-e6b9-43e6-b48b-b8a713c689f8,Norht Wind Izmir,Izmir,Turkey,vegan_friendly,false,https://northwindhotels.com/rooms/norht-wind-izmir/
+de9143e4-1c79-49c6-a5a7-e4ce33934080,Janus Cappadocia Restaurant,Nevsehir,Turkey,vegan_friendly,false,https://januscappadocia.com.tr/Restaurant
+e13875fc-e151-4ce0-8dbb-ddc537ff0ee1,Çiğköftem,Istanbul,Turkey,vegan_friendly,false,
+e198bada-bc30-48bd-a6a8-4da0edccbb3d,Arka Bahce,Istanbul,Turkey,vegan_friendly,false,
+e2cfafb1-86e1-41ae-91ef-f61e69e00d0b,Sabah Et Lokantasi Mezitli,Mersin,Turkey,vegan_friendly,false,https://sabahlokantasi.com.tr/
+ea7b0aaa-cd17-4004-8a93-9abef1dc562b,Arch Bistro,Istanbul,Turkey,vegan_friendly,false,https://www.archbistro.com/
+ed0b0dca-98b9-473d-95fa-5e6aa3de5533,Çıtırım,Alanya,Turkey,vegan_friendly,false,
+ee2d8a0e-ec1d-48f2-9930-181e526e778b,Divella Bistro Restaurant,Istanbul,Turkey,vegan_friendly,false,
+eeff22bc-39af-4f66-b59a-33ff3471de4e,Agora Ev Yemekleri ve Kahvalti Kavurma,Hopa,Turkey,vegan_friendly,false,
+f187a844-e80d-4af8-8d59-49f81321f4f6,Güneş Büfe Breakfast House,Datça,Turkey,vegan_friendly,false,http://datcagunesbufe.com/
+f7de50e4-227f-4923-8dd0-ecf2f912fea9,Beam bakes,Sarıyer,Turkey,vegan_friendly,false,
+f842d585-360d-4cdf-b1e6-00e491547a29,Komagene etsiz çig köfte,Sındırgı,Turkey,vegan_friendly,false,
+f861c6ab-2b0a-4968-9d0d-32a31fdac00a,Gazi Cigkofte,Istanbul,Turkey,vegan_friendly,false,
+f867a490-f8d8-4ca3-a9a6-c61627710d9c,Çiğköftem,Büyükçekmece,Turkey,vegan_friendly,false,http://www.cigkoftem.com
+f9107deb-2d2b-4469-ae97-b267e8fae998,Maydonoz Doner,Bursa,Turkey,vegan_friendly,false,https://maydonozdoner.com
+fcfe02f2-4b19-480d-a01d-24059fd635ef,Vegisso,Ankara,Turkey,vegan_friendly,false,http://www.vegisso.com
+ff8c67d9-6a5a-4464-9e3d-4a9cb71bbf11,ATESHAN ET KEBAP DONER,Ankara,Turkey,vegan_friendly,false,https://www.ateshan.com.tr/
+0edb4c2e-8a4e-4f62-92e5-4a33947b066d,Submarine,Zagreb,Croatia,vegan_options,false,https://submarineburger.com
+858983d6-5757-4d5d-bf7e-3e508e0cb687,Feel Green,Split,Croatia,vegan_options,false,https://feelgreen.hr
+c14acedd-b3e6-434b-9d1e-c862dd2e9635,Fish House Zadar,Zadar,Croatia,vegan_options,false,
+cfd9b883-19be-40e1-bceb-3689dbe838de,Sv. Nikola,Porec,Croatia,vegan_options,false,https://www.svnikola.com
+e3b14098-75e9-48ef-a270-0d186d31ae9d,StoRija,Rijeka,Croatia,vegan_options,false,https://www.restoranstorija.com.hr/
+0a341e1a-09d4-48fe-a569-cee054ed502c,Mae na Massa,Braga,Portugal,vegan_options,false,https://www.maenamassa.pt/
+18322632-a47c-42f8-b138-e99274c6560b,Nonnas teeth & tomatoes,Ponta Delgada,Portugal,vegan_options,false,https://nonnas.pt
+18900bc8-6889-458f-a8b9-f5868477eb7f,Nola Kitchen,Porto,Portugal,vegan_options,false,https://nola.com.pt
+1a605a00-b0b4-4ac3-954e-47eb111ac6bf,Farinha,Porto,Portugal,vegan_options,false,https://www.farinha-restaurante.com/
+3a51aa76-0dc8-4806-a317-0588da87175d,Cult of Pita,Porto,Portugal,vegan_options,false,https://www.cultofpita.com/
+4036b5eb-c353-4711-b6b6-151016cefe12,Nicolau Cafe,Lisbon,Portugal,vegan_options,false,https://www.ilovenicolau.com/en/our-locations/nicolau/
+410d872f-c2a7-4d61-9e8b-3359ebabdf09,Defuse Cafe,Lisbon,Portugal,vegan_options,false,https://www.defusecafe.com
+54bc494f-9242-4291-885d-05aed6b86ca9,Galeria,Funchal,Portugal,vegan_options,false,https://galeria-restaurante.com/
+836f1dc2-5d1a-411c-8ac5-3572aace0010,Neighbourhood,Lisbon,Portugal,vegan_options,false,https://www.neighbourhoodlisbon.com
+91d3daf9-8b81-475f-8fe2-85677172299f,Munchie,Matosinhos,Portugal,vegan_options,false,https://munchie.pt/
+987ac07a-b39a-4018-b63d-f6232f929d57,La Plage,Carcavelos,Portugal,vegan_options,false,https://www.laplagecarcavelos.com
+98af216a-1446-4273-8b0b-fd203531de80,Zahir Kebab,Lisbon,Portugal,vegan_options,false,zahirkebab.pt
+997cbea6-90cc-4bf9-ba78-4cd90ef8e103,Unique Sushi Lab,Lisbon,Portugal,vegan_options,false,https://uniquesushilab.pt/
+a544af35-b883-475b-adcd-4bc916d28f32,Il Fiume,Braga,Portugal,vegan_options,false,https://www.ilfiume.pt
+a6225dbc-052b-45ea-bdff-ca037c98109a,BAO'S,Porto,Portugal,vegan_options,false,
+ae5b3da3-651a-405c-acbc-115aceceb6e2,Pizza D'Artista - Povoa de Varzim,Povoa de Varzim,Portugal,vegan_options,false,https://pizzadartistagroup.com
+c6353f04-f5e2-4783-be76-7c8d03819c3f,Al Forno da Baixa,Porto,Portugal,vegan_options,false,https://www.facebook.com/francesinhasalfornodabaixa
+d710d690-5c1b-4bb0-be3c-2092ed42e87a,Al-Gharb Coffee Roasters,Albufeira e Olhos de Agua,Portugal,vegan_options,false,https://www.al-gharb.coffee/
+d82cc69a-df0d-42c1-85de-5b640196d94d,MADPIZZA Alvalade,Lisbon,Portugal,vegan_options,false,https://www.instagram.com/madpizza.pt/
+f870bbd0-22a8-45b9-895c-99e7ece5e32f,Café Passaporte,Porto,Portugal,vegan_options,false,https://www.cafepassaporte.com/
+073b2cf5-e8de-49d4-9169-5ba0edb17f1e,Sosrates - Burger & Snack,Istanbul,Turkey,vegan_options,false,www.sosrates.com
+187342b3-5576-4d73-b27c-9a89b87e7c81,Milano Gourmet,Istanbul,Turkey,vegan_options,false,https://www.milanogourmet.com.tr/
+264e8cec-6cae-4231-a6ab-e8ac81d3c47f,Pizza Pieza by Divan,Istanbul,Turkey,vegan_options,false,https://www.divan.com.tr/restoran/pizza-pieza-by-divan
+2bd1669c-c561-4032-9163-e1bfbde67824,240 Derece,Istanbul,Turkey,vegan_options,false,https://www.240derece.com
+3625fb22-79dd-44c1-a74a-70b231b338cf,Address Restaurant Cafe & Bar,Fethiye,Turkey,vegan_options,false,
+37bd79bb-1e72-40f2-aa06-56654ececdb9,Kafeterya,Ankara,Turkey,vegan_options,false,https://kafeterya.metu.edu.tr
+3f3adfc3-81d2-4e96-b9b4-5cc83fbc415e,Niyokki Tepe Prime,Ankara,Turkey,vegan_options,false,https://niyokki.com.tr/
+42f64cf9-48a1-4bda-8a92-9bff49e3dca7,Atlas Bikery Cafe,Fethiye,Turkey,vegan_options,false,fethiyebike.com
+46b98a89-a0ac-410e-8924-8a89c5e9c1e9,240 Derece,Istanbul,Turkey,vegan_options,false,https://www.240derece.com/
+5ca35f96-a7db-4da9-bd6e-24cd44d1aa1d,Atadan Firin,Izmir,Turkey,vegan_options,false,https://www.atadanbakery.com/
+619ebd81-7673-4b2a-9bd4-fcb69d64523f,Oburus Momus,Kas,Turkey,vegan_options,false,http://oburusmomus.com
+70499c42-ce20-4690-93db-c8c9e0d2e06f,Vera Beach Hotel,Fethiye,Turkey,vegan_options,false,https://verabeachhotel.com/
+b8093466-e81c-4363-a85c-cc3a244adc4c,Flow Datca Surf & Beach Hotel Restaurant,Mugla,Turkey,vegan_options,false,https://www.flowdatca.com/
+bb09be5a-000b-48ac-bda5-9ba17c19f71a,Shakespeare,Konyaaltı,Turkey,vegan_options,false,https://www.shakespearebistro.com/
+c2f9fbe1-159d-412e-bc01-b9ae11a8b8b7,Emirgan Köftecisi | Kaytur,Kayseri,Turkey,vegan_options,false,https://www.kaytur.com.tr
+ce3a5037-0b3d-4ee1-81d2-9cda0d6a2336,Kabadayi Burger,Istanbul,Turkey,vegan_options,false,https://www.yemeksepeti.com/kabadayi-burger-pendik-kaynarca-mah-istanbul?affiliateid=ganbr503813&cid=ganbr503813&status=closed
+da00ba91-153a-46df-8fb4-c68187c39c90,Mersin Class Tantuni Doner,Antalya,Turkey,vegan_options,false,https://www.instagram.com/mersinclasstantuni/
+e110e505-7cd3-4889-923c-0a960901d632,Amisos Restoran ve Cafe,Samsun,Turkey,vegan_options,false,https://www.samsunanakent.com/
+f1ace61b-7465-40e3-a229-882b5e242459,Lime Alacati - Istinye Park,Izmir,Turkey,vegan_options,false,https://limealacati.com/
