@@ -37,6 +37,11 @@ const CITY_REDIRECTS: Record<string, Record<string, string>> = {
   },
   'united-kingdom': {
     'city-of-westminster': 'westminster',
+    // "City of London" is the historic Square Mile admin boundary; for
+    // a vegan directory it folds naturally into "London". Audit on
+    // 2026-05-14 showed 1 place lives under the City-of-London slug
+    // and would otherwise orphan.
+    'city-of-london': 'london',
   },
 }
 
