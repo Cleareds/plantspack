@@ -24,9 +24,6 @@ export async function GET(
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // First, get the hashtag ID
-    console.log(`[Hashtag Query] Looking for hashtag: ${tag}`)
-
     const { data: hashtagInfo, error: hashtagError } = await supabase
       .from('hashtags')
       .select('id, tag, usage_count')
@@ -34,7 +31,6 @@ export async function GET(
       .single()
 
     if (hashtagError || !hashtagInfo) {
-      console.log(`[Hashtag Query] Hashtag not found:`, hashtagError)
       return NextResponse.json({
         posts: [],
         hashtag: { tag, usage_count: 0 },
@@ -42,9 +38,6 @@ export async function GET(
       })
     }
 
-    console.log(`[Hashtag Query] Found hashtag:`, hashtagInfo)
-
-    // Step 1: Get post IDs from post_hashtags
     const { data: postHashtagLinks, error: linkError } = await supabase
       .from('post_hashtags')
       .select('post_id, created_at')
@@ -52,19 +45,12 @@ export async function GET(
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
-    console.log(`[Hashtag Query] Post hashtag links:`, {
-      count: postHashtagLinks?.length || 0,
-      error: linkError,
-      postIds: postHashtagLinks?.map(l => l.post_id)
-    })
-
     if (linkError) {
       console.error(`[Hashtag Query] Error fetching post links:`, linkError)
       throw linkError
     }
 
     if (!postHashtagLinks || postHashtagLinks.length === 0) {
-      console.log(`[Hashtag Query] No post links found`)
       return NextResponse.json({
         posts: [],
         hashtag: hashtagInfo,
@@ -121,22 +107,12 @@ export async function GET(
       .is('deleted_at', null)
       .eq('privacy', 'public')
 
-    console.log(`[Hashtag Query] Posts query result:`, {
-      requestedIds: postIds.length,
-      returnedPosts: posts?.length || 0,
-      error: postsError
-    })
-
     if (postsError) {
       console.error(`[Hashtag Query] Error fetching posts:`, postsError)
       throw postsError
     }
 
     const filteredPosts = posts || []
-
-    console.log(`[Hashtag Query] Final result:`, {
-      totalPosts: filteredPosts.length
-    })
 
     // Count actual visible posts for this hashtag
     const { count: actualCount } = await supabase

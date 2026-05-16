@@ -319,7 +319,6 @@ export async function POST(request: NextRequest) {
       throw createError
     }
 
-    console.log('[Packs API] Pack created:', pack.id)
 
     return NextResponse.json({ pack }, { status: 201 })
   } catch (error) {

@@ -240,7 +240,6 @@ export async function PATCH(
       throw updateError
     }
 
-    console.log('[Pack API] Pack updated:', pack.id)
 
     return NextResponse.json({ pack: updatedPack })
   } catch (error) {
@@ -313,7 +312,6 @@ export async function DELETE(
       throw deleteError
     }
 
-    console.log('[Pack API] Pack deleted:', pack.id)
 
     return NextResponse.json({ success: true })
   } catch (error) {

@@ -64,7 +64,6 @@ export async function DELETE(
 
     if (error) throw error
 
-    console.log('[Pack Posts API] Post removed from pack:', postId)
 
     return NextResponse.json({ success: true })
   } catch (error) {

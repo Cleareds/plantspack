@@ -98,8 +98,7 @@ export async function POST(request: NextRequest) {
 
       if (created && !createError) {
         hashtagIds.push(...created.map(h => h.id))
-        console.log(`[Hashtags] Created ${created.length} new hashtags:`, newTags)
-      } else {
+      } else if (createError) {
         console.error(`[Hashtags] Error creating hashtags:`, createError)
       }
     }
@@ -110,8 +109,6 @@ export async function POST(request: NextRequest) {
         post_id: postId,
         hashtag_id: hashtagId
       }))
-
-      console.log(`[Hashtags] Linking ${hashtagIds.length} hashtags to post ${postId}`)
 
       const { error: linkError } = await supabase
         .from('post_hashtags')
@@ -124,10 +121,6 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         )
       }
-
-      console.log(`[Hashtags] Successfully linked ${hashtagIds.length} hashtags to post ${postId}`)
-    } else {
-      console.log(`[Hashtags] No hashtags to link for post ${postId}`)
     }
 
     return NextResponse.json({

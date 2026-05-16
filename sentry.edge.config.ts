@@ -8,8 +8,8 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://75f5c58e2777ced9c1613bcf3d1aa463@o4510374990118912.ingest.de.sentry.io/4510374991364176",
 
-  // Sample 10% of transactions in production to reduce costs
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1,
+  // 2% sampling in prod — matches sentry.server.config.ts
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.02 : 1,
 
   // Enable logs to be sent to Sentry (only errors in production)
   enableLogs: process.env.NODE_ENV !== 'production',

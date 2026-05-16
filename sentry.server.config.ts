@@ -7,9 +7,10 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://75f5c58e2777ced9c1613bcf3d1aa463@o4510374990118912.ingest.de.sentry.io/4510374991364176",
 
-  // Sample 10% of transactions in production to reduce costs
-  // Adjust based on traffic: 0.1 = 10%, 0.05 = 5%, 0.01 = 1%
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1,
+  // Sample 2% of transactions in production. At 4.8M function invocations/mo
+  // even 10% = 480K Sentry transactions; 2% keeps a representative sample
+  // while staying within free quotas and cutting Sentry-side breadcrumb noise.
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.02 : 1,
 
   // Enable logs to be sent to Sentry (only errors in production)
   enableLogs: process.env.NODE_ENV !== 'production',
