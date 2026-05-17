@@ -172,6 +172,22 @@ export async function PUT(
       }
     }
 
+    // Defensive: chk_secondary_tags_limit enforces max 3. Clip server-side so a
+    // stale or buggy client can't hit the constraint and surface as a generic
+    // "DB policy" error. UI also caps at 3 but belt-and-braces here.
+    if (Array.isArray(updateData.secondary_tags)) {
+      const seen = new Set<string>()
+      updateData.secondary_tags = updateData.secondary_tags
+        .filter((t: unknown): t is string => typeof t === 'string' && t.trim().length > 0)
+        .map((t: string) => t.trim().toLowerCase())
+        .filter((t: string) => {
+          if (seen.has(t)) return false
+          seen.add(t)
+          return true
+        })
+        .slice(0, 3)
+    }
+
     // Keep images and image_urls in sync (canonical field is `images`)
     if (updateData.images) {
       updateData.image_urls = updateData.images

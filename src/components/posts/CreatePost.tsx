@@ -760,15 +760,19 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                             { group: 'Other', tags: ['Budget-Friendly', 'Kid-Friendly', 'Batch Cooking', 'Holiday', 'BBQ & Grill'] },
                                         ].map(group => group.tags.map(tag => {
                                             const isSelected = secondaryTags.includes(tag.toLowerCase());
+                                            const atLimit = !isSelected && secondaryTags.length >= 3;
                                             return (
                                                 <button key={tag} type="button"
+                                                    disabled={atLimit}
                                                     onClick={() => {
                                                         const lower = tag.toLowerCase();
                                                         if (isSelected) setSecondaryTags(prev => prev.filter(t => t !== lower));
-                                                        else setSecondaryTags(prev => [...prev, lower]);
+                                                        else if (secondaryTags.length < 3) setSecondaryTags(prev => [...prev, lower]);
                                                     }}
                                                     className={`px-2 py-0.5 rounded-full text-xs transition-colors ${
-                                                        isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
+                                                        isSelected ? 'bg-primary text-on-primary'
+                                                        : atLimit ? 'bg-surface-container-lowest text-outline ghost-border opacity-40 cursor-not-allowed'
+                                                        : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
                                                     }`}>
                                                     {tag}
                                                 </button>
@@ -927,15 +931,19 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 <div className="flex flex-wrap gap-1.5">
                                     {['Vegan Breakfast', 'Fully Vegan', 'Eco-Friendly', 'Pet-Friendly', 'City Center', 'Nature/Rural', 'Kitchen Available', 'Pool/Spa'].map(tag => {
                                         const isSelected = secondaryTags.includes(tag.toLowerCase());
+                                        const atLimit = !isSelected && secondaryTags.length >= 3;
                                         return (
                                             <button key={tag} type="button"
+                                                disabled={atLimit}
                                                 onClick={() => {
                                                     const lower = tag.toLowerCase();
                                                     if (isSelected) setSecondaryTags(prev => prev.filter(t => t !== lower));
-                                                    else setSecondaryTags(prev => [...prev, lower]);
+                                                    else if (secondaryTags.length < 3) setSecondaryTags(prev => [...prev, lower]);
                                                 }}
                                                 className={`px-2 py-0.5 rounded-full text-xs transition-colors ${
-                                                    isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
+                                                    isSelected ? 'bg-primary text-on-primary'
+                                                    : atLimit ? 'bg-surface-container-lowest text-outline ghost-border opacity-40 cursor-not-allowed'
+                                                    : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
                                                 }`}>
                                                 {tag}
                                             </button>
@@ -955,15 +963,19 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                                 <div className="flex flex-wrap gap-1.5">
                                     {['Animal Sanctuary', 'Vegan Non-Profit', 'Advocacy Group', 'Food Bank', 'Community Kitchen', 'Education', 'Health & Wellness', 'Environmental'].map(tag => {
                                         const isSelected = secondaryTags.includes(tag.toLowerCase());
+                                        const atLimit = !isSelected && secondaryTags.length >= 3;
                                         return (
                                             <button key={tag} type="button"
+                                                disabled={atLimit}
                                                 onClick={() => {
                                                     const lower = tag.toLowerCase();
                                                     if (isSelected) setSecondaryTags(prev => prev.filter(t => t !== lower));
-                                                    else setSecondaryTags(prev => [...prev, lower]);
+                                                    else if (secondaryTags.length < 3) setSecondaryTags(prev => [...prev, lower]);
                                                 }}
                                                 className={`px-2 py-0.5 rounded-full text-xs transition-colors ${
-                                                    isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
+                                                    isSelected ? 'bg-primary text-on-primary'
+                                                    : atLimit ? 'bg-surface-container-lowest text-outline ghost-border opacity-40 cursor-not-allowed'
+                                                    : 'bg-surface-container-lowest text-on-surface-variant ghost-border hover:bg-surface-container'
                                                 }`}>
                                                 {tag}
                                             </button>
