@@ -388,17 +388,60 @@ export default function DataQualityPage() {
           >
             Summer Hub audit →
           </Link>
-          <Link
-            href="/admin/data-quality/belgium"
-            className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium"
-          >
-            Belgium audit →
-          </Link>
           <button onClick={fetchStats} disabled={statsLoading}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg text-sm disabled:opacity-50">
             <RefreshCw className={`h-3.5 w-3.5 ${statsLoading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
+        </div>
+      </div>
+
+      {/* Country audits — focused drill-downs for the countries we've worked through */}
+      <div className="mb-6 rounded-2xl bg-gray-900/40 border border-gray-800 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h2 className="text-sm font-semibold text-white">Country audits</h2>
+            <p className="text-xs text-gray-500 mt-0.5">Per-country drill-down (uses the same audit UI as Belgium).</p>
+          </div>
+          <a
+            href="/api/admin/data-quality/coverage"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-emerald-400"
+            title="JSON: all-country coverage stats"
+          >
+            /api/admin/data-quality/coverage ↗
+          </a>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { slug: 'belgium', label: 'Belgium', color: 'bg-emerald-700 hover:bg-emerald-600' },
+            { slug: 'croatia', label: 'Croatia', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'portugal', label: 'Portugal', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'spain', label: 'Spain', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'italy', label: 'Italy', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'greece', label: 'Greece', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'turkey', label: 'Turkey', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'germany', label: 'Germany', color: 'bg-sky-700 hover:bg-sky-600' },
+          ].map(c => (
+            <div key={c.slug} className="flex items-stretch rounded-lg overflow-hidden">
+              <Link
+                href={`/admin/data-quality/${c.slug}`}
+                className={`px-3 py-1.5 ${c.color} text-white text-sm font-medium`}
+              >
+                {c.label} audit →
+              </Link>
+              <a
+                href={`/api/admin/data-quality/coverage/${c.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs border-l border-gray-700"
+                title="JSON: full coverage payload for this country"
+              >
+                JSON
+              </a>
+            </div>
+          ))}
         </div>
       </div>
 
