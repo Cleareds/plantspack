@@ -4,7 +4,10 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { Suspense } from 'react'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
 
-export const revalidate = 3600
+// Always fresh: new recipes added through the post composer must appear in
+// the directory immediately, not after the next ISR window. The page is not
+// a hot route (~30 visits/day) so the extra invocations are negligible.
+export const revalidate = 0
 
 export const metadata: Metadata = {
   title: 'Vegan Recipes — Plant-Based Cooking Made Easy | PlantsPack',

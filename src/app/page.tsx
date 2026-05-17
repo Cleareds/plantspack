@@ -160,7 +160,8 @@ async function getRecentPosts() {
   const { data } = await supabase
     .from('posts')
     .select(`
-      id, title, content, category, images, image_url, created_at, slug, is_pinned,
+      id, title, content, category, secondary_tags, recipe_data, event_data, product_data,
+      images, image_url, created_at, slug, is_pinned,
       users!inner(username, first_name, avatar_url),
       post_reactions(count),
       comments(count)
