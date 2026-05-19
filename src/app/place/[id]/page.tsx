@@ -148,9 +148,26 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const location = [place.city, place.country].filter(Boolean).join(', ')
   const rating = place.average_rating > 0 ? ` · ⭐ ${place.average_rating.toFixed(1)}` : ''
 
+  // Branch-aware title differentiation. Chains like "Max & Benito" / "Pret a
+  // Manger" / "Anker" have many same-name listings in one city; without a
+  // street-level discriminator GSC flags younger pages as "Duplicate, Google
+  // chose a different canonical". Extract the first segment of the address
+  // (typically "Rotenturmstraße 27") and inject it between the name and the
+  // category tail when it adds new signal beyond the name and city.
+  const addr = (place.address ?? '').trim()
+  const firstSeg = addr.split(',')[0]?.trim() ?? ''
+  const cityLower = (place.city ?? '').toLowerCase()
+  const nameLower = (place.name ?? '').toLowerCase()
+  const usefulStreet = firstSeg
+    && firstSeg.length > 3
+    && firstSeg.length < 60
+    && !firstSeg.toLowerCase().includes(cityLower)
+    && !nameLower.includes(firstSeg.toLowerCase())
+  const namePart = usefulStreet ? `${place.name} at ${firstSeg}` : place.name
+
   const title = location
-    ? `${place.name} — ${veganTag} ${cat} in ${location}${rating} | PlantsPack`
-    : `${place.name} — ${veganTag} ${cat}${rating} | PlantsPack`
+    ? `${namePart} — ${veganTag} ${cat} in ${location}${rating} | PlantsPack`
+    : `${namePart} — ${veganTag} ${cat}${rating} | PlantsPack`
 
   // Build a rich fallback description if the place has no description
   const cuisines = (place as any).cuisine_types?.filter((c: string) => c && c !== 'vegan').slice(0, 3) || []
@@ -191,9 +208,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // Indexation hygiene — noindex thin places that drag down site quality.
   // Always index a place that is fully_vegan / mostly_vegan (rare and unique
   // signal worth preserving) OR that has at least one quality signal:
-  // a real description (>=50 chars), an image, a website, or hours.
+  // a real description (>=80 chars — was 50 before; GSC May 2026 flagged
+  // 49-60 char pages as "Duplicate, Google chose a different canonical" when
+  // they shared name+city with a chain sibling), an image, a website, or hours.
+  // The description threshold doubles as a chain-branch differentiation gate.
   const vl = (place as any).vegan_level
-  const hasDesc = (place.description ?? '').trim().length >= 50
+  const hasDesc = (place.description ?? '').trim().length >= 80
   const hasImage = !!(place as any).main_image_url || (place.images?.length ?? 0) > 0
   const hasWeb = !!(place as any).website
   const hasHours = !!(place as any).opening_hours && Object.keys((place as any).opening_hours).length > 0
@@ -206,7 +226,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     alternates: { canonical: `https://www.plantspack.com/place/${place.slug || id}` },
     robots: isThin ? { index: false, follow: true } : undefined,
     openGraph: {
-      title: `${place.name} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
+      title: `${namePart} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
       description,
       type: 'website',
       siteName: 'PlantsPack',
@@ -218,7 +238,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ...(image ? {
       twitter: {
         card: 'summary_large_image' as const,
-        title: `${place.name} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
+        title: `${namePart} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
         description,
         images: [image],
       },
@@ -452,7 +472,28 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   </span>
                 )}
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-on-surface mb-2">{place.name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-on-surface mb-2">
+                {place.name}
+                {(() => {
+                  // Branch-aware H1 suffix mirroring the title logic in
+                  // generateMetadata: when the address has a clear street-level
+                  // first segment, render it as muted sub-text so Google sees
+                  // a unique H1 per chain branch.
+                  const a = (place.address ?? '').trim()
+                  const seg = a.split(',')[0]?.trim() ?? ''
+                  const c = (place.city ?? '').toLowerCase()
+                  const n = (place.name ?? '').toLowerCase()
+                  const useful = seg
+                    && seg.length > 3
+                    && seg.length < 60
+                    && !seg.toLowerCase().includes(c)
+                    && !n.includes(seg.toLowerCase())
+                  if (!useful) return null
+                  return (
+                    <span className="block text-sm font-normal text-on-surface-variant mt-1">{seg}</span>
+                  )
+                })()}
+              </h1>
               <div className="mb-3 flex items-center gap-3 flex-wrap">
                 <RatingBadge
                   rating={place.average_rating}
