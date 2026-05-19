@@ -153,11 +153,11 @@ export default async function BlogIndex() {
                   </p>
                 </div>
                 {/* 2x2 collage of Mediterranean summer cities. Pulls from the
-                    existing optimised city heroes (already resized to 1280px
-                    WebP and cached on Supabase), routed through /_next/image
-                    so each ~100px thumbnail downloads ~5-15 KB instead of the
-                    full source. Falls back to silk-gradient if any city image
-                    is missing. */}
+                    1600x900 city heroes on Supabase. Routed through /_next/image
+                    so each tile downloads at retina-sharp size for the actual
+                    rendered footprint (~200-260px on desktop, doubled for 2x
+                    displays). Falls back to silk-gradient if any city image is
+                    missing. */}
                 {collage.length === 4 ? (
                   <div className="md:col-span-2 hidden md:grid grid-cols-2 gap-1 p-3">
                     {collage.map(({ city, country, src }) => (
@@ -169,8 +169,8 @@ export default async function BlogIndex() {
                           src={src!}
                           alt={`${city}, ${country}`}
                           fill
-                          sizes="120px"
-                          quality={55}
+                          sizes="(min-width: 1024px) 260px, 200px"
+                          quality={82}
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
