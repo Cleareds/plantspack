@@ -83,12 +83,16 @@ export default function VerificationFooter({
   const community = communityState(isVerified, tags)
   const level = verificationLevel ?? 0
   const isAdminReviewed = verificationMethod === 'admin_review'
-  // Admin review is a stronger signal than AI verification — render an
-  // explicit "Admin-reviewed" line instead of the generic "AI-verified"
-  // copy so admins who promote a place see their action reflected.
+  const isAIVerified = verificationMethod === 'ai_verified'
+  // Admin review and AI verification are stronger signals than dataset import.
+  // Both require the explicit verification_method to be set — CLI batch tags
+  // (e.g. germany-verification-bump-2026-05-19) do NOT promote to these labels
+  // because no admin clicked through them and no AI cross-check was run.
   const showAdminLine = isAdminReviewed && community !== 'confirmed'
-  const showAILine = !isAdminReviewed && level >= 2 && community !== 'confirmed' // when community-confirmed, AI line is redundant noise
-  const showSourcedLine = level === 1 && !isAdminReviewed && community !== 'confirmed' // L1-only places get the sourced label
+  const showAILine = isAIVerified && !isAdminReviewed && community !== 'confirmed'
+  // Sourced line covers everything else at level >= 1 that doesn't qualify for
+  // admin/AI labels — including batch-cross-referenced places at level >= 2.
+  const showSourcedLine = level >= 1 && !isAdminReviewed && !isAIVerified && community !== 'confirmed'
   const showHonestNote = level === 0 // basically never (every place is at least L1) but here for completeness
 
   return (
@@ -124,7 +128,17 @@ export default function VerificationFooter({
         </div>
       )}
 
-      {showSourcedLine && (
+      {showSourcedLine && level >= 3 && (
+        <div className="flex items-start gap-2">
+          <Database className="h-4 w-4 text-on-surface-variant flex-shrink-0 mt-0.5" />
+          <div>
+            <span className="font-medium text-on-surface">Cross-referenced</span>
+            <span className="text-on-surface-variant">{' '}across multiple vegan-first sources. Awaiting admin or community confirmation.</span>
+          </div>
+        </div>
+      )}
+
+      {showSourcedLine && level < 3 && (
         <div className="flex items-start gap-2">
           <Database className="h-4 w-4 text-on-surface-variant flex-shrink-0 mt-0.5" />
           <div>

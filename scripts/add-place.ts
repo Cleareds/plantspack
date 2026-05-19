@@ -444,13 +444,20 @@ async function main() {
     country: input.country,
     vegan_level: input.vegan_level,
     verification_status: PENDING ? 'pending' : 'approved',
-    is_verified: !PENDING,
-    // Places added via this script are admin-curated (Claude is asked by an
-    // admin to add a specific place after manual confirmation). Mark them as
-    // admin_review at level 3 so the public verification footer reads
-    // "Confirmed - Admin-reviewed" instead of "Confirmed - Imported".
+    // is_verified=true is reserved for genuine community/admin confirmation
+    // taken through the data-quality page or place page UI. CLI runs never
+    // claim that signal; they set verification_level + verification_method
+    // honestly and leave is_verified=false so the footer doesn't fake a
+    // green "Confirmed" badge.
+    is_verified: false,
+    // verification_level: PENDING=1, IMPORTED=2 (single dataset), AI_VERIFIED=2
+    // (single source + AI cross-check), default CLI add-place=3 (admin
+    // researched + cross-checked but did NOT manually click Admin-review).
     verification_level: PENDING ? 1 : (IMPORTED || AI_VERIFIED ? 2 : 3),
-    verification_method: PENDING ? null : (IMPORTED ? 'imported' : (AI_VERIFIED ? 'ai_verified' : 'admin_review')),
+    // verification_method intentionally never set to 'admin_review' from CLI.
+    // 'admin_review' is only assigned when an admin uses the data-quality
+    // page or place page UI to confirm a record manually.
+    verification_method: PENDING ? null : (AI_VERIFIED ? 'ai_verified' : 'imported'),
     last_verified_at: PENDING ? null : new Date().toISOString(),
     source,
     source_id,

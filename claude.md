@@ -94,6 +94,20 @@ When writing copy about the platform:
 
 This file (claude.md) should be read and respected in ALL sessions in this directory.
 
+## 🚫 ABSOLUTE RULE: CLI work never claims Admin-reviewed or community-confirmed
+
+**`verification_method = 'admin_review'` is reserved for actions taken through the data-quality page or place page UI.** A human clicking the Admin button. Nothing in CLI scripts may set this value.
+
+**`is_verified = true` is reserved for genuine community/admin confirmation through the UI.** CLI scripts must leave `is_verified=false` so the public footer doesn't fake a green "Confirmed" badge.
+
+In practice:
+- `scripts/add-place.ts` already enforces this: it sets `verification_method='imported'` (or `'ai_verified'` with the AI flag) and `is_verified=false` regardless of which mode is used.
+- Bulk update scripts must use a descriptive `verification_method` value (e.g. `germany-osm-gap-2026-05-19`) — NEVER `admin_review`.
+- Bulk update scripts must NOT set `is_verified=true`.
+- `verification_level` may still be promoted to 2 or 3 via CLI based on cross-referenced signals (OSM, vegan name pattern, audited via WebSearch, etc.). The footer reads "Cross-referenced across multiple vegan-first sources" at L3, which is honest.
+
+Why: vegans, business owners, and partners spot inflated trust claims fast. Saying "Admin-reviewed" or "Confirmed" when no human clicked through breaks trust the moment it's discovered. Per [data policy] only what's literally true ships.
+
 ## Authenticated CLI Tools
 
 All the following CLI tools are installed and authenticated on this machine:
