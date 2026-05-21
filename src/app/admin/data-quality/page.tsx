@@ -423,6 +423,7 @@ export default function DataQualityPage() {
             { slug: 'greece', label: 'Greece', color: 'bg-sky-700 hover:bg-sky-600' },
             { slug: 'turkey', label: 'Turkey', color: 'bg-sky-700 hover:bg-sky-600' },
             { slug: 'germany', label: 'Germany', color: 'bg-sky-700 hover:bg-sky-600' },
+            { slug: 'brazil', label: 'Brazil', color: 'bg-amber-700 hover:bg-amber-600' },
           ].map(c => (
             <div key={c.slug} className="flex items-stretch rounded-lg overflow-hidden">
               <Link
