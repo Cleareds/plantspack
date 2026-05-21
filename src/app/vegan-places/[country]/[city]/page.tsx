@@ -66,6 +66,7 @@ import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import { getCityIntro } from '@/lib/city-intros'
 import { getRegionForCity, getRegionCityStats } from '@/lib/regions'
+import { getCountryAuditPost } from '@/lib/country-audit-post'
 import { createAdminClient } from '@/lib/supabase-admin'
 
 // SEO: city pages must be cacheable so Google spends crawl budget on them.
@@ -424,6 +425,12 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   // city not assigned to a region.
   const region = await getRegionForCity(country, cityName)
 
+  // Surface the country-level audit blog post on the city page too. When a
+  // country has a published audit, every city inside it benefits from the
+  // editorial context + internal link to the post (the user can also reach
+  // it from the country page; we duplicate the entry point for the city flow).
+  const auditPost = await getCountryAuditPost(country)
+
   // Compute the city centroid from its places (cheap — already in memory).
   // Used to find nearby cities, and also handy for any future "near me"
   // features on this page.
@@ -711,6 +718,39 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                 <span className="text-on-surface-variant"> — see every vegan place across the region.</span>
               </div>
               <span className="text-primary text-sm font-medium flex-shrink-0">View region →</span>
+            </div>
+          </Link>
+        )}
+
+        {/* Country-audit blog callout — shown on every city within a country
+            that has a published audit post. Same callout shape as the country
+            page so users get a consistent entry point and Google sees the
+            audit referenced from many internal pages. */}
+        {auditPost && (
+          <Link
+            href={`/blog/${auditPost.slug}`}
+            className="block mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
+          >
+            <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
+              {auditPost.image_url && (
+                <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
+                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                </div>
+              )}
+              <div className="flex-1 p-5 md:p-6">
+                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
+                  How we audited {countryName}
+                </div>
+                <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
+                  {auditPost.title}
+                </h2>
+                <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                  {auditPost.description}
+                </p>
+                <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
+                  Read the audit →
+                </span>
+              </div>
             </div>
           </Link>
         )}

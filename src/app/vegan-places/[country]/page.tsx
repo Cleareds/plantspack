@@ -304,6 +304,39 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             authoritative writeup of how this country's directory was built.
             Strong internal-link signal for the audit post; honest signal to
             visitors that the data is hand-curated, not just imported. */}
+        {/* Summer hub callout — links to /vegan-summer-destinations from the
+            six countries that are featured in it. Season-gated like the
+            homepage banner so it disappears after the Mediterranean season. */}
+        {(() => {
+          const SUMMER_HUB_COUNTRIES = new Set(['italy','spain','greece','portugal','croatia','turkey'])
+          const m = new Date().getUTCMonth()
+          const inSeason = m >= 4 && m <= 8
+          if (!inSeason || !SUMMER_HUB_COUNTRIES.has(country)) return null
+          return (
+            <Link
+              href="/vegan-summer-destinations"
+              className="block mb-6 group bg-primary/5 hover:bg-primary/10 border border-primary/30 rounded-2xl overflow-hidden editorial-shadow transition-colors"
+            >
+              <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
+                <div className="flex-1 p-5 md:p-6">
+                  <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
+                    Featured guide · Summer 2026
+                  </div>
+                  <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
+                    Vegan Summer Destinations in Europe
+                  </h2>
+                  <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                    {countryName} is one of six Mediterranean countries in PlantsPack's seasonal vegan-travel hub - 29 destinations curated for plant-based summer trips.
+                  </p>
+                  <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
+                    Open the hub →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          )
+        })()}
+
         {auditPost && (
           <Link
             href={`/blog/${auditPost.slug}`}
