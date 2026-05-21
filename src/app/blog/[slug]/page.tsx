@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { marked } from 'marked'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { renderBlogContent } from '@/lib/blog-renderer'
 import { createClient } from '@/lib/supabase-server'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import BlogEngagement from '@/components/blog/BlogEngagement'
@@ -136,13 +136,16 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     : `@${article.users.username}`
   const url = `https://www.plantspack.com/blog/${article.slug || article.id}`
 
-  // Render content as markdown
-  marked.setOptions({ breaks: true })
-  const bodyHtml = await marked(article.content)
+  // Render content as markdown with custom extensions ([[place:slug]] cards)
+  const rendered = await renderBlogContent(article.content)
+  const bodyHtml = rendered.html
 
   // Pull a short clean description from the body for SEO + JSON-LD.
+  // Strip place tokens, markdown images and links, then take the first 197 chars.
   const description = article.content
-    .replace(/\[(.+?)\]\(.+?\)/g, '$1')   // strip markdown links, keep text
+    .replace(/\[\[place:[a-z0-9-]+\]\]/g, '')
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, '')   // strip markdown images
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')      // strip links, keep anchor text
     .replace(/[#*_`>-]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
@@ -151,6 +154,24 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
 
   const wordCount = (article.content || '').trim().split(/\s+/).length
   const keywords = Array.isArray((article as any).tags) ? (article as any).tags as string[] : []
+
+  // FAQ schema: extract H2 "FAQ" or "Frequently asked questions" section and its child Q/A pairs.
+  // Markdown convention used in posts: `### Question?` followed by paragraph answer.
+  const faqMatch = article.content.match(/##+\s*(?:FAQ|Frequently asked questions)[^\n]*\n([\s\S]+?)(?=\n##\s|\n---|\n\*\*Want|\Z)/i)
+  const faqItems: { q: string; a: string }[] = []
+  if (faqMatch) {
+    const block = faqMatch[1]
+    const qaRegex = /###\s+([^\n]+?)\s*\n([\s\S]+?)(?=\n###\s|$)/g
+    for (const m of block.matchAll(qaRegex)) {
+      const q = m[1].trim().replace(/[?]?$/, '?')
+      const a = m[2]
+        .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+        .replace(/[#*_`>]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (a) faqItems.push({ q, a })
+    }
+  }
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -185,10 +206,41 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     { name: title, url },
   ])
 
+  // ItemList of all places referenced via [[place:slug]] tokens, in order.
+  const itemListJsonLd = rendered.places.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Places mentioned in: ${title}`,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    numberOfItems: rendered.places.length,
+    itemListElement: rendered.places.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://www.plantspack.com/place/${p.slug}`,
+      name: p.name,
+    })),
+  } : null
+
+  const faqJsonLd = faqItems.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  } : null
+
   return (
     <div className="min-h-screen bg-surface">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
+      {itemListJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
+      )}
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
 
       {heroImage && (
         <div className="w-full aspect-[21/9] md:aspect-[3/1] overflow-hidden bg-surface-container-low">
