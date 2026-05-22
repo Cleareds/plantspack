@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { checkQuota, logScan, hashImage, type ToolName, LIMITS } from '@/lib/tool-quota'
-import { preClassify, scanImage } from '@/lib/tool-scanner'
+import { preClassify, scanImage, scanText } from '@/lib/tool-scanner'
 import crypto from 'crypto'
 
 export const runtime = 'nodejs'
-export const maxDuration = 30
+export const maxDuration = 60
 
 const GUEST_COOKIE = 'pp_tools_guest'
+const MAX_IMAGES_PER_SCAN = 5
 
 async function getOrSetGuestId(): Promise<string> {
   const jar = await cookies()
@@ -33,8 +34,19 @@ function getIp(req: NextRequest): string | null {
   )
 }
 
+function decodeDataUrl(dataUrl: string): Buffer | null {
+  if (!dataUrl.startsWith('data:image/')) return null
+  const commaIdx = dataUrl.indexOf(',')
+  if (commaIdx < 0) return null
+  try {
+    return Buffer.from(dataUrl.slice(commaIdx + 1), 'base64')
+  } catch {
+    return null
+  }
+}
+
 export async function POST(req: NextRequest) {
-  let body: { tool?: ToolName; imageDataUrl?: string }
+  let body: { tool?: ToolName; imageDataUrls?: string[]; imageDataUrl?: string; text?: string }
   try {
     body = await req.json()
   } catch {
@@ -42,27 +54,54 @@ export async function POST(req: NextRequest) {
   }
 
   const tool = body.tool
-  const dataUrl = body.imageDataUrl
   if (!tool || (tool !== 'ingredient' && tool !== 'menu')) {
     return NextResponse.json({ error: 'Invalid tool' }, { status: 400 })
   }
-  if (!dataUrl || !dataUrl.startsWith('data:image/')) {
-    return NextResponse.json({ error: 'Missing image' }, { status: 400 })
+
+  // Normalise input: accept legacy imageDataUrl (single), new imageDataUrls (array), or text
+  const text = body.text?.trim()
+  const dataUrls: string[] = body.imageDataUrls
+    ? body.imageDataUrls
+    : body.imageDataUrl
+      ? [body.imageDataUrl]
+      : []
+  const inputKind: 'text' | 'images' = text && !dataUrls.length ? 'text' : 'images'
+
+  if (inputKind === 'text' && !text) {
+    return NextResponse.json({ error: 'Empty text' }, { status: 400 })
+  }
+  if (inputKind === 'images') {
+    if (dataUrls.length === 0) {
+      return NextResponse.json({ error: 'No image provided' }, { status: 400 })
+    }
+    if (dataUrls.length > MAX_IMAGES_PER_SCAN) {
+      return NextResponse.json({ error: `Max ${MAX_IMAGES_PER_SCAN} images per scan` }, { status: 400 })
+    }
+    if (tool === 'ingredient' && dataUrls.length > 1) {
+      return NextResponse.json({ error: 'Ingredient scanner accepts one image at a time' }, { status: 400 })
+    }
   }
 
-  // Decode + hash + size-check
-  const commaIdx = dataUrl.indexOf(',')
-  const b64 = dataUrl.slice(commaIdx + 1)
-  let buf: Buffer
-  try {
-    buf = Buffer.from(b64, 'base64')
-  } catch {
-    return NextResponse.json({ error: 'Invalid image data' }, { status: 400 })
+  // Decode + size check images
+  const buffers: Buffer[] = []
+  if (inputKind === 'images') {
+    for (const url of dataUrls) {
+      const buf = decodeDataUrl(url)
+      if (!buf) return NextResponse.json({ error: 'Invalid image data' }, { status: 400 })
+      if (buf.byteLength > 8 * 1024 * 1024) {
+        return NextResponse.json({ error: 'One of the images is over 8MB after downscale.' }, { status: 413 })
+      }
+      buffers.push(buf)
+    }
   }
-  if (buf.byteLength > 8 * 1024 * 1024) {
-    return NextResponse.json({ error: 'Image too large (max 8MB after downscale).' }, { status: 413 })
+
+  // Image hash: for text we hash the text content; for multi-image we hash all concatenated.
+  let contentHash: string
+  if (inputKind === 'text') {
+    contentHash = hashImage(Buffer.from(text!, 'utf8'))
+  } else {
+    contentHash = hashImage(Buffer.concat(buffers))
   }
-  const imageHash = hashImage(buf)
 
   // Identify caller
   const supabase = await createServerClient()
@@ -71,9 +110,8 @@ export async function POST(req: NextRequest) {
   const guestId = userId ? null : await getOrSetGuestId()
   const ip = getIp(req)
 
-  const ctx = { userId, guestId, ip, tool, imageHash }
+  const ctx = { userId, guestId, ip, tool, imageHash: contentHash }
 
-  // Quota + cache check
   const quota = await checkQuota(ctx)
   if (!quota.allowed) {
     return NextResponse.json(
@@ -85,37 +123,44 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ result: quota.cached, tier: quota.tier, cached: true })
   }
 
-  // Pre-classifier (Y/N gate)
+  // Pre-classifier (images only; for text we already do a length check)
   let preCost = 0
-  try {
-    const pre = await preClassify(dataUrl, tool)
-    preCost = pre.costUsd
-    if (!pre.ok) {
-      await logScan({
-        ctx,
-        costUsd: preCost,
-        rejected: true,
-        rejectReason: `pre-classifier said not a ${tool}`,
-      })
-      return NextResponse.json(
-        {
-          error:
-            tool === 'ingredient'
-              ? "That doesn't look like an ingredient label. Try a closer photo of the back of the package."
-              : "That doesn't look like a menu. Try a clearer photo of the printed menu.",
-          tier: quota.tier,
-        },
-        { status: 422 },
-      )
+  if (inputKind === 'images') {
+    try {
+      // Only pre-classify the first image - if a user uploads 5 images, they're
+      // clearly committed; running 5 pre-classifiers wastes money.
+      const pre = await preClassify(dataUrls[0], tool)
+      preCost = pre.costUsd
+      if (!pre.ok) {
+        await logScan({
+          ctx,
+          costUsd: preCost,
+          rejected: true,
+          rejectReason: `pre-classifier said not a ${tool}`,
+        })
+        return NextResponse.json(
+          {
+            error:
+              tool === 'ingredient'
+                ? "That doesn't look like an ingredient label. Try a closer photo of the back of the package."
+                : "That doesn't look like a menu. Try a clearer photo of the printed menu.",
+            tier: quota.tier,
+          },
+          { status: 422 },
+        )
+      }
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Pre-check failed'
+      return NextResponse.json({ error: msg }, { status: 502 })
     }
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : 'Pre-check failed'
-    return NextResponse.json({ error: msg }, { status: 502 })
   }
 
-  // Full scan
+  // Main scan
   try {
-    const { result, costUsd } = await scanImage(dataUrl, tool)
+    const { result, costUsd } =
+      inputKind === 'text'
+        ? await scanText(text!, tool)
+        : await scanImage(dataUrls, tool)
     await logScan({ ctx, costUsd: preCost + costUsd, result })
     return NextResponse.json({ result, tier: quota.tier, cached: false })
   } catch (e: unknown) {
@@ -126,5 +171,5 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({ limits: LIMITS })
+  return NextResponse.json({ limits: LIMITS, maxImagesPerScan: MAX_IMAGES_PER_SCAN })
 }

@@ -51,17 +51,14 @@ export default function BarcodeClient() {
           },
         },
         videoRef.current,
-        (res, err, ctl) => {
+        (res, _err, ctl) => {
+          // ZXing fires this callback on every frame; _err is "NotFoundException"
+          // every frame that has no barcode. We ignore it - real decoder failures
+          // would surface from the outer try/catch above.
           if (res) {
             ctl.stop()
             controlsRef.current = null
             void lookup(res.getText())
-            return
-          }
-          // ZXing surfaces NotFoundException on every frame that has no barcode -
-          // ignore those, but log unexpected errors for debugging.
-          if (err && err.name && err.name !== 'NotFoundException' && err.name !== 'NotFoundException2') {
-            console.warn('[barcode] decoder:', err.name, err.message)
           }
         },
       )

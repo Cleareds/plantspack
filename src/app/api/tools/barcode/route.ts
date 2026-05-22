@@ -103,11 +103,16 @@ export async function GET(req: NextRequest) {
       next: { revalidate: 86400 },
     })
     clearTimeout(timeoutId)
-    if (!r.ok) {
+    // OFF returns 404 (or sometimes 200 with status:0) when a product isn't in
+    // their database. That's a legitimate "not found" answer, not an outage.
+    if (r.status === 404) {
+      off = { status: 0 }
+    } else if (!r.ok) {
       console.error(`[barcode] OFF returned ${r.status} for ${barcode}`)
       throw new Error(`OFF returned ${r.status}`)
+    } else {
+      off = await r.json()
     }
-    off = await r.json()
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'unknown'
     console.error(`[barcode] OFF fetch failed for ${barcode}:`, msg)

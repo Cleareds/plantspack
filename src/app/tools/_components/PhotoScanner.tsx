@@ -2,13 +2,27 @@
 
 import { useRef, useState } from 'react'
 import Link from 'next/link'
-import { Camera, Upload, X, Loader2, CheckCircle2, AlertCircle, HelpCircle, RotateCcw } from 'lucide-react'
+import {
+  Camera,
+  Upload,
+  X,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  RotateCcw,
+  Type,
+  Image as ImageIcon,
+  Plus,
+} from 'lucide-react'
 import type { ScanResult, ToolName } from '@/lib/tool-quota'
 
 type Status = 'idle' | 'loading' | 'scanning' | 'result' | 'error'
+type Mode = 'photo' | 'text'
 
 const MAX_DIMENSION = 1600
 const JPEG_QUALITY = 0.82
+const MAX_IMAGES = 5
 
 async function downscale(file: File): Promise<string> {
   const bmp = await createImageBitmap(file)
@@ -24,20 +38,29 @@ async function downscale(file: File): Promise<string> {
   return canvas.toDataURL('image/jpeg', JPEG_QUALITY)
 }
 
-export default function PhotoScanner({ tool, examplePrompt }: { tool: ToolName; examplePrompt: string }) {
+export default function PhotoScanner({
+  tool,
+  examplePrompt,
+}: {
+  tool: ToolName
+  examplePrompt: string
+}) {
+  const allowMultiImage = tool === 'menu'
+
+  const [mode, setMode] = useState<Mode>('photo')
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<ScanResult | null>(null)
   const [tier, setTier] = useState<string | null>(null)
   const [cached, setCached] = useState(false)
+
+  const [images, setImages] = useState<string[]>([]) // data URLs
+  const [text, setText] = useState('')
+
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  async function handleFile(file: File) {
-    setStatus('loading')
+  async function addFile(file: File) {
     setError(null)
-    setResult(null)
-    setCached(false)
-
     if (!file.type.startsWith('image/')) {
       setError('Please upload an image file.')
       setStatus('error')
@@ -48,22 +71,68 @@ export default function PhotoScanner({ tool, examplePrompt }: { tool: ToolName; 
       setStatus('error')
       return
     }
-
-    let dataUrl: string
+    setStatus('loading')
     try {
-      dataUrl = await downscale(file)
+      const dataUrl = await downscale(file)
+      setImages((prev) => {
+        const next = allowMultiImage ? [...prev, dataUrl].slice(0, MAX_IMAGES) : [dataUrl]
+        // Single-image tools auto-submit; multi-image tools require explicit submit.
+        if (!allowMultiImage) {
+          void submitImages([dataUrl])
+        } else {
+          setStatus('idle')
+        }
+        return next
+      })
     } catch {
       setError('Could not read this image. Try another photo.')
       setStatus('error')
-      return
     }
+  }
 
+  async function submitImages(urls: string[]) {
     setStatus('scanning')
+    setError(null)
+    setResult(null)
+    setCached(false)
     try {
       const r = await fetch('/api/tools/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tool, imageDataUrl: dataUrl }),
+        body: JSON.stringify({ tool, imageDataUrls: urls }),
+      })
+      const data = await r.json()
+      if (!r.ok) {
+        setError(data.error ?? 'Scan failed')
+        setTier(data.tier ?? null)
+        setStatus('error')
+        return
+      }
+      setResult(data.result)
+      setTier(data.tier ?? null)
+      setCached(!!data.cached)
+      setStatus('result')
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Scan failed')
+      setStatus('error')
+    }
+  }
+
+  async function submitText() {
+    if (text.trim().length < 20) {
+      setError('Paste at least a few lines of the ingredient list or menu.')
+      setStatus('error')
+      return
+    }
+    setStatus('scanning')
+    setError(null)
+    setResult(null)
+    setCached(false)
+    try {
+      const r = await fetch('/api/tools/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tool, text }),
       })
       const data = await r.json()
       if (!r.ok) {
@@ -85,65 +154,161 @@ export default function PhotoScanner({ tool, examplePrompt }: { tool: ToolName; 
   function reset() {
     setResult(null)
     setError(null)
+    setImages([])
+    setText('')
     setCached(false)
     setStatus('idle')
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
+  if (status === 'scanning' || status === 'loading') {
+    return (
+      <div className="rounded-2xl ghost-border bg-surface-container-lowest p-8 flex flex-col items-center justify-center gap-3 text-on-surface-variant">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span>{status === 'loading' ? 'Preparing image...' : 'Reading...'}</span>
+      </div>
+    )
+  }
+
+  if (status === 'error') {
+    return <ErrorCard message={error ?? 'Something went wrong.'} tier={tier} onReset={reset} />
+  }
+
+  if (status === 'result' && result) {
+    return <ResultCard result={result} cached={cached} onReset={reset} />
+  }
+
   return (
     <div>
-      {status === 'idle' && (
+      <div className="inline-flex p-1 rounded-full ghost-border bg-surface mb-5">
+        <ModeBtn active={mode === 'photo'} onClick={() => setMode('photo')} icon={ImageIcon} label="Photo" />
+        <ModeBtn active={mode === 'text'} onClick={() => setMode('text')} icon={Type} label="Paste text" />
+      </div>
+
+      {mode === 'photo' && (
         <div className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 md:p-8">
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
             capture="environment"
+            multiple={allowMultiImage}
             className="hidden"
             onChange={(e) => {
-              const f = e.target.files?.[0]
-              if (f) void handleFile(f)
+              const files = Array.from(e.target.files ?? [])
+              files.forEach((f) => void addFile(f))
+              if (fileInputRef.current) fileInputRef.current.value = ''
             }}
           />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-90 mb-3"
-          >
-            <Camera className="h-5 w-5" />
-            Take a photo
-          </button>
-          <button
-            onClick={() => {
-              if (fileInputRef.current) {
-                fileInputRef.current.removeAttribute('capture')
-                fileInputRef.current.click()
-                fileInputRef.current.setAttribute('capture', 'environment')
-              }
-            }}
-            className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl ghost-border bg-surface text-on-surface font-semibold hover:border-primary/30"
-          >
-            <Upload className="h-5 w-5" />
-            Upload from device
-          </button>
-          <p className="text-xs text-on-surface-variant text-center mt-4">{examplePrompt}</p>
+
+          {allowMultiImage && images.length > 0 && (
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {images.map((src, i) => (
+                <div key={i} className="relative aspect-square rounded-lg overflow-hidden ghost-border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  <button
+                    onClick={() => setImages((p) => p.filter((_, idx) => idx !== i))}
+                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/70 text-white flex items-center justify-center"
+                    aria-label="Remove"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+              {images.length < MAX_IMAGES && (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="aspect-square rounded-lg ghost-border border-dashed flex items-center justify-center text-on-surface-variant hover:border-primary/30 hover:text-primary"
+                  aria-label="Add another image"
+                >
+                  <Plus className="h-6 w-6" />
+                </button>
+              )}
+            </div>
+          )}
+
+          {(!allowMultiImage || images.length === 0) && (
+            <>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-90 mb-3"
+              >
+                <Camera className="h-5 w-5" />
+                Take a photo
+              </button>
+              <button
+                onClick={() => {
+                  if (fileInputRef.current) {
+                    fileInputRef.current.removeAttribute('capture')
+                    fileInputRef.current.click()
+                    fileInputRef.current.setAttribute('capture', 'environment')
+                  }
+                }}
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl ghost-border bg-surface text-on-surface font-semibold hover:border-primary/30"
+              >
+                <Upload className="h-5 w-5" />
+                Upload from device
+              </button>
+            </>
+          )}
+
+          {allowMultiImage && images.length > 0 && (
+            <button
+              onClick={() => void submitImages(images)}
+              className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-90 mt-2"
+            >
+              Scan {images.length} {images.length === 1 ? 'image' : 'images'}
+            </button>
+          )}
+
+          <p className="text-xs text-on-surface-variant text-center mt-4">
+            {examplePrompt}
+            {allowMultiImage && ' Up to 5 pages.'}
+          </p>
         </div>
       )}
 
-      {(status === 'loading' || status === 'scanning') && (
-        <div className="rounded-2xl ghost-border bg-surface-container-lowest p-8 flex flex-col items-center justify-center gap-3 text-on-surface-variant">
-          <Loader2 className="h-6 w-6 animate-spin" />
-          <span>{status === 'loading' ? 'Preparing image...' : 'Reading the image...'}</span>
+      {mode === 'text' && (
+        <div className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 md:p-8">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={tool === 'ingredient' ? 6 : 10}
+            placeholder={
+              tool === 'ingredient'
+                ? 'Paste the ingredient list here (e.g. "wheat flour, sugar, vegetable oil, salt, mono- and diglycerides...")'
+                : 'Paste the menu text here. Dish names and short descriptions are enough.'
+            }
+            className="w-full px-4 py-3 rounded-xl ghost-border bg-surface text-on-surface focus:outline-none focus:border-primary resize-y"
+          />
+          <button
+            onClick={() => void submitText()}
+            disabled={text.trim().length < 20}
+            className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed mt-3"
+          >
+            Analyse text
+          </button>
+          <p className="text-xs text-on-surface-variant text-center mt-3">
+            Useful when the package text is too small to photograph, or you got the menu by email or PDF.
+          </p>
         </div>
-      )}
-
-      {status === 'error' && (
-        <ErrorCard message={error ?? 'Something went wrong.'} tier={tier} onReset={reset} />
-      )}
-
-      {status === 'result' && result && (
-        <ResultCard result={result} cached={cached} onReset={reset} />
       )}
     </div>
+  )
+}
+
+function ModeBtn({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: typeof Type; label: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition ${
+        active ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+      }`}
+    >
+      <Icon className="h-3.5 w-3.5" />
+      {label}
+    </button>
   )
 }
 
@@ -165,7 +330,7 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
           </Link>
         )}
         <button onClick={onReset} className="px-5 py-3 rounded-xl text-on-surface-variant text-sm">
-          Try a different photo
+          Try again
         </button>
       </div>
     </div>
@@ -177,7 +342,7 @@ function ResultCard({ result, cached, onReset }: { result: ScanResult; cached: b
     vegan: { Icon: CheckCircle2, bg: 'bg-success/10', text: 'text-success', label: 'Vegan' },
     not_vegan: { Icon: AlertCircle, bg: 'bg-error/10', text: 'text-error', label: 'Not vegan' },
     uncertain: { Icon: HelpCircle, bg: 'bg-warning/10', text: 'text-warning', label: 'Uncertain' },
-    unclear: { Icon: HelpCircle, bg: 'bg-on-surface/10', text: 'text-on-surface-variant', label: 'Unclear photo' },
+    unclear: { Icon: HelpCircle, bg: 'bg-on-surface/10', text: 'text-on-surface-variant', label: 'Unclear' },
     invalid_image: { Icon: AlertCircle, bg: 'bg-error/10', text: 'text-error', label: 'Wrong photo type' },
   }[result.verdict]
 

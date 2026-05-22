@@ -108,22 +108,28 @@ Rules:
 - Skip clearly non-vegan dishes (the user knows a chicken burger isn't vegan).`
 
 export async function scanImage(
-  dataUrl: string,
+  dataUrls: string[],
   tool: ToolName,
 ): Promise<{ result: ScanResult; costUsd: number }> {
   const prompt = tool === 'ingredient' ? INGREDIENT_PROMPT : MENU_PROMPT
+  const introText = dataUrls.length === 1
+    ? prompt
+    : `${prompt}\n\nThe user has uploaded ${dataUrls.length} images of the same menu (multi-page). Treat them as one combined menu when listing dishes.`
 
   const resp = await openai<ChatResp>({
     model: SCAN_MODEL,
-    max_tokens: 800,
+    max_tokens: 1500,
     temperature: 0.1,
     response_format: { type: 'json_object' },
     messages: [
       {
         role: 'user',
         content: [
-          { type: 'text', text: prompt },
-          { type: 'image_url', image_url: { url: dataUrl, detail: 'high' } },
+          { type: 'text', text: introText },
+          ...dataUrls.map((url) => ({
+            type: 'image_url' as const,
+            image_url: { url, detail: 'high' as const },
+          })),
         ],
       },
     ],
@@ -137,7 +143,81 @@ export async function scanImage(
     parsed = { verdict: 'unclear', summary: 'Could not read this image clearly. Try a sharper photo.' }
   }
 
-  const inTok = resp.usage?.prompt_tokens ?? 2000
+  const inTok = resp.usage?.prompt_tokens ?? 2000 * dataUrls.length
+  const outTok = resp.usage?.completion_tokens ?? 400
+  return {
+    result: parsed,
+    costUsd: estimateCostUsd(SCAN_MODEL, inTok, outTok),
+  }
+}
+
+const INGREDIENT_TEXT_PROMPT = `You are a vegan ingredient analyser. Analyse this pasted ingredient list and identify any animal-derived ingredients.
+
+Respond ONLY with JSON matching this schema:
+{
+  "verdict": "vegan" | "not_vegan" | "uncertain" | "unclear",
+  "summary": "one short sentence verdict for the user",
+  "items": [
+    { "name": "ingredient name", "status": "vegan" | "not_vegan" | "uncertain", "note": "optional short explanation" }
+  ]
+}
+
+Rules:
+- "unclear" if the text is not actually an ingredient list (e.g. random text, just a product name).
+- Only list ingredients that are non-vegan or uncertain. Don't list every vegan ingredient.
+- "uncertain" for ingredients that can be plant or animal (mono- and diglycerides, lecithin, vitamin D3, natural flavours, lactic acid).`
+
+const MENU_TEXT_PROMPT = `You are a vegan menu analyser. Analyse this pasted menu text.
+
+Respond ONLY with JSON matching this schema:
+{
+  "verdict": "vegan" | "not_vegan" | "uncertain" | "unclear",
+  "summary": "one short sentence about vegan options on this menu",
+  "items": [
+    { "name": "dish name", "status": "vegan" | "not_vegan" | "uncertain", "note": "optional - what to ask about or which animal product makes it non-vegan" }
+  ]
+}
+
+Rules:
+- "unclear" if the input is not actually a menu.
+- List ALL dishes that look vegan or could be made vegan with a small change. Note what to ask about.
+- Skip clearly non-vegan dishes the user already knows about.`
+
+export async function scanText(
+  text: string,
+  tool: ToolName,
+): Promise<{ result: ScanResult; costUsd: number }> {
+  // Cheap sanity check before calling the LLM
+  if (text.trim().length < 20) {
+    return {
+      result: { verdict: 'unclear', summary: 'Too little text to analyse. Paste the full ingredient list or menu.' },
+      costUsd: 0,
+    }
+  }
+  if (text.length > 8000) text = text.slice(0, 8000)
+
+  const prompt = tool === 'ingredient' ? INGREDIENT_TEXT_PROMPT : MENU_TEXT_PROMPT
+
+  const resp = await openai<ChatResp>({
+    model: SCAN_MODEL,
+    max_tokens: 1200,
+    temperature: 0.1,
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: prompt },
+      { role: 'user', content: text },
+    ],
+  })
+
+  const content = resp.choices?.[0]?.message?.content ?? '{}'
+  let parsed: ScanResult
+  try {
+    parsed = JSON.parse(content) as ScanResult
+  } catch {
+    parsed = { verdict: 'unclear', summary: 'Could not parse the response. Try again.' }
+  }
+
+  const inTok = resp.usage?.prompt_tokens ?? 1500
   const outTok = resp.usage?.completion_tokens ?? 400
   return {
     result: parsed,
