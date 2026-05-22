@@ -5,7 +5,13 @@ export type RestaurantCard = {
   title: string // "I am vegan" headline
   body: string // explanation paragraph
   thanks: string // closing thank-you line
+  // "Animal-free dining" variant - softer, less ideological wording for
+  // skeptical restaurants. Same factual content, no preachy framing.
+  bodyGentle?: string
+  titleGentle?: string
 }
+
+export type CardVariant = 'vegan' | 'gentle'
 
 // "I also cannot eat:" prefix in each supported language. Falls back to English.
 export const ALSO_AVOID_PREFIX: Record<string, string> = {
@@ -32,6 +38,13 @@ export const ALSO_AVOID_PREFIX: Record<string, string> = {
   el: 'Επίσης δεν μπορώ να φάω',
   hu: 'Sem ezeket nem tudom enni',
   he: 'אני גם לא יכול לאכול',
+  tl: 'Hindi rin ako kumakain ng',
+  bn: 'আমি এগুলোও খাই না',
+  ur: 'میں یہ بھی نہیں کھاتا',
+  ro: 'De asemenea, nu pot mânca',
+  uk: 'Я також не можу їсти',
+  hr: 'Također ne mogu jesti',
+  sr: 'Такође не могу јести',
 }
 
 // Common allergen labels in each language so a custom card can say
@@ -62,31 +75,41 @@ export const RESTAURANT_CARDS: RestaurantCard[] = [
   {
     lang: 'en', label: 'English', native: 'English',
     title: 'I am vegan',
+    titleGentle: 'I follow a plant-based diet',
     body: 'I do not eat any animal products. This includes meat, fish, shellfish, poultry, eggs, dairy, butter, cheese, cream, honey, gelatin, or any animal-derived ingredients. Could you please show me dishes that contain none of these, or prepare something simple from vegetables, fruit, grains, and legumes?',
+    bodyGentle: 'I eat only plants - so no meat, fish, shellfish, poultry, eggs, dairy, butter, cheese, cream, or honey. Could you suggest dishes that fit, or prepare something simple from vegetables, fruit, grains, and beans? Anything seasonal would be wonderful.',
     thanks: 'Thank you very much for your help.',
   },
   {
     lang: 'es', label: 'Spanish', native: 'Español',
     title: 'Soy vegano',
+    titleGentle: 'Sigo una alimentación 100% vegetal',
     body: 'No como ningún producto de origen animal. Esto incluye carne, pescado, marisco, aves, huevos, lácteos, mantequilla, queso, nata, miel, gelatina, ni ningún ingrediente derivado de animales. ¿Podría enseñarme platos que no contengan nada de esto, o preparar algo sencillo a base de verduras, fruta, cereales y legumbres?',
+    bodyGentle: 'Sólo como alimentos de origen vegetal - nada de carne, pescado, marisco, aves, huevos, lácteos, mantequilla, queso, nata ni miel. ¿Podría sugerirme algún plato que se ajuste, o preparar algo sencillo con verduras, fruta, cereales y legumbres? Cualquier ingrediente de temporada sería estupendo.',
     thanks: 'Muchas gracias por su ayuda.',
   },
   {
     lang: 'fr', label: 'French', native: 'Français',
     title: 'Je suis végane',
+    titleGentle: 'Je suis une alimentation 100% végétale',
     body: 'Je ne mange aucun produit d\'origine animale. Cela inclut la viande, le poisson, les fruits de mer, la volaille, les œufs, les produits laitiers, le beurre, le fromage, la crème, le miel, la gélatine, et tout ingrédient d\'origine animale. Pourriez-vous m\'indiquer des plats qui n\'en contiennent pas, ou préparer quelque chose de simple à base de légumes, fruits, céréales et légumineuses ?',
+    bodyGentle: 'Je mange uniquement des produits d\'origine végétale - donc pas de viande, poisson, fruits de mer, volaille, œufs, produits laitiers, beurre, fromage, crème ni miel. Pourriez-vous me suggérer des plats compatibles, ou préparer quelque chose de simple avec légumes, fruits, céréales et légumineuses ? Tout produit de saison serait merveilleux.',
     thanks: 'Merci beaucoup pour votre aide.',
   },
   {
     lang: 'de', label: 'German', native: 'Deutsch',
     title: 'Ich lebe vegan',
+    titleGentle: 'Ich ernähre mich rein pflanzlich',
     body: 'Ich esse keinerlei tierische Produkte. Dazu gehören Fleisch, Fisch, Meeresfrüchte, Geflügel, Eier, Milchprodukte, Butter, Käse, Sahne, Honig, Gelatine sowie alle Zutaten tierischen Ursprungs. Könnten Sie mir Gerichte zeigen, die nichts davon enthalten, oder etwas Einfaches aus Gemüse, Obst, Getreide und Hülsenfrüchten zubereiten?',
+    bodyGentle: 'Ich esse nur pflanzliche Lebensmittel - also kein Fleisch, Fisch, Meeresfrüchte, Geflügel, Eier, Milchprodukte, Butter, Käse, Sahne oder Honig. Könnten Sie mir passende Gerichte empfehlen, oder etwas Einfaches aus Gemüse, Obst, Getreide und Hülsenfrüchten zubereiten? Saisonales wäre wunderbar.',
     thanks: 'Vielen Dank für Ihre Hilfe.',
   },
   {
     lang: 'it', label: 'Italian', native: 'Italiano',
     title: 'Sono vegano',
+    titleGentle: 'Seguo un\'alimentazione 100% vegetale',
     body: 'Non mangio nessun prodotto di origine animale. Ciò include carne, pesce, frutti di mare, pollame, uova, latticini, burro, formaggio, panna, miele, gelatina e qualsiasi ingrediente di origine animale. Potrebbe indicarmi piatti che non contengono nulla di tutto questo, o preparare qualcosa di semplice a base di verdure, frutta, cereali e legumi?',
+    bodyGentle: 'Mangio solo alimenti di origine vegetale - quindi niente carne, pesce, frutti di mare, pollame, uova, latticini, burro, formaggio, panna o miele. Potrebbe suggerirmi dei piatti adatti, o preparare qualcosa di semplice con verdure, frutta, cereali e legumi? Qualsiasi ingrediente di stagione sarebbe meraviglioso.',
     thanks: 'Grazie mille per il vostro aiuto.',
   },
   {
@@ -196,6 +219,48 @@ export const RESTAURANT_CARDS: RestaurantCard[] = [
     title: 'אני טבעוני',
     body: 'אני לא אוכל מוצרים מן החי. זה כולל בשר, דגים, פירות ים, עוף, ביצים, מוצרי חלב, חמאה, גבינה, שמנת, דבש, ג\'לטין, וכל מרכיב שמקורו בחי. האם תוכל להראות לי מנות שאינן מכילות אף אחד מאלה, או להכין משהו פשוט מירקות, פירות, דגנים וקטניות?',
     thanks: 'תודה רבה על העזרה.',
+  },
+  {
+    lang: 'tl', label: 'Filipino (Tagalog)', native: 'Tagalog',
+    title: 'Ako ay vegan',
+    body: 'Hindi ako kumakain ng kahit anong produktong galing sa hayop. Kabilang dito ang karne, isda, pagkaing dagat, manok, itlog, gatas at mga produktong gawa sa gatas, mantikilya, keso, krema, pulot-pukyutan, gelatin, at anumang sangkap na nanggaling sa hayop. Pwede ba kayong magpakita sa akin ng mga pagkaing walang ganito, o maghanda ng simpleng ulam galing sa gulay, prutas, butil, at munggo?',
+    thanks: 'Maraming salamat sa inyong tulong.',
+  },
+  {
+    lang: 'bn', label: 'Bengali', native: 'বাংলা',
+    title: 'আমি ভেগান',
+    body: 'আমি কোনো প্রাণীজ খাবার খাই না। এর মধ্যে আছে মাংস, মাছ, সামুদ্রিক খাবার, মুরগি, ডিম, দুধ ও দুগ্ধজাত পণ্য, মাখন, পনির, ক্রিম, মধু, জেলাটিন, এবং যেকোনো প্রাণীজ উপাদান। আপনি কি আমাকে এমন খাবার দেখাতে পারেন যাতে এসব নেই, অথবা সবজি, ফল, শস্য ও ডাল দিয়ে সাধারণ কিছু রান্না করতে পারেন?',
+    thanks: 'আপনার সাহায্যের জন্য অসংখ্য ধন্যবাদ।',
+  },
+  {
+    lang: 'ur', label: 'Urdu', native: 'اردو',
+    title: 'میں ویگن ہوں',
+    body: 'میں جانوروں سے بنی کوئی چیز نہیں کھاتا/کھاتی۔ اس میں گوشت، مچھلی، سمندری غذا، مرغی، انڈے، دودھ اور دودھ سے بنی اشیاء، مکھن، پنیر، کریم، شہد، جلیٹن، اور جانوروں سے ماخوذ کوئی بھی جزو شامل ہے۔ کیا آپ مجھے ایسے کھانے دکھا سکتے ہیں جن میں یہ کچھ بھی نہ ہو، یا سبزیوں، پھلوں، اناج اور دالوں سے کچھ سادہ تیار کر سکتے ہیں؟',
+    thanks: 'آپ کی مدد کا بہت بہت شکریہ۔',
+  },
+  {
+    lang: 'ro', label: 'Romanian', native: 'Română',
+    title: 'Sunt vegan',
+    body: 'Nu mănânc niciun produs de origine animală. Acestea includ carne, pește, fructe de mare, carne de pasăre, ouă, lactate, unt, brânză, smântână, miere, gelatină și orice ingredient de origine animală. Mi-ați putea arăta preparate care nu conțin niciunul dintre acestea, sau pregăti ceva simplu din legume, fructe, cereale și leguminoase?',
+    thanks: 'Vă mulțumesc foarte mult pentru ajutor.',
+  },
+  {
+    lang: 'uk', label: 'Ukrainian', native: 'Українська',
+    title: 'Я веган',
+    body: 'Я не їм жодних продуктів тваринного походження. Це включає м\'ясо, рибу, морепродукти, птицю, яйця, молоко та молочні продукти, масло, сир, вершки, мед, желатин і будь-які інгредієнти тваринного походження. Чи могли б ви показати мені страви, які нічого з цього не містять, або приготувати щось просте з овочів, фруктів, круп та бобових?',
+    thanks: 'Дуже дякую за вашу допомогу.',
+  },
+  {
+    lang: 'hr', label: 'Croatian', native: 'Hrvatski',
+    title: 'Ja sam vegan',
+    body: 'Ne jedem nikakve životinjske proizvode. To uključuje meso, ribu, plodove mora, perad, jaja, mliječne proizvode, maslac, sir, vrhnje, med, želatinu i bilo koje sastojke životinjskog podrijetla. Možete li mi pokazati jela koja ne sadrže ništa od navedenog, ili pripremiti nešto jednostavno od povrća, voća, žitarica i mahunarki?',
+    thanks: 'Hvala vam puno na pomoći.',
+  },
+  {
+    lang: 'sr', label: 'Serbian', native: 'Српски',
+    title: 'Ја сам веган',
+    body: 'Не једем никакве животињске производе. То укључује месо, рибу, плодове мора, живину, јаја, млечне производе, путер, сир, павлаку, мед, желатин и било које састојке животињског порекла. Да ли бисте могли да ми покажете јела која не садрже ништа од наведеног, или да припремите нешто једноставно од поврћа, воћа, житарица и махунарки?',
+    thanks: 'Хвала вам пуно на помоћи.',
   },
 ]
 

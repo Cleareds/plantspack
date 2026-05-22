@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Printer, Languages, ListChecks, EyeOff, Search } from 'lucide-react'
+import Link from 'next/link'
+import { Printer, Languages, ListChecks, EyeOff, Search, ExternalLink } from 'lucide-react'
 import {
   RESTAURANT_CARDS,
   NON_VEGAN_E_NUMBERS,
@@ -9,6 +10,7 @@ import {
   HIDDEN_NON_VEGAN_INGREDIENTS,
   ALSO_AVOID_PREFIX,
   translateAllergen,
+  type CardVariant,
 } from './cards-data'
 import AllergenSelector from '../_components/AllergenSelector'
 
@@ -17,6 +19,7 @@ type Tab = 'restaurant' | 'e-numbers' | 'hidden'
 export default function CardsClient() {
   const [tab, setTab] = useState<Tab>('restaurant')
   const [query, setQuery] = useState('')
+  const [variant, setVariant] = useState<CardVariant>('vegan')
   const [allergens, setAllergens] = useState<string[]>([])
   const [allergensFromProfile, setAllergensFromProfile] = useState(false)
 
@@ -50,7 +53,17 @@ export default function CardsClient() {
       </div>
 
       {tab === 'restaurant' && (
-        <div className="mb-5 print:hidden">
+        <div className="mb-5 print:hidden space-y-3">
+          <div className="inline-flex p-1 rounded-full ghost-border bg-surface">
+            <VariantBtn active={variant === 'vegan'} onClick={() => setVariant('vegan')} label="Vegan" />
+            <VariantBtn active={variant === 'gentle'} onClick={() => setVariant('gentle')} label="Animal-free dining" />
+          </div>
+          {variant === 'gentle' && (
+            <p className="text-xs text-on-surface-variant">
+              Softer wording for skeptical restaurants. Same factual content, no preachy framing. Available in English, Spanish, French, German, and Italian; other languages fall back to the standard text.
+            </p>
+          )}
+
           <AllergenSelector
             value={allergens}
             onChange={setAllergens}
@@ -59,14 +72,14 @@ export default function CardsClient() {
             compact
           />
           {allergens.length > 0 && (
-            <p className="text-xs text-on-surface-variant mt-2">
-              Each card below will include &quot;I also can&apos;t eat&quot; in the local language with your allergens listed.
+            <p className="text-xs text-on-surface-variant">
+              Each card will include &quot;I also can&apos;t eat&quot; in the local language with your allergens listed.
             </p>
           )}
         </div>
       )}
 
-      {tab === 'restaurant' && <RestaurantCardsTab query={query} setQuery={setQuery} allergens={allergens} />}
+      {tab === 'restaurant' && <RestaurantCardsTab query={query} setQuery={setQuery} allergens={allergens} variant={variant} />}
       {tab === 'e-numbers' && <ENumbersTab />}
       {tab === 'hidden' && <HiddenIngredientsTab />}
     </div>
@@ -87,7 +100,20 @@ function TabBtn({ active, onClick, icon: Icon, label }: { active: boolean; onCli
   )
 }
 
-function RestaurantCardsTab({ query, setQuery, allergens }: { query: string; setQuery: (s: string) => void; allergens: string[] }) {
+function VariantBtn({ active, onClick, label }: { active: boolean; onClick: () => void; label: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${
+        active ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+      }`}
+    >
+      {label}
+    </button>
+  )
+}
+
+function RestaurantCardsTab({ query, setQuery, allergens, variant }: { query: string; setQuery: (s: string) => void; allergens: string[]; variant: CardVariant }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return RESTAURANT_CARDS
@@ -123,18 +149,35 @@ function RestaurantCardsTab({ query, setQuery, allergens }: { query: string; set
       </div>
 
       <div className="space-y-6 print:space-y-0">
-        {filtered.map((card) => (
+        {filtered.map((card) => {
+          const isRtl = card.lang === 'ar' || card.lang === 'he' || card.lang === 'ur'
+          const title = variant === 'gentle' && card.titleGentle ? card.titleGentle : card.title
+          const body = variant === 'gentle' && card.bodyGentle ? card.bodyGentle : card.body
+          const allergenParams = allergens.length > 0 ? `?a=${encodeURIComponent(allergens.join(','))}&v=${variant}` : `?v=${variant}`
+          return (
           <article
             key={card.lang}
             className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 md:p-8 print:shadow-none print:border print:border-black print:rounded-none print:break-after-page print:m-0"
             lang={card.lang}
-            dir={card.lang === 'ar' || card.lang === 'he' ? 'rtl' : 'ltr'}
+            dir={isRtl ? 'rtl' : 'ltr'}
           >
-            <div className="text-xs uppercase tracking-wider font-bold text-on-surface-variant mb-2 print:text-black" dir="ltr">
-              {card.label} / {card.native}
+            <div className="flex items-center justify-between mb-2 print:text-black" dir="ltr">
+              <div className="text-xs uppercase tracking-wider font-bold text-on-surface-variant">
+                {card.label} / {card.native}
+              </div>
+              <Link
+                href={`/tools/cards/${card.lang}${allergenParams}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-primary hover:underline print:hidden"
+                aria-label={`Open ${card.label} card in new tab`}
+              >
+                <ExternalLink className="h-3 w-3" />
+                Open
+              </Link>
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-on-surface mb-4 print:text-black">{card.title}</h2>
-            <p className="text-on-surface leading-relaxed mb-4 print:text-black">{card.body}</p>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-on-surface mb-4 print:text-black">{title}</h2>
+            <p className="text-on-surface leading-relaxed mb-4 print:text-black">{body}</p>
             {allergens.length > 0 && (
               <p className="text-on-surface leading-relaxed mb-4 print:text-black">
                 <strong>{(ALSO_AVOID_PREFIX[card.lang] ?? ALSO_AVOID_PREFIX.en)}:</strong>{' '}
@@ -146,7 +189,7 @@ function RestaurantCardsTab({ query, setQuery, allergens }: { query: string; set
               plantspack.com/tools/cards
             </div>
           </article>
-        ))}
+        )})}
         {filtered.length === 0 && (
           <p className="text-on-surface-variant text-center py-8">No language matches &quot;{query}&quot;.</p>
         )}
