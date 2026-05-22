@@ -1,0 +1,141 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+export const runtime = 'edge'
+
+type Verdict = 'vegan' | 'not_vegan' | 'uncertain' | 'not_found'
+
+export interface BarcodeResult {
+  barcode: string
+  verdict: Verdict
+  reason: string
+  productName: string | null
+  brand: string | null
+  imageUrl: string | null
+  ingredients: string | null
+  nonVeganHits: string[]
+  labels: string[]
+  source: 'open-food-facts'
+}
+
+// Animal-derived ingredients we flag in the raw ingredient text when OFF
+// hasn't given us a clean verdict. Lowercased substring match.
+const NON_VEGAN_TERMS = [
+  'milk', 'whey', 'casein', 'lactose', 'butter', 'cream', 'cheese', 'ghee',
+  'egg', 'albumen', 'ovalbumin',
+  'honey', 'beeswax', 'royal jelly',
+  'gelatin', 'gelatine', 'collagen',
+  'lard', 'tallow', 'suet', 'beef', 'pork', 'chicken', 'fish', 'anchovy',
+  'shellac', 'carmine', 'cochineal', 'e120',
+  'isinglass', 'cod liver',
+  'l-cysteine (from feather)', 'l-cysteine',
+  'lanolin',
+]
+
+function verdictFromOff(off: {
+  ingredients_analysis_tags?: string[]
+  labels_tags?: string[]
+  ingredients_text?: string
+}): { verdict: Verdict; reason: string; hits: string[] } {
+  const analysis = off.ingredients_analysis_tags ?? []
+  const labels = off.labels_tags ?? []
+
+  if (labels.includes('en:vegan')) {
+    return { verdict: 'vegan', reason: 'Carries a vegan label/certification.', hits: [] }
+  }
+  if (analysis.includes('en:non-vegan')) {
+    return { verdict: 'not_vegan', reason: 'Open Food Facts marks this as non-vegan.', hits: [] }
+  }
+  if (analysis.includes('en:vegan')) {
+    return { verdict: 'vegan', reason: 'Open Food Facts ingredient analysis: vegan.', hits: [] }
+  }
+
+  // Fall back to ingredient text scan
+  const text = (off.ingredients_text ?? '').toLowerCase()
+  if (text) {
+    const hits = NON_VEGAN_TERMS.filter((t) => text.includes(t))
+    if (hits.length > 0) {
+      return {
+        verdict: 'not_vegan',
+        reason: `Ingredient list contains likely animal-derived items: ${hits.slice(0, 4).join(', ')}.`,
+        hits,
+      }
+    }
+    if (analysis.includes('en:maybe-vegan')) {
+      return {
+        verdict: 'uncertain',
+        reason: 'Some ingredients have ambiguous origin (could be plant or animal). Check the label.',
+        hits: [],
+      }
+    }
+    return {
+      verdict: 'uncertain',
+      reason: 'No obvious animal ingredients spotted, but no clean vegan signal either. Double-check the label.',
+      hits: [],
+    }
+  }
+
+  return {
+    verdict: 'uncertain',
+    reason: 'Open Food Facts has this product but no ingredient list yet.',
+    hits: [],
+  }
+}
+
+export async function GET(req: NextRequest) {
+  const barcode = (req.nextUrl.searchParams.get('barcode') ?? '').trim()
+  if (!/^\d{6,14}$/.test(barcode)) {
+    return NextResponse.json({ error: 'Invalid barcode' }, { status: 400 })
+  }
+
+  const url = `https://world.openfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,brands,ingredients_text,ingredients_analysis_tags,image_url,labels_tags`
+
+  let off: { status: number; product?: Record<string, unknown> } | null = null
+  try {
+    const r = await fetch(url, {
+      headers: { 'User-Agent': 'PlantsPack-VeganTools/1.0 (https://www.plantspack.com)' },
+      next: { revalidate: 86400 },
+    })
+    if (!r.ok) throw new Error(`OFF ${r.status}`)
+    off = await r.json()
+  } catch {
+    return NextResponse.json({ error: 'Open Food Facts unavailable' }, { status: 502 })
+  }
+
+  if (!off || off.status !== 1 || !off.product) {
+    const result: BarcodeResult = {
+      barcode,
+      verdict: 'not_found',
+      reason: 'This barcode is not in Open Food Facts yet. You can add it at openfoodfacts.org.',
+      productName: null,
+      brand: null,
+      imageUrl: null,
+      ingredients: null,
+      nonVeganHits: [],
+      labels: [],
+      source: 'open-food-facts',
+    }
+    return NextResponse.json(result, { headers: { 'Cache-Control': 'public, s-maxage=3600' } })
+  }
+
+  const p = off.product as Record<string, unknown>
+  const v = verdictFromOff({
+    ingredients_analysis_tags: (p.ingredients_analysis_tags as string[]) ?? [],
+    labels_tags: (p.labels_tags as string[]) ?? [],
+    ingredients_text: (p.ingredients_text as string) ?? '',
+  })
+
+  const result: BarcodeResult = {
+    barcode,
+    verdict: v.verdict,
+    reason: v.reason,
+    productName: (p.product_name as string) || null,
+    brand: (p.brands as string) || null,
+    imageUrl: (p.image_url as string) || null,
+    ingredients: (p.ingredients_text as string) || null,
+    nonVeganHits: v.hits,
+    labels: ((p.labels_tags as string[]) ?? []).filter((l) => l.startsWith('en:')).map((l) => l.replace('en:', '')),
+    source: 'open-food-facts',
+  }
+
+  return NextResponse.json(result, { headers: { 'Cache-Control': 'public, s-maxage=86400' } })
+}
