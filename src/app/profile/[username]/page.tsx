@@ -14,6 +14,7 @@ import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
 import ProfileHero from '@/components/profile/ProfileHero'
+import SproutsCard from '@/components/profile/SproutsCard'
 import { getUserSubscription, SUBSCRIPTION_TIERS } from '@/lib/stripe'
 import PostCard from '@/components/posts/PostCard'
 import OwnerBadge from '@/components/places/OwnerBadge'
@@ -392,6 +393,13 @@ export default function ProfilePage() {
                 )}
               </div>
             }
+          />
+
+          <SproutsCard
+            lifetime={profile.sprouts_lifetime || 0}
+            balance={profile.sprouts_balance || 0}
+            seeded={profile.sprouts_seeded || 0}
+            isOwnProfile={isOwnProfile}
           />
 
           {/* Social · Favorites · Packs widgets (3-column on desktop).
