@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Barcode, ScanLine, UtensilsCrossed, Calculator, Printer, Lock, Sparkles } from 'lucide-react'
+import { Barcode, ScanLine, UtensilsCrossed, Calculator, Printer, Lock, Sparkles, Replace, History } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Vegan Tools — Barcode, Ingredient & Menu Scanners | PlantsPack',
@@ -49,6 +49,22 @@ const TOOLS: Tool[] = [
     icon: Calculator,
     status: 'live',
     gate: 'Free, no sign-in',
+  },
+  {
+    href: '/tools/substitutes',
+    title: 'Vegan substitute finder',
+    blurb: 'Search any ingredient (milk, eggs, gelatin, mayo, mince) and get the best plant-based swaps with notes on what each works for.',
+    icon: Replace,
+    status: 'live',
+    gate: 'Free, no sign-up',
+  },
+  {
+    href: '/tools/history',
+    title: 'My scan history',
+    blurb: 'Your past ingredient and menu scans, kept private to your profile.',
+    icon: History,
+    status: 'live',
+    gate: 'Signed-in users only',
   },
   {
     href: '/tools/cards',

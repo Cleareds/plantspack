@@ -1,29 +1,72 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Printer, Languages, ListChecks, EyeOff, Search } from 'lucide-react'
 import {
   RESTAURANT_CARDS,
   NON_VEGAN_E_NUMBERS,
   MAYBE_VEGAN_E_NUMBERS,
   HIDDEN_NON_VEGAN_INGREDIENTS,
+  ALSO_AVOID_PREFIX,
+  translateAllergen,
 } from './cards-data'
+import AllergenSelector from '../_components/AllergenSelector'
 
 type Tab = 'restaurant' | 'e-numbers' | 'hidden'
 
 export default function CardsClient() {
   const [tab, setTab] = useState<Tab>('restaurant')
   const [query, setQuery] = useState('')
+  const [allergens, setAllergens] = useState<string[]>([])
+  const [allergensFromProfile, setAllergensFromProfile] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/tools/allergens')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data?.allergens) && data.allergens.length > 0) {
+          setAllergens(data.allergens)
+          setAllergensFromProfile(true)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  async function persistAllergens(next: string[]) {
+    const r = await fetch('/api/tools/allergens', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ allergens: next }),
+    })
+    if (r.ok) setAllergensFromProfile(true)
+  }
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-6 print:hidden">
+      <div className="flex flex-wrap gap-2 mb-4 print:hidden">
         <TabBtn active={tab === 'restaurant'} onClick={() => setTab('restaurant')} icon={Languages} label="Restaurant cards" />
         <TabBtn active={tab === 'e-numbers'} onClick={() => setTab('e-numbers')} icon={ListChecks} label="E-number guide" />
         <TabBtn active={tab === 'hidden'} onClick={() => setTab('hidden')} icon={EyeOff} label="Hidden ingredients" />
       </div>
 
-      {tab === 'restaurant' && <RestaurantCardsTab query={query} setQuery={setQuery} />}
+      {tab === 'restaurant' && (
+        <div className="mb-5 print:hidden">
+          <AllergenSelector
+            value={allergens}
+            onChange={setAllergens}
+            savedRemote={allergensFromProfile}
+            onPersist={persistAllergens}
+            compact
+          />
+          {allergens.length > 0 && (
+            <p className="text-xs text-on-surface-variant mt-2">
+              Each card below will include &quot;I also can&apos;t eat&quot; in the local language with your allergens listed.
+            </p>
+          )}
+        </div>
+      )}
+
+      {tab === 'restaurant' && <RestaurantCardsTab query={query} setQuery={setQuery} allergens={allergens} />}
       {tab === 'e-numbers' && <ENumbersTab />}
       {tab === 'hidden' && <HiddenIngredientsTab />}
     </div>
@@ -44,7 +87,7 @@ function TabBtn({ active, onClick, icon: Icon, label }: { active: boolean; onCli
   )
 }
 
-function RestaurantCardsTab({ query, setQuery }: { query: string; setQuery: (s: string) => void }) {
+function RestaurantCardsTab({ query, setQuery, allergens }: { query: string; setQuery: (s: string) => void; allergens: string[] }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!q) return RESTAURANT_CARDS
@@ -92,6 +135,12 @@ function RestaurantCardsTab({ query, setQuery }: { query: string; setQuery: (s: 
             </div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-on-surface mb-4 print:text-black">{card.title}</h2>
             <p className="text-on-surface leading-relaxed mb-4 print:text-black">{card.body}</p>
+            {allergens.length > 0 && (
+              <p className="text-on-surface leading-relaxed mb-4 print:text-black">
+                <strong>{(ALSO_AVOID_PREFIX[card.lang] ?? ALSO_AVOID_PREFIX.en)}:</strong>{' '}
+                {allergens.map((a) => translateAllergen(a, card.lang)).join(', ')}.
+              </p>
+            )}
             <p className="text-on-surface-variant italic print:text-black">{card.thanks}</p>
             <div className="mt-5 pt-4 border-t border-on-surface/10 text-xs text-on-surface-variant print:text-black" dir="ltr">
               plantspack.com/tools/cards

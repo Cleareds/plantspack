@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX } from 'lucide-react'
+import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX, ShieldAlert } from 'lucide-react'
 import type { BarcodeResult } from '@/app/api/tools/barcode/route'
+import AllergenSelector from '../_components/AllergenSelector'
 
 type Status = 'idle' | 'scanning' | 'looking-up' | 'result' | 'error'
 
@@ -11,6 +12,8 @@ export default function BarcodeClient() {
   const [error, setError] = useState<string | null>(null)
   const [manual, setManual] = useState('')
   const [result, setResult] = useState<BarcodeResult | null>(null)
+  const [allergens, setAllergens] = useState<string[]>([])
+  const [allergensFromProfile, setAllergensFromProfile] = useState(false)
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const controlsRef = useRef<{ stop: () => void } | null>(null)
@@ -20,6 +23,27 @@ export default function BarcodeClient() {
       controlsRef.current?.stop()
     }
   }, [])
+
+  useEffect(() => {
+    fetch('/api/tools/allergens')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data?.allergens) && data.allergens.length > 0) {
+          setAllergens(data.allergens)
+          setAllergensFromProfile(true)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  async function persistAllergens(next: string[]) {
+    const r = await fetch('/api/tools/allergens', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ allergens: next }),
+    })
+    if (r.ok) setAllergensFromProfile(true)
+  }
 
   async function startCamera() {
     setError(null)
@@ -86,7 +110,9 @@ export default function BarcodeClient() {
     setStatus('looking-up')
     setError(null)
     try {
-      const r = await fetch(`/api/tools/barcode?barcode=${encodeURIComponent(barcode)}`)
+      const qs = new URLSearchParams({ barcode })
+      if (allergens.length) qs.set('allergens', allergens.join(','))
+      const r = await fetch(`/api/tools/barcode?${qs.toString()}`)
       if (!r.ok) {
         const data = await r.json().catch(() => ({}))
         throw new Error(data.error || `Lookup failed (${r.status})`)
@@ -121,7 +147,17 @@ export default function BarcodeClient() {
   return (
     <div>
       {status === 'idle' && (
-        <div className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 md:p-8">
+        <>
+          <div className="mb-4">
+            <AllergenSelector
+              value={allergens}
+              onChange={setAllergens}
+              savedRemote={allergensFromProfile}
+              onPersist={persistAllergens}
+              compact
+            />
+          </div>
+          <div className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 md:p-8">
           <button
             onClick={startCamera}
             className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-90 mb-4"
@@ -154,7 +190,8 @@ export default function BarcodeClient() {
               <Search className="h-5 w-5" />
             </button>
           </form>
-        </div>
+          </div>
+        </>
       )}
 
       {status === 'scanning' && (
@@ -242,6 +279,16 @@ function ResultCard({ result, onReset }: { result: BarcodeResult; onReset: () =>
           <div className="mb-4 p-3 rounded-lg bg-error/5 text-sm text-on-surface">
             <div className="font-semibold mb-1 text-error">Flagged ingredients</div>
             <div className="text-on-surface-variant">{result.nonVeganHits.join(', ')}</div>
+          </div>
+        )}
+
+        {result.allergenHits && result.allergenHits.length > 0 && (
+          <div className="mb-4 p-3 rounded-lg bg-warning/5 text-sm text-on-surface">
+            <div className="font-semibold mb-1 text-warning flex items-center gap-1.5">
+              <ShieldAlert className="h-4 w-4" />
+              Allergen match
+            </div>
+            <div className="text-on-surface-variant">Contains: {result.allergenHits.join(', ')}</div>
           </div>
         )}
 

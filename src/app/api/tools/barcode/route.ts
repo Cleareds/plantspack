@@ -14,6 +14,7 @@ export interface BarcodeResult {
   imageUrl: string | null
   ingredients: string | null
   nonVeganHits: string[]
+  allergenHits: string[]
   labels: string[]
   source: 'open-food-facts'
 }
@@ -82,11 +83,52 @@ function verdictFromOff(off: {
   }
 }
 
+// Quick keyword sets for allergen detection in ingredient text.
+const ALLERGEN_KEYWORDS: Record<string, string[]> = {
+  gluten: ['wheat', 'barley', 'rye', 'spelt', 'malt', 'gluten'],
+  soy: ['soy', 'soja', 'soia', 'soybean', 'edamame'],
+  nuts: ['almond', 'hazelnut', 'walnut', 'pecan', 'cashew', 'pistachio', 'macadamia', 'brazil nut'],
+  peanuts: ['peanut', 'groundnut', 'arachide'],
+  sesame: ['sesame', 'tahini'],
+  mustard: ['mustard', 'moutarde'],
+  celery: ['celery', 'celeri'],
+  lupin: ['lupin'],
+  sulphites: ['sulphite', 'sulfite', 'sulphur dioxide', 'sulfur dioxide', 'e220', 'e221', 'e222', 'e223', 'e224', 'e226', 'e227', 'e228'],
+  corn: ['corn ', 'maize', 'cornstarch', 'corn starch', 'high-fructose', 'high fructose'],
+  nightshades: ['tomato', 'potato', 'pepper', 'eggplant', 'aubergine', 'paprika'],
+  coconut: ['coconut'],
+}
+
+function findAllergenHits(text: string, allergens: string[]): string[] {
+  if (!text || allergens.length === 0) return []
+  const lower = text.toLowerCase()
+  const hits = new Set<string>()
+  for (const a of allergens) {
+    const known = ALLERGEN_KEYWORDS[a]
+    if (known) {
+      for (const kw of known) {
+        if (lower.includes(kw)) {
+          hits.add(a)
+          break
+        }
+      }
+    } else if (lower.includes(a)) {
+      // Custom allergen - just look for the literal string
+      hits.add(a)
+    }
+  }
+  return Array.from(hits)
+}
+
 export async function GET(req: NextRequest) {
   const barcode = (req.nextUrl.searchParams.get('barcode') ?? '').trim()
   if (!/^\d{6,14}$/.test(barcode)) {
     return NextResponse.json({ error: 'Invalid barcode' }, { status: 400 })
   }
+  const allergens = (req.nextUrl.searchParams.get('allergens') ?? '')
+    .split(',')
+    .map((a) => a.trim().toLowerCase())
+    .filter((a) => a.length > 0 && a.length < 40)
 
   const url = `https://world.openfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,brands,ingredients_text,ingredients_analysis_tags,image_url,labels_tags`
 
@@ -132,6 +174,7 @@ export async function GET(req: NextRequest) {
       imageUrl: null,
       ingredients: null,
       nonVeganHits: [],
+      allergenHits: [],
       labels: [],
       source: 'open-food-facts',
     }
@@ -145,6 +188,9 @@ export async function GET(req: NextRequest) {
     ingredients_text: (p.ingredients_text as string) ?? '',
   })
 
+  const ingredientsText = (p.ingredients_text as string) || ''
+  const allergenHits = findAllergenHits(ingredientsText, allergens)
+
   const result: BarcodeResult = {
     barcode,
     verdict: v.verdict,
@@ -152,8 +198,9 @@ export async function GET(req: NextRequest) {
     productName: (p.product_name as string) || null,
     brand: (p.brands as string) || null,
     imageUrl: (p.image_url as string) || null,
-    ingredients: (p.ingredients_text as string) || null,
+    ingredients: ingredientsText || null,
     nonVeganHits: v.hits,
+    allergenHits,
     labels: ((p.labels_tags as string[]) ?? []).filter((l) => l.startsWith('en:')).map((l) => l.replace('en:', '')),
     source: 'open-food-facts',
   }

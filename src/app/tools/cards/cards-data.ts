@@ -7,6 +7,55 @@ export type RestaurantCard = {
   thanks: string // closing thank-you line
 }
 
+// "I also cannot eat:" prefix in each supported language. Falls back to English.
+export const ALSO_AVOID_PREFIX: Record<string, string> = {
+  en: 'I also cannot eat',
+  es: 'Tampoco puedo comer',
+  fr: 'Je ne peux pas non plus manger',
+  de: 'Ich darf außerdem nicht essen',
+  it: 'Non posso mangiare nemmeno',
+  pt: 'Também não posso comer',
+  nl: 'Ik mag ook niet eten',
+  pl: 'Nie mogę też jeść',
+  cs: 'Také nemohu jíst',
+  sv: 'Jag kan inte heller äta',
+  tr: 'Ayrıca yiyemem',
+  ru: 'Я также не могу есть',
+  ar: 'لا أستطيع أيضاً تناول',
+  zh: '我也不能吃',
+  ja: '以下も食べられません',
+  ko: '다음도 먹을 수 없습니다',
+  th: 'ฉันก็กินไม่ได้เช่นกัน',
+  vi: 'Tôi cũng không thể ăn',
+  id: 'Saya juga tidak bisa makan',
+  hi: 'मैं ये भी नहीं खा सकता',
+  el: 'Επίσης δεν μπορώ να φάω',
+  hu: 'Sem ezeket nem tudom enni',
+  he: 'אני גם לא יכול לאכול',
+}
+
+// Common allergen labels in each language so a custom card can say
+// "I am vegan AND I also avoid X" naturally. Falls back to English if
+// a language's translation is missing.
+export const ALLERGEN_TRANSLATIONS: Record<string, Record<string, string>> = {
+  en: { gluten: 'gluten', soy: 'soy', nuts: 'tree nuts', peanuts: 'peanuts', sesame: 'sesame', mustard: 'mustard', celery: 'celery', lupin: 'lupin', sulphites: 'sulphites', corn: 'corn', nightshades: 'nightshades', coconut: 'coconut' },
+  es: { gluten: 'gluten', soy: 'soja', nuts: 'frutos secos', peanuts: 'cacahuetes', sesame: 'sésamo', mustard: 'mostaza', celery: 'apio', lupin: 'altramuces', sulphites: 'sulfitos', corn: 'maíz', nightshades: 'solanáceas', coconut: 'coco' },
+  fr: { gluten: 'gluten', soy: 'soja', nuts: 'fruits à coque', peanuts: 'arachides', sesame: 'sésame', mustard: 'moutarde', celery: 'céleri', lupin: 'lupin', sulphites: 'sulfites', corn: 'maïs', nightshades: 'solanacées', coconut: 'noix de coco' },
+  de: { gluten: 'Gluten', soy: 'Soja', nuts: 'Nüsse', peanuts: 'Erdnüsse', sesame: 'Sesam', mustard: 'Senf', celery: 'Sellerie', lupin: 'Lupinen', sulphites: 'Sulfite', corn: 'Mais', nightshades: 'Nachtschattengewächse', coconut: 'Kokosnuss' },
+  it: { gluten: 'glutine', soy: 'soia', nuts: 'frutta a guscio', peanuts: 'arachidi', sesame: 'sesamo', mustard: 'senape', celery: 'sedano', lupin: 'lupini', sulphites: 'solfiti', corn: 'mais', nightshades: 'solanacee', coconut: 'cocco' },
+  pt: { gluten: 'glúten', soy: 'soja', nuts: 'frutos secos', peanuts: 'amendoim', sesame: 'sésamo', mustard: 'mostarda', celery: 'aipo', lupin: 'tremoço', sulphites: 'sulfitos', corn: 'milho', nightshades: 'solanáceas', coconut: 'coco' },
+  nl: { gluten: 'gluten', soy: 'soja', nuts: 'noten', peanuts: 'pinda\'s', sesame: 'sesam', mustard: 'mosterd', celery: 'selderij', lupin: 'lupine', sulphites: 'sulfieten', corn: 'maïs', nightshades: 'nachtschadefamilie', coconut: 'kokos' },
+  ja: { gluten: 'グルテン', soy: '大豆', nuts: 'ナッツ類', peanuts: '落花生', sesame: 'ごま', mustard: 'マスタード', celery: 'セロリ', lupin: 'ルピナス', sulphites: '亜硫酸塩', corn: 'とうもろこし', nightshades: 'ナス科', coconut: 'ココナッツ' },
+  zh: { gluten: '麸质', soy: '大豆', nuts: '坚果', peanuts: '花生', sesame: '芝麻', mustard: '芥末', celery: '芹菜', lupin: '羽扇豆', sulphites: '亚硫酸盐', corn: '玉米', nightshades: '茄科', coconut: '椰子' },
+  ko: { gluten: '글루텐', soy: '대두', nuts: '견과류', peanuts: '땅콩', sesame: '참깨', mustard: '겨자', celery: '셀러리', lupin: '루핀', sulphites: '아황산염', corn: '옥수수', nightshades: '가지과', coconut: '코코넛' },
+  th: { gluten: 'กลูเตน', soy: 'ถั่วเหลือง', nuts: 'ถั่วเปลือกแข็ง', peanuts: 'ถั่วลิสง', sesame: 'งา', mustard: 'มัสตาร์ด', celery: 'ขึ้นฉ่าย', lupin: 'ลูพิน', sulphites: 'ซัลไฟต์', corn: 'ข้าวโพด', nightshades: 'ตระกูลมะเขือ', coconut: 'มะพร้าว' },
+}
+
+export function translateAllergen(allergen: string, lang: string): string {
+  const dict = ALLERGEN_TRANSLATIONS[lang] ?? ALLERGEN_TRANSLATIONS.en
+  return dict[allergen] ?? allergen
+}
+
 // Translations reviewed against vegan-passport-style wording.
 // Keep the body literal: avoid figurative meaning that doesn't translate.
 export const RESTAURANT_CARDS: RestaurantCard[] = [

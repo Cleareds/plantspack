@@ -116,11 +116,19 @@ Rules:
 - For multi-image uploads: combine all into one items array, deduplicate dishes that appear on multiple pages.
 - If a dish name is unreadable but the section header is visible (e.g. "MAINS" section but one item too blurry), note that in visibility.issues - don't fabricate the dish.`
 
+function allergenSuffix(allergens: string[] | undefined): string {
+  if (!allergens || allergens.length === 0) return ''
+  const list = allergens.map((a) => `"${a}"`).join(', ')
+  return `\n\nALLERGY CONSTRAINTS: The user must avoid: ${list}. In each item, if the dish/product contains or likely contains any of these, mark status as "not_vegan" (or "uncertain" if you can't tell) and call out which allergen is the problem in the note. Treat allergens with the same seriousness as animal products - "vegan but contains peanuts" must NOT be tagged "vegan" for this user.`
+}
+
 export async function scanImage(
   dataUrls: string[],
   tool: ToolName,
+  allergens?: string[],
 ): Promise<{ result: ScanResult; costUsd: number }> {
-  const prompt = tool === 'ingredient' ? INGREDIENT_PROMPT : MENU_PROMPT
+  const basePrompt = tool === 'ingredient' ? INGREDIENT_PROMPT : MENU_PROMPT
+  const prompt = basePrompt + allergenSuffix(allergens)
   const introText = dataUrls.length === 1
     ? prompt
     : `${prompt}\n\nThe user has uploaded ${dataUrls.length} images of the same menu (multi-page). Treat them as one combined menu when listing dishes.`
@@ -195,6 +203,7 @@ Rules:
 export async function scanText(
   text: string,
   tool: ToolName,
+  allergens?: string[],
 ): Promise<{ result: ScanResult; costUsd: number }> {
   // Cheap sanity check before calling the LLM
   if (text.trim().length < 20) {
@@ -205,7 +214,8 @@ export async function scanText(
   }
   if (text.length > 8000) text = text.slice(0, 8000)
 
-  const prompt = tool === 'ingredient' ? INGREDIENT_TEXT_PROMPT : MENU_TEXT_PROMPT
+  const basePrompt = tool === 'ingredient' ? INGREDIENT_TEXT_PROMPT : MENU_TEXT_PROMPT
+  const prompt = basePrompt + allergenSuffix(allergens)
 
   const resp = await openai<ChatResp>({
     model: SCAN_MODEL,

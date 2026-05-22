@@ -1,7 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import AllergenSelector from './AllergenSelector'
 import {
   Camera,
   Upload,
@@ -57,8 +58,37 @@ export default function PhotoScanner({
 
   const [images, setImages] = useState<string[]>([]) // data URLs
   const [text, setText] = useState('')
+  const [allergens, setAllergens] = useState<string[]>([])
+  const [allergensFromProfile, setAllergensFromProfile] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  // Pull saved allergens from profile on mount. Endpoint returns [] for guests.
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/tools/allergens')
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return
+        if (Array.isArray(data?.allergens) && data.allergens.length > 0) {
+          setAllergens(data.allergens)
+          setAllergensFromProfile(true)
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  async function persistAllergens(next: string[]) {
+    const r = await fetch('/api/tools/allergens', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ allergens: next }),
+    })
+    if (r.ok) setAllergensFromProfile(true)
+  }
 
   async function addFile(file: File) {
     setError(null)
@@ -122,7 +152,7 @@ export default function PhotoScanner({
       const r = await fetch('/api/tools/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tool, imageDataUrls: urls }),
+        body: JSON.stringify({ tool, imageDataUrls: urls, allergens }),
       })
       const data = await r.json()
       if (!r.ok) {
@@ -155,7 +185,7 @@ export default function PhotoScanner({
       const r = await fetch('/api/tools/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tool, text }),
+        body: JSON.stringify({ tool, text, allergens }),
       })
       const data = await r.json()
       if (!r.ok) {
@@ -203,6 +233,16 @@ export default function PhotoScanner({
 
   return (
     <div>
+      <div className="mb-4">
+        <AllergenSelector
+          value={allergens}
+          onChange={setAllergens}
+          savedRemote={allergensFromProfile}
+          onPersist={persistAllergens}
+          compact
+        />
+      </div>
+
       <div className="inline-flex p-1 rounded-full ghost-border bg-surface mb-5">
         <ModeBtn active={mode === 'photo'} onClick={() => setMode('photo')} icon={ImageIcon} label="Photo" />
         <ModeBtn active={mode === 'text'} onClick={() => setMode('text')} icon={Type} label="Paste text" />

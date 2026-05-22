@@ -46,7 +46,7 @@ function decodeDataUrl(dataUrl: string): Buffer | null {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { tool?: ToolName; imageDataUrls?: string[]; imageDataUrl?: string; text?: string }
+  let body: { tool?: ToolName; imageDataUrls?: string[]; imageDataUrl?: string; text?: string; allergens?: string[] }
   try {
     body = await req.json()
   } catch {
@@ -156,12 +156,15 @@ export async function POST(req: NextRequest) {
   }
 
   // Main scan
+  const allergens = Array.isArray(body.allergens)
+    ? body.allergens.map((a) => String(a).trim().toLowerCase()).filter((a) => a.length > 0).slice(0, 30)
+    : []
   try {
     const { result, costUsd } =
       inputKind === 'text'
-        ? await scanText(text!, tool)
-        : await scanImage(dataUrls, tool)
-    await logScan({ ctx, costUsd: preCost + costUsd, result })
+        ? await scanText(text!, tool, allergens)
+        : await scanImage(dataUrls, tool, allergens)
+    await logScan({ ctx, costUsd: preCost + costUsd, result, allergens })
     return NextResponse.json({ result, tier: quota.tier, cached: false })
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'Scan failed'

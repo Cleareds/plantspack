@@ -174,6 +174,7 @@ export async function logScan(args: {
   result?: ScanResult
   rejected?: boolean
   rejectReason?: string
+  allergens?: string[]
 }) {
   const sb = adminClient()
   await sb.from('tool_scans').insert({
@@ -187,6 +188,7 @@ export async function logScan(args: {
     result: args.result ?? null,
     rejected: args.rejected ?? false,
     reject_reason: args.rejectReason ?? null,
+    allergens: args.allergens ?? [],
   })
 }
 

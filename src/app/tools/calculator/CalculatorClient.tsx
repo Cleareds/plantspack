@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { Calculator, Droplets, Cloud, Trees, Heart, Fish, Share2 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Calculator, Droplets, Cloud, Trees, Heart, Fish, Share2, Car, Plane } from 'lucide-react'
 
 // Per-year savings of a vegan diet vs an average omnivorous diet.
 // Sources cited on the page; see references section.
@@ -13,6 +13,12 @@ const PER_YEAR = {
   landSqM: 2_500, // Poore & Nemecek 2018 - vegan vs average diet
 } as const
 
+// Equivalence references for visceral comparisons:
+// - Average passenger car emits ~4.6 tonnes CO2/year (EPA 2024)
+// - Round-trip transatlantic flight per passenger ~2 tonnes CO2 (ICAO)
+const CAR_TONNES_PER_YEAR = 4.6
+const FLIGHT_TONNES_PER_TRIP = 2.0
+
 function fmt(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
   if (n >= 10_000) return `${Math.round(n / 1000)}k`
@@ -23,6 +29,17 @@ function fmt(n: number) {
 
 export default function CalculatorClient() {
   const [years, setYears] = useState<number>(1)
+  const [projectionYears, setProjectionYears] = useState<number>(20)
+
+  // Read ?y= from URL on first render (shareable links).
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const p = new URLSearchParams(window.location.search)
+    const y = parseFloat(p.get('y') ?? '')
+    if (Number.isFinite(y) && y >= 0 && y <= 100) setYears(y)
+    const p2 = parseFloat(p.get('p') ?? '')
+    if (Number.isFinite(p2) && p2 >= 0 && p2 <= 80) setProjectionYears(p2)
+  }, [])
 
   const r = useMemo(() => {
     const y = Math.max(0, years)
@@ -33,11 +50,23 @@ export default function CalculatorClient() {
       co2Kg: y * PER_YEAR.co2Kg,
       waterLitres: y * PER_YEAR.waterLitres,
       landSqM: y * PER_YEAR.landSqM,
+      carsOff: (y * PER_YEAR.co2Kg) / (CAR_TONNES_PER_YEAR * 1000),
+      flightsAvoided: (y * PER_YEAR.co2Kg) / (FLIGHT_TONNES_PER_TRIP * 1000),
     }
   }, [years])
 
+  const projection = useMemo(() => {
+    const future = Math.max(0, projectionYears)
+    return {
+      animals: future * (PER_YEAR.landAnimals + PER_YEAR.seaAnimals),
+      co2Kg: future * PER_YEAR.co2Kg,
+    }
+  }, [projectionYears])
+
   const shareText = `${fmt(r.totalAnimals)} animals, ${fmt(r.co2Kg)}kg CO2, and ${fmt(r.waterLitres)} litres of water saved in ${years} year${years === 1 ? '' : 's'} of being vegan. Calculate yours:`
-  const shareUrl = 'https://www.plantspack.com/tools/calculator'
+  const shareUrl = typeof window === 'undefined'
+    ? 'https://www.plantspack.com/tools/calculator'
+    : `${window.location.origin}/tools/calculator?y=${years}&p=${projectionYears}`
 
   return (
     <div>
@@ -71,6 +100,46 @@ export default function CalculatorClient() {
         <Stat icon={Calculator} label="Total animals" value={fmt(r.totalAnimals)} sub="land + sea, lifetime" />
       </div>
 
+      {r.co2Kg > 0 && (
+        <div className="rounded-2xl ghost-border bg-primary/5 p-5 mb-6">
+          <div className="text-xs uppercase tracking-wider font-bold text-primary mb-3">That CO2 saved is equivalent to</div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Equiv icon={Car} value={fmt(r.carsOff)} label={r.carsOff < 1 ? 'fraction of a car off the road for a year' : `cars off the road for a year`} />
+            <Equiv icon={Plane} value={fmt(r.flightsAvoided)} label={r.flightsAvoided < 1 ? 'fraction of a transatlantic flight' : `transatlantic round-trips avoided`} />
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-2xl ghost-border bg-surface-container-lowest p-5 mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-sm font-semibold text-on-surface">If you stay vegan for {projectionYears} more years...</label>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={60}
+          step={1}
+          value={projectionYears}
+          onChange={(e) => setProjectionYears(parseInt(e.target.value))}
+          className="w-full accent-primary"
+        />
+        <div className="flex justify-between text-xs text-on-surface-variant mt-1 mb-3">
+          <span>0</span>
+          <span>30 yrs</span>
+          <span>60 yrs</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-surface p-4">
+            <div className="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Future animals</div>
+            <div className="text-2xl font-extrabold text-on-surface tabular-nums">{fmt(projection.animals)}</div>
+          </div>
+          <div className="rounded-xl bg-surface p-4">
+            <div className="text-xs text-on-surface-variant uppercase tracking-wider font-bold">Future CO2</div>
+            <div className="text-2xl font-extrabold text-on-surface tabular-nums">{fmt(projection.co2Kg)} kg</div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-wrap gap-2 mb-10">
         <a
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
@@ -90,6 +159,16 @@ export default function CalculatorClient() {
           <Share2 className="h-4 w-4" />
           Share on Reddit
         </a>
+        <button
+          onClick={() => {
+            if (typeof navigator !== 'undefined' && navigator.clipboard) {
+              navigator.clipboard.writeText(shareUrl).catch(() => {})
+            }
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full ghost-border bg-surface-container-lowest text-on-surface text-sm font-semibold hover:border-primary/30"
+        >
+          Copy link
+        </button>
       </div>
 
       <div className="rounded-2xl ghost-border bg-surface-container-lowest p-6 text-sm text-on-surface-variant leading-relaxed">
@@ -120,6 +199,20 @@ export default function CalculatorClient() {
         <p className="mt-4 text-xs">
           Why we don&apos;t cite Cowspiracy&apos;s figures: several of them (1,100 gallons water per almond, 660 gallons per burger) don&apos;t hold up under peer review. The numbers here are smaller but defensible.
         </p>
+      </div>
+    </div>
+  )
+}
+
+function Equiv({ icon: Icon, value, label }: { icon: typeof Car; value: string; label: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/15 text-primary flex items-center justify-center">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-xl font-extrabold text-on-surface tabular-nums">{value}</div>
+        <div className="text-xs text-on-surface-variant leading-snug">{label}</div>
       </div>
     </div>
   )
