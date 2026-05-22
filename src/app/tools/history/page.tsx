@@ -1,13 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { ArrowLeft, ScanLine, UtensilsCrossed, CheckCircle2, AlertCircle, HelpCircle } from 'lucide-react'
+import { ArrowLeft, ScanLine, UtensilsCrossed, Barcode, CheckCircle2, AlertCircle, HelpCircle, PackageX } from 'lucide-react'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import type { ScanResult } from '@/lib/tool-quota'
 
 export const metadata: Metadata = {
   title: 'My scan history | PlantsPack',
-  description: 'Your previous ingredient and menu scans.',
+  description: 'Your previous ingredient, menu, and barcode scans.',
   robots: { index: false, follow: false },
 }
 
@@ -39,14 +39,14 @@ export default async function ScanHistoryPage() {
           My scan history
         </h1>
         <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
-          Your last 50 ingredient and menu scans. Only you can see this.
+          Your last 50 ingredient, menu, and barcode scans. Only you can see this. Synced across devices when signed in.
         </p>
 
         {!scans || scans.length === 0 ? (
           <div className="rounded-2xl ghost-border bg-surface-container-lowest p-8 text-center text-on-surface-variant">
             No scans yet.{' '}
-            <Link href="/tools/ingredient-scanner" className="text-primary underline">Try the ingredient scanner</Link>{' '}
-            or{' '}
+            <Link href="/tools/barcode" className="text-primary underline">Try the barcode scanner</Link>,{' '}
+            <Link href="/tools/ingredient-scanner" className="text-primary underline">ingredient scanner</Link>, or{' '}
             <Link href="/tools/menu-scanner" className="text-primary underline">menu scanner</Link>.
           </div>
         ) : (
@@ -61,17 +61,30 @@ export default async function ScanHistoryPage() {
   )
 }
 
+// Barcode scans extend the standard ScanResult with product fields the
+// barcode API writes into the result jsonb. Loose typing so this stays a
+// drop-in render without a separate row type.
+interface BarcodeScanResult {
+  summary?: string
+  barcode?: string
+  productName?: string | null
+  brand?: string | null
+  imageUrl?: string | null
+  allergenHits?: string[]
+}
+
 interface ScanRowData {
   id: string
   tool: string
   verdict: string | null
-  result: ScanResult | null
+  result: (ScanResult & BarcodeScanResult) | null
   allergens: string[] | null
   created_at: string
 }
 
 function ScanRow({ scan }: { scan: ScanRowData }) {
-  const ToolIcon = scan.tool === 'menu' ? UtensilsCrossed : ScanLine
+  const isBarcode = scan.tool === 'barcode'
+  const ToolIcon = scan.tool === 'menu' ? UtensilsCrossed : isBarcode ? Barcode : ScanLine
   const verdict = scan.verdict ?? 'unclear'
   const theme = {
     vegan: { Icon: CheckCircle2, text: 'text-success', label: 'Vegan' },
@@ -79,12 +92,22 @@ function ScanRow({ scan }: { scan: ScanRowData }) {
     uncertain: { Icon: HelpCircle, text: 'text-warning', label: 'Uncertain' },
     unclear: { Icon: HelpCircle, text: 'text-on-surface-variant', label: 'Unclear' },
     invalid_image: { Icon: AlertCircle, text: 'text-error', label: 'Invalid' },
-  }[verdict as 'vegan' | 'not_vegan' | 'uncertain' | 'unclear' | 'invalid_image'] ?? {
+    not_found: { Icon: PackageX, text: 'text-on-surface-variant', label: 'Not in DB' },
+  }[verdict as 'vegan' | 'not_vegan' | 'uncertain' | 'unclear' | 'invalid_image' | 'not_found'] ?? {
     Icon: HelpCircle, text: 'text-on-surface-variant', label: verdict,
   }
 
   const date = new Date(scan.created_at)
   const dateStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+
+  const r = scan.result
+  const headline = isBarcode
+    ? (r?.productName ?? (r?.barcode ? `Barcode ${r.barcode}` : 'Barcode scan'))
+    : `${scan.tool[0].toUpperCase() + scan.tool.slice(1)} scan`
+  const subhead = isBarcode ? r?.brand ?? null : null
+  const description = isBarcode
+    ? r?.summary ?? null
+    : r?.summary ?? null
 
   return (
     <div className="rounded-xl ghost-border bg-surface-container-lowest p-4">
@@ -98,9 +121,15 @@ function ScanRow({ scan }: { scan: ScanRowData }) {
             <span className={`text-xs font-bold uppercase tracking-wider ${theme.text}`}>{theme.label}</span>
             <span className="text-xs text-on-surface-variant ml-auto">{dateStr}</span>
           </div>
-          <div className="text-sm text-on-surface mb-1 capitalize">{scan.tool} scan</div>
-          {scan.result?.summary && (
-            <div className="text-sm text-on-surface-variant leading-relaxed">{scan.result.summary}</div>
+          <div className="text-sm font-semibold text-on-surface mb-0.5 truncate">{headline}</div>
+          {subhead && <div className="text-xs text-on-surface-variant mb-1 truncate">{subhead}</div>}
+          {description && (
+            <div className="text-sm text-on-surface-variant leading-relaxed mt-1">{description}</div>
+          )}
+          {isBarcode && r?.allergenHits && r.allergenHits.length > 0 && (
+            <div className="text-xs text-warning mt-2">
+              Allergen match: {r.allergenHits.join(', ')}
+            </div>
           )}
           {scan.allergens && scan.allergens.length > 0 && (
             <div className="text-xs text-on-surface-variant mt-2">

@@ -1,7 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient as createServerClient } from '@/lib/supabase-server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
 export const revalidate = 86400
+
+// Log a successful barcode lookup to tool_scans for signed-in users so it
+// shows up on /tools/history alongside ingredient and menu scans. No-op
+// for guests (their history lives in IndexedDB on the device).
+async function logBarcodeScan(
+  userId: string,
+  allergens: string[],
+  result: BarcodeResult,
+) {
+  try {
+    const admin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } },
+    )
+    await admin.from('tool_scans').insert({
+      user_id: userId,
+      tool: 'barcode',
+      cost_usd: 0,
+      image_hash: result.barcode,
+      verdict: result.verdict,
+      result: {
+        summary: result.reason,
+        barcode: result.barcode,
+        productName: result.productName,
+        brand: result.brand,
+        imageUrl: result.imageUrl,
+        allergenHits: result.allergenHits,
+        nonVeganHits: result.nonVeganHits,
+      },
+      allergens,
+      rejected: false,
+    })
+  } catch (e) {
+    // History log is non-critical - never block the user-facing response
+    console.warn('[barcode] history log failed:', e)
+  }
+}
 
 type Verdict = 'vegan' | 'not_vegan' | 'uncertain' | 'not_found'
 
@@ -178,6 +218,8 @@ export async function GET(req: NextRequest) {
       labels: [],
       source: 'open-food-facts',
     }
+    // Skip DB log for not_found - clutters history with dead barcodes;
+    // the IndexedDB client-side also skips not_found per existing logic.
     return NextResponse.json(result, { headers: { 'Cache-Control': 'public, s-maxage=3600' } })
   }
 
@@ -205,5 +247,25 @@ export async function GET(req: NextRequest) {
     source: 'open-food-facts',
   }
 
-  return NextResponse.json(result, { headers: { 'Cache-Control': 'public, s-maxage=86400' } })
+  // Log to DB for signed-in users so the scan persists across devices.
+  // Skip for guests (their history is in IndexedDB on this device only).
+  let userId: string | null = null
+  try {
+    const supabase = await createServerClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    userId = user?.id ?? null
+    if (userId) void logBarcodeScan(userId, allergens, result)
+  } catch {
+    // Non-critical
+  }
+
+  // Cache strategy: the upstream OFF fetch is already cached at the
+  // server-side data layer (next: { revalidate: 86400 }), which is the
+  // expensive part. For signed-in users, skip edge caching so the DB log
+  // fires on every scan; for guests it is safe to cache publicly.
+  const cacheHeader = userId
+    ? 'private, no-store'
+    : 'public, s-maxage=86400, stale-while-revalidate=3600'
+
+  return NextResponse.json(result, { headers: { 'Cache-Control': cacheHeader } })
 }
