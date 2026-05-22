@@ -1025,7 +1025,7 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
             See vegan places near you
           </h2>
           <p className="text-xs md:text-sm text-white/85 mt-1.5 max-w-md leading-snug">
-            Sign in and we&apos;ll auto-detect your city, then show top-rated vegan spots, fully-vegan venues, animal sanctuaries, and stays within reach.
+            Sign in to see vegan restaurants, cafes, shops and stays near you - we&apos;ll pick up your city automatically and surface what&apos;s closest.
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
