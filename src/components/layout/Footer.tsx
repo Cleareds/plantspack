@@ -102,6 +102,22 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
+                  href="/tools"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Vegan Tools
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/vegan"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Vegan Answers
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/vegan-summer-destinations"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
