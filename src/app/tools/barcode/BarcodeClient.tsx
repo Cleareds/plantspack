@@ -26,23 +26,54 @@ export default function BarcodeClient() {
     setResult(null)
     setStatus('scanning')
 
+    // Wait one tick so the <video> ref mounts before ZXing attaches.
+    await new Promise((r) => setTimeout(r, 0))
+    if (!videoRef.current) {
+      setError('Camera element not ready - try again.')
+      setStatus('error')
+      return
+    }
+
     try {
       const { BrowserMultiFormatReader } = await import('@zxing/browser')
       const reader = new BrowserMultiFormatReader()
-      const controls = await reader.decodeFromVideoDevice(
-        undefined,
-        videoRef.current!,
-        (res, _err, ctl) => {
+
+      // Use constraints to force the rear camera on mobile - decodeFromVideoDevice
+      // with undefined deviceId picks the first device, which on iOS Safari is
+      // usually the front-facing camera (useless for scanning a barcode in your hand).
+      const controls = await reader.decodeFromConstraints(
+        {
+          audio: false,
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+        },
+        videoRef.current,
+        (res, err, ctl) => {
           if (res) {
             ctl.stop()
             controlsRef.current = null
             void lookup(res.getText())
+            return
+          }
+          // ZXing surfaces NotFoundException on every frame that has no barcode -
+          // ignore those, but log unexpected errors for debugging.
+          if (err && err.name && err.name !== 'NotFoundException' && err.name !== 'NotFoundException2') {
+            console.warn('[barcode] decoder:', err.name, err.message)
           }
         },
       )
       controlsRef.current = controls
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Could not access camera'
+      const err = e as { name?: string; message?: string }
+      let msg = err.message ?? 'Could not access camera'
+      if (err.name === 'NotAllowedError') msg = 'Camera permission denied. Allow access in browser settings.'
+      else if (err.name === 'NotFoundError') msg = 'No camera found on this device.'
+      else if (err.name === 'NotReadableError') msg = 'Camera is in use by another app. Close other apps and try again.'
+      else if (err.name === 'OverconstrainedError') msg = 'No rear camera available. Try a phone or tablet.'
+      else if (err.name === 'SecurityError') msg = 'Camera blocked - this page must be served over HTTPS.'
       setError(msg)
       setStatus('error')
     }
