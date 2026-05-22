@@ -30,7 +30,7 @@ export default function MenuScannerPage() {
 
         <PhotoScanner
           tool="menu"
-          examplePrompt="Take a photo of the printed or chalkboard menu. Closer is better - one section at a time works well for big menus."
+          examplePrompt="Take a photo, upload up to 5 images, or drop a PDF of the menu (great for emailed PDFs and online menus)."
         />
 
         <div className="mt-8 text-sm text-on-surface-variant leading-relaxed">

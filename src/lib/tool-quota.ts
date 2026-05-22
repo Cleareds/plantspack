@@ -45,6 +45,7 @@ export interface QuotaCheck {
 export interface ScanResult {
   verdict: 'vegan' | 'not_vegan' | 'uncertain' | 'unclear' | 'invalid_image'
   summary: string
+  visibility?: { fully_readable: boolean; issues?: string }
   items?: { name: string; status: 'vegan' | 'not_vegan' | 'uncertain'; note?: string }[]
 }
 

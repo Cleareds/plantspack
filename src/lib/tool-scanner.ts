@@ -89,23 +89,32 @@ Rules:
 - "uncertain" for ingredients that can be plant or animal (mono- and diglycerides, lecithin, vitamin D3, natural flavours, lactic acid).
 - Be honest about uncertainty - don't guess "vegan" when you can't tell.`
 
-const MENU_PROMPT = `You are a vegan menu analyser. Look at this restaurant menu and classify dishes.
+const MENU_PROMPT = `You are a vegan menu analyser. Look at this restaurant menu and classify EVERY dish you can read.
 
 Respond ONLY with JSON matching this schema:
 {
   "verdict": "vegan" | "not_vegan" | "uncertain" | "unclear",
-  "summary": "one short sentence about vegan options on this menu",
+  "summary": "2-3 sentence overview of vegan options + any visibility issues",
+  "visibility": {
+    "fully_readable": true | false,
+    "issues": "optional - describe any cropped sections, glare, blur, cut-off prices, missing pages, dishes you could only partially read"
+  },
   "items": [
-    { "name": "dish name", "status": "vegan" | "not_vegan" | "uncertain", "note": "optional - what to ask about or which animal product makes it non-vegan" }
+    { "name": "dish name exactly as printed", "status": "vegan" | "not_vegan" | "uncertain", "note": "for vegan: list known animal products or 'naturally vegan'; for not_vegan: which animal product; for uncertain: what to ask the server" }
   ]
 }
 
 Rules:
-- "unclear" if the photo is unreadable.
-- "verdict" should reflect overall menu: "vegan" if multiple clearly vegan dishes, "uncertain" if only ambiguous ones, "not_vegan" if nothing usable.
-- List ALL dishes that look vegan or could be made vegan with a small change. Note what to ask about.
-- Don't fabricate dishes. Only list what you can actually read.
-- Skip clearly non-vegan dishes (the user knows a chicken burger isn't vegan).`
+- List ALL dishes you can read. Yes, including obviously non-vegan ones (burger, steak, etc.) - the user wants a complete picture of the menu so they can see what's where.
+- Use the dish name as printed on the menu (keep the original language).
+- Be honest about what you cannot see. If half the menu is cut off, glare obscures prices, a section is too blurry to read, or pages are missing - say so in "visibility.issues". Do NOT invent dishes you cannot actually read.
+- "verdict" reflects vegan-friendliness of the menu overall:
+  - "vegan" if there are 2+ clearly vegan dishes (no swaps needed)
+  - "uncertain" if only askable/swappable dishes exist
+  - "not_vegan" if no usable options even with swaps
+  - "unclear" if the image is too unreadable to assess
+- For multi-image uploads: combine all into one items array, deduplicate dishes that appear on multiple pages.
+- If a dish name is unreadable but the section header is visible (e.g. "MAINS" section but one item too blurry), note that in visibility.issues - don't fabricate the dish.`
 
 export async function scanImage(
   dataUrls: string[],
@@ -167,21 +176,21 @@ Rules:
 - Only list ingredients that are non-vegan or uncertain. Don't list every vegan ingredient.
 - "uncertain" for ingredients that can be plant or animal (mono- and diglycerides, lecithin, vitamin D3, natural flavours, lactic acid).`
 
-const MENU_TEXT_PROMPT = `You are a vegan menu analyser. Analyse this pasted menu text.
+const MENU_TEXT_PROMPT = `You are a vegan menu analyser. Analyse this pasted menu text and classify EVERY dish.
 
 Respond ONLY with JSON matching this schema:
 {
   "verdict": "vegan" | "not_vegan" | "uncertain" | "unclear",
-  "summary": "one short sentence about vegan options on this menu",
+  "summary": "2-3 sentence overview of vegan options",
   "items": [
-    { "name": "dish name", "status": "vegan" | "not_vegan" | "uncertain", "note": "optional - what to ask about or which animal product makes it non-vegan" }
+    { "name": "dish name as written", "status": "vegan" | "not_vegan" | "uncertain", "note": "for vegan: list known animal products or 'naturally vegan'; for not_vegan: which animal product; for uncertain: what to ask the server" }
   ]
 }
 
 Rules:
-- "unclear" if the input is not actually a menu.
-- List ALL dishes that look vegan or could be made vegan with a small change. Note what to ask about.
-- Skip clearly non-vegan dishes the user already knows about.`
+- List ALL dishes from the text. Include obviously non-vegan ones too so the user sees the complete menu landscape.
+- "unclear" if the input is not actually a menu (random text, just a single word, etc).
+- "verdict" reflects vegan-friendliness overall: "vegan" if 2+ clear options, "uncertain" if only askable/swappable, "not_vegan" if nothing works.`
 
 export async function scanText(
   text: string,

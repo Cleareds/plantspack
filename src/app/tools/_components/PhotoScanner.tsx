@@ -14,6 +14,7 @@ import {
   Type,
   Image as ImageIcon,
   Plus,
+  Eye,
 } from 'lucide-react'
 import type { ScanResult, ToolName } from '@/lib/tool-quota'
 
@@ -61,22 +62,43 @@ export default function PhotoScanner({
 
   async function addFile(file: File) {
     setError(null)
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file.')
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+    const isImage = file.type.startsWith('image/')
+
+    if (!isPdf && !isImage) {
+      setError('Please upload an image (JPG/PNG/HEIC) or a PDF.')
       setStatus('error')
       return
     }
-    if (file.size > 20 * 1024 * 1024) {
-      setError('Image is over 20MB. Try a smaller photo.')
+    if (file.size > 30 * 1024 * 1024) {
+      setError('File is over 30MB. Try a smaller one.')
       setStatus('error')
       return
     }
+    if (isPdf && !allowMultiImage) {
+      setError('PDFs are only supported for the menu scanner.')
+      setStatus('error')
+      return
+    }
+
     setStatus('loading')
     try {
+      if (isPdf) {
+        const { pdfToImages } = await import('./pdf-to-images')
+        const pages = await pdfToImages(file)
+        if (pages.length === 0) {
+          setError('No pages found in the PDF.')
+          setStatus('error')
+          return
+        }
+        setImages((prev) => [...prev, ...pages].slice(0, MAX_IMAGES))
+        setStatus('idle')
+        return
+      }
+
       const dataUrl = await downscale(file)
       setImages((prev) => {
         const next = allowMultiImage ? [...prev, dataUrl].slice(0, MAX_IMAGES) : [dataUrl]
-        // Single-image tools auto-submit; multi-image tools require explicit submit.
         if (!allowMultiImage) {
           void submitImages([dataUrl])
         } else {
@@ -84,8 +106,9 @@ export default function PhotoScanner({
         }
         return next
       })
-    } catch {
-      setError('Could not read this image. Try another photo.')
+    } catch (e) {
+      console.error('[scanner] file processing failed:', e)
+      setError('Could not read this file. Try another photo or PDF.')
       setStatus('error')
     }
   }
@@ -190,8 +213,8 @@ export default function PhotoScanner({
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
-            capture="environment"
+            accept={allowMultiImage ? 'image/*,application/pdf' : 'image/*'}
+            capture={allowMultiImage ? undefined : 'environment'}
             multiple={allowMultiImage}
             className="hidden"
             onChange={(e) => {
@@ -231,7 +254,12 @@ export default function PhotoScanner({
           {(!allowMultiImage || images.length === 0) && (
             <>
               <button
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => {
+                  if (fileInputRef.current) {
+                    if (!allowMultiImage) fileInputRef.current.setAttribute('capture', 'environment')
+                    fileInputRef.current.click()
+                  }
+                }}
                 className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-primary text-on-primary font-semibold hover:opacity-90 mb-3"
               >
                 <Camera className="h-5 w-5" />
@@ -242,13 +270,12 @@ export default function PhotoScanner({
                   if (fileInputRef.current) {
                     fileInputRef.current.removeAttribute('capture')
                     fileInputRef.current.click()
-                    fileInputRef.current.setAttribute('capture', 'environment')
                   }
                 }}
                 className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl ghost-border bg-surface text-on-surface font-semibold hover:border-primary/30"
               >
                 <Upload className="h-5 w-5" />
-                Upload from device
+                {allowMultiImage ? 'Upload images or PDF' : 'Upload from device'}
               </button>
             </>
           )}
@@ -363,6 +390,16 @@ function ResultCard({ result, cached, onReset }: { result: ScanResult; cached: b
 
       <div className="p-5">
         <p className="text-on-surface leading-relaxed mb-4">{result.summary}</p>
+
+        {result.visibility && result.visibility.fully_readable === false && result.visibility.issues && (
+          <div className="flex gap-2 items-start p-3 rounded-lg bg-warning/5 mb-4">
+            <Eye className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <div className="font-semibold text-warning text-xs uppercase tracking-wider mb-0.5">Visibility</div>
+              <div className="text-on-surface-variant leading-relaxed">{result.visibility.issues}</div>
+            </div>
+          </div>
+        )}
 
         {result.items && result.items.length > 0 && (
           <div className="space-y-2 mb-5">
