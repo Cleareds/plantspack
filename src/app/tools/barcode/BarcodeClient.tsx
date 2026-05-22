@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX, ShieldAlert } from 'lucide-react'
+import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX, ShieldAlert, Plus, Clock, ExternalLink } from 'lucide-react'
 import type { BarcodeResult } from '@/app/api/tools/barcode/route'
 import AllergenSelector from '../_components/AllergenSelector'
+import { saveBarcodeScan, getRecentBarcodeScans, type BarcodeHistoryEntry } from './barcode-history'
 
 type Status = 'idle' | 'scanning' | 'looking-up' | 'result' | 'error'
 
@@ -14,6 +15,7 @@ export default function BarcodeClient() {
   const [result, setResult] = useState<BarcodeResult | null>(null)
   const [allergens, setAllergens] = useState<string[]>([])
   const [allergensFromProfile, setAllergensFromProfile] = useState(false)
+  const [history, setHistory] = useState<BarcodeHistoryEntry[]>([])
 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const controlsRef = useRef<{ stop: () => void } | null>(null)
@@ -34,6 +36,7 @@ export default function BarcodeClient() {
         }
       })
       .catch(() => {})
+    void getRecentBarcodeScans(5).then(setHistory)
   }, [])
 
   async function persistAllergens(next: string[]) {
@@ -120,6 +123,19 @@ export default function BarcodeClient() {
       const data: BarcodeResult = await r.json()
       setResult(data)
       setStatus('result')
+
+      // Save to local history (skip not_found - keep that for the contribute CTA)
+      if (data.verdict !== 'not_found') {
+        void saveBarcodeScan({
+          barcode: data.barcode,
+          verdict: data.verdict,
+          productName: data.productName,
+          brand: data.brand,
+          imageUrl: data.imageUrl,
+          allergenHits: data.allergenHits ?? [],
+          ts: Date.now(),
+        }).then(() => getRecentBarcodeScans(5).then(setHistory))
+      }
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Lookup failed')
       setStatus('error')
@@ -191,6 +207,42 @@ export default function BarcodeClient() {
             </button>
           </form>
           </div>
+
+          {history.length > 0 && (
+            <div className="mt-6">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-wider font-bold text-on-surface-variant mb-3">
+                <Clock className="h-3.5 w-3.5" />
+                Recent on this device
+              </div>
+              <div className="space-y-2">
+                {history.map((h) => {
+                  const verdictTheme = {
+                    vegan: { Icon: CheckCircle2, color: 'text-success' },
+                    not_vegan: { Icon: AlertCircle, color: 'text-error' },
+                    uncertain: { Icon: HelpCircle, color: 'text-warning' },
+                  }[h.verdict as 'vegan' | 'not_vegan' | 'uncertain'] ?? { Icon: HelpCircle, color: 'text-on-surface-variant' }
+                  return (
+                    <button
+                      key={h.barcode}
+                      onClick={() => void lookup(h.barcode)}
+                      className="w-full flex items-center gap-3 p-3 rounded-lg ghost-border bg-surface-container-lowest text-left hover:border-primary/30 transition"
+                    >
+                      <verdictTheme.Icon className={`h-4 w-4 flex-shrink-0 ${verdictTheme.color}`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm text-on-surface truncate">
+                          {h.productName ?? `Barcode ${h.barcode}`}
+                        </div>
+                        {h.brand && <div className="text-xs text-on-surface-variant truncate">{h.brand}</div>}
+                      </div>
+                      <span className="text-xs text-on-surface-variant font-mono">
+                        {new Date(h.ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </>
       )}
 
@@ -253,6 +305,27 @@ function ResultCard({ result, onReset }: { result: BarcodeResult; onReset: () =>
 
       <div className="p-5">
         <p className="text-sm text-on-surface-variant leading-relaxed mb-4">{result.reason}</p>
+
+        {result.verdict === 'not_found' && (
+          <div className="mb-4 p-4 rounded-lg ghost-border bg-primary/5">
+            <div className="font-semibold text-on-surface mb-1 flex items-center gap-1.5">
+              <Plus className="h-4 w-4 text-primary" />
+              Help everyone - add this product
+            </div>
+            <p className="text-sm text-on-surface-variant leading-relaxed mb-3">
+              Open Food Facts is open and community-built. Adding this barcode takes 2 minutes and makes the scanner smarter for every vegan after you.
+            </p>
+            <a
+              href={`https://world.openfoodfacts.org/cgi/product.pl?type=edit&code=${result.barcode}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold hover:opacity-90"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Add on Open Food Facts
+            </a>
+          </div>
+        )}
 
         {(result.productName || result.brand) && (
           <div className="flex gap-3 mb-4 items-start">
