@@ -172,6 +172,17 @@ export async function POST(
 
       if (error) throw error
       review = data
+
+      // Award Sprouts (admin-only during phase 1, gated inside awardSprouts).
+      try {
+        const { awardSprouts } = await import('@/lib/sprouts')
+        const action = reviewVideo ? 'review_with_video'
+          : (reviewImages && reviewImages.length > 0) ? 'review_with_photo' : 'review_text'
+        await awardSprouts({
+          userId: session.user.id, actionType: action,
+          referenceType: 'review', referenceId: review.id,
+        })
+      } catch (e) { console.warn('[sprouts] review award failed', (e as Error).message) }
     }
 
     await revalidatePlacePage(id)

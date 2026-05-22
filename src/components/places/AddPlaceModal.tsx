@@ -183,6 +183,15 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         .single()
       if (error) throw error
 
+      // Award Sprouts (admin-only during phase 1; server-side gating).
+      try {
+        fetch('/api/sprouts/award', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'place_added', referenceId: insertedPlace.id }),
+        }).catch(() => {})
+      } catch {}
+
       // Auto-create a linked post via API (bypasses RLS issues for non-admin users)
       try {
         await fetch('/api/places/' + insertedPlace.id + '/auto-post', {
