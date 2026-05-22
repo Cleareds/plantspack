@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
+export const revalidate = 86400
 
 type Verdict = 'vegan' | 'not_vegan' | 'uncertain' | 'not_found'
 
@@ -91,14 +92,29 @@ export async function GET(req: NextRequest) {
 
   let off: { status: number; product?: Record<string, unknown> } | null = null
   try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 8000)
     const r = await fetch(url, {
-      headers: { 'User-Agent': 'PlantsPack-VeganTools/1.0 (https://www.plantspack.com)' },
+      headers: {
+        'User-Agent': 'PlantsPack-VeganTools/1.0 (https://www.plantspack.com; hello@plantspack.com)',
+        Accept: 'application/json',
+      },
+      signal: controller.signal,
       next: { revalidate: 86400 },
     })
-    if (!r.ok) throw new Error(`OFF ${r.status}`)
+    clearTimeout(timeoutId)
+    if (!r.ok) {
+      console.error(`[barcode] OFF returned ${r.status} for ${barcode}`)
+      throw new Error(`OFF returned ${r.status}`)
+    }
     off = await r.json()
-  } catch {
-    return NextResponse.json({ error: 'Open Food Facts unavailable' }, { status: 502 })
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'unknown'
+    console.error(`[barcode] OFF fetch failed for ${barcode}:`, msg)
+    return NextResponse.json(
+      { error: `Open Food Facts could not be reached (${msg}). Try again in a moment.` },
+      { status: 502 },
+    )
   }
 
   if (!off || off.status !== 1 || !off.product) {
