@@ -132,17 +132,34 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
                 <h2 className="font-semibold text-gray-900 mb-3">Recent activity</h2>
                 {state.recent.length === 0 && <p className="text-sm text-gray-600">No activity yet.</p>}
                 <ul className="divide-y divide-gray-100">
-                  {state.recent.map(r => (
-                    <li key={r.id} className="py-2 flex items-center justify-between text-sm">
-                      <div>
-                        <div className="text-gray-900">{r.action_type.replace(/_/g, ' ').replace(/\./g, ' / ')}</div>
-                        <div className="text-xs text-gray-500">{new Date(r.created_at).toLocaleString()}</div>
-                      </div>
-                      <div className={`font-mono font-semibold ${r.amount >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
-                        {r.amount >= 0 ? `+${r.amount}` : r.amount}
-                      </div>
-                    </li>
-                  ))}
+                  {state.recent.map(r => {
+                    const isStageUp = r.action_type === 'tree_stage_reached'
+                    const isMatured = r.action_type === 'tree_matured'
+                    const stageLabel = (r.metadata as any)?.label
+                    const finalSeeded = (r.metadata as any)?.final_seeded
+                    let label: string
+                    if (isStageUp) label = `Reached: ${stageLabel ?? `stage ${(r.metadata as any)?.stage}`}`
+                    else if (isMatured) label = `Tree matured! Planted in your forest (${finalSeeded?.toLocaleString?.() ?? ''} Sprouts)`
+                    else label = r.action_type.replace(/_/g, ' ').replace(/\./g, ' / ')
+                    return (
+                      <li key={r.id} className="py-2 flex items-center justify-between text-sm gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {(isStageUp || isMatured) && <span className="text-base shrink-0">{isMatured ? '🌳' : '🌱'}</span>}
+                          <div className="min-w-0">
+                            <div className={`truncate ${isMatured ? 'text-amber-800 font-semibold' : isStageUp ? 'text-emerald-800 font-semibold' : 'text-gray-900'}`}>{label}</div>
+                            <div className="text-xs text-gray-500">{new Date(r.created_at).toLocaleString()}</div>
+                          </div>
+                        </div>
+                        {(isStageUp || isMatured) ? (
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold whitespace-nowrap">milestone</span>
+                        ) : (
+                          <div className={`font-mono font-semibold whitespace-nowrap ${r.amount >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                            {r.amount >= 0 ? `+${r.amount}` : r.amount}
+                          </div>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               </section>
             )}

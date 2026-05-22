@@ -309,10 +309,19 @@ export async function seedTree(userId: string, amount: number): Promise<AwardRes
 
   if (matured) {
     // Graduate this tree to the forest, then reset current tree state.
+    const nowIso = new Date().toISOString()
     await sb.from('user_forest_trees').insert({
       user_id: userId,
       sprouts_seeded: newSeeded,
-      matured_at: new Date().toISOString(),
+      matured_at: nowIso,
+    })
+    await sb.from('user_sprouts_ledger').insert({
+      user_id: userId,
+      amount: 0, base_amount: 0, multiplier: 1.0,
+      action_type: 'tree_matured',
+      reference_type: 'tree',
+      metadata: { final_seeded: newSeeded },
+      created_at: nowIso,
     })
     if (existing) await sb.from('user_trees').delete().eq('user_id', userId)
     // Recompute forest_size cache
@@ -323,8 +332,21 @@ export async function seedTree(userId: string, amount: number): Promise<AwardRes
     const newStage = treeStageFor(newSeeded).stage
     const stageReached = { ...(existing?.stage_reached_at ?? {}) } as Record<string, string>
     if (newStage > prevStage) {
+      const nowIso = new Date().toISOString()
+      // Insert one zero-amount ledger entry per stage reached so the
+      // activity log shows clear "Reached <stage>" rows alongside the
+      // -<amount> seed entry.
       for (let s = prevStage + 1; s <= newStage; s++) {
-        stageReached[String(s)] = new Date().toISOString()
+        stageReached[String(s)] = nowIso
+        const stageInfo = TREE_STAGES.find(x => x.stage === s)
+        await sb.from('user_sprouts_ledger').insert({
+          user_id: userId,
+          amount: 0, base_amount: 0, multiplier: 1.0,
+          action_type: 'tree_stage_reached',
+          reference_type: 'tree',
+          metadata: { stage: s, label: stageInfo?.label },
+          created_at: nowIso,
+        })
       }
     }
     if (existing) {
