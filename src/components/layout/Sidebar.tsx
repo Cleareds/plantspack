@@ -11,8 +11,6 @@ const navItems = [
   { href: '/map', label: 'Map', icon: 'explore' },
   { href: '/vegan-places', label: 'Vegan Places', icon: 'location_on' },
   { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
-  { href: '/tools', label: 'Tools', icon: 'build' },
-  { href: '/vegan', label: 'Vegan Answers', icon: 'menu_book' },
   { href: '/city-ranks', label: 'City Ranks', icon: 'leaderboard' },
   { href: '/feed', label: 'Community Feed', icon: 'forum' },
   { href: '/events', label: 'Events', icon: 'event' },
