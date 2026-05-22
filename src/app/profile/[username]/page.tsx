@@ -396,6 +396,7 @@ export default function ProfilePage() {
           />
 
           <SproutsCard
+            username={profile.username}
             lifetime={profile.sprouts_lifetime || 0}
             balance={profile.sprouts_balance || 0}
             seeded={profile.sprouts_seeded || 0}

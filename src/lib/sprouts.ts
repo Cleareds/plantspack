@@ -300,10 +300,12 @@ export async function seedTree(userId: string, amount: number): Promise<AwardRes
 export async function recomputeUserTotals(userId: string) {
   const sb = adminClient()
   const { data: rows } = await sb.from('user_sprouts_ledger')
-    .select('amount').eq('user_id', userId).is('reversed_at', null)
+    .select('amount, reversal_of').eq('user_id', userId).is('reversed_at', null)
   let lifetime = 0, balance = 0
   for (const r of rows ?? []) {
-    if (r.amount > 0) lifetime += r.amount
+    // Lifetime = positive earnings only. Reversal entries (which carry
+    // reversal_of) and spend rows do not count toward lifetime.
+    if (r.amount > 0 && !r.reversal_of) lifetime += r.amount
     balance += r.amount
   }
   const { data: tree } = await sb.from('user_trees').select('total_seeded').eq('user_id', userId).maybeSingle()

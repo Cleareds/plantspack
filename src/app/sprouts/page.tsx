@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase-server'
-import { ACTION_AMOUNTS, TIERS, TREE_STAGES, getMyState, tierFor, treeStageFor } from '@/lib/sprouts'
-import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, ScrollText, Users } from 'lucide-react'
+import { createClient as createAdmin } from '@supabase/supabase-js'
+import { ACTION_AMOUNTS, TIERS, TREE_STAGES } from '@/lib/sprouts'
+import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
+import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
 
 export const metadata = {
   title: 'Sprouts - PlantsPack contribution rewards',
@@ -9,16 +10,19 @@ export const metadata = {
 }
 export const revalidate = 3600
 
+const admin = createAdmin(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  { auth: { persistSession: false, autoRefreshToken: false } },
+)
+
 export default async function SproutsPage() {
-  const sb = await createClient()
-  const { data: { user } } = await sb.auth.getUser()
-  let role: string | null = null
-  let myState = null
-  if (user) {
-    const { data } = await sb.from('users').select('role').eq('id', user.id).maybeSingle()
-    role = (data as any)?.role ?? null
-    if (role === 'admin') myState = await getMyState(user.id)
-  }
+  // Top contributors (public, lifetime-ranked). Currently admin-only during phase 1.
+  const { data: top } = await admin.from('users')
+    .select('id, username, avatar_url, sprouts_lifetime, sprouts_seeded')
+    .gt('sprouts_lifetime', 0)
+    .order('sprouts_lifetime', { ascending: false })
+    .limit(10)
 
   const earnGroups = [
     {
@@ -59,7 +63,7 @@ export default async function SproutsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-surface">
       <div className="mx-auto max-w-4xl px-4 py-12">
 
         {/* Hero */}
@@ -67,7 +71,7 @@ export default async function SproutsPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold mb-3">
             <Sprout className="w-3.5 h-3.5" /> Currently in admin-only preview
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-emerald-900 mb-3 flex items-center justify-center gap-3">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-3">
             <Sprout className="w-10 h-10 text-emerald-600" />
             Sprouts
           </h1>
@@ -78,42 +82,46 @@ export default async function SproutsPage() {
           </p>
         </div>
 
-        {/* Admin state card */}
-        {myState && (
-          <div className="bg-white rounded-2xl border-2 border-emerald-200 shadow-sm p-6 mb-10">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-emerald-900">Your Sprouts</h2>
-              <Link href="/sprouts/me" className="text-sm text-emerald-700 hover:underline">{'View tree ->'}</Link>
-            </div>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-3xl font-bold text-emerald-700">{myState.balance.toLocaleString()}</div>
-                <div className="text-xs text-gray-600 mt-1">Balance</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-amber-700">{myState.lifetime.toLocaleString()}</div>
-                <div className="text-xs text-gray-600 mt-1">Lifetime</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-rose-700">{myState.seeded.toLocaleString()}</div>
-                <div className="text-xs text-gray-600 mt-1">Seeded</div>
-              </div>
-            </div>
-            <div className="mt-4 flex items-center gap-2 justify-center text-sm">
-              <Trophy className="w-4 h-4 text-amber-600" />
-              <span className="font-semibold">{myState.tier.label}</span>
-              {myState.nextTier && (
-                <span className="text-gray-600">
-                  - {myState.toNext.toLocaleString()} to {myState.nextTier.label}
-                </span>
-              )}
-            </div>
-          </div>
+        {/* Top contributors */}
+        {top && top.length > 0 && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Trophy className="w-6 h-6 text-amber-600" /> Top contributors
+            </h2>
+            <ul className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+              {top.map((u: any, i) => {
+                const tier = TIERS.slice().reverse().find(t => u.sprouts_lifetime >= t.min) || TIERS[0]
+                const stage = TREE_STAGES.slice().reverse().find(s => u.sprouts_seeded >= s.min) || TREE_STAGES[0]
+                return (
+                  <li key={u.id} className="flex items-center gap-3 p-3">
+                    <span className="w-6 text-center text-sm font-mono text-gray-500">{i + 1}</span>
+                    {u.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={u.avatar_url} alt="" className="w-9 h-9 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+                        <Sprout className="w-4 h-4" />
+                      </div>
+                    )}
+                    <Link href={`/profile/${u.username}`} className="font-semibold text-gray-900 hover:underline flex-1 truncate">
+                      @{u.username}
+                    </Link>
+                    <span title={stage.label} className="shrink-0"><TreeStageSvg stage={stage.stage} size={36} /></span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 font-semibold">{tier.label}</span>
+                    <span className="font-mono font-bold text-emerald-700 w-20 text-right">{u.sprouts_lifetime.toLocaleString()}</span>
+                    <Link href={`/profile/${u.username}/sprouts`} className="text-xs text-emerald-700 hover:underline whitespace-nowrap">
+                      Tree -&gt;
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
         )}
 
         {/* Tiers */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <Trophy className="w-6 h-6" /> Lifetime tiers
           </h2>
           <p className="text-gray-700 mb-4">
@@ -134,14 +142,14 @@ export default async function SproutsPage() {
 
         {/* How to earn */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <Coins className="w-6 h-6" /> How to earn
           </h2>
           <div className="space-y-4">
             {earnGroups.map(g => (
               <div key={g.label} className="bg-white rounded-xl border border-gray-200 p-5">
-                <div className="flex items-center gap-2 font-semibold text-emerald-900 mb-3">
-                  <g.icon className="w-5 h-5" /> {g.label}
+                <div className="flex items-center gap-2 font-semibold text-gray-900 mb-3">
+                  <g.icon className="w-5 h-5 text-emerald-700" /> {g.label}
                 </div>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-1 text-sm">
                   {g.items.map(([label, amount]) => (
@@ -162,17 +170,17 @@ export default async function SproutsPage() {
 
         {/* Digital tree */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4 flex items-center gap-2">
-            <TreeDeciduous className="w-6 h-6" /> Grow a tree
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <TreeDeciduous className="w-6 h-6 text-emerald-700" /> Grow a tree
           </h2>
           <p className="text-gray-700 mb-4">
             Seed Sprouts into your digital tree to watch it grow through seven stages. Seeded Sprouts come from your balance, but your lifetime total is untouched - the tree is a way to put your contributions visibly on display, not lose them.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {TREE_STAGES.map(s => (
-              <div key={s.stage} className="bg-white rounded-xl border border-emerald-100 p-3 text-center">
-                <div className="text-2xl">{['◯','🌱','🌿','🌳','🌳','🌲','🌳','🌲'][s.stage]}</div>
-                <div className="text-xs font-semibold text-emerald-900 mt-1">{s.label}</div>
+              <div key={s.stage} className="bg-white rounded-xl border border-gray-200 p-3 text-center">
+                <div className="flex justify-center"><TreeStageSvg stage={s.stage} size={72} /></div>
+                <div className="text-xs font-semibold text-gray-900 mt-1">{s.label}</div>
                 <div className="text-xs text-gray-600">{s.min.toLocaleString()}+</div>
               </div>
             ))}
@@ -181,22 +189,22 @@ export default async function SproutsPage() {
 
         {/* Spend */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4 flex items-center gap-2">
-            <Leaf className="w-6 h-6" /> What to spend Sprouts on
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Leaf className="w-6 h-6 text-emerald-700" /> What to spend Sprouts on
           </h2>
           <div className="space-y-3">
-            <div className="bg-white rounded-xl border border-emerald-200 p-5">
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between mb-1">
-                <div className="font-semibold text-emerald-900">Plant a real tree</div>
+                <div className="font-semibold text-gray-900">Plant a real tree</div>
                 <div className="font-mono text-emerald-700 font-bold">1,000 Sprouts</div>
               </div>
               <p className="text-sm text-gray-700">
                 Silver tier (2,000 lifetime) unlocks the ability to convert 1,000 Sprouts into a real tree planted via a reforestation partner (Eden Reforestation Projects). PlantsPack covers the planting cost.
               </p>
             </div>
-            <div className="bg-white rounded-xl border border-emerald-200 p-5">
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between mb-1">
-                <div className="font-semibold text-emerald-900">Cleareds discount</div>
+                <div className="font-semibold text-gray-900">Cleareds discount</div>
                 <div className="font-mono text-emerald-700 font-bold">500 Sprouts</div>
               </div>
               <p className="text-sm text-gray-700">
