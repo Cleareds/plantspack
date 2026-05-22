@@ -92,15 +92,17 @@ export default async function SummerHubDataQuality({ searchParams }: PageProps) 
 
   // Fetch all hub cities in one round-trip per country. Each country query
   // restricts via .in('city', cityList) so Supabase only returns hub rows.
-  const byCountry = new Map<string, string[]>()
+  // Using Record<> not Map<> per project deployment rule — TS `Map<string,X>`
+  // crashes the build's TypeScript pass (memory: feedback_deployment.md).
+  const byCountry: Record<string, string[]> = {}
   for (const [c, city] of HUB_CITIES) {
-    if (!byCountry.has(c)) byCountry.set(c, [])
-    byCountry.get(c)!.push(city)
+    if (!byCountry[c]) byCountry[c] = []
+    byCountry[c].push(city)
   }
 
   let places: PlaceRow[] = []
   let migrationMissing = false
-  for (const [country, cities] of byCountry) {
+  for (const [country, cities] of Object.entries(byCountry)) {
     const r: any = await admin
       .from('places')
       .select(`${cols}, admin_notes`)
@@ -148,15 +150,15 @@ export default async function SummerHubDataQuality({ searchParams }: PageProps) 
   })
 
   // Group by destination (country + city) so islands stay separate even
-  // when same country has multiple sections.
-  const byDest = new Map<string, PlaceRow[]>()
+  // when same country has multiple sections. Record over Map per project rule.
+  const byDest: Record<string, PlaceRow[]> = {}
   for (const r of filtered) {
     const key = `${r.country} · ${r.city || '(no city)'}`
-    if (!byDest.has(key)) byDest.set(key, [])
-    byDest.get(key)!.push(r)
+    if (!byDest[key]) byDest[key] = []
+    byDest[key].push(r)
   }
   const isAuditFlagged = (r: PlaceRow) => ((r as any).admin_notes || '').startsWith('audit-')
-  const dests = [...byDest.entries()]
+  const dests = Object.entries(byDest)
     .sort((a, b) => b[1].length - a[1].length)
     .map(([key, list]) => ({
       key,

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { CheckCircle, XCircle, Loader2, ExternalLink } from 'lucide-react'
+import { formatCorrectionValue } from '@/lib/corrections-format'
 
 interface Correction {
   id: string
@@ -130,9 +131,9 @@ export default function AdminCorrectionsPage() {
                             ))}
                           </div>
                         ) : (
-                          <p className="text-sm text-emerald-400 break-words">
-                            {String(newValue)}
-                          </p>
+                          <div className="text-sm text-emerald-400 break-words">
+                            {formatCorrectionValue(newValue)}
+                          </div>
                         )}
                       </div>
                     </div>

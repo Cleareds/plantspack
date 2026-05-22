@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { formatCorrectionValue } from '@/lib/corrections-format'
 import {
   Loader2, ExternalLink, Trash2, XCircle, AlertTriangle,
   Clock, Globe, WifiOff, Users, CheckCircle, BarChart3, Leaf,
@@ -540,7 +541,7 @@ export default function DataQualityPage() {
                   {Object.entries(c.corrections).map(([field, val]) => (
                     <div key={field} className="flex items-start gap-2 text-sm">
                       <span className="text-gray-500 w-24 flex-shrink-0">{FIELD_LABELS[field] || field}</span>
-                      <span className="text-emerald-400 break-words">{String(val)}</span>
+                      <div className="text-emerald-400 break-words flex-1 min-w-0">{formatCorrectionValue(val)}</div>
                     </div>
                   ))}
                 </div>
