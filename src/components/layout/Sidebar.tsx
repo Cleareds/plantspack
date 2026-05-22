@@ -106,7 +106,7 @@ export default function Sidebar() {
               <p className="text-sm font-bold text-on-surface truncate">{profile?.first_name || username}</p>
               <p className="text-xs text-on-surface-variant">View Profile</p>
             </div>
-            {((profile as any)?.sprouts_lifetime ?? 0) > 0 && (
+            {(profile as any)?.role === 'admin' && ((profile as any)?.sprouts_lifetime ?? 0) > 0 && (
               <span
                 title={`${((profile as any).sprouts_lifetime).toLocaleString()} Sprouts (lifetime)`}
                 className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold whitespace-nowrap"

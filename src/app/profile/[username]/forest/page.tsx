@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { getForest } from '@/lib/sprouts'
 import { ArrowLeft, TreeDeciduous } from 'lucide-react'
@@ -34,6 +35,13 @@ function ForestTreeIcon({ cx, cy, scale = 1 }: { cx: number; cy: number; scale?:
 
 export default async function ForestPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
+  // Admin-only during phase 1
+  const sb = await createClient()
+  const { data: { user: viewer } } = await sb.auth.getUser()
+  if (!viewer) notFound()
+  const { data: viewerProf } = await sb.from('users').select('role').eq('id', viewer.id).maybeSingle()
+  if ((viewerProf as any)?.role !== 'admin') notFound()
+
   const { data: target } = await admin.from('users')
     .select('id, username, avatar_url, forest_size').eq('username', username).maybeSingle()
   if (!target) notFound()

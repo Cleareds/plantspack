@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { ACTION_AMOUNTS, TIERS, TREE_STAGES } from '@/lib/sprouts'
 import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
@@ -9,7 +11,8 @@ export const metadata = {
   title: 'Sprouts - PlantsPack contribution rewards',
   description: 'Earn Sprouts by adding vegan venues, writing reviews, and sharing your vegan journey. Seed a digital tree, plant real ones, unlock partner perks.',
 }
-export const revalidate = 3600
+// Admin-only during phase 1. Anyone else gets a 404.
+export const dynamic = 'force-dynamic'
 
 const admin = createAdmin(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,6 +21,13 @@ const admin = createAdmin(
 )
 
 export default async function SproutsPage() {
+  // Admin-only gate
+  const sb = await createClient()
+  const { data: { user } } = await sb.auth.getUser()
+  if (!user) notFound()
+  const { data: viewerProfile } = await sb.from('users').select('role').eq('id', user.id).maybeSingle()
+  if ((viewerProfile as any)?.role !== 'admin') notFound()
+
   // Top contributors (public, lifetime-ranked). Currently admin-only during phase 1.
   const { data: top } = await admin.from('users')
     .select('id, username, avatar_url, sprouts_lifetime, sprouts_seeded, forest_size')

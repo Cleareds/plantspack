@@ -18,15 +18,20 @@ const admin = createAdmin(
 export default async function ProfileSproutsPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
 
+  // Admin-only during phase 1
+  const sbAuth = await createClient()
+  const { data: { user: viewer } } = await sbAuth.auth.getUser()
+  if (!viewer) notFound()
+  const { data: viewerProf } = await sbAuth.from('users').select('role').eq('id', viewer.id).maybeSingle()
+  if ((viewerProf as any)?.role !== 'admin') notFound()
+
   const { data: targetUser } = await admin.from('users')
     .select('id, username, avatar_url, sprouts_lifetime, sprouts_balance, sprouts_seeded, forest_size')
     .eq('username', username).maybeSingle()
   if (!targetUser) notFound()
   const forestSize = (targetUser as any).forest_size ?? 0
 
-  const sb = await createClient()
-  const { data: { user: viewer } } = await sb.auth.getUser()
-  const isOwn = viewer?.id === targetUser.id
+  const isOwn = viewer.id === targetUser.id
 
   // If the target has no Sprouts yet, show an empty-state page rather than 404
   const state = await getMyState(targetUser.id)

@@ -6,7 +6,7 @@ import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
 import ForestPreview from '@/components/sprouts/ForestPreview'
 
 export default function SproutsCard({
-  username, lifetime, balance, seeded, forestSize, isOwnProfile,
+  username, lifetime, balance, seeded, forestSize, isOwnProfile, viewerIsAdmin = false,
 }: {
   username: string
   lifetime: number
@@ -14,7 +14,11 @@ export default function SproutsCard({
   seeded: number
   forestSize?: number
   isOwnProfile: boolean
+  viewerIsAdmin?: boolean
 }) {
+  // Phase 1: Sprouts UI is admin-only. Card only renders when the
+  // viewer is an admin and the target has any Sprouts to show.
+  if (!viewerIsAdmin) return null
   if (!lifetime || lifetime <= 0) return null
 
   const tier = tierFor(lifetime)

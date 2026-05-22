@@ -402,6 +402,7 @@ export default function ProfilePage() {
             seeded={profile.sprouts_seeded || 0}
             forestSize={profile.forest_size || 0}
             isOwnProfile={isOwnProfile}
+            viewerIsAdmin={(currentUserProfile as any)?.role === 'admin'}
           />
 
           {/* Social · Favorites · Packs widgets (3-column on desktop).
