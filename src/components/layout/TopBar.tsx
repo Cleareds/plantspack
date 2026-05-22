@@ -121,6 +121,14 @@ export default function TopBar() {
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Resources</span>
                   </div>
+                  <Link href="/tools" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>build</span>
+                    <span className="text-sm text-on-surface">Vegan Tools</span>
+                  </Link>
+                  <Link href="/vegan" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>menu_book</span>
+                    <span className="text-sm text-on-surface">Vegan Answers</span>
+                  </Link>
                   <Link href="/support" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>payments</span>
                     <span className="text-sm text-on-surface">Pricing</span>
