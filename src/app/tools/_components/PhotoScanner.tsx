@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import AllergenSelector from './AllergenSelector'
+import AskServerCard from './AskServerCard'
 import {
   Camera,
   Upload,
@@ -228,7 +229,7 @@ export default function PhotoScanner({
   }
 
   if (status === 'result' && result) {
-    return <ResultCard result={result} cached={cached} onReset={reset} />
+    return <ResultCard result={result} cached={cached} onReset={reset} tool={tool} allergens={allergens} />
   }
 
   return (
@@ -404,7 +405,19 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
   )
 }
 
-function ResultCard({ result, cached, onReset }: { result: ScanResult; cached: boolean; onReset: () => void }) {
+function ResultCard({
+  result,
+  cached,
+  onReset,
+  tool,
+  allergens,
+}: {
+  result: ScanResult
+  cached: boolean
+  onReset: () => void
+  tool: ToolName
+  allergens: string[]
+}) {
   const theme = {
     vegan: { Icon: CheckCircle2, bg: 'bg-success/10', text: 'text-success', label: 'Vegan' },
     not_vegan: { Icon: AlertCircle, bg: 'bg-error/10', text: 'text-error', label: 'Not vegan' },
@@ -462,9 +475,13 @@ function ResultCard({ result, cached, onReset }: { result: ScanResult; cached: b
           </div>
         )}
 
+        {tool === 'menu' && (result.items?.length ?? 0) > 0 && (
+          <AskServerCard result={result} allergens={allergens} />
+        )}
+
         <button
           onClick={onReset}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary font-semibold"
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-on-primary font-semibold mt-3"
         >
           <RotateCcw className="h-4 w-4" />
           Scan another
