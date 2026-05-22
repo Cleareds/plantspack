@@ -1,0 +1,18 @@
+[
+  {"name":"Café Raízes","city":"Coimbra","country":"Portugal","address":"R. de Tomar, Coimbra, Portugal"},
+  {"name":"Cozinha Consciente","city":"Coimbra","country":"Portugal","address":"Rua de Olivença, 9,2 - 35L, Coimbra, Portugal"},
+  {"name":"O Burrito","city":"Coimbra","country":"Portugal","address":"Largo de São Salvador, Coimbra, Portugal"},
+  {"name":"Alfarroba Cafe","city":"Albufeira","country":"Portugal","address":"Parque da Corcovada Lote 31 Loja C, Albufeira, Portugal"},
+  {"name":"Veggie Momi","city":"Albufeira","country":"Portugal","address":"Rua Primeiro de Dezembro Porta 27A, Albufeira, Portugal"},
+  {"name":"Alcachofra Cafe","city":"Faro","country":"Portugal","address":"Largo pe da Cruz 25, Faro, Portugal"},
+  {"name":"Outro Lado","city":"Faro","country":"Portugal","address":"Travessa da Madalena 6, Faro, Portugal"},
+  {"name":"Vegan Box","city":"Faro","country":"Portugal","address":"R Cruz das Mestras 4, Faro, Portugal"},
+  {"name":"Libelinha Cafetaria","city":"Barcelos","country":"Portugal","address":"R. Dr. Teotónio da Fonseca, Barcelos, Portugal"},
+  {"name":"Naturena","city":"Barcelos","country":"Portugal","address":"Rua de Sertao 110, Durrães, Barcelos, Portugal"},
+  {"name":"O Arado","city":"Barcelos","country":"Portugal","address":"Rua Barjona de Freitas, 54, Barcelos, Portugal"},
+  {"name":"Mela Canela","city":"Sintra","country":"Portugal","address":"Rua Marquês de Viana 1, Sintra, Portugal"},
+  {"name":"Mela Canela - Sintra Centre","city":"Sintra","country":"Portugal","address":"Rua Dr Alfredo da Costa, 94, Sintra, Portugal"},
+  {"name":"Kaş Gurme Falafel","city":"Kas","country":"Turkey","address":"Andifli mahallesi Çukurbağlılar-2 sokak no:3/A, Kas, Turkey"},
+  {"name":"Lifeboxtr","city":"Kas","country":"Turkey","address":"Andifli mh. Fevzi Gürsoy sk. No:1/A3, Kas, Turkey"},
+  {"name":"Refresh Vegan Kitchen","city":"Kas","country":"Turkey","address":"Öztürk Sokak No 13/B, Kas, Turkey"}
+]

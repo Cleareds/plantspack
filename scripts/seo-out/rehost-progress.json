@@ -1,0 +1,10 @@
+{
+  "cursor": "ffe4b148-050e-4fb0-808b-3dc3cec0731b",
+  "ok": 108,
+  "skipped": 3546,
+  "failed": 4,
+  "bytesBefore": 49758688,
+  "bytesAfter": 9857796,
+  "startedAt": "2026-05-12T14:07:12.690Z",
+  "updatedAt": "2026-05-12T15:46:00.285Z"
+}

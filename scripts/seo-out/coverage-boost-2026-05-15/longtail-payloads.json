@@ -1,0 +1,130 @@
+[
+  {
+    "name": "Veggie Momi",
+    "city": "Albufeira",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Albufeira, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Rua Primeiro de Dezembro Porta 27A, Albufeira, Portugal",
+    "source": "longtail-2026-05-15",
+    "source_id": "portugal-longtail-veggie-momi",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Alcachofra Cafe",
+    "city": "Faro",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Faro, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Largo pe da Cruz 25, Faro, Portugal",
+    "source": "longtail-2026-05-15",
+    "source_id": "portugal-longtail-alcachofra-cafe",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Libelinha Cafetaria",
+    "city": "Barcelos",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Barcelos, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "R. Dr. Teotónio da Fonseca, Barcelos, Portugal",
+    "source": "longtail-2026-05-15",
+    "source_id": "portugal-longtail-libelinha-cafetaria",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Naturena",
+    "city": "Barcelos",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Barcelos, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Rua de Sertao 110, Durrães, Barcelos, Portugal",
+    "source": "longtail-2026-05-15",
+    "source_id": "portugal-longtail-naturena",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "O Arado",
+    "city": "Barcelos",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Barcelos, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Rua Barjona de Freitas, 54, Barcelos, Portugal",
+    "source": "longtail-2026-05-15",
+    "source_id": "portugal-longtail-o-arado",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Kaş Gurme Falafel",
+    "city": "Kas",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Kas, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Andifli mahallesi Çukurbağlılar-2 sokak no:3/A, Kas, Turkey",
+    "source": "longtail-2026-05-15",
+    "source_id": "turkey-longtail-kas-gurme-falafel",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Lifeboxtr",
+    "city": "Kas",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Kas, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Andifli mh. Fevzi Gürsoy sk. No:1/A3, Kas, Turkey",
+    "source": "longtail-2026-05-15",
+    "source_id": "turkey-longtail-lifeboxtr",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Refresh Vegan Kitchen",
+    "city": "Kas",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Kas, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Öztürk Sokak No 13/B, Kas, Turkey",
+    "source": "longtail-2026-05-15",
+    "source_id": "turkey-longtail-refresh-vegan-kitchen",
+    "tags": [
+      "longtail-2026-05-15",
+      "happycow-vegan"
+    ]
+  }
+]

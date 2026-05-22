@@ -1,0 +1,6 @@
+[
+  {"name": "La Végé Table Reims", "city": "Reims", "country": "France", "vegan_level": "fully_vegan", "address": "Reims, France", "notes": "Vegan; one daily dish"},
+  {"name": "Vegana Burgers Cascais", "city": "Cascais", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Cascais, Portugal", "notes": "Vegan burgers"},
+  {"name": "GREEN Balls & Burgers Ericeira", "city": "Ericeira", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Ericeira, Mafra, Portugal", "notes": "100% vegan food truck in skate park"},
+  {"name": "The Cru Cascais", "city": "Cascais", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Cascais, Portugal", "notes": "Organic raw vegan"}
+]

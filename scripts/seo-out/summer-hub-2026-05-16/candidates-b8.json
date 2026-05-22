@@ -1,0 +1,5 @@
+[
+  {"name": "Ouzeri Balatsos", "city": "Halkidiki", "country": "Greece", "vegan_level": "fully_vegan", "address": "Halkidiki, Greece", "notes": "100% vegan; Greek ouzeri"},
+  {"name": "Restaurant Artha", "city": "Poreč", "country": "Croatia", "vegan_level": "fully_vegan", "address": "Ul. Jože Šuran 10, 52440 Poreč, Croatia", "notes": "Istria's only 100% vegan; near town market"},
+  {"name": "Prema Vegetariano Viseu", "city": "Viseu", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Viseu, Portugal", "notes": "Vegetarian + vegan; biological"}
+]

@@ -1,0 +1,8 @@
+[
+  {"name": "Veganalina Dortmund", "city": "Dortmund", "country": "Germany", "vegan_level": "fully_vegan", "address": "Dortmund, Germany", "notes": "100% vegan; cross-referenced via community blog sweep"},
+  {"name": "GreenDay Duisburg", "city": "Duisburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Duisburg, Germany", "notes": "100% vegan; community blog mention"},
+  {"name": "Veganalina Duisburg", "city": "Duisburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Duisburg, Germany", "notes": "100% vegan; community blog mention"},
+  {"name": "Vegs Halle", "city": "Halle (Saale)", "country": "Germany", "vegan_level": "fully_vegan", "address": "Halle (Saale), Germany", "notes": "100% vegan; community blog mention"},
+  {"name": "Ökoase Halle", "city": "Halle (Saale)", "country": "Germany", "vegan_level": "fully_vegan", "address": "Halle (Saale), Germany", "notes": "100% vegan; community blog mention"},
+  {"name": "Red die grüne Küche", "city": "Heidelberg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Heidelberg, Germany", "notes": "100% vegan; community blog mention"}
+]

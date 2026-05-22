@@ -1,0 +1,650 @@
+[
+  {
+    "extracted": "Chay Village Schöneberg",
+    "dbMatch": "Chay Village",
+    "dbId": "6160f72c-80c8-45c0-9ba5-b4730bcb4b60",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Mamas Banh | Schöneberg",
+    "dbMatch": "Mamas Banh",
+    "dbId": "6e6f9a02-641d-4c91-85c0-b96e7a1cefd2",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Cigköftem Schöneberg",
+    "dbMatch": "Cigkoftem",
+    "dbId": "45847f7f-49b5-4157-9464-07e9ff116c77",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Hummus & Friends",
+    "dbMatch": "Hummus & Friends",
+    "dbId": "55f4ac47-55a8-4905-ba30-2fbbd5a60f5d",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Kebap with Attitude - Mitte",
+    "dbMatch": "Kebap with Attitude",
+    "dbId": "72363a9f-7775-49e1-b6d0-13a7f18f6e47",
+    "dbVeganLevel": "vegan_options",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "The Mood Burger Oranienburger",
+    "dbMatch": "The Mood Burger",
+    "dbId": "a7b71339-6b03-4887-9bfd-476123dc23aa",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "The Noodle Town Mitte",
+    "dbMatch": "The Noodle Town Mitte",
+    "dbId": "48b7184c-241b-444e-97d7-9286f3ba3f40",
+    "dbVeganLevel": "vegan_options",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Saveur de Bánh Mì",
+    "dbMatch": "Saveur de Banh Mi",
+    "dbId": "bf019276-ac08-457f-8555-404b30be38fa",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Vegano Mezo",
+    "dbMatch": "Vegano Mezo",
+    "dbId": "64fabdf9-6c24-412e-a107-964cd20c9ae3",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "2D Cafe Always Together",
+    "dbMatch": "Always Together",
+    "dbId": "23fc1377-b56d-402a-820f-0ef755e9b8b1",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Sfera",
+    "dbMatch": "Sfera",
+    "dbId": "07a35b54-2d8d-455c-a642-f4384f34fc14",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Huong Que",
+    "dbMatch": "Huong Que",
+    "dbId": "42d3faa6-44d7-4cae-8c59-ea7a4612a651",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Falafel Salam",
+    "dbMatch": "FalaFel",
+    "dbId": "c361563b-5d8a-43b8-baad-f155e8cf29eb",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Vegan Haus",
+    "dbMatch": "Vegan Haus",
+    "dbId": "8636d341-8938-49c7-8ada-41cd0c92cd97",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Kim999 Potsdamer Platz",
+    "dbMatch": "Kim999",
+    "dbId": "8033f1af-316e-444f-bcb6-fd6fde7c1b5e",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "KIM999 Vegan",
+    "dbMatch": "Kim999",
+    "dbId": "8033f1af-316e-444f-bcb6-fd6fde7c1b5e",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Yangguofu Malatang 杨国福（柏林）",
+    "dbMatch": "Yangguofu Malatang",
+    "dbId": "f594d1ee-9035-42ea-bceb-bfa796063795",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Umami",
+    "dbMatch": "Umami",
+    "dbId": "d86e9621-2c72-4595-9211-898e1e6f579f",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Zerö Kebab | Plant-Based Döner",
+    "dbMatch": "Zero Kebab",
+    "dbId": "61281cd0-5bd6-40cc-ae71-fc30dd38c5f9",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "GEMELLO",
+    "dbMatch": "Gemello",
+    "dbId": "44f4d12d-fae5-4b1d-80dc-a05ab0db7b0d",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "NOTHAFT CAFE",
+    "dbMatch": "Nothaft",
+    "dbId": "362d6055-a431-4c9c-be30-7b386126b9d0",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Sùsù Vegan Food",
+    "dbMatch": "Sùsù Vegan Food",
+    "dbId": "f3629b4f-9f56-4657-aae8-42977ff7a7d3",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "The Vegan Monkey",
+    "dbMatch": "The Vegan Monkey",
+    "dbId": "090c069d-0941-402a-bcd1-acdfe9ed9eeb",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "The crazy little Greek",
+    "dbMatch": "The Crazy Little Greek",
+    "dbId": "8aefddbb-3cf6-4c4f-8c1d-2a2aa9ed8921",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "IRO Izakaya Vegan",
+    "dbMatch": "Iro Izakaya Vegan",
+    "dbId": "3f55443a-cb41-4325-9124-500a015b7467",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Dervish",
+    "dbMatch": "Dervish",
+    "dbId": "2b10f5ca-0c55-42be-9f8b-397ebd04ed48",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Lily Burger \"Beef & Vegan Grill-Club“",
+    "dbMatch": "Lily Burger",
+    "dbId": "1eaaa92b-ae8b-474f-9fbd-3a52ea260d96",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "VeganBackyard",
+    "dbMatch": "Backyard",
+    "dbId": "c7f60342-8f85-4226-9e6b-6553422cbc42",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Soi & Co. Plant-Based Cafe",
+    "dbMatch": "soi & co.",
+    "dbId": "e604c03c-9232-4e8c-b72b-9200b410d449",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Froindlichst Berlin Prenzlauer Berg",
+    "dbMatch": "Froindlichst",
+    "dbId": "1c2477a2-d11f-4175-a92f-737104db841d",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "La Stella Nera",
+    "dbMatch": "La Stella Nera",
+    "dbId": "961d7efa-50c1-41ee-8419-a3b056584463",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Blumental",
+    "dbMatch": "Blumental",
+    "dbId": "ce703909-654c-4770-b104-5c443bef0db8",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "MOM’S Creation",
+    "dbMatch": "Mom's Creation",
+    "dbId": "5a6b8825-cfbc-4a1c-95c3-44be073b92fd",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Mom's Creation Vegan Restaurant Friedrichshain",
+    "dbMatch": "Mom's Creation",
+    "dbId": "5a6b8825-cfbc-4a1c-95c3-44be073b92fd",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "House of Do an - Vegetarisches, vietnamesisches Restaurant (& Cafe)",
+    "dbMatch": "Vietnam",
+    "dbId": "733d9a8c-432e-4573-9dc9-4ed0477ca7f0",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Oukan",
+    "dbMatch": "Oukan",
+    "dbId": "6f571a47-664d-43c0-8391-9bb742ba1fbd",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "The Sanctuary - Mitte",
+    "dbMatch": "The Sanctuary",
+    "dbId": "66553e0a-a8b0-48ba-8471-d3d04a22f22c",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Velicious Cafe",
+    "dbMatch": "velicious",
+    "dbId": "5c585c6b-6649-4be1-8eed-063583c99c59",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Schnitzelei Mitte",
+    "dbMatch": "Schnitzelei",
+    "dbId": "ce16bc41-3064-487d-be2d-3b101353ea2f",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "FALCO´SLICE",
+    "dbMatch": "Falco' Slice",
+    "dbId": "a758b84c-d753-4107-8bd5-3688206dd64a",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Bonvivant",
+    "dbMatch": "Bonvivant Cocktail Bistro",
+    "dbId": "c1fa6899-53b8-467d-b237-4eff643f62f9",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Pêle-Mêle",
+    "dbMatch": "Pêle Mêle",
+    "dbId": "439ae9c7-9ec1-4e9c-a1c5-27b86bcaea9b",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "The Butterfly Lovers",
+    "dbMatch": "the Butterfly Lovers",
+    "dbId": "3b2734c5-1d5f-414b-9ab4-3a10cd2af01d",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "SOY",
+    "dbMatch": "Soy",
+    "dbId": "ac9e1b8d-3b4f-421e-af95-9c882d875652",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Shisomen Vegan Ramen & Cocktails",
+    "dbMatch": "Shisomen",
+    "dbId": "15bf416e-74ea-47f3-b317-4ae5cc91fd8e",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Iimori Ramen",
+    "dbMatch": "Iimori Ramen",
+    "dbId": "dc18ac12-bc54-4ee0-b306-b7fecf360620",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Umi Vegan",
+    "dbMatch": "Umi Vegan",
+    "dbId": "59bd4a91-525c-44f6-8d5b-e5f2690b16de",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Veganaa",
+    "dbMatch": "Veganaa",
+    "dbId": "cb5dfc3f-50db-418a-95cf-f78425aac2a7",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "W The Imbiss",
+    "dbMatch": "Imbiss",
+    "dbId": "0c43b57f-c3ec-4531-9d22-1452de24004e",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "TRAMY Vietnam Kitchen",
+    "dbMatch": "Vietnam",
+    "dbId": "733d9a8c-432e-4573-9dc9-4ed0477ca7f0",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Vincent",
+    "dbMatch": "Vincent",
+    "dbId": "2a189fec-57c6-49f2-aed2-ea23761e9bad",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Feel Seoul Good",
+    "dbMatch": "Feel Seoul Good",
+    "dbId": "045f8040-7a05-4a5b-bce4-834412413a19",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "tiger club vegan sushi",
+    "dbMatch": "Tiger Club",
+    "dbId": "372cb62e-5b7d-42be-b677-7230c5312378",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Alaska Bar",
+    "dbMatch": "Alaska",
+    "dbId": "21d74dc9-5d61-4b67-b352-5fd586a7d826",
+    "dbVeganLevel": "vegan_options",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Frittenwerk Berlin Friedrichstraße",
+    "dbMatch": "Frittenwerk",
+    "dbId": "07cfd57c-4219-4824-be88-f059c1ee8898",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Ga Ya Ya",
+    "dbMatch": "Ga Ya Ya",
+    "dbId": "859e5660-7ae8-4ab2-86db-13c8231cc299",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "geh Veg",
+    "dbMatch": "Geh Veg",
+    "dbId": "8506f169-08c6-4313-b0a7-a8e04828f995",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "CHAY UMI VEGAN",
+    "dbMatch": "Umi Vegan",
+    "dbId": "59bd4a91-525c-44f6-8d5b-e5f2690b16de",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Neumanns Erntegarten",
+    "dbMatch": "Neumanns",
+    "dbId": "c3647192-3609-40dc-8f14-a4e93ee811d6",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Ketels Curry",
+    "dbMatch": "Ketels",
+    "dbId": "58a5e49c-30ec-4762-894d-e502fc9e9aa7",
+    "dbVeganLevel": "mostly_vegan",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "grüngut",
+    "dbMatch": "Grungut",
+    "dbId": "91b99aae-52ea-4073-b1b6-e45c833eeb1f",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Lalibela Restaurant - Taste of Ethiopia, Kreuzberg",
+    "dbMatch": "Lalibela",
+    "dbId": "ea9bf08d-9412-411e-bf4e-56e93dc129dc",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Vamos Veganos",
+    "dbMatch": "Vamos Veganos",
+    "dbId": "f2c72c4c-d9ec-4504-afba-dfb9b747a096",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "KOI 56",
+    "dbMatch": "Koi 56",
+    "dbId": "7731ce44-d896-4f95-be71-db8e3c0e08af",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "1990 Vegan Living",
+    "dbMatch": "1990 Vegan Living",
+    "dbId": "8e70cbbe-63be-4cdb-9121-231c8e27577d",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Con Tho",
+    "dbMatch": "Con Tho",
+    "dbId": "576f3387-dfea-4897-89c1-367a002df39e",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Good Morning Vietnam Vegan",
+    "dbMatch": "Good Morning Vietnam",
+    "dbId": "6023a985-299b-4ab4-93dc-983a4c58abb0",
+    "dbVeganLevel": "vegan_options",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Indian Street Food",
+    "dbMatch": "Indian Street Food",
+    "dbId": "85de5c44-d434-438e-a35f-6a36fa5089ad",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Vegang Prenzlauer Berg",
+    "dbMatch": "Vegang",
+    "dbId": "37e76240-8e6d-44a0-8450-8ab521f8b29d",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Bodhicitta Vegan Bowl",
+    "dbMatch": "Bodhicitta",
+    "dbId": "87a58b76-d3bd-435f-b732-511db564ef31",
+    "dbVeganLevel": "vegan_friendly",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": false
+  },
+  {
+    "extracted": "Vedang - Smashburger",
+    "dbMatch": "Vedang",
+    "dbId": "90c67485-9c57-41d9-a0ca-72304322765d",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": false,
+    "hasWebsite": true
+  },
+  {
+    "extracted": "Vegang",
+    "dbMatch": "Vegang",
+    "dbId": "37e76240-8e6d-44a0-8450-8ab521f8b29d",
+    "dbVeganLevel": "fully_vegan",
+    "dbVerified": false,
+    "hasImage": true,
+    "hasWebsite": true
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {"name": "Vegan Haus", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Berlin, Germany", "notes": "All-vegan Asian fusion (Japanese/Korean/Vietnamese)"},
+  {"name": "Mido Sakura Vegan", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Berlin, Germany", "notes": "Vietnamese/Japanese fusion 'Veganese'"},
+  {"name": "1990 Vegan Living", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Berlin, Germany", "notes": "Vietnamese-inspired family-run, small sharing bowls"},
+  {"name": "Quy Nguyen Vegan Living", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Berlin, Germany", "notes": "Mitte; Vietnamese vegan"},
+  {"name": "Umi Vegan", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Berlin, Germany", "notes": "Japanese vegan"},
+  {"name": "doen doen kebap", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Friedrichshain, 10245 Berlin, Germany", "notes": "Vegan doner with Planted; 100% vegan including ayran"},
+  {"name": "Zerö Kebab", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Rosenthaler Platz, 10119 Berlin, Germany", "notes": "Plant-based doner, 'Future Food'"},
+  {"name": "MANA Berlin", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Moabit, 10551 Berlin, Germany", "notes": "Moabit + Schöneberg; vegan brunch café"},
+  {"name": "gehVeg", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Bremer Straße 67, Berlin, Germany", "notes": "Mitte; vegan café/brunch"},
+  {"name": "Brammibal's Donuts", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Berlin, Germany", "notes": "Iconic vegan donut chain; 7+ Berlin locations"},
+  {"name": "Vöner", "city": "Berlin", "vegan_level": "fully_vegan", "address": "Boxhagener Straße 56, 10245 Berlin, Germany", "notes": "Friedrichshain; first vegan doner & currywurst in Berlin"}
+]

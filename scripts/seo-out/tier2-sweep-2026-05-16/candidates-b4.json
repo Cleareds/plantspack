@@ -1,0 +1,14 @@
+[
+  {"name": "GUTTUT", "city": "Dortmund", "country": "Germany", "vegan_level": "fully_vegan", "address": "Lindemannstr. 4, 44137 Dortmund, Germany", "notes": "100% vegan bistro; fully plant-based since 2019"},
+  {"name": "Der kleine Esel", "city": "Bochum", "country": "Germany", "vegan_level": "fully_vegan", "address": "Bochum, Germany", "notes": "Vegan burrito spot near main train station"},
+  {"name": "Be.Well Bochum", "city": "Bochum", "country": "Germany", "vegan_level": "fully_vegan", "address": "U35 Ruhr-University, Bochum, Germany", "notes": "All-vegan; fresh daily"},
+  {"name": "Hummelbude", "city": "Essen", "country": "Germany", "vegan_level": "fully_vegan", "address": "Essen, Germany", "notes": "Vegan fine dining"},
+  {"name": "Universo Vegano Bergamo", "city": "Bergamo", "country": "Italy", "vegan_level": "fully_vegan", "address": "Via Sant'Alessandro, Bergamo, Italy", "notes": "Pioneer of vegan food; opened early 2024"},
+  {"name": "Bistrot Macro Vegan", "city": "Bergamo", "country": "Italy", "vegan_level": "fully_vegan", "address": "Bergamo, Italy", "notes": "Entirely vegan menu; città bassa near university"},
+  {"name": "Yoo Restaurant l'Uncinaia", "city": "Perugia", "country": "Italy", "vegan_level": "fully_vegan", "address": "Perugia, Italy", "notes": "Vegan; organic + biodynamic"},
+  {"name": "Unique Wraps & More", "city": "Bielefeld", "country": "Germany", "vegan_level": "fully_vegan", "address": "Brackwede, Bielefeld, Germany", "notes": "100% vegan wraps + köfte"},
+  {"name": "Vegan Living Magdeburg", "city": "Magdeburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Magdeburg, Germany", "notes": "Fully vegan Asian; dim sum, sushi, spring rolls, udon"},
+  {"name": "BOTANICA Magdeburg", "city": "Magdeburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Magdeburg, Germany", "notes": "Vegan; seasonal regional emphasis"},
+  {"name": "El Vegans Hospitalet", "city": "L'Hospitalet de Llobregat", "country": "Spain", "vegan_level": "fully_vegan", "address": "Municipal Market, L'Hospitalet de Llobregat, Spain", "notes": "100% vegan store; artisanal fresh products"},
+  {"name": "Vegans Badalona", "city": "Badalona", "country": "Spain", "vegan_level": "fully_vegan", "address": "Badalona, Spain", "notes": "Catalonia's first vegan butcher shop; burgers, sausages, croquetas"}
+]

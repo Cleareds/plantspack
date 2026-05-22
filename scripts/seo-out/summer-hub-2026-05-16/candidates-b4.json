@@ -1,0 +1,9 @@
+[
+  {"name": "Avli Zakynthos", "city": "Zakynthos", "country": "Greece", "vegan_level": "fully_vegan", "address": "15 Rizospaston & Desylla Str, Zante Town, Zakynthos, Greece", "notes": "Traditional organic vegan; first on island"},
+  {"name": "Pernera Patmos", "city": "Patmos", "country": "Greece", "vegan_level": "fully_vegan", "address": "Patmos, Greece", "notes": "Organic plant-based; zucchini fritters, baba ganoush"},
+
+  {"name": "Alfarroba Cafe", "city": "Albufeira", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Albufeira, Portugal", "notes": "Vegan; organic + biological + macrobiotic"},
+  {"name": "Sugar Rabbit Kaffé", "city": "Albufeira", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Albufeira, Portugal", "notes": "Vegan café"},
+  {"name": "Veggie Momi", "city": "Albufeira", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Albufeira, Portugal", "notes": "Vegan"},
+  {"name": "All Things Dough Lagos", "city": "Lagos", "country": "Portugal", "vegan_level": "fully_vegan", "address": "Lagos, Portugal", "notes": "Vegan"}
+]

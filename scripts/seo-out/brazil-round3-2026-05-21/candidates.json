@@ -1,0 +1,60 @@
+[
+  {"name": "Cozinha Voraz Recife", "city": "Recife", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Recife - PE, Brazil", "notes": "Veganizze fully-vegan — frozen vegetal solutions + party kit"},
+  {"name": "Asia4u_vegan Recife", "city": "Recife", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Recife - PE, Brazil", "notes": "Veganizze fully-vegan — 100% vegan Asian cuisine"},
+  {"name": "Vermelho Romã Confeitaria Vegana", "city": "Recife", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Recife - PE, Brazil", "notes": "Veganizze fully-vegan — frozen vegan cakes + cheesecakes"},
+  {"name": "Explosão Vegana Recife", "city": "Recife", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Recife - PE, Brazil", "notes": "Veganizze fully-vegan — accessible anti-speciesist cuisine"},
+
+  {"name": "Mood Herbals Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan — plant-based superfoods, organic, gluten-free"},
+  {"name": "Sweet Cakes Vegan Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan gluten-free cakes + breads"},
+  {"name": "Cantina Ananda Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan — lunch + café"},
+  {"name": "misturaVeg Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan baked snacks + frozen sweets"},
+  {"name": "Brownlight Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan brownies + cookies, gluten-free"},
+  {"name": "Vega Açaí Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan açaí house"},
+  {"name": "Margot Cozinha Vegana", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan — 100% vegan collaborative kitchen"},
+  {"name": "Isabella Produtos Artesanais Florianópolis", "city": "Florianopolis", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Florianópolis - SC, Brazil", "notes": "Veganizze fully-vegan — frozen artisan vegetal burgers"},
+
+  {"name": "Veggie Sushi Home Goiânia", "city": "Goiania", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Goiânia - GO, Brazil", "notes": "Veganizze fully-vegan — Japanese cuisine"},
+  {"name": "Frô do Cerrado Bar", "city": "Goiania", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Goiânia - GO, Brazil", "notes": "Veganizze fully-vegan bar — petiscos + affective cuisine"},
+  {"name": "La Bottega Vegana Goiânia", "city": "Goiania", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Goiânia - GO, Brazil", "notes": "Veganizze fully-vegan + gluten-free"},
+  {"name": "Topá Bar Goiânia", "city": "Goiania", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Goiânia - GO, Brazil", "notes": "Veganizze fully-vegan alternative gastrobar"},
+  {"name": "Be Green Vegan Goiânia", "city": "Goiania", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Goiânia - GO, Brazil", "notes": "Veganizze fully-vegan plant-based restaurant"},
+
+  {"name": "Casa Da Vovó Manu Manaus", "city": "Manaus", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Manaus - AM, Brazil", "notes": "Veganizze fully-vegan — marmitas, sopas, vegan buffet for events"},
+  {"name": "Salgados Veganos Manaus", "city": "Manaus", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Manaus - AM, Brazil", "notes": "Veganizze fully-vegan snack shop"},
+
+  {"name": "Aquafaba Confeitaria Inclusiva Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan + wheat/dairy/egg-free"},
+  {"name": "Alero Gastronomia Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan — world cuisine versions"},
+  {"name": "Só Brownie Vegano Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan brownie specialist"},
+  {"name": "Forno Veggie Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze 100% vegan confectionery, gluten-free options"},
+  {"name": "A Boa do Dia Vegan Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan hot dogs + snacks"},
+  {"name": "Náh-Tureba Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan healthy proteic gluten-free meals"},
+  {"name": "Flora Confeitaria Vegana Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan sweets"},
+  {"name": "Donana Vegan Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan baked savouries + sweets"},
+  {"name": "Vegan House Campinas", "city": "Campinas", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Campinas - SP, Brazil", "notes": "Veganizze fully-vegan frozen marmitas"},
+
+  {"name": "Purão Vegano Belém", "city": "Belem", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Belém - PA, Brazil", "notes": "Veganizze fully-vegan — first 100% vegan buffet por kilo in Belém"},
+  {"name": "Padaria Verderosa Belém", "city": "Belem", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Belém - PA, Brazil", "notes": "Veganizze fully-vegan bakery"},
+
+  {"name": "Restaurante Natural Sol da Terra Vitória", "city": "Vitoria", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Vitória - ES, Brazil", "notes": "Veganizze fully-vegan — Capixaba family-farming ingredients"},
+  {"name": "Chef Vegan Alimentos Vitória", "city": "Vitoria", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Vitória - ES, Brazil", "notes": "Veganizze fully-vegan"},
+
+  {"name": "Cozinha e Confeitaria Da Tsu", "city": "Joao Pessoa", "country": "Brazil", "vegan_level": "fully_vegan", "address": "João Pessoa - PB, Brazil", "notes": "Veganizze fully-vegan inclusive cuisine + confectionery"},
+  {"name": "Gato Doce João Pessoa", "city": "Joao Pessoa", "country": "Brazil", "vegan_level": "fully_vegan", "address": "João Pessoa - PB, Brazil", "notes": "Veganizze fully-vegan confeitaria"},
+  {"name": "Terracota Artesanal João Pessoa", "city": "Joao Pessoa", "country": "Brazil", "vegan_level": "fully_vegan", "address": "João Pessoa - PB, Brazil", "notes": "Veganizze fully-vegan — pasta, sauces, artisan sweets delivery"},
+  {"name": "Veganaria João Pessoa", "city": "Joao Pessoa", "country": "Brazil", "vegan_level": "fully_vegan", "address": "João Pessoa - PB, Brazil", "notes": "Veganizze fully-vegan ice cream + sweets"},
+  {"name": "Serranas Vegan Food", "city": "Joao Pessoa", "country": "Brazil", "vegan_level": "fully_vegan", "address": "João Pessoa - PB, Brazil", "notes": "Veganizze fully-vegan accessibly priced"},
+  {"name": "Flor de Coentro João Pessoa", "city": "Joao Pessoa", "country": "Brazil", "vegan_level": "fully_vegan", "address": "João Pessoa - PB, Brazil", "notes": "Veganizze fully-vegan — affective + creative cuisine"},
+
+  {"name": "Moa Cozinha Natural Maceió", "city": "Maceio", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Maceió - AL, Brazil", "notes": "Veganizze fully-vegan + wheat-free sweets"},
+  {"name": "Lis de Flor Maceió", "city": "Maceio", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Maceió - AL, Brazil", "notes": "Veganizze fully-vegan frozen meals + sandwiches + sweets"},
+
+  {"name": "Raposa Vegana Cuiabá", "city": "Cuiaba", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Cuiabá - MT, Brazil", "notes": "Veganizze fully-vegan — first vegan establishment in Mato Grosso, gluten-free"},
+
+  {"name": "Green House Santa Maria", "city": "Santa Maria", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Santa Maria - RS, Brazil", "notes": "Veganizze fully-vegan — best burger in Santa Maria, animal + environmental ethics"},
+  {"name": "Bruxa Culinária Santa Maria", "city": "Santa Maria", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Santa Maria - RS, Brazil", "notes": "Veganizze fully-vegan — burgers, appetizers, ricotta"},
+
+  {"name": "Magical Vegan Natal", "city": "Natal", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Natal - RN, Brazil", "notes": "Veganizze fully-vegan"},
+  {"name": "Saliva's Veg Natal", "city": "Natal", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Natal - RN, Brazil", "notes": "Veganizze fully-vegan independent food venture"},
+  {"name": "VegRosas Natal", "city": "Natal", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Natal - RN, Brazil", "notes": "Veganizze fully-vegan artisan snacks + drinks"},
+  {"name": "Doçura Vegana Natal", "city": "Natal", "country": "Brazil", "vegan_level": "fully_vegan", "address": "Natal - RN, Brazil", "notes": "Veganizze fully-vegan + gluten/dairy/egg/refined-sugar free"}
+]

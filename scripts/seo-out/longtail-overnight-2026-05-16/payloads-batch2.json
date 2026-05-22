@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Dates & Avocados Atelier",
+    "city": "Barcelona",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Gluten-free vegan made from scratch by chef Lore Salas, Poblenou",
+    "address": "Barcelona, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-dates-avocados-atelier",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Mozaik Bahçe",
+    "city": "Fethiye",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Family-run vegetarian Fethiye, meze platter with hummus/tarator",
+    "address": "Fethiye, Turkey",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "turkey-longtail-overnight-mozaik-bahce",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Meltemi",
+    "city": "Kavala",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Seaside taverna with wide variety of vegan options Kavala",
+    "address": "Kavala, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-meltemi",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Ladolemono",
+    "city": "Kalamata",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Vegan souvlaki and burger options Kalamata",
+    "address": "Kalamata, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-ladolemono",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "myVegan Kalamata",
+    "city": "Kalamata",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan pizza, plant-based burgers, veggie cheese Kalamata",
+    "address": "Kalamata, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-myvegan-kalamata",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Legumes & Outros Vícios",
+    "city": "Coimbra",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Top-rated vegan Coimbra 9.6 rating",
+    "address": "Coimbra, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-legumes-outros-vicios",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Maria Rio",
+    "city": "Coimbra",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Vegetarian/vegan restaurant Coimbra",
+    "address": "Coimbra, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-maria-rio",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "O Palco",
+    "city": "Coimbra",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Vegetarian/vegan restaurant Coimbra 9.6",
+    "address": "Coimbra, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-o-palco",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Art of Raw",
+    "city": "Zadar",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Only vegan and raw food restaurant in Dalmatia, seasonal",
+    "address": "Zadar, Croatia",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "croatia-longtail-overnight-art-of-raw",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Pelago Veggie",
+    "city": "Athens",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Cited in Veggies Abroad Athens 2024 guide as fully vegan",
+    "address": "Athens, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-pelago-veggie",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Ghea (Panghea)",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan fine dining Italian organic locally sourced Milan",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-ghea-panghea",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  }
+]

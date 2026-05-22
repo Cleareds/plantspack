@@ -1,0 +1,28 @@
+[
+  {"name": "Mapa Verde", "city": "San Sebastián", "country": "Spain", "vegan_level": "fully_vegan", "address": "Calle Trueba 4, 20001 Donostia-San Sebastián, Spain", "notes": "San Sebastián's only 100% vegan; mindful eating, local organic"},
+  {"name": "Beganbai", "city": "Vitoria-Gasteiz", "country": "Spain", "vegan_level": "fully_vegan", "address": "Vitoria-Gasteiz, Spain", "notes": "100% vegan"},
+  {"name": "Black Salad Vitoria", "city": "Vitoria-Gasteiz", "country": "Spain", "vegan_level": "fully_vegan", "address": "Vitoria-Gasteiz, Spain", "notes": "100% vegan; Basque + international"},
+  {"name": "Umami Good Food Tenerife", "city": "Santa Cruz de Tenerife", "country": "Spain", "vegan_level": "fully_vegan", "address": "Santa Cruz de Tenerife, Spain", "notes": "Vegan cafeteria + smoothies + raw cakes"},
+  {"name": "Mel Tenerife", "city": "Santa Cruz de Tenerife", "country": "Spain", "vegan_level": "fully_vegan", "address": "Santa Cruz de Tenerife, Spain", "notes": "Vegan products + restaurant; own burger/sausages"},
+  {"name": "La Ecológica Tenerife", "city": "Santa Cruz de Tenerife", "country": "Spain", "vegan_level": "fully_vegan", "address": "Santa Cruz de Tenerife, Spain", "notes": "Artisan vegan pasta + pizza; employs disadvantaged youth"},
+  {"name": "Plantae Gastrobar", "city": "San Cristóbal de La Laguna", "country": "Spain", "vegan_level": "fully_vegan", "address": "San Cristóbal de La Laguna, Spain", "notes": "Vegan culinary art"},
+  {"name": "A Roots", "city": "Las Palmas", "country": "Spain", "vegan_level": "fully_vegan", "address": "Las Palmas de Gran Canaria, Spain", "notes": "100% vegan; Caribbean rice + 'Viennese schnitzel' seitan"},
+  {"name": "Vegetopía Veg-Away", "city": "Las Palmas", "country": "Spain", "vegan_level": "fully_vegan", "address": "Las Canteras, Las Palmas de Gran Canaria, Spain", "notes": "Jackfruit arepas; Latin American vegan"},
+
+  {"name": "Ristorante Flora", "city": "Verona", "country": "Italy", "vegan_level": "fully_vegan", "address": "Verona, Italy", "notes": "All-vegan pay-by-weight buffet"},
+  {"name": "La Lanterna Verona", "city": "Verona", "country": "Italy", "vegan_level": "fully_vegan", "address": "Verona, Italy", "notes": "Small fully vegan; Italian classics"},
+  {"name": "Haiku Palermo", "city": "Palermo", "country": "Italy", "vegan_level": "fully_vegan", "address": "Palermo, Italy", "notes": "100% vegan organic; elegant; seasonal"},
+  {"name": "In Cottura", "city": "Palermo", "country": "Italy", "vegan_level": "fully_vegan", "address": "Palermo, Italy", "notes": "Home restaurant; 100% plant-based Sicilian"},
+  {"name": "Veganda", "city": "Padua", "country": "Italy", "vegan_level": "fully_vegan", "address": "Padua, Italy", "notes": "100% vegan"},
+  {"name": "La Tecia Vegana", "city": "Padua", "country": "Italy", "vegan_level": "fully_vegan", "address": "Padua, Italy", "notes": "Vegan tavern"},
+  {"name": "Vegan Come Koala", "city": "Pisa", "country": "Italy", "vegan_level": "fully_vegan", "address": "Pisa, Italy", "notes": "Pisa's only fully vegan; deli-style"},
+  {"name": "Loving Hut Rimini", "city": "Rimini", "country": "Italy", "vegan_level": "fully_vegan", "address": "Rimini, Italy", "notes": "100% vegan Asian/Western"},
+
+  {"name": "Vegan Village Hannover", "city": "Hannover", "country": "Germany", "vegan_level": "fully_vegan", "address": "Calenbergerstr. 11, 30169 Hannover, Germany", "notes": "100% vegan Vietnamese; new management since 2025"},
+  {"name": "Veganam", "city": "Kiel", "country": "Germany", "vegan_level": "fully_vegan", "address": "Kiel, Germany", "notes": "Completely vegan"},
+  {"name": "SOUL Bremen", "city": "Bremen", "country": "Germany", "vegan_level": "fully_vegan", "address": "Am Dobben 65, 28203 Bremen, Germany", "notes": "100% vegan; no refined sugar"},
+  {"name": "NOAH Mainz", "city": "Mainz", "country": "Germany", "vegan_level": "fully_vegan", "address": "Mainz, Germany", "notes": "100% vegan pizza; homemade cashew cheese"},
+  {"name": "Alebrijes Wiesbaden", "city": "Wiesbaden", "country": "Germany", "vegan_level": "fully_vegan", "address": "Wilhelmstraße passage, Wiesbaden, Germany", "notes": "100% vegan Latin American; nachos, tacos, enchiladas"},
+  {"name": "Com Chay Mannheim", "city": "Mannheim", "country": "Germany", "vegan_level": "fully_vegan", "address": "Mannheim, Germany", "notes": "100% vegan Vietnamese"},
+  {"name": "My Heart Beats Vegan", "city": "Karlsruhe", "country": "Germany", "vegan_level": "fully_vegan", "address": "Kriegsstraße 94, 76133 Karlsruhe, Germany", "notes": "Karlsruhe's first purely plant-based; burgers/wraps/curries"}
+]

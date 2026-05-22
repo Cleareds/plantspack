@@ -1,0 +1,362 @@
+[
+  {
+    "name": "Vege Fino Za Sve",
+    "city": "Zagreb",
+    "address": "Lavoslava Ruzicke 48, Zagreb, Croatia",
+    "phone": "+385-98777577",
+    "isClosed": false,
+    "href": "/reviews/vege-fino-za-sve-zagreb-62912",
+    "country": "Croatia"
+  },
+  {
+    "name": "VEG",
+    "city": "Split",
+    "address": "Poljana Tina Ujevica 5, Split, Croatia",
+    "phone": "+385-98448476",
+    "isClosed": false,
+    "href": "/reviews/veg-split-187016",
+    "country": "Croatia"
+  },
+  {
+    "name": "YES rebel bites",
+    "city": "Osijek",
+    "address": "19H Ulica Hrvatske Republike, Osijek, Croatia",
+    "phone": "+385-31240250",
+    "isClosed": false,
+    "href": "/reviews/yes-rebel-bites-osijek-379452",
+    "country": "Croatia"
+  },
+  {
+    "name": "The Botanist",
+    "city": "Zadar",
+    "address": "Ulica Mihovila Pavlinovića 4, Zadar, Croatia",
+    "phone": "+385-922173614",
+    "isClosed": false,
+    "href": "/reviews/the-botanist-zadar-291232",
+    "country": "Croatia"
+  },
+  {
+    "name": "Al Sanpietrino Trattoria",
+    "href": "/reviews/al-sanpietrino-trattoria-lisbon-198263",
+    "address": "Beco do Maquinez 16, Lisbon, Portugal",
+    "phone": "+351-936715754",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "Casa da Mully",
+    "href": "/reviews/casa-da-mully-lisbon-481924",
+    "address": "R. Dr. Gama Barros 17 A/B, Lisbon, Portugal",
+    "phone": "+351-928324143",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "Gaya Veggie Market",
+    "href": "/reviews/gaya-veggie-market-lisbon-245113",
+    "address": "Av das Nações Unidas 21, Lisbon, Portugal",
+    "phone": "+351-911738992",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "Hale Matcha",
+    "href": "/reviews/hale-matcha-lisbon-498055",
+    "address": "R. Garcia de Orta 32D, Lisbon, Portugal",
+    "phone": "",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "Mother Burger - Saldanha",
+    "href": "/reviews/mother-burger-lisbon-190013",
+    "address": "Praça Duque de Saldanha 1, Shop 27 (at Atrium Saldanha), Lisbon, Portugal",
+    "phone": "+351-211348735",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "Pequeno Café e Bistrô - Príncipe Real",
+    "href": "/reviews/pequeno-cafe-e-bistro-lisbon-377487",
+    "address": "R. Monte Olivete 20 (at Rua da Escola Politécnica, Praça das Flores), Lisbon, Portugal",
+    "phone": "+351-213950058",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "Spill the Greens",
+    "href": "/reviews/spill-the-greens-lisbon-309018",
+    "address": "Largo José João Farinha Júnior 1, Lisbon, Portugal",
+    "phone": "+351-217930965",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "The Botanical Den",
+    "href": "/reviews/the-botanical-den-lisbon-200512",
+    "address": "Rua da Atalaia 153, Bairro Alto, Lisbon, Portugal",
+    "phone": "",
+    "isClosed": false,
+    "city": "Lisbon",
+    "country": "Portugal"
+  },
+  {
+    "name": "GAO",
+    "href": "/reviews/gao-matosinhos-214897",
+    "address": "Rua do Godinho, 866, Matosinhos, Portugal",
+    "phone": "+351-935681523",
+    "isClosed": false,
+    "city": "Matosinhos",
+    "country": "Portugal"
+  },
+  {
+    "name": "NOT SO VEGAN",
+    "href": "/reviews/not-so-vegan-matosinhos-440236",
+    "address": "Av Comendador Ferreira de Matos 615, Matosinhos, Portugal",
+    "phone": "+351-915975321",
+    "isClosed": false,
+    "city": "Matosinhos",
+    "country": "Portugal"
+  },
+  {
+    "name": "Em Carne Viva",
+    "href": "/reviews/em-carne-viva-porto-46477",
+    "address": "Avenida da Boavista, 868, Porto, Portugal",
+    "phone": "+351-932352722",
+    "isClosed": false,
+    "city": "Porto",
+    "country": "Portugal"
+  },
+  {
+    "name": "O Porto dos Gatos",
+    "href": "/reviews/o-porto-dos-gatos-porto-101292",
+    "address": "Avenida Rodrigues de Freitas, 93-95, Bonfim, Porto, Portugal",
+    "phone": "+351-222452502",
+    "isClosed": false,
+    "city": "Porto",
+    "country": "Portugal"
+  },
+  {
+    "name": "PLANTZ",
+    "href": "/reviews/plantz-porto-290929",
+    "address": "Av de Fernão de Magalhães 2960, Porto, Portugal",
+    "phone": "+351-935865366",
+    "isClosed": false,
+    "city": "Porto",
+    "country": "Portugal"
+  },
+  {
+    "name": "Verde Vida - Rua Formosa",
+    "href": "/reviews/verde-vida-porto-335638",
+    "address": "Rua Formosa 322, Porto, Portugal",
+    "phone": "",
+    "isClosed": false,
+    "city": "Porto",
+    "country": "Portugal"
+  },
+  {
+    "name": "Verde Vida II - Pimentel",
+    "href": "/reviews/verde-vida-ii-porto-417110",
+    "address": "Largo de Alberto Pimentel 38, Porto, Portugal",
+    "phone": "+351-969373107",
+    "isClosed": false,
+    "city": "Porto",
+    "country": "Portugal"
+  },
+  {
+    "name": "Terradan Pub",
+    "href": "/reviews/terradan-pub-ankara-199861",
+    "address": "Paris Str, Chile Square, Ankara, Turkey",
+    "phone": "",
+    "isClosed": false,
+    "city": "Ankara",
+    "country": "Turkey"
+  },
+  {
+    "name": "LEVEL - Vegan & Gluten Free",
+    "href": "/reviews/level-antalya-277876",
+    "address": "Civelek Sokak No:12, Antalya, Turkey",
+    "phone": "+90-5334033676",
+    "isClosed": false,
+    "city": "Antalya",
+    "country": "Turkey"
+  },
+  {
+    "name": "Sisu Kitchen %100 Vegan",
+    "href": "/reviews/sisu-kitchen-antalya-424524",
+    "address": "3808 Sk Asya sitesi Meltem mah, C3 Blok No 13 C/A Muratpaşa, Antalya, Turkey",
+    "phone": "+90-5449346234",
+    "isClosed": false,
+    "city": "Antalya",
+    "country": "Turkey"
+  },
+  {
+    "name": "Tyche",
+    "href": "/reviews/tyche-antalya-313722",
+    "address": "Çarşı, İskele Cd. 58A, Antalya, Turkey",
+    "phone": "",
+    "isClosed": false,
+    "city": "Antalya",
+    "country": "Turkey"
+  },
+  {
+    "name": "Vegan House",
+    "href": "/reviews/vegan-house-antalya-120599",
+    "address": "Altınkum, 470 Sk 9 E, Antalya, Turkey",
+    "phone": "+90-2422280700",
+    "isClosed": false,
+    "city": "Antalya",
+    "country": "Turkey"
+  },
+  {
+    "name": "The Vegan Regime",
+    "href": "/reviews/the-vegan-regime-istanbul-229467",
+    "address": "Sinanpaşa, Şair Veysi Sk. No:9 D:11A, Istanbul, Turkey",
+    "phone": "+90-5386529201",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Ayrışım Kitabevi Kafe",
+    "href": "/reviews/ayrisim-kitabevi-kafe-istanbul-446960",
+    "address": "Rasimpaşa Mh. Beydağı Sk. No:54/A, Istanbul, Turkey",
+    "phone": "+90-5313489876",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Bi Nevi Deli",
+    "href": "/reviews/bi-nevi-deli-istanbul-50484",
+    "address": "Bahtiyar Sokak no: 8, Etiler, Istanbul, Turkey",
+    "phone": "+90-2123586032",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Ethique Plant-based",
+    "href": "/reviews/ethique-plant-based-istanbul-300755",
+    "address": "Fikirtepe Mh, Volkan Sk, No: 1, Kadıköy, Istanbul, Turkey",
+    "phone": "+90-5354459566",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Kumin Vegan Lezzetler",
+    "href": "/reviews/kumin-vegan-lezzetler-istanbul-260752",
+    "address": "İzzettin Sk 55/1, Istanbul, Turkey",
+    "phone": "+90-5322555199",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Roots Shots",
+    "href": "/reviews/roots-shots-istanbul-297467",
+    "address": "Bagdat Cd. 260C, Istanbul, Turkey",
+    "phone": "+90-2163852070",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Salpa Bar",
+    "href": "/reviews/salpa-bar-istanbul-311534",
+    "address": "Osmanağa, Piri Çavuş Sk. No:3, Istanbul, Turkey",
+    "phone": "+90-5316222442",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Salve Kadıköy",
+    "href": "/reviews/salve-kadikoey-istanbul-311912",
+    "address": "Piri Çavuş Sk 4, Kadikoey, Istanbul, Turkey",
+    "phone": "+90-5399253108",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Telezzüz",
+    "href": "/reviews/telezzuez-istanbul-408228",
+    "address": "Kuşbakışı Cd. No: 16 Kuzguncuk Üsküdar, Istanbul, Turkey",
+    "phone": "+90-2165767671",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "TURP",
+    "href": "/reviews/turp-istanbul-228567",
+    "address": "Caferağa Mh, Mühürdar Karakolu Sk 12/B, Istanbul, Turkey",
+    "phone": "+90-2167730573",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Vega Vegan",
+    "href": "/reviews/vega-vegan-istanbul-505856",
+    "address": "Rasimpaşa, İzzettin Sk. No: 44/A, Istanbul, Turkey",
+    "phone": "",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Veganarsist Kadıköy - Osmanağa",
+    "href": "/reviews/veganarsist-istanbul-208058",
+    "address": "Osmanağa, Canan Sk. 20/A, Istanbul, Turkey",
+    "phone": "+90-2164187853",
+    "isClosed": false,
+    "city": "Istanbul",
+    "country": "Turkey"
+  },
+  {
+    "name": "Gibi Vegan",
+    "href": "/reviews/gibi-vegan-izmir-330848",
+    "address": "Bostanlı, Şehitler Blv No 49/C, Izmir, Turkey",
+    "phone": "",
+    "isClosed": false,
+    "city": "Izmir",
+    "country": "Turkey"
+  },
+  {
+    "name": "Tyke Kafe",
+    "href": "/reviews/tyke-kafe-izmir-103570",
+    "address": "1460 Sokak, 28/1, Izmir, Turkey",
+    "phone": "+90-5066146135",
+    "isClosed": false,
+    "city": "Izmir",
+    "country": "Turkey"
+  },
+  {
+    "name": "Yasam Vegan Kafe",
+    "href": "/reviews/yasam-kafe-izmir-77640",
+    "address": "1484 Sk 9/A, Alsancak Konak, Izmir, Turkey",
+    "phone": "+90-5340330372",
+    "isClosed": false,
+    "city": "Izmir",
+    "country": "Turkey"
+  },
+  {
+    "name": "YayaRaw",
+    "href": "/reviews/yayaraw-izmir-107126",
+    "address": "Kültür Mahallesi 1383 Sokak 7/A, Alsancak, Izmir, Turkey",
+    "phone": "+90-5449292729",
+    "isClosed": false,
+    "city": "Izmir",
+    "country": "Turkey"
+  }
+]

@@ -1,0 +1,305 @@
+{
+  "1cf98c93-3e21-4da4-8b4c-e48f06d917b3": {
+    "name": "Green Hut",
+    "city": "Zagreb",
+    "website": "https://greenhutzagreb.com",
+    "error": "curl failed"
+  },
+  "e95fbf55-a1b2-46ce-886f-6a221eeaaab7": {
+    "name": "Zelena",
+    "city": "Pula",
+    "website": "http://www.zdravozelena.hr",
+    "error": "curl failed"
+  },
+  "bd8c10d4-e3b9-4d28-b170-9907f0817cf3": {
+    "name": "Vege Lege",
+    "city": "Osijek",
+    "website": "https://vege-lege.com",
+    "error": "curl failed"
+  },
+  "ad623329-485e-42e4-a01f-50acd2b3ea1e": {
+    "name": "Natural",
+    "city": "Split",
+    "website": "https://www.natural.hr",
+    "error": "no og:image"
+  },
+  "a4e8bf19-8896-4f03-a770-7c068a2b1bd3": {
+    "name": "Ki",
+    "city": "Aveiro",
+    "website": "http://www.kimacrobiotico.com/",
+    "error": "curl failed"
+  },
+  "e33cf363-0944-4b2d-a70b-afb6a10e439c": {
+    "name": "Marimor Kitchen",
+    "city": "Antalya",
+    "website": "http://www.marimor.com.tr",
+    "error": "curl failed"
+  },
+  "fa6c638b-df5c-4c48-be9e-7ff7b577e9f5": {
+    "name": "Lime Bistro",
+    "city": "Athens",
+    "website": "https://limebistro23.wixsite.com/limebistro",
+    "error": "curl failed"
+  },
+  "06a4e56d-4caf-4c44-86b6-be8f85ad78b9": {
+    "name": "The Vegan Vandal",
+    "city": "Athens",
+    "website": "https://theveganvandal.com",
+    "error": "curl failed"
+  },
+  "2b18d53a-54c6-4fa1-9cbb-4ef2e194a800": {
+    "name": "Groceristas",
+    "city": "Athens",
+    "website": "http://www.groceristas.com",
+    "error": "curl failed"
+  },
+  "4e161e2c-cf35-43bf-a639-8cba179702ad": {
+    "name": "Troo Food",
+    "city": "Athens",
+    "website": "https://shop.troofood.gr/",
+    "error": "curl failed"
+  },
+  "9b59d54b-06d4-4b5b-b652-7c77a09b3d3c": {
+    "name": "Hubits",
+    "city": "Athens",
+    "website": "https://hubits.gr",
+    "error": "curl failed"
+  },
+  "ab78cd3c-02f0-4574-9294-2eb996487c03": {
+    "name": "Sillage",
+    "city": "Athens",
+    "website": "https://sillage.gr/",
+    "error": "no og:image"
+  },
+  "84267bbd-e84d-4175-b699-eb2bdbcaeeb4": {
+    "name": "Mimi's",
+    "city": "Athens",
+    "website": "https://mimisvegan.cafe",
+    "error": "curl failed"
+  },
+  "ce0a9ef7-b9a6-412b-9010-676ecdb800a4": {
+    "name": "Bamboo Vegan",
+    "city": "Athens",
+    "website": "https://bamboovegan.com",
+    "error": "curl failed"
+  },
+  "4b57ffca-21f4-4db1-82a1-3ef8e053869b": {
+    "name": "Ecocentre",
+    "city": "Barcelona",
+    "website": "https://www.ecocentre.cat",
+    "error": "curl failed"
+  },
+  "82bfc9d3-dcf2-47d5-ab1d-6ce54dc232bb": {
+    "name": "The Livingfood",
+    "city": "Barcelona",
+    "website": "http://www.thelivingfood.com",
+    "error": "no og:image"
+  },
+  "a9c2e42c-7c61-4056-8ab4-35d0039b6a4e": {
+    "name": "Enjoy Vegan",
+    "city": "Barcelona",
+    "website": "http://www.comidavegetarianabarcelona.com/",
+    "error": "curl failed"
+  },
+  "18c4e93d-e243-4ba0-885c-3f8826e28753": {
+    "name": "Maoz",
+    "city": "Barcelona",
+    "website": "http://www.maozusa.com/restaurants/locations/barcelona",
+    "error": "curl failed"
+  },
+  "c63de601-d62f-4ac6-8301-d685d59879e5": {
+    "name": "V Market",
+    "city": "Barcelona",
+    "website": "https://vmarket.hiboutik.com/",
+    "error": "no og:image"
+  },
+  "a78cf479-2dd0-417b-a2a6-b9af5704cd71": {
+    "name": "Vacka",
+    "city": "Barcelona",
+    "website": "http://vackabcn.es/",
+    "error": "curl failed"
+  },
+  "dc427bbe-dd49-4743-b5d3-beb96051ade6": {
+    "name": "Veggie Garden",
+    "city": "Barcelona",
+    "website": "http://www.veggiegarden.es",
+    "error": "curl failed"
+  },
+  "0814e105-9656-44c1-a74c-462949eb79e0": {
+    "name": "Juicy Jones",
+    "city": "Barcelona",
+    "website": "https://www.sincarne.net/barcelona-vegan-restaurants/juicy-jones.htm",
+    "error": "curl failed"
+  },
+  "0e6a9e72-d07d-4083-ae2f-40c13f28c515": {
+    "name": "The Vegan Corner",
+    "city": "Barcelona",
+    "website": "https://vegancornerbcn.com/",
+    "error": "no og:image"
+  },
+  "0bb40bc0-906b-4e8e-b5b9-96307e4e2a9d": {
+    "name": "Petit Brot",
+    "city": "Barcelona",
+    "website": "https://petitbrot.com/?lang=en",
+    "picked": {
+      "url": "https://res.cloudinary.com/f0ustf0ur/image/upload/v1742276503/hondatoto_rwrkdz.png",
+      "kind": "meta:og:image"
+    }
+  },
+  "d049ab0f-a281-4fca-a885-d5f1511ad202": {
+    "name": "Haiku",
+    "city": "Catania",
+    "website": "https://www.haiku-ct.it",
+    "error": "curl failed"
+  },
+  "235af9cb-385a-41a5-9d01-e61f76d4c572": {
+    "name": "Suribachy",
+    "city": "Catania",
+    "website": "https://www.suribachy.it",
+    "error": "curl failed"
+  },
+  "71b04765-de6f-4bcc-89c9-f016b13d0aa4": {
+    "name": "#RAW",
+    "city": "Florence",
+    "website": "https://rawveganfirenze.com",
+    "error": "curl failed"
+  },
+  "dcac028d-d1e2-4eb5-817c-318c198b14ae": {
+    "name": "Dolce Vegan",
+    "city": "Florence",
+    "website": "https://www.dolcevegan.it",
+    "error": "no og:image"
+  },
+  "474be607-1683-421a-8a2a-2dd9a49b65f4": {
+    "name": "Bioveggy",
+    "city": "Florence",
+    "website": "http://www.bioveggy.it",
+    "error": "curl failed"
+  },
+  "2f57a70b-48d2-4742-b46c-61858d1a2458": {
+    "name": "Sa Gulita",
+    "city": "Ibiza",
+    "website": "https://sagulitaibiza.com",
+    "error": "curl failed"
+  },
+  "a0f8bf31-3d0d-44e1-b482-bf9951ab159d": {
+    "name": "Saf Akatlar",
+    "city": "Istanbul",
+    "website": "https://eng.safrestaurant.com.tr/bio-restaurant.aspx",
+    "error": "curl failed"
+  },
+  "52e202cd-a199-41c3-a846-4cc04280de18": {
+    "name": "Vegan BellaVista Hostel",
+    "city": "Istanbul",
+    "website": "https://bellavistahostel.org",
+    "error": "curl failed"
+  },
+  "03cbf56a-2ab6-4252-b83f-c8d3777ea0c0": {
+    "name": "Pizza Pieza by Divan",
+    "city": "Istanbul",
+    "website": "https://www.divan.com.tr/restoran/pizza-pieza-by-divan",
+    "error": "no og:image"
+  },
+  "08fdf73d-0e93-41d9-ba38-3c5c2341da49": {
+    "name": "Oh my vegan",
+    "city": "Madrid",
+    "website": "https://ohmyvegan.es/",
+    "error": "no og:image"
+  },
+  "1da9df98-5193-4980-9cf5-17139ba1fa9b": {
+    "name": "Planeta Vegano",
+    "city": "Madrid",
+    "website": "https://www.planetavegano.com",
+    "error": "no og:image"
+  },
+  "9fb8eb94-4929-4a5a-a56e-0842476d2515": {
+    "name": "The Vegan Store",
+    "city": "Madrid",
+    "website": "https://www.veganstore.es",
+    "error": "curl failed"
+  },
+  "629f96c7-d584-4323-a7c8-7ee89d7ee3f4": {
+    "name": "Loving Hut",
+    "city": "Madrid",
+    "website": "https://madrid.lovinghut.es",
+    "error": "no og:image"
+  },
+  "4f392534-7f50-466f-b7ec-12660554454f": {
+    "name": "Merry Cherry Vegan",
+    "city": "Milan",
+    "website": "https://www.merrycherryveg.com",
+    "error": "curl failed"
+  },
+  "9e66d6bf-e5a9-4dd6-9e1b-bb07bed53129": {
+    "name": "Flower Burger Milano Bicocca",
+    "city": "Milan",
+    "website": "https://www.flowerburger.it/negozi/flower-burger-milano-bicocca/",
+    "error": "curl failed"
+  },
+  "124c2dec-642b-4616-a36d-c24112ba1733": {
+    "name": "Veganfruttariano",
+    "city": "Milan",
+    "website": "https://www.veganfruttariano.it/",
+    "error": "no og:image"
+  },
+  "f05cfdbe-56b9-43e9-abfd-42888fd470de": {
+    "name": "Cibo",
+    "city": "Milan",
+    "website": "https://www.cibonatura.com/",
+    "error": "no og:image"
+  },
+  "82c71018-0b96-4a17-8e80-3aaa31c2c34a": {
+    "name": "VeganArt",
+    "city": "Naples",
+    "website": "https://www.veganartnapoli.com",
+    "error": "curl failed"
+  },
+  "a821b227-85b4-4174-99c5-75e6943a92f7": {
+    "name": "Haiku",
+    "city": "Palermo",
+    "website": "http://www.haikupalermo.it",
+    "error": "curl failed"
+  },
+  "c49965fc-8cbe-427f-96e9-00a4e6f14bf1": {
+    "name": "Vegan Bistró",
+    "city": "Palma de Mallorca",
+    "website": "https://veganbistro.es/",
+    "error": "curl failed"
+  },
+  "9cc5d7aa-c9a0-4ea8-a085-bfb34bbdb8d0": {
+    "name": "Impact Food",
+    "city": "Rome",
+    "website": "https://www.impactcorp.it/impact-food/",
+    "error": "no og:image"
+  },
+  "28095f9a-d954-4c12-b371-bce615bd4cf4": {
+    "name": "Universo Vegano",
+    "city": "Rome",
+    "website": "https://www.universovegano.it",
+    "error": "no og:image"
+  },
+  "b054ea80-6c8f-4e11-810c-c87c7c131fc1": {
+    "name": "Ti Diro",
+    "city": "Rome",
+    "website": "https://www.tidiro.net",
+    "error": "curl failed"
+  },
+  "d4f53d62-a188-4790-bed4-5c40d01f26f8": {
+    "name": "Το Γλυκοπλαστειον της Φυσης",
+    "city": "Thessaloniki",
+    "website": "https://glykoplasteionthsfyshs.com",
+    "error": "curl failed"
+  },
+  "2da9f697-a06d-43f9-ab14-c36cba3acb91": {
+    "name": "The Saints Stores",
+    "city": "Thessaloniki",
+    "website": "https://thesaintsstores.business.site/?m=true",
+    "error": "curl failed"
+  },
+  "4e5e5e07-f52c-4bc2-baf6-90b9909d3f7f": {
+    "name": "Loving Hut",
+    "city": "Valencia",
+    "website": "https://www.lovinghut.es/www.lovinghutcuisine.com/index.html",
+    "error": "no og:image"
+  }
+}

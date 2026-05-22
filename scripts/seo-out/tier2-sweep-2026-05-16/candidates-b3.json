@@ -1,0 +1,14 @@
+[
+  {"name": "Katzentempel Freiburg", "city": "Freiburg im Breisgau", "country": "Germany", "vegan_level": "fully_vegan", "address": "Freiburg im Breisgau, Germany", "notes": "All-vegan cat-cafe chain; breakfast, soups, daily specials"},
+  {"name": "Blattwerk", "city": "Freiburg im Breisgau", "country": "Germany", "vegan_level": "fully_vegan", "address": "Freiburg im Breisgau, Germany", "notes": "100% vegan"},
+  {"name": "Katzentempel Heidelberg", "city": "Heidelberg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Heidelberg, Germany", "notes": "Vegan cat-cafe with rescue cats"},
+  {"name": "NUDE Food & Bar", "city": "Augsburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Schaezlerstraße, 86150 Augsburg, Germany", "notes": "Trendy vegan; bowls"},
+  {"name": "dada Regensburg", "city": "Regensburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Regensburg, Germany", "notes": "100% plant-based; regional products"},
+  {"name": "Chay Viet Tadilen", "city": "Würzburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Würzburg, Germany", "notes": "Vietnamese exclusively vegan"},
+  {"name": "Vrohstoff", "city": "Würzburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Würzburg, Germany", "notes": "Vegan + GF + low-allergen"},
+  {"name": "Biosteria Piccapane", "city": "Cutrofiano", "country": "Italy", "vegan_level": "fully_vegan", "address": "Cutrofiano, 73020 Lecce, Italy", "notes": "Salento; 100% vegan; garden + outdoor theater"},
+  {"name": "B12 Restaurant Bar Vega", "city": "Girona", "country": "Spain", "vegan_level": "fully_vegan", "address": "Carrer de les Hortes, 17004 Girona, Spain", "notes": "100% vegan; daily menus + burgers"},
+  {"name": "El Vergel Tarragona", "city": "Tarragona", "country": "Spain", "vegan_level": "fully_vegan", "address": "Tarragona, Spain", "notes": "Plant-based; vegan chorizo, mushroom croquettes, vegan tacos"},
+  {"name": "Berraco Lleida", "city": "Lleida", "country": "Spain", "vegan_level": "fully_vegan", "address": "Lleida, Spain", "notes": "Vegan restaurant"},
+  {"name": "Sama Sama Veggie", "city": "Salou", "country": "Spain", "vegan_level": "fully_vegan", "address": "Salou, 43840 Tarragona, Spain", "notes": "100% plant-based burgers/bowls/tapas"}
+]

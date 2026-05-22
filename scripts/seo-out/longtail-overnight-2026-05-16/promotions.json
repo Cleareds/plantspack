@@ -1,0 +1,142 @@
+[
+  {
+    "id": "f4e45c0f-fbc0-457e-9a87-f982b502f4f7",
+    "name": "Antonio Chiodi Latini",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Exclusively plant-based dishes Turin fine dining"
+  },
+  {
+    "id": "7f4bb983-2c23-4138-ae88-7bddbfa96dfa",
+    "name": "Idem con Patate",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "100% plant-based bistro Quadrilatero Turin"
+  },
+  {
+    "id": "33ad619d-49ec-429b-b8db-b322372c1fb6",
+    "name": "Estravagario",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "100% vegan anti-speciesist queer space"
+  },
+  {
+    "id": "3e0e0a76-da11-455a-bc55-d8868e10de76",
+    "name": "Pasto Nomade",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Plant-based cuisine Bologna"
+  },
+  {
+    "id": "5e00f411-969c-4d5c-af73-0be2481f5e70",
+    "name": "GingerGi",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Tapas-style vegan tour menu Padua"
+  },
+  {
+    "id": "95e32930-4de3-4338-90b2-86fcafe5ed51",
+    "name": "Genuino",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Vegan restaurant Trieste"
+  },
+  {
+    "id": "12835dc7-a779-4efd-b49f-1f51117a1096",
+    "name": "'O Grin",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "First completely vegan takeaway in Naples"
+  },
+  {
+    "id": "8c346893-ac51-4e0b-b490-7e86eb9ac77f",
+    "name": "Un Sorriso Integral",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Organic vegetarian and vegan Naples"
+  },
+  {
+    "id": "5879b02b-1da4-4d40-b7fc-eb58046c9b21",
+    "name": "Il Margutta veggy food & art",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Rome's oldest vegetarian restaurant 1979 with vegan options"
+  },
+  {
+    "id": "f24e7149-f7c0-48fc-8cf4-343517b23119",
+    "name": "La Cucina dei Colori",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "All vegetarian or vegan dishes counter-service Catania"
+  },
+  {
+    "id": "914f266e-9c1f-45d6-a068-ff36b2e5bc64",
+    "name": "Restaurante Lluvia",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Vegan paradise Alicante Asian/Italian/Latin American"
+  },
+  {
+    "id": "13995677-d0a4-4675-b45f-5c41a487384b",
+    "name": "Bodhigreen",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Vegetarian/vegan/raw fresh food Alicante"
+  },
+  {
+    "id": "2acba178-5ec8-44ca-a3e4-9417b5493c61",
+    "name": "manuka",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Vegetarian/vegan health food restaurant 5 branches"
+  },
+  {
+    "id": "cee52752-8f7f-4c00-b11b-ed4c87df0fb7",
+    "name": "El Vergel",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Plant-based cuisine Tarragona, bold flavors"
+  },
+  {
+    "id": "7fab8e4d-8c92-4bcf-959a-ccbbc928de51",
+    "name": "Amelie Green",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Diverse healthy vegan/vegetarian Guanarteme"
+  },
+  {
+    "id": "9480c3cc-514f-4f55-9e1c-3f91922a494d",
+    "name": "Mr. Kale",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Daily lunch menus with vegan/vegetarian options"
+  },
+  {
+    "id": "6f5291ba-2d43-4e86-b4ae-6339ade24441",
+    "name": "Zoe Food",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Popular vegetarian and vegan spot Las Palmas"
+  },
+  {
+    "id": "99dd5c94-be92-4014-84d1-8527973effeb",
+    "name": "Fala Fala",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan",
+    "note": "Almost entirely vegan menu Funchal"
+  },
+  {
+    "id": "aa270166-c0dc-4b72-b4fd-39342552d929",
+    "name": "Avocado",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Fully vegan restaurant near Heraklion"
+  },
+  {
+    "id": "d466f1bb-9d27-481e-8c3e-4024db2d460b",
+    "name": "Green Goodness Hvar",
+    "from": "vegan_friendly",
+    "to": "fully_vegan",
+    "note": "Juice bar Hvar by Canadian expat Julie"
+  }
+]

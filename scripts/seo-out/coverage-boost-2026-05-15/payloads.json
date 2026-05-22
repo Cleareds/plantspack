@@ -1,0 +1,675 @@
+[
+  {
+    "name": "Vege Fino Za Sve",
+    "city": "Zagreb",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Zagreb, Croatia. Listed as vegan-only on HappyCow.",
+    "address": "Lavoslava Ruzicke 48, Zagreb, Croatia",
+    "phone": "+385-98777577",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "croatia-vege-fino-za-sve",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "VEG",
+    "city": "Split",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Split, Croatia. Listed as vegan-only on HappyCow.",
+    "address": "Poljana Tina Ujevica 5, Split, Croatia",
+    "phone": "+385-98448476",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "croatia-veg",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "YES rebel bites",
+    "city": "Osijek",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Osijek, Croatia. Listed as vegan-only on HappyCow.",
+    "address": "19H Ulica Hrvatske Republike, Osijek, Croatia",
+    "phone": "+385-31240250",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "croatia-yes-rebel-bites",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "The Botanist",
+    "city": "Zadar",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Zadar, Croatia. Listed as vegan-only on HappyCow.",
+    "address": "Ulica Mihovila Pavlinovića 4, Zadar, Croatia",
+    "phone": "+385-922173614",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "croatia-the-botanist",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Al Sanpietrino Trattoria",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Beco do Maquinez 16, Lisbon, Portugal",
+    "phone": "+351-936715754",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-al-sanpietrino-trattoria",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Casa da Mully",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "R. Dr. Gama Barros 17 A/B, Lisbon, Portugal",
+    "phone": "+351-928324143",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-casa-da-mully",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Gaya Veggie Market",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Av das Nações Unidas 21, Lisbon, Portugal",
+    "phone": "+351-911738992",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-gaya-veggie-market",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Hale Matcha",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "R. Garcia de Orta 32D, Lisbon, Portugal",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-hale-matcha",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Mother Burger - Saldanha",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Praça Duque de Saldanha 1, Shop 27 (at Atrium Saldanha), Lisbon, Portugal",
+    "phone": "+351-211348735",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-mother-burger-saldanha",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Pequeno Café e Bistrô - Príncipe Real",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "R. Monte Olivete 20 (at Rua da Escola Politécnica, Praça das Flores), Lisbon, Portugal",
+    "phone": "+351-213950058",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-pequeno-cafe-e-bistro-principe-real",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Spill the Greens",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Largo José João Farinha Júnior 1, Lisbon, Portugal",
+    "phone": "+351-217930965",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-spill-the-greens",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "The Botanical Den",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Lisbon, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Rua da Atalaia 153, Bairro Alto, Lisbon, Portugal",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-the-botanical-den",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "GAO",
+    "city": "Matosinhos",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Matosinhos, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Rua do Godinho, 866, Matosinhos, Portugal",
+    "phone": "+351-935681523",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-gao",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "NOT SO VEGAN",
+    "city": "Matosinhos",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Matosinhos, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Av Comendador Ferreira de Matos 615, Matosinhos, Portugal",
+    "phone": "+351-915975321",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-not-so-vegan",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Em Carne Viva",
+    "city": "Porto",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Porto, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Avenida da Boavista, 868, Porto, Portugal",
+    "phone": "+351-932352722",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-em-carne-viva",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "O Porto dos Gatos",
+    "city": "Porto",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Porto, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Avenida Rodrigues de Freitas, 93-95, Bonfim, Porto, Portugal",
+    "phone": "+351-222452502",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-o-porto-dos-gatos",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "PLANTZ",
+    "city": "Porto",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Porto, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Av de Fernão de Magalhães 2960, Porto, Portugal",
+    "phone": "+351-935865366",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-plantz",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Verde Vida - Rua Formosa",
+    "city": "Porto",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Porto, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Rua Formosa 322, Porto, Portugal",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-verde-vida-rua-formosa",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Verde Vida II - Pimentel",
+    "city": "Porto",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Porto, Portugal. Listed as vegan-only on HappyCow.",
+    "address": "Largo de Alberto Pimentel 38, Porto, Portugal",
+    "phone": "+351-969373107",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "portugal-verde-vida-ii-pimentel",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Terradan Pub",
+    "city": "Ankara",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Ankara, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Paris Str, Chile Square, Ankara, Turkey",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-terradan-pub",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "LEVEL - Vegan & Gluten Free",
+    "city": "Antalya",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Antalya, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Civelek Sokak No:12, Antalya, Turkey",
+    "phone": "+90-5334033676",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-level-vegan-gluten-free",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Sisu Kitchen %100 Vegan",
+    "city": "Antalya",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Antalya, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "3808 Sk Asya sitesi Meltem mah, C3 Blok No 13 C/A Muratpaşa, Antalya, Turkey",
+    "phone": "+90-5449346234",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-sisu-kitchen-100-vegan",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Tyche",
+    "city": "Antalya",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Antalya, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Çarşı, İskele Cd. 58A, Antalya, Turkey",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-tyche",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Vegan House",
+    "city": "Antalya",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Antalya, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Altınkum, 470 Sk 9 E, Antalya, Turkey",
+    "phone": "+90-2422280700",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-vegan-house",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "The Vegan Regime",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Sinanpaşa, Şair Veysi Sk. No:9 D:11A, Istanbul, Turkey",
+    "phone": "+90-5386529201",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-the-vegan-regime",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Ayrışım Kitabevi Kafe",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Rasimpaşa Mh. Beydağı Sk. No:54/A, Istanbul, Turkey",
+    "phone": "+90-5313489876",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-ayr-s-m-kitabevi-kafe",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Bi Nevi Deli",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Bahtiyar Sokak no: 8, Etiler, Istanbul, Turkey",
+    "phone": "+90-2123586032",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-bi-nevi-deli",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Ethique Plant-based",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Fikirtepe Mh, Volkan Sk, No: 1, Kadıköy, Istanbul, Turkey",
+    "phone": "+90-5354459566",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-ethique-plant-based",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Kumin Vegan Lezzetler",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "İzzettin Sk 55/1, Istanbul, Turkey",
+    "phone": "+90-5322555199",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-kumin-vegan-lezzetler",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Roots Shots",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Bagdat Cd. 260C, Istanbul, Turkey",
+    "phone": "+90-2163852070",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-roots-shots",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Salpa Bar",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Osmanağa, Piri Çavuş Sk. No:3, Istanbul, Turkey",
+    "phone": "+90-5316222442",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-salpa-bar",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Salve Kadıköy",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Piri Çavuş Sk 4, Kadikoey, Istanbul, Turkey",
+    "phone": "+90-5399253108",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-salve-kad-koy",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Telezzüz",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Kuşbakışı Cd. No: 16 Kuzguncuk Üsküdar, Istanbul, Turkey",
+    "phone": "+90-2165767671",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-telezzuz",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "TURP",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Caferağa Mh, Mühürdar Karakolu Sk 12/B, Istanbul, Turkey",
+    "phone": "+90-2167730573",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-turp",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Vega Vegan",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Rasimpaşa, İzzettin Sk. No: 44/A, Istanbul, Turkey",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-vega-vegan",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Veganarsist Kadıköy - Osmanağa",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Istanbul, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Osmanağa, Canan Sk. 20/A, Istanbul, Turkey",
+    "phone": "+90-2164187853",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-veganarsist-kad-koy-osmanaga",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Gibi Vegan",
+    "city": "Izmir",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Izmir, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Bostanlı, Şehitler Blv No 49/C, Izmir, Turkey",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-gibi-vegan",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Tyke Kafe",
+    "city": "Izmir",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Izmir, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "1460 Sokak, 28/1, Izmir, Turkey",
+    "phone": "+90-5066146135",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-tyke-kafe",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "Yasam Vegan Kafe",
+    "city": "Izmir",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Izmir, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "1484 Sk 9/A, Alsancak Konak, Izmir, Turkey",
+    "phone": "+90-5340330372",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-yasam-vegan-kafe",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  },
+  {
+    "name": "YayaRaw",
+    "city": "Izmir",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan venue in Izmir, Turkey. Listed as vegan-only on HappyCow.",
+    "address": "Kültür Mahallesi 1383 Sokak 7/A, Alsancak, Izmir, Turkey",
+    "phone": "+90-5449292729",
+    "source": "coverage-boost-2026-05-15",
+    "source_id": "turkey-yayaraw",
+    "tags": [
+      "coverage-boost-2026-05-15",
+      "happycow-vegan"
+    ]
+  }
+]

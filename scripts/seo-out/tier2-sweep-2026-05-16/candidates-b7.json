@@ -1,0 +1,7 @@
+[
+  {"name": "Vegano A Seimeira", "city": "Lugo", "country": "Spain", "vegan_level": "fully_vegan", "address": "Lugo, Spain", "notes": "Homemade vegan food"},
+  {"name": "Veldkueche", "city": "Cottbus", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cottbus, Germany", "notes": "Vegan street food"},
+  {"name": "Sen Vegan Halle", "city": "Halle (Saale)", "country": "Germany", "vegan_level": "fully_vegan", "address": "Moritzburgring 1, 06108 Halle (Saale), Germany", "notes": "Vegan Vietnamese"},
+  {"name": "Festgebissen", "city": "Jena", "country": "Germany", "vegan_level": "fully_vegan", "address": "Jena, Germany", "notes": "Vegan food (jena.vegan.food)"},
+  {"name": "Cigköftem Ulm", "city": "Ulm", "country": "Germany", "vegan_level": "fully_vegan", "address": "Ulm, Germany", "notes": "100% plant-based Turkish çiğköfte"}
+]

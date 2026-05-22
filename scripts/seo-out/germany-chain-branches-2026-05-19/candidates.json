@@ -1,0 +1,6 @@
+[
+  {"name": "Katzentempel Dortmund", "city": "Dortmund", "country": "Germany", "vegan_level": "fully_vegan", "address": "Kampstraße 96, 44137 Dortmund, Germany", "notes": "Katzentempel official locator branch — Dortmund"},
+  {"name": "Katzentempel Hamburg Holstenwall", "city": "Hamburg", "country": "Germany", "vegan_level": "fully_vegan", "address": "Ludwig-Erhard-Straße 32, 20459 Hamburg, Germany", "notes": "Katzentempel official locator branch — Hamburg Holstenwall (2nd Hamburg location)"},
+  {"name": "Katzentempel München Freiham", "city": "Munich", "country": "Germany", "vegan_level": "fully_vegan", "address": "Amalie-Nacken-Str. 4, 81248 München, Germany", "notes": "Katzentempel official locator branch — Munich Freiham (Mahatma-Gandhi-Platz)"},
+  {"name": "Sattgrün Düsseldorf Hafen", "city": "Düsseldorf", "country": "Germany", "vegan_level": "fully_vegan", "address": "Brückenstr. 12, 40221 Düsseldorf, Germany", "notes": "Sattgrün official locator branch — Düsseldorf Hafen (2nd Düsseldorf location, was missing)"}
+]

@@ -1,0 +1,14 @@
+[
+  {"name": "Bubita Sangria Bar", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Barcelona, Spain", "notes": "All-vegan tapas + sangria; croquettes, gnocchi, vegan shrimp cocktail"},
+  {"name": "Gallo Santo", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Gràcia, Barcelona, Spain", "notes": "Spain's first fully plant-based Mexican; Gràcia + Carrer de la Marina"},
+  {"name": "Desoriente", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Barcelona, Spain", "notes": "All-vegan Asian fusion; sushi + Thai"},
+  {"name": "Good Shit Vegan Kebabs", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Barcelona, Spain", "notes": "Heura-filled vegan pita kebabs"},
+  {"name": "Bien Kebab", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Carrer Pujades 27, 08005 Barcelona, Spain", "notes": "Poblenou; Heura kebabs sliced from spit"},
+  {"name": "Vegan Corner Barcelona", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Plaça Sant Jaume, Barcelona, Spain", "notes": "Daily vegan croissants/donuts/muffins/pastries"},
+  {"name": "Vida Café Barcelona", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Horta, Barcelona, Spain", "notes": "100% plant-based tapas/sandwiches/bowls/sweets"},
+  {"name": "Noush", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Carrer d'Olzinelles, Sants, Barcelona, Spain", "notes": "Spain's only fully vegan Persian/Iranian restaurant; opened summer 2025"},
+  {"name": "Roots & Rolls", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Eixample, Barcelona, Spain", "notes": "100% vegan Asian; vegan sushi, ramen, gyoza"},
+  {"name": "UMAMI Plant Based", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Gràcia, Barcelona, Spain", "notes": "All-vegan Japanese; bao/karaage/gyoza/katsu/ramen"},
+  {"name": "Oz Bakery", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Plaça de la Vila de Gràcia 11, 08012 Barcelona, Spain", "notes": "Vegan bakery; Gràcia + Sarrià-Sant Gervasi"},
+  {"name": "Hanai Pastelería Alternativa", "city": "Barcelona", "vegan_level": "fully_vegan", "address": "Barcelona, Spain", "notes": "Vegan + gluten-free bakery; Gràcia + Born"}
+]

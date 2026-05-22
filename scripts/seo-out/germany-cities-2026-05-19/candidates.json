@@ -1,0 +1,38 @@
+[
+  {"name": "VEGEFARM Bremen", "city": "Bremen", "country": "Germany", "vegan_level": "fully_vegan", "address": "Bremen, Germany", "notes": "100% vegan Taiwanese-Chinese; soy meat, rice, noodles"},
+  {"name": "pressgut Bremen", "city": "Bremen", "country": "Germany", "vegan_level": "fully_vegan", "address": "Bremen, Germany", "notes": "Bremen's first 100% vegan cold-press juice bar"},
+  {"name": "Vielleicht Bremen", "city": "Bremen", "country": "Germany", "vegan_level": "fully_vegan", "address": "Neustadt, Bremen, Germany", "notes": "Small vegan café; cakes, lunch, pastries"},
+
+  {"name": "sushi green Cologne", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "100% vegan sushi; creative rolls and starters"},
+  {"name": "Cotell", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "Seasonal 3-4 course menus; fully vegan fine dining"},
+  {"name": "Well Being Cologne", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "Organic vegan; fresh cooking, organic tofu, no MSG"},
+  {"name": "Virtuous Pie Cologne", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "100% plant-based pizza, pasta, ice cream"},
+  {"name": "Nobiko Cologne", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "Vegan noodle bar; udon, rice, Japanese cuisine"},
+  {"name": "Vegan Junk Food Bar Cologne", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "Veganized junk food; loaded fries, McCruelty Free burgers, mac-n-cheese"},
+  {"name": "Trash Chic Cologne", "city": "Cologne", "country": "Germany", "vegan_level": "fully_vegan", "address": "Cologne, Germany", "notes": "Fully vegan since Aug 2019"},
+
+  {"name": "Der Falsche Hase Dresden", "city": "Dresden", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hechtviertel, Dresden, Germany", "notes": "Dresden's veteran vegan; exclusively vegan since 2011"},
+  {"name": "Steffenhagen Dresden", "city": "Dresden", "country": "Germany", "vegan_level": "fully_vegan", "address": "Neustadt, Dresden, Germany", "notes": "Vegan restaurant + pub"},
+  {"name": "Vegan House Dresden Neustadt", "city": "Dresden", "country": "Germany", "vegan_level": "fully_vegan", "address": "Neustadt, Dresden, Germany", "notes": "Vegan Asian/Vietnamese; 2 Dresden locations"},
+
+  {"name": "Life Deli Frankfurt", "city": "Frankfurt am Main", "country": "Germany", "vegan_level": "fully_vegan", "address": "Jewish Museum, Frankfurt am Main, Germany", "notes": "Fully vegan; museum-attached"},
+  {"name": "Vegan Pirates Frankfurt", "city": "Frankfurt am Main", "country": "Germany", "vegan_level": "fully_vegan", "address": "Frankfurt am Main, Germany", "notes": "100% vegan; broad menu"},
+  {"name": "Vegins Frankfurt", "city": "Frankfurt am Main", "country": "Germany", "vegan_level": "fully_vegan", "address": "Frankfurt am Main, Germany", "notes": "100% vegan"},
+
+  {"name": "Pausenraum Freiburg", "city": "Freiburg im Breisgau", "country": "Germany", "vegan_level": "fully_vegan", "address": "Zahringen, Freiburg im Breisgau, Germany", "notes": "Vegan café; fair-trade coffee, GF lunch, cakes"},
+  {"name": "Beb&Bene Freiburg", "city": "Freiburg im Breisgau", "country": "Germany", "vegan_level": "fully_vegan", "address": "Freiburg im Breisgau, Germany", "notes": "Veggie/vegan crêperie lounge; 100% organic, regional"},
+
+  {"name": "Hippo Bio Vegan", "city": "Hannover", "country": "Germany", "vegan_level": "fully_vegan", "address": "Südstadt, Hannover, Germany", "notes": "100% vegan + bio-certified café-restaurant"},
+  {"name": "CHAM Hannover", "city": "Hannover", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hannover, Germany", "notes": "100% vegan Vietnamese-Asian"},
+  {"name": "Hiller Hannover", "city": "Hannover", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hannover, Germany", "notes": "Completely vegan since 2012"},
+  {"name": "Liners Food Hannover", "city": "Hannover", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hannover, Germany", "notes": "100% vegan; burgers, German-style fast food"},
+  {"name": "All Vegan Hannover Markthalle", "city": "Hannover", "country": "Germany", "vegan_level": "fully_vegan", "address": "Markthalle, Hannover, Germany", "notes": "Hannover's first purely plant-based stand in the Markthalle"},
+
+  {"name": "Heaven's Kitchen Stuttgart", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart, Germany", "notes": "Entirely plant-based; zero-waste, seasonal local"},
+  {"name": "Energetic Life Stuttgart", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart, Germany", "notes": "Vegan + GF + organic; health-focused"},
+  {"name": "Veganes Gold", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart, Germany", "notes": "Fully vegan; green courtyard, regional + organic"},
+  {"name": "vhy! Stuttgart", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart, Germany", "notes": "Vegan restaurant + café; plant-based lifestyle"},
+  {"name": "Viegan Stuttgart", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart, Germany", "notes": "Totally Vietnamese, totally vegan"},
+  {"name": "Doen Doen Stuttgart", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart, Germany", "notes": "Fully vegan kebap; vegan döner, yufka, baklava, vegan ayran"},
+  {"name": "Köhlerstüble", "city": "Stuttgart", "country": "Germany", "vegan_level": "fully_vegan", "address": "Stuttgart-Ost, Stuttgart, Germany", "notes": "100% vegan home cooking; hand-scraped spaetzle, Swabian classics"}
+]

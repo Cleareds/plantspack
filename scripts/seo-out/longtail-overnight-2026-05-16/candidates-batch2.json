@@ -1,0 +1,23 @@
+[
+  {"name":"Winners Vegan","city":"Athens","country":"Greece","level":"fully_vegan","note":"Plant-based international dishes at Niki Athens Hotel Plaka"},
+  {"name":"Baba Ghanoush","city":"Athens","country":"Greece","level":"mostly_vegan","note":"Mediterranean/Middle Eastern eatery Pangrati neighborhood Athens"},
+  {"name":"Dates & Avocados Atelier","city":"Barcelona","country":"Spain","level":"fully_vegan","note":"Gluten-free vegan made from scratch by chef Lore Salas, Poblenou"},
+  {"name":"Mozaik Bahçe","city":"Fethiye","country":"Turkey","level":"mostly_vegan","note":"Family-run vegetarian Fethiye, meze platter with hummus/tarator"},
+  {"name":"Meltemi","city":"Kavala","country":"Greece","level":"vegan_friendly","note":"Seaside taverna with wide variety of vegan options Kavala"},
+  {"name":"Ladolemono","city":"Kalamata","country":"Greece","level":"vegan_options","note":"Vegan souvlaki and burger options Kalamata"},
+  {"name":"myVegan Kalamata","city":"Kalamata","country":"Greece","level":"fully_vegan","note":"Vegan pizza, plant-based burgers, veggie cheese Kalamata"},
+  {"name":"Legumes & Outros Vícios","city":"Coimbra","country":"Portugal","level":"fully_vegan","note":"Top-rated vegan Coimbra 9.6 rating"},
+  {"name":"Maria Rio","city":"Coimbra","country":"Portugal","level":"mostly_vegan","note":"Vegetarian/vegan restaurant Coimbra"},
+  {"name":"O Palco","city":"Coimbra","country":"Portugal","level":"mostly_vegan","note":"Vegetarian/vegan restaurant Coimbra 9.6"},
+  {"name":"Salsa Verde","city":"Évora","country":"Portugal","level":"mostly_vegan","note":"Recommended vegetarian restaurant Évora"},
+  {"name":"Madre Tierra","city":"Toledo","country":"Spain","level":"mostly_vegan","note":"Vegetarian/vegan restaurant Toledo"},
+  {"name":"Yerbabuena","city":"Toledo","country":"Spain","level":"vegan_friendly","note":"Vegetarian-leaning restaurant Toledo"},
+  {"name":"Vega","city":"Toledo","country":"Spain","level":"fully_vegan","note":"Vegan restaurant Toledo"},
+  {"name":"Art of Raw","city":"Zadar","country":"Croatia","level":"fully_vegan","note":"Only vegan and raw food restaurant in Dalmatia, seasonal"},
+  {"name":"Pelago Veggie","city":"Athens","country":"Greece","level":"fully_vegan","note":"Cited in Veggies Abroad Athens 2024 guide as fully vegan"},
+  {"name":"FalafeLAND","city":"Santorini","country":"Greece","level":"vegan_friendly","note":"Affordable falafel wraps Santorini"},
+  {"name":"Premiata Fabbrica Pizza","city":"Milan","country":"Italy","level":"vegan_friendly","note":"Milan pizza spot with vegan options"},
+  {"name":"Vegamore","city":"Milan","country":"Italy","level":"fully_vegan","note":"Multi-course Italian vegan tiramisu seitan lasagna Milan"},
+  {"name":"Joia","city":"Milan","country":"Italy","level":"vegan_friendly","note":"First vegetarian Michelin star Italy 1996, clear vegan options"},
+  {"name":"Ghea (Panghea)","city":"Milan","country":"Italy","level":"fully_vegan","note":"Vegan fine dining Italian organic locally sourced Milan"}
+]

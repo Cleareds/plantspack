@@ -1,0 +1,10 @@
+import { readFileSync, writeFileSync } from 'node:fs'
+const R = JSON.parse(readFileSync('scripts/seo-out/summer-hub-audit-2026-05-15/image-scrape-results.json','utf8'))
+// All without-picked + not social (FB/IG need login)
+const queue = Object.entries(R)
+  .filter(([id, r]) => !r.picked || r.picked.url.startsWith('data:'))
+  .filter(([id, r]) => !r.website.includes('facebook.com') && !r.website.includes('instagram.com'))
+  .map(([id, r]) => ({ id, name: r.name, city: r.city, website: r.website }))
+writeFileSync('scripts/seo-out/summer-hub-audit-2026-05-15/chromedt-queue.json', JSON.stringify(queue, null, 2))
+console.log(`Queue: ${queue.length} sites`)
+queue.slice(0, 5).forEach(q => console.log(`  ${q.name} (${q.city}) — ${q.website}`))

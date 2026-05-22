@@ -1,0 +1,156 @@
+[
+  {
+    "id": "1cf98c93-3e21-4da4-8b4c-e48f06d917b3",
+    "name": "Green Hut",
+    "city": "Zagreb",
+    "website": "https://greenhutzagreb.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "e95fbf55-a1b2-46ce-886f-6a221eeaaab7",
+    "name": "Zelena",
+    "city": "Pula",
+    "website": "http://www.zdravozelena.hr",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "bd8c10d4-e3b9-4d28-b170-9907f0817cf3",
+    "name": "Vege Lege",
+    "city": "Osijek",
+    "website": "https://vege-lege.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "e33cf363-0944-4b2d-a70b-afb6a10e439c",
+    "name": "Marimor Kitchen",
+    "city": "Antalya",
+    "website": "http://www.marimor.com.tr",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "06a4e56d-4caf-4c44-86b6-be8f85ad78b9",
+    "name": "The Vegan Vandal",
+    "city": "Athens",
+    "website": "https://theveganvandal.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "2b18d53a-54c6-4fa1-9cbb-4ef2e194a800",
+    "name": "Groceristas",
+    "city": "Athens",
+    "website": "http://www.groceristas.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "9b59d54b-06d4-4b5b-b652-7c77a09b3d3c",
+    "name": "Hubits",
+    "city": "Athens",
+    "website": "https://hubits.gr",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "ce0a9ef7-b9a6-412b-9010-676ecdb800a4",
+    "name": "Bamboo Vegan",
+    "city": "Athens",
+    "website": "https://bamboovegan.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "a9c2e42c-7c61-4056-8ab4-35d0039b6a4e",
+    "name": "Enjoy Vegan",
+    "city": "Barcelona",
+    "website": "http://www.comidavegetarianabarcelona.com/",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "a78cf479-2dd0-417b-a2a6-b9af5704cd71",
+    "name": "Vacka",
+    "city": "Barcelona",
+    "website": "http://vackabcn.es/",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "dc427bbe-dd49-4743-b5d3-beb96051ade6",
+    "name": "Veggie Garden",
+    "city": "Barcelona",
+    "website": "http://www.veggiegarden.es",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "d049ab0f-a281-4fca-a885-d5f1511ad202",
+    "name": "Haiku",
+    "city": "Catania",
+    "website": "https://www.haiku-ct.it",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "235af9cb-385a-41a5-9d01-e61f76d4c572",
+    "name": "Suribachy",
+    "city": "Catania",
+    "website": "https://www.suribachy.it",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "71b04765-de6f-4bcc-89c9-f016b13d0aa4",
+    "name": "#RAW",
+    "city": "Florence",
+    "website": "https://rawveganfirenze.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "474be607-1683-421a-8a2a-2dd9a49b65f4",
+    "name": "Bioveggy",
+    "city": "Florence",
+    "website": "http://www.bioveggy.it",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "2f57a70b-48d2-4742-b46c-61858d1a2458",
+    "name": "Sa Gulita",
+    "city": "Ibiza",
+    "website": "https://sagulitaibiza.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "a0f8bf31-3d0d-44e1-b482-bf9951ab159d",
+    "name": "Saf Akatlar",
+    "city": "Istanbul",
+    "website": "https://eng.safrestaurant.com.tr/bio-restaurant.aspx",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "52e202cd-a199-41c3-a846-4cc04280de18",
+    "name": "Vegan BellaVista Hostel",
+    "city": "Istanbul",
+    "website": "https://bellavistahostel.org",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "9fb8eb94-4929-4a5a-a56e-0842476d2515",
+    "name": "The Vegan Store",
+    "city": "Madrid",
+    "website": "https://www.veganstore.es",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "4f392534-7f50-466f-b7ec-12660554454f",
+    "name": "Merry Cherry Vegan",
+    "city": "Milan",
+    "website": "https://www.merrycherryveg.com",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "b054ea80-6c8f-4e11-810c-c87c7c131fc1",
+    "name": "Ti Diro",
+    "city": "Rome",
+    "website": "https://www.tidiro.net",
+    "dnsError": "ENOTFOUND"
+  },
+  {
+    "id": "d4f53d62-a188-4790-bed4-5c40d01f26f8",
+    "name": "Το Γλυκοπλαστειον της Φυσης",
+    "city": "Thessaloniki",
+    "website": "https://glykoplasteionthsfyshs.com",
+    "dnsError": "ENOTFOUND"
+  }
+]

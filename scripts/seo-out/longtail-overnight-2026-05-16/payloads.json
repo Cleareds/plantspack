@@ -1,0 +1,677 @@
+[
+  {
+    "name": "Pizzità",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan pizzeria in Milan",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-pizzita",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Veg'n'Roll",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan restaurant Milan",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-veg-n-roll",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Natural Mente",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan restaurant Milan",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-natural-mente",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Soulgreen",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Plant-based Milan, may not be fully vegan",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-soulgreen",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Linfa",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Plant-forward Milan restaurant",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-linfa",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Ghea",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Previously Panghea, vegan fine dining Italian",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-ghea",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Gelateria Solferino",
+    "city": "Milan",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Has plenty of vegan gelato",
+    "address": "Milan, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-gelateria-solferino",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Mezzaluna",
+    "city": "Turin",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Original vegan spot Torino since 1994",
+    "address": "Turin, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-mezzaluna",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "L'Orto già Salsamentario",
+    "city": "Turin",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Institution among plant-based restaurants Turin",
+    "address": "Turin, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-l-orto-gia-salsamentario",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Red Carrot",
+    "city": "Turin",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan restaurant Turin opened April 2025",
+    "address": "Turin, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-red-carrot",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Efrem Gourmet Boutique",
+    "city": "Turin",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "All-vegan coffee/pastries/meals Turin",
+    "address": "Turin, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-efrem-gourmet-boutique",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Un'Altro",
+    "city": "Bologna",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Creative plant-based cuisine Bologna",
+    "address": "Bologna, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-un-altro",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Frulez",
+    "city": "Bari",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Bistro juice bar Bari with marked vegan options",
+    "address": "Bari, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-frulez",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Pesto di Pistacchio",
+    "city": "Trani",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan Italian restaurant Trani",
+    "address": "Trani, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-pesto-di-pistacchio",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Micro",
+    "city": "Cisternino",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Fully vegan bistro Cisternino",
+    "address": "Cisternino, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-micro",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Agriturismo Piccapane",
+    "city": "Cutrofiano",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Organic farm with vegan restaurant Puglia",
+    "address": "Cutrofiano, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-agriturismo-piccapane",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Agricola Samadhi",
+    "city": "Zollino",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Organic vegan agriturismo Puglia",
+    "address": "Zollino, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-agricola-samadhi",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Le Ombre Rosse",
+    "city": "Genoa",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Hidden garden Genoa, traditional + vegetarian",
+    "address": "Genoa, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-le-ombre-rosse",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Pop Hot Dog",
+    "city": "Genoa",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Burger and beer Genoa with vegan options",
+    "address": "Genoa, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-pop-hot-dog",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Apriti Sesamo",
+    "city": "Parma",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Vegetarian-leaning vegan since 1996 Parma",
+    "address": "Parma, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-apriti-sesamo",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Cavoli Nostri",
+    "city": "Naples",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "First vegan Italian restaurant Naples with seating",
+    "address": "Naples, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-cavoli-nostri",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Vgoloso",
+    "city": "Florence",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Fully vegan Florence",
+    "address": "Florence, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-vgoloso",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Babalu",
+    "city": "Valencia",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% homemade vegan paella Valencia",
+    "address": "Valencia, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-babalu",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Purpura Project",
+    "city": "Alicante",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Art gallery and vegan restaurant Alicante",
+    "address": "Alicante, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-purpura-project",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Kambon Alicante",
+    "city": "Alicante",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Special vegan menu within Thai restaurant",
+    "address": "Alicante, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-kambon-alicante",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Roots & Rolls",
+    "city": "Girona",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Catalonian-Asian fusion vegan Girona",
+    "address": "Girona, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-roots-rolls",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Bionectar",
+    "city": "Girona",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan Spanish/Western organic Girona",
+    "address": "Girona, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-bionectar",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Café Luwak",
+    "city": "Las Palmas",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Vegan/vegetarian/flexitarian Las Canteras",
+    "address": "Las Palmas, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-cafe-luwak",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "A Roots",
+    "city": "Las Palmas",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan restaurant Caribbean Las Palmas",
+    "address": "Las Palmas, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-a-roots",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "The Organic Jungle",
+    "city": "Las Palmas",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Vegan-friendly breakfast/lunch/dinner near Las Canteras",
+    "address": "Las Palmas, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-the-organic-jungle",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Don Don Ramen",
+    "city": "Las Palmas",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Japanese with 100% vegan ramen option",
+    "address": "Las Palmas, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-don-don-ramen",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "La Ecológica",
+    "city": "Santa Cruz de Tenerife",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Artisan pasta and pizza employing disadvantaged youth",
+    "address": "Santa Cruz de Tenerife, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-la-ecologica",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Plantae Gastrobar",
+    "city": "San Cristóbal de La Laguna",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Veganism as culinary art exquisitely plated dishes",
+    "address": "San Cristóbal de La Laguna, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-plantae-gastrobar",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "El Vegano de la Villa",
+    "city": "Granada",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan tapas as art near Albayzín Granada",
+    "address": "Granada, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-el-vegano-de-la-villa",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Txarloska",
+    "city": "Bilbao",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "First 100% vegan bakery in Bilbao, 8 years operating",
+    "address": "Bilbao, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-txarloska",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Armazém do Sal",
+    "city": "Funchal",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Historic salt warehouse with vegan menu Funchal",
+    "address": "Funchal, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-armazem-do-sal",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Bioforma",
+    "city": "Funchal",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Health store + café veggie/vegan options 30 years",
+    "address": "Funchal, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-bioforma",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "ELaiolithos",
+    "city": "Naxos",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Gluten-free/vegan/vegetarian/special diet Naxos terrace",
+    "address": "Naxos, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-elaiolithos",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Rhino Vegan Beat",
+    "city": "Mykonos",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan street food burgers souvlaki Mykonos",
+    "address": "Mykonos, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-rhino-vegan-beat",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Bizou Vegan Cafe",
+    "city": "Corfu",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Exclusively vegan breakfast/brunch/lunch Corfu",
+    "address": "Corfu, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-bizou-vegan-cafe",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "GOJI Vegan Hotel",
+    "city": "Rhodes",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "First exclusive vegan hotel in Rhodes",
+    "address": "Rhodes, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-goji-vegan-hotel",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Vegan Kantin",
+    "city": "Bursa",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Best vegan food in Bursa, plant-based commitment",
+    "address": "Bursa, Turkey",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "turkey-longtail-overnight-vegan-kantin",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Vegan Pure Mutfak",
+    "city": "Eskisehir",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Plant-based cuisine Eskisehir Veggy Burger Buddha Bowl",
+    "address": "Eskisehir, Turkey",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "turkey-longtail-overnight-vegan-pure-mutfak",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Asian Bistro by Pralet",
+    "city": "Pula",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Tofu dish, Pula Old Town",
+    "address": "Pula, Croatia",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "croatia-longtail-overnight-asian-bistro-by-pralet",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Agrippina",
+    "city": "Pula",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Vegan burger and tacos available Pula",
+    "address": "Pula, Croatia",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "croatia-longtail-overnight-agrippina",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  }
+]

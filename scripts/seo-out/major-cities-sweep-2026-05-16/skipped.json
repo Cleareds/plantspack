@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Asante Café",
+    "city": "Barcelona",
+    "db_name": "Asante Cafe",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Mad Mad Vegan Barcelona",
+    "city": "Barcelona",
+    "db_name": "Mad Mad Vegan - Barcelona",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Dates & Avocados Atelier",
+    "city": "Barcelona",
+    "db_name": "Dates & Avocados Atelier",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Areca Bakery",
+    "city": "Barcelona",
+    "db_name": "Areca Bakery",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Tonka Bakery",
+    "city": "Barcelona",
+    "db_name": "Tonka",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "La Oveja Negra",
+    "city": "Madrid",
+    "db_name": "La Oveja Negra - Taberna Vegana",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Hakuna Matata Veggie",
+    "city": "Madrid",
+    "db_name": "Hakuna matata veggie",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "B13 Bar",
+    "city": "Madrid",
+    "db_name": "B13 bar",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Mad Mad Vegan Madrid",
+    "city": "Madrid",
+    "db_name": "Mad Mad Vegan",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Distrito Vegano",
+    "city": "Madrid",
+    "db_name": "VEGA",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Shlen",
+    "city": "Madrid",
+    "db_name": "shlen",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Mudrá Madrid",
+    "city": "Madrid",
+    "db_name": "Mudrá",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "The Vegan Roll",
+    "city": "Madrid",
+    "db_name": "VEGA",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Vegamazing",
+    "city": "Madrid",
+    "db_name": "VegAmazing Doughnuts",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Khambú",
+    "city": "Valencia",
+    "db_name": "Khambú",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "MESTIZA",
+    "city": "Valencia",
+    "db_name": "Mestiza",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Café Madrigal",
+    "city": "Valencia",
+    "db_name": "Café Madrigal",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "The Nature",
+    "city": "Valencia",
+    "db_name": "The Nature",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Flower Burger Rome",
+    "city": "Rome",
+    "db_name": "Flower Burger Roma Alessandria",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Romeow Cat Bistrot",
+    "city": "Rome",
+    "db_name": "Romeow Cat Bistrot",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Buddy",
+    "city": "Rome",
+    "db_name": "Buddy Veggy Restaurant Cafè",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Ops! Cucina Mediterranea",
+    "city": "Rome",
+    "db_name": "Ops!",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Ecru",
+    "city": "Rome",
+    "db_name": "écru",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Radagast Vegan Bakery",
+    "city": "Rome",
+    "db_name": "Radagast Vegan Bakery",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "La Colubrina",
+    "city": "Milan",
+    "db_name": "La Colubrina",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Flower Burger Milan",
+    "city": "Milan",
+    "db_name": "Flower Burger Milano Vittorio Veneto",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Nirvana Veg Restaurant",
+    "city": "Florence",
+    "db_name": "Nirvana",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Il Vegano Bistrot",
+    "city": "Florence",
+    "db_name": "Il vegano",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "Tripperia Vegana",
+    "city": "Florence",
+    "db_name": "Tripperia vegana TAN8",
+    "db_level": "fully_vegan"
+  },
+  {
+    "name": "#RAW Vegan Firenze",
+    "city": "Florence",
+    "db_name": "#RAW",
+    "db_level": "fully_vegan"
+  }
+]

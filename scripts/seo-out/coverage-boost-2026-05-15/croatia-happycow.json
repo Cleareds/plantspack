@@ -1,0 +1,20 @@
+[
+  {"name":"BEKIND.","city":"Zagreb","address":"Ilica 75, Zagreb, Croatia","phone":"+385-15534763","isClosed":true,"href":"/reviews/bekind-zagreb-376297"},
+  {"name":"BioMania Bistro","city":"Zagreb","address":"Ivana Tkalčića 65, Zagreb, Croatia","phone":"+385-919362276","isClosed":false,"href":"/reviews/biomania-bistro-zagreb-442947"},
+  {"name":"Falafel etc","city":"Zagreb","address":"Ulica Andrije Žaje 60, Zagreb, Croatia","phone":"+385-12343945","isClosed":false,"href":"/reviews/falafel-etc-zagreb-202764"},
+  {"name":"Oaza Joyful Kitchen","city":"Zagreb","address":"Radićeva ul. 9, Zagreb, Croatia","phone":"+385-976602744","isClosed":false,"href":"/reviews/oaza-zagreb-182518"},
+  {"name":"Simple Green & Bake","city":"Zagreb","address":"Sutlanska ul. 1, Zagreb, Croatia","phone":"+385-957001777","isClosed":false,"href":"/reviews/simple-green-and-bake-zagreb-101469"},
+  {"name":"superplanty","city":"Zagreb","address":"Trg Vladka Mačeka 2, Zagreb, Croatia","phone":"","isClosed":true,"href":"/reviews/superplanty-zagreb-378212"},
+  {"name":"Vege Fino Za Sve","city":"Zagreb","address":"Lavoslava Ruzicke 48, Zagreb, Croatia","phone":"+385-98777577","isClosed":false,"href":"/reviews/vege-fino-za-sve-zagreb-62912"},
+  {"name":"Vegehop","city":"Zagreb","address":"Vlaska 79, Zagreb, Croatia","phone":"+385-14649400","isClosed":false,"href":"/reviews/vegehop-zagreb-14107"},
+  {"name":"Zrno Bio Bistro","city":"Zagreb","address":"Meduliceva 20, Zagreb, Croatia","phone":"+385-14847540","isClosed":false,"href":"/reviews/zrno-bio-bistro-zagreb-40259"},
+  {"name":"Barakokula","city":"Split","address":"Ul Kralja Petra Krešimira IV 3, Split, Croatia","phone":"+385-98448476","isClosed":false,"href":"/reviews/barakokula-split-281428"},
+  {"name":"Pandora Greenbox","city":"Split","address":"Obrov 4, Split, Croatia","phone":"+385-21236120","isClosed":false,"href":"/reviews/pandora-greenbox-split-165882"},
+  {"name":"VEG","city":"Split","address":"Poljana Tina Ujevica 5, Split, Croatia","phone":"+385-98448476","isClosed":false,"href":"/reviews/veg-split-187016"},
+  {"name":"Vege Fast Food","city":"Split","address":"Nadhodnik B.B., Split, Croatia","phone":"+385-996632236","isClosed":true,"href":"/reviews/vege-fast-food-split-39501"},
+  {"name":"BioMania Bistro Bol","city":"Bol","address":"Rudina 10, Bol, Croatia","phone":"+385-919362276","isClosed":false,"href":"/reviews/biomania-bistro-bol-208405"},
+  {"name":"BioMania Street Food","city":"Bol","address":"Zlatni rat, Bol, Croatia","phone":"+385-919362276","isClosed":true,"href":"/reviews/biomania-street-food-bol-130734"},
+  {"name":"YES rebel bites","city":"Osijek","address":"19H Ulica Hrvatske Republike, Osijek, Croatia","phone":"+385-31240250","isClosed":false,"href":"/reviews/yes-rebel-bites-osijek-379452"},
+  {"name":"The Botanist","city":"Zadar","address":"Ulica Mihovila Pavlinovića 4, Zadar, Croatia","phone":"+385-922173614","isClosed":false,"href":"/reviews/the-botanist-zadar-291232"},
+  {"name":"Terrabite","city":"Simuni","address":"30 Šimuni, Simuni, Croatia","phone":"+385-958081332","isClosed":true,"href":"/reviews/terrabite-simuni-361104"}
+]

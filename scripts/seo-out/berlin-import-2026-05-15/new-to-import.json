@@ -1,0 +1,614 @@
+[
+  {
+    "name": "Erbil Restaurant",
+    "rating": "4.8(1,283)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Restaurant",
+    "description": "Mitte, Vegan Uzbek Plov/Oriental, Vegan & Vegetarian food"
+  },
+  {
+    "name": "Ho Lo",
+    "rating": "4.3(526)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Asian",
+    "description": "Schöneberg, omnivor, vegan duck , vegan plate and other vegan options"
+  },
+  {
+    "name": "WaWa Berlin",
+    "rating": "4.7(1,054)",
+    "closed": false,
+    "closure": null,
+    "price": "€20–30",
+    "category": "Korean",
+    "description": "Schöneberg, omnivor, vegan korean tapas, bibim bap, kimchi zzigae"
+  },
+  {
+    "name": "acht&dreissig",
+    "rating": "4.5(1,061)",
+    "closed": false,
+    "closure": null,
+    "price": "€30–70",
+    "category": "German",
+    "description": "Mitte, omnivor, each 1 option for starter, salad & main"
+  },
+  {
+    "name": "Cocolo Ramen",
+    "rating": "4.5(2,265)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Ramen",
+    "description": "Mitte, omnivor, 1 began option: MISO VEGGIE / VEGAN - / homemade miso, / soy sauce base, / noodles, vegetables, egg or tofu"
+  },
+  {
+    "name": "YUNA",
+    "rating": "4.7(1,652)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Coffee shop",
+    "description": "Mitte, Café, omnivor with vegan sandwiches and vegan breakfast option"
+  },
+  {
+    "name": "Berliner Republik",
+    "rating": "4.3(6,036)",
+    "closed": false,
+    "closure": null,
+    "price": "€20–30",
+    "category": "German",
+    "description": "Mitte, omnivor, vegan Currywurst, vegan Schnitzel, vegan Leberkäs"
+  },
+  {
+    "name": "摊摊豆花 Tantan Douhua",
+    "rating": "5.0(20)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Vegan",
+    "description": "Kreuzberg, frech vegan noodles"
+  },
+  {
+    "name": "Eat Manti - Coffee and Cake",
+    "rating": "4.8(99)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Coffee shop",
+    "description": "Prenzlauer Berg, Manti, vegan options"
+  },
+  {
+    "name": "Home of Dumplings",
+    "rating": "4.8(725)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Asian",
+    "description": "Prenzlauer Berg, omnivor, vegan dupmplings"
+  },
+  {
+    "name": "Dat Cookie",
+    "rating": "4.6(813)",
+    "closed": false,
+    "closure": null,
+    "price": null,
+    "category": null,
+    "description": "Cookies / Mitte, Vegan Cookies"
+  },
+  {
+    "name": "ROLLS Asian Street Food",
+    "rating": "4.8(586)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Takeout restaurant",
+    "description": "Prenzlauer Berg, omnivor, Bahn Mi & more"
+  },
+  {
+    "name": "Round & Edgy",
+    "rating": "5.0(102)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Cafe",
+    "description": "Berlin Mitte - Cafe, vegan ice, cookies etc"
+  },
+  {
+    "name": "Croissant Couture Breakfast & Brunch",
+    "rating": "4.7(240)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Breakfast",
+    "description": "Mitte, Café, vegan options"
+  },
+  {
+    "name": "India Express - Indisches Restaurant",
+    "rating": "4.7(1,204)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Indian",
+    "description": "Charlottenburg, Indian Vegan"
+  },
+  {
+    "name": "Roji - Godai no Sekai Prenzlauer Berg",
+    "rating": "4.7(1,571)",
+    "closed": false,
+    "closure": null,
+    "price": "€20–30",
+    "category": "Sushi",
+    "description": "Omnivor, vegan options, Vegan Monk Pizza, Sushi"
+  },
+  {
+    "name": "Kiautschoustraße 1",
+    "rating": null,
+    "closed": false,
+    "closure": null,
+    "price": null,
+    "category": null,
+    "description": "13353 Berlin / Germany / Best vegan cakes"
+  },
+  {
+    "name": "Vaust Bar & Restaurant",
+    "rating": "5.0(46)",
+    "closed": false,
+    "closure": null,
+    "price": "€40–80",
+    "category": "Vegan",
+    "description": "Kreuzberg, Vegan Bar & Restaurant"
+  },
+  {
+    "name": "Umami F-Hain",
+    "rating": "4.6(1,980)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Asian",
+    "description": "Berlin - F-Hain, asiatisch, omnivor, viele vegane optionen"
+  },
+  {
+    "name": "Fit Cake",
+    "rating": "4.7(277)",
+    "closed": false,
+    "closure": null,
+    "price": null,
+    "category": null,
+    "description": "Patisserie / Berlin - Charlottenburg, Café, viele vegane Optionen (Torten, Donuts etc)"
+  },
+  {
+    "name": "Umami Mitte",
+    "rating": "4.9(3,132)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vietnamese",
+    "description": "Berlin - Mitte, asiatisch, omnivor, viele vegane optionen"
+  },
+  {
+    "name": "Kailash Parbat – Indisches vegetarisches & veganes Restaurant",
+    "rating": "4.8(684)",
+    "closed": false,
+    "closure": null,
+    "price": "€20–30",
+    "category": "Indian",
+    "description": "Berlin-Mitte, Indian, vegan-vegetarian"
+  },
+  {
+    "name": "OKA Onigiri",
+    "rating": "4.9(211)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Japanese",
+    "description": "Berlin-Mitte, omnivor, Onigiris"
+  },
+  {
+    "name": "Inari-San Berlin",
+    "rating": "4.3(256)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Soul",
+    "description": "Berlin-Mitte, omnivor, Inaris"
+  },
+  {
+    "name": "SammyS Berliner Donuts",
+    "rating": "4.7(424)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Donuts",
+    "description": "Alles vegan"
+  },
+  {
+    "name": "HeroinKids",
+    "rating": "4.9(60)",
+    "closed": false,
+    "closure": null,
+    "price": null,
+    "category": null,
+    "description": "Clothing store"
+  },
+  {
+    "name": "Ingwer",
+    "rating": "4.7(139)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Cafe",
+    "description": "Coffee from Tommy 47"
+  },
+  {
+    "name": "Uhland Bistro",
+    "rating": "4.4(214)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Kebab shop",
+    "description": "Vegan Döner - einer der leckersten in Berlin"
+  },
+  {
+    "name": "+84",
+    "rating": "4.6(1,466)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vietnamese",
+    "description": ""
+  },
+  {
+    "name": "Creperia La Bombarde",
+    "rating": "4.6(586)",
+    "closed": false,
+    "closure": null,
+    "price": "€",
+    "category": "Crêperie",
+    "description": ""
+  },
+  {
+    "name": "Shibu Vegan",
+    "rating": "4.0(23)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–30",
+    "category": "Vegan",
+    "description": "Prenzlauer Berg, vegan, asian, sushi & more"
+  },
+  {
+    "name": "You're Welcome",
+    "rating": "4.5(825)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Cafe",
+    "description": "Mitte, Omnivor mit veganer Karte"
+  },
+  {
+    "name": "Pepe In Grani",
+    "rating": "4.4(11,203)",
+    "closed": false,
+    "closure": null,
+    "price": "€€",
+    "category": "Pizza",
+    "description": ""
+  },
+  {
+    "name": "Funk You - Natural Food",
+    "rating": "4.6(1,141)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Coffee shop",
+    "description": "Vegan quesadilla, raw cakes, Vegan + Vegetarian!"
+  },
+  {
+    "name": "Golda delux",
+    "rating": "4.8(1,006)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Restaurant",
+    "description": "Kreuzberg, lots vegan dishes"
+  },
+  {
+    "name": "Madami - Mom's Viet Kitchen",
+    "rating": "4.4(4,005)",
+    "closed": false,
+    "closure": null,
+    "price": "€20–30",
+    "category": "Vietnamese",
+    "description": "Mitte, vegan vietnamese"
+  },
+  {
+    "name": "MANA Food Moabit",
+    "rating": "4.5(343)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "Moabit, vegan breakfast, dinner & Brunch. Shakshuka, Pasta, Soups"
+  },
+  {
+    "name": "Chaomin-Congee Restaurant",
+    "rating": "4.7(676)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Chinese",
+    "description": "P-Berg, Omnivor, Congee soups, asian Tapas, Congee Hotpot (also vegan)"
+  },
+  {
+    "name": "C+ Bakery",
+    "rating": "4.7(218)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Cafe",
+    "description": "Kreuzberg, vegan bakery"
+  },
+  {
+    "name": "Spluffin Bäckerei",
+    "rating": "4.7(80)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Bakery",
+    "description": "F-Hain, süße und herzhafte Spluffins, oft auf Bestellung. Viele vegane Sorten"
+  },
+  {
+    "name": "When Dreams Come True",
+    "rating": "4.7(436)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Breakfast",
+    "description": "Schöneberg, Omnivor, Vegan shakshuka"
+  },
+  {
+    "name": "BrewDog Berlin Mitte",
+    "rating": "4.4(4,901)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Bar",
+    "description": "Mitte, Omnivor, Vegan Pizza, Vegan Hot-Dog, Salats"
+  },
+  {
+    "name": "flat white - Coffee & more",
+    "rating": "4.6(382)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Cafe",
+    "description": "Mitte, Café with vegan options"
+  },
+  {
+    "name": "VEG'D - Vegan Burger - NK",
+    "rating": "4.6(318)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "Neukölln, Vegan burgers"
+  },
+  {
+    "name": "VEG'D - Vegan Burgers - F-hain",
+    "rating": "4.8(1,479)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "Friedrichshain, Vegan burgers"
+  },
+  {
+    "name": "Veg'd - Vegan Burgers - P-Berg",
+    "rating": "4.8(475)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "O-Berg, Vegan burgers"
+  },
+  {
+    "name": "Zerostress Pizza & Restaurant - Kreuzberg",
+    "rating": "4.4(550)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Pizza",
+    "description": "Kreuzberg, Omnivor with a Vegan Pizza menu!"
+  },
+  {
+    "name": "LoveBurger",
+    "rating": "4.9(431)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "vegan, burger!"
+  },
+  {
+    "name": "Tianfuzius 天府子",
+    "rating": "4.5(1,252)",
+    "closed": false,
+    "closure": null,
+    "price": "€20–30",
+    "category": "Vegetarian",
+    "description": "Vegetarian Shuan kitchen, mostly vegan"
+  },
+  {
+    "name": "Emira Vegan Sushi Restaurant",
+    "rating": "4.9(612)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "P-Berg, Sushi & Ramen, vegan"
+  },
+  {
+    "name": "kwia",
+    "rating": "3.9(297)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Bar",
+    "description": "Bar! Kreuzberg. Ambient music in a queer atmosphere."
+  },
+  {
+    "name": "HOT Restaurant Café - Berlin",
+    "rating": "3.8(420)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Restaurant",
+    "description": "Food Court in Mitte, Omnivor with lots of vegan options!"
+  },
+  {
+    "name": "MONO Berlin",
+    "rating": "4.7(570)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vietnamese",
+    "description": "Asian vegan food in Prenzlauer Berg."
+  },
+  {
+    "name": "El Amigo Taqueria",
+    "rating": "4.8(1,497)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Mexican",
+    "description": ""
+  },
+  {
+    "name": "Veggie 2.0 - the green canteen",
+    "rating": "4.3(62)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Cafeteria",
+    "description": "First 100% vegan cafeteria for university students in Berlin. Non-students are welcome."
+  },
+  {
+    "name": "HAPPA Restaurant",
+    "rating": "4.8(409)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–70",
+    "category": "Vegan",
+    "description": "Kreuzberg, Bio & Vegan, made of saved vegetables"
+  },
+  {
+    "name": "Miss Pho Restaurant",
+    "rating": "4.6(981)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Asian",
+    "description": "Charlottenburg, Vegan sushi & more"
+  },
+  {
+    "name": "Mon Eatery & Bar",
+    "rating": "4.4(598)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Asian",
+    "description": ""
+  },
+  {
+    "name": "Café Honig",
+    "rating": "4.8(250)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Cafe",
+    "description": ""
+  },
+  {
+    "name": "Tropimarkt",
+    "rating": "3.9(58)",
+    "closed": false,
+    "closure": null,
+    "price": null,
+    "category": null,
+    "description": "Wholesale grocer / Moabit, Tropical online Shop"
+  },
+  {
+    "name": "Madonna Bar",
+    "rating": "4.6(309)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Bar",
+    "description": "Kreuzberg, Kultbar"
+  },
+  {
+    "name": "Humble — Restaurant für Burger & Bowls Berlin Tiergarten",
+    "rating": "4.6(537)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Restaurant",
+    "description": "Tiergarten-Mitte, Fusion: Burger, Udon, Pho, Fries"
+  },
+  {
+    "name": "House of vegan 182",
+    "rating": "4.9(565)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "Köpenick, Vegan, Asian"
+  },
+  {
+    "name": "Lia's Kitchen - 100% Vegan",
+    "rating": "4.5(1,522)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "Prenzlauer Berg, Vegan, self made burger and other tasty vegan dishes."
+  },
+  {
+    "name": "Romeo und Romeo",
+    "rating": "4.7(1,696)",
+    "closed": false,
+    "closure": null,
+    "price": "€1–10",
+    "category": "Gay bar",
+    "description": "Schöneberg, Maybe not as vegan, but you have to take a look on this rainbow cakes!"
+  },
+  {
+    "name": "Sanhok Wok&Grill",
+    "rating": "4.5(535)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Restaurant",
+    "description": "Neukölln, Pho Chay"
+  },
+  {
+    "name": "Vegup — powered by plants",
+    "rating": "4.7(570)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Restaurant",
+    "description": "Kreuzberg, Vegetarisch, Vegan ausgewiesen, Asiatische Küche"
+  },
+  {
+    "name": "li.ke : serious||thai||vegan",
+    "rating": "4.7(2,312)",
+    "closed": false,
+    "closure": null,
+    "price": "€10–20",
+    "category": "Vegan",
+    "description": "Friedrichshain, Asian (Thai), Vegan"
+  }
+]

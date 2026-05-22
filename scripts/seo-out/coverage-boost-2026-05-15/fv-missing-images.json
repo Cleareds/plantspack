@@ -1,0 +1,682 @@
+[
+  {
+    "id": "100368b8-7422-4d27-9305-66e18d081b40",
+    "name": "YES rebel bites",
+    "city": "Osijek",
+    "country": "Croatia",
+    "website": null,
+    "address": "19H Ulica Hrvatske Republike, Osijek, Croatia"
+  },
+  {
+    "id": "145a3aa3-2ee6-40bd-acdc-990c659037da",
+    "name": "Falafel etc.",
+    "city": "Zagreb",
+    "country": "Croatia",
+    "website": "https://falafeletc.com.hr/",
+    "address": "60 Ulica Andrije Žaje"
+  },
+  {
+    "id": "3eb6fb3e-5782-42e3-95da-c800ca9acdae",
+    "name": "Vege Fino Za Sve",
+    "city": "Zagreb",
+    "country": "Croatia",
+    "website": null,
+    "address": "Lavoslava Ruzicke 48, Zagreb, Croatia"
+  },
+  {
+    "id": "40c94ed4-9087-42c0-8838-a39c24fb0006",
+    "name": "Plantae Vegan",
+    "city": "Vis",
+    "country": "Croatia",
+    "website": null,
+    "address": "Vis, Grad Vis, Splitsko-dalmatinska županija"
+  },
+  {
+    "id": "6b4321b4-6f09-40a5-9d58-13f0d0c65c93",
+    "name": "The Botanist",
+    "city": "Zadar",
+    "country": "Croatia",
+    "website": null,
+    "address": "Ulica Mihovila Pavlinovića 4, Zadar, Croatia"
+  },
+  {
+    "id": "ad623329-485e-42e4-a01f-50acd2b3ea1e",
+    "name": "Natural",
+    "city": "Split",
+    "country": "Croatia",
+    "website": "https://www.natural.hr",
+    "address": "GlagoljaÅ¡ka 2"
+  },
+  {
+    "id": "bf6f9298-f680-4577-8a5f-850198172677",
+    "name": "Pandora Greenbox",
+    "city": "Split",
+    "country": "Croatia",
+    "website": null,
+    "address": "4 Obrov"
+  },
+  {
+    "id": "d3240275-9a46-411e-8700-d92b06a239f5",
+    "name": "OAZA Joyful Kitchen",
+    "city": "Zagreb",
+    "country": "Croatia",
+    "website": null,
+    "address": ""
+  },
+  {
+    "id": "dcb8bdc5-b273-4fea-81be-6d0724f35bfa",
+    "name": "Adio Mare Vegan",
+    "city": "Korčula",
+    "country": "Croatia",
+    "website": null,
+    "address": "Korčula, Dubrovačko-neretvanska županija, Hrvatska"
+  },
+  {
+    "id": "e95fbf55-a1b2-46ce-886f-6a221eeaaab7",
+    "name": "Zelena",
+    "city": "Pula",
+    "country": "Croatia",
+    "website": "http://www.zdravozelena.hr",
+    "address": "5 Smareglina"
+  },
+  {
+    "id": "05452fcd-2609-4c13-b18c-f70d1ca5edce",
+    "name": "Em Carne Viva",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": null,
+    "address": "Avenida da Boavista, 868, Porto, Portugal"
+  },
+  {
+    "id": "07ecf14b-196e-4824-99fc-f2b1bf0ea58c",
+    "name": "Church LX",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "1 Beco da Horta das Canas"
+  },
+  {
+    "id": "10a8e6c6-3bc8-49f7-9029-8f37c6458832",
+    "name": "Vegana Burgers",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "42 E Avenida Fontes Pereira de Melo, Lisboa, 1050-250, Portugal"
+  },
+  {
+    "id": "12c07eda-1b12-4e44-8b1e-a5013e95aaf0",
+    "name": "Pequeno Café e Bistrô - Arroios",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "40D, Loja 5 Rua Ângela Pinto"
+  },
+  {
+    "id": "14cee650-dd7a-4be3-a9ee-840142fee4b1",
+    "name": "Porto Vegan",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": "https://www.facebook.com/oportovegan/",
+    "address": "Porto, Portugal"
+  },
+  {
+    "id": "16b7bffc-8390-4371-8e51-679eb729131e",
+    "name": "Veganeats Caffe",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "42 Rua Cavaleiro de Oliveira"
+  },
+  {
+    "id": "17ea0218-519f-44f7-9b41-ed1c51bf9ed9",
+    "name": "Hale Matcha",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "R. Garcia de Orta 32D, Lisbon, Portugal"
+  },
+  {
+    "id": "226370f0-2587-40ea-9b5c-28c14467de7e",
+    "name": "O Porto dos Gatos",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": null,
+    "address": "Avenida Rodrigues de Freitas, 93-95, Bonfim, Porto, Portugal"
+  },
+  {
+    "id": "34955dc9-f089-42c8-8821-837bc28b0ead",
+    "name": "Mundo Vegan",
+    "city": "Funchal",
+    "country": "Portugal",
+    "website": null,
+    "address": "2 Rua Velha da Ajuda, Funchal, 9000-115, Portugal"
+  },
+  {
+    "id": "35f30964-aca1-4556-8bd2-21d9fb406c3e",
+    "name": "Verde Vida II - Pimentel",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": null,
+    "address": "Largo de Alberto Pimentel 38, Porto, Portugal"
+  },
+  {
+    "id": "3706cbc9-fc7b-4779-824b-d5c4207f31a6",
+    "name": "Vegan Story",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": ""
+  },
+  {
+    "id": "3c89def4-0332-463f-935d-6669bfb10b5d",
+    "name": "Pequeno Café e Bistrô - Príncipe Real",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "R. Monte Olivete 20 (at Rua da Escola Politécnica, Praça das Flores), Lisbon, Portugal"
+  },
+  {
+    "id": "3fa3db8a-53ab-43bd-9dff-285e4cbfa610",
+    "name": "o gambuzino",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": ""
+  },
+  {
+    "id": "4ea9a60e-d027-4477-9a97-3874bf2c13c5",
+    "name": "Mother Burger - Saldanha",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "Praça Duque de Saldanha 1, Shop 27 (at Atrium Saldanha), Lisbon, Portugal"
+  },
+  {
+    "id": "56f22b67-e88d-43fd-afb1-3aaffed67187",
+    "name": "Fresh No Meat No Fish",
+    "city": "Lourinha",
+    "country": "Portugal",
+    "website": null,
+    "address": "Rua Zambujo"
+  },
+  {
+    "id": "5ad341c8-292c-4a0a-aa01-f723cf885152",
+    "name": "Alfarroba Café",
+    "city": "Albufeira",
+    "country": "Portugal",
+    "website": "http://www.alfarrobacafe.com/",
+    "address": ""
+  },
+  {
+    "id": "60ceda4e-3a3d-48af-a952-a813d405682c",
+    "name": "The Botanical Den",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "Rua da Atalaia 153, Bairro Alto, Lisbon, Portugal"
+  },
+  {
+    "id": "61a30142-04ca-4b17-a895-3a8c173af405",
+    "name": "Veganices",
+    "city": "Tavira",
+    "country": "Portugal",
+    "website": null,
+    "address": "Tavira, Faro, Portugal"
+  },
+  {
+    "id": "7101d278-70a9-4ade-aafb-a6be209a9c74",
+    "name": "Casa da Mully",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "R. Dr. Gama Barros 17 A/B, Lisbon, Portugal"
+  },
+  {
+    "id": "767c15f9-19be-49fb-ab0f-15e338a9c0d0",
+    "name": "Porto Vegans",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": "https://www.instagram.com/porto_vegans/",
+    "address": "Porto, Portugal"
+  },
+  {
+    "id": "82d61c13-935a-4583-a625-761265fb0d8b",
+    "name": "O Oriente no Porto",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": "https://www.orientenoporto.com",
+    "address": "Rua São Miguel, 19"
+  },
+  {
+    "id": "86c996ac-5555-4774-83d1-407308e0ce26",
+    "name": "daTerra",
+    "city": "Vila Nova de Gaia",
+    "country": "Portugal",
+    "website": null,
+    "address": ""
+  },
+  {
+    "id": "96d925c5-9f08-4f63-bccc-958d727853d9",
+    "name": "Spill the Greens",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "Largo José João Farinha Júnior 1, Lisbon, Portugal"
+  },
+  {
+    "id": "993a7131-e65e-45e5-b093-e3d2b8595b24",
+    "name": "PLANTZ",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": null,
+    "address": "Av de Fernão de Magalhães 2960, Porto, Portugal"
+  },
+  {
+    "id": "a44b2e65-b29a-4f31-b316-892f6e65cc52",
+    "name": "Verde Vida - Rua Formosa",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": null,
+    "address": "Rua Formosa 322, Porto, Portugal"
+  },
+  {
+    "id": "a4e8bf19-8896-4f03-a770-7c068a2b1bd3",
+    "name": "Ki",
+    "city": "Aveiro",
+    "country": "Portugal",
+    "website": "http://www.kimacrobiotico.com/",
+    "address": "15 Rua Capitão Souza Pizarro"
+  },
+  {
+    "id": "a94d0039-72a2-46af-9670-f044754d5d87",
+    "name": "The Food Temple",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": "https://www.facebook.com/FoodTemple",
+    "address": "Beco Do Jasmim 18"
+  },
+  {
+    "id": "b7b585a7-a68e-4c39-964b-a4a5a927df53",
+    "name": "Verde Hut",
+    "city": "Porto",
+    "country": "Portugal",
+    "website": "https://www.instagram.com/verde_hut/",
+    "address": ""
+  },
+  {
+    "id": "c7814933-ec5d-4647-8f78-bd9cf1644154",
+    "name": "Veganaria Madeira",
+    "city": "Ponta do Sol",
+    "country": "Portugal",
+    "website": null,
+    "address": "Ponta do Sol"
+  },
+  {
+    "id": "d1ba6844-84e7-48ef-93b0-b12a50545b0e",
+    "name": "O Botanista",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "19 Rua Dom Luís I"
+  },
+  {
+    "id": "d597587b-67ff-4f8b-aa41-778322187df0",
+    "name": "Mel & Limão",
+    "city": "Faro",
+    "country": "Portugal",
+    "website": null,
+    "address": "Faro, Portugal"
+  },
+  {
+    "id": "e6927a79-69fc-44c9-9c22-b18ebf4dbe3f",
+    "name": "GAO",
+    "city": "Matosinhos",
+    "country": "Portugal",
+    "website": null,
+    "address": "Rua do Godinho, 866, Matosinhos, Portugal"
+  },
+  {
+    "id": "eca195b8-b279-4fe8-9f6a-7ba244e5a793",
+    "name": "Al Sanpietrino Trattoria",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "website": null,
+    "address": "Beco do Maquinez 16, Lisbon, Portugal"
+  },
+  {
+    "id": "0369de9d-a619-4886-af93-d6ca57fa9d39",
+    "name": "Falafel Veggie",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": ""
+  },
+  {
+    "id": "04b66ff4-155f-4431-babd-11cf92d5aa8e",
+    "name": "Vegan House",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": null,
+    "address": "Altınkum, 470 Sk 9 E, Antalya, Turkey"
+  },
+  {
+    "id": "22a21351-27bb-47b0-82c4-1635e6af8a70",
+    "name": "Bodrum Botanicals Health Shop & Cafe",
+    "city": "Bodrum",
+    "country": "Turkey",
+    "website": null,
+    "address": "Bodrum, Muğla, Ege Bölgesi"
+  },
+  {
+    "id": "235ac8ab-762a-4ccc-945a-139e4c6c27bf",
+    "name": "Tyke Kafe",
+    "city": "Izmir",
+    "country": "Turkey",
+    "website": null,
+    "address": "1460 Sokak, 28/1, Izmir, Turkey"
+  },
+  {
+    "id": "3049af3f-a483-4b03-a980-e7065eb909a8",
+    "name": "Loving Hut",
+    "city": "Besiktas",
+    "country": "Turkey",
+    "website": null,
+    "address": "Şair Veysi Sokağı, 34022 Beşiktaş"
+  },
+  {
+    "id": "30a406dd-e0c5-426f-8b49-2354e19cc8e5",
+    "name": "Sisu Kitchen %100 Vegan",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": null,
+    "address": "3808 Sk Asya sitesi Meltem mah, C3 Blok No 13 C/A Muratpaşa, Antalya, Turkey"
+  },
+  {
+    "id": "34913a3d-f063-448b-960a-ef8fda2bcd9f",
+    "name": "Tyche",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": null,
+    "address": "Çarşı, İskele Cd. 58A, Antalya, Turkey"
+  },
+  {
+    "id": "38832b7e-c37d-4aa8-9de3-3e6b8bf07646",
+    "name": "240 Derece",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "1/A Hakkı Şehit Han Sokağı"
+  },
+  {
+    "id": "3cb16ad2-a457-402a-8987-2c623c7fcbae",
+    "name": "Semsür Çiğköfte",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": ""
+  },
+  {
+    "id": "3d7f7fb0-4309-4c89-b142-a056eb7d3abc",
+    "name": "Ethique Plant-based",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Fikirtepe Mh, Volkan Sk, No: 1, Kadıköy, Istanbul, Turkey"
+  },
+  {
+    "id": "46c8a7c5-a32b-4ea9-92eb-566ebcf58a3a",
+    "name": "Asian vegan kitchen",
+    "city": "Beyoğlu",
+    "country": "Turkey",
+    "website": null,
+    "address": "Mebusan Yokuşu, 34427, Beyoğlu"
+  },
+  {
+    "id": "52e202cd-a199-41c3-a846-4cc04280de18",
+    "name": "Vegan BellaVista Hostel",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": "https://bellavistahostel.org",
+    "address": "Bulbul Mahallesi Turan Caddesi 50, Beyoglu, 34435, Istanbul, Turkey"
+  },
+  {
+    "id": "58fbfb39-9685-44de-9428-006f04ccbcda",
+    "name": "TURP",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Caferağa Mh, Mühürdar Karakolu Sk 12/B, Istanbul, Turkey"
+  },
+  {
+    "id": "5e132a0b-73b3-4792-a278-07115ec417cd",
+    "name": "Gibi Vegan",
+    "city": "Izmir",
+    "country": "Turkey",
+    "website": null,
+    "address": "Bostanlı, Şehitler Blv No 49/C, Izmir, Turkey"
+  },
+  {
+    "id": "65ba78be-235b-4ffa-9090-c21cbb787bc3",
+    "name": "Telezzüz",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Kuşbakışı Cd. No: 16 Kuzguncuk Üsküdar, Istanbul, Turkey"
+  },
+  {
+    "id": "6aa1f34c-51ec-45b9-a503-55e67ab56327",
+    "name": "LEVEL - Vegan & Gluten Free",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": null,
+    "address": "Civelek Sokak No:12, Antalya, Turkey"
+  },
+  {
+    "id": "71e55bfe-db70-4a68-8b2a-43223991ddaa",
+    "name": "Mahatma Vegan Cafe",
+    "city": "Kadikoy",
+    "country": "Turkey",
+    "website": null,
+    "address": "Macit Erbudak Sokağı, 34716 Kadıköy"
+  },
+  {
+    "id": "74c59ce1-ed03-4940-b27e-4172607c3b68",
+    "name": "Ch'i for Life",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": null,
+    "address": "Antalya, Muratpaşa, Antalya"
+  },
+  {
+    "id": "77495af2-c55b-4510-b995-c7202cf0ba36",
+    "name": "Salpa Bar",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Osmanağa, Piri Çavuş Sk. No:3, Istanbul, Turkey"
+  },
+  {
+    "id": "799e0b1d-ca3c-498f-a87e-8160e42a3a10",
+    "name": "Vegan a la Turca",
+    "city": "Bodrum",
+    "country": "Turkey",
+    "website": null,
+    "address": "Bodrum, Muğla, Ege Bölgesi"
+  },
+  {
+    "id": "7c7ce5c0-1b9b-4305-a701-962d4c7c394a",
+    "name": "Terradan Pub",
+    "city": "Ankara",
+    "country": "Turkey",
+    "website": null,
+    "address": "Paris Str, Chile Square, Ankara, Turkey"
+  },
+  {
+    "id": "7e07987f-62a3-4ef0-ab2e-55384ed2a3aa",
+    "name": "Kumin Vegan Lezzetler",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "İzzettin Sk 55/1, Istanbul, Turkey"
+  },
+  {
+    "id": "86f931d4-915f-404e-89fb-1bad31796f4d",
+    "name": "Gabo kitchen",
+    "city": "Yenişehir",
+    "country": "Turkey",
+    "website": null,
+    "address": "Şair Sırrı Hanım Sokak, 21200, Yenişehir"
+  },
+  {
+    "id": "9976bbf9-93f6-4b28-b7af-185154e28ec3",
+    "name": "Vegan Community Kitchen",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "38/A Serdar-ı Ekrem Caddesi"
+  },
+  {
+    "id": "9d2876d5-2ac1-4b69-bae1-1107bd276578",
+    "name": "Bi Nevi Deli",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Bahtiyar Sokak no: 8, Etiler, Istanbul, Turkey"
+  },
+  {
+    "id": "a3b04133-3b10-47d4-98c2-c59dc4635370",
+    "name": "The Vegan Regime",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Sinanpaşa, Şair Veysi Sk. No:9 D:11A, Istanbul, Turkey"
+  },
+  {
+    "id": "ab7dc25c-6bde-4a29-a764-525992025a6f",
+    "name": "Vega Vegan",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Rasimpaşa, İzzettin Sk. No: 44/A, Istanbul, Turkey"
+  },
+  {
+    "id": "b29f9040-940e-491e-9599-d99553b374aa",
+    "name": "Veganarsist Kadıköy - Osmanağa",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Osmanağa, Canan Sk. 20/A, Istanbul, Turkey"
+  },
+  {
+    "id": "b2ed9269-cb90-4297-8f2c-c04fb4eaa7af",
+    "name": "240 Derece",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "11 Katar Caddesi"
+  },
+  {
+    "id": "bcd96885-eeb3-4c90-8229-720c544036b7",
+    "name": "YayaRaw",
+    "city": "Izmir",
+    "country": "Turkey",
+    "website": null,
+    "address": "Kültür Mahallesi 1383 Sokak 7/A, Alsancak, Izmir, Turkey"
+  },
+  {
+    "id": "ca0e8925-6274-472f-a543-5967aeb42254",
+    "name": "Vegan Istanbul",
+    "city": "Beyoğlu",
+    "country": "Turkey",
+    "website": null,
+    "address": "Türkgücü Caddesi, 34425, Turkey"
+  },
+  {
+    "id": "cd4dc930-b9e4-43ba-861d-7c08d35088af",
+    "name": "Ara Sokak Pub / Vegan Taş Fırın",
+    "city": "Ankara",
+    "country": "Turkey",
+    "website": null,
+    "address": "52, Esat Caddesi"
+  },
+  {
+    "id": "cd8605f7-3f9e-44ca-b6d2-f7561ff5726f",
+    "name": "All Vegan",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": null,
+    "address": "Antalya, Muratpaşa, Antalya"
+  },
+  {
+    "id": "cdd7d64a-2fe9-4e35-8d1c-2c365f4c993b",
+    "name": "Vegan Community Kitchen Express",
+    "city": "Beyoğlu",
+    "country": "Turkey",
+    "website": null,
+    "address": "18, Kumbaracı Yokuşu"
+  },
+  {
+    "id": "d3ed1d13-225e-4a10-b727-76762cdfadc9",
+    "name": "Vegan Community Kitchen",
+    "city": "Beyoğlu",
+    "country": "Turkey",
+    "website": null,
+    "address": "38/A Serdar-ı Ekrem Caddesi, 34087, Turkey"
+  },
+  {
+    "id": "d64775c1-de12-4022-9074-a2a880dc8d57",
+    "name": "Vegan Community Kitchen Express",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "18 Kumbaracı Yokuşu"
+  },
+  {
+    "id": "e2642add-e8bf-4eb8-91fe-0ef643c15aa2",
+    "name": "Ayrışım Kitabevi Kafe",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Rasimpaşa Mh. Beydağı Sk. No:54/A, Istanbul, Turkey"
+  },
+  {
+    "id": "e33cf363-0944-4b2d-a70b-afb6a10e439c",
+    "name": "Marimor Kitchen",
+    "city": "Antalya",
+    "country": "Turkey",
+    "website": "http://www.marimor.com.tr",
+    "address": "Pınarbaşı Caddesi, Sıla apartmanı, No:36 A, Konyaaltı, Antalya"
+  },
+  {
+    "id": "e378657d-ada9-468e-9077-fc7f5dedb9a6",
+    "name": "Junk Vegan",
+    "city": "Ankara",
+    "country": "Turkey",
+    "website": null,
+    "address": "Tunus Caddesi, 06680, Turkey"
+  },
+  {
+    "id": "e5aa30df-762e-4565-9bd4-2e3187408e28",
+    "name": "Salve Kadıköy",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Piri Çavuş Sk 4, Kadikoey, Istanbul, Turkey"
+  },
+  {
+    "id": "e868bebc-801d-4af7-a281-8af66d684537",
+    "name": "Yasam Vegan Kafe",
+    "city": "Izmir",
+    "country": "Turkey",
+    "website": null,
+    "address": "1484 Sk 9/A, Alsancak Konak, Izmir, Turkey"
+  },
+  {
+    "id": "f8994623-b83b-46d7-aace-3d016ac2f626",
+    "name": "Roots Shots",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "website": null,
+    "address": "Bagdat Cd. 260C, Istanbul, Turkey"
+  }
+]

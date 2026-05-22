@@ -1,0 +1,87 @@
+=== REMOVE_CLOSED (soft-archive) ===
+  c950e2a3-8b58-48c8-bc54-d3aaaa064d12  Veganko (Zagreb)
+    ✓ archived
+  e3ff6a08-a291-44dd-8644-b2db5c15b821  Marta's Veggie Fusion (Split)
+    ✓ archived
+
+=== DOWNGRADE_MEAT_HEAVY_NOISE (fully_vegan → vegan_friendly) ===
+  a9269b53-f95b-480e-8b4b-cee2649c9647  Bubalus Burger Bar (Trogir) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  64f4ffa5-70c3-4bc8-a89d-a1d7129cb544  Fish House Zadar (Zadar) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  45128608-8443-4338-b559-4a32dd87c925  Kebab Factory (Hvar) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  a07147e5-7a7c-40c0-a7a6-7ed970c88971  MC CHEVAP (Kukuljanovo) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  e573dbe3-70fa-4b39-9708-cb6f407f1c3f  Passarola Restaurant (Hvar) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  21a2112a-2195-4b0e-811c-6b79b6d9613d  Plac Kitchen & Grill (Zagreb) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  19b7e5a0-3119-4da6-8c2b-c7bc95ea2d6e  Restoran Agora (Dubrovnik) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  0b80767b-4ee2-4bdf-a05d-554f6decd7dd  Submarine (Rijeka) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  0edb4c2e-8a4e-4f62-92e5-4a33947b066d  Submarine (Zagreb) — vegan_options → vegan_friendly
+    ✓ downgraded
+  95d64805-3cea-4f20-bac4-433362b50d5a  Submarine Burger (Split) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+  3f622020-60a3-4d01-bb2a-f7f3f359a668  Submarine Burger (Varazdin) — vegan_friendly → vegan_friendly
+    ✓ downgraded
+
+=== REMOVE_OR_ARCHIVE_FALSE_100 (downgrade) ===
+  f3dacc2c-934c-46c4-99de-a44e89c41dfb  Barcode Mitra (Croatia) — fully_vegan → vegan_friendly
+    ✓ downgraded
+
+=== MERGE_DUPLICATE / MERGE_DUPLICATE_AND_VERIFY_SEASONAL / MERGE_OR_RENAME ===
+  KEEP: art-of-raw-zadar (2447af0c-ffa5-435c-b9ce-b8a33c896f10) — score=2
+  ARCHIVE: croatia-longtail-overnight-art-of-raw (f97bbafd-d7c6-4b63-a4f8-70f21517b73f)
+    ✓ archived
+  KEEP: nishta (76e9628a-c208-4825-abe7-ef399316c730) — score=6
+  ARCHIVE: nishta-dubrovnik-dubrovnik (7de4c2f2-aae1-492c-a2a1-9f895699bd91)
+    ✓ archived
+  EXPLICIT: keep croatia-vege-fino-za-sve (3eb6fb3e-5782-42e3-95da-c800ca9acdae), archive vegeanddobro
+  ARCHIVE: vegeanddobro (875b2549-815f-4516-9191-7845245ac6cf)
+    ✓ archived
+
+=== UPGRADE_TO_100_IF_OPEN (flag for review, no auto-upgrade) ===
+  9a8bae8e-3400-4163-8018-097a73a19543  BEKIND (Zagreb) — vegan_friendly (needs live verification before upgrade)
+
+=== DO_NOT_UPGRADE_TO_100 (noted, no action) ===
+  6d99855d-37c8-4442-a8ea-2c4b2531043c  Urban & Veggie (Dubrovnik) — keep at vegan_friendly
+  eafc19b9-a968-4a45-9faa-7e9b972797fa  VegeDub (Dubrovnik) — keep at vegan_friendly
+
+=== REVIEW_NOT_RESTAURANT / SEPARATE_EXPERIENCE ===
+  8755d72b-ed38-47b9-9d0a-49e7daee5e91  OPG Natura škoj (Vodice) — REVIEW_NOT_RESTAURANT: Do not count in 100% vegan restaurant layer until confirmed that the public edible offer is fully vegan; likely store/farm/cosmetics/olive oil record.
+  201b9669-56d1-43ae-9aec-c5a4e03c6440  Vegan Sailing (Split) — SEPARATE_EXPERIENCE_FROM_RESTAURANTS: Keep as 100% vegan experience/tour, but exclude from 100% vegan restaurant/cafe count and label separately.
+
+=== Items requiring WebSearch verification (next phase) ===
+  VERIFY_SEASONAL_100 | Adio Mare Vegan (Korčula) | dcb8bdc5-b273-4fea-81be-6d0724f35bfa
+  KEEP_ENRICH_100 | Barakokula (Split) | 09ea2232-785a-457d-ad4d-dc2df72d1d79
+  ENRICH_AND_VERIFY_CHAIN_BRANCH | BioMania (Zagreb) | 2350fbdf-72c6-4119-a601-d18096391a4d
+  ENRICH_AND_VERIFY_CHAIN_BRANCH | Biomania Street Food (Bol) | 27d5bf3c-4493-4f96-bd33-a1b67a6de158
+  KEEP_ENRICH_100 | Falafel etc. (Zagreb) | 145a3aa3-2ee6-40bd-acdc-990c659037da
+  VERIFY_SEASONAL_100 | Green Goodness Hvar (Hvar) | d466f1bb-9d27-481e-8c3e-4024db2d460b
+  KEEP_ENRICH_100 | Makrovega (Rijeka) | e5fa235f-0299-4500-98af-02f793f0ae52
+  VERIFY_OLD_OR_STALE_100 | Natural (Split) | ad623329-485e-42e4-a01f-50acd2b3ea1e
+  KEEP_ENRICH_100 | OAZA Joyful Kitchen (Zagreb) | d3240275-9a46-411e-8700-d92b06a239f5
+  KEEP_ENRICH_100 | Pandora Greenbox (Split) | bf6f9298-f680-4577-8a5f-850198172677
+  VERIFY_SEASONAL_100 | Plantae Vegan (Vis) | 40c94ed4-9087-42c0-8838-a39c24fb0006
+  KEEP_ENRICH_100 | Restaurant Artha (Poreč) | 50416bf0-f232-446c-8ecb-9c11b48db14a
+  KEEP_ENRICH_100 | Shambala (Croatia) | 69c81062-18c2-4fc8-a792-9bb359c3ddfb
+  KEEP_ENRICH_100 | Simple green (Zagreb) | 43bc7fa7-e522-4f2b-986c-67a7aca8d471
+  KEEP_ENRICH_100 | The Botanist (Zadar) | 6b4321b4-6f09-40a5-9d58-13f0d0c65c93
+  VERIFY_SEASONAL_100 | The Green House (Hvar) | 7f9e3dfa-68d3-4713-8e47-ad3caaae1122
+  KEEP_ENRICH_100 | VEG (Split) | df367b8e-adba-42ef-99f1-afca356ae10e
+  KEEP_ENRICH_100 | Vege Fino Za Sve (Zagreb) | 3eb6fb3e-5782-42e3-95da-c800ca9acdae
+  KEEP_ENRICH_100 | Vegehop (Zagreb) | b121f2fa-fdb2-428f-a1d0-06079ba760ca
+  KEEP_ENRICH_100 | YES rebel bites (Osijek) | 100368b8-7422-4d27-9305-66e18d081b40
+  KEEP_ENRICH_100 | Zelena (Pula) | e95fbf55-a1b2-46ce-886f-6a221eeaaab7
+  KEEP_ENRICH_100 | Zrno bio bistro (Zagreb) | faeab079-8d8a-40f8-80ff-1f33fc4407a3
+  VERIFY_POTENTIAL_100_OR_MOSTLY | Soul Kitchen (Split) | 19a3067e-ae68-434c-8208-221fb6fdafa2
+  VERIFY_POTENTIAL_100_OR_MOSTLY | Green & Purple's Vegan & Veggie (Dubrovnik) | f2db82a1-0e54-4902-a448-f1e4f13180fb
+
+=== ADD_MISSING_SOURCE_CANDIDATE (separate add-place pass) ===
+  superplanty (Zagreb) | source: https://www.instagram.com/superplanty/ or official website if available
+  Swanky Monkey Garden (Zagreb) | source: https://swanky-hostel.com/ or official venue page
+  Upcafe (Split) | source: Official/social page
+  Tvornica Zdrave Hrane (Split/Zagreb/multiple) | source: https://www.tvornicazdravehrane.com/

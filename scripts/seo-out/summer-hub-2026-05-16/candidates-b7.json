@@ -1,0 +1,5 @@
+[
+  {"name": "Asian Vegan Kitchen Istanbul", "city": "Istanbul", "country": "Turkey", "vegan_level": "fully_vegan", "address": "Istanbul, Turkey", "notes": "All-vegan Asian"},
+  {"name": "Community Kitchen Balat", "city": "Istanbul", "country": "Turkey", "vegan_level": "fully_vegan", "address": "Balat, Istanbul, Turkey", "notes": "Vegan community kitchen"},
+  {"name": "Vegan Dükkan Lokanta", "city": "Istanbul", "country": "Turkey", "vegan_level": "fully_vegan", "address": "Cihangir, Istanbul, Turkey", "notes": "All-vegan Turkish"}
+]

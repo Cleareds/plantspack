@@ -1,0 +1,44 @@
+[
+  {
+    "id": "4b0e83f4-e936-4b19-9403-075d4d0b9597",
+    "name": "Fronda Pasaje BCN",
+    "from": "vegan_friendly",
+    "to": "fully_vegan"
+  },
+  {
+    "id": "cf8af658-f5f7-4758-b3ff-ae35451344e6",
+    "name": "Rasoterra",
+    "from": "vegan_friendly",
+    "to": "fully_vegan"
+  },
+  {
+    "id": "79d50bb1-7bf5-4f44-84a3-08a19bb2f586",
+    "name": "POTSTOT",
+    "from": "vegan_friendly",
+    "to": "fully_vegan"
+  },
+  {
+    "id": "d3bf69b6-4dde-4405-bffb-c771ea33dd91",
+    "name": "Let It Bloom",
+    "from": "vegan_friendly",
+    "to": "fully_vegan"
+  },
+  {
+    "id": "98c11d01-3a13-4639-8d26-783f207805cc",
+    "name": "La Mandragora",
+    "from": "vegan_friendly",
+    "to": "fully_vegan"
+  },
+  {
+    "id": "cb62eb9f-8324-4d83-bd75-42f687ba1985",
+    "name": "Aromaticus",
+    "from": "mostly_vegan",
+    "to": "fully_vegan"
+  },
+  {
+    "id": "91aef645-e652-46d2-b9ea-9c5113288899",
+    "name": "Gelatò",
+    "from": "vegan_friendly",
+    "to": "fully_vegan"
+  }
+]

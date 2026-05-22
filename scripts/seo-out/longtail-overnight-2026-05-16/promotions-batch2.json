@@ -1,0 +1,20 @@
+[
+  {
+    "id": "f03600ea-626e-40be-b4ee-9aae9a9678c8",
+    "name": "Baba Ghanoush",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan"
+  },
+  {
+    "id": "7e27c156-49ea-4053-a07f-f0821faec0b4",
+    "name": "Salsa Verde",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan"
+  },
+  {
+    "id": "47a68db4-6905-414e-9a17-922fbab7c1b6",
+    "name": "Madre Tierra",
+    "from": "vegan_friendly",
+    "to": "mostly_vegan"
+  }
+]

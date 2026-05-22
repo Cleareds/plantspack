@@ -1,0 +1,42 @@
+[
+  {
+    "id": "e34a49ee-7fc8-42ae-b49b-cf876427b3fe",
+    "slug": "adar-vegan-and-doner-augsburg",
+    "name": "Ädar Vegan & Döner",
+    "city": "Augsburg",
+    "website": "",
+    "address": "2 Äußeres Pfaffengäßchen"
+  },
+  {
+    "id": "6dd814ef-e577-4624-90d1-aa748f6fa092",
+    "slug": "balaram-berlin",
+    "name": "Balaram",
+    "city": "Berlin",
+    "website": "",
+    "address": "Boxhagener Platz, 10245 Berlin, Germany"
+  },
+  {
+    "id": "d1e87d0d-f34f-40a9-a187-fe61f7fce718",
+    "slug": "frea-bakery-berlin",
+    "name": "FREA Bakery",
+    "city": "Berlin",
+    "website": "https://www.freabakery.de",
+    "address": "Gartenstraße 9, 10115 Berlin, Germany"
+  },
+  {
+    "id": "fea39bc7-f1bb-451e-8405-b8664e0db1ee",
+    "slug": "garden-gourmet",
+    "name": "Garden Gourmet",
+    "city": "Frankfurt",
+    "website": "https://www.gardengourmet.com",
+    "address": "Frankfurt am Main"
+  },
+  {
+    "id": "b6bb9cac-f6e3-448a-84c6-ff753315af6d",
+    "slug": "crunchy-kebab-vegan-kassel",
+    "name": "Crunchy Kebab Vegan",
+    "city": "Kassel",
+    "website": "https://crunchy-vegan.de/",
+    "address": "73 Friedrich-Ebert-Straße, Kassel, 34119, Germany"
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Makrovega",
+    "city": "Rijeka",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Macrobiotic vegan/vegetarian, top picks",
+    "address": "Rijeka, Croatia",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "croatia-blog-makrovega",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Lab Salad Bar",
+    "city": "Rovinj",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Healthy vegan-friendly acai bowls",
+    "address": "Rovinj, Croatia",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "croatia-blog-lab-salad-bar",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Tipico Green Garden",
+    "city": "Rovinj",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Vegan-friendly farm-to-table",
+    "address": "Rovinj, Croatia",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "croatia-blog-tipico-green-garden",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Arkhe",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Fine-dining plant-based fusion French/Italian/Asian",
+    "address": "Lisbon, Portugal",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "portugal-blog-arkhe",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Quintal de Santo Amaro",
+    "city": "Lisbon",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan café and mini-grocery in Alcântara",
+    "address": "Lisbon, Portugal",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "portugal-blog-quintal-de-santo-amaro",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Mandala",
+    "city": "Tavira",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan café in Tavira",
+    "address": "Tavira, Portugal",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "portugal-blog-mandala",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "GREEN Balls & Burgers",
+    "city": "Ericeira",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan food truck at skate park",
+    "address": "Ericeira, Portugal",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "portugal-blog-green-balls-burgers",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "King's Cafe",
+    "city": "Göreme",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan oasis in Cappadocia, Turkish and international vegan dishes",
+    "address": "Göreme, Turkey",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "turkey-blog-king-s-cafe",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Falafel Koy",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Hidden gem, Syrian-Palestinian owners, homemade falafel",
+    "address": "Istanbul, Turkey",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "turkey-blog-falafel-koy",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Mahatma Café",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Cozy vegan café in Kadikoy",
+    "address": "Istanbul, Turkey",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "turkey-blog-mahatma-cafe",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Muhtelif Mekan",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan restaurant in Kadikoy, traditional Turkish like lahmacun, iskender kebab",
+    "address": "Istanbul, Turkey",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "turkey-blog-muhtelif-mekan",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  },
+  {
+    "name": "Rulo Ezberbozan Lezzetler",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Build-your-own vegetarian/vegan, nohut durum wraps",
+    "address": "Istanbul, Turkey",
+    "source": "blog-coverage-2026-05-15",
+    "source_id": "turkey-blog-rulo-ezberbozan-lezzetler",
+    "tags": [
+      "blog-coverage-2026-05-15"
+    ]
+  }
+]

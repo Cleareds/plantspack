@@ -17,6 +17,7 @@ import { generateCountryDescription, generateCountryMetaDescription } from '@/li
 import { getCities } from '@/lib/directory-queries'
 import { getRegionsForCountry } from '@/lib/regions'
 import { getCountryAuditPost } from '@/lib/country-audit-post'
+import { hasTravelGuide } from '@/lib/vegan-content'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
@@ -427,6 +428,23 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             <div className="text-6xl mb-4">🗺️</div>
             <h2 className="text-xl font-semibold text-on-surface mb-2">No places yet in {countryName}</h2>
             <p className="text-on-surface-variant mb-6">Be the first to add a vegan place!</p>
+          </div>
+        )}
+
+        {/* Small footer link to travel cheat sheet when one exists. Kept
+            deliberately understated - the country page is the SEO authority
+            for "vegan [country]" queries; the cheat sheet is supporting
+            content for "how to eat vegan in [country]" queries. */}
+        {hasTravelGuide(country) && !isFullyVeganMode && (
+          <div className="mt-10 text-sm text-on-surface-variant">
+            Travelling here?{' '}
+            <Link
+              href={`/vegan/travel/${country}`}
+              className="text-primary hover:underline font-medium"
+            >
+              See our travel tips for vegans visiting {countryName}
+            </Link>{' '}
+            — phrasebook, dish dictionary, and what to watch for.
           </div>
         )}
       </div>

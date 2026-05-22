@@ -1,0 +1,272 @@
+[
+  {
+    "name": "Mangiamore",
+    "city": "Reggio Emilia",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Vegetarian/vegan with rotating seasonal dishes Reggio Emilia",
+    "address": "Reggio Emilia, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-mangiamore",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Herbe",
+    "city": "Reggio Emilia",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan restaurant ethnic plant-based tradition contemporary Reggio Emilia",
+    "address": "Reggio Emilia, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-herbe",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "RE VEGANO",
+    "city": "Reggio Emilia",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegetable 100% organic bio vegan fast food Reggio Emilia",
+    "address": "Reggio Emilia, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-re-vegano",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Framento",
+    "city": "Cagliari",
+    "country": "Italy",
+    "country_code": "it",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Vegan pizza options Cagliari carapigna dessert",
+    "address": "Cagliari, Italy",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "italy-longtail-overnight-framento",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "San Wich",
+    "city": "Cádiz",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Best vegan burgers Cadiz 7 alternatives aubergine quinoa lentils",
+    "address": "Cádiz, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-san-wich",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Sonámbulo",
+    "city": "Cádiz",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Mediterranean modern cuisine Plaza Candelaria many vegan options",
+    "address": "Cádiz, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-sonambulo",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "La Candela",
+    "city": "Cádiz",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Cozy place Cadiz Feduchy Street vegan tapas",
+    "address": "Cádiz, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-la-candela",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Las Niñas Veganas",
+    "city": "Cádiz",
+    "country": "Spain",
+    "country_code": "es",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Central market Cadiz, all tapas without gluten dairy eggs",
+    "address": "Cádiz, Spain",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "spain-longtail-overnight-las-ninas-veganas",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Let's Vegan",
+    "city": "Rethymno",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "First innovative vegan restaurant Rethymno Crete plant-based",
+    "address": "Rethymno, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-let-s-vegan",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Stella's Kitchen",
+    "city": "Rethymno",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Granny-style kitchen Rethymno old town home flavors",
+    "address": "Rethymno, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-stella-s-kitchen",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Vegan Joe's",
+    "city": "Loulé",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "100% vegan restaurant Loulé weekly menu Portuguese tapas",
+    "address": "Loulé, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-vegan-joe-s",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Gengibre E Canela",
+    "city": "Faro",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "All-you-can-eat vegetarian Faro feijoada curry green meals",
+    "address": "Faro, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-gengibre-e-canela",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Mercearia Bio Café",
+    "city": "Lagos",
+    "country": "Portugal",
+    "country_code": "pt",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Bio café near bus station Lagos vegan cake",
+    "address": "Lagos, Portugal",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "portugal-longtail-overnight-mercearia-bio-cafe",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Vege Vegan Street Food",
+    "city": "Split",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Vegan street food restaurant Split",
+    "address": "Split, Croatia",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "croatia-longtail-overnight-vege-vegan-street-food",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Sibenik Hub For Ecology",
+    "city": "Šibenik",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Ecology hub restaurant with vegan options Sibenik",
+    "address": "Šibenik, Croatia",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "croatia-longtail-overnight-sibenik-hub-for-ecology",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Bistro & Rooftop Bar SHE",
+    "city": "Šibenik",
+    "country": "Croatia",
+    "country_code": "hr",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Vegan-friendly bistro rooftop bar Sibenik patio",
+    "address": "Šibenik, Croatia",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "croatia-longtail-overnight-bistro-rooftop-bar-she",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Herb's Garden",
+    "city": "Heraklion",
+    "country": "Greece",
+    "country_code": "gr",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Rooftop vegan and vegetarian fresh local Heraklion",
+    "address": "Heraklion, Greece",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "greece-longtail-overnight-herb-s-garden",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  },
+  {
+    "name": "Avokado Bar",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "country_code": "tr",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Avocado-focused breakfast/entrées Sisli vegan/vegetarian",
+    "address": "Istanbul, Turkey",
+    "source": "longtail-overnight-2026-05-16",
+    "source_id": "turkey-longtail-overnight-avokado-bar",
+    "tags": [
+      "longtail-overnight-2026-05-16"
+    ]
+  }
+]

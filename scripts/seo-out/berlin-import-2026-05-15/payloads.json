@@ -1,0 +1,1022 @@
+[
+  {
+    "name": "Erbil Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Mitte, Vegan Uzbek Plov/Oriental, Vegan & Vegetarian food (Google: 4.8(1,283)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-erbil-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Ho Lo",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Schöneberg, omnivor, vegan duck , vegan plate and other vegan options (Google: 4.3(526)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-ho-lo",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "WaWa Berlin",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Schöneberg, omnivor, vegan korean tapas, bibim bap, kimchi zzigae (Google: 4.7(1,054)), €20–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-wawa-berlin",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "acht&dreissig",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Mitte, omnivor, each 1 option for starter, salad & main (Google: 4.5(1,061)), €30–70",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-acht-dreissig",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Cocolo Ramen",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Mitte, omnivor, 1 began option: MISO VEGGIE / VEGAN - / homemade miso, / soy sauce base, / noodles, vegetables, egg or tofu (Google: 4.5(2,265)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-cocolo-ramen",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "YUNA",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "store",
+    "vegan_level": "vegan_options",
+    "description": "Mitte, Café, omnivor with vegan sandwiches and vegan breakfast option (Google: 4.7(1,652)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-yuna",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Berliner Republik",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Mitte, omnivor, vegan Currywurst, vegan Schnitzel, vegan Leberkäs (Google: 4.3(6,036)), €20–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-berliner-republik",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "摊摊豆花 Tantan Douhua",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Kreuzberg, frech vegan noodles (Google: 5.0(20)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-tantan-douhua",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Eat Manti - Coffee and Cake",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "store",
+    "vegan_level": "vegan_friendly",
+    "description": "Prenzlauer Berg, Manti, vegan options (Google: 4.8(99)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-eat-manti-coffee-and-cake",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Home of Dumplings",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Prenzlauer Berg, omnivor, vegan dupmplings (Google: 4.8(725)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-home-of-dumplings",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Dat Cookie",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Cookies / Mitte, Vegan Cookies (Google: 4.6(813))",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-dat-cookie",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "ROLLS Asian Street Food",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Prenzlauer Berg, omnivor, Bahn Mi & more (Google: 4.8(586)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-rolls-asian-street-food",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Round & Edgy",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Berlin Mitte - Cafe, vegan ice, cookies etc (Google: 5.0(102)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-round-edgy",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Croissant Couture Breakfast & Brunch",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Mitte, Café, vegan options (Google: 4.7(240)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-croissant-couture-breakfast-brunch",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "India Express - Indisches Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Charlottenburg, Indian Vegan (Google: 4.7(1,204)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-india-express-indisches-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Roji - Godai no Sekai Prenzlauer Berg",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Omnivor, vegan options, Vegan Monk Pizza, Sushi (Google: 4.7(1,571)), €20–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-roji-godai-no-sekai-prenzlauer-berg",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Kiautschoustraße 1",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "13353 Berlin / Germany / Best vegan cakes",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-kiautschoustra-e-1",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Vaust Bar & Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Kreuzberg, Vegan Bar & Restaurant (Google: 5.0(46)), €40–80",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-vaust-bar-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Umami F-Hain",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Berlin - F-Hain, asiatisch, omnivor, viele vegane optionen (Google: 4.6(1,980)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-umami-f-hain",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Fit Cake",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Patisserie / Berlin - Charlottenburg, Café, viele vegane Optionen (Torten, Donuts etc) (Google: 4.7(277))",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-fit-cake",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Umami Mitte",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Berlin - Mitte, asiatisch, omnivor, viele vegane optionen (Google: 4.9(3,132)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-umami-mitte",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Kailash Parbat – Indisches vegetarisches & veganes Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Berlin-Mitte, Indian, vegan-vegetarian (Google: 4.8(684)), €20–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-kailash-parbat-indisches-vegetarisches-veganes-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "OKA Onigiri",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Berlin-Mitte, omnivor, Onigiris (Google: 4.9(211)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-oka-onigiri",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Inari-San Berlin",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Berlin-Mitte, omnivor, Inaris (Google: 4.3(256)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-inari-san-berlin",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "SammyS Berliner Donuts",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "store",
+    "vegan_level": "fully_vegan",
+    "description": "Alles vegan (Google: 4.7(424)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-sammys-berliner-donuts",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "HeroinKids",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Clothing store (Google: 4.9(60))",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-heroinkids",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Ingwer",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Coffee from Tommy 47 (Google: 4.7(139)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-ingwer",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Uhland Bistro",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "store",
+    "vegan_level": "vegan_friendly",
+    "description": "Vegan Döner - einer der leckersten in Berlin (Google: 4.4(214)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-uhland-bistro",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "+84",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "(Google: 4.6(1,466)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-84",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Creperia La Bombarde",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "(Google: 4.6(586)), €",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-creperia-la-bombarde",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Shibu Vegan",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Prenzlauer Berg, vegan, asian, sushi & more (Google: 4.0(23)), €10–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-shibu-vegan",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "You're Welcome",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Mitte, Omnivor mit veganer Karte (Google: 4.5(825)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-you-re-welcome",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Pepe In Grani",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "(Google: 4.4(11,203)), €€",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-pepe-in-grani",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Funk You - Natural Food",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "store",
+    "vegan_level": "vegan_friendly",
+    "description": "Vegan quesadilla, raw cakes, Vegan + Vegetarian! (Google: 4.6(1,141)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-funk-you-natural-food",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Golda delux",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Kreuzberg, lots vegan dishes (Google: 4.8(1,006)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-golda-delux",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Madami - Mom's Viet Kitchen",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Mitte, vegan vietnamese (Google: 4.4(4,005)), €20–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-madami-mom-s-viet-kitchen",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "MANA Food Moabit",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Moabit, vegan breakfast, dinner & Brunch. Shakshuka, Pasta, Soups (Google: 4.5(343)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-mana-food-moabit",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Chaomin-Congee Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "P-Berg, Omnivor, Congee soups, asian Tapas, Congee Hotpot (also vegan) (Google: 4.7(676)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-chaomin-congee-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "C+ Bakery",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Kreuzberg, vegan bakery (Google: 4.7(218)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-c-bakery",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Spluffin Bäckerei",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "store",
+    "vegan_level": "vegan_friendly",
+    "description": "F-Hain, süße und herzhafte Spluffins, oft auf Bestellung. Viele vegane Sorten (Google: 4.7(80)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-spluffin-b-ckerei",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "When Dreams Come True",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Schöneberg, Omnivor, Vegan shakshuka (Google: 4.7(436)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-when-dreams-come-true",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "BrewDog Berlin Mitte",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Mitte, Omnivor, Vegan Pizza, Vegan Hot-Dog, Salats (Google: 4.4(4,901)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-brewdog-berlin-mitte",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "flat white - Coffee & more",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Mitte, Café with vegan options (Google: 4.6(382)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-flat-white-coffee-more",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "VEG'D - Vegan Burger - NK",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Neukölln, Vegan burgers (Google: 4.6(318)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-veg-d-vegan-burger-nk",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "VEG'D - Vegan Burgers - F-hain",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Friedrichshain, Vegan burgers (Google: 4.8(1,479)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-veg-d-vegan-burgers-f-hain",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Veg'd - Vegan Burgers - P-Berg",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "O-Berg, Vegan burgers (Google: 4.8(475)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-veg-d-vegan-burgers-p-berg",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Zerostress Pizza & Restaurant - Kreuzberg",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Kreuzberg, Omnivor with a Vegan Pizza menu! (Google: 4.4(550)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-zerostress-pizza-restaurant-kreuzberg",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "LoveBurger",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "vegan, burger! (Google: 4.9(431)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-loveburger",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Tianfuzius 天府子",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Vegetarian Shuan kitchen, mostly vegan (Google: 4.5(1,252)), €20–30",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-tianfuzius",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Emira Vegan Sushi Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "P-Berg, Sushi & Ramen, vegan (Google: 4.9(612)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-emira-vegan-sushi-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "kwia",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Bar! Kreuzberg. Ambient music in a queer atmosphere. (Google: 3.9(297)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-kwia",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "HOT Restaurant Café - Berlin",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_options",
+    "description": "Food Court in Mitte, Omnivor with lots of vegan options! (Google: 3.8(420)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-hot-restaurant-caf-berlin",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "MONO Berlin",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Asian vegan food in Prenzlauer Berg. (Google: 4.7(570)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-mono-berlin",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "El Amigo Taqueria",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "(Google: 4.8(1,497)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-el-amigo-taqueria",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Veggie 2.0 - the green canteen",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "First 100% vegan cafeteria for university students in Berlin. Non-students are welcome. (Google: 4.3(62)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-veggie-2-0-the-green-canteen",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "HAPPA Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Kreuzberg, Bio & Vegan, made of saved vegetables (Google: 4.8(409)), €10–70",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-happa-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Miss Pho Restaurant",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Charlottenburg, Vegan sushi & more (Google: 4.6(981)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-miss-pho-restaurant",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Mon Eatery & Bar",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "(Google: 4.4(598)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-mon-eatery-bar",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Café Honig",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "(Google: 4.8(250)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-caf-honig",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Tropimarkt",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Wholesale grocer / Moabit, Tropical online Shop (Google: 3.9(58))",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-tropimarkt",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Madonna Bar",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Kreuzberg, Kultbar (Google: 4.6(309)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-madonna-bar",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Humble — Restaurant für Burger & Bowls Berlin Tiergarten",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Tiergarten-Mitte, Fusion: Burger, Udon, Pho, Fries (Google: 4.6(537)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-humble-restaurant-f-r-burger-bowls-berlin-tiergarten",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "House of vegan 182",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Köpenick, Vegan, Asian (Google: 4.9(565)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-house-of-vegan-182",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Lia's Kitchen - 100% Vegan",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Prenzlauer Berg, Vegan, self made burger and other tasty vegan dishes. (Google: 4.5(1,522)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-lia-s-kitchen-100-vegan",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Romeo und Romeo",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Schöneberg, Maybe not as vegan, but you have to take a look on this rainbow cakes! (Google: 4.7(1,696)), €1–10",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-romeo-und-romeo",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Sanhok Wok&Grill",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "vegan_friendly",
+    "description": "Neukölln, Pho Chay (Google: 4.5(535)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-sanhok-wok-grill",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "Vegup — powered by plants",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "mostly_vegan",
+    "description": "Kreuzberg, Vegetarisch, Vegan ausgewiesen, Asiatische Küche (Google: 4.7(570)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-vegup-powered-by-plants",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  },
+  {
+    "name": "li.ke : serious||thai||vegan",
+    "city": "Berlin",
+    "country": "Germany",
+    "country_code": "de",
+    "category": "eat",
+    "vegan_level": "fully_vegan",
+    "description": "Friedrichshain, Asian (Thai), Vegan (Google: 4.7(2,312)), €10–20",
+    "address": "Berlin, Germany",
+    "source": "berlin-google-map-2026-05-15",
+    "source_id": "berlin-li-ke-serious-thai-vegan",
+    "tags": [
+      "berlin-google-map-2026-05-15"
+    ]
+  }
+]
