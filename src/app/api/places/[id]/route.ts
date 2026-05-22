@@ -149,7 +149,7 @@ export async function PUT(
     // Build update object with allowed fields
     const updateData: Record<string, any> = {}
     const allowedFields = [
-      'name', 'description', 'category', 'address', 'latitude', 'longitude',
+      'name', 'description', 'category', 'subcategory', 'address', 'latitude', 'longitude',
       'website', 'phone', 'is_pet_friendly', 'images', 'main_image_url', 'tags',
       'opening_hours', 'event_time', 'city', 'country', 'vegan_level'
     ]

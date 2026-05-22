@@ -5,6 +5,54 @@ import { X, Save, Star, Loader2 } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import { geocodingService } from '@/lib/geocoding'
 
+// Canonical subcategories per top-level category. Mirrors the list in
+// AddPlaceModal so values stay consistent.
+const EDIT_SUBCATEGORIES: Record<string, Array<{ value: string; label: string }>> = {
+  hotel: [
+    { value: 'hotel',       label: 'Hotel' },
+    { value: 'bnb',         label: 'B&B' },
+    { value: 'guesthouse',  label: 'Guesthouse' },
+    { value: 'hostel',      label: 'Hostel' },
+    { value: 'retreat',     label: 'Retreat' },
+    { value: 'resort',      label: 'Resort' },
+    { value: 'apartment',   label: 'Apartment / Self-catering' },
+    { value: 'agriturismo', label: 'Agriturismo / Farm stay' },
+    { value: 'eco-lodge',   label: 'Eco-lodge / Glamping' },
+  ],
+  eat: [
+    { value: 'restaurant', label: 'Restaurant' },
+    { value: 'cafe',       label: 'Cafe' },
+    { value: 'bakery',     label: 'Bakery' },
+    { value: 'bar',        label: 'Bar / Pub' },
+    { value: 'fast-food',  label: 'Fast food / Takeaway' },
+    { value: 'ice-cream',  label: 'Ice cream / Dessert' },
+    { value: 'food-truck', label: 'Food truck' },
+    { value: 'caterer',    label: 'Caterer' },
+  ],
+  store: [
+    { value: 'grocery',     label: 'Grocery / Supermarket' },
+    { value: 'health-food', label: 'Health food shop' },
+    { value: 'butcher',     label: 'Vegan butcher / Deli' },
+    { value: 'farm-shop',   label: 'Farm shop' },
+    { value: 'market',      label: 'Market stall' },
+    { value: 'bookshop',    label: 'Bookshop' },
+    { value: 'clothing',    label: 'Clothing / Lifestyle' },
+    { value: 'beauty',      label: 'Beauty / Cosmetics' },
+  ],
+  organisation: [
+    { value: 'sanctuary', label: 'Sanctuary' },
+    { value: 'charity',   label: 'Charity / NGO' },
+    { value: 'community', label: 'Community group' },
+    { value: 'meetup',    label: 'Meetup group' },
+  ],
+  event: [
+    { value: 'festival', label: 'Festival' },
+    { value: 'market',   label: 'Market / Fair' },
+    { value: 'workshop', label: 'Workshop / Class' },
+    { value: 'social',   label: 'Social / Meetup' },
+  ],
+}
+
 interface EditPlaceProps {
   place: {
     id: string
@@ -35,6 +83,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
   const addressRef = useRef<HTMLDivElement>(null)
   const [description, setDescription] = useState(place.description || '')
   const [category, setCategory] = useState(place.category)
+  const [subcategory, setSubcategory] = useState((place as any).subcategory || '')
   const [website, setWebsite] = useState(place.website || '')
   const [phone, setPhone] = useState(place.phone || '')
   const [openingHours, setOpeningHours] = useState(() => {
@@ -136,6 +185,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
           ...(selectedGeo ? { latitude: selectedGeo.lat, longitude: selectedGeo.lng } : {}),
           description: description.trim() || null,
           category,
+          subcategory: subcategory || null,
           vegan_level: veganLevel,
           website: website.trim() || null,
           phone: phone.trim() || null,
@@ -222,21 +272,38 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
               )}
             </div>
 
-            {/* Category */}
-            <div>
-              <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
-              >
-                <option value="eat">Eat</option>
-                <option value="hotel">Stay</option>
-                <option value="store">Store</option>
-                <option value="event">Event</option>
-                <option value="organisation">Organisation</option>
-                <option value="other">Other</option>
-              </select>
+            {/* Category + Subcategory */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
+                <select
+                  value={category}
+                  onChange={(e) => { setCategory(e.target.value); setSubcategory('') }}
+                  className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+                >
+                  <option value="eat">Eat</option>
+                  <option value="hotel">Stay</option>
+                  <option value="store">Store</option>
+                  <option value="event">Event</option>
+                  <option value="organisation">Organisation</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              {EDIT_SUBCATEGORIES[category as string]?.length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-on-surface-variant mb-1">Type</label>
+                  <select
+                    value={subcategory}
+                    onChange={(e) => setSubcategory(e.target.value)}
+                    className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+                  >
+                    <option value="">- choose -</option>
+                    {EDIT_SUBCATEGORIES[category as string].map(s => (
+                      <option key={s.value} value={s.value}>{s.label}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             {/* Vegan Level */}

@@ -17,6 +17,54 @@ const PLACE_CATEGORIES = [
   { value: 'other', label: 'Other' },
 ]
 
+// Canonical subcategories shown in the dropdown per category. Values stay
+// lowercase + kebab to match what's already in the places.subcategory column.
+const SUBCATEGORIES: Record<string, Array<{ value: string; label: string }>> = {
+  hotel: [
+    { value: 'hotel',       label: 'Hotel' },
+    { value: 'bnb',         label: 'B&B' },
+    { value: 'guesthouse',  label: 'Guesthouse' },
+    { value: 'hostel',      label: 'Hostel' },
+    { value: 'retreat',     label: 'Retreat' },
+    { value: 'resort',      label: 'Resort' },
+    { value: 'apartment',   label: 'Apartment / Self-catering' },
+    { value: 'agriturismo', label: 'Agriturismo / Farm stay' },
+    { value: 'eco-lodge',   label: 'Eco-lodge / Glamping' },
+  ],
+  eat: [
+    { value: 'restaurant', label: 'Restaurant' },
+    { value: 'cafe',       label: 'Cafe' },
+    { value: 'bakery',     label: 'Bakery' },
+    { value: 'bar',        label: 'Bar / Pub' },
+    { value: 'fast-food',  label: 'Fast food / Takeaway' },
+    { value: 'ice-cream',  label: 'Ice cream / Dessert' },
+    { value: 'food-truck', label: 'Food truck' },
+    { value: 'caterer',    label: 'Caterer' },
+  ],
+  store: [
+    { value: 'grocery',     label: 'Grocery / Supermarket' },
+    { value: 'health-food', label: 'Health food shop' },
+    { value: 'butcher',     label: 'Vegan butcher / Deli' },
+    { value: 'farm-shop',   label: 'Farm shop' },
+    { value: 'market',      label: 'Market stall' },
+    { value: 'bookshop',    label: 'Bookshop' },
+    { value: 'clothing',    label: 'Clothing / Lifestyle' },
+    { value: 'beauty',      label: 'Beauty / Cosmetics' },
+  ],
+  organisation: [
+    { value: 'sanctuary',     label: 'Sanctuary' },
+    { value: 'charity',       label: 'Charity / NGO' },
+    { value: 'community',     label: 'Community group' },
+    { value: 'meetup',        label: 'Meetup group' },
+  ],
+  event: [
+    { value: 'festival', label: 'Festival' },
+    { value: 'market',   label: 'Market / Fair' },
+    { value: 'workshop', label: 'Workshop / Class' },
+    { value: 'social',   label: 'Social / Meetup' },
+  ],
+}
+
 interface AddPlaceModalProps {
   onClose: () => void
   onPlaceAdded?: (place: any) => void
@@ -41,6 +89,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
   const [newPlace, setNewPlace] = useState({
     name: draft?.name || '',
     category: draft?.category || 'eat',
+    subcategory: draft?.subcategory || '',
     address: draft?.address || '',
     description: draft?.description || '',
     website: draft?.website || '',
@@ -171,6 +220,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         .from('places')
         .insert({
           ...newPlace,
+          subcategory: newPlace.subcategory || null,
           slug,
           vegan_level: newPlace.vegan_level,
           images: placeImages,
@@ -305,17 +355,34 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
-            <select
-              value={newPlace.category}
-              onChange={(e) => setNewPlace(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
-            >
-              {PLACE_CATEGORIES.map((cat) => (
-                <option key={cat.value} value={cat.value}>{cat.label}</option>
-              ))}
-            </select>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Category</label>
+              <select
+                value={newPlace.category}
+                onChange={(e) => setNewPlace(prev => ({ ...prev, category: e.target.value, subcategory: '' }))}
+                className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+              >
+                {PLACE_CATEGORIES.map((cat) => (
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                ))}
+              </select>
+            </div>
+            {SUBCATEGORIES[newPlace.category as string]?.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">Type</label>
+                <select
+                  value={newPlace.subcategory}
+                  onChange={(e) => setNewPlace(prev => ({ ...prev, subcategory: e.target.value }))}
+                  className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+                >
+                  <option value="">- choose -</option>
+                  {SUBCATEGORIES[newPlace.category as string].map(s => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           <div className="address-search-container">
