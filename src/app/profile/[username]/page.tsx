@@ -400,6 +400,7 @@ export default function ProfilePage() {
             lifetime={profile.sprouts_lifetime || 0}
             balance={profile.sprouts_balance || 0}
             seeded={profile.sprouts_seeded || 0}
+            forestSize={profile.forest_size || 0}
             isOwnProfile={isOwnProfile}
           />
 

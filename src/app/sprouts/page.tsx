@@ -3,6 +3,7 @@ import { createClient as createAdmin } from '@supabase/supabase-js'
 import { ACTION_AMOUNTS, TIERS, TREE_STAGES } from '@/lib/sprouts'
 import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
 import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
+import ForestPreview from '@/components/sprouts/ForestPreview'
 
 export const metadata = {
   title: 'Sprouts - PlantsPack contribution rewards',
@@ -19,7 +20,7 @@ const admin = createAdmin(
 export default async function SproutsPage() {
   // Top contributors (public, lifetime-ranked). Currently admin-only during phase 1.
   const { data: top } = await admin.from('users')
-    .select('id, username, avatar_url, sprouts_lifetime, sprouts_seeded')
+    .select('id, username, avatar_url, sprouts_lifetime, sprouts_seeded, forest_size')
     .gt('sprouts_lifetime', 0)
     .order('sprouts_lifetime', { ascending: false })
     .limit(10)
@@ -92,6 +93,7 @@ export default async function SproutsPage() {
               {top.map((u: any, i) => {
                 const tier = TIERS.slice().reverse().find(t => u.sprouts_lifetime >= t.min) || TIERS[0]
                 const stage = TREE_STAGES.slice().reverse().find(s => u.sprouts_seeded >= s.min) || TREE_STAGES[0]
+                const forestSize = u.forest_size ?? 0
                 return (
                   <li key={u.id} className="flex items-center gap-3 p-3">
                     <span className="w-6 text-center text-sm font-mono text-gray-500">{i + 1}</span>
@@ -106,12 +108,17 @@ export default async function SproutsPage() {
                     <Link href={`/profile/${u.username}`} className="font-semibold text-gray-900 hover:underline flex-1 truncate">
                       @{u.username}
                     </Link>
-                    <span title={stage.label} className="shrink-0"><TreeStageSvg stage={stage.stage} size={36} /></span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 font-semibold">{tier.label}</span>
+                    {forestSize > 0 ? (
+                      <Link href={`/profile/${u.username}/forest`} title={`Forest of ${forestSize} matured trees`} className="shrink-0 hover:opacity-90">
+                        <ForestPreview count={forestSize} size={56} />
+                      </Link>
+                    ) : (
+                      <Link href={`/profile/${u.username}/sprouts`} title={stage.label} className="shrink-0 hover:opacity-90">
+                        <TreeStageSvg stage={stage.stage} size={42} />
+                      </Link>
+                    )}
+                    <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${tier.chip}`}>{tier.label}</span>
                     <span className="font-mono font-bold text-emerald-700 w-20 text-right">{u.sprouts_lifetime.toLocaleString()}</span>
-                    <Link href={`/profile/${u.username}/sprouts`} className="text-xs text-emerald-700 hover:underline whitespace-nowrap">
-                      Tree -&gt;
-                    </Link>
                   </li>
                 )
               })}
@@ -129,9 +136,9 @@ export default async function SproutsPage() {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {TIERS.map(t => (
-              <div key={t.key} className="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                <div className="text-sm font-semibold text-gray-900">{t.label}</div>
-                <div className="text-xs text-gray-600 mt-1">{t.min.toLocaleString()}+</div>
+              <div key={t.key} className={`rounded-xl border p-4 text-center ${t.chip}`}>
+                <div className="text-sm font-semibold">{t.label}</div>
+                <div className="text-xs opacity-80 mt-1">{t.min.toLocaleString()}+</div>
               </div>
             ))}
           </div>

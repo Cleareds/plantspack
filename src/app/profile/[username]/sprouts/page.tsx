@@ -19,9 +19,10 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
   const { username } = await params
 
   const { data: targetUser } = await admin.from('users')
-    .select('id, username, avatar_url, sprouts_lifetime, sprouts_balance, sprouts_seeded')
+    .select('id, username, avatar_url, sprouts_lifetime, sprouts_balance, sprouts_seeded, forest_size')
     .eq('username', username).maybeSingle()
   if (!targetUser) notFound()
+  const forestSize = (targetUser as any).forest_size ?? 0
 
   const sb = await createClient()
   const { data: { user: viewer } } = await sb.auth.getUser()
@@ -41,12 +42,24 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
           <ArrowLeft className="w-3.5 h-3.5" /> Back to @{username}
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-1 flex items-center gap-2">
-          <Sprout className="w-7 h-7 text-emerald-600" /> {isOwn ? 'Your Sprouts' : `@${username}'s Sprouts`}
-        </h1>
-        <p className="text-gray-600 mb-6">
-          <Link href="/sprouts" className="underline hover:text-emerald-700">What are Sprouts?</Link>
-        </p>
+        <div className="flex items-center justify-between mb-6 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+              <Sprout className="w-7 h-7 text-emerald-600" /> {isOwn ? 'Your Sprouts' : `@${username}'s Sprouts`}
+            </h1>
+            <p className="text-gray-600 text-sm">
+              <Link href="/sprouts" className="underline hover:text-emerald-700">What are Sprouts?</Link>
+            </p>
+          </div>
+          {forestSize > 0 && (
+            <Link
+              href={`/profile/${username}/forest`}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 whitespace-nowrap"
+            >
+              <TreeDeciduous className="w-4 h-4" /> View forest ({forestSize})
+            </Link>
+          )}
+        </div>
 
         {!state || state.lifetime === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-600">

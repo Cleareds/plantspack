@@ -90,18 +90,33 @@ export const DAILY_CAPS: Partial<Record<ActionType, number>> = {
   add_place_with_image: 8,
 }
 
+// Tiers are named for tree life, not metals. Each tier carries its own
+// Tailwind classes so chips/labels render in tier-appropriate colour.
+// 'forest-guardian' uses a silvery platinum-style gradient.
 export const TIERS = [
-  { key: 'sprout',   label: 'Sprout',   min: 0 },
-  { key: 'bronze',   label: 'Bronze',   min: 500 },
-  { key: 'silver',   label: 'Silver',   min: 2000 },
-  { key: 'gold',     label: 'Gold',     min: 5000 },
-  { key: 'platinum', label: 'Platinum', min: 10000 },
+  { key: 'seed', label: 'Seed', min: 0,
+    chip: 'bg-stone-100 border-stone-300 text-stone-700',
+    bar:  'bg-stone-400' },
+  { key: 'sprout', label: 'Sprout', min: 500,
+    chip: 'bg-lime-50 border-lime-300 text-lime-800',
+    bar:  'bg-lime-500' },
+  { key: 'sapling', label: 'Sapling', min: 2000,
+    chip: 'bg-emerald-50 border-emerald-300 text-emerald-800',
+    bar:  'bg-emerald-500' },
+  { key: 'grove', label: 'Grove', min: 5000,
+    chip: 'bg-teal-50 border-teal-300 text-teal-800',
+    bar:  'bg-teal-600' },
+  { key: 'forest-guardian', label: 'Forest Guardian', min: 10000,
+    chip: 'bg-gradient-to-br from-slate-50 via-zinc-100 to-stone-200 border-slate-400 text-slate-900 shadow-sm',
+    bar:  'bg-gradient-to-r from-slate-400 via-emerald-500 to-slate-500' },
 ] as const
 
 export type TierKey = (typeof TIERS)[number]['key']
 
-export function tierFor(lifetime: number): { key: TierKey; label: string; min: number } {
-  let current: { key: TierKey; label: string; min: number } = TIERS[0]
+export type TierInfo = { key: TierKey; label: string; min: number; chip: string; bar: string }
+
+export function tierFor(lifetime: number): TierInfo {
+  let current: TierInfo = TIERS[0]
   for (const t of TIERS) if (lifetime >= t.min) current = t
   return current
 }
@@ -155,7 +170,7 @@ export interface AwardArgs {
 
 export interface AwardResult {
   ok: boolean
-  reason?: 'gated' | 'duplicate' | 'daily_cap' | 'no_amount' | 'insufficient_balance' | 'user_not_found' | 'db_error'
+  reason?: 'gated' | 'duplicate' | 'daily_cap' | 'no_amount' | 'insufficient_balance' | 'user_not_found' | 'db_error' | 'tree_mature'
   awarded?: number
   ledgerId?: string
   balance?: number
@@ -247,8 +262,14 @@ export async function spendSprouts(args: {
   return { ok: true, awarded: cost, ledgerId: ledger.id, balance: totals.balance, lifetime: totals.lifetime }
 }
 
-// Seed: spend from balance into the user's digital tree. Does not reduce lifetime.
-export async function seedTree(userId: string, amount: number): Promise<AwardResult & { newStage?: number }> {
+export const FOREST_THRESHOLD = TREE_STAGES[TREE_STAGES.length - 1].min  // 10,000 Sprouts matures a tree
+
+// Seed: spend from balance into the user's digital tree. Does not reduce
+// lifetime. If seeding pushes the tree past the maturity threshold, the
+// excess Sprouts are NOT spent (capped at remaining-to-mature). When the
+// tree matures, a row is inserted into user_forest_trees and the current
+// tree state is reset for a fresh planting in an empty pot.
+export async function seedTree(userId: string, amount: number): Promise<AwardResult & { newStage?: number; matured?: boolean }> {
   if (amount <= 0) return { ok: false, reason: 'no_amount' }
   const sb = adminClient()
   const user = await getUserGateContext(userId)
@@ -256,44 +277,90 @@ export async function seedTree(userId: string, amount: number): Promise<AwardRes
   if (!SPROUTS_ENABLED_FOR_ALL && user.role !== 'admin') return { ok: false, reason: 'gated' }
 
   const { data: u } = await sb.from('users').select('sprouts_balance').eq('id', userId).single()
-  if (!u || u.sprouts_balance < amount) return { ok: false, reason: 'insufficient_balance' }
+  if (!u) return { ok: false, reason: 'user_not_found' }
 
+  const { data: existing } = await sb.from('user_trees').select('*').eq('user_id', userId).maybeSingle()
+  const prevSeeded = existing?.total_seeded ?? 0
+  const prevStage = existing?.current_stage ?? 0
+
+  // Cap the requested amount: don't take more than what's needed to mature
+  // and don't take more than the user can afford.
+  const remainingToMature = Math.max(0, FOREST_THRESHOLD - prevSeeded)
+  const actualAmount = Math.min(amount, remainingToMature, u.sprouts_balance)
+  if (actualAmount <= 0) {
+    return { ok: false, reason: remainingToMature <= 0 ? 'tree_mature' : 'insufficient_balance' }
+  }
+
+  const newSeeded = prevSeeded + actualAmount
+  const matured = newSeeded >= FOREST_THRESHOLD
+
+  // Ledger entry for the actual spend
   const { data: ledger, error } = await sb.from('user_sprouts_ledger').insert({
     user_id: userId,
-    amount: -amount,
-    base_amount: -amount,
+    amount: -actualAmount,
+    base_amount: -actualAmount,
     multiplier: 1.0,
     action_type: 'seed_tree',
     reference_type: 'tree',
     reference_id: null,
-    metadata: {},
+    metadata: { matured },
   }).select('id').single()
   if (error || !ledger) return { ok: false, reason: 'db_error' }
 
-  // Update tree state
-  const { data: existing } = await sb.from('user_trees').select('*').eq('user_id', userId).maybeSingle()
-  const prevSeeded = existing?.total_seeded ?? 0
-  const prevStage = existing?.current_stage ?? 0
-  const newSeeded = prevSeeded + amount
-  const newStage = treeStageFor(newSeeded).stage
-  const stageReached = { ...(existing?.stage_reached_at ?? {}) } as Record<string, string>
-  if (newStage > prevStage) {
-    for (let s = prevStage + 1; s <= newStage; s++) {
-      stageReached[String(s)] = new Date().toISOString()
-    }
-  }
-  if (existing) {
-    await sb.from('user_trees').update({
-      total_seeded: newSeeded, current_stage: newStage, stage_reached_at: stageReached,
-    }).eq('user_id', userId)
-  } else {
-    await sb.from('user_trees').insert({
-      user_id: userId, total_seeded: newSeeded, current_stage: newStage, stage_reached_at: stageReached,
+  if (matured) {
+    // Graduate this tree to the forest, then reset current tree state.
+    await sb.from('user_forest_trees').insert({
+      user_id: userId,
+      sprouts_seeded: newSeeded,
+      matured_at: new Date().toISOString(),
     })
+    if (existing) await sb.from('user_trees').delete().eq('user_id', userId)
+    // Recompute forest_size cache
+    const { count: forestCount } = await sb.from('user_forest_trees')
+      .select('id', { count: 'exact', head: true }).eq('user_id', userId)
+    await sb.from('users').update({ forest_size: forestCount ?? 0 }).eq('id', userId)
+  } else {
+    const newStage = treeStageFor(newSeeded).stage
+    const stageReached = { ...(existing?.stage_reached_at ?? {}) } as Record<string, string>
+    if (newStage > prevStage) {
+      for (let s = prevStage + 1; s <= newStage; s++) {
+        stageReached[String(s)] = new Date().toISOString()
+      }
+    }
+    if (existing) {
+      await sb.from('user_trees').update({
+        total_seeded: newSeeded, current_stage: newStage, stage_reached_at: stageReached,
+      }).eq('user_id', userId)
+    } else {
+      await sb.from('user_trees').insert({
+        user_id: userId, total_seeded: newSeeded, current_stage: newStage, stage_reached_at: stageReached,
+      })
+    }
   }
 
   const totals = await recomputeUserTotals(userId)
-  return { ok: true, awarded: -amount, ledgerId: ledger.id, balance: totals.balance, lifetime: totals.lifetime, newStage }
+  return {
+    ok: true, awarded: -actualAmount, ledgerId: ledger.id,
+    balance: totals.balance, lifetime: totals.lifetime,
+    newStage: matured ? 0 : treeStageFor(newSeeded).stage,
+    matured,
+  }
+}
+
+export interface ForestTree {
+  id: string
+  matured_at: string
+  sprouts_seeded: number
+  species: string | null
+  dedication: string | null
+}
+
+export async function getForest(userId: string): Promise<ForestTree[]> {
+  const sb = adminClient()
+  const { data } = await sb.from('user_forest_trees')
+    .select('id, matured_at, sprouts_seeded, species, dedication')
+    .eq('user_id', userId).order('matured_at', { ascending: true })
+  return (data ?? []) as ForestTree[]
 }
 
 // Recompute cached lifetime/balance/seeded sums on the users row from the ledger.

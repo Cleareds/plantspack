@@ -3,14 +3,16 @@ import Link from 'next/link'
 import { Sprout, Trophy, TreeDeciduous } from 'lucide-react'
 import { TIERS, TREE_STAGES, tierFor, treeStageFor } from '@/lib/sprouts'
 import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
+import ForestPreview from '@/components/sprouts/ForestPreview'
 
 export default function SproutsCard({
-  username, lifetime, balance, seeded, isOwnProfile,
+  username, lifetime, balance, seeded, forestSize, isOwnProfile,
 }: {
   username: string
   lifetime: number
   balance: number
   seeded: number
+  forestSize?: number
   isOwnProfile: boolean
 }) {
   if (!lifetime || lifetime <= 0) return null
@@ -31,15 +33,21 @@ export default function SproutsCard({
           <h3 className="font-bold text-gray-900">Sprouts</h3>
           <Link href="/sprouts" className="text-xs text-emerald-700 hover:underline">What's this?</Link>
         </div>
-        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold">
+        <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-semibold ${tier.chip}`}>
           <Trophy className="w-3 h-3" /> {tier.label}
         </div>
       </div>
 
       <div className="flex items-center gap-5">
-        <Link href={`/profile/${username}/sprouts`} className="shrink-0 hover:opacity-90" title={stage.label}>
-          <TreeStageSvg stage={stage.stage} size={96} />
-        </Link>
+        {(forestSize ?? 0) > 0 ? (
+          <Link href={`/profile/${username}/forest`} className="shrink-0 hover:opacity-90" title={`Forest of ${forestSize}`}>
+            <ForestPreview count={forestSize ?? 0} size={108} />
+          </Link>
+        ) : (
+          <Link href={`/profile/${username}/sprouts`} className="shrink-0 hover:opacity-90" title={stage.label}>
+            <TreeStageSvg stage={stage.stage} size={96} />
+          </Link>
+        )}
 
         <div className="flex-1 min-w-0">
           <div className={`grid ${isOwnProfile ? 'grid-cols-3' : 'grid-cols-2'} gap-3 mb-2`}>
@@ -79,6 +87,11 @@ export default function SproutsCard({
         <Link href={`/profile/${username}/sprouts`} className="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">
           {isOwnProfile ? 'View my tree' : 'View tree'}
         </Link>
+        {(forestSize ?? 0) > 0 && (
+          <Link href={`/profile/${username}/forest`} className="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-600 text-white hover:bg-amber-700">
+            View forest ({forestSize})
+          </Link>
+        )}
         <Link href="/sprouts" className="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
           How to earn
         </Link>
