@@ -1,9 +1,0 @@
-[
-  {"name": "Un Gelsomino", "city": "Salerno", "country": "Italy", "vegan_level": "fully_vegan", "address": "Salerno, Italy", "notes": "Completely vegan macrobiotic; own garden produce"},
-  {"name": "Luna Vegana", "city": "Salerno", "country": "Italy", "vegan_level": "fully_vegan", "address": "Salerno, Italy", "notes": "Vegan restaurant"},
-  {"name": "Cavoli Nostri", "city": "Salerno", "country": "Italy", "vegan_level": "fully_vegan", "address": "Salerno, Italy", "notes": "Vegan restaurant"},
-  {"name": "Tre Vegan Goody", "city": "Salerno", "country": "Italy", "vegan_level": "fully_vegan", "address": "Salerno, Italy", "notes": "Vegan"},
-  {"name": "Ravegan Gastronomia", "city": "Ravenna", "country": "Italy", "vegan_level": "fully_vegan", "address": "Viale Galileo Galilei 75, 48121 Ravenna, Italy", "notes": "Vegan + organic gastronomia"},
-  {"name": "SOL Konstanz", "city": "Konstanz", "country": "Germany", "vegan_level": "fully_vegan", "address": "Konstanz, Germany", "notes": "Self-service vegan; 100% plant-based daily"},
-  {"name": "Project Vegan Koblenz", "city": "Koblenz", "country": "Germany", "vegan_level": "fully_vegan", "address": "Koblenz, Germany", "notes": "Vegan Asian"}
-]

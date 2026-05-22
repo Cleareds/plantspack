@@ -1,7 +1,0 @@
-[
-  {"name": "Brotes Verdes", "city": "Cáceres", "country": "Spain", "vegan_level": "fully_vegan", "address": "Cáceres, Spain", "notes": "Vegan dining option"},
-  {"name": "Vegan Village Hildesheim", "city": "Hildesheim", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hildesheim, Germany", "notes": "Vegan"},
-  {"name": "Öz BABA", "city": "Hildesheim", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hildesheim, Germany", "notes": "Vegan"},
-  {"name": "Zauberkessel Hildesheim", "city": "Hildesheim", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hildesheim, Germany", "notes": "Vegan"},
-  {"name": "Vegan & Raw Hildesheim", "city": "Hildesheim", "country": "Germany", "vegan_level": "fully_vegan", "address": "Hildesheim, Germany", "notes": "Vegan + raw"}
-]

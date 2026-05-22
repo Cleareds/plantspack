@@ -127,3 +127,20 @@ docs/OPENAI_SECURITY.md
 docs/PACKS_FEATURE_PLAN.md
 docs/SUPABASE_AUTH_CONFIG.md
 docs/UPTIME_MONITORING.md
+
+# Scrape outputs and audit run logs - kept on disk for local analysis but
+# never tracked. Re-added 2026-05-22 after a sweeping commit caught them.
+scripts/seo-out/
+GSC/
+summer/
+reports/*.csv
+reports/*.jsonl
+reports/*.log
+
+# Claude Code worktrees - they may contain embedded git repos
+.claude/worktrees/
+
+# Root-level run logs from batch scripts
+/be-nl-followup.log
+/fix-null-cities.log
+/osm-import.log
