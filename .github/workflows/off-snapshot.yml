@@ -1,0 +1,77 @@
+name: OFF database snapshot to Google Drive
+
+# Weekly mirror of the Open Food Facts Parquet dump to Google Drive so we
+# keep our own copy if OFF ever goes away. License: OFF data is CC BY-SA 4.0
+# (attribution required for any derivative work we publish).
+
+on:
+  schedule:
+    # Sundays at 04:00 UTC - OFF refreshes their dumps around 03:00 UTC
+    - cron: '0 4 * * 0'
+  workflow_dispatch: {}
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Install rclone
+        run: |
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+          rclone version
+
+      - name: Configure rclone
+        env:
+          RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "$RCLONE_CONFIG" > ~/.config/rclone/rclone.conf
+          rclone listremotes
+
+      - name: Download OFF Parquet dump
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          echo "SNAPSHOT_DATE=$DATE" >> $GITHUB_ENV
+          mkdir -p snapshot
+          curl -fL --retry 3 --retry-delay 30 -o "snapshot/openfoodfacts-products-${DATE}.parquet" \
+            https://static.openfoodfacts.org/data/openfoodfacts-products.parquet
+          ls -lh snapshot/
+
+      - name: Upload to Google Drive
+        run: |
+          rclone copy \
+            "snapshot/openfoodfacts-products-${SNAPSHOT_DATE}.parquet" \
+            "gdrive-off:PlantsPack/off-snapshots/" \
+            --progress \
+            --transfers 1 \
+            --drive-chunk-size 256M \
+            --stats-one-line
+
+      - name: Prune old snapshots (keep last 4)
+        run: |
+          rclone lsf "gdrive-off:PlantsPack/off-snapshots/" \
+            --files-only \
+            --include "openfoodfacts-products-*.parquet" \
+            --format "tp" \
+            --separator "|" \
+            | sort -r \
+            | awk -F'|' 'NR>4 {print $2}' \
+            | while read -r f; do
+                echo "Deleting old snapshot: $f"
+                rclone delete "gdrive-off:PlantsPack/off-snapshots/$f"
+              done
+          echo "Current snapshots:"
+          rclone ls "gdrive-off:PlantsPack/off-snapshots/"
+
+      - name: Write manifest
+        run: |
+          cat > manifest.json <<EOF
+          {
+            "latest_snapshot": "openfoodfacts-products-${SNAPSHOT_DATE}.parquet",
+            "snapshot_date": "${SNAPSHOT_DATE}",
+            "source": "https://static.openfoodfacts.org/data/openfoodfacts-products.parquet",
+            "license": "CC BY-SA 4.0 (data) + DbCL (database)",
+            "attribution": "Open Food Facts contributors"
+          }
+          EOF
+          rclone copyto manifest.json "gdrive-off:PlantsPack/off-snapshots/manifest.json"
