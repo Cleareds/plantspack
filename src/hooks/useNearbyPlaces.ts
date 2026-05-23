@@ -140,9 +140,13 @@ export function useNearbyPlaces({ lat, lng, category, limit = 20 }: UseNearbyPla
           .order('name')
           .range(offset, offset + batchSize - 1)
 
-        if (cat !== 'all') {
+        if (cat !== 'all' && cat !== 'event') {
           query = query.eq('category', cat)
         }
+        // Hide event-category pins on map per 2026-05-23 directive - events
+        // live on /events (posts table), not as map markers. Even when
+        // category=event is selected we render nothing on the map.
+        query = query.neq('category', 'event')
         if (isFullyVeganOnly) {
           query = query.eq('vegan_level', 'fully_vegan')
         }
