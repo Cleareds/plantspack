@@ -12,10 +12,10 @@ import VerificationConfidenceBadge from '@/components/places/VerificationConfide
 import PlaceImage from '@/components/places/PlaceImage'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
-// ISR: revalidate every 24h per [feedback_deployment] caching policy.
-// No `dynamic = 'force-static'` because we use searchParams (?level=fully-vegan
-// toggle) - that combination throws at runtime.
-export const revalidate = 86400
+// Use force-dynamic to bypass any cache during the diagnostic phase. Will
+// switch back to `revalidate = 86400` (ISR) once we confirm the route
+// actually executes.
+export const dynamic = 'force-dynamic'
 
 type RouteParams = { country: string; city: string; dish: string }
 
@@ -62,7 +62,9 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
 }
 
 export default async function DishPage({ params, searchParams }: { params: Promise<RouteParams>; searchParams: Promise<Record<string, string>> }) {
+  console.log('[DISH PAGE ENTER]')
   const p = await params
+  console.log('[DISH PAGE] params:', JSON.stringify(p))
   const sp = await searchParams
   const data = await load(p)
   if (!data) notFound()
