@@ -789,10 +789,18 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                 </p>
               </section>
             )}
-            {/* Long-tail dish chips - jumps to best-vegan-{dish} pages */}
+            {/* Long-tail dish chips - jumps to best-vegan/{dish} pages */}
             {dishChips.length > 0 && (
               <section className="mb-6 px-4 md:px-0">
-                <h2 className="font-headline font-bold text-lg md:text-xl mb-2">Best vegan dishes in {cityName}</h2>
+                <div className="flex items-baseline justify-between gap-3 flex-wrap mb-2">
+                  <h2 className="font-headline font-bold text-lg md:text-xl">Best vegan dishes in {cityName}</h2>
+                  <Link
+                    href={`/vegan-places/${country}/${city}/best-vegan`}
+                    className="text-sm text-primary hover:underline font-medium"
+                  >
+                    See all {dishChips.length} dish guides →
+                  </Link>
+                </div>
                 <p className="text-sm text-on-surface-variant mb-3">Curated picks by dish, ranked by community + verification confidence.</p>
                 <div className="flex flex-wrap gap-2">
                   {dishChips.slice(0, 16).map(d => (
