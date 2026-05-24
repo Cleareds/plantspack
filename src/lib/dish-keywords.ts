@@ -128,7 +128,8 @@ export const DISHES: DishDef[] = [
 export const DISH_BY_SLUG: Record<string, DishDef> = Object.fromEntries(DISHES.map(d => [d.slug, d]))
 
 /** Normalise URL-supplied dish slug (handle common aliases) */
-export function normaliseDishSlug(input: string): string | null {
+export function normaliseDishSlug(input: string | undefined | null): string | null {
+  if (!input) return null
   const s = input.toLowerCase().replace(/^best-vegan-/, '')
   // Direct match
   if (DISH_BY_SLUG[s]) return s

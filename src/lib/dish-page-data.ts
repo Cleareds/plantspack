@@ -41,15 +41,19 @@ export interface DishPlace {
 }
 
 function matchScoreFor(place: any, dish: DishDef): number {
-  const name = (place.name || '').toLowerCase()
-  const desc = (place.description || '').toLowerCase()
-  const cuisines = (place.cuisine_types || []).map((c: string) => c.toLowerCase())
-  const subcat = (place.subcategory || '').toLowerCase()
+  const name = (place.name ?? '').toLowerCase()
+  const desc = (place.description ?? '').toLowerCase()
+  // cuisine_types is jsonb in the DB and occasionally contains null entries
+  // (legacy data from old imports). Filter falsy before lowercasing.
+  const cuisines = ((place.cuisine_types ?? []) as unknown[])
+    .filter((c): c is string => typeof c === 'string' && c.length > 0)
+    .map(c => c.toLowerCase())
+  const subcat = (place.subcategory ?? '').toLowerCase()
   let score = 0
   for (const n of dish.needles) {
     const needle = n.toLowerCase()
     if (name.includes(needle)) { score += 10; continue }
-    if (cuisines.some((c: string) => c.includes(needle))) { score += 6; continue }
+    if (cuisines.some(c => c.includes(needle))) { score += 6; continue }
     if (subcat === needle || subcat.includes(needle)) { score += 4; continue }
     if (desc.includes(needle)) { score += 2; continue }
   }
@@ -225,8 +229,10 @@ export async function getNearbyDishCities(
     .slice(0, limit)
 }
 
-/** Build the canonical href for a dish page */
-export function dishPageHref(country: string, city: string, dishSlug: string): string {
+/** Build the canonical href for a dish page. Defensive against undefined
+ *  args - returns `/` rather than crashing the metadata function. */
+export function dishPageHref(country: string | undefined, city: string | undefined, dishSlug: string | undefined): string {
+  if (!country || !city || !dishSlug) return '/'
   const c = country.toLowerCase().replace(/\s+/g, '-')
   const ci = city.toLowerCase().replace(/\s+/g, '-')
   return `/vegan-places/${c}/${ci}/best-vegan-${dishSlug}`

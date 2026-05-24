@@ -27,21 +27,31 @@ async function load({ country, city, dish }: RouteParams): Promise<DishPageData 
 }
 
 export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
-  const p = await params
-  const data = await load(p)
-  if (!data) return { title: 'Page not found', robots: { index: false } }
-  const title = `Best Vegan ${data.dish.label} in ${data.city} - ${data.total} spots | PlantsPack`
-  const description = `${data.total} vegan ${data.dish.label.toLowerCase()} spots in ${data.city}, ${data.country}. ${data.fullyVeganCount} are 100% vegan. Verified across multiple sources.`
-  const heroImg = data.places.find(p => p.main_image_url)?.main_image_url
+  const routeParams = await params
+  // Defensive: any of these being undefined would crash toLowerCase calls
+  // downstream. Return a noindex page rather than 500.
+  if (!routeParams?.country || !routeParams?.city || !routeParams?.dish) {
+    return { title: 'Page not found', robots: { index: false } }
+  }
+  const data = await load(routeParams)
+  if (!data || !data.dish?.label || !data.city || !data.country) {
+    return { title: 'Page not found', robots: { index: false } }
+  }
+  const dishLabel = data.dish.label
+  const dishLabelLc = dishLabel.toLowerCase()
+  const title = `Best Vegan ${dishLabel} in ${data.city} - ${data.total} spots | PlantsPack`
+  const description = `${data.total} vegan ${dishLabelLc} spots in ${data.city}, ${data.country}. ${data.fullyVeganCount} are 100% vegan. Verified across multiple sources.`
+  const heroImg = data.places.find(pl => pl.main_image_url)?.main_image_url
+  const canonical = `https://www.plantspack.com${dishPageHref(routeParams.country, routeParams.city, data.dish.slug)}`
   return {
     title,
     description,
-    alternates: { canonical: `https://www.plantspack.com${dishPageHref(p.country, p.city, data.dish.slug)}` },
+    alternates: { canonical },
     openGraph: {
       title,
       description,
       type: 'article',
-      url: `https://www.plantspack.com${dishPageHref(p.country, p.city, data.dish.slug)}`,
+      url: canonical,
       siteName: 'PlantsPack',
       images: heroImg ? [{ url: heroImg }] : undefined,
     },
@@ -210,6 +220,7 @@ export default async function DishPage({ params, searchParams }: { params: Promi
             <h2 className="font-headline font-bold text-xl mb-3">Vegan {dish.label} in nearby cities</h2>
             <div className="flex flex-wrap gap-2">
               {nearbyCities.map(nc => {
+                if (!nc.country || !nc.city) return null
                 const ccSlug = nc.country.toLowerCase().replace(/\s+/g, '-')
                 const ciSlug = nc.city.toLowerCase().replace(/\s+/g, '-')
                 return (
