@@ -17,7 +17,7 @@ const SITE_URL = 'https://www.plantspack.com'
 // thin sitemap was rendering with zero <url> entries and triggering
 // "missing required url tag" errors in Google Search Console. The
 // route at /sitemap/thin.xml now returns 410 Gone for legacy crawlers.
-const SEGMENTS = ['priority', 'content'] as const
+const SEGMENTS = ['priority', 'content', 'dishes'] as const
 
 export function GET() {
   const now = new Date().toISOString()

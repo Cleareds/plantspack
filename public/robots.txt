@@ -65,3 +65,4 @@ Allow: /
 Sitemap: https://www.plantspack.com/sitemap-index.xml
 Sitemap: https://www.plantspack.com/sitemap/priority.xml
 Sitemap: https://www.plantspack.com/sitemap/content.xml
+Sitemap: https://www.plantspack.com/sitemap/dishes.xml

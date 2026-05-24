@@ -18,6 +18,10 @@
       "maxDuration": 60,
       "memory": 1024
     },
+    "src/app/sitemap/dishes.xml/route.ts": {
+      "maxDuration": 90,
+      "memory": 1024
+    },
     "src/app/sitemap-index.xml/route.ts": {
       "maxDuration": 10,
       "memory": 512
