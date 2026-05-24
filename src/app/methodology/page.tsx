@@ -85,19 +85,39 @@ export default function MethodologyPage() {
         <hr className="border-surface-container my-8" />
 
         <h2 className="text-xl md:text-2xl font-headline font-bold mt-8 mb-3 flex items-center gap-2">
-          <ShieldCheck className="h-5 w-5 text-blue-600" /> Verification levels
+          <ShieldCheck className="h-5 w-5 text-blue-600" /> Verification confidence
         </h2>
         <p className="text-base leading-relaxed mb-3">
-          Every place also carries a verification level from 0 to 3:
+          Alongside the vegan tier above (what kind of place it is), every venue carries a <em>confidence badge</em> that tells you how we know what we know. We group these into three visual levels - high, mid, low - so the trust signal is readable at a glance on every card.
         </p>
+
+        <h3 className="font-semibold text-lg mt-5 mb-2">High confidence</h3>
         <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
-          <li><strong>Level 0 (imported)</strong> — Pulled from public sources (OpenStreetMap, VegGuide, etc.) without further checking. Most of our long-tail entries.</li>
-          <li><strong>Level 1 (sourced)</strong> — Same import, with at least one corroborating source noted.</li>
-          <li><strong>Level 2 (AI-verified)</strong> — Cross-checked via web search and structured data parsing. The DB explicitly forbids AI-only promotion to 100% vegan; this level can confirm vegan-friendly or vegan-options claims but cannot upgrade something to fully vegan.</li>
-          <li><strong>Level 3 (admin-reviewed)</strong> — Hand-checked against the venue&apos;s own website, cross-referenced against secondary sources, current operating status confirmed. This is the level we apply to 100% vegan listings during a country audit.</li>
+          <li><strong>Admin-checked</strong> - A PlantsPack admin manually verified the venue via its own website plus at least one cross-reference, and confirmed it is currently open. Highest trust level on the platform.</li>
+          <li><strong>Community-confirmed</strong> - A community member submitted a correction (e.g. &quot;this is actually 100% vegan&quot;) which an admin reviewed and approved. Real-human signal that survives admin review.</li>
+          <li><strong>Community-added</strong> - A signed-in PlantsPack user (not the admin) added this place. We treat community contributions as a strong primary source because a real human deliberately added the venue. They may know the place better than any algorithm could.</li>
         </ul>
+
+        <h3 className="font-semibold text-lg mt-5 mb-2">Mid confidence</h3>
+        <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
+          <li><strong>Cross-referenced</strong> - We matched this venue across multiple vegan-first sources (HappyCow, the venue&apos;s own website, OSM tags, press coverage). No admin has personally clicked through yet, but the data passed our automated cross-check.</li>
+        </ul>
+
+        <h3 className="font-semibold text-lg mt-5 mb-2">Low confidence (unchecked)</h3>
+        <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
+          <li><strong>OSM-sourced</strong> - Imported from OpenStreetMap with a <code>diet:vegan</code> tag. An OSM contributor flagged it; we haven&apos;t personally checked. Most of our long-tail entries land here. Community feedback is what moves them up.</li>
+          <li><strong>Imported (external)</strong> - From other vegan datasets (VegGuide, Foursquare, etc.) without further checking.</li>
+        </ul>
+
         <p className="text-base leading-relaxed mb-3">
-          Every place page shows its current verification level and the date of the last review. If a level 3 verification is more than 12 months old, we re-check before claiming &quot;currently open&quot; in any external context.
+          About 2% of our places are currently at high confidence and 3% at mid. The rest are unchecked external imports. We are deliberate about not inflating these numbers - the whole point of carrying the badge is that you can tell at a glance what we have actually verified versus what we have just imported. If a card shows &quot;OSM-sourced&quot;, that is the honest signal: useful enough to know the place exists, not strong enough for us to claim we have personally validated it.
+        </p>
+
+        <p className="text-base leading-relaxed mb-3">
+          Every place page shows the current confidence badge and the date of the last verification. If a high-confidence check is more than 12 months old, we re-check before treating it as fresh in any external context.
+        </p>
+        <p className="text-base leading-relaxed mb-3">
+          You can help move places out of the low-confidence bucket by suggesting a correction on any place page. Two community confirmations + admin approval = a place jumps to high confidence.
         </p>
 
         <hr className="border-surface-container my-8" />

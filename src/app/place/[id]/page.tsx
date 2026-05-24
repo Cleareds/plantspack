@@ -17,6 +17,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
 import VerificationFooter from '@/components/places/VerificationFooter'
+import VerificationConfidenceBadge from '@/components/places/VerificationConfidenceBadge'
 import ReportButton from '@/components/reports/ReportButton'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
@@ -851,6 +852,23 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 />
               )
             })()}
+          </div>
+
+          {/* Verification confidence (Axis 2) - shown above the legacy
+              VerificationFooter so the trust tier is the first thing a
+              reader notices. */}
+          <div className="px-6 pt-4">
+            <VerificationConfidenceBadge
+              place={{
+                is_verified: (place as any).is_verified,
+                verification_level: (place as any).verification_level,
+                verification_method: (place as any).verification_method,
+                source: (place as any).source,
+                created_by: (place as any).created_by,
+                tags: (place as any).tags,
+              }}
+              variant="full"
+            />
           </div>
 
           {/* Verification footer */}

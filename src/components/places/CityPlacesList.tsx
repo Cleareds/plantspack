@@ -13,6 +13,7 @@ import { useVeganFilter } from '@/lib/vegan-filter-context'
 import { Plus } from 'lucide-react'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS, veganLevelOrder } from '@/lib/vegan-level'
+import VerificationConfidenceBadge from './VerificationConfidenceBadge'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -61,6 +62,10 @@ interface Place {
   verification_level?: number | null
   verification_method?: string | null
   last_verified_at?: string | null
+  is_verified?: boolean | null
+  source?: string | null
+  created_by?: string | null
+  tags?: string[] | null
 }
 
 export default function CityPlacesList({ places, allPlaces, cityName, countryName }: { places: Place[]; allPlaces?: Place[]; cityName?: string; countryName?: string }) {
@@ -317,6 +322,11 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
                           {VEGAN_LEVEL_LABEL[place.vegan_level] || place.vegan_level}
                         </span>
                       )}
+                      {/* Verification confidence (Axis 2) - lives next to the
+                          vegan-level chip so users see "what is it" + "how
+                          confident are we" together. */}
+                      <VerificationConfidenceBadge place={place} variant="compact" />
+
                       {/* Hand-verified freshness badge - shown on /fully-vegan
                           tiles only. Surfaces last_verified_at as visible
                           text so AI search systems can quote it as a
