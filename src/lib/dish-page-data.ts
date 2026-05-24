@@ -112,6 +112,7 @@ export async function getDishPageData(
 
   const country = countrySlug.replace(/-/g, ' ')
   const city = citySlug.replace(/-/g, ' ')
+  console.log(`[dish] enter ${dishSlug} country="${country}" city="${city}" env=${!!process.env.SUPABASE_SERVICE_ROLE_KEY ? 'KEY_OK' : 'NO_KEY'}`)
 
   const { data, error } = await sb.from('places')
     .select(`
@@ -125,14 +126,10 @@ export async function getDishPageData(
     .is('archived_at', null)
     .limit(2000)
 
-  if (error) {
-    console.error('[dish-page-data] supabase error', { dishSlug, country, city, error: error.message })
-    return null
-  }
-  if (!data?.length) {
-    console.warn('[dish-page-data] no rows', { dishSlug, country, city, ilike_country: country, ilike_city: city })
-    return null
-  }
+  console.log(`[dish] query result for ${dishSlug}/${city}: ${data?.length || 0} rows, error=${error?.message || 'none'}`)
+
+  if (error) return null
+  if (!data?.length) return null
 
   const scored: DishPlace[] = []
   for (const p of data) {
@@ -146,10 +143,8 @@ export async function getDishPageData(
     scored.push({ ...p, matchScore: ms, rankScore, badge })
   }
 
-  if (scored.length < 3) {
-    console.warn('[dish-page-data] density gate', { dishSlug, country, city, total: data.length, scored: scored.length })
-    return null
-  }
+  console.log(`[dish] scored ${dishSlug}/${city}: ${scored.length} of ${data.length} rows match`)
+  if (scored.length < 3) return null
 
   // Sort by composite rank
   scored.sort((a, b) => b.rankScore - a.rankScore)
