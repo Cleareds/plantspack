@@ -20,10 +20,13 @@ export const revalidate = 86400
 type RouteParams = { country: string; city: string; dish: string }
 
 async function load({ country, city, dish }: RouteParams): Promise<DishPageData | null> {
-  // The route param arrives as `best-vegan-donut`. Strip the prefix.
+  console.log(`[dish-page] load() country="${country}" city="${city}" dish="${dish}"`)
   const slug = normaliseDishSlug(dish)
+  console.log(`[dish-page] normalised slug="${slug}"`)
   if (!slug) return null
-  return await getDishPageData(slug, country, city)
+  const result = await getDishPageData(slug, country, city)
+  console.log(`[dish-page] load() result: ${result ? `${result.total} places` : 'null'}`)
+  return result
 }
 
 export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
