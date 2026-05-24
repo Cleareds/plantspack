@@ -12,8 +12,10 @@ import VerificationConfidenceBadge from '@/components/places/VerificationConfide
 import PlaceImage from '@/components/places/PlaceImage'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
-export const revalidate = 86400  // 24h, per [feedback_deployment] caching policy
-export const dynamic = 'force-static'  // ISR
+// ISR: revalidate every 24h per [feedback_deployment] caching policy.
+// No `dynamic = 'force-static'` because we use searchParams (?level=fully-vegan
+// toggle) - that combination throws at runtime.
+export const revalidate = 86400
 
 type RouteParams = { country: string; city: string; dish: string }
 
