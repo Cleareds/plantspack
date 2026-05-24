@@ -53,6 +53,7 @@ const CROSS_COUNTRY_CITY_REDIRECTS: Record<string, { country: string; city: stri
 }
 import { Globe, MapPin } from 'lucide-react'
 import AddPlaceButton from '@/components/places/AddPlaceButton'
+import { getCityDishChips } from '@/lib/dish-page-data'
 import PinCityButton from '@/components/places/PinCityButton'
 import FollowCityButton from '@/components/places/FollowCityButton'
 import { generateCityDescription, generateCityMetaDescription, filterCuisinesForDisplay } from '@/lib/vegan-scene-descriptions'
@@ -408,10 +409,11 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   if (crossCountry) redirect(`/vegan-places/${crossCountry.country}/${crossCountry.city}${isFullyVeganMode ? '/fully-vegan' : ''}`)
   const cityAlias = CITY_REDIRECTS[country]?.[city]
   if (cityAlias) redirect(`/vegan-places/${country}/${cityAlias}${isFullyVeganMode ? '/fully-vegan' : ''}`)
-  const [{ places: allPlaces, city: cityName, country: countryName }, cityScore, cityExperiences] = await Promise.all([
+  const [{ places: allPlaces, city: cityName, country: countryName }, cityScore, cityExperiences, dishChips] = await Promise.all([
     fetchCityPlaces(country, city),
     getCityScore(city.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()), country.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())),
     fetchCityExperiences(country, city),
+    getCityDishChips(country, city),
   ])
 
   // FV-mode filters the place list at SSR. Empty filter -> redirect back
@@ -787,6 +789,25 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                 </p>
               </section>
             )}
+            {/* Long-tail dish chips - jumps to best-vegan-{dish} pages */}
+            {dishChips.length > 0 && (
+              <section className="mb-6 px-4 md:px-0">
+                <h2 className="font-headline font-bold text-lg md:text-xl mb-2">Best vegan dishes in {cityName}</h2>
+                <p className="text-sm text-on-surface-variant mb-3">Curated picks by dish, ranked by community + verification confidence.</p>
+                <div className="flex flex-wrap gap-2">
+                  {dishChips.slice(0, 16).map(d => (
+                    <Link
+                      key={d.slug}
+                      href={`/vegan-places/${country}/${city}/best-vegan-${d.slug}`}
+                      className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface ghost-border"
+                    >
+                      Vegan {d.label} <span className="text-on-surface-variant">({d.count})</span>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
           </>
         ) : (
