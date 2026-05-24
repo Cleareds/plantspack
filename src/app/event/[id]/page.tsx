@@ -93,20 +93,35 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-surface-container-low">
       {/* Event JSON-LD */}
-      {event?.start_time && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Event',
-          name: eventTitle,
-          startDate: event.start_time,
-          ...(event.end_time ? { endDate: event.end_time } : {}),
-          ...(event.location ? { location: { '@type': 'Place', name: event.location } } : {}),
-          ...(event.ticket_url ? { offers: { '@type': 'Offer', url: event.ticket_url } } : {}),
-          description: post.content.substring(0, 300),
-          organizer: { '@type': 'Person', name: displayName },
-          ...(images[0] ? { image: images[0] } : {}),
-        }) }} />
-      )}
+      {event?.start_time && (() => {
+        const eventUrl = `https://www.plantspack.com/event/${post.slug || post.id}`
+        const organizerUrl = `https://www.plantspack.com/profile/${post.users.username}`
+        const fallbackImage = 'https://www.plantspack.com/og-logo.png'
+        const organizer = {
+          '@type': 'Organization',
+          name: displayName,
+          url: organizerUrl,
+        }
+        return (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Event',
+            name: eventTitle,
+            startDate: event.start_time,
+            ...(event.end_time ? { endDate: event.end_time } : {}),
+            eventStatus: 'https://schema.org/EventScheduled',
+            eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+            ...(event.location
+              ? { location: { '@type': 'Place', name: event.location, address: event.location } }
+              : {}),
+            description: post.content.substring(0, 300),
+            image: [images[0] || fallbackImage],
+            organizer,
+            performer: organizer,
+            url: event.ticket_url || eventUrl,
+          }) }} />
+        )
+      })()}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(
         buildBreadcrumbs([
           HOME_CRUMB,
