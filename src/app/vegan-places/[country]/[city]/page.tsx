@@ -798,7 +798,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                   {dishChips.slice(0, 16).map(d => (
                     <Link
                       key={d.slug}
-                      href={`/vegan-places/${country}/${city}/best-vegan-${d.slug}`}
+                      href={`/vegan-places/${country}/${city}/best-vegan/${d.slug}`}
                       className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface ghost-border"
                     >
                       Vegan {d.label} <span className="text-on-surface-variant">({d.count})</span>

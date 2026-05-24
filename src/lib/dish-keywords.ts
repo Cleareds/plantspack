@@ -1,5 +1,5 @@
 // Dish keyword library for the long-tail SEO surface
-// (/vegan-places/{country}/{city}/best-vegan-{dish}).
+// (/vegan-places/{country}/{city}/best-vegan/{dish}).
 //
 // Each dish entry has:
 //   - slug: URL-safe identifier (lowercase, hyphenated)

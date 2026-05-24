@@ -234,11 +234,13 @@ export async function getNearbyDishCities(
     .slice(0, limit)
 }
 
-/** Build the canonical href for a dish page. Defensive against undefined
- *  args - returns `/` rather than crashing the metadata function. */
+/** Build the canonical href for a dish page. URL pattern:
+ *    /vegan-places/{country}/{city}/best-vegan/{dish}
+ *  Defensive against undefined args - returns `/` rather than crashing
+ *  the metadata function. */
 export function dishPageHref(country: string | undefined, city: string | undefined, dishSlug: string | undefined): string {
   if (!country || !city || !dishSlug) return '/'
   const c = country.toLowerCase().replace(/\s+/g, '-')
   const ci = city.toLowerCase().replace(/\s+/g, '-')
-  return `/vegan-places/${c}/${ci}/best-vegan-${dishSlug}`
+  return `/vegan-places/${c}/${ci}/best-vegan/${dishSlug}`
 }

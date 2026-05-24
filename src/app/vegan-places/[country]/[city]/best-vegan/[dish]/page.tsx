@@ -1,5 +1,11 @@
 // Dish × city long-tail SEO page.
-// Example: /vegan-places/germany/berlin/best-vegan-donut
+// URL pattern: /vegan-places/{country}/{city}/best-vegan/{dish}
+//
+// Folder structure split into literal `best-vegan/` + dynamic `[dish]`
+// after the original mixed literal+dynamic folder name `best-vegan-[dish]/`
+// failed to build/route in production (route matched but `[dish]` was
+// undefined at runtime, causing 404s on every URL). Plain dynamic routing
+// in a sub-folder works reliably.
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -229,7 +235,7 @@ export default async function DishPage({ params, searchParams }: { params: Promi
                 const ccSlug = nc.country.toLowerCase().replace(/\s+/g, '-')
                 const ciSlug = nc.city.toLowerCase().replace(/\s+/g, '-')
                 return (
-                  <Link key={nc.city} href={`/vegan-places/${ccSlug}/${ciSlug}/best-vegan-${dish.slug}`}
+                  <Link key={nc.city} href={`/vegan-places/${ccSlug}/${ciSlug}/best-vegan/${dish.slug}`}
                     className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface"
                   >
                     {nc.city} <span className="text-on-surface-variant">({nc.count})</span>
