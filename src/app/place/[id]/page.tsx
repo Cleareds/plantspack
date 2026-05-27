@@ -17,7 +17,6 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
 import VerificationFooter from '@/components/places/VerificationFooter'
-import VerificationConfidenceBadge from '@/components/places/VerificationConfidenceBadge'
 import ReportButton from '@/components/reports/ReportButton'
 import FavoriteButton from '@/components/social/FavoriteButton'
 import ImageSlider from '@/components/ui/ImageSlider'
@@ -854,25 +853,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             })()}
           </div>
 
-          {/* Verification confidence (Axis 2) - shown above the legacy
-              VerificationFooter so the trust tier is the first thing a
-              reader notices. */}
+          {/* Verification footer - shows the Axis-2 confidence badge inline
+              plus the "Suggest correction" / "How we verify" actions. The
+              previously-separate VerificationConfidenceBadge block was
+              removed (2026-05-27) because it duplicated the badge that the
+              footer already renders. */}
           <div className="px-6 pt-4">
-            <VerificationConfidenceBadge
-              place={{
-                is_verified: (place as any).is_verified,
-                verification_level: (place as any).verification_level,
-                verification_method: (place as any).verification_method,
-                source: (place as any).source,
-                created_by: (place as any).created_by,
-                tags: (place as any).tags,
-              }}
-              variant="full"
-            />
-          </div>
-
-          {/* Verification footer */}
-          <div className="px-6 pt-2">
             <VerificationFooter
               verificationLevel={(place as any).verification_level}
               verificationMethod={(place as any).verification_method}
