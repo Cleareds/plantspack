@@ -9,9 +9,10 @@ interface SimpleAvatarUploadProps {
   currentAvatar?: string | null
   onAvatarUpdate: (avatarUrl: string) => void
   className?: string
+  maxSizeMB?: number
 }
 
-export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, className = '' }: SimpleAvatarUploadProps) {
+export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, className = '', maxSizeMB = 2 }: SimpleAvatarUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
@@ -31,8 +32,8 @@ export default function SimpleAvatarUpload({ currentAvatar, onAvatarUpdate, clas
       return
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      setError('Image must be less than 2MB')
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      setError(`Image must be less than ${maxSizeMB}MB`)
       return
     }
 

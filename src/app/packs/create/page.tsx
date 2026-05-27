@@ -197,8 +197,9 @@ export default function CreatePackPage() {
             <SimpleAvatarUpload
               currentAvatar={formData.banner_url}
               onAvatarUpdate={(url) => setFormData({ ...formData, banner_url: url })}
+              maxSizeMB={5}
             />
-            <p className="text-sm text-outline mt-1">Recommended: 1200x400px</p>
+            <p className="text-sm text-outline mt-1">Recommended: 1200x400px (max 5MB)</p>
           </div>
 
           {/* Social Links */}
