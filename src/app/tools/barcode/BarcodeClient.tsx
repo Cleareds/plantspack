@@ -365,6 +365,30 @@ function ResultCard({ result, onReset }: { result: BarcodeResult; onReset: () =>
           </div>
         )}
 
+        {/* E-code findings: surface every additive we recognised so the
+            reader can see WHY a "not vegan" or "uncertain" verdict came
+            out the way it did. Educational + builds trust. */}
+        {result.eCodeHits && result.eCodeHits.length > 0 && (
+          <div className="mb-4 p-3 rounded-lg bg-surface-variant/40 text-sm text-on-surface">
+            <div className="font-semibold mb-2 text-on-surface">Food additives detected</div>
+            <ul className="space-y-1.5">
+              {result.eCodeHits.map(e => (
+                <li key={e.code} className="flex gap-2">
+                  <span className={`mt-0.5 inline-flex items-center justify-center w-12 shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide ${
+                    e.status === 'non_vegan' ? 'bg-error/15 text-error' :
+                    e.status === 'maybe' ? 'bg-warning/15 text-warning' :
+                    'bg-emerald-500/15 text-emerald-700'
+                  }`}>{e.code}</span>
+                  <span className="text-on-surface-variant">
+                    <span className="font-medium text-on-surface">{e.name}.</span>{' '}
+                    {e.note}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <button onClick={onReset} className="w-full px-5 py-3 rounded-xl bg-primary text-on-primary font-semibold">
           Scan another
         </button>

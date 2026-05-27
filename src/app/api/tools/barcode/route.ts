@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { findECodeHits, findProblematicECodes, type ECode } from '@/lib/e-codes'
 
 export const runtime = 'nodejs'
 export const revalidate = 86400
@@ -55,6 +56,10 @@ export interface BarcodeResult {
   ingredients: string | null
   nonVeganHits: string[]
   allergenHits: string[]
+  /** E-codes found in the ingredient list (lookup data + status). Empty when
+   *  no codes detected. Includes vegan ones so the UI can surface a full
+   *  "what's in this" view if desired. */
+  eCodeHits: ECode[]
   labels: string[]
   source: 'open-food-facts'
 }
@@ -92,14 +97,28 @@ function verdictFromOff(off: {
   }
 
   // Fall back to ingredient text scan
-  const text = (off.ingredients_text ?? '').toLowerCase()
+  const rawText = off.ingredients_text ?? ''
+  const text = rawText.toLowerCase()
   if (text) {
     const hits = NON_VEGAN_TERMS.filter((t) => text.includes(t))
-    if (hits.length > 0) {
+    const eCodes = findProblematicECodes(rawText)
+    if (hits.length > 0 || eCodes.nonVegan.length > 0) {
+      const animalParts: string[] = []
+      if (hits.length > 0) animalParts.push(...hits.slice(0, 3))
+      if (eCodes.nonVegan.length > 0) {
+        animalParts.push(...eCodes.nonVegan.slice(0, 2).map(e => `${e.code} (${e.name})`))
+      }
       return {
         verdict: 'not_vegan',
-        reason: `Ingredient list contains likely animal-derived items: ${hits.slice(0, 4).join(', ')}.`,
+        reason: `Contains animal-derived items: ${animalParts.slice(0, 4).join(', ')}.`,
         hits,
+      }
+    }
+    if (eCodes.maybe.length > 0) {
+      return {
+        verdict: 'uncertain',
+        reason: `Contains additive(s) of ambiguous origin: ${eCodes.maybe.slice(0, 3).map(e => e.code).join(', ')}. These can be animal or plant — check the label.`,
+        hits: [],
       }
     }
     if (analysis.includes('en:maybe-vegan')) {
@@ -215,6 +234,7 @@ export async function GET(req: NextRequest) {
       ingredients: null,
       nonVeganHits: [],
       allergenHits: [],
+      eCodeHits: [],
       labels: [],
       source: 'open-food-facts',
     }
@@ -232,6 +252,20 @@ export async function GET(req: NextRequest) {
 
   const ingredientsText = (p.ingredients_text as string) || ''
   const allergenHits = findAllergenHits(ingredientsText, allergens)
+  // E-code scan covers ingredient lists that the OFF analysis tags miss
+  // (e.g. an "E441" in a body of text where OFF didn't classify the
+  // additive). Surfaced in the response so the UI can render explanations.
+  const eCodeHits = findECodeHits(ingredientsText)
+  // Also fold E-code-tagged allergens into the allergen hit list if the
+  // user is sensitive to them (e.g. E966 lactitol → dairy).
+  if (allergens.length > 0) {
+    const allergenSet = new Set(allergens)
+    for (const e of eCodeHits) {
+      if (e.allergen && allergenSet.has(e.allergen) && !allergenHits.includes(e.allergen)) {
+        allergenHits.push(e.allergen)
+      }
+    }
+  }
 
   const result: BarcodeResult = {
     barcode,
@@ -243,6 +277,7 @@ export async function GET(req: NextRequest) {
     ingredients: ingredientsText || null,
     nonVeganHits: v.hits,
     allergenHits,
+    eCodeHits,
     labels: ((p.labels_tags as string[]) ?? []).filter((l) => l.startsWith('en:')).map((l) => l.replace('en:', '')),
     source: 'open-food-facts',
   }

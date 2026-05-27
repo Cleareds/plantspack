@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { checkQuota, logScan, hashImage, type ToolName, LIMITS } from '@/lib/tool-quota'
 import { preClassify, scanImage, scanText } from '@/lib/tool-scanner'
+import { findECodeHits } from '@/lib/e-codes'
 import crypto from 'crypto'
 
 export const runtime = 'nodejs'
@@ -164,6 +165,22 @@ export async function POST(req: NextRequest) {
       inputKind === 'text'
         ? await scanText(text!, tool, allergens)
         : await scanImage(dataUrls, tool, allergens)
+    // Post-process for E-codes. For text input we scan the user's text
+    // directly. For image input we scan whatever the model echoed back
+    // via items[].name + items[].note (catches "E471" mentions in named
+    // ingredients). Cheap and additive — never blocks the response.
+    if (tool === 'ingredient') {
+      const haystack = inputKind === 'text'
+        ? (text ?? '')
+        : (result.items ?? []).map(i => `${i.name} ${i.note ?? ''}`).join(' ')
+      const hits = findECodeHits(haystack)
+      if (hits.length > 0) {
+        result.eCodeHits = hits.map(h => ({
+          code: h.code, name: h.name, status: h.status, note: h.note,
+          allergen: h.allergen,
+        }))
+      }
+    }
     await logScan({ ctx, costUsd: preCost + costUsd, result, allergens })
     return NextResponse.json({ result, tier: quota.tier, cached: false })
   } catch (e: unknown) {

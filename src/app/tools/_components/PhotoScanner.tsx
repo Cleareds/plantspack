@@ -475,6 +475,30 @@ function ResultCard({
           </div>
         )}
 
+        {/* E-code findings — populated by api/tools/scan when the tool is
+            "ingredient". Shows the additive code, what it is, and whether
+            it's an animal-derived issue. */}
+        {result.eCodeHits && result.eCodeHits.length > 0 && (
+          <div className="mb-5 p-3 rounded-lg bg-surface-variant/40 text-sm text-on-surface">
+            <div className="font-semibold mb-2 text-on-surface">Food additives detected</div>
+            <ul className="space-y-1.5">
+              {result.eCodeHits.map(e => (
+                <li key={e.code} className="flex gap-2">
+                  <span className={`mt-0.5 inline-flex items-center justify-center w-12 shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wide ${
+                    e.status === 'non_vegan' ? 'bg-error/15 text-error' :
+                    e.status === 'maybe' ? 'bg-warning/15 text-warning' :
+                    'bg-emerald-500/15 text-emerald-700'
+                  }`}>{e.code}</span>
+                  <span className="text-on-surface-variant">
+                    <span className="font-medium text-on-surface">{e.name}.</span>{' '}
+                    {e.note}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {tool === 'menu' && (result.items?.length ?? 0) > 0 && (
           <AskServerCard result={result} allergens={allergens} />
         )}

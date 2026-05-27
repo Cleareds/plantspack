@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth'
 import { useRouter, useParams } from 'next/navigation'
-import { Save, User, Mail } from 'lucide-react'
+import { Save, User, Mail, ShieldAlert } from 'lucide-react'
+import AllergenSelector from '@/app/tools/_components/AllergenSelector'
 import SimpleAvatarUpload from '@/components/ui/SimpleAvatarUpload'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 
@@ -24,6 +25,35 @@ export default function ProfileEditPage() {
 
   // Track if user has made changes to prevent overriding their input
   const [hasUserMadeChanges, setHasUserMadeChanges] = useState(false)
+  const [allergens, setAllergens] = useState<string[]>([])
+  const [allergensSaved, setAllergensSaved] = useState(false)
+
+  // Load saved allergens once. Same endpoint used by barcode / ingredient /
+  // menu / substitutes / cards tools, so editing here propagates everywhere.
+  useEffect(() => {
+    fetch('/api/tools/allergens')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (Array.isArray(data?.allergens)) {
+          setAllergens(data.allergens)
+          setAllergensSaved(true)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const updateAllergens = async (next: string[]) => {
+    setAllergens(next)
+    setAllergensSaved(false)
+    try {
+      const r = await fetch('/api/tools/allergens', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ allergens: next }),
+      })
+      if (r.ok) setAllergensSaved(true)
+    } catch { /* non-blocking */ }
+  }
 
   useEffect(() => {
     if (!authReady) {
@@ -244,6 +274,25 @@ export default function ProfileEditPage() {
                   rows={4}
                   className="w-full px-4 py-2 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none resize-none"
                   placeholder="Tell others about yourself and your vegan journey..."
+                />
+              </div>
+
+              {/* Allergen profile — used by barcode, ingredient and menu
+                  scanners, substitute finder, and restaurant cards. Saving
+                  is independent of the profile form save and happens on
+                  each toggle. */}
+              <div className="border-t pt-6 mt-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <ShieldAlert className="h-4 w-4 text-on-surface-variant" />
+                  <h2 className="font-headline font-bold text-on-surface">Allergens (used across tools)</h2>
+                </div>
+                <p className="text-sm text-on-surface-variant mb-3">
+                  Tell us once and the barcode scanner, ingredient scanner, menu scanner, restaurant cards and substitute finder will all flag matches for you.
+                </p>
+                <AllergenSelector
+                  value={allergens}
+                  onChange={updateAllergens}
+                  savedRemote={allergensSaved}
                 />
               </div>
 

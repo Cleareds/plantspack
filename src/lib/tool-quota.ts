@@ -47,6 +47,16 @@ export interface ScanResult {
   summary: string
   visibility?: { fully_readable: boolean; issues?: string }
   items?: { name: string; status: 'vegan' | 'not_vegan' | 'uncertain'; note?: string }[]
+  /** E-codes detected in the OCR'd / submitted text (ingredient scanner).
+   *  Populated by api/tools/scan after the model returns its verdict;
+   *  surfaces additive-level explanations in the UI. */
+  eCodeHits?: {
+    code: string
+    name: string
+    status: 'vegan' | 'non_vegan' | 'maybe'
+    note: string
+    allergen?: string
+  }[]
 }
 
 export interface QuotaContext {
