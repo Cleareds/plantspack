@@ -1,0 +1,91 @@
+import type { IngredientArticle } from '../types'
+
+export const eCodesArticle: IngredientArticle = {
+  slug: 'e-codes',
+  title: 'Which E-numbers are vegan?',
+  metaTitle: 'Which E-numbers are vegan? The full list of animal-derived E-codes | PlantsPack',
+  metaDescription: 'Most E-numbers are vegan, but a handful are always or sometimes animal-derived. The shortlist of E-codes vegans need to recognise on packaged food labels.',
+  category: 'lifestyle',
+  searchQueries: [
+    'which e numbers are vegan',
+    'is e471 vegan',
+    'e471 vegan or not',
+    'is e120 vegan',
+    'is e441 vegan',
+    'vegan e numbers list',
+    'e-codes vegan',
+    'what is e120',
+    'e numbers to avoid as a vegan',
+  ],
+  verdict: 'depends',
+  verdictHeadline: 'Most E-numbers are vegan, but a handful are always or sometimes animal-derived. The big ones to know: E120 carmine, E441 gelatine, E542 bone phosphate, E901 beeswax, E904 shellac, E920 L-cysteine, E966 lactitol, E1105 lysozyme.',
+  tldr: 'E-numbers are EU food-additive identifiers. The vast majority are plant or synthetic and vegan-fine. A small set is always animal-derived (E120, E441, E542, E901, E904, E913, E966, E1105). A larger set is ambiguous — especially the E471/E47x emulsifier family and the E631/E635 flavour enhancers — where the same E-code can be plant or animal depending on the manufacturer. When in doubt, look for a Vegan Society sunflower or V-Label, or scan the barcode in the PlantsPack app.',
+  fullAnswer: [
+    'E-numbers are the EU\'s additive identifiers - every food additive approved for use in Europe gets a number prefixed with "E" (E100-E1599). There are around 250 in active use, covering colourings, preservatives, antioxidants, emulsifiers, thickeners, sweeteners, flavour enhancers, and processing aids. The system was designed for safety regulation, not for telling consumers where an additive came from. That mismatch is why "is this E-number vegan?" is a real question: the same E-code on two different products can be plant-derived in one and animal-derived in the other.',
+    'The unambiguous animal-derived E-codes - the ones that are always or near-always non-vegan - are a short list. E120 (carmine, also called cochineal or natural red 4) is a red dye made from crushed cochineal scale insects, used in some yoghurts, sweets, sausages, fruit drinks, and lipsticks. E441 is gelatine, made from boiled animal bones and skin, found in jelly sweets, marshmallows, some yoghurt drinks, and many vitamin capsules. E542 is bone phosphate, an anti-caking agent made from animal bones. E901 is beeswax and E904 is shellac, both insect-derived glazing agents used on shiny sweets, coated chocolates, supplement pills, and some fresh fruit. E913 is lanolin from sheep wool, used in some vitamin D supplements. E966 is lactitol, a sweetener made from lactose (cow\'s milk), so it is dairy. E1105 is lysozyme, an enzyme extracted from egg white, used as a preservative in some cheeses and wines. If you see any of these on a label, the product is not vegan.',
+    'The ambiguous emulsifier family is where most accidental non-vegan slip-ups happen. E471 (mono- and diglycerides of fatty acids) is the single most common confusing additive in supermarket bread, biscuits, margarine, chocolate, ice cream, and protein bars. The fatty acids in E471 can come from plant oils (palm, soy, rapeseed, sunflower) or from animal fat (tallow). EU labelling rules do not require manufacturers to disclose the source. Some brands voluntarily write "vegetable mono- and diglycerides" or "mono- and diglycerides of vegetable origin," and that is reliable. Most do not, and "E471" alone tells you nothing about source. The same applies to the whole adjacent family: E472a, E472b, E472c, E472d, E472e (DATEM, used in bread improver), E472f, E473, E474, E475, E477, E481 (SSL, common in supermarket bread), E482 (CSL), E483, E491, E492, E493, E494, E495, and E570 (stearic acid). All have a fatty-acid base that could be plant or animal. In practice most modern EU manufacturing has shifted to plant sources because they are cheaper and more consistent, but "most" is not "all" and there is no way to read the label and be sure.',
+    'The ambiguous flavour-enhancer pair to know is E631 (disodium inosinate) and E635 (disodium 5\'-ribonucleotides). These show up in instant noodles, flavoured crisps, savoury snack seasonings, and stock cubes. Both are usually derived from fish (sardines) or meat, though synthetic versions exist. E635 is a mix that includes E627 (vegan, from yeast) and E631 (usually animal), so its vegan status follows E631. Treat both as non-vegan unless the product carries a vegan certification or the brand has confirmed a synthetic source. Halal-certified products often use synthetic versions, which is a useful proxy in some regions but not a guarantee.',
+    'E920 (L-cysteine) deserves its own paragraph because it is hiding in more bakery than people realise. It is a dough conditioner used to soften and speed-prove dough in many supermarket loaves, bagels, pizza bases, pretzels, and some burger buns. Traditional sources are duck feathers, pig bristles, and human hair (yes, really - hair from barbershop sweepings is processed into L-cysteine, mostly in China). Synthetic and microbial-fermentation versions exist and are increasingly common, but EU labels never tell you which one is in your bread. The related code E910 (L-cystine) has the same problem. If you eat a lot of supermarket bread and want to be sure, look for a vegan-certified brand or buy from a bakery that confirms no L-cysteine.',
+    'What to actually do in practice. First, the good news: the famous "scary-looking" E-numbers most people worry about are fine. E300 is vitamin C. E322 (lecithin) is almost always soy or sunflower, occasionally egg - "soy lecithin" or "sunflower lecithin" on the label is vegan. E440 is pectin from fruit. E150a-d are caramel colours (vegan). E160a is beta-carotene (vegan). Sweeteners E950 (acesulfame K), E951 (aspartame), E952 (cyclamate), E954 (saccharin), E955 (sucralose), E960 (stevia), and E965 (maltitol) are all vegan. The PlantsPack barcode scanner reads ingredient lists, surfaces every E-code it finds, and flags the problematic ones with plain-English explanations - so you do not need to memorise the list. For products without a barcode (bakery, deli, restaurant menus), look for a Vegan Society sunflower logo, a V-Label "vegan" mark, or Certified Vegan (the sunflower-with-V mark common in the US). All three trademark schemes explicitly check the full additive list and refuse certification if any animal-derived E-code is present, including the ambiguous ones unless the manufacturer can prove plant sourcing. When a product has none of those marks and you cannot tell from the label, the safest move is to contact the brand - most have a customer-service line that will tell you the source of a specific E-code, and many keep a "vegan products list" they will email you.',
+  ],
+  whatToLookFor: {
+    good: [
+      'Vegan Society sunflower trademark',
+      'V-Label "vegan" certification',
+      'Certified Vegan (USA sunflower-with-V mark)',
+      'E160a (beta-carotene), E300 (vitamin C), E322 lecithin when labelled "soy" or "sunflower," E440 (pectin) - all plant or synthetic',
+      'E150a-d (caramel colours), E440 (pectin), E406 (agar), E407 (carrageenan), E410 (locust bean gum), E412 (guar gum), E415 (xanthan gum) - plant or microbial',
+      'Sweeteners E950, E951, E952, E954, E955, E960 (stevia), E965 (maltitol) - all vegan',
+      '"Vegetable mono- and diglycerides" or "mono- and diglycerides of vegetable origin" on the label - explicit plant source for E471',
+    ],
+    avoid: [
+      'E120 carmine / cochineal / natural red 4',
+      'E441 gelatine',
+      'E542 bone phosphate',
+      'E901 beeswax',
+      'E904 shellac',
+      'E913 lanolin',
+      'E920 L-cysteine (usually animal-derived; common in supermarket bread and bagels)',
+      'E910 L-cystine (same source problem as E920)',
+      'E966 lactitol (dairy)',
+      'E1105 lysozyme (egg white; in some cheese and wine)',
+      'E631 and E635 flavour enhancers without a vegan certification',
+      'E471 and the wider E47x / E481-E495 / E570 emulsifier family unless the brand confirms plant sourcing',
+      'E322 lecithin if the label does not specify "soy" or "sunflower" - it is occasionally from egg',
+    ],
+  },
+  faq: [
+    {
+      question: 'Which E-numbers are always non-vegan?',
+      answer: 'E120 (carmine, from cochineal insects), E441 (gelatine, from animal bones), E542 (bone phosphate), E901 (beeswax), E904 (shellac, from the lac insect), E913 (lanolin, from sheep wool), E966 (lactitol, from cow\'s milk), and E1105 (lysozyme, from egg white). If any of these appear on an ingredient list, the product is not vegan.',
+    },
+    {
+      question: 'Is E471 vegan?',
+      answer: 'It depends. E471 (mono- and diglycerides of fatty acids) is the most common ambiguous emulsifier on supermarket shelves. The fatty acids can be plant (palm, soy, rapeseed) or animal (tallow). EU rules do not require disclosure of the source, so "E471" alone tells you nothing. Most modern EU food manufacturing uses plant sources, but not all. Look for "vegetable mono- and diglycerides" on the label, a Vegan Society or V-Label mark, or contact the brand. The same uncertainty applies to E472a-f, E473, E474, E475, E477, E481, E482, E483, E491-495, and E570.',
+    },
+    {
+      question: 'Is E120 vegan?',
+      answer: 'No. E120 is carmine (also called cochineal, carminic acid, or natural red 4), a red dye made from crushed female cochineal scale insects. It takes around 70,000 insects to make a pound of dye. It is always non-vegan, regardless of brand. Plant-based red dyes exist (beetroot E162, anthocyanins E163, lycopene E160d, paprika extract E160c) and any of those on a label is fine.',
+    },
+    {
+      question: 'What about E322 lecithin?',
+      answer: 'Usually vegan. E322 is almost always soy lecithin or sunflower lecithin - both plant-derived. A small number of products use egg lecithin, which is non-vegan. If the label says "soy lecithin" or "sunflower lecithin" specifically, you are fine. If it just says "lecithin" or "E322" with no source named, it is statistically very likely soy but technically unconfirmed.',
+    },
+    {
+      question: 'How can I check E-codes on the go?',
+      answer: 'Use the PlantsPack barcode scanner. It reads the ingredient list of any packaged product, identifies every E-code, and flags the non-vegan and ambiguous ones with one-line explanations. The ingredient scanner does the same for ingredients you type or paste in, useful for restaurant menus and unpackaged bakery items.',
+    },
+    {
+      question: 'Is the Vegan Society sunflower logo reliable?',
+      answer: 'Yes. The Vegan Society trademark is one of the strictest schemes globally - it explicitly checks for all animal-derived additives, including ambiguous ones like E471 and E631, requires the manufacturer to prove plant sourcing, and also requires no animal testing. V-Label "vegan" and Certified Vegan (the US scheme) apply similar additive checks. Any of the three on a pack is reliable.',
+    },
+  ],
+  relatedTools: ['barcode', 'ingredient-scanner'],
+  relatedTopics: ['cheese', 'bread', 'chocolate'],
+  sources: [
+    { title: 'European Commission: Food Additives Database', url: 'https://ec.europa.eu/food/food-feed-portal/screen/food-additives/search' },
+    { title: 'The Vegan Society: animal-derived ingredients and additives', url: 'https://www.vegansociety.com/resources/nutrition-and-health/ingredients-animal-origin' },
+    { title: 'PETA: E-numbers that are not vegetarian or vegan', url: 'https://www.peta.org.uk/living/e-numbers/' },
+  ],
+  updatedAt: '2026-05-29',
+}
