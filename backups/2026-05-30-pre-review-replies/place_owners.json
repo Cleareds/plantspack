@@ -1,0 +1,38 @@
+[
+  {
+    "id": "832c366c-9dba-4706-91b7-c7ce9ece12cf",
+    "place_id": "a6abbdd1-3229-4df1-b6e8-6353990ad2f7",
+    "user_id": "608ea336-875c-433e-8f89-2de27bdecd07",
+    "claim_request_id": "104364bd-b367-4795-8728-d3a809b297a4",
+    "verified_at": "2026-04-01T21:13:21.860879+00:00",
+    "verified_by": "608ea336-875c-433e-8f89-2de27bdecd07",
+    "removed_at": null,
+    "removed_by": null,
+    "removal_reason": null,
+    "created_at": "2026-04-01T21:13:21.860879+00:00"
+  },
+  {
+    "id": "20ae6049-c3c6-4b19-b4d1-1fa691f70670",
+    "place_id": "fd7233d7-8637-4ea4-baef-112ac7fda85a",
+    "user_id": "dd92bd2a-8f5b-48ff-a20f-bb632fc13c23",
+    "claim_request_id": "acb00484-9536-461a-a470-5a93a36fbb76",
+    "verified_at": "2026-04-20T20:57:32.672187+00:00",
+    "verified_by": "d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c",
+    "removed_at": null,
+    "removed_by": null,
+    "removal_reason": null,
+    "created_at": "2026-04-20T20:57:32.672187+00:00"
+  },
+  {
+    "id": "695c0f58-405e-4cbb-b9a3-8b302c285198",
+    "place_id": "b69b138a-d633-4f73-8ce4-07d37502a55d",
+    "user_id": "dd92bd2a-8f5b-48ff-a20f-bb632fc13c23",
+    "claim_request_id": "0e1aa557-3538-40eb-9fff-4a35de857873",
+    "verified_at": "2026-04-20T21:15:12.828271+00:00",
+    "verified_by": "d27f7c5e-2053-4c0c-8fd1-27ee3269ad1c",
+    "removed_at": null,
+    "removed_by": null,
+    "removal_reason": null,
+    "created_at": "2026-04-20T21:15:12.828271+00:00"
+  }
+]

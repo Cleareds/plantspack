@@ -58,8 +58,50 @@ export async function GET(
 
     if (error) throw error
 
+    // Fetch replies for these reviews in a single query and stitch them in.
+    // We do this as a follow-up (rather than a joined PostgREST select) so
+    // soft-deleted replies stay invisible to the public reader.
+    const reviewIds = (reviews ?? []).map(r => r.id)
+    let repliesByReview: Record<string, unknown[]> = {}
+    if (reviewIds.length > 0) {
+      const { data: replies } = await supabase
+        .from('place_review_replies')
+        .select(`
+          id,
+          review_id,
+          user_id,
+          author_role,
+          content,
+          edited_at,
+          edit_count,
+          created_at,
+          updated_at,
+          users:user_id (
+            id,
+            username,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        `)
+        .in('review_id', reviewIds)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: true })
+
+      repliesByReview = (replies ?? []).reduce((acc, r) => {
+        const arr = acc[r.review_id] ?? (acc[r.review_id] = [])
+        arr.push(r)
+        return acc
+      }, {} as Record<string, unknown[]>)
+    }
+
+    const reviewsWithReplies = (reviews ?? []).map(r => ({
+      ...r,
+      replies: repliesByReview[r.id] ?? [],
+    }))
+
     return NextResponse.json({
-      reviews,
+      reviews: reviewsWithReplies,
       total: count,
       hasMore: (offset + limit) < (count || 0)
     })

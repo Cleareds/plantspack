@@ -16,6 +16,7 @@ import VideoUploader from '../ui/VideoUploader'
 import VideoPlayer from '../ui/VideoPlayer'
 import EmojiPickerButton from '../ui/EmojiPickerButton'
 import LinkifiedText from '../ui/LinkifiedText'
+import ReviewReplyThread, { type ReviewReply } from './ReviewReplyThread'
 
 type Review = {
   id: string
@@ -37,6 +38,7 @@ type Review = {
     last_name: string | null
     avatar_url: string | null
   }
+  replies?: ReviewReply[]
 }
 
 interface PlaceReviewsProps {
@@ -70,6 +72,31 @@ export default function PlaceReviews({
   const [showVideoUploader, setShowVideoUploader] = useState(false)
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
   const { user, profile } = useAuth()
+  const [canReplyAsAuthority, setCanReplyAsAuthority] = useState(false)
+
+  // Resolve whether the current user is allowed to post owner/admin replies
+  // on THIS place. Admin via users.role, owner via place_owners. The /reply
+  // API independently validates this server-side — UI just hides the button
+  // for unauthorised users.
+  useEffect(() => {
+    let cancelled = false
+    if (!user) { setCanReplyAsAuthority(false); return }
+    ;(async () => {
+      try {
+        const [adminQ, ownerQ] = await Promise.all([
+          supabase.from('users').select('role').eq('id', user.id).maybeSingle(),
+          supabase.from('place_owners').select('id').eq('place_id', placeId).eq('user_id', user.id).maybeSingle(),
+        ])
+        if (cancelled) return
+        const isAdmin = adminQ.data?.role === 'admin'
+        const isOwner = !!ownerQ.data
+        setCanReplyAsAuthority(isAdmin || isOwner)
+      } catch {
+        if (!cancelled) setCanReplyAsAuthority(false)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [user, placeId])
 
   const REVIEWS_PER_PAGE = 20
 
@@ -636,6 +663,19 @@ export default function PlaceReviews({
 
                       <ReviewReactions
                         reviewId={review.id}
+                      />
+
+                      <ReviewReplyThread
+                        placeId={placeId}
+                        reviewId={review.id}
+                        replies={review.replies ?? []}
+                        currentUserId={user?.id ?? null}
+                        canReply={canReplyAsAuthority}
+                        onChange={(next) => {
+                          setReviews(prev => prev.map(r =>
+                            r.id === review.id ? { ...r, replies: next } : r
+                          ))
+                        }}
                       />
                     </div>
                   </div>
