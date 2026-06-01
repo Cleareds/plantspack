@@ -1,80 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
-import OpenAI from 'openai'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 25000, maxRetries: 1 })
-
-function parseVerdict(text: string): 'fully_vegan' | 'not_fully_vegan' | 'closed' | 'uncertain' {
-  const first = text.split('\n')[0].toUpperCase()
-  if (first.includes('FULLY_VEGAN') && !first.includes('NOT')) return 'fully_vegan'
-  if (first.includes('NOT_FULLY_VEGAN')) return 'not_fully_vegan'
-  if (first.includes('CLOSED')) return 'closed'
-  return 'uncertain'
-}
-
-/**
- * Verify a single place's vegan status. Tier 1 (gpt-4o-mini, description) first
- * for places with a usable description; escalate to Tier 2 (web-search) if Tier 1
- * comes back uncertain or no description. Returns the verdict + which tier was used.
- * Cost: ~$0.0001 (Tier 1 only) to ~$0.012 (Tier 1 uncertain → Tier 2).
- */
-async function verifyVeganStatus(p: { name: string; description: string | null; city: string | null; country: string | null }): Promise<{ verdict: string; tier: 'tier1' | 'tier2' | 'error'; evidence: string }> {
-  const location = [p.city, p.country].filter(Boolean).join(', ')
-  const hasDesc = p.description && p.description.trim().length >= 30
-
-  if (hasDesc) {
-    const prompt = `Classify this place into one vegan category based only on the information provided.
-
-Name: ${p.name}${location ? ` (${location})` : ''}
-Description: ${(p.description || '').slice(0, 500)}
-
-Rules:
-- FULLY_VEGAN: description clearly states 100% vegan / plant-based only / no animal products
-- NOT_FULLY_VEGAN: description mentions dairy, eggs, honey, meat, fish, or vegetarian options alongside vegan
-- CLOSED: description or name indicates permanently closed
-- UNCERTAIN: not enough information to decide confidently
-
-Reply with exactly one of: FULLY_VEGAN / NOT_FULLY_VEGAN / CLOSED / UNCERTAIN
-Then a one-sentence reason on the next line.`
-    try {
-      const r = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 80,
-        temperature: 0,
-      })
-      const text = r.choices[0]?.message?.content?.trim() ?? ''
-      const v = parseVerdict(text)
-      if (v !== 'uncertain') {
-        return { verdict: v, tier: 'tier1', evidence: text.split('\n').slice(1).join(' ').slice(0, 200) }
-      }
-    } catch (e: any) {
-      return { verdict: 'uncertain', tier: 'error', evidence: e?.message?.slice(0, 200) || 'tier1-error' }
-    }
-  }
-
-  // Escalate to Tier 2 web-search
-  const prompt = `Is "${p.name}"${location ? ` in ${location}` : ''} a 100% fully vegan establishment (no animal products of any kind on the menu)?
-
-Search for this specific place and check:
-1. Is it confirmed 100% vegan (no meat, dairy, eggs, honey)?
-2. Is it still open, or permanently closed?
-
-Reply with exactly one of these verdicts on the first line, then a one-sentence reason:
-FULLY_VEGAN - confirmed 100% vegan, currently open
-NOT_FULLY_VEGAN - serves or sells animal products (even dairy/eggs)
-CLOSED - permanently closed
-UNCERTAIN - cannot find reliable information`
-  try {
-    const r = await openai.chat.completions.create({
-      model: 'gpt-4o-mini-search-preview',
-      messages: [{ role: 'user', content: prompt }],
-    })
-    const text = r.choices[0]?.message?.content?.trim() ?? ''
-    return { verdict: parseVerdict(text), tier: 'tier2', evidence: text.split('\n').slice(1).join(' ').slice(0, 300) }
-  } catch (e: any) {
-    return { verdict: 'uncertain', tier: 'error', evidence: e?.message?.slice(0, 200) || 'tier2-error' }
+// AI vegan-status verification disabled (2026-06-01) per project policy:
+// OpenAI is reserved for the ingredient and menu scanners only. The admin
+// "AI verify" button now returns an explicit "uncertain — AI disabled"
+// verdict so the manual workflow on /admin/data-quality keeps working
+// without ever calling out to OpenAI.
+async function verifyVeganStatus(_p: { name: string; description: string | null; city: string | null; country: string | null }): Promise<{ verdict: string; tier: 'tier1' | 'tier2' | 'error'; evidence: string }> {
+  return {
+    verdict: 'uncertain',
+    tier: 'error',
+    evidence: 'AI verification disabled — OpenAI is reserved for the ingredient and menu scanners. Verify this place manually.',
   }
 }
 

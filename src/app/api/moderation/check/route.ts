@@ -1,41 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 
-// OpenAI Moderation API
-async function checkContentModeration(content: string) {
-  if (!process.env.OPENAI_API_KEY) {
-    console.warn('OPENAI_API_KEY not configured, skipping moderation')
-    return { flagged: false, categories: {} }
-  }
-
-  try {
-    const response = await fetch('https://api.openai.com/v1/moderations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        input: content
-      })
-    })
-
-    if (!response.ok) {
-      throw new Error('Moderation API request failed')
-    }
-
-    const data = await response.json()
-    const result = data.results[0]
-
-    return {
-      flagged: result.flagged,
-      categories: result.categories,
-      categoryScores: result.category_scores
-    }
-  } catch (error) {
-    console.error('Error checking content moderation:', error)
-    return { flagged: false, categories: {}, error: true }
-  }
+// Per project policy (2026-06-01) OpenAI is reserved for the ingredient
+// and menu scanners only. Moderation runs locally via the anti-vegan
+// pattern matcher (handled client-side and passed in as `antiVeganDetection`)
+// plus the categorical checks below. No external API call.
+async function checkContentModeration(_content: string) {
+  return { flagged: false, categories: {} as Record<string, boolean>, categoryScores: undefined as Record<string, number> | undefined }
 }
 
 export async function POST(request: NextRequest) {
