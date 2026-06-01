@@ -67,14 +67,23 @@ export interface QuotaContext {
   imageHash?: string
 }
 
+async function isAdmin(sb: ReturnType<typeof adminClient>, userId: string): Promise<boolean> {
+  const { data } = await sb.from('users').select('role').eq('id', userId).maybeSingle()
+  return data?.role === 'admin'
+}
+
 async function getTier(userId: string | null): Promise<UserTier> {
   if (!userId) return 'guest'
   const sb = adminClient()
   const { data } = await sb
-    .from('profiles')
-    .select('subscription_tier, subscription_status')
+    .from('users')
+    .select('subscription_tier, subscription_status, role')
     .eq('id', userId)
     .maybeSingle()
+  // Site admins skip tier limits (handled by early-return in checkQuota).
+  // Still report 'supporter' so any UI that reads back the tier string
+  // shows the unlimited-style messaging.
+  if (data?.role === 'admin') return 'supporter'
   const tier = data?.subscription_tier ?? 'free'
   const status = data?.subscription_status ?? 'inactive'
   if (SUPPORTER_TIERS.has(tier) && status === 'active') return 'supporter'
@@ -84,6 +93,26 @@ async function getTier(userId: string | null): Promise<UserTier> {
 export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
   const sb = adminClient()
   const tier = await getTier(ctx.userId)
+
+  // Site admins bypass every cap (per-user, per-month, daily-global). They
+  // still flow through the cache path and their scans are still logged for
+  // cost telemetry — they just don't get blocked.
+  if (ctx.userId && (await isAdmin(sb, ctx.userId))) {
+    if (ctx.imageHash) {
+      const { data: cached } = await sb
+        .from('tool_scans')
+        .select('result')
+        .eq('image_hash', ctx.imageHash)
+        .eq('tool', ctx.tool)
+        .eq('rejected', false)
+        .not('result', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (cached?.result) return { allowed: true, tier, cached: cached.result as ScanResult }
+    }
+    return { allowed: true, tier }
+  }
 
   // 0. Image-hash cache: if this exact image was successfully scanned before
   //    by anyone, return that result for free.
