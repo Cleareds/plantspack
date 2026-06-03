@@ -8,6 +8,8 @@ export type ToolHandle =
   | 'cards'
   | 'calculator'
   | 'drinks'
+  | 'baking'
+  | 'cosmetics'
 
 export interface RelatedLink {
   href: string
