@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Globe } from 'lucide-react'
+import { Globe, BookOpen, UtensilsCrossed, Printer } from 'lucide-react'
 
 // Country-name aliases for slugs that should redirect to the canonical name.
 // Add entries here when a country renames or when we consolidate variants.
@@ -301,6 +301,51 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           </div>
         </div>
 
+        {/* Travel essentials — interconnects the country page with the
+            travel guide (where it exists) and the universally-useful
+            menu scanner + printable cards. Positioned above-the-fold
+            for travel-intent users without competing with the country
+            page on the "vegan [country]" query (header framing is
+            travel-utility, not alt-destination). Renders in both
+            normal and fully-vegan modes since the tools help either
+            audience. */}
+        <section className="mb-6 rounded-2xl ghost-border bg-surface-container-lowest p-4 md:p-5">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3">
+            Going to {countryName}? Travel essentials
+          </h2>
+          <div className={`grid gap-2 ${hasTravelGuide(country) ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+            {hasTravelGuide(country) && (
+              <Link
+                href={`/vegan/travel/${country}`}
+                prefetch={false}
+                className="block p-3 rounded-xl ghost-border bg-surface hover:border-primary/40 hover:bg-primary/5 transition"
+              >
+                <BookOpen className="h-5 w-5 text-primary mb-1.5" />
+                <div className="font-bold text-sm text-on-surface mb-0.5">Travel tips for {countryName}</div>
+                <div className="text-xs text-on-surface-variant leading-relaxed">Phrasebook, dish dictionary, what to watch for.</div>
+              </Link>
+            )}
+            <Link
+              href="/tools/menu-scanner"
+              prefetch={false}
+              className="block p-3 rounded-xl ghost-border bg-surface hover:border-primary/40 hover:bg-primary/5 transition"
+            >
+              <UtensilsCrossed className="h-5 w-5 text-primary mb-1.5" />
+              <div className="font-bold text-sm text-on-surface mb-0.5">Menu scanner</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Photo of any menu — we highlight what&apos;s vegan.</div>
+            </Link>
+            <Link
+              href="/tools/cards"
+              prefetch={false}
+              className="block p-3 rounded-xl ghost-border bg-surface hover:border-primary/40 hover:bg-primary/5 transition"
+            >
+              <Printer className="h-5 w-5 text-primary mb-1.5" />
+              <div className="font-bold text-sm text-on-surface mb-0.5">Printable restaurant cards</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Hand to your waiter — 30+ languages.</div>
+            </Link>
+          </div>
+        </section>
+
         {/* Country-audit blog callout — links Google + visitors to the
             authoritative writeup of how this country's directory was built.
             Strong internal-link signal for the audit post; honest signal to
@@ -431,22 +476,9 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           </div>
         )}
 
-        {/* Small footer link to travel cheat sheet when one exists. Kept
-            deliberately understated - the country page is the SEO authority
-            for "vegan [country]" queries; the cheat sheet is supporting
-            content for "how to eat vegan in [country]" queries. */}
-        {hasTravelGuide(country) && !isFullyVeganMode && (
-          <div className="mt-10 text-sm text-on-surface-variant">
-            Travelling here?{' '}
-            <Link
-              href={`/vegan/travel/${country}`}
-              className="text-primary hover:underline font-medium"
-            >
-              See our travel tips for vegans visiting {countryName}
-            </Link>{' '}
-            — phrasebook, dish dictionary, and what to watch for.
-          </div>
-        )}
+        {/* Bottom travel-guide link removed — the top "Travel essentials"
+            callout now carries this link prominently. Keeping one link to
+            the guide avoids splitting anchor signal. */}
       </div>
     </div>
   )
