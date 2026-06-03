@@ -73,7 +73,7 @@ export const gelatinArticle: IngredientArticle = {
       answer: 'Standard gel capsules are mostly bovine or pork gelatin. Vegan capsules made from HPMC (hydroxypropyl methylcellulose) or pullulan exist and are now common for supplements, less common for prescription medication. If a medication only comes in gelatin capsules and you need it, that is a personal call most vegans accept under the "as far as is possible and practicable" clause.',
     },
   ],
-  relatedTools: ['ingredient-scanner', 'barcode'],
+  relatedTools: ['baking', 'substitutes', 'ingredient-scanner', 'barcode'],
   relatedTopics: ['honey', 'sugar'],
   sources: [
     { title: 'The Vegan Society: animal-derived ingredients to avoid', url: 'https://www.vegansociety.com/resources/nutrition-and-health/ingredients-animal-origin' },

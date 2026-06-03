@@ -1,14 +1,20 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX, ShieldAlert, Plus, Clock, ExternalLink } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX, ShieldAlert, Plus, Clock, ExternalLink, Apple, Sparkle } from 'lucide-react'
 import type { BarcodeResult } from '@/app/api/tools/barcode/route'
 import AllergenSelector from '../_components/AllergenSelector'
 import { saveBarcodeScan, getRecentBarcodeScans, type BarcodeHistoryEntry } from './barcode-history'
 
+type Kind = 'food' | 'cosmetics'
+
 type Status = 'idle' | 'scanning' | 'looking-up' | 'result' | 'error'
 
 export default function BarcodeClient() {
+  const searchParams = useSearchParams()
+  const initialKind: Kind = searchParams?.get('mode') === 'cosmetics' ? 'cosmetics' : 'food'
+  const [kind, setKind] = useState<Kind>(initialKind)
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<string | null>(null)
   const [manual, setManual] = useState('')
@@ -114,7 +120,8 @@ export default function BarcodeClient() {
     setError(null)
     try {
       const qs = new URLSearchParams({ barcode })
-      if (allergens.length) qs.set('allergens', allergens.join(','))
+      if (kind === 'cosmetics') qs.set('kind', 'cosmetics')
+      if (allergens.length && kind === 'food') qs.set('allergens', allergens.join(','))
       const r = await fetch(`/api/tools/barcode?${qs.toString()}`)
       if (!r.ok) {
         const data = await r.json().catch(() => ({}))
@@ -164,15 +171,44 @@ export default function BarcodeClient() {
     <div>
       {status === 'idle' && (
         <>
-          <div className="mb-4">
-            <AllergenSelector
-              value={allergens}
-              onChange={setAllergens}
-              savedRemote={allergensFromProfile}
-              onPersist={persistAllergens}
-              compact
-            />
+          <div className="mb-4 grid grid-cols-2 gap-2 p-1 rounded-xl ghost-border bg-surface-container-lowest">
+            <button
+              onClick={() => setKind('food')}
+              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
+                kind === 'food' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <Apple className="h-4 w-4" />
+              Food
+            </button>
+            <button
+              onClick={() => setKind('cosmetics')}
+              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition ${
+                kind === 'cosmetics' ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <Sparkle className="h-4 w-4" />
+              Cosmetics
+            </button>
           </div>
+
+          {kind === 'cosmetics' && (
+            <div className="mb-4 p-3 rounded-lg bg-primary/5 ghost-border text-xs text-on-surface-variant leading-relaxed">
+              Looks up cosmetics in <a href="https://world.openbeautyfacts.org" target="_blank" rel="noopener noreferrer" className="text-primary underline">Open Beauty Facts</a> and scans the INCI ingredient list for animal-derived components (lanolin, carmine, beeswax, keratin, silk, snail mucin, etc.). This tool checks vegan status, <strong className="text-on-surface">not animal testing</strong> — for cruelty-free, look for Leaping Bunny or PETA certifications.
+            </div>
+          )}
+
+          {kind === 'food' && (
+            <div className="mb-4">
+              <AllergenSelector
+                value={allergens}
+                onChange={setAllergens}
+                savedRemote={allergensFromProfile}
+                onPersist={persistAllergens}
+                compact
+              />
+            </div>
+          )}
           <div className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 md:p-8">
           <button
             onClick={startCamera}
@@ -313,16 +349,16 @@ function ResultCard({ result, onReset }: { result: BarcodeResult; onReset: () =>
               Help everyone - add this product
             </div>
             <p className="text-sm text-on-surface-variant leading-relaxed mb-3">
-              Open Food Facts is open and community-built. Adding this barcode takes 2 minutes and makes the scanner smarter for every vegan after you.
+              {result.kind === 'cosmetics' ? 'Open Beauty Facts' : 'Open Food Facts'} is open and community-built. Adding this barcode takes 2 minutes and makes the scanner smarter for every vegan after you.
             </p>
             <a
-              href={`https://world.openfoodfacts.org/cgi/product.pl?type=edit&code=${result.barcode}`}
+              href={`https://world.open${result.kind === 'cosmetics' ? 'beauty' : 'food'}facts.org/cgi/product.pl?type=edit&code=${result.barcode}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold hover:opacity-90"
             >
               <ExternalLink className="h-4 w-4" />
-              Add on Open Food Facts
+              Add on Open {result.kind === 'cosmetics' ? 'Beauty' : 'Food'} Facts
             </a>
           </div>
         )}
@@ -365,6 +401,26 @@ function ResultCard({ result, onReset }: { result: BarcodeResult; onReset: () =>
           </div>
         )}
 
+        {/* Cosmetic ingredient hits — INCI-name matches in cosmetics mode */}
+        {result.cosmeticHits && result.cosmeticHits.length > 0 && (
+          <div className="mb-4 p-3 rounded-lg bg-surface-variant/40 text-sm text-on-surface">
+            <div className="font-semibold mb-2 text-on-surface">Ingredients flagged</div>
+            <ul className="space-y-2">
+              {result.cosmeticHits.map(h => (
+                <li key={h.name} className="flex gap-2">
+                  <span className={`mt-0.5 inline-flex items-center justify-center shrink-0 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide ${
+                    h.status === 'non_vegan' ? 'bg-error/15 text-error' : 'bg-warning/15 text-warning'
+                  }`}>{h.status === 'non_vegan' ? 'ANIMAL' : 'MAYBE'}</span>
+                  <span className="text-on-surface-variant">
+                    <span className="font-medium text-on-surface">{h.name}.</span>{' '}
+                    {h.note}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* E-code findings: surface every additive we recognised so the
             reader can see WHY a "not vegan" or "uncertain" verdict came
             out the way it did. Educational + builds trust. */}
@@ -395,8 +451,8 @@ function ResultCard({ result, onReset }: { result: BarcodeResult; onReset: () =>
 
         <p className="text-xs text-on-surface-variant mt-4 text-center">
           Data from{' '}
-          <a href={`https://world.openfoodfacts.org/product/${result.barcode}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">
-            Open Food Facts
+          <a href={`https://world.open${result.kind === 'cosmetics' ? 'beauty' : 'food'}facts.org/product/${result.barcode}`} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+            Open {result.kind === 'cosmetics' ? 'Beauty' : 'Food'} Facts
           </a>
           . Always double-check the label - data can be incomplete or out of date.
         </p>

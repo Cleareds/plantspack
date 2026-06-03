@@ -73,7 +73,7 @@ export const cheeseArticle: IngredientArticle = {
       answer: 'In the US, yes. "Non-dairy" is a marketing term, not a regulated one, and products labelled non-dairy can legally contain sodium caseinate, a milk-derived protein. This is most common in coffee creamers but has historically applied to some plant-style cheese slices too. The "certified vegan" or Vegan Society logo is the only label that guarantees no milk derivatives. In the EU and UK, allergen labelling is stricter and milk must be highlighted in the ingredient list, but the rule is still: read the back, not the front.',
     },
   ],
-  relatedTools: ['ingredient-scanner', 'barcode', 'substitutes'],
+  relatedTools: ['substitutes', 'baking', 'ingredient-scanner', 'barcode'],
   relatedTopics: ['palm-oil'],
   sources: [
     { title: 'The Vegan Society: ingredients to avoid', url: 'https://www.vegansociety.com/resources/nutrition-and-health/ingredients-animal-origin' },

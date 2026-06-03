@@ -62,7 +62,7 @@ export const beerArticle: IngredientArticle = {
       answer: 'Most decent pubs with a vegan-aware staff member can tell you which taps are vegan. CAMRA (the UK Campaign for Real Ale) maintains a vegan-friendly cask ale list. Apps like Barnivore (search the brewery name) work fast at the bar.',
     },
   ],
-  relatedTools: ['ingredient-scanner'],
+  relatedTools: ['drinks', 'ingredient-scanner', 'barcode'],
   relatedTopics: ['wine', 'sugar'],
   sources: [
     { title: 'Barnivore: vegan beer database', url: 'https://www.barnivore.com/beer' },

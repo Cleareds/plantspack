@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Leaf, Wine, Plane, ArrowRight } from 'lucide-react'
+import { Leaf, Wine, Plane, ArrowRight, Barcode, ChefHat, UtensilsCrossed, Sparkle } from 'lucide-react'
 import { INGREDIENT_ARTICLES, TRAVEL_GUIDES } from '@/lib/vegan-content'
 
 export const metadata: Metadata = {
@@ -22,9 +22,37 @@ export default function VeganHubPage() {
         <h1 className="font-headline font-extrabold text-4xl md:text-5xl text-on-surface tracking-tight leading-[1.1] mb-4">
           Vegan answers
         </h1>
-        <p className="text-on-surface-variant text-lg leading-relaxed mb-10 max-w-2xl">
+        <p className="text-on-surface-variant text-lg leading-relaxed mb-8 max-w-2xl">
           Researched answers to common &quot;is X vegan?&quot; questions and country-by-country travel guides. No fluff, no fake studies, sources cited.
         </p>
+
+        {/* Tools strip — bridge from "reading about" to "doing".
+            Surfacing the four tools that most often answer the question
+            the visitor came here for. */}
+        <section className="mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Link href="/tools/barcode" className="block p-4 rounded-xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition">
+              <Barcode className="h-5 w-5 text-primary mb-2" />
+              <div className="font-bold text-sm text-on-surface">Barcode scanner</div>
+              <div className="text-xs text-on-surface-variant mt-0.5">Check a product</div>
+            </Link>
+            <Link href="/tools/drinks" className="block p-4 rounded-xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition">
+              <Wine className="h-5 w-5 text-primary mb-2" />
+              <div className="font-bold text-sm text-on-surface">Is this drink vegan?</div>
+              <div className="text-xs text-on-surface-variant mt-0.5">Beer / wine / spirits</div>
+            </Link>
+            <Link href="/tools/baking" className="block p-4 rounded-xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition">
+              <ChefHat className="h-5 w-5 text-primary mb-2" />
+              <div className="font-bold text-sm text-on-surface">Baking calculator</div>
+              <div className="text-xs text-on-surface-variant mt-0.5">Exact substitute ratios</div>
+            </Link>
+            <Link href="/tools/menu-scanner" className="block p-4 rounded-xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition">
+              <UtensilsCrossed className="h-5 w-5 text-primary mb-2" />
+              <div className="font-bold text-sm text-on-surface">Menu scanner</div>
+              <div className="text-xs text-on-surface-variant mt-0.5">For eating out abroad</div>
+            </Link>
+          </div>
+        </section>
 
         {ingredients.length > 0 && (
           <Section icon={Leaf} title="Ingredients & foods" items={ingredients.map((a) => ({

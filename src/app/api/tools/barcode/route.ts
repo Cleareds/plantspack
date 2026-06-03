@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { findECodeHits, findProblematicECodes, type ECode } from '@/lib/e-codes'
+import { findCosmeticHits, type MatchedIngredient } from '@/lib/cosmetic-ingredients'
 
 export const runtime = 'nodejs'
 export const revalidate = 86400
@@ -22,7 +23,7 @@ async function logBarcodeScan(
     )
     await admin.from('tool_scans').insert({
       user_id: userId,
-      tool: 'barcode',
+      tool: result.kind === 'cosmetics' ? 'barcode-cosmetics' : 'barcode',
       cost_usd: 0,
       image_hash: result.barcode,
       verdict: result.verdict,
@@ -34,6 +35,7 @@ async function logBarcodeScan(
         imageUrl: result.imageUrl,
         allergenHits: result.allergenHits,
         nonVeganHits: result.nonVeganHits,
+        kind: result.kind,
       },
       allergens,
       rejected: false,
@@ -60,8 +62,11 @@ export interface BarcodeResult {
    *  no codes detected. Includes vegan ones so the UI can surface a full
    *  "what's in this" view if desired. */
   eCodeHits: ECode[]
+  /** Cosmetic ingredient hits (only populated in cosmetics mode) */
+  cosmeticHits?: MatchedIngredient[]
   labels: string[]
-  source: 'open-food-facts'
+  source: 'open-food-facts' | 'open-beauty-facts'
+  kind: 'food' | 'cosmetics'
 }
 
 // Animal-derived ingredients we flag in the raw ingredient text when OFF
@@ -184,12 +189,17 @@ export async function GET(req: NextRequest) {
   if (!/^\d{6,14}$/.test(barcode)) {
     return NextResponse.json({ error: 'Invalid barcode' }, { status: 400 })
   }
+  const kindParam = req.nextUrl.searchParams.get('kind')
+  const kind: 'food' | 'cosmetics' = kindParam === 'cosmetics' ? 'cosmetics' : 'food'
   const allergens = (req.nextUrl.searchParams.get('allergens') ?? '')
     .split(',')
     .map((a) => a.trim().toLowerCase())
     .filter((a) => a.length > 0 && a.length < 40)
 
-  const url = `https://world.openfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,brands,ingredients_text,ingredients_analysis_tags,image_url,labels_tags`
+  const upstream = kind === 'cosmetics'
+    ? `https://world.openbeautyfacts.org/api/v2/product/${barcode}.json?fields=product_name,brands,ingredients_text,image_url,labels_tags`
+    : `https://world.openfoodfacts.org/api/v2/product/${barcode}.json?fields=product_name,brands,ingredients_text,ingredients_analysis_tags,image_url,labels_tags`
+  const url = upstream
 
   let off: { status: number; product?: Record<string, unknown> } | null = null
   try {
@@ -209,25 +219,30 @@ export async function GET(req: NextRequest) {
     if (r.status === 404) {
       off = { status: 0 }
     } else if (!r.ok) {
-      console.error(`[barcode] OFF returned ${r.status} for ${barcode}`)
-      throw new Error(`OFF returned ${r.status}`)
+      console.error(`[barcode] upstream ${kind} returned ${r.status} for ${barcode}`)
+      throw new Error(`upstream returned ${r.status}`)
     } else {
       off = await r.json()
     }
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'unknown'
-    console.error(`[barcode] OFF fetch failed for ${barcode}:`, msg)
+    const upstreamName = kind === 'cosmetics' ? 'Open Beauty Facts' : 'Open Food Facts'
+    console.error(`[barcode] ${upstreamName} fetch failed for ${barcode}:`, msg)
     return NextResponse.json(
-      { error: `Open Food Facts could not be reached (${msg}). Try again in a moment.` },
+      { error: `${upstreamName} could not be reached (${msg}). Try again in a moment.` },
       { status: 502 },
     )
   }
+
+  const upstreamName = kind === 'cosmetics' ? 'Open Beauty Facts' : 'Open Food Facts'
+  const upstreamHost = kind === 'cosmetics' ? 'openbeautyfacts.org' : 'openfoodfacts.org'
+  const sourceTag: 'open-food-facts' | 'open-beauty-facts' = kind === 'cosmetics' ? 'open-beauty-facts' : 'open-food-facts'
 
   if (!off || off.status !== 1 || !off.product) {
     const result: BarcodeResult = {
       barcode,
       verdict: 'not_found',
-      reason: 'This barcode is not in Open Food Facts yet. You can add it at openfoodfacts.org.',
+      reason: `This barcode is not in ${upstreamName} yet. You can add it at ${upstreamHost}.`,
       productName: null,
       brand: null,
       imageUrl: null,
@@ -236,7 +251,8 @@ export async function GET(req: NextRequest) {
       allergenHits: [],
       eCodeHits: [],
       labels: [],
-      source: 'open-food-facts',
+      source: sourceTag,
+      kind,
     }
     // Skip DB log for not_found - clutters history with dead barcodes;
     // the IndexedDB client-side also skips not_found per existing logic.
@@ -244,18 +260,54 @@ export async function GET(req: NextRequest) {
   }
 
   const p = off.product as Record<string, unknown>
-  const v = verdictFromOff({
-    ingredients_analysis_tags: (p.ingredients_analysis_tags as string[]) ?? [],
-    labels_tags: (p.labels_tags as string[]) ?? [],
-    ingredients_text: (p.ingredients_text as string) ?? '',
-  })
-
   const ingredientsText = (p.ingredients_text as string) || ''
+
+  // Cosmetics-mode verdict uses a different ingredient dictionary.
+  let v: { verdict: Verdict; reason: string; hits: string[] }
+  let cosmeticHits: MatchedIngredient[] | undefined
+  if (kind === 'cosmetics') {
+    const labels = ((p.labels_tags as string[]) ?? [])
+    cosmeticHits = findCosmeticHits(ingredientsText)
+    const nonVeganMatches = cosmeticHits.filter(h => h.status === 'non_vegan')
+    const maybeMatches = cosmeticHits.filter(h => h.status === 'maybe')
+    if (labels.includes('en:vegan')) {
+      v = { verdict: 'vegan', reason: 'Carries a vegan label/certification.', hits: [] }
+    } else if (nonVeganMatches.length > 0) {
+      v = {
+        verdict: 'not_vegan',
+        reason: `Contains animal-derived ingredient${nonVeganMatches.length > 1 ? 's' : ''}: ${nonVeganMatches.slice(0, 3).map(m => m.name).join(', ')}.`,
+        hits: nonVeganMatches.map(m => m.name),
+      }
+    } else if (maybeMatches.length > 0) {
+      v = {
+        verdict: 'uncertain',
+        reason: `Contains ingredient(s) of ambiguous origin: ${maybeMatches.slice(0, 3).map(m => m.name).join(', ')}. These can be plant or animal-derived; check with the brand.`,
+        hits: [],
+      }
+    } else if (!ingredientsText) {
+      v = { verdict: 'uncertain', reason: 'Open Beauty Facts has this product but no ingredient list yet.', hits: [] }
+    } else {
+      v = {
+        verdict: 'uncertain',
+        reason: 'No obvious animal-derived ingredients spotted. Cosmetics often hide animal testing too — look for Leaping Bunny, Choose Cruelty Free, or PETA cruelty-free certifications.',
+        hits: [],
+      }
+    }
+  } else {
+    v = verdictFromOff({
+      ingredients_analysis_tags: (p.ingredients_analysis_tags as string[]) ?? [],
+      labels_tags: (p.labels_tags as string[]) ?? [],
+      ingredients_text: ingredientsText,
+    })
+  }
+
   const allergenHits = findAllergenHits(ingredientsText, allergens)
   // E-code scan covers ingredient lists that the OFF analysis tags miss
   // (e.g. an "E441" in a body of text where OFF didn't classify the
   // additive). Surfaced in the response so the UI can render explanations.
-  const eCodeHits = findECodeHits(ingredientsText)
+  // Skip in cosmetics mode — cosmetic ingredients use INCI nomenclature,
+  // not E-codes (except CI 75470 which our cosmetic dictionary covers).
+  const eCodeHits = kind === 'cosmetics' ? [] : findECodeHits(ingredientsText)
   // Also fold E-code-tagged allergens into the allergen hit list if the
   // user is sensitive to them (e.g. E966 lactitol → dairy).
   if (allergens.length > 0) {
@@ -278,8 +330,10 @@ export async function GET(req: NextRequest) {
     nonVeganHits: v.hits,
     allergenHits,
     eCodeHits,
+    cosmeticHits,
     labels: ((p.labels_tags as string[]) ?? []).filter((l) => l.startsWith('en:')).map((l) => l.replace('en:', '')),
-    source: 'open-food-facts',
+    source: sourceTag,
+    kind,
   }
 
   // Log to DB for signed-in users so the scan persists across devices.

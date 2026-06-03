@@ -58,7 +58,7 @@ export const sugarArticle: IngredientArticle = {
       answer: 'Most brands answer this directly on their website or via customer service. Vegan certification logos (Vegan Society, V-Label, Certified Vegan) confirm bone-char-free. Organic certification also rules it out.',
     },
   ],
-  relatedTools: ['ingredient-scanner', 'substitutes'],
+  relatedTools: ['ingredient-scanner', 'substitutes', 'baking'],
   relatedTopics: ['wine', 'honey'],
   sources: [
     { title: 'PETA: Is sugar vegan?', url: 'https://www.peta.org/living/food/sugar-vegan/' },

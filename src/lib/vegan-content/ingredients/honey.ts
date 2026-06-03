@@ -61,7 +61,7 @@ export const honeyArticle: IngredientArticle = {
       answer: 'Yes. Several brands make plant-based honey alternatives from apples (Bee Free Honee), cane sugar with floral flavouring (MeliBio), or other plant sources. They look and pour like honey and work in tea or baking, though they\'re pricier than maple or agave.',
     },
   ],
-  relatedTools: ['ingredient-scanner', 'substitutes'],
+  relatedTools: ['baking', 'substitutes', 'ingredient-scanner'],
   relatedTopics: ['sugar', 'wine'],
   sources: [
     { title: 'The Vegan Society: definition and FAQ on honey', url: 'https://www.vegansociety.com/go-vegan/definition-veganism' },

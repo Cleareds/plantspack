@@ -75,7 +75,7 @@ export const eggsArticle: IngredientArticle = {
       answer: 'Close. It is a mung bean protein liquid that you pour into a hot pan and scramble or fold. The texture and feel are very similar to real scrambled egg or omelette; the flavour is mild and works well with the usual seasonings (salt, pepper, kala namak for a more eggy aroma). It is not a 1:1 baking replacement - for that use aquafaba or a flax egg.',
     },
   ],
-  relatedTools: ['ingredient-scanner', 'barcode', 'substitutes'],
+  relatedTools: ['baking', 'substitutes', 'ingredient-scanner', 'barcode'],
   relatedTopics: ['honey'],
   sources: [
     { title: 'The Vegan Society: definition of veganism', url: 'https://www.vegansociety.com/go-vegan/definition-veganism' },

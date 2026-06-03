@@ -9,6 +9,7 @@ import HomeClient from '@/components/home/HomeClient'
 import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
+import { Barcode, UtensilsCrossed, ChefHat } from 'lucide-react'
 
 export interface FollowedCity {
   city: string
@@ -381,6 +382,79 @@ export default async function Home() {
           </section>
         )
       })()}
+
+      {/* Tools strip — three highest-utility tools as a pinned row. Homepage
+          is the most-trafficked entry point; surfacing tools here is the
+          highest-leverage place to convert "I came to find a place" visitors
+          into tool users (and supporters, eventually). Pure server-rendered
+          links so Googlebot sees them in initial HTML. */}
+      <section className="max-w-6xl mx-auto px-4 md:px-8 py-10 border-t border-outline-variant/10">
+        <div className="flex items-baseline justify-between mb-4 gap-3 flex-wrap">
+          <h2 className="text-xl font-semibold text-on-surface">Free vegan tools</h2>
+          <Link href="/tools" prefetch={false} className="text-sm text-primary hover:underline">
+            All tools →
+          </Link>
+        </div>
+        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <li>
+            <Link
+              href="/tools/barcode"
+              prefetch={false}
+              className="block h-full p-5 rounded-2xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <Barcode className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-on-surface mb-1">Barcode scanner</p>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                    Point your camera at any product. We check Open Food Facts and flag what&apos;s not vegan. Free, unlimited.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/tools/menu-scanner"
+              prefetch={false}
+              className="block h-full p-5 rounded-2xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <UtensilsCrossed className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-on-surface mb-1">Menu scanner</p>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                    Photo of a restaurant menu in any language. We highlight what&apos;s vegan and suggest swaps for the rest.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/tools/baking"
+              prefetch={false}
+              className="block h-full p-5 rounded-2xl ghost-border bg-surface-container-lowest hover:border-primary/30 transition"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <ChefHat className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-on-surface mb-1">Baking calculator</p>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                    Type how much egg, butter, or milk your recipe needs - get exact plant replacement amounts.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </li>
+        </ul>
+      </section>
 
       {/* Featured Places — SSR plain-HTML links, visible to Googlebot without JS.
           Purpose is purely to shorten the click-depth from home → place pages

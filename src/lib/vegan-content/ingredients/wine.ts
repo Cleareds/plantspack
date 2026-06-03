@@ -60,7 +60,7 @@ export const wineArticle: IngredientArticle = {
       answer: 'Most major champagne houses use isinglass or fining agents that are not vegan. Some smaller producers (and a growing list of major ones) have moved to bentonite. Same rule as still wine: check the producer.',
     },
   ],
-  relatedTools: ['ingredient-scanner'],
+  relatedTools: ['drinks', 'ingredient-scanner', 'barcode'],
   relatedTopics: ['sugar', 'honey'],
   sources: [
     { title: 'Barnivore: vegan wine database', url: 'https://www.barnivore.com/wine' },

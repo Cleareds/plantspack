@@ -65,7 +65,7 @@ export const proteinArticle: IngredientArticle = {
       answer: 'Around 25-30g per meal is the rough target for maximising muscle protein synthesis if you are training. A tofu bowl with 150g tofu and a cup of edamame hits this easily. So does a lentil-and-quinoa salad. You do not need a shake unless you want one.',
     },
   ],
-  relatedTools: ['ingredient-scanner', 'calculator', 'substitutes'],
+  relatedTools: ['substitutes', 'baking', 'ingredient-scanner', 'calculator'],
   relatedTopics: ['vitamins', 'sugar'],
   sources: [
     { title: 'Academy of Nutrition and Dietetics: Position on Vegetarian Diets (2016)', url: 'https://pubmed.ncbi.nlm.nih.gov/27886704/' },

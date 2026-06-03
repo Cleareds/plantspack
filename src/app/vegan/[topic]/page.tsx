@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle2, AlertCircle, HelpCircle, ExternalLink } from '
 import { INGREDIENT_ARTICLES, getIngredientArticle } from '@/lib/vegan-content'
 import type { Verdict } from '@/lib/vegan-content/types'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import ECodeSearch from './_components/ECodeSearch'
 
 export const revalidate = 86400
 
@@ -39,7 +40,9 @@ const TOOL_LABELS: Record<string, { label: string; href: string }> = {
   'substitutes': { label: 'Substitute finder', href: '/tools/substitutes' },
   'cards': { label: 'Printable cards', href: '/tools/cards' },
   'calculator': { label: 'Impact calculator', href: '/tools/calculator' },
-  'drinks': { label: 'Drinks lookup (coming soon)', href: '/tools' },
+  'drinks': { label: 'Vegan drinks lookup', href: '/tools/drinks' },
+  'cosmetics': { label: 'Cosmetics barcode scanner', href: '/tools/barcode?mode=cosmetics' },
+  'baking': { label: 'Baking substitute calculator', href: '/tools/baking' },
 }
 
 const VERDICT_THEME: Record<Verdict, { Icon: typeof CheckCircle2; bg: string; text: string; label: string }> = {
@@ -123,6 +126,8 @@ export default async function IngredientArticlePage({ params }: Props) {
             <p key={i} className="text-on-surface leading-relaxed mb-4">{p}</p>
           ))}
         </div>
+
+        {article.slug === 'e-codes' && <ECodeSearch />}
 
         {article.whatToLookFor && (
           <div className="grid md:grid-cols-2 gap-4 mb-10">
