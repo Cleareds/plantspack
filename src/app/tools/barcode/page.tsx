@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import BarcodeClient from './BarcodeClient'
 
@@ -28,7 +29,9 @@ export default function BarcodeToolPage() {
           Point your phone camera at a product barcode. We check Open Food Facts (3M+ products) and tell you if it&apos;s vegan.
         </p>
 
-        <BarcodeClient />
+        <Suspense fallback={<div className="rounded-2xl ghost-border bg-surface-container-lowest p-8 text-center text-on-surface-variant">Loading scanner...</div>}>
+          <BarcodeClient />
+        </Suspense>
 
         <div className="mt-8 text-sm text-on-surface-variant leading-relaxed">
           <p className="mb-2">
