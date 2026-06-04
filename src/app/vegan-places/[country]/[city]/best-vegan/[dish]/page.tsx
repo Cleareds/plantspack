@@ -35,6 +35,28 @@ async function load({ country, city, dish }: RouteParams): Promise<DishPageData 
   return result
 }
 
+/**
+ * Build the heading phrase used in titles/descriptions.
+ * "Indian food" → "Indian Restaurants" (restaurant-context)
+ * "Pizza"       → "Pizza" (dish-context, used as "Vegan Pizza ...")
+ *
+ * The old template ("Best Vegan Indian food in Bellevue - 3 spots") was
+ * grammatically awkward AND signalled thin content via "- 3 spots". We
+ * hide the count from the title when it's small, mention place names
+ * directly in the description, and never lead with "0 are 100% vegan"
+ * (which was killing CTR on every page where fullyVeganCount was 0).
+ */
+function buildHeadingPhrase(dishLabel: string): { phrase: string; phraseLc: string } {
+  const isFoodLabel = / food$/i.test(dishLabel)
+  if (isFoodLabel) {
+    const cuisine = dishLabel.replace(/ food$/i, '')
+    const phrase = `Vegan ${cuisine} Restaurants`
+    return { phrase, phraseLc: phrase.toLowerCase() }
+  }
+  const phrase = `Vegan ${dishLabel}`
+  return { phrase, phraseLc: phrase.toLowerCase() }
+}
+
 export async function generateMetadata({ params }: { params: Promise<RouteParams> }): Promise<Metadata> {
   const routeParams = await params
   // Defensive: any of these being undefined would crash toLowerCase calls
@@ -46,16 +68,47 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   if (!data || !data.dish?.label || !data.city || !data.country) {
     return { title: 'Page not found', robots: { index: false } }
   }
-  const dishLabel = data.dish.label
-  const dishLabelLc = dishLabel.toLowerCase()
-  const title = `Best Vegan ${dishLabel} in ${data.city} - ${data.total} spots | PlantsPack`
-  const description = `${data.total} vegan ${dishLabelLc} spots in ${data.city}, ${data.country}. ${data.fullyVeganCount} are 100% vegan. Verified across multiple sources.`
+  const { phrase, phraseLc } = buildHeadingPhrase(data.dish.label)
+  // Year tag for freshness signal. Stamped explicitly so it doesn't drift
+  // when this file is touched in 2027 - update this constant when we
+  // re-audit titles annually.
+  const YEAR = 2026
+
+  // Title shapes by count - hide the count when it's small (signals thin
+  // content); lead with the count when it's compelling.
+  let title: string
+  if (data.total >= 5) {
+    title = `${data.total} Best ${phrase} in ${data.city} (${YEAR}) | PlantsPack`
+  } else if (data.total >= 2) {
+    title = `${phrase} in ${data.city}, ${data.country} (${YEAR}) | PlantsPack`
+  } else {
+    title = `${phrase} in ${data.city} | PlantsPack`
+  }
+
+  // Description leads with actual place names when we have them, not with
+  // platform statistics. "Hand-verified" is the curation signal. We never
+  // mention "0 are 100% vegan" - that was the single biggest CTR killer.
+  const top3Names = data.places.slice(0, 3).map(p => p.name).filter(Boolean)
+  const namesStr = top3Names.length > 0 ? top3Names.join(', ') : ''
+  const moreCount = Math.max(0, data.total - top3Names.length)
+  const moreStr = moreCount > 0 ? `, and ${moreCount} more` : ''
+  const description = namesStr
+    ? `Hand-verified ${phraseLc} in ${data.city}, ${data.country}: ${namesStr}${moreStr}. Cross-referenced against menus and community reviews. Updated ${YEAR}.`
+    : `Hand-verified ${phraseLc} in ${data.city}, ${data.country}. Cross-referenced against menus and community reviews. Updated ${YEAR}.`
+
   const heroImg = data.places.find(pl => pl.main_image_url)?.main_image_url
   const canonical = `https://www.plantspack.com${dishPageHref(routeParams.country, routeParams.city, data.dish.slug)}`
+
+  // Noindex pages with <2 actual places. A 1-place page isn't a useful
+  // list - it's just a redundant view of the place page. Indexing it
+  // dilutes Google's signal that the (city, dish) pattern is useful.
+  const shouldNoindex = data.total < 2
+
   return {
     title,
     description,
     alternates: { canonical },
+    robots: shouldNoindex ? { index: false, follow: true } : undefined,
     openGraph: {
       title,
       description,
@@ -134,15 +187,32 @@ export default async function DishPage({ params, searchParams }: { params: Promi
           <span className="font-medium">Best Vegan {dish.label}</span>
         </nav>
 
-        {/* H1 + subline */}
-        <h1 className="font-headline font-extrabold text-3xl md:text-4xl tracking-tight mb-2">
-          Best Vegan {dish.label} in {city}
-        </h1>
-        <p className="text-on-surface-variant text-base mb-4 leading-relaxed">
-          {total} spots serving vegan {dish.label.toLowerCase()} in {city}, {country}.{' '}
-          <span className="font-semibold text-emerald-700">{fullyVeganCount} are 100% vegan</span>{fullyVeganCount > 0 && filtered.length > 0 ? '.' : '. '}
-          Cross-referenced across HappyCow, venue websites, and OSM tags.
-        </p>
+        {/* H1 + subline. Phrasing matches the metadata template so SERP
+            snippet and page heading don't disagree. "0 are 100% vegan"
+            anti-selling removed - fully-vegan count is only highlighted
+            when > 0. */}
+        {(() => {
+          const isFood = / food$/i.test(dish.label)
+          const cuisine = dish.label.replace(/ food$/i, '')
+          const phrase = isFood ? `Vegan ${cuisine} Restaurants` : `Vegan ${dish.label}`
+          const phraseLc = phrase.toLowerCase()
+          return (
+            <>
+              <h1 className="font-headline font-extrabold text-3xl md:text-4xl tracking-tight mb-2">
+                {total >= 5 ? `${total} Best ` : ''}{phrase} in {city}
+              </h1>
+              <p className="text-on-surface-variant text-base mb-4 leading-relaxed">
+                Hand-verified {phraseLc} in {city}, {country}.{' '}
+                {fullyVeganCount > 0 && (
+                  <span className="font-semibold text-emerald-700">
+                    {fullyVeganCount} fully vegan.{' '}
+                  </span>
+                )}
+                Cross-referenced across HappyCow, venue websites, and OSM tags.
+              </p>
+            </>
+          )
+        })()}
 
         {/* Photo strip - max 3 places that have images */}
         {top3WithPhotos.length > 0 && (
