@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
               Didn&apos;t receive the email? Check your spam folder or try again in a few minutes.
             </p>
             <Link
-              href="/auth"
+              href="/auth?mode=signin"
               className="inline-flex items-center space-x-2 text-primary hover:text-primary font-medium"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -116,7 +116,7 @@ export default function ResetPasswordPage() {
 
           <div className="mt-6 text-center">
             <Link
-              href="/auth"
+              href="/auth?mode=signin"
               className="inline-flex items-center space-x-2 text-sm text-primary hover:text-primary font-medium"
             >
               <ArrowLeft className="h-4 w-4" />

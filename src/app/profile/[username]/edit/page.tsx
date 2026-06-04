@@ -61,7 +61,7 @@ export default function ProfileEditPage() {
     }
 
     if (!user) {
-      router.push('/auth')
+      router.push('/auth?mode=signin')
       return
     }
 

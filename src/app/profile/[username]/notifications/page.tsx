@@ -20,7 +20,7 @@ export default function NotificationPreferencesPage() {
 
   useEffect(() => {
     if (authReady && !user) {
-      router.push('/auth')
+      router.push('/auth?mode=signin')
     }
 
     // Check if viewing own profile

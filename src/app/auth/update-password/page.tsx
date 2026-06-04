@@ -190,7 +190,7 @@ export default function UpdatePasswordPage() {
 
           <div className="mt-6 text-center">
             <Link
-              href="/auth"
+              href="/auth?mode=signin"
               className="text-sm text-primary hover:text-primary font-medium"
             >
               Back to Login

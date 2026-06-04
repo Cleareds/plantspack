@@ -11,7 +11,7 @@ function AuthContent() {
   const mode = searchParams.get('mode')
   const errorParam = searchParams.get('error')
   const successParam = searchParams.get('success')
-  const [isLogin, setIsLogin] = useState(mode !== 'signup')
+  const [isLogin, setIsLogin] = useState(mode === 'signin')
   const [isRedirecting, setIsRedirecting] = useState(false)
   const [globalError, setGlobalError] = useState<string | null>(null)
   const [globalSuccess, setGlobalSuccess] = useState<string | null>(null)
@@ -38,7 +38,7 @@ function AuthContent() {
 
   // Update form mode when URL parameter changes
   useEffect(() => {
-    setIsLogin(mode !== 'signup')
+    setIsLogin(mode === 'signin')
   }, [mode])
 
   // Don't show anything while redirecting
@@ -57,6 +57,15 @@ function AuthContent() {
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
       <div className="w-full max-w-md">
+        <div className="text-center mb-6">
+          <div className="text-2xl font-bold text-on-surface mb-1">🌱 PlantsPack</div>
+          <p className="text-sm text-on-surface-variant">Find 54,000+ vegan places across 154 countries</p>
+          <div className="flex items-center justify-center gap-3 mt-3">
+            <span className="text-xs text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">Save places</span>
+            <span className="text-xs text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">Plan trips</span>
+            <span className="text-xs text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">Follow cities</span>
+          </div>
+        </div>
         {globalError && (
           <div className="mb-4 p-4 bg-error/5 border border-error/15 rounded-lg">
             <p className="text-sm text-error">{globalError}</p>

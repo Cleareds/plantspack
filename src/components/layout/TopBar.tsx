@@ -70,7 +70,7 @@ export default function TopBar() {
           {user && <div className="hidden sm:block"><NotificationBell /></div>}
           {!user && (
             <Link
-              href="/auth"
+              href="/auth?mode=signin"
               data-event="cta_click_signup"
               data-cta="sign_in"
               data-from="topbar"

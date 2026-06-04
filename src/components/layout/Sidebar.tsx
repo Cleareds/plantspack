@@ -72,7 +72,7 @@ export default function Sidebar() {
       <div className="mt-auto space-y-4">
         {!user && (
           <Link
-            href="/auth"
+            href="/auth?mode=signin"
             data-event="cta_click_signup"
             data-cta="sign_in"
             data-from="sidebar"

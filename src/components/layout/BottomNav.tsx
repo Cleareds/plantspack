@@ -57,7 +57,7 @@ export default function BottomNav() {
         </Link>
       ) : (
         <Link
-          href="/auth"
+          href="/auth?mode=signin"
           prefetch={false}
           data-event="cta_click_signup"
           data-cta="sign_in"
