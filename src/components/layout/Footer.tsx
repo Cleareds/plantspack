@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Heart, Mail, HelpCircle } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import Image from "next/image";
 
 export default function Footer() {
@@ -96,9 +96,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources Column */}
+          {/* Explore Column */}
           <div>
-            <h3 className="font-semibold text-on-surface mb-4">Resources</h3>
+            <h3 className="font-semibold text-on-surface mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
                 <Link
@@ -106,6 +106,22 @@ export default function Footer() {
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
                   Vegan Tools
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/city-ranks"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  City Rankings
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/recipes"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Recipes
                 </Link>
               </li>
               <li>
@@ -137,7 +153,7 @@ export default function Footer() {
                   href="/compare/happycow"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
-                  Compare: vs HappyCow
+                  vs HappyCow
                 </Link>
               </li>
               <li>
@@ -147,32 +163,6 @@ export default function Footer() {
                 >
                   Summer Destinations 2026
                 </Link>
-              </li>
-              <li>
-                <Link
-                  href="/support"
-                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1"
-                >
-                  <HelpCircle className="h-3 w-3" />
-                  <span>Help Center</span>
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="mailto:hello@plantspack.com"
-                  className="text-sm text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-1"
-                >
-                  <Mail className="h-3 w-3" />
-                  <span>Email Support</span>
-                </a>
               </li>
             </ul>
           </div>
