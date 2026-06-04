@@ -33,9 +33,30 @@ export interface FollowedCity {
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'PlantsPack — Vegan Places & City Rankings Worldwide',
-  description: '50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries. Compare cities by vegan-friendliness with community reviews and ratings. Free, ad-free.',
+  title: 'PlantsPack: Free Vegan Tools, Places & Travel Guides',
+  description: 'Free vegan barcode scanner, baking calculator, menu translator and drinks lookup, plus 50,000+ verified plant-based places in 160+ countries. Ad-free, no tracking, community-built.',
   alternates: { canonical: 'https://www.plantspack.com' },
+  openGraph: {
+    title: 'PlantsPack: Free Vegan Tools, Places & Travel Guides',
+    description: 'Free vegan barcode scanner, baking calculator, menu translator, and 50,000+ verified plant-based places worldwide. Ad-free, no tracking.',
+    type: 'website',
+    siteName: 'PlantsPack',
+    url: 'https://www.plantspack.com',
+    images: [
+      {
+        url: 'https://www.plantspack.com/og-default.png',
+        width: 1200,
+        height: 630,
+        alt: 'PlantsPack: free vegan tools and verified plant-based places worldwide',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PlantsPack: Free Vegan Tools & Verified Plant-Based Places',
+    description: 'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 50,000+ verified places in 160+ countries. Ad-free.',
+    images: ['https://www.plantspack.com/og-default.png'],
+  },
 }
 
 // Top cities are also returned by /api/home (which we always call now), so

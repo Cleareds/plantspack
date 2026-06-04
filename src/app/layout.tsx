@@ -36,11 +36,13 @@ export const viewport: Viewport = {
 
 // Single source of truth for the homepage tagline. Used in title, meta
 // description, OG, and the Organization JSON-LD so they cannot drift apart.
-// Numbers reflect actual DB counts as of 2026-05 (~52K places, ~10K cities,
-// ~163 countries) rounded down per the honesty-first copy rule.
-const SITE_TITLE = 'PlantsPack — Vegan Places & City Rankings Worldwide';
+// Numbers reflect actual DB counts as of 2026-06 (~52K places, ~1,400 cities
+// with 5+ places, ~160 countries) per the honesty-first copy rule. We say
+// "1,400+ active cities" rather than "10,000+ cities" because most of those
+// 10K "cities" have only 1-2 places each - not a directory people can use.
+const SITE_TITLE = 'PlantsPack: Free Vegan Tools, Places & Travel Guides';
 const SITE_DESCRIPTION =
-  '50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries. Compare cities by vegan-friendliness with community reviews and ratings. Free, ad-free.';
+  'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 50,000+ verified plant-based places across 1,400+ cities in 160+ countries. Ad-free, no tracking, community-built.';
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
@@ -171,8 +173,8 @@ export default function RootLayout({
                   url: 'https://www.plantspack.com',
                   logo: 'https://www.plantspack.com/plantspack-logo-real.svg',
                   description:
-                    'Community-funded vegan platform mapping 50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries. Free, ad-free.',
-                  slogan: 'Vegan places and city rankings, free and ad-free.',
+                    'Community-funded vegan platform with free barcode scanner, baking calculator, menu translator, drinks lookup, plus 50,000+ verified plant-based places across 1,400+ cities in 160+ countries. Ad-free.',
+                  slogan: 'Free vegan tools and verified plant-based places, ad-free.',
                   sameAs: [
                     'https://x.com/plantspackX',
                     'https://www.instagram.com/plants.pack/',

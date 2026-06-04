@@ -85,6 +85,29 @@ export default function VeganHubPage() {
             subtitle: g.vegFriendlinessNote,
           }))} />
         )}
+
+        <Section icon={Leaf} title="Reference" items={[
+          {
+            href: '/glossary',
+            title: 'Vegan glossary',
+            subtitle: 'Plain-language definitions of vegan ingredients, certifications, fining agents, and additive families.',
+          },
+          {
+            href: '/methodology',
+            title: 'How we classify places',
+            subtitle: 'The four vegan-level tiers we use and how we verify each entry.',
+          },
+          {
+            href: '/research/vegan-places-2026',
+            title: 'Vegan places worldwide: 2026 data report',
+            subtitle: 'Original analysis of 52,870 verified places - top countries, fully-vegan share by region, city density.',
+          },
+          {
+            href: '/compare/happycow',
+            title: 'PlantsPack vs HappyCow - honest comparison',
+            subtitle: 'Where they win, where we win, where we are catching up. We use both.',
+          },
+        ]} />
       </div>
     </div>
   )
