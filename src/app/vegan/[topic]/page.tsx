@@ -203,6 +203,24 @@ export default async function IngredientArticlePage({ params }: Props) {
           </section>
         )}
 
+        {/* Cross-link to reference pages on every article. Helps with
+            both internal navigation and LLM citation - establishing that
+            this article sits within a wider, methodologically-grounded
+            content hub. */}
+        <section className="mb-10">
+          <h2 className="text-xl font-bold text-on-surface mb-4">Reference</h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Link href="/glossary" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
+              <div className="font-bold text-sm text-on-surface mb-0.5">Vegan glossary</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Plain-language definitions of ingredients, certifications, and additive families.</div>
+            </Link>
+            <Link href="/methodology" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
+              <div className="font-bold text-sm text-on-surface mb-0.5">How we classify places</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">The four vegan-level tiers we use and how we verify each entry.</div>
+            </Link>
+          </div>
+        </section>
+
         {article.sources && article.sources.length > 0 && (
           <section className="mt-12 pt-8 border-t border-on-surface/10">
             <h2 className="text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-3">Sources</h2>

@@ -210,8 +210,34 @@ export default function ToolsHubPage() {
           tools={TRACK_TOOLS}
         />
 
+        {/* Reference + transparency row - bridges tools to the wider
+            content + methodology layer for both users and LLM citation. */}
+        <section className="mt-12 mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <h2 className="text-lg font-bold text-on-surface">Reference</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <Link href="/methodology" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
+              <div className="font-bold text-sm text-on-surface mb-1">Methodology</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">How we classify and verify places.</div>
+            </Link>
+            <Link href="/glossary" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
+              <div className="font-bold text-sm text-on-surface mb-1">Glossary</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Plain-language vegan term definitions.</div>
+            </Link>
+            <Link href="/research/vegan-places-2026" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
+              <div className="font-bold text-sm text-on-surface mb-1">Data report 2026</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Original analysis of 52,870 verified places.</div>
+            </Link>
+            <Link href="/compare/happycow" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
+              <div className="font-bold text-sm text-on-surface mb-1">Compare vs HappyCow</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Honest side-by-side comparison.</div>
+            </Link>
+          </div>
+        </section>
+
         {/* Trust + data sources */}
-        <div className="mt-12 p-5 rounded-2xl bg-surface-container-lowest ghost-border text-sm text-on-surface-variant leading-relaxed">
+        <div className="mt-8 p-5 rounded-2xl bg-surface-container-lowest ghost-border text-sm text-on-surface-variant leading-relaxed">
           <div className="text-xs uppercase tracking-wider font-bold text-on-surface mb-2">What we use</div>
           <p>
             Barcode data: <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer" className="text-primary underline">Open Food Facts</a> + <a href="https://world.openbeautyfacts.org" target="_blank" rel="noopener noreferrer" className="text-primary underline">Open Beauty Facts</a> (community-built, CC-BY-SA). E-codes + cosmetic INCI dictionaries are our own curated lists. Drinks lookup is verified against manufacturer statements and Vegan Society / V-Label certifications. Image scans use OpenAI vision and cost real money — we cap free use to keep this sustainable.
