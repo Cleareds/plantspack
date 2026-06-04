@@ -160,7 +160,6 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         setSuccess('Account created! Please check your email to verify your address before signing in.')
         setEmail('')
         setPassword('')
-        setConfirmPassword('')
         setUsername('')
         setFirstName('')
         setLastName('')
