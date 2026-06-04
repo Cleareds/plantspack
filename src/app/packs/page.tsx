@@ -13,6 +13,7 @@ export default function PacksPage() {
   const { user } = useAuth()
   const [packs, setPacks] = useState<PackWithStats[]>([])
   const [myPacks, setMyPacks] = useState<PackWithStats[]>([])
+  const [memberPacks, setMemberPacks] = useState<PackWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [myPacksLoading, setMyPacksLoading] = useState(true)
   const [hasMore, setHasMore] = useState(false)
@@ -65,20 +66,21 @@ export default function PacksPage() {
   const fetchMyPacks = async () => {
     if (!user) {
       setMyPacks([])
+      setMemberPacks([])
       setMyPacksLoading(false)
       return
     }
     try {
       setMyPacksLoading(true)
-      // credentials: 'include' is required for the API to see the auth
-      // cookie and return unpublished rows (trips) alongside published packs.
-      const response = await fetch(`/api/packs?creator_id=${user.id}&limit=50`, {
-        credentials: 'include',
-      })
-      const data = await response.json()
-      if (response.ok) {
-        setMyPacks(data.packs)
-      }
+      const [creatorRes, memberRes] = await Promise.all([
+        // credentials: 'include' is required for the API to see the auth
+        // cookie and return unpublished rows (trips) alongside published packs.
+        fetch(`/api/packs?creator_id=${user.id}&limit=50`, { credentials: 'include' }),
+        fetch(`/api/packs?member_id=${user.id}&limit=50`, { credentials: 'include' }),
+      ])
+      const [creatorData, memberData] = await Promise.all([creatorRes.json(), memberRes.json()])
+      if (creatorRes.ok) setMyPacks(creatorData.packs)
+      if (memberRes.ok) setMemberPacks(memberData.packs)
     } catch (error) {
       console.error('Error fetching my packs:', error)
     } finally {
@@ -93,7 +95,12 @@ export default function PacksPage() {
   const isTrip = (pack: PackWithStats) =>
     Array.isArray(pack.categories) && pack.categories.some(c => c === 'Trip' as any)
   const myTrips = myPacks.filter(isTrip)
-  const myOwnPacks = myPacks.filter(p => !isTrip(p))
+  // Merge created packs + member packs (deduped by id), trips excluded
+  const createdPackIds = new Set(myPacks.filter(p => !isTrip(p)).map(p => p.id))
+  const myOwnPacks = [
+    ...myPacks.filter(p => !isTrip(p)),
+    ...memberPacks.filter(p => !createdPackIds.has(p.id)),
+  ]
 
   useEffect(() => {
     fetchPacks()

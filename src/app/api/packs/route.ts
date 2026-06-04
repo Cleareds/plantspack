@@ -18,9 +18,42 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
+    const memberId = searchParams.get('member_id')
+
     // Get current user for membership/follow info
     const { data: { session } } = await supabase.auth.getSession()
     const userId = session?.user?.id
+
+    // member_id mode: return packs the user is a member of but didn't create.
+    // Used by the page to populate "My Packs" alongside creator packs.
+    if (memberId && userId && memberId === userId) {
+      const { data: memberRows } = await supabase
+        .from('pack_members')
+        .select('pack_id')
+        .eq('user_id', memberId)
+
+      const memberPackIds = (memberRows || []).map((r: any) => r.pack_id)
+
+      if (memberPackIds.length === 0) {
+        return NextResponse.json({ packs: [], total: 0, hasMore: false })
+      }
+
+      const { data: packs } = await supabase
+        .from('packs')
+        .select(`
+          id, creator_id, title, slug, description, banner_url, category,
+          categories, is_published, is_verified, view_count, created_at, updated_at,
+          users:creator_id ( id, username, first_name, last_name, avatar_url, subscription_tier )
+        `)
+        .in('id', memberPackIds)
+        .neq('creator_id', memberId)
+        .eq('is_published', true)
+        .not('categories', 'cs', '{Trip}')
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+      return NextResponse.json({ packs: packs || [], total: (packs || []).length, hasMore: false })
+    }
 
     // Build query
     let query = supabase
