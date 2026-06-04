@@ -118,6 +118,30 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/glossary"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Glossary
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/research/vegan-places-2026"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Data Report 2026
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/compare/happycow"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Compare: vs HappyCow
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/vegan-summer-destinations"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >

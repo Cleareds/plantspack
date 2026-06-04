@@ -60,9 +60,9 @@ const ROWS: Row[] = [
     happycow: { status: 'yes', note: 'Native iOS + Android apps with millions of downloads' },
   },
   {
-    feature: 'Ads',
-    plantspack: { status: 'no', note: 'Zero ads, ever. Supporter-funded' },
-    happycow: { status: 'no', note: 'Display ads on free version; premium tier removes them' },
+    feature: 'Ad-free experience',
+    plantspack: { status: 'yes', note: 'Zero ads, ever. Supporter-funded' },
+    happycow: { status: 'no', note: 'Display ads on the free version; premium tier removes them' },
   },
   {
     feature: 'Free to use',
