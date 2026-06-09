@@ -118,13 +118,21 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return []
 
-    const { data: followed } = await supabase
+    const { data: followedRaw } = await supabase
       .from('user_followed_cities')
       .select('city, country, last_seen_score')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
-    if (!followed || followed.length === 0) return []
+    if (!followedRaw || followedRaw.length === 0) return []
+
+    // Canonicalize local-language names (Gent → Ghent, Wien → Vienna, …)
+    // before the score join, otherwise a follow stored as "Gent" misses
+    // the "Ghent" city_scores row and the card reads "F / 0 places / -54".
+    const followed = followedRaw.map((f: any) => ({
+      ...f,
+      city: canonicalCityName(f.city),
+    }))
 
     const admin = createAdminClient()
     const { data: scores } = await admin
