@@ -7,8 +7,10 @@ node_modules/
 .expo/
 dist/
 web-build/
+expo-env.d.ts
 
 # Native
+.kotlin/
 *.orig.*
 *.jks
 *.p8
@@ -34,5 +36,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# testing
-coverage/
+# generated native folders — ios/ committed so EAS uses our Package.resolved (SPM lock)
+/ios/Pods
+/ios/build
+/android
+.env

@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -75,34 +76,76 @@ type PlaceData = {
   owner: PlaceOwnerPublic | null
 }
 
-async function getPlace(id: string): Promise<PlaceData | null> {
+// Direct Supabase query instead of self-fetching /api/places/<id> +
+// /api/places/<id>/owner. The internal HTTP round-trips multiplied edge-
+// function invocations 5x per place page render (page + 2 middleware + 2
+// API lambdas) and tripped Vercel's free-tier limits. React's cache()
+// dedupes the call between generateMetadata and the page body.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+const getPlace = cache(async (id: string): Promise<PlaceData | null> => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const [placeResponse, ownerResponse] = await Promise.all([
-      fetch(`${baseUrl}/api/places/${id}`, {
-        cache: 'no-store'
-      }),
-      fetch(`${baseUrl}/api/places/${id}/owner`, {
-        cache: 'no-store'
-      })
+    const supabase = createAdminClient()
+    const column = UUID_RE.test(id) ? 'id' : 'slug'
+
+    const { data: place, error } = await supabase
+      .from('places')
+      .select(`
+        *,
+        users:created_by (
+          id,
+          username,
+          first_name,
+          last_name,
+          avatar_url
+        ),
+        favorite_places (
+          id,
+          user_id
+        )
+      `)
+      .eq(column, id)
+      .is('archived_at', null)
+      .single()
+
+    if (error || !place) return null
+
+    const placeId = place.id
+
+    const [{ data: avgRating }, { data: distribution }, { count: reviewCount }, { data: ownerRow }] = await Promise.all([
+      supabase.rpc('get_place_average_rating', { p_place_id: placeId }),
+      supabase.rpc('get_place_rating_distribution', { p_place_id: placeId }),
+      supabase
+        .from('place_reviews')
+        .select('*', { count: 'exact', head: true })
+        .eq('place_id', placeId)
+        .is('deleted_at', null),
+      supabase.rpc('get_place_owner', { p_place_id: placeId }).maybeSingle(),
     ])
 
-    if (!placeResponse.ok) {
-      return null
-    }
-
-    const placeData = await placeResponse.json()
-    const ownerData = ownerResponse.ok ? await ownerResponse.json() : { owner: null }
+    const owner = ownerRow
+      ? {
+          user_id: (ownerRow as any).user_id,
+          username: (ownerRow as any).username,
+          first_name: (ownerRow as any).first_name,
+          last_name: (ownerRow as any).last_name,
+          avatar_url: (ownerRow as any).avatar_url,
+          verified_at: (ownerRow as any).verified_at,
+        }
+      : null
 
     return {
-      ...placeData.place,
-      owner: ownerData.owner
-    }
+      ...(place as any),
+      average_rating: avgRating || 0,
+      review_count: reviewCount || 0,
+      rating_distribution: distribution || { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0, total: 0 },
+      owner,
+    } as PlaceData
   } catch (error) {
     console.error('Error fetching place:', error)
     return null
   }
-}
+})
 
 const REVIEWS_PER_PAGE = 20
 
