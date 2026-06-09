@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { canonicalCityName } from '@/lib/places/city-aliases'
 
 /**
  * Home-page location-aware payload.
@@ -23,7 +24,11 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const lat = parseFloat(searchParams.get('lat') || '0')
   const lng = parseFloat(searchParams.get('lng') || '0')
-  const city = searchParams.get('city') || ''
+  // Map local-language city names (Gent → Ghent, Wien → Vienna, etc.) to
+  // the canonical English spelling stored in places.city. Without this,
+  // a user with a "Gent" pin sees a homepage card reading "0 places" even
+  // though Ghent has 91. See src/lib/places/city-aliases.ts.
+  const city = canonicalCityName(searchParams.get('city') || '')
   const country = searchParams.get('country') || ''
   // Cookieless calls (no location params) are identical for every guest,
   // so the CDN can dedupe them. Personalised calls vary per user and

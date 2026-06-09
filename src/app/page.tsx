@@ -9,6 +9,7 @@ import HomeClient from '@/components/home/HomeClient'
 import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
+import { canonicalCityName } from '@/lib/places/city-aliases'
 import { Barcode, UtensilsCrossed, ChefHat } from 'lucide-react'
 
 export interface FollowedCity {
@@ -259,11 +260,14 @@ async function getInitialLocationData(isSignedIn: boolean) {
     let geoCountry: string | undefined
 
     if (isSignedIn) {
-      pinnedCity = c.get('pp_pinned_city')?.value
+      // Canonicalize local-language names (Gent → Ghent, Wien → Vienna, …)
+      // so the score lookup, place count, and rendered card label all use
+      // the same English form we store in `places.city`.
+      pinnedCity = canonicalCityName(c.get('pp_pinned_city')?.value) || undefined
       pinnedCountry = c.get('pp_pinned_country')?.value
       const geoLat = c.get('pp_user_lat')?.value
       const geoLng = c.get('pp_user_lng')?.value
-      geoCity = c.get('pp_user_city')?.value
+      geoCity = canonicalCityName(c.get('pp_user_city')?.value) || undefined
       geoCountry = c.get('pp_user_country')?.value
       if (pinnedCity) {
         params.set('city', pinnedCity)
@@ -356,8 +360,9 @@ export default async function Home() {
   const sidebarActivity = activityItems.slice(0, 8)
 
   // Filter out the currently pinned city — it's already in the hero banner.
+  // Canonicalize so a "Gent" cookie still matches followed "Ghent" entries.
   const c = await cookies()
-  const pinnedCity = c.get('pp_pinned_city')?.value
+  const pinnedCity = canonicalCityName(c.get('pp_pinned_city')?.value)
   const pinnedCountry = c.get('pp_pinned_country')?.value
   const displayedFollowedCities = followedCities.filter(
     fc => !(fc.city === pinnedCity && fc.country === pinnedCountry),
