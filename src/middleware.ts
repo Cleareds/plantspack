@@ -98,7 +98,44 @@ export async function middleware(request: NextRequest) {
   // Skip the Supabase auth round-trip entirely for public read-only paths.
   // The bulk of traffic (guests, bots, RSC prefetches) hits these.
   if (isPublicReadOnly(pathname)) {
-    return NextResponse.next({ request: { headers: request.headers } })
+    const res = NextResponse.next({ request: { headers: request.headers } })
+
+    // 2026-06-11: Vercel edge-request anomaly traced to `/` returning
+    // x-vercel-cache: MISS for every visit. The homepage server component
+    // calls cookies() + supabase.auth.getUser() unconditionally, which
+    // makes Next mark the route dynamic and override the
+    // `public, max-age=10, swr=59` header we configured for it.
+    //
+    // Crawlers (Googlebot, GPTBot, ClaudeBot, Bing, etc.) hammer `/`,
+    // /vegan-places/*, /place/* — these have no per-user content for
+    // anonymous visitors, so it's safe to serve them from Vercel's CDN.
+    //
+    // `Vercel-CDN-Cache-Control` is Vercel-specific and is honoured even
+    // on dynamic routes (overrides Next's no-store). It only applies to
+    // the Vercel edge — browsers still see whatever Cache-Control the
+    // page sets, so signed-in users won't get stale renders cached in
+    // their own browser.
+    //
+    // Anonymous = no Supabase session cookie (sb-*-auth-token). Cookied
+    // requests still go through the dynamic path unchanged.
+    let hasAuthCookie = false
+    for (const c of request.cookies.getAll()) {
+      if (c.name.startsWith('sb-') && c.name.includes('auth-token')) {
+        hasAuthCookie = true
+        break
+      }
+    }
+    if (!hasAuthCookie) {
+      // 5 min fresh + 1 h stale-while-revalidate. Mutation paths
+      // (add-place, review, etc.) already call revalidatePath('/') /
+      // revalidatePath('/vegan-places/...') so fresh content still
+      // appears within seconds of an update for repeat visitors.
+      res.headers.set(
+        'Vercel-CDN-Cache-Control',
+        'public, s-maxage=300, stale-while-revalidate=3600',
+      )
+    }
+    return res
   }
 
   let response = NextResponse.next({
