@@ -22,7 +22,8 @@ import {
   PenLine,
   BarChart3,
   Star,
-  BookOpen
+  BookOpen,
+  Smartphone
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -83,6 +84,7 @@ export default function AdminLayout({
     { name: 'Events', href: '/admin/events', icon: Calendar },
     { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },
     { name: 'Staging', href: '/admin/staging', icon: Shield },
+    { name: 'Mobile Submissions', href: '/admin/submissions', icon: Smartphone },
     { name: 'Reports', href: '/admin/reports', icon: Flag },
     { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
     { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
