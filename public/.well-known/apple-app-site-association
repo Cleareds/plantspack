@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "29TC6H2FGG.com.plantspack.app",
+        "paths": ["/vegan/*"]
+      }
+    ]
+  }
+}
