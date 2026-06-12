@@ -30,6 +30,8 @@ interface PlaceMapProps {
   placeSlug?: string | null
 }
 
+const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || 'JfEx435iBIbX7SuVxRuJ'
+
 export default function PlaceMap({ latitude, longitude, name, address, category, veganLevel, placeId, placeSlug }: PlaceMapProps) {
   const [customIcon, setCustomIcon] = useState<Icon | null>(null)
   // Defer mounting the live MapContainer (and the MapTiler tile fetches it
@@ -72,7 +74,7 @@ export default function PlaceMap({ latitude, longitude, name, address, category,
         >
           <TileLayer
             attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=JfEx435iBIbX7SuVxRuJ"
+            url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=${MAPTILER_KEY}`}
             tileSize={256}
           />
           {customIcon && <Marker position={[latitude, longitude]} icon={customIcon} />}
@@ -89,7 +91,6 @@ export default function PlaceMap({ latitude, longitude, name, address, category,
         </div>
       )}
 
-      {/* Hover overlay (only meaningful once map is loaded) */}
       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center pointer-events-none z-10">
         <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-lowest px-4 py-2 rounded-lg shadow-ambient flex items-center gap-2">
           <MapPin className="h-4 w-4 text-primary" />

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { extractHashtags } from '@/lib/hashtags'
 
 export async function GET(
   request: NextRequest,
@@ -216,6 +217,45 @@ export async function PUT(
         .eq('id', existingPost.place_id)
       if (syncError) {
         console.error('[Post API] Image sync to place failed:', syncError)
+      }
+    }
+
+    // Re-sync hashtags when content changed. The original create path links
+    // hashtags via /api/posts/hashtags, but edits previously left the join
+    // table stale — a freshly-added #tag wouldn't show on /hashtag/<tag>.
+    if (typeof updateData.content === 'string') {
+      const admin = createAdminClient()
+      const tags = extractHashtags(updateData.content)
+      const normalized = tags.map(t => t.toLowerCase())
+
+      // Drop old links so removed hashtags don't linger
+      await admin.from('post_hashtags').delete().eq('post_id', id)
+
+      if (normalized.length > 0) {
+        const { data: existing } = await admin
+          .from('hashtags')
+          .select('id, normalized_tag')
+          .in('normalized_tag', normalized)
+
+        const existingMap = new Map((existing || []).map(h => [h.normalized_tag, h.id]))
+        const newTags = normalized.filter(t => !existingMap.has(t))
+
+        if (newTags.length > 0) {
+          const { data: created } = await admin
+            .from('hashtags')
+            .insert(newTags.map(tag => ({ tag, normalized_tag: tag, usage_count: 1 })))
+            .select('id, normalized_tag')
+          for (const h of created || []) existingMap.set(h.normalized_tag, h.id)
+        }
+
+        const linkRows = normalized
+          .map(t => existingMap.get(t))
+          .filter((v): v is string => !!v)
+          .map(hashtag_id => ({ post_id: id, hashtag_id }))
+
+        if (linkRows.length > 0) {
+          await admin.from('post_hashtags').insert(linkRows)
+        }
       }
     }
 
