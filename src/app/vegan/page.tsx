@@ -88,6 +88,11 @@ export default function VeganHubPage() {
 
         <Section icon={Leaf} title="Reference" items={[
           {
+            href: '/vegan/health-consensus',
+            title: 'What major health bodies say about vegan diets',
+            subtitle: 'Quoted positions from Academy of Nutrition and Dietetics, BDA, Kaiser, NHMRC, Harvard, WHO/IARC. Sources cited, no spin.',
+          },
+          {
             href: '/glossary',
             title: 'Vegan glossary',
             subtitle: 'Plain-language definitions of vegan ingredients, certifications, fining agents, and additive families.',
