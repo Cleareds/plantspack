@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Leaf, Wine, Plane, ArrowRight, Barcode, ChefHat, UtensilsCrossed, Sparkle } from 'lucide-react'
+import { Leaf, Wine, Plane, ArrowRight, Barcode, ChefHat, UtensilsCrossed, Sparkle, ShieldCheck } from 'lucide-react'
 import { INGREDIENT_ARTICLES, TRAVEL_GUIDES } from '@/lib/vegan-content'
 
 export const metadata: Metadata = {
@@ -52,6 +52,33 @@ export default function VeganHubPage() {
               <div className="text-xs text-on-surface-variant mt-0.5">For eating out abroad</div>
             </Link>
           </div>
+        </section>
+
+        {/* Featured: health consensus — the "is veganism actually healthy" answer
+            people Google before they read any ingredient article. Promoted here so
+            it isn't buried in Reference. */}
+        <section className="mb-12">
+          <Link
+            href="/vegan/health-consensus"
+            className="block p-5 md:p-6 rounded-2xl bg-primary/5 ghost-border border-primary/20 hover:border-primary/40 transition group"
+          >
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-primary uppercase tracking-wide mb-1">Featured</div>
+                <div className="font-bold text-on-surface text-lg group-hover:text-primary transition-colors mb-1">
+                  What major health bodies say about vegan diets
+                </div>
+                <div className="text-sm text-on-surface-variant leading-relaxed">
+                  Quoted positions from the Academy of Nutrition and Dietetics, BDA, Dietitians of Canada, Kaiser
+                  Permanente, NHMRC, Harvard, WHO/IARC and AICR. Every quote sourced and linked. No spin.
+                </div>
+              </div>
+              <ArrowRight className="h-4 w-4 text-on-surface-variant flex-shrink-0 mt-2 group-hover:text-primary group-hover:translate-x-0.5 transition" />
+            </div>
+          </Link>
         </section>
 
         {ingredients.length > 0 && (
