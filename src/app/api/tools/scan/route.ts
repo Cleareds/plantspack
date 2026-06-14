@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { checkQuota, logScan, hashImage, type ToolName, LIMITS } from '@/lib/tool-quota'
 import { preClassify, scanImage, scanText } from '@/lib/tool-scanner'
@@ -104,11 +105,23 @@ export async function POST(req: NextRequest) {
     contentHash = hashImage(Buffer.concat(buffers))
   }
 
-  // Identify caller
+  // Identify caller. Web sends a cookie session + guest cookie. The mobile app
+  // has neither, so it sends an Authorization: Bearer <token> (signed-in) and an
+  // x-guest-id header (a stable device id) for guests.
   const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  let user = (await supabase.auth.getUser()).data.user
+  if (!user) {
+    const bearer = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
+    if (bearer) {
+      const tokenClient = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      )
+      user = (await tokenClient.auth.getUser(bearer)).data.user
+    }
+  }
   const userId = user?.id ?? null
-  const guestId = userId ? null : await getOrSetGuestId()
+  const guestId = userId ? null : (req.headers.get('x-guest-id') || await getOrSetGuestId())
   const ip = getIp(req)
 
   const ctx = { userId, guestId, ip, tool, imageHash: contentHash }

@@ -4,9 +4,10 @@ import crypto from 'crypto'
 export type ToolName = 'ingredient' | 'menu'
 export type UserTier = 'guest' | 'user' | 'supporter'
 
-// Lifetime guest limit. Cheap signal - cookies clear easily so this is a
-// nudge, not a hard wall. The IP-hash join makes casual abuse mildly annoying.
-const GUEST_LIFETIME_LIMIT = 1
+// Per-month guest limit. Cheap signal - cookies/device-ids clear easily so this
+// is a nudge, not a hard wall. The IP-hash join makes casual abuse mildly
+// annoying. Bump later once we see how much people like the tools.
+const GUEST_MONTHLY_LIMIT = 1
 
 // Per-month limit for signed-in non-supporters.
 const USER_MONTHLY_LIMIT = 3
@@ -146,22 +147,26 @@ export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
 
   // 2. Per-user limits
   if (tier === 'guest') {
+    const monthStart = new Date()
+    monthStart.setUTCDate(1)
+    monthStart.setUTCHours(0, 0, 0, 0)
     const ipHash = ctx.ip ? hashIp(ctx.ip) : null
-    let query = sb.from('tool_scans').select('id', { count: 'exact', head: true }).eq('tool', ctx.tool).eq('rejected', false)
+    let query = sb.from('tool_scans').select('id', { count: 'exact', head: true })
+      .eq('tool', ctx.tool).eq('rejected', false).gte('created_at', monthStart.toISOString())
     if (ctx.guestId) query = query.eq('guest_id', ctx.guestId)
     else if (ipHash) query = query.eq('ip_hash', ipHash)
     else return { allowed: false, tier, reason: 'Cannot verify guest identity.' }
     const { count } = await query
     const used = count ?? 0
-    if (used >= GUEST_LIFETIME_LIMIT) {
+    if (used >= GUEST_MONTHLY_LIMIT) {
       return {
         allowed: false,
         tier,
-        reason: `You've used your free scan. Sign in for ${USER_MONTHLY_LIMIT} per month, or back PlantsPack for unlimited.`,
+        reason: `You've used your free scan this month. Sign in for ${USER_MONTHLY_LIMIT} per month, or back PlantsPack for unlimited.`,
         remaining: 0,
       }
     }
-    return { allowed: true, tier, remaining: GUEST_LIFETIME_LIMIT - used }
+    return { allowed: true, tier, remaining: GUEST_MONTHLY_LIMIT - used }
   }
 
   if (tier === 'user') {
@@ -232,7 +237,7 @@ export async function logScan(args: {
 }
 
 export const LIMITS = {
-  GUEST_LIFETIME_LIMIT,
+  GUEST_MONTHLY_LIMIT,
   USER_MONTHLY_LIMIT,
   SUPPORTER_MONTHLY_BUDGET_USD,
   GLOBAL_DAILY_BUDGET_USD,
