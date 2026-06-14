@@ -202,7 +202,135 @@ export default function PrivacyPolicy() {
               of the updated policy.
             </p>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Contact Us</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Mobile Applications (iOS and Android)</h2>
+            <p className="text-on-surface-variant mb-4">
+              In addition to the website, PlantsPack is available as a mobile application on iOS
+              (Apple App Store, bundle identifier <code>com.plantspack.app</code>) and Android
+              (Google Play, package <code>plantspack.app</code>). Everything in this Privacy Policy
+              applies to the mobile apps. The sections below describe the additional, mobile-specific
+              data handling required by Apple App Store and Google Play disclosure rules.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.1 Device Permissions We Request</h3>
+            <p className="text-on-surface-variant mb-4">
+              The mobile app asks for the following operating-system permissions only when you use the
+              feature that needs them. You can decline any of them and continue using the rest of the app.
+            </p>
+            <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
+              <li>
+                <strong>Location (When-In-Use only):</strong> Used to centre the map on your current
+                position and to show vegan places near you. We never collect location in the background,
+                we do not build a location history, and we do not sell or share precise location data
+                with third parties for advertising. Location is processed in memory to query nearby
+                places and is not retained.
+              </li>
+              <li>
+                <strong>Camera:</strong> Used by the barcode scanner, ingredient-label scanner, menu
+                scanner, and to take a photo when you suggest a new place. Photos taken in scanners are
+                used only for the scan itself.
+              </li>
+              <li>
+                <strong>Photo Library:</strong> Used so you can pick an existing photo to scan or to
+                attach to a place suggestion. We access only the images you select; we do not scan or
+                index your library.
+              </li>
+              <li>
+                <strong>Push Notifications:</strong> Optional. Used to send notifications you have
+                explicitly subscribed to (for example, updates in cities you follow). You can turn
+                push notifications off at any time in your device settings or in the app.
+              </li>
+            </ul>
+            <p className="text-on-surface-variant mb-4">
+              The Android app explicitly blocks the advertising ID (<code>AD_ID</code>) permission. We
+              do not collect an advertising identifier on either platform, and we do not use device
+              identifiers for advertising or cross-app tracking.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.2 Photos You Scan (AI Scanners)</h3>
+            <p className="text-on-surface-variant mb-4">
+              When you use the ingredient scanner, menu scanner, or barcode scanner, the image you
+              capture is sent over an encrypted connection to our servers and forwarded to a third-party
+              AI provider (OpenAI) which extracts and classifies the text. Images are not stored on our
+              servers after the scan response is returned, are not used to train any AI model, and are
+              not associated with your account in a way that lets us re-identify what you scanned.
+              OpenAI processes the request under its API data-usage terms (no training, retained briefly
+              for abuse monitoring). If you do not want to use a third-party AI provider, do not use
+              the scanner tools — every other feature works without them.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.3 Sign in with Apple</h3>
+            <p className="text-on-surface-variant mb-4">
+              The iOS app supports Sign in with Apple. When you use it, Apple shares with us a stable
+              user identifier and either your real email address or a private relay email address
+              (your choice at sign-in). We use this identifier solely to create and authenticate your
+              PlantsPack account. We do not receive any other information from your Apple ID.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.4 Data Collection Summary (Apple App Privacy / Google Data Safety)</h3>
+            <p className="text-on-surface-variant mb-4">
+              For Apple App Store &ldquo;App Privacy&rdquo; and Google Play &ldquo;Data Safety&rdquo;
+              disclosures, the following categories apply to PlantsPack:
+            </p>
+            <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
+              <li><strong>Contact Info — Email Address:</strong> Collected, linked to identity, used for account functionality and (if you opt in) the newsletter. Not used for tracking.</li>
+              <li><strong>Identifiers — User ID:</strong> Collected, linked to identity, used for account functionality and analytics. Not used for tracking.</li>
+              <li><strong>User Content — Photos, Reviews, Place Suggestions, Posts:</strong> Collected, linked to identity, used for app functionality. You choose what to submit.</li>
+              <li><strong>Location — Precise / Coarse:</strong> Collected only while the app is open and only after you grant permission. Used for app functionality (showing nearby places). Not linked to identity unless you save a place or write a review. Not used for tracking.</li>
+              <li><strong>Usage Data — Product Interaction:</strong> Collected, linked to identity, used for analytics and to improve the app. Not used for tracking.</li>
+              <li><strong>Diagnostics — Crash and Performance Data:</strong> Collected, not linked to identity, used to fix bugs.</li>
+            </ul>
+            <p className="text-on-surface-variant mb-4">
+              We do <strong>not</strong> collect: financial information (subscriptions are web-only,
+              handled by Stripe), health or fitness data, sensitive demographic data, contacts, search
+              history outside the app, browsing history, audio recordings, or your advertising
+              identifier. We do <strong>not</strong> use your data for third-party advertising or
+              cross-app tracking, and we do not share your data with data brokers.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.5 Account Deletion (In-App)</h3>
+            <p className="text-on-surface-variant mb-4">
+              Per Apple App Store guideline 5.1.1(v) and Google Play account-deletion policy, you can
+              delete your PlantsPack account and associated personal data directly from the app:
+            </p>
+            <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
+              <li>Open the app and go to <strong>Profile → Account → Delete account</strong>, or</li>
+              <li>Visit{' '}
+                <Link href="/data-deletion-confirmation" className="text-primary hover:text-primary-container underline">
+                  plantspack.com/data-deletion-confirmation
+                </Link>{' '}
+                from any browser (no app install required), or
+              </li>
+              <li>Email <a href="mailto:hello@plantspack.com" className="text-primary hover:text-primary-container underline">hello@plantspack.com</a> with &ldquo;Delete my account&rdquo; in the subject line.</li>
+            </ul>
+            <p className="text-on-surface-variant mb-4">
+              Deletion removes or anonymises your account, profile, saved places, followed cities,
+              reviews, comments, and posts within 30 days. We retain a minimal record of the deletion
+              itself (account ID and timestamp) to honour the request if you re-register and for legal
+              audit purposes, and we may retain content unrelated to your identity (for example, a
+              place you suggested that has since been independently verified) in anonymised form.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.6 Children</h3>
+            <p className="text-on-surface-variant mb-4">
+              The mobile apps are rated for users aged 13 and over on Google Play and 12+ on the Apple
+              App Store, however account creation requires you to be at least 16 years old, consistent
+              with Section 11 of this policy. We do not knowingly collect data from children under that
+              age. The apps are not directed at children, do not include behavioural advertising, and
+              do not participate in Apple&rsquo;s Kids Category or Google Play&rsquo;s Designed for
+              Families programme.
+            </p>
+
+            <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.7 Mobile-Specific Third Parties</h3>
+            <p className="text-on-surface-variant mb-4">
+              The mobile apps additionally interact with:
+            </p>
+            <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
+              <li><strong>Apple Push Notification service (APNs)</strong> and <strong>Firebase Cloud Messaging (FCM)</strong>: route push notifications you have opted into. Your device token is shared with Apple/Google for delivery only.</li>
+              <li><strong>OpenFreeMap</strong> and the underlying <strong>OpenStreetMap</strong> tile servers: serve the base map tiles. Your IP address is visible to the tile server when tiles are requested; this is standard for any map-based app and the tile server does not receive your account identity.</li>
+              <li><strong>Expo Application Services (EAS)</strong>: delivers over-the-air JavaScript updates for the app. EAS receives the app version and platform, not personal data.</li>
+            </ul>
+
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Contact Us</h2>
             <p className="text-on-surface-variant mb-4">
               If you have questions about this Privacy Policy or how we handle your data, please contact us.
               PlantsPack is operated by Cleareds, a company registered in Belgium.
