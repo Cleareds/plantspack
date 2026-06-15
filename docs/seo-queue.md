@@ -90,13 +90,47 @@ Process: open GSC → Performance → filter by query → confirm landing page �
 
 ## 4. Enrichment queue (Tier C — kept indexable but thin)
 
-1,355 pages have only a website — no description, image, or hours. These need photo + description backfill to actually earn their index slot.
+1,355 pages have only a website — no description, image, or hours.
 
-Pattern proven with the HK batch (2026-06-15): WebSearch + WebFetch of og:image, capped 2 search + 1 fetch per place, ~40% hit rate.
+### 4a. Curl-only batch results (2026-06-15) — yield ~6% across markets
 
-**Target queue (priority countries):** UK, Germany, US, Italy, Spain — these are the markets with both Tier-C pages AND non-zero search impressions per GSC. Run as 50-100 place batches per session.
+Ran 5 batches: HK, Germany, UK, US-1, US-2. **32 of 498 enrichments applied (6.4%).** Pattern is robust across markets — the bottleneck is data, not tooling. Most Tier-C URLs are either dead, parked, hijacked, or behind Cloudflare-style bot challenges. Sites that loaded often returned JS-only SPAs with no og tags in initial HTML.
 
-Helper: `scripts/_hk-enrich.mjs` (HK template, generalise per country).
+Notable: 2 UK domains (Demuths, Carnevale) had been hijacked into non-GamStop gambling sites. URLs cleared 2026-06-15 (places kept).
+
+### 4b. Mitigation — dead-site HEAD sweep (in flight 2026-06-15)
+
+Cheap one-time pass over all ~50K rows with website set. Categorises each URL as LIVE / DNS_FAIL / 4XX_HARD / 5XX / CERT_ERROR / TIMEOUT / BOT_BLOCKED / 3XX_LOOP / NETWORK.
+
+Rows in the hard categories get `website = NULL` after explicit user go-ahead on the preview. Soft categories (BOT_BLOCKED, 3XX_LOOP) stay — they often resolve on a real browser hit.
+
+Script: `scripts/_website-head-sweep.mjs`. Preview written to `/tmp/website-head-sweep-preview.json`. Apply step is separate.
+
+Expected outcome:
+- 15-25% of website URLs nulled (~7-12k rows)
+- Rows that lose their last signal flip Tier C → Tier A → noindex automatically (no schema change)
+- Future enrichment runs target a known-live URL base → 30-40%+ hit rate
+
+### 4c. Next: WebSearch + Chrome-DevTools-MCP enrichment on clean base
+
+Re-run Tier C enrichment on the cleaned URL base. Two paths:
+- **WebSearch-led** for rows where the on-file site is dead but the venue might still exist on a new domain. ~2 searches per place, ~30-40% hit rate expected (proven on HK).
+- **Chrome DevTools MCP** for the BOT_BLOCKED + 3XX_LOOP rows where curl is fooled but a real browser would render. Higher per-place cost (~30s headless) but unlocks the Cloudflare-protected long tail.
+
+Sequencing: WebSearch first (cheaper, broader coverage), Chrome-DevTools-MCP for the remaining stubborn segment.
+
+### Per-country queue order (after sweep applies)
+Germany → UK → US (×2) → France → Italy → Spain.
+
+Helper template: `scripts/_hk-enrich.mjs`. Per-country runs: `scripts/_tier-c-{country}-*.{mjs,ts}`.
+
+---
+
+## 6. Dead-site HEAD sweep (NEW 2026-06-15)
+
+A separate cleanup task (see 4b above) that also produces a useful by-product: a known-live URL allowlist. Once applied, the affected count becomes part of the next /research/ data report (e.g. "How many vegan restaurant websites are dead? 2026 snapshot.") — surprisingly linkable angle.
+
+After apply: the cleared rows lose their last quality signal and flip into the noindex cohort automatically (via the Tier A+B logic already shipped 2026-06-15). No further action needed for SEO hygiene.
 
 ---
 
