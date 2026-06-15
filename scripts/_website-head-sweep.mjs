@@ -79,7 +79,7 @@ const rows = []
 while (true) {
   const { data } = await sb.from('places')
     .select('id, slug, name, country, website')
-    .gt('id', lastId).is('archived_at', null).not('website', 'is', null).order('id').limit(2000)
+    .gt('id', lastId).is('archived_at', null).not('website', 'is', null).order('id').limit(1000)
   if (!data?.length) break
   for (const r of data) {
     const w = (r.website ?? '').trim()
@@ -87,7 +87,7 @@ while (true) {
     rows.push(r)
   }
   lastId = data[data.length - 1].id
-  if (data.length < 2000) break
+  if (data.length < 1000) break
 }
 console.log(`Total rows with website: ${rows.length}`)
 

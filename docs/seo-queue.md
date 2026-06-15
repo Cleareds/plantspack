@@ -126,11 +126,28 @@ Helper template: `scripts/_hk-enrich.mjs`. Per-country runs: `scripts/_tier-c-{c
 
 ---
 
-## 6. Dead-site HEAD sweep (NEW 2026-06-15)
+## 6. Dead-site HEAD sweep (SHIPPED 2026-06-15)
 
-A separate cleanup task (see 4b above) that also produces a useful by-product: a known-live URL allowlist. Once applied, the affected count becomes part of the next /research/ data report (e.g. "How many vegan restaurant websites are dead? 2026 snapshot.") — surprisingly linkable angle.
+Scanned all 32,483 places with a website set. 6,260 (19.3%) failed in hard categories (DNS_FAIL / 4XX_HARD / 5XX / CERT_ERROR / TIMEOUT / NETWORK). After excluding Facebook URLs (kept per user direction — relevant info pages even if HEAD-blocked), 6,246 rows had their `website` field nulled with full audit trail in `admin_notes`.
 
-After apply: the cleared rows lose their last quality signal and flip into the noindex cohort automatically (via the Tier A+B logic already shipped 2026-06-15). No further action needed for SEO hygiene.
+**Tier shifts as a result:**
+- KEEP: 41,675 → 39,778 (−1,897)
+- Noindex (Tier A + Tier B): 11,196 → 13,092 (+1,896)
+- Tier A specifically grew by ~485 (rows that had ONLY a website and lost their last signal)
+
+Facebook URLs preserved: 14 rows that failed HEAD but were Facebook pages → kept as relevant info source per user policy 2026-06-15.
+
+**Data-report angle:** the 6,260 number is itself linkable content for the next /research/ piece — "How many vegan-restaurant websites are dead? A 2026 audit of 32,483 venues." Hold for the Q3 data report.
+
+---
+
+## 7. WebSearch-led re-enrichment (NEXT)
+
+The 1,897 rows that just lost their website still exist as places — just without a URL. Run a focused WebSearch pass to find their new (live) website where it exists. Pattern: search "<name> <city>", filter out aggregators (HappyCow / TripAdvisor / Yelp / Yellow Pages), WebFetch the first viable result for og:image + description.
+
+Expected hit rate: 20-30% (some venues are simply closed, but a meaningful share have moved to a new domain or social-media-only presence). On top of that, the original Tier C cohort (where the on-file website was alive but yielded no og tags) gets a second pass with a better extraction strategy.
+
+Sequenced after the next session.
 
 ---
 
