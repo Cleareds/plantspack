@@ -18,6 +18,13 @@ export async function GET() {
       .select('username, first_name, avatar_url, subscription_tier, donor_source')
       .or('and(subscription_tier.neq.free,subscription_tier.not.is.null),donor_source.not.is.null')
       .eq('is_banned', false)
+      // Exclude internal/operational accounts that hold a paid tier for a
+      // non-financial reason. The 'reviewer' account is provisioned with
+      // subscription_tier='premium' so Apple App Store and Google Play
+      // reviewers can exercise the gated AI features during submission
+      // review — they are not real supporters. Per data policy we never
+      // present a non-supporter as a supporter.
+      .neq('username', 'reviewer')
       .order('created_at', { ascending: true })
       .limit(50)
 
