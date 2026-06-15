@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 //  - Android: Play Console -> Closed testing -> copy the "opt-in URL"
 //  - iOS:     App Store Connect -> TestFlight -> create a Public Link
 const ANDROID_OPT_IN_URL = ''
-const IOS_TESTFLIGHT_URL = ''
+const IOS_TESTFLIGHT_URL = 'https://testflight.apple.com/join/KDr6YSfY'
 const SUPPORT_EMAIL = 'hello@plantspack.com'
 
 export default function BetaTestersPage() {
