@@ -6,7 +6,17 @@ Order is rough priority. Update dates when a row ships.
 
 ---
 
-## 1. "vegan restaurants" head term — title/snippet mismatch (HIGH)
+## 1. "vegan restaurants" head term — title/snippet mismatch (SHIPPED 2026-06-15)
+
+**Shipped fix:** conditional title template in `src/app/vegan-places/[country]/page.tsx` and `src/app/vegan-places/[country]/[city]/page.tsx`. When eat_count / total ≥ 60% **and** total ≥ 5, the title uses "Vegan Restaurants in X" instead of "Vegan Places in X". For fully-vegan filter mode, uses "100% Vegan Restaurants in X" when the FV-filtered inventory passes the same threshold.
+
+**Coverage:** 109 of 167 countries flip to "Restaurants", 352 of 1,000+ cities flip. 4 countries + 12 cities stay "Places" because restaurants are <60% of their inventory (Hungary, Pakistan, Jersey, Czechia; Chennai, Santa Rosa, Pecs, Debrecen, etc.) — honest by design.
+
+**Measure:** GSC export at +28 days. Expected: CTR on the 30+ impression pages lifts from ~0% to ~2-4% (still position 8-12, but with query match), recovering ~70-140 clicks/month at current impression volume.
+
+---
+
+## 1b. Original analysis (kept for context)
 
 **Source:** GSC export 2026-06-15, folder `GSC/15.06/vegan restaurants/Сторінки.csv`.
 

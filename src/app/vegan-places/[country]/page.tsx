@@ -89,11 +89,23 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     cityCount: cities.length,
   })
 
+  // Title term swap (2026-06-15 GSC fix): when restaurants dominate the
+  // country's inventory we lead with "Vegan Restaurants in X" so the title
+  // matches "vegan restaurants" search intent (Iraq/Duhok ranked #4 with 0
+  // clicks for this query before this fix). Honest fallback to "Places"
+  // when restaurants are <60% (e.g. sanctuary-heavy regions) or the country
+  // has fewer than 5 places total. We can't recompute FV-mode eat share
+  // here without re-running the per-city query, so FV-mode keeps the
+  // existing wording for now.
+  const eatShare = totalPlaces > 0 ? totalEat / totalPlaces : 0
+  const eatDominant = totalPlaces >= 5 && eatShare >= 0.6
+  const placeTerm = eatDominant ? 'Restaurants' : 'Places'
+
   const title = isFullyVeganMode
     ? `100% Vegan in ${countryName} — ${totalFv} Hand-Verified Spots | PlantsPack`
     : cities.length > 1
-      ? `Vegan Places in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
-      : `Vegan Places in ${countryName} — ${totalPlaces} Verified Spots | PlantsPack`
+      ? `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
+      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Verified Spots | PlantsPack`
 
   const fvDesc = `Manually verified directory of ${totalFv} fully vegan ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName}: restaurants, cafés, bakeries, sanctuaries and stores. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
 
@@ -106,7 +118,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     description: isFullyVeganMode ? fvDesc : metaDesc,
     alternates: { canonical },
     openGraph: {
-      title: isFullyVeganMode ? `100% Vegan in ${countryName}` : `Vegan Places in ${countryName}`,
+      title: isFullyVeganMode ? `100% Vegan in ${countryName}` : `Vegan ${placeTerm} in ${countryName}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
       siteName: 'PlantsPack',

@@ -162,9 +162,23 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       ? ` (${fv} Fully Vegan)`
       : ''
 
+  // Title term swap (2026-06-15 GSC fix): when the page is dominated by
+  // restaurants we say "Vegan Restaurants in X" instead of "Vegan Places",
+  // so it matches the "vegan restaurants" query (3,534 impressions, 0 clicks
+  // on 30+ directory pages before this fix). Stays honest by keeping "Places"
+  // when restaurants are <60% of the inventory or the count is too small to
+  // be a meaningful claim. eat is computed over the current view (FV-filtered
+  // when applicable) so the FV restaurant share decides FV-mode wording.
+  const fvEat = isFullyVeganMode ? places.filter((p: Place) => p.category === 'eat').length : eat
+  const eatShare = places.length > 0 ? fvEat / places.length : 0
+  const eatDominant = places.length >= 5 && eatShare >= 0.6
+  const placeTerm = eatDominant ? 'Restaurants' : 'Places'
+
   const title = isFullyVeganMode
-    ? `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | PlantsPack`
-    : `Vegan Places in ${locLabel}${countSuffix} | PlantsPack`
+    ? eatDominant
+      ? `100% Vegan Restaurants in ${locLabel} — ${places.length} Verified | PlantsPack`
+      : `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | PlantsPack`
+    : `Vegan ${placeTerm} in ${locLabel}${countSuffix} | PlantsPack`
 
   // FV-mode-specific meta description that emphasises hand-verification
   const fvDesc = `Manually verified directory of ${places.length} fully vegan ${places.length === 1 ? 'venue' : 'venues'} in ${cityName}, ${countryName}. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
@@ -195,7 +209,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         ? { index: false, follow: true }
         : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     openGraph: {
-      title: isFullyVeganMode ? `100% Vegan in ${locLabel}` : `Vegan Places in ${locLabel}`,
+      title: isFullyVeganMode
+        ? eatDominant ? `100% Vegan Restaurants in ${locLabel}` : `100% Vegan in ${locLabel}`
+        : `Vegan ${placeTerm} in ${locLabel}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
       siteName: 'PlantsPack',
