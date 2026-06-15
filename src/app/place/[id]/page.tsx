@@ -277,20 +277,36 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // (set in root layout) when no real photo is available.
   const image = pickOgImage((place as any).main_image_url, ...(place.images ?? []))
 
-  // Indexation hygiene — noindex thin places that drag down site quality.
-  // Always index a place that is fully_vegan / mostly_vegan (rare and unique
-  // signal worth preserving) OR that has at least one quality signal:
-  // a real description (>=80 chars — was 50 before; GSC May 2026 flagged
-  // 49-60 char pages as "Duplicate, Google chose a different canonical" when
-  // they shared name+city with a chain sibling), an image, a website, or hours.
-  // The description threshold doubles as a chain-branch differentiation gate.
+  // Indexation hygiene — noindex thin places per the 2026-06-15 GSC cleanup.
+  //
+  // Before this change we only deindexed pages with zero signals (Tier A,
+  // ~4.1k pages). GSC reported 47k pages as "Discovered – not indexed",
+  // confirming Google sees most of our directory as below the bar.
+  //
+  // Expanded definition now covers Tier A + Tier B (~13.9k pages combined):
+  //   Strong-keep signals (any one → KEEP):
+  //     - vegan_level in {fully_vegan, mostly_vegan}    (rare, unique)
+  //     - is_verified OR verification_level >= 2        (manual sign-off)
+  //     - review_count >= 1                              (community signal)
+  //     - website present                                (Tier C: thin but
+  //       at least the user can verify externally — kept on the index)
+  //     - >=2 of {description ≥80 chars, image, hours}  (composite signal)
+  //
+  //   Everything else → noindex,follow.
+  //
+  // Threshold for hasDesc stays at 80 chars (GSC May 2026 lesson about
+  // duplicate canonical at 49-60 chars on chain branches).
   const vl = (place as any).vegan_level
   const hasDesc = (place.description ?? '').trim().length >= 80
   const hasImage = !!(place as any).main_image_url || (place.images?.length ?? 0) > 0
   const hasWeb = !!(place as any).website
   const hasHours = !!(place as any).opening_hours && Object.keys((place as any).opening_hours).length > 0
+  const hasReviews = ((place as any).review_count ?? 0) >= 1
   const isVeganTier = vl === 'fully_vegan' || vl === 'mostly_vegan'
-  const isThin = !isVeganTier && !hasDesc && !hasImage && !hasWeb && !hasHours
+  const isVerified = (place as any).is_verified || ((place as any).verification_level ?? 0) >= 2
+  const compositeCount = [hasDesc, hasImage, hasHours].filter(Boolean).length
+  const keep = isVeganTier || isVerified || hasReviews || hasWeb || compositeCount >= 2
+  const isThin = !keep
 
   return {
     title,
