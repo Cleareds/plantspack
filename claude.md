@@ -224,16 +224,17 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 
 ## Build & Deployment Optimization
 
-**CRITICAL - Vercel Free Tier Resource Management:**
-- ⚠️ **Vercel free tier: 1,000,000 function invocations/month** — we've hit this limit before
-- ❌ **DO NOT push more than 1-2 times per session** — each push triggers a deployment which revalidates all ISR pages
+**CRITICAL - Vercel Pro Plan Resource Management:**
+Current plan: **Vercel Pro at $20/month** (NOT free tier). Supabase paid tier at ~$25/month. Invocations are metered but no hard wall — overage bills per use, so volume still matters.
+- ⚠️ **Bill 2026-05-15→06-14 baseline:** 5.4M function invocations ($2.40), 16.2M observability events ($10.96), 278K ISR writes ($0.62), 262K ISR reads ($0.06), ~$42 total before VAT. Observability events were the biggest cuttable line; cut via `src/lib/logger.ts` on 2026-06-16.
+- ❌ **DO NOT push more than 1-2 times per session** — each push triggers a deployment which revalidates all ISR pages, multiplying invocations
 - ❌ **DO NOT push rapid fix-after-fix commits** — batch all changes into ONE push at the end of a work session
-- ❌ **DO NOT run local builds** (`npm run build`, `next build`) - They consume tokens unnecessarily
-- ❌ **DO NOT enable Vercel cron jobs on free tier that run more than daily** — free tier only allows daily crons
+- ❌ **DO NOT run local builds** (`npm run build`, `next build`) — They consume tokens unnecessarily
 - ✅ **DO accumulate commits locally** and push once when a chunk of work is complete
 - ✅ **DO use aggressive caching** — prefer `revalidate: 3600` (1 hour) or higher for all SSR pages
 - ✅ **DO use on-demand revalidation** (`revalidatePath`) instead of short timer-based ISR
 - ✅ **Before pushing, ASK the user** if they want to deploy now or batch more changes
+- ✅ **DO use `log.debug` / `log.info` from `@/lib/logger`** instead of `console.log` in server-side code — those are no-ops in production and don't burn observability events
 
 **Caching strategy:**
 - SSR pages: `revalidate = 3600` (1 hour minimum)
