@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { sendSubscriptionEmail } from '@/lib/email'
+import { log } from '@/lib/logger'
 
 // Force Node.js runtime (required for Stripe SDK)
 export const runtime = 'nodejs'
@@ -24,7 +25,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  console.log('🔔 ===== STRIPE WEBHOOK RECEIVED =====')
+  log.debug('🔔 ===== STRIPE WEBHOOK RECEIVED =====')
 
   if (!stripe) {
     console.error('❌ Stripe not configured - missing STRIPE_SECRET_KEY')
@@ -45,15 +46,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.text()
     const signature = request.headers.get('stripe-signature')!
-    console.log('📝 Webhook signature present:', !!signature)
+    log.debug('📝 Webhook signature present:', !!signature)
 
     let event: Stripe.Event
 
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
-      console.log('✅ Signature verified successfully')
-      console.log('📋 Event type:', event.type)
-      console.log('🆔 Event ID:', event.id)
+      log.debug('✅ Signature verified successfully')
+      log.debug('📋 Event type:', event.type)
+      log.debug('🆔 Event ID:', event.id)
     } catch (err) {
       console.error('❌ Webhook signature verification failed:', err)
       return NextResponse.json(
@@ -63,41 +64,41 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle the event
-    console.log(`🔄 Processing event: ${event.type}`)
+    log.debug(`🔄 Processing event: ${event.type}`)
     switch (event.type) {
       case 'checkout.session.completed':
-        console.log('💳 Handling checkout completion...')
+        log.debug('💳 Handling checkout completion...')
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
         break
 
       case 'invoice.payment_succeeded':
-        console.log('💰 Handling payment success...')
+        log.debug('💰 Handling payment success...')
         await handlePaymentSucceeded(event.data.object as Stripe.Invoice)
         break
 
       case 'invoice.payment_failed':
-        console.log('⚠️  Handling payment failure...')
+        log.debug('⚠️  Handling payment failure...')
         await handlePaymentFailed(event.data.object as Stripe.Invoice)
         break
 
       case 'customer.subscription.updated':
-        console.log('🔄 Handling subscription update...')
+        log.debug('🔄 Handling subscription update...')
         await handleSubscriptionUpdated(event.data.object as Stripe.Subscription)
         break
 
       case 'customer.subscription.deleted':
-        console.log('🗑️  Handling subscription deletion...')
+        log.debug('🗑️  Handling subscription deletion...')
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
         break
 
       default:
-        console.log(`⚠️  Unhandled event type: ${event.type}`)
+        log.debug(`⚠️  Unhandled event type: ${event.type}`)
     }
 
     // Log the event
     await logWebhookEvent(event)
 
-    console.log('✅ ===== WEBHOOK PROCESSED SUCCESSFULLY =====')
+    log.debug('✅ ===== WEBHOOK PROCESSED SUCCESSFULLY =====')
     return NextResponse.json({ received: true })
   } catch (error) {
     console.error('❌ ===== WEBHOOK PROCESSING ERROR =====')
@@ -116,9 +117,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Use admin client to bypass RLS for webhook operations
   const supabase = createAdminClient()
 
-  console.log('=== Handling Checkout Completed ===')
-  console.log('Session ID:', session.id)
-  console.log('Metadata:', session.metadata)
+  log.debug('=== Handling Checkout Completed ===')
+  log.debug('Session ID:', session.id)
+  log.debug('Metadata:', session.metadata)
 
   const userId = session.metadata?.userId
   const tierId = session.metadata?.tierId as 'medium' | 'premium'
@@ -130,7 +131,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   try {
     // Get subscription details
-    console.log('Retrieving subscription:', session.subscription)
+    log.debug('Retrieving subscription:', session.subscription)
     const subscriptionResponse = await stripe.subscriptions.retrieve(
       session.subscription as string,
       { expand: ['latest_invoice', 'default_payment_method'] }
@@ -141,7 +142,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const periodStart = new Date(subscription.current_period_start * 1000).toISOString()
     const periodEnd = new Date(subscription.current_period_end * 1000).toISOString()
 
-    console.log('Updating user subscription with params:', {
+    log.debug('Updating user subscription with params:', {
       target_user_id: userId,
       new_tier: tierId,
       new_status: 'active',
@@ -152,7 +153,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     })
 
     // Update user subscription
-    console.log('📞 Calling update_user_subscription RPC...')
+    log.debug('📞 Calling update_user_subscription RPC...')
     const { data: rpcData, error } = await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
       new_tier: tierId,
@@ -169,8 +170,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       throw error
     }
 
-    console.log('✅ RPC call succeeded, data:', rpcData)
-    console.log('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: subscription.id })
+    log.debug('✅ RPC call succeeded, data:', rpcData)
+    log.debug('✅ Subscription activated successfully:', { userId, tierId, subscriptionId: subscription.id })
 
     // Verify the update worked by querying the user
     const { data: updatedUser, error: verifyError } = await supabase
@@ -182,7 +183,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     if (verifyError) {
       console.error('⚠️ Could not verify subscription update:', verifyError)
     } else {
-      console.log('✅ Verified user subscription:', updatedUser)
+      log.debug('✅ Verified user subscription:', updatedUser)
 
       // Send subscription confirmation email
       if (updatedUser.email && updatedUser.username) {
@@ -206,7 +207,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         if (promoError && !promoError.message?.includes('not eligible') && !promoError.message?.includes('no longer available')) {
           console.error('Error checking early purchaser promotion:', promoError)
         } else if (!promoError) {
-          console.log('🎉 Early purchaser promotion granted to user:', userId)
+          log.debug('🎉 Early purchaser promotion granted to user:', userId)
         }
       } catch (promoCheckError) {
         console.error('Error during early purchaser promotion check:', promoCheckError)
@@ -217,7 +218,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     // Fallback: direct database update if RPC fails
     try {
-      console.log('Attempting fallback direct database update...')
+      log.debug('Attempting fallback direct database update...')
       const { error: fallbackError } = await supabase
         .from('users')
         .update({
@@ -232,7 +233,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       if (fallbackError) {
         console.error('Fallback update also failed:', fallbackError)
       } else {
-        console.log('✅ Fallback update succeeded')
+        log.debug('✅ Fallback update succeeded')
       }
     } catch (fallbackError) {
       console.error('❌ Fallback update failed:', fallbackError)
@@ -279,7 +280,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
       period_end: subscription.current_period_end ? new Date(subscription.current_period_end * 1000).toISOString() : null
     })
 
-    console.log(`✅ Payment succeeded for user ${userId}: ${tierId}`)
+    log.debug(`✅ Payment succeeded for user ${userId}: ${tierId}`)
   } catch (error) {
     console.error('Error handling payment success:', error)
   }
@@ -308,7 +309,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
       .update({ subscription_status: 'past_due' })
       .eq('id', userId)
 
-    console.log(`Payment failed for user ${userId}`)
+    log.debug(`Payment failed for user ${userId}`)
   } catch (error) {
     console.error('Error handling payment failure:', error)
   }
@@ -318,12 +319,12 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   // Use admin client to bypass RLS for webhook operations
   const supabase = createAdminClient()
 
-  console.log('📊 ===== SUBSCRIPTION UPDATE HANDLER =====')
+  log.debug('📊 ===== SUBSCRIPTION UPDATE HANDLER =====')
   const extendedSubscription = subscription as any
 
-  console.log('🔍 Subscription ID:', extendedSubscription.id)
-  console.log('👤 Customer ID:', extendedSubscription.customer)
-  console.log('📋 Subscription metadata:', JSON.stringify(extendedSubscription.metadata))
+  log.debug('🔍 Subscription ID:', extendedSubscription.id)
+  log.debug('👤 Customer ID:', extendedSubscription.customer)
+  log.debug('📋 Subscription metadata:', JSON.stringify(extendedSubscription.metadata))
 
   const userId = extendedSubscription.metadata.userId
 
@@ -334,37 +335,37 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     return
   }
 
-  console.log('✅ User ID found:', userId)
+  log.debug('✅ User ID found:', userId)
 
   try {
     // Determine tier from actual price ID (not metadata, which doesn't update on plan changes)
     const priceId = extendedSubscription.items.data[0]?.price?.id
-    console.log('💰 Price ID from subscription:', priceId)
-    console.log('🔧 Expected Premium Price ID:', process.env.STRIPE_PREMIUM_PRICE_ID)
-    console.log('🔧 Expected Medium Price ID:', process.env.STRIPE_MEDIUM_PRICE_ID)
+    log.debug('💰 Price ID from subscription:', priceId)
+    log.debug('🔧 Expected Premium Price ID:', process.env.STRIPE_PREMIUM_PRICE_ID)
+    log.debug('🔧 Expected Medium Price ID:', process.env.STRIPE_MEDIUM_PRICE_ID)
 
     let tierId: 'medium' | 'premium' | 'free' = 'free'
 
     if (priceId === process.env.STRIPE_PREMIUM_PRICE_ID) {
       tierId = 'premium'
-      console.log('✅ Detected tier: PREMIUM')
+      log.debug('✅ Detected tier: PREMIUM')
     } else if (priceId === process.env.STRIPE_MEDIUM_PRICE_ID) {
       tierId = 'medium'
-      console.log('✅ Detected tier: SUPPORTER (medium)')
+      log.debug('✅ Detected tier: SUPPORTER (medium)')
     } else {
       console.warn(`⚠️  Unknown price ID: ${priceId}, defaulting to free tier`)
       console.warn('   This price ID does not match any configured tiers!')
     }
 
     const status = mapStripeStatusToLocal(extendedSubscription.status)
-    console.log('📊 Subscription status:', extendedSubscription.status, '→', status)
+    log.debug('📊 Subscription status:', extendedSubscription.status, '→', status)
 
-    console.log('💾 Calling RPC function with params:')
-    console.log('   target_user_id:', userId)
-    console.log('   new_tier:', tierId)
-    console.log('   new_status:', status)
-    console.log('   stripe_sub_id:', extendedSubscription.id)
-    console.log('   stripe_cust_id:', extendedSubscription.customer)
+    log.debug('💾 Calling RPC function with params:')
+    log.debug('   target_user_id:', userId)
+    log.debug('   new_tier:', tierId)
+    log.debug('   new_status:', status)
+    log.debug('   stripe_sub_id:', extendedSubscription.id)
+    log.debug('   stripe_cust_id:', extendedSubscription.customer)
 
     const { data: rpcData, error: rpcError } = await supabase.rpc('update_user_subscription', {
       target_user_id: userId,
@@ -384,7 +385,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       console.error('   Hint:', rpcError.hint)
 
       // Try direct table update as fallback
-      console.log('🔄 Attempting fallback direct table update...')
+      log.debug('🔄 Attempting fallback direct table update...')
       const { error: fallbackError } = await supabase
         .from('users')
         .update({
@@ -399,14 +400,14 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       if (fallbackError) {
         console.error('❌ Fallback update also failed:', fallbackError)
       } else {
-        console.log('✅ Fallback update succeeded!')
+        log.debug('✅ Fallback update succeeded!')
       }
     } else {
-      console.log('✅ RPC function succeeded!')
-      console.log('   Response data:', rpcData)
+      log.debug('✅ RPC function succeeded!')
+      log.debug('   Response data:', rpcData)
     }
 
-    console.log(`✅ ===== SUBSCRIPTION UPDATE COMPLETE: ${tierId} (${status}) =====`)
+    log.debug(`✅ ===== SUBSCRIPTION UPDATE COMPLETE: ${tierId} (${status}) =====`)
   } catch (error) {
     console.error('❌ ===== ERROR IN SUBSCRIPTION UPDATE =====')
     console.error('Error:', error)
@@ -437,7 +438,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
       period_end: null
     })
 
-    console.log(`Subscription canceled for user ${userId}`)
+    log.debug(`Subscription canceled for user ${userId}`)
   } catch (error) {
     console.error('Error handling subscription cancellation:', error)
   }
@@ -486,7 +487,7 @@ async function logWebhookEvent(event: Stripe.Event) {
             throw insertError
           }
         } else {
-          console.log(`Webhook event ${event.id} already processed, skipping`)
+          log.debug(`Webhook event ${event.id} already processed, skipping`)
         }
       }
     }

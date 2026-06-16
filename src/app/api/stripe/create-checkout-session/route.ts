@@ -3,6 +3,7 @@ import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { log } from '@/lib/logger'
 
 // Force Node.js runtime (required for Stripe SDK)
 export const runtime = 'nodejs'
@@ -20,11 +21,11 @@ const PRICE_IDS: Record<string, { month: string; year: string }> = {
 
 export async function POST(request: NextRequest) {
   // Enhanced logging for debugging
-  console.log('=== Stripe Checkout Session Creation ===')
-  console.log('Environment check:')
-  console.log('- STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? 'Set' : 'Missing')
-  console.log('- STRIPE_MEDIUM_PRICE_ID:', process.env.STRIPE_MEDIUM_PRICE_ID || 'Missing')
-  console.log('- STRIPE_PREMIUM_PRICE_ID:', '(removed — single tier)')
+  log.debug('=== Stripe Checkout Session Creation ===')
+  log.debug('Environment check:')
+  log.debug('- STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY ? 'Set' : 'Missing')
+  log.debug('- STRIPE_MEDIUM_PRICE_ID:', process.env.STRIPE_MEDIUM_PRICE_ID || 'Missing')
+  log.debug('- STRIPE_PREMIUM_PRICE_ID:', '(removed — single tier)')
 
   if (!stripe) {
     console.error('Stripe not initialized - missing STRIPE_SECRET_KEY')
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     const userId = authSession.user.id
 
     const body = await request.json()
-    console.log('Request body:', body)
+    log.debug('Request body:', body)
 
     const { tierId, successUrl, cancelUrl, interval = 'month' } = body
 
@@ -81,10 +82,10 @@ export async function POST(request: NextRequest) {
 
     const billingInterval = interval === 'year' ? 'year' : 'month'
     const priceId = tierPrices[billingInterval]
-    console.log('Using price ID:', priceId, 'interval:', billingInterval)
+    log.debug('Using price ID:', priceId, 'interval:', billingInterval)
 
     // Get user details
-    console.log('Fetching user details for ID:', userId)
+    log.debug('Fetching user details for ID:', userId)
     const supabase = createAdminClient()
     let { data: user, error: userError } = await supabase
       .from('users')
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     // If profile doesn't exist, try to get email from auth and create profile
     if (!user) {
-      console.log('Profile not found, checking auth user...')
+      log.debug('Profile not found, checking auth user...')
       const { data: authData } = await supabase.auth.admin.getUserById(userId)
 
       if (!authData?.user?.email) {
@@ -162,11 +163,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log('User found:', { email: user.email, hasStripeCustomer: !!user.stripe_customer_id })
+    log.debug('User found:', { email: user.email, hasStripeCustomer: !!user.stripe_customer_id })
 
     // Check for existing active subscriptions and redirect to portal if found
     if (user.stripe_customer_id) {
-      console.log('Checking for existing active subscriptions...')
+      log.debug('Checking for existing active subscriptions...')
       try {
         const existingSubscriptions = await stripe.subscriptions.list({
           customer: user.stripe_customer_id,
@@ -175,7 +176,7 @@ export async function POST(request: NextRequest) {
         })
 
         if (existingSubscriptions.data.length > 0) {
-          console.log('User already has active subscription(s) - redirecting to portal:', existingSubscriptions.data.map(s => s.id))
+          log.debug('User already has active subscription(s) - redirecting to portal:', existingSubscriptions.data.map(s => s.id))
 
           // Create portal session instead of checkout
           const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
@@ -193,7 +194,7 @@ export async function POST(request: NextRequest) {
             portalUrl: portalSession.url,
           })
         }
-        console.log('No active subscriptions found - OK to create checkout')
+        log.debug('No active subscriptions found - OK to create checkout')
       } catch (error) {
         console.error('Error checking existing subscriptions:', error)
         // Continue anyway - better to allow duplicate than block legitimate checkout
@@ -204,7 +205,7 @@ export async function POST(request: NextRequest) {
     let customerId = user.stripe_customer_id
 
     if (!customerId) {
-      console.log('Creating new Stripe customer for:', user.email)
+      log.debug('Creating new Stripe customer for:', user.email)
       try {
         const customer = await stripe.customers.create({
           email: user.email,
@@ -213,7 +214,7 @@ export async function POST(request: NextRequest) {
           },
         })
         customerId = customer.id
-        console.log('Created Stripe customer:', customerId)
+        log.debug('Created Stripe customer:', customerId)
 
         // Update user with Stripe customer ID
         const { error: updateError } = await supabase
@@ -233,11 +234,11 @@ export async function POST(request: NextRequest) {
         )
       }
     } else {
-      console.log('Using existing Stripe customer:', customerId)
+      log.debug('Using existing Stripe customer:', customerId)
     }
 
     // Create checkout session
-    console.log('Creating checkout session with params:', {
+    log.debug('Creating checkout session with params:', {
       customerId,
       priceId: priceId,
       tierId,
@@ -270,7 +271,7 @@ export async function POST(request: NextRequest) {
         },
       })
 
-      console.log('Checkout session created successfully:', session.id)
+      log.debug('Checkout session created successfully:', session.id)
       return NextResponse.json({ sessionId: session.id })
     } catch (stripeError) {
       console.error('Failed to create checkout session:', stripeError)

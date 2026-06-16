@@ -4,6 +4,7 @@
  */
 
 import { supabase } from './supabase'
+import { log } from '@/lib/logger'
 
 /**
  * Extract hashtags from text
@@ -74,7 +75,7 @@ export async function resolveUsernames(usernames: string[]): Promise<string[]> {
 export async function getOrCreateHashtags(hashtags: string[]): Promise<string[]> {
   if (!hashtags || hashtags.length === 0) return []
 
-  console.log('[Hashtags] Processing hashtags:', hashtags)
+  log.debug('[Hashtags] Processing hashtags:', hashtags)
   const hashtagIds: string[] = []
 
   try {
@@ -89,11 +90,11 @@ export async function getOrCreateHashtags(hashtags: string[]): Promise<string[]>
         .single()
 
       if (existing) {
-        console.log('[Hashtags] Found existing hashtag:', normalizedTag, existing.id)
+        log.debug('[Hashtags] Found existing hashtag:', normalizedTag, existing.id)
         hashtagIds.push(existing.id)
       } else if (fetchError?.code === 'PGRST116') {
         // Hashtag doesn't exist, create it
-        console.log('[Hashtags] Creating new hashtag:', normalizedTag)
+        log.debug('[Hashtags] Creating new hashtag:', normalizedTag)
         const { data: created, error: createError } = await supabase
           .from('hashtags')
           .insert({
@@ -104,7 +105,7 @@ export async function getOrCreateHashtags(hashtags: string[]): Promise<string[]>
           .single()
 
         if (created) {
-          console.log('[Hashtags] Created hashtag:', normalizedTag, created.id)
+          log.debug('[Hashtags] Created hashtag:', normalizedTag, created.id)
           hashtagIds.push(created.id)
         } else {
           console.error('[Hashtags] Error creating hashtag:', normalizedTag, createError)
@@ -114,7 +115,7 @@ export async function getOrCreateHashtags(hashtags: string[]): Promise<string[]>
       }
     }
 
-    console.log('[Hashtags] Final hashtag IDs:', hashtagIds)
+    log.debug('[Hashtags] Final hashtag IDs:', hashtagIds)
     return hashtagIds
   } catch (error) {
     console.error('[Hashtags] Error in getOrCreateHashtags:', error)
@@ -131,7 +132,7 @@ export async function linkHashtagsToPost(postId: string, hashtagIds: string[]): 
   if (!postId || !hashtagIds || hashtagIds.length === 0) return
 
   try {
-    console.log('[Hashtags] Linking hashtags to post:', postId, hashtagIds)
+    log.debug('[Hashtags] Linking hashtags to post:', postId, hashtagIds)
     const insertData = hashtagIds.map(hashtagId => ({
       post_id: postId,
       hashtag_id: hashtagId
@@ -146,7 +147,7 @@ export async function linkHashtagsToPost(postId: string, hashtagIds: string[]): 
       console.error('[Hashtags] Error linking hashtags to post:', error)
       throw error
     }
-    console.log('[Hashtags] Successfully linked hashtags:', data)
+    log.debug('[Hashtags] Successfully linked hashtags:', data)
   } catch (error) {
     console.error('[Hashtags] Error linking hashtags to post:', error)
   }

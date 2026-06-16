@@ -5,6 +5,7 @@ import { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 import { Tables } from './supabase'
 import { pushDataLayerEvent } from './analytics'
+import { log } from '@/lib/logger'
 
 type UserProfile = Tables<'users'> & { role?: string; is_banned?: boolean }
 
@@ -108,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } else if (!data && !profileCreationInProgress.current) {
           // Profile doesn't exist and not already creating
           profileCreationInProgress.current = true
-          console.log('Profile not found, attempting to create one...')
+          log.debug('Profile not found, attempting to create one...')
 
           try {
             const response = await fetch('/api/auth/create-profile', {
@@ -123,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               if (result.profile) {
                 profileCache.current.set(userId, result.profile as any)
                 setProfile(result.profile as any)
-                console.log('Profile created successfully:', result.profile.username)
+                log.debug('Profile created successfully:', result.profile.username)
               }
             } else {
               const errorData = await response.json()
@@ -377,7 +378,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setProfile(data)
       profileCache.current.set(user.id, data as any)
-      console.log('Profile updated successfully')
+      log.debug('Profile updated successfully')
       
       return { data, error: null }
     } catch (error) {
@@ -391,7 +392,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error || !session) {
-        console.log('Auth: Session validation failed')
+        log.debug('Auth: Session validation failed')
         sessionStorage.setItem('auth-status', 'unauthenticated')
         setUser(null)
         setProfile(null)

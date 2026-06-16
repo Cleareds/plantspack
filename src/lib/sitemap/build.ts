@@ -9,6 +9,7 @@
  */
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { log } from '@/lib/logger'
 
 const SITE_URL = 'https://www.plantspack.com'
 
@@ -151,7 +152,7 @@ function renderUrlEntry(e: SitemapEntry): string {
 }
 
 export async function buildSitemap(id: SegmentId): Promise<string> {
-  console.log(`[sitemap ${id}] START`)
+  log.debug(`[sitemap ${id}] START`)
   const sb = getSupabase()
 
   const [places, posts, packs] = await Promise.all([
@@ -175,7 +176,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     ),
   ])
 
-  console.log(`[sitemap ${id}] fetched places=${places.length} posts=${posts.length} packs=${packs.length}`)
+  log.debug(`[sitemap ${id}] fetched places=${places.length} posts=${posts.length} packs=${packs.length}`)
 
   const byTier: Record<SegmentId, PlaceRow[]> = { priority: [], content: [], thin: [] }
   for (const p of places) {
@@ -319,7 +320,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     entries.map(renderUrlEntry).join('\n') +
     `\n</urlset>\n`
 
-  console.log(`[sitemap ${id}] DONE — ${entries.length} entries`)
+  log.debug(`[sitemap ${id}] DONE — ${entries.length} entries`)
   return body
 }
 
