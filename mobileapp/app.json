@@ -5,43 +5,69 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
     "scheme": "plantspack",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#10b981"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.plantspack.app",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "PlantsPack needs your location to show nearby vegan places on the map.",
-        "NSPhotoLibraryUsageDescription": "PlantsPack needs access to your photo library to let you share images in your posts.",
-        "NSCameraUsageDescription": "PlantsPack needs camera access to let you take photos for your posts."
-      }
+        "NSCameraUsageDescription": "PlantsPack needs camera access for the barcode and ingredient scanners.",
+        "NSPhotoLibraryUsageDescription": "PlantsPack needs photo library access to scan ingredient labels.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "associatedDomains": [
+        "applinks:plantspack.com"
+      ],
+      "buildNumber": "8"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#10b981"
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png",
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.plantspack.app",
+      "package": "plantspack.app",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
-        "CAMERA",
-        "READ_MEDIA_IMAGES",
-        "READ_MEDIA_VIDEO"
+        "CAMERA"
       ],
-      "config": {
-        "googleMaps": {
-          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+      "blockedPermissions": [
+        "com.google.android.gms.permission.AD_ID",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "plantspack.com",
+              "pathPrefix": "/vegan"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
-      }
+      ],
+      "versionCode": 6
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -49,11 +75,14 @@
     },
     "plugins": [
       "expo-router",
+      "expo-status-bar",
+      "expo-secure-store",
+      "expo-notifications",
+      "@maplibre/maplibre-react-native",
       [
-        "expo-image-picker",
+        "expo-camera",
         {
-          "photosPermission": "Allow PlantsPack to access your photos to share in posts.",
-          "cameraPermission": "Allow PlantsPack to use your camera to take photos for posts."
+          "cameraPermission": "Allow PlantsPack to access your camera for barcode and ingredient scanning."
         }
       ],
       [
@@ -61,25 +90,22 @@
         {
           "locationWhenInUsePermission": "Allow PlantsPack to use your location to show nearby vegan places."
         }
-      ],
-      [
-        "@stripe/stripe-react-native",
-        {
-          "merchantIdentifier": "merchant.com.plantspack.app",
-          "enableGooglePay": true
-        }
-      ],
-      "expo-secure-store",
-      "expo-video",
-      "expo-web-browser"
+      ]
     ],
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "your-project-id"
+        "projectId": "2387639f-4faf-4aa3-bbf1-6469e262b321"
       }
+    },
+    "owner": "papasoft",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/2387639f-4faf-4aa3-bbf1-6469e262b321"
     }
   }
 }
