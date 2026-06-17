@@ -49,6 +49,14 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   metadataBase: new URL('https://www.plantspack.com'),
   manifest: '/manifest.json',
+  // SVG favicon for modern browsers; src/app/icon.png and src/app/apple-icon.png
+  // are auto-served by Next.js's file-based metadata convention as the raster
+  // fallback (PNG) and Apple Touch Icon respectively.
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
   robots: {
     index: true,
     follow: true,
