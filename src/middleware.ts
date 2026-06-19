@@ -67,8 +67,20 @@ export async function middleware(request: NextRequest) {
   // bleed crawl budget: GSC 2026-05-14 export showed 80 "crawled-not-
   // indexed" and 128 "404" errors were apex-domain URLs that should
   // have redirected. One single fix collapses 208 reported errors.
+  //
+  // Exception: paths that mobile App Links / Universal Links verifiers
+  // must reach on the apex without any redirect. Google's Android App
+  // Links and Apple's iOS Universal Links both REFUSE to follow any
+  // redirect when fetching their verification files. They also fetch
+  // the actual deep-link URL itself (e.g. plantspack.com/vegan) and
+  // expect 200 there — hence /vegan and the well-known files all
+  // bypass the apex redirect on the apex host.
   const host = request.headers.get('host') || ''
-  if (host === 'plantspack.com') {
+  const isAppLinksPath =
+    pathname.startsWith('/.well-known/') ||
+    pathname === '/vegan' ||
+    pathname.startsWith('/vegan/')
+  if (host === 'plantspack.com' && !isAppLinksPath) {
     const url = request.nextUrl.clone()
     url.host = 'www.plantspack.com'
     url.protocol = 'https:'
