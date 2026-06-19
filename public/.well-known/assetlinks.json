@@ -1,11 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "plantspack.app",
       "sha256_cert_fingerprints": [
-        "REPLACE_WITH_PLAY_APP_SIGNING_SHA256"
+        "REPLACE_WITH_PLAY_APP_SIGNING_SHA256",
+        "33:DF:8F:44:6D:A4:E8:3A:D9:6D:C6:BF:7A:39:5A:48:4C:D5:6F:D5:1E:66:D9:68:23:12:8E:AD:FB:D3:B9:E1"
       ]
     }
   }

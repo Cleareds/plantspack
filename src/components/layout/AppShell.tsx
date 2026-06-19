@@ -7,6 +7,7 @@ import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 import BottomNav from './BottomNav'
 import Footer from './Footer'
+import { safeStorage } from '@/lib/safe-storage'
 
 function useGeolocation() {
   const [showBanner, setShowBanner] = useState(false)
@@ -18,17 +19,17 @@ function useGeolocation() {
     // dark-pattern prompt for a feature they don't get. Only signed-in
     // users see this banner and the subsequent geolocation prompts.
     // `auth-status` is written by the AuthProvider on every state change.
-    if (sessionStorage.getItem('auth-status') !== 'authenticated') return
+    if (safeStorage.session.get('auth-status') !== 'authenticated') return
     // Use localStorage for persistence across tabs/reloads
-    if (localStorage.getItem('geo_resolved')) return
+    if (safeStorage.local.get('geo_resolved')) return
 
     function storeLocation(lat: number, lng: number, city?: string, country?: string) {
-      localStorage.setItem('user_lat', String(lat))
-      localStorage.setItem('user_lng', String(lng))
-      if (city) localStorage.setItem('user_city', city)
-      if (country) localStorage.setItem('user_country', country)
-      localStorage.setItem('geo_resolved', '1')
-      localStorage.setItem('geo_timestamp', String(Date.now()))
+      safeStorage.local.set('user_lat', String(lat))
+      safeStorage.local.set('user_lng', String(lng))
+      if (city) safeStorage.local.set('user_city', city)
+      if (country) safeStorage.local.set('user_country', country)
+      safeStorage.local.set('geo_resolved', '1')
+      safeStorage.local.set('geo_timestamp', String(Date.now()))
       // Mirror to cookies so the next SSR hit of / can use them directly.
       // Same-tab localStorage writes don't fire `storage` events, so we have
       // to set the cookies explicitly here.
@@ -46,7 +47,7 @@ function useGeolocation() {
             storeLocation(data.latitude, data.longitude, data.city, data.country_name)
           }
         })
-        .catch(() => { localStorage.setItem('geo_resolved', '1') })
+        .catch(() => { safeStorage.local.set('geo_resolved', '1') })
     }
 
     // Check permission state
@@ -75,9 +76,9 @@ function useGeolocation() {
   const requestGeolocation = () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
-        sessionStorage.setItem('user_lat', String(pos.coords.latitude))
-        sessionStorage.setItem('user_lng', String(pos.coords.longitude))
-        sessionStorage.setItem('geo_resolved', '1')
+        safeStorage.session.set('user_lat', String(pos.coords.latitude))
+        safeStorage.session.set('user_lng', String(pos.coords.longitude))
+        safeStorage.session.set('geo_resolved', '1')
         setShowBanner(false)
         window.location.reload() // reload to use precise location
       },

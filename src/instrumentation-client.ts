@@ -70,6 +70,15 @@ const initOptions = {
     // Next.js known benign — router aborts during navigation.
     'NEXT_REDIRECT',
     'NEXT_NOT_FOUND',
+    // Storage SecurityError — fires when our page is loaded inside Google
+    // Translate's iframe proxy (xxx.translate.goog), Safari ITP, Brave
+    // Strict, sandboxed iframes etc. Storage access is denied for those
+    // contexts. Already handled gracefully via @/lib/safe-storage; this
+    // filter just removes Sentry noise for the remaining call sites that
+    // haven't been migrated yet.
+    /SecurityError.*localStorage/,
+    /SecurityError.*sessionStorage/,
+    /Access is denied for this document/,
   ],
 
   // Filter sensitive data before sending

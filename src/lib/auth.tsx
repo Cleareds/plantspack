@@ -6,6 +6,7 @@ import { supabase } from './supabase'
 import { Tables } from './supabase'
 import { pushDataLayerEvent } from './analytics'
 import { log } from '@/lib/logger'
+import { safeStorage } from './safe-storage'
 
 type UserProfile = Tables<'users'> & { role?: string; is_banned?: boolean }
 
@@ -57,11 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null)
           setProfile(null)
           setSession(null)
-          sessionStorage.setItem('auth-status', 'unauthenticated')
+          safeStorage.session.set('auth-status', 'unauthenticated')
         } else if (session?.user) {
           setSession(session)
           setUser(session.user)
-          sessionStorage.setItem('auth-status', 'authenticated')
+          safeStorage.session.set('auth-status', 'authenticated')
           
           loadUserProfile(session.user.id).catch(error => {
             console.error('Profile loading failed:', error)
@@ -70,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null)
           setProfile(null)
           setSession(null)
-          sessionStorage.setItem('auth-status', 'unauthenticated')
+          safeStorage.session.set('auth-status', 'unauthenticated')
         }
       } catch (error) {
         if (!isMounted) return
@@ -78,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
         setProfile(null)
         setSession(null)
-        sessionStorage.setItem('auth-status', 'error')
+        safeStorage.session.set('auth-status', 'error')
       } finally {
         if (isMounted) {
           setLoading(false)
@@ -160,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(null)
         setUser(null)
         setProfile(null)
-        sessionStorage.setItem('auth-status', 'unauthenticated')
+        safeStorage.session.set('auth-status', 'unauthenticated')
       } else {
         setSession(session)
         setUser(session?.user ?? null)
@@ -169,7 +170,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthReady(true)
 
         if (session?.user) {
-          sessionStorage.setItem('auth-status', 'authenticated')
+          safeStorage.session.set('auth-status', 'authenticated')
           // Fire sign_up vs login to the dataLayer. SIGNED_IN fires for both
           // fresh signups and returning logins; distinguish by comparing
           // created_at to last_sign_in_at (within 60s = fresh signup, esp.
@@ -186,7 +187,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error('Profile loading failed:', error)
           })
         } else {
-          sessionStorage.setItem('auth-status', 'unauthenticated')
+          safeStorage.session.set('auth-status', 'unauthenticated')
           setProfile(null)
         }
       }
@@ -393,7 +394,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error || !session) {
         log.debug('Auth: Session validation failed')
-        sessionStorage.setItem('auth-status', 'unauthenticated')
+        safeStorage.session.set('auth-status', 'unauthenticated')
         setUser(null)
         setProfile(null)
         setSession(null)

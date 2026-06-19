@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { safeStorage } from './safe-storage'
 
 type VeganFilter = 'all' | 'fully_vegan'
 
@@ -21,7 +22,7 @@ export function VeganFilterProvider({ children }: { children: ReactNode }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('plantspack_vegan_filter')
+    const saved = safeStorage.local.get('plantspack_vegan_filter')
     if (saved === 'fully_vegan') {
       setVeganFilterState('fully_vegan')
     }
@@ -29,7 +30,7 @@ export function VeganFilterProvider({ children }: { children: ReactNode }) {
 
   const setVeganFilter = (filter: VeganFilter) => {
     setVeganFilterState(filter)
-    localStorage.setItem('plantspack_vegan_filter', filter)
+    safeStorage.local.set('plantspack_vegan_filter', filter)
   }
 
   return (
