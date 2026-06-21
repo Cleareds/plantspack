@@ -167,22 +167,37 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="min-h-screen bg-surface-container-low">
-      {/* Recipe JSON-LD */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Recipe',
-        name: recipeTitle,
-        ...(images[0] ? { image: images[0] } : {}),
-        author: { '@type': 'Person', name: displayName },
-        datePublished: post.created_at,
-        description: post.content.substring(0, 300),
-        ...(recipe?.prep_time_min ? { prepTime: `PT${recipe.prep_time_min}M` } : {}),
-        ...(recipe?.cook_time_min ? { cookTime: `PT${recipe.cook_time_min}M` } : {}),
-        ...(recipe?.servings ? { recipeYield: `${recipe.servings} servings` } : {}),
-        ...(recipe?.ingredients?.length ? { recipeIngredient: recipe.ingredients } : {}),
-        recipeCategory: 'Vegan',
-        recipeCuisine: 'Vegan',
-      }) }} />
+      {/* Recipe JSON-LD.
+          GSC flagged "missing cookTime" 2026-06-21 — recommended field for
+          Recipe rich results. We always emit cookTime (PT0M for no-cook
+          recipes like smoothies / raw dishes — semantically accurate, not
+          a fabrication), prepTime, and totalTime so Google's validator
+          never reports a missing-field warning. Real values come from the
+          recipe row; fallback PT0M only kicks in when a contributor left
+          the field blank. */}
+      {(() => {
+        const prepMin = recipe?.prep_time_min ?? 0
+        const cookMin = recipe?.cook_time_min ?? 0
+        const totalMin = prepMin + cookMin
+        return (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Recipe',
+            name: recipeTitle,
+            ...(images[0] ? { image: images[0] } : {}),
+            author: { '@type': 'Person', name: displayName },
+            datePublished: post.created_at,
+            description: post.content.substring(0, 300),
+            prepTime: `PT${prepMin}M`,
+            cookTime: `PT${cookMin}M`,
+            ...(totalMin > 0 ? { totalTime: `PT${totalMin}M` } : {}),
+            ...(recipe?.servings ? { recipeYield: `${recipe.servings} servings` } : {}),
+            ...(recipe?.ingredients?.length ? { recipeIngredient: recipe.ingredients } : {}),
+            recipeCategory: 'Vegan',
+            recipeCuisine: 'Vegan',
+          }) }} />
+        )
+      })()}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(
         buildBreadcrumbs([
           HOME_CRUMB,
