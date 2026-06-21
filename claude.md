@@ -56,8 +56,8 @@ When writing copy about the platform:
 ### Recipe Sources
 - **ONLY source recipes from 100% vegan creators/websites**
 - **NEVER source from non-vegan or "plant-based leaning" sites** that also publish non-vegan recipes
-- **Banned sources:** Minimalist Baker (minimalistbaker.com), and any site that publishes recipes containing animal products
-- **Approved sources:** Nora Cooks, Bianca Zapatka, Vegan Richa, Rainbow Plant Life, and any creator whose entire catalog is 100% vegan
+- **Banned sources:** Minimalist Baker (minimalistbaker.com); Bianca Zapatka (biancazapatka.com — site footer states "mainly plant-based" and a Vegetarian category exists, verified 2026-06-21); and any site that publishes recipes containing animal products
+- **Approved sources:** Nora Cooks, Vegan Richa, Rainbow Plant Life, and any creator whose entire catalog is 100% vegan
 - **Before importing recipes from a new source:** verify that the source is exclusively vegan by checking their about page and recipe catalog. If in doubt, ask the user.
 - All imported recipes MUST include `source_url` and `source_attribution` crediting the original creator
 
