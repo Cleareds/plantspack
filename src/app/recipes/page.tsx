@@ -23,29 +23,65 @@ export const metadata: Metadata = {
 
 const PAGE_SIZE = 50
 
+// Username that always appears at the top of the recipes list. Pinned ahead
+// of community/imported recipes for editorial reasons. Pin is by username
+// (not user_id) so it survives any future ID rotation; the user must exist
+// in public.users with this exact username for the pin to take effect.
+const PINNED_USERNAME = 'sonna_moka'
+
+const RECIPE_SELECT = `
+  id, title, slug, content, images, image_url, secondary_tags, created_at,
+  recipe_data,
+  users!inner(id, username, first_name, last_name, avatar_url)
+`
+
 async function getRecipes() {
   const supabase = createAdminClient()
 
-  // Fetch first page + 1 extra to know if there are more
-  const { data } = await supabase
+  // Pinned author first — fetch all their recent recipes (capped at PAGE_SIZE
+  // as a sanity bound). When the pinned author has zero recipes this query
+  // returns []` and the list falls through to the everyone-else query
+  // unchanged. Two-query approach keeps pagination predictable; ordering
+  // inside a single SQL query against an embedded relation is awkward in
+  // PostgREST.
+  const { data: pinned } = await supabase
     .from('posts')
-    .select(`
-      id, title, slug, content, images, image_url, secondary_tags, created_at,
-      recipe_data,
-      users!inner(id, username, first_name, last_name, avatar_url)
-    `)
+    .select(RECIPE_SELECT)
     .eq('category', 'recipe')
     .eq('privacy', 'public')
     .is('deleted_at', null)
     .not('recipe_data', 'is', null)
+    .eq('users.username', PINNED_USERNAME)
     .order('created_at', { ascending: false })
-    .limit(PAGE_SIZE + 1)
+    .limit(PAGE_SIZE)
 
-  const recipes = data || []
-  const hasMore = recipes.length > PAGE_SIZE
+  const pinnedRows = pinned ?? []
+  const pinnedIds = pinnedRows.map((r) => r.id)
+  const remaining = PAGE_SIZE + 1 - pinnedRows.length
+
+  let restRows: typeof pinnedRows = []
+  if (remaining > 0) {
+    let restQuery = supabase
+      .from('posts')
+      .select(RECIPE_SELECT)
+      .eq('category', 'recipe')
+      .eq('privacy', 'public')
+      .is('deleted_at', null)
+      .not('recipe_data', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(remaining)
+    if (pinnedIds.length > 0) {
+      restQuery = restQuery.not('id', 'in', `(${pinnedIds.map((id) => `"${id}"`).join(',')})`)
+    }
+    const { data } = await restQuery
+    restRows = data ?? []
+  }
+
+  const combined = [...pinnedRows, ...restRows]
+  const hasMore = combined.length > PAGE_SIZE
 
   return {
-    recipes: hasMore ? recipes.slice(0, PAGE_SIZE) : recipes,
+    recipes: hasMore ? combined.slice(0, PAGE_SIZE) : combined,
     hasMore,
   }
 }
