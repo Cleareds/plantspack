@@ -157,7 +157,10 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
 
   // FAQ schema: extract H2 "FAQ" or "Frequently asked questions" section and its child Q/A pairs.
   // Markdown convention used in posts: `### Question?` followed by paragraph answer.
-  const faqMatch = article.content.match(/##+\s*(?:FAQ|Frequently asked questions)[^\n]*\n([\s\S]+?)(?=\n##\s|\n---|\n\*\*Want|\Z)/i)
+  // NB: terminate on end-of-string with `$`, not `\Z` — JS has no `\Z` anchor, so `\Z`
+  // was matching a literal "Z" (and, under the /i flag, any lowercase "z"), truncating
+  // the FAQ block at the first "z" (e.g. "pizza") and silently breaking FAQ schema.
+  const faqMatch = article.content.match(/##+\s*(?:FAQ|Frequently asked questions)[^\n]*\n([\s\S]+?)(?=\n##\s|\n---|\n\*\*Want|$)/i)
   const faqItems: { q: string; a: string }[] = []
   if (faqMatch) {
     const block = faqMatch[1]
