@@ -58,6 +58,10 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  verification: {
+    // Pinterest domain claim → renders <meta name="p:domain_verify" content="...">
+    other: { 'p:domain_verify': 'c0934acbbf2430867bedf8648981989a' },
+  },
   // openGraph.images and twitter.images are auto-supplied by Next.js's
   // file-based metadata convention from src/app/opengraph-image.tsx and
   // src/app/twitter-image.tsx. Those generators render the brand SVG +
@@ -177,7 +181,7 @@ export default function RootLayout({
                   url: 'https://www.plantspack.com',
                   logo: 'https://www.plantspack.com/plantspack-logo-real.svg',
                   description:
-                    'Community-funded vegan platform with free barcode scanner, baking calculator, menu translator, drinks lookup, plus 50,000+ verified plant-based places across 1,400+ cities in 160+ countries. Ad-free.',
+                    'Community-driven vegan platform with free barcode scanner, baking calculator, menu translator, drinks lookup, plus 50,000+ verified plant-based places across 1,400+ cities in 160+ countries. Ad-free.',
                   slogan: 'Free vegan tools and verified plant-based places, ad-free.',
                   sameAs: [
                     'https://x.com/plantspackX',

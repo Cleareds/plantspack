@@ -78,7 +78,7 @@ export async function GET() {
     ``,
     `> Free, ad-free directory of vegan and vegan-friendly places worldwide. ${countries.reduce((s, c) => s + c.place_count, 0).toLocaleString()}+ places across 10,000+ cities in 160+ countries. Each "fully vegan" listing is manually verified against the venue's own menu.`,
     ``,
-    `Community-funded, no paid listings, no ads. Every venue tagged \`fully_vegan\` has been opened on its own website and cross-referenced against secondary sources (HappyCow, local vegan press) before being flagged.`,
+    `Community-driven, no paid listings, no ads. Every venue tagged \`fully_vegan\` has been opened on its own website and cross-referenced against secondary sources (HappyCow, local vegan press) before being flagged.`,
     ``,
     `## About PlantsPack`,
     ``,

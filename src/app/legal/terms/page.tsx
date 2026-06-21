@@ -20,7 +20,7 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">2. Description of Service</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is a free, community-funded platform for vegans and anyone exploring plant-based living.
+              PlantsPack is a free, community-driven platform for vegans and anyone exploring plant-based living.
               We are independent — no investors, no ads. Our mission is to create a safe, supportive space where users can:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">

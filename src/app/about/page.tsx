@@ -4,7 +4,7 @@ import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'l
 
 export const metadata: Metadata = {
   title: 'About PlantsPack — Built for the Mission, Not the Markets',
-  description: 'PlantsPack is a community-funded, ad-free vegan platform mapping 37,000+ plant-based places across 170+ countries. No investors — 50% of profit funds animal welfare.',
+  description: 'PlantsPack is a community-driven, ad-free vegan platform mapping 37,000+ plant-based places across 170+ countries. No investors — 50% of profit funds animal welfare.',
   alternates: { canonical: 'https://www.plantspack.com/about' },
 }
 
@@ -27,7 +27,7 @@ export default function AboutPage() {
             <span className="text-primary">Not the Markets</span>
           </h1>
           <p className="text-on-surface-variant text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            PlantsPack is a free, community-funded platform for vegans and anyone exploring plant-based living.
+            PlantsPack is a free, community-driven platform for vegans and anyone exploring plant-based living.
             No investors. No ads. No paywalls.
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function AboutPage() {
               We are doing things differently.
             </p>
             <p>
-              PlantsPack is independent and community-funded. We don&apos;t answer to investors &mdash;
+              PlantsPack is independent and community-driven. We don&apos;t answer to investors &mdash;
               we answer to you. Our goal isn&apos;t to become a billion-dollar company. It&apos;s to create a
               <strong> permanent, digital home for the vegan movement</strong>.
             </p>
@@ -147,7 +147,7 @@ export default function AboutPage() {
             </div>
           </div>
           <p className="text-on-surface-variant text-sm italic">
-            No bloated salaries. No shady data selling. Just a community-funded tool that gives back. The 50% donation is calculated from net profit, not gross revenue — because the law requires us to cover taxes and expenses first. We believe in full transparency about this.
+            No bloated salaries. No shady data selling. Just a community-driven tool that gives back. The 50% donation is calculated from net profit, not gross revenue — because the law requires us to cover taxes and expenses first. We believe in full transparency about this.
           </p>
         </div>
 
