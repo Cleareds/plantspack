@@ -25,18 +25,14 @@ export default function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col p-6 gap-4 h-screen w-64 bg-surface fixed left-0 top-0 z-40 font-body">
       {/* Logo */}
-      <Link href="/" className="flex items-end gap-1 mb-3">
+      <Link href="/" className="flex items-center mb-3">
         <Image
-          src="/plantspack-logo-real.svg"
-          alt="PlantsPack Logo"
-          width={64}
-          height={42}
-          className="object-contain"
+          src="/plantspack.svg"
+          alt="PlantsPack"
+          width={1967}
+          height={233}
+          className="h-7 w-auto"
         />
-        <div className="flex flex-col">
-          <span className="font-headline font-extrabold text-primary text-lg tracking-tight leading-tight">Plants Pack</span>
-          <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">vegan syndicate</span>
-        </div>
       </Link>
 
       {/* Navigation */}

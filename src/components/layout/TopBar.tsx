@@ -34,18 +34,14 @@ export default function TopBar() {
     <header className="fixed top-0 right-0 left-0 lg:left-64 z-50 bg-surface/80 backdrop-blur-lg">
       <div className="flex justify-between items-center px-4 md:px-8 h-20">
         {/* Mobile logo (shown only on mobile where sidebar is hidden) */}
-        <Link href="/" className="flex items-center gap-2 lg:hidden">
+        <Link href="/" className="flex items-center shrink-0 lg:hidden">
           <Image
-            src="/plantspack-logo-real.svg"
-            alt="PlantsPack Logo"
-            width={36}
-            height={36}
-            className="object-contain"
+            src="/plantspack.svg"
+            alt="PlantsPack"
+            width={1967}
+            height={233}
+            className="h-[18px] w-[152px] shrink-0"
           />
-          <div className="flex flex-col">
-            <span className="font-headline font-extrabold text-primary text-lg tracking-tight leading-tight">Plants Pack</span>
-            <span className="text-[8px] uppercase tracking-widest text-on-surface-variant font-bold">vegan syndicate</span>
-          </div>
         </Link>
 
         {/* Search Bar - center (desktop only) */}

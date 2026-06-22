@@ -13,18 +13,14 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-                <Link href="/" className="flex items-center space-x-3">
+                <Link href="/" className="flex items-center">
                     <Image
-                        src="/plantspack-logo-real.svg"
-                        alt="PlantsPack Logo"
-                        width={64}
-                        height={42}
-                        className="object-contain"
+                        src="/plantspack.svg"
+                        alt="PlantsPack"
+                        width={1967}
+                        height={233}
+                        className="h-7 w-auto"
                     />
-                    <div className="flex flex-col">
-                        <span className="text-xl font-bold text-on-surface tracking-editorial leading-[1.1]">PLANTS PACK</span>
-                        <span className="text-sm font-light text-on-surface-variant leading-[1.1]">vegan syndicate</span>
-                    </div>
                 </Link>
             </div>
             <p className="text-sm text-on-surface-variant mb-4">
