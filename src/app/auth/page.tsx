@@ -11,6 +11,10 @@ function AuthContent() {
   const mode = searchParams.get('mode')
   const errorParam = searchParams.get('error')
   const successParam = searchParams.get('success')
+  // Where to land after auth. Only allow same-site relative paths (must start
+  // with a single "/") so this can't be used as an open redirect.
+  const redirectParam = searchParams.get('redirect')
+  const postAuthDest = redirectParam && /^\/(?!\/)/.test(redirectParam) ? redirectParam : '/'
   const [isLogin, setIsLogin] = useState(mode === 'signin')
   const [isRedirecting, setIsRedirecting] = useState(false)
   const [globalError, setGlobalError] = useState<string | null>(null)
@@ -32,9 +36,9 @@ function AuthContent() {
   useEffect(() => {
     if (initialized && user && !isRedirecting) {
       setIsRedirecting(true)
-      router.push('/')
+      router.push(postAuthDest)
     }
-  }, [user, initialized, router, isRedirecting])
+  }, [user, initialized, router, isRedirecting, postAuthDest])
 
   // Update form mode when URL parameter changes
   useEffect(() => {

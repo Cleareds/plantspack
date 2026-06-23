@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useAuth } from '@/lib/auth'
+import { useSearchParams } from 'next/navigation'
 import { Lock, User, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 
@@ -17,6 +18,8 @@ export default function LoginForm({ onToggle }: LoginFormProps) {
   const [error, setError] = useState('')
 
   const { signIn, signInWithGoogle, signInWithFacebook } = useAuth()
+  // Preserve where the user came from (e.g. a place page they're claiming).
+  const next = useSearchParams().get('redirect') || undefined
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,7 +59,7 @@ export default function LoginForm({ onToggle }: LoginFormProps) {
         <div className="space-y-2 mb-5">
           <button
             type="button"
-            onClick={signInWithGoogle}
+            onClick={() => signInWithGoogle(next)}
             className="w-full inline-flex items-center justify-center gap-3 py-2.5 px-4 ghost-border rounded-md editorial-shadow bg-surface-container-lowest text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
           >
             <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
@@ -69,7 +72,7 @@ export default function LoginForm({ onToggle }: LoginFormProps) {
           </button>
           <button
             type="button"
-            onClick={signInWithFacebook}
+            onClick={() => signInWithFacebook(next)}
             className="w-full inline-flex items-center justify-center gap-3 py-2.5 px-4 ghost-border rounded-md editorial-shadow bg-surface-container-lowest text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
           >
             <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">

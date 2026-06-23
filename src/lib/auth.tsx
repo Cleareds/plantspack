@@ -19,8 +19,8 @@ interface AuthContextType {
   authReady: boolean  // New: true when auth is stable and components can fetch data
   signUp: (email: string, password: string, userData: { username: string; firstName?: string; lastName?: string }) => Promise<any>
   signIn: (email: string, password: string) => Promise<any>
-  signInWithGoogle: () => Promise<any>
-  signInWithFacebook: () => Promise<any>
+  signInWithGoogle: (next?: string) => Promise<any>
+  signInWithFacebook: (next?: string) => Promise<any>
   signOut: () => Promise<any>
   updateProfile: (updates: Partial<UserProfile>) => Promise<any>
   validateSession: () => Promise<boolean>
@@ -330,20 +330,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const signInWithGoogle = async () => {
+  // `next` (a same-site relative path) is forwarded to the callback so OAuth
+  // returns the user where they started (e.g. a place page they're claiming).
+  const callbackUrl = (next?: string) =>
+    `${window.location.origin}/auth/callback${next && /^\/(?!\/)/.test(next) ? `?next=${encodeURIComponent(next)}` : ''}`
+
+  const signInWithGoogle = async (next?: string) => {
     return await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: callbackUrl(next),
       },
     })
   }
 
-  const signInWithFacebook = async () => {
+  const signInWithFacebook = async (next?: string) => {
     return await supabase.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: callbackUrl(next),
       },
     })
   }

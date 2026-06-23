@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Building2, Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
+import { usePathname } from 'next/navigation'
 import ClaimBusinessModal from './ClaimBusinessModal'
 import type { ClaimStatusResponse } from '@/types/place-claims'
 import Link from 'next/link'
@@ -19,6 +20,7 @@ export default function ClaimBusinessButton({
   isOwner = false
 }: ClaimBusinessButtonProps) {
   const { user } = useAuth()
+  const pathname = usePathname()
   const [modalOpen, setModalOpen] = useState(false)
   const [claimStatus, setClaimStatus] = useState<ClaimStatusResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -55,11 +57,24 @@ export default function ClaimBusinessButton({
     }, 5000)
   }
 
-  // Don't show if user not logged in
-  if (!user) return null
-
-  // Don't show if user is already the owner
+  // Already owned — nothing to claim (also hides for the owner themselves).
   if (isOwner) return null
+
+  // Guest: surface the claim path + a sign-in CTA that returns here afterwards,
+  // so business owners can discover they're able to claim. (Previously this
+  // rendered nothing for logged-out visitors — the reported gap.)
+  if (!user) {
+    const redirect = encodeURIComponent(pathname || `/place/${placeId}`)
+    return (
+      <Link
+        href={`/auth?mode=signin&redirect=${redirect}`}
+        className="inline-flex items-center gap-2 px-4 py-2 border border-primary text-primary hover:bg-surface-container-low rounded-md text-sm font-medium transition-colors"
+      >
+        <Building2 className="h-4 w-4" />
+        <span>Own this business? Sign in to claim it</span>
+      </Link>
+    )
+  }
 
   // Loading state
   if (loading) {

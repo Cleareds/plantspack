@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2, Sparkles } from 'lucide-react'
 import { pushDataLayerEvent } from '@/lib/analytics'
@@ -29,6 +30,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   const successRef = useRef<HTMLDivElement>(null)
 
   const { signUp, signInWithGoogle, signInWithFacebook} = useAuth()
+  const next = useSearchParams().get('redirect') || undefined
 
   useEffect(() => {
     if (success && successRef.current) {
@@ -204,7 +206,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         <div className="space-y-2 mb-5">
           <button
             type="button"
-            onClick={signInWithGoogle}
+            onClick={() => signInWithGoogle(next)}
             className="w-full inline-flex items-center justify-center gap-3 py-2.5 px-4 ghost-border rounded-md editorial-shadow bg-surface-container-lowest text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
           >
             <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
@@ -217,7 +219,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           </button>
           <button
             type="button"
-            onClick={signInWithFacebook}
+            onClick={() => signInWithFacebook(next)}
             className="w-full inline-flex items-center justify-center gap-3 py-2.5 px-4 ghost-border rounded-md editorial-shadow bg-surface-container-lowest text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors"
           >
             <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
