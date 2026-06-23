@@ -17,6 +17,8 @@ import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from '@/components/places/VerificationConfidenceBadge'
 import PlaceImage from '@/components/places/PlaceImage'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { buildFaqSchema, type FaqItem } from '@/lib/schema/faq'
+import FaqSection from '@/components/seo/FaqSection'
 
 // Use force-dynamic to bypass any cache during the diagnostic phase. Will
 // switch back to `revalidate = 86400` (ISR) once we confirm the route
@@ -26,13 +28,9 @@ export const dynamic = 'force-dynamic'
 type RouteParams = { country: string; city: string; dish: string }
 
 async function load({ country, city, dish }: RouteParams): Promise<DishPageData | null> {
-  console.log(`[dish-page] load() country="${country}" city="${city}" dish="${dish}"`)
   const slug = normaliseDishSlug(dish)
-  console.log(`[dish-page] normalised slug="${slug}"`)
   if (!slug) return null
-  const result = await getDishPageData(slug, country, city)
-  console.log(`[dish-page] load() result: ${result ? `${result.total} places` : 'null'}`)
-  return result
+  return await getDishPageData(slug, country, city)
 }
 
 /**
@@ -121,9 +119,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
 }
 
 export default async function DishPage({ params, searchParams }: { params: Promise<RouteParams>; searchParams: Promise<Record<string, string>> }) {
-  console.log('[DISH PAGE ENTER]')
   const p = await params
-  console.log('[DISH PAGE] params:', JSON.stringify(p))
   const sp = await searchParams
   const data = await load(p)
   if (!data) notFound()
@@ -154,12 +150,23 @@ export default async function DishPage({ params, searchParams }: { params: Promi
     name: `Best Vegan ${dish.label} in ${city}`,
     description: `${total} vegan ${dish.label.toLowerCase()} spots in ${city}, ${country}.`,
     numberOfItems: filtered.length,
-    itemListElement: filtered.slice(0, 20).map((pl, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      url: `https://www.plantspack.com/place/${pl.slug || pl.id}`,
-      name: pl.name,
-    })),
+    itemListElement: filtered.slice(0, 20).map((pl, i) => {
+      const placeUrl = `https://www.plantspack.com/place/${pl.slug || pl.id}`
+      // Embed each entry as a Restaurant so the rating travels with the item.
+      const restaurant: Record<string, unknown> = {
+        '@type': pl.category === 'hotel' ? 'LodgingBusiness' : pl.category === 'store' ? 'Store' : 'Restaurant',
+        name: pl.name,
+        url: placeUrl,
+      }
+      if (pl.review_count && pl.review_count > 0 && pl.average_rating) {
+        restaurant.aggregateRating = {
+          '@type': 'AggregateRating',
+          ratingValue: pl.average_rating,
+          reviewCount: pl.review_count,
+        }
+      }
+      return { '@type': 'ListItem', position: i + 1, url: placeUrl, name: pl.name, item: restaurant }
+    }),
   }
   const ldBreadcrumbs = buildBreadcrumbs([
     HOME_CRUMB,
@@ -169,10 +176,37 @@ export default async function DishPage({ params, searchParams }: { params: Promi
     { name: `Best Vegan ${dish.label}`, url: `https://www.plantspack.com${dishPageHref(p.country, p.city, dish.slug)}` },
   ])
 
+  // Data-driven, honest FAQ — adds unique on-page text + PAA eligibility.
+  const dishLc = dish.label.toLowerCase()
+  const topNames = places.slice(0, 3).map(x => x.name).filter(Boolean)
+  const faqItems: FaqItem[] = []
+  if (total > 0) {
+    faqItems.push({
+      question: `How many vegan ${dishLc} places are there in ${city}?`,
+      answer: `PlantsPack lists ${total} vegan ${dishLc} ${total === 1 ? 'spot' : 'spots'} in ${city}, ${country}${fullyVeganCount > 0 ? `, of which ${fullyVeganCount} ${fullyVeganCount === 1 ? 'is' : 'are'} 100% vegan` : ''}.`,
+    })
+  }
+  if (topNames.length > 0) {
+    faqItems.push({
+      question: `Which are the best vegan ${dishLc} spots in ${city}?`,
+      answer: `Popular picks include ${topNames.join(', ')}. Each listing is cross-referenced against menus and community reviews.`,
+    })
+  }
+  faqItems.push({
+    question: `Are these ${dishLc} places fully vegan?`,
+    answer: fullyVeganCount > 0
+      ? `${fullyVeganCount} of the ${total} ${total === 1 ? 'is' : 'are'} 100% vegan (no animal products on the menu). The rest are vegan-friendly with clearly labelled vegan options.`
+      : `These are vegan-friendly spots with clearly labelled vegan options rather than 100% vegan menus. We flag fully-vegan venues separately when we've verified them.`,
+  })
+  const ldFaq = buildFaqSchema(faqItems)
+
   return (
     <div className="min-h-screen bg-surface">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ldItemList) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumbs) }} />
+      {faqItems.length > 0 && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }} />
+      )}
 
       <article className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-10">
 
@@ -315,6 +349,9 @@ export default async function DishPage({ params, searchParams }: { params: Promi
             </div>
           </section>
         )}
+
+        {/* FAQ — unique on-page content + PAA eligibility */}
+        <FaqSection items={faqItems} heading={`Vegan ${dish.label} in ${city}: FAQ`} />
 
         {/* Back to city */}
         <div className="border-t border-outline-variant/20 pt-6">

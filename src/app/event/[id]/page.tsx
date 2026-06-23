@@ -7,6 +7,8 @@ import InlineComments from '@/components/posts/InlineComments'
 import EventResponseButtons from '@/components/events/EventResponseButtons'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
 // Static shell revalidates every 10 minutes. Comments and the Going/Interested
 // buttons are client components that fetch live data on mount, so this does
@@ -29,6 +31,10 @@ type EventPost = {
     location?: string
     ticket_url?: string
     is_recurring?: boolean
+    is_free?: boolean
+    city?: string
+    country?: string
+    time_tbd?: boolean
   } | null
   created_at: string
   users: {
@@ -56,6 +62,33 @@ async function getEventPost(id: string): Promise<EventPost | null> {
   query = isUuid ? query.eq('id', id) : query.eq('slug', id)
   const { data } = await query.maybeSingle()
   return (data as unknown as EventPost) ?? null
+}
+
+type NearbyPlace = {
+  id: string; slug: string | null; name: string; vegan_level: string | null
+  category: string | null; main_image_url: string | null; address: string | null
+}
+
+/**
+ * Vegan places in the event's city — turns event traffic into directory
+ * discovery and passes internal-link equity from well-ranking event pages to
+ * the directory city/cuisine pages (the events→directory synergy). Ranked by
+ * verification then rating so the strongest spots surface first.
+ */
+async function getCityVeganPlaces(city?: string, country?: string): Promise<{ places: NearbyPlace[]; total: number }> {
+  if (!city || !country) return { places: [], total: 0 }
+  const sb = createAdminClient()
+  const { data, count } = await sb
+    .from('places')
+    .select('id, slug, name, vegan_level, category, main_image_url, address', { count: 'exact' })
+    .ilike('country', country)
+    .ilike('city', city)
+    .is('archived_at', null)
+    .order('is_verified', { ascending: false })
+    .order('verification_level', { ascending: false, nullsFirst: false })
+    .order('review_count', { ascending: false, nullsFirst: false })
+    .limit(6)
+  return { places: (data as NearbyPlace[]) || [], total: count || 0 }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -92,6 +125,10 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
 
   const images = post.images?.length ? post.images : post.image_url ? [post.image_url] : []
   const event = post.event_data
+  const { places: cityPlaces, total: cityTotal } = await getCityVeganPlaces(event?.city, event?.country)
+  const citySlug = event?.city ? slugifyCityOrCountry(event.city) : null
+  const countrySlug = event?.country ? slugifyCityOrCountry(event.country) : null
+  const cityDirHref = countrySlug && citySlug ? `/vegan-places/${countrySlug}/${citySlug}` : null
   const displayName = post.users.first_name
     ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
     : post.users.username
@@ -133,6 +170,11 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             image: [images[0] || fallbackImage],
             organizer,
             performer: organizer,
+            ...(event.is_free
+              ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url: event.ticket_url || eventUrl } }
+              : event.ticket_url
+                ? { offers: { '@type': 'Offer', url: event.ticket_url, availability: 'https://schema.org/InStock' } }
+                : {}),
             url: event.ticket_url || eventUrl,
           }) }} />
         )
@@ -181,10 +223,12 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                     <div className="font-medium text-on-surface">
                       {new Date(event.start_time).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                     </div>
-                    <div className="text-sm text-on-surface-variant mt-0.5">
-                      {new Date(event.start_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
-                      {event.end_time && ` – ${new Date(event.end_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`}
-                    </div>
+                    {!event.time_tbd && (
+                      <div className="text-sm text-on-surface-variant mt-0.5">
+                        {new Date(event.start_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                        {event.end_time && ` – ${new Date(event.end_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -255,6 +299,53 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
         </div>
+
+        {/* Vegan places in this event's city — events → directory bridge */}
+        {cityPlaces.length > 0 && cityDirHref && (
+          <div className="mt-6 bg-surface-container-lowest rounded-2xl editorial-shadow p-6">
+            <div className="flex items-center justify-between mb-4 gap-3">
+              <h2 className="text-lg font-semibold text-on-surface">
+                Vegan places in {event?.city}
+              </h2>
+              <Link href={cityDirHref} className="text-sm text-primary font-medium hover:underline whitespace-nowrap">
+                See all {cityTotal} →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {cityPlaces.map(pl => (
+                <Link
+                  key={pl.id}
+                  href={`/place/${pl.slug || pl.id}`}
+                  className="flex items-center gap-3 p-2.5 rounded-xl ghost-border hover:bg-surface-container-low transition-colors"
+                >
+                  {pl.main_image_url ? (
+                    <img src={pl.main_image_url} alt={pl.name} className="h-12 w-12 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+                  ) : (
+                    <div className="h-12 w-12 rounded-lg bg-surface-container flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-5 w-5 text-on-surface-variant" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <div className="font-medium text-sm text-on-surface truncate">{pl.name}</div>
+                    <div className="text-xs text-on-surface-variant truncate">
+                      {pl.vegan_level ? (VEGAN_LEVEL_LABEL[pl.vegan_level] ?? pl.vegan_level) : pl.address}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <p className="text-xs text-on-surface-variant mt-4">
+              Heading to {event?.city} for this event? Discover{' '}
+              <Link href={cityDirHref} className="text-primary hover:underline">all {cityTotal} vegan spots in {event?.city}</Link>
+              {countrySlug && citySlug && (
+                <>
+                  {' '}or browse{' '}
+                  <Link href={`${cityDirHref}/best-vegan`} className="text-primary hover:underline">guides by dish</Link>
+                </>
+              )}.
+            </p>
+          </div>
+        )}
 
         <div className="mt-6 bg-surface-container-lowest rounded-2xl editorial-shadow p-6">
           <h2 className="text-lg font-semibold text-on-surface mb-4">Comments</h2>

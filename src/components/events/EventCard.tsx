@@ -14,6 +14,7 @@ type EventPost = {
     end_time?: string
     location?: string
     ticket_url?: string
+    time_tbd?: boolean
   } | null
   users: {
     id: string
@@ -57,7 +58,7 @@ export default function EventCard({ event }: { event: EventPost }) {
               <span className="truncate max-w-[200px]">{data.location}</span>
             </span>
           )}
-          {startDate && (
+          {startDate && !data?.time_tbd && (
             <span className="flex items-center gap-1">
               <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
               {startDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
