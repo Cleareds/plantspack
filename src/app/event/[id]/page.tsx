@@ -35,6 +35,8 @@ type EventPost = {
     city?: string
     country?: string
     time_tbd?: boolean
+    latitude?: number
+    longitude?: number
   } | null
   created_at: string
   users: {
@@ -103,10 +105,16 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     : post.content.substring(0, 160)
 
   const image = post.images?.[0] || post.image_url
+  // Noindex events that ended well in the past (>21 days): Google only surfaces
+  // future events, and a stale "past event" page indexed as live is low-value.
+  // We don't 404 it (keeps any link equity) — just drop it from the index.
+  const endIso = event?.end_time || event?.start_time
+  const wellPast = endIso ? (Date.now() - new Date(endIso).getTime()) > 21 * 864e5 : false
   return {
     title: `${title} - Event | PlantsPack`,
     description,
     alternates: { canonical: `https://www.plantspack.com/event/${post.slug || id}` },
+    ...(wellPast ? { robots: { index: false, follow: true } } : {}),
     openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
   }
 }
@@ -159,12 +167,30 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             '@context': 'https://schema.org',
             '@type': 'Event',
             name: eventTitle,
-            startDate: event.start_time,
-            ...(event.end_time ? { endDate: event.end_time } : {}),
+            // Date-only when we only know the day (avoids advertising a fake
+            // time); full datetime (with the source's offset) otherwise.
+            startDate: event.time_tbd ? event.start_time.slice(0, 10) : event.start_time,
+            ...(event.end_time ? { endDate: event.time_tbd ? event.end_time.slice(0, 10) : event.end_time } : {}),
             eventStatus: 'https://schema.org/EventScheduled',
             eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
             ...(event.location
-              ? { location: { '@type': 'Place', name: event.location, address: event.location } }
+              ? {
+                  location: {
+                    '@type': 'Place',
+                    name: event.location,
+                    // PostalAddress is what makes an event eligible for Google's
+                    // event rich results; geo added now that events are geocoded.
+                    address: {
+                      '@type': 'PostalAddress',
+                      ...(event.location ? { streetAddress: event.location } : {}),
+                      ...(event.city ? { addressLocality: event.city } : {}),
+                      ...(event.country ? { addressCountry: event.country } : {}),
+                    },
+                    ...(event.latitude != null && event.longitude != null
+                      ? { geo: { '@type': 'GeoCoordinates', latitude: event.latitude, longitude: event.longitude } }
+                      : {}),
+                  },
+                }
               : {}),
             description: post.content.substring(0, 300),
             image: [images[0] || fallbackImage],
@@ -183,6 +209,9 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
         buildBreadcrumbs([
           HOME_CRUMB,
           { name: 'Events', url: 'https://www.plantspack.com/events' },
+          ...(event?.country && countrySlug
+            ? [{ name: event.country, url: `https://www.plantspack.com/events/${countrySlug}` }]
+            : []),
           { name: eventTitle, url: `https://www.plantspack.com/event/${post.slug || post.id}` },
         ])
       ) }} />
@@ -192,6 +221,12 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           <span className="text-outline">/</span>
           <Link href="/events" className="hover:text-primary transition-colors">Events</Link>
           <span className="text-outline">/</span>
+          {event?.country && countrySlug && (
+            <>
+              <Link href={`/events/${countrySlug}`} className="hover:text-primary transition-colors">{event.country}</Link>
+              <span className="text-outline">/</span>
+            </>
+          )}
           <span className="text-on-surface font-medium truncate max-w-[200px]">{post.title || post.content.split('\n')[0].substring(0, 40)}</span>
         </nav>
 

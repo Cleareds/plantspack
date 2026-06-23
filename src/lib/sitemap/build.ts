@@ -165,7 +165,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     fetchAll<any>(
       sb,
       'posts',
-      'slug, category, created_at, updated_at',
+      'slug, category, created_at, updated_at, event_data',
       (q) => q.eq('privacy', 'public').is('deleted_at', null).in('category', ['recipe', 'event', 'article']),
     ),
     fetchAll<any>(
@@ -276,17 +276,37 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       })
     }
   } else if (id === 'content') {
+    const eventCountrySlugs = new Set<string>()
     for (const post of posts) {
       if (!post.slug) continue
       // Articles are already in the priority tier; skip here to avoid dupes.
       if (post.category === 'article') continue
-      const prefix = post.category === 'recipe' ? 'recipe' : 'event'
+      if (post.category === 'event') {
+        const ed = post.event_data || {}
+        // Mirror the page-level noindex: drop events that ended >21 days ago so
+        // the sitemap doesn't advertise stale events Google won't surface.
+        const endIso = ed.end_time || ed.start_time
+        if (endIso && Date.now() - new Date(endIso).getTime() > 21 * 864e5) continue
+        if (ed.country) { const cs = slugifyCityOrCountry(ed.country); if (cs) eventCountrySlugs.add(cs) }
+        entries.push({
+          url: `${SITE_URL}/event/${post.slug}`,
+          lastModified: post.updated_at || post.created_at,
+          changeFreq: 'weekly',
+          priority: 0.7,
+        })
+        continue
+      }
+      // recipe
       entries.push({
-        url: `${SITE_URL}/${prefix}/${post.slug}`,
+        url: `${SITE_URL}/recipe/${post.slug}`,
         lastModified: post.updated_at || post.created_at,
         changeFreq: 'weekly',
         priority: 0.7,
       })
+    }
+    // Country event hubs (/events/[country]) — one per country with upcoming events.
+    for (const cs of eventCountrySlugs) {
+      entries.push({ url: `${SITE_URL}/events/${cs}`, changeFreq: 'daily', priority: 0.75 })
     }
     for (const pack of packs) {
       if (!pack.slug) continue
