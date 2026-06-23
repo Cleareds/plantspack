@@ -5,6 +5,9 @@ export type NotificationType =
   | 'submission_received' | 'submission_approved'
   | 'correction_received' | 'correction_approved'
   | 'place_nearby'
+  // Admin broadcast to all users (in-app bell for everyone; OS push only to
+  // users who opted in via user_preferences.push_announcements).
+  | 'announcement'
 export type NotificationEntityType = 'post' | 'comment' | 'place'
 
 export interface Notification {

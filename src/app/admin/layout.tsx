@@ -23,7 +23,8 @@ import {
   BarChart3,
   Star,
   BookOpen,
-  Smartphone
+  Smartphone,
+  Megaphone
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -74,6 +75,7 @@ export default function AdminLayout({
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+    { name: 'Notifications', href: '/admin/notifications', icon: Megaphone },
     { name: 'Blog', href: '/admin/blog', icon: BookOpen },
     { name: 'Users', href: '/admin/users', icon: Users },
     { name: 'Posts', href: '/admin/posts', icon: FileText },
