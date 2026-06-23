@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { slugifyCityOrCountry } from '@/lib/places/slugify'
 
 // The /events page is a client component (interactive search/calendar), so it
 // can't server-render schema. This layout adds a server-rendered ItemList of
@@ -54,13 +56,28 @@ async function upcomingEventsSchema() {
       return { '@type': 'ListItem', position: i + 1, item: ev }
     })
 
-    return {
+    // Country rollup for the "browse by country" hub links.
+    const counts = new Map<string, { name: string; count: number }>()
+    for (const p of data) {
+      const c = (p.event_data as { country?: string } | null)?.country
+      if (!c) continue
+      const slug = slugifyCityOrCountry(c)
+      if (!slug) continue
+      const cur = counts.get(slug) || { name: c, count: 0 }
+      cur.count++; counts.set(slug, cur)
+    }
+    const countries = [...counts.entries()]
+      .map(([slug, v]) => ({ slug, ...v }))
+      .sort((a, b) => b.count - a.count)
+
+    const schema = {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
       name: 'Upcoming vegan events & festivals',
       numberOfItems: items.length,
       itemListElement: items,
     }
+    return { schema, countries }
   } catch (e) {
     console.error('[events/layout] schema build failed', (e as Error)?.message)
     return null
@@ -68,13 +85,30 @@ async function upcomingEventsSchema() {
 }
 
 export default async function EventsLayout({ children }: { children: React.ReactNode }) {
-  const schema = await upcomingEventsSchema()
+  const data = await upcomingEventsSchema()
+  const countries = data?.countries ?? []
   return (
     <>
-      {schema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      {data?.schema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data.schema) }} />
       )}
       {children}
+      {countries.length > 1 && (
+        <nav aria-label="Vegan events by country" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+          <h2 className="text-sm font-semibold text-on-surface-variant mb-3">Browse vegan events by country</h2>
+          <div className="flex flex-wrap gap-2">
+            {countries.map(c => (
+              <Link
+                key={c.slug}
+                href={`/events/${c.slug}`}
+                className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface transition-colors"
+              >
+                {c.name} <span className="text-on-surface-variant">({c.count})</span>
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
     </>
   )
 }
