@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
-import { normalizeCity } from '@/lib/normalize-city'
+import { approveSubmission } from '@/lib/submissions/approve'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,19 +15,14 @@ async function checkAdmin() {
   return { supabase, userId: profile.id }
 }
 
-const ADMIN_USER_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
-const VALID_LEVELS = ['fully_vegan', 'mostly_vegan', 'vegan_friendly', 'vegan_options']
-
 /**
  * POST /api/admin/submissions/[id]/action
  *   body: { action: 'approve' | 'reject', vegan_level?: string, note?: string }
  *
- * - approve → insert into `places` from the submission. Per CLAUDE.md honesty
- *   rules a user suggestion is NOT admin-verified: it lands with
- *   is_verified=false / verification_status='unverified' and a 'mobile-suggest'
- *   source tag so it can be rolled back. Admin may later run the full verify
- *   flow on the place page. The admin picks the vegan_level (defaults to what
- *   the user submitted) but cannot fake the "Confirmed - Admin-reviewed" badge.
+ * - approve → delegates to approveSubmission(): inserts the place (community
+ *   semantics, NOT admin-verified), geocodes if needed, creates a feed post by
+ *   the submitter, and notifies the submitter + nearby users. Per CLAUDE.md the
+ *   place lands is_verified=false / verification_method='community_submission'.
  * - reject → mark status='rejected' with an optional note.
  */
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -62,50 +57,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ success: true, action })
   }
 
-  // approve → insert into places (unverified; not admin_review).
-  const veganLevel = VALID_LEVELS.includes(body?.vegan_level) ? body.vegan_level : (row.vegan_level || 'vegan_friendly')
-
-  const placeRow = {
-    name: String(row.name).slice(0, 200),
-    address: row.address || row.city || row.country || 'Unknown',
-    city: normalizeCity(row.city, row.country) || row.city,
-    country: row.country,
-    latitude: row.latitude,
-    longitude: row.longitude,
-    website: row.website,
-    vegan_level: veganLevel,
-    source: 'mobile-suggest',
-    category: ['eat', 'hotel', 'event', 'store', 'organisation', 'other'].includes(row.category) ? row.category : 'eat',
-    description: row.notes || null,
-    tags: ['mobile-suggest', 'community-submitted'],
-    is_verified: false,                        // user suggestion — NOT admin-verified
-    verification_status: 'unverified',
-    verification_method: 'community_submission',
-    created_by: ADMIN_USER_ID,
+  // approve → shared helper (insert place + feed post + notify submitter +
+  // nearby users + geocode). Unverified community semantics, not admin_review.
+  const result = await approveSubmission(id, { reviewerId: userId, veganLevel: body?.vegan_level, reviewNote: body?.note })
+  if (!result.ok) {
+    if (result.already) return NextResponse.json({ error: 'Already reviewed', already: result.already }, { status: 409 })
+    return NextResponse.json({ error: result.error || 'Approve failed' }, { status: 500 })
   }
-
-  const { data: inserted, error: insErr } = await supabase
-    .from('places').insert(placeRow).select('id, slug').single()
-  if (insErr) return NextResponse.json({ error: `insert place: ${insErr.message}` }, { status: 500 })
-
-  const { error: linkErr } = await supabase.from('place_submissions').update({
-    status: 'approved',
-    review_note: body?.note ?? null,
-    reviewed_by: userId,
-    reviewed_at: now,
-    imported_place_id: inserted!.id,
-  }).eq('id', id)
-  if (linkErr) return NextResponse.json({ error: `link submission: ${linkErr.message}` }, { status: 500 })
-
-  const { revalidatePath } = await import('next/cache')
-  const { slugifyCityOrCountry } = await import('@/lib/places/slugify')
-  if (inserted?.slug) revalidatePath(`/place/${inserted.slug}`)
-  const countrySlug = slugifyCityOrCountry(row.country)
-  const citySlug = slugifyCityOrCountry(row.city)
-  if (countrySlug && citySlug) {
-    revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
-    revalidatePath(`/vegan-places/${countrySlug}`)
-  }
-
-  return NextResponse.json({ success: true, action, vegan_level: veganLevel, place_id: inserted!.id, slug: inserted!.slug })
+  return NextResponse.json({ success: true, action, place_id: result.placeId, slug: result.slug, nearby_notified: result.nearbyNotified })
 }

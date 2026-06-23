@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createNotification } from '@/lib/notifications/server'
 
 // GET /api/admin/corrections - List corrections (admin only)
 export async function GET(request: NextRequest) {
@@ -17,6 +18,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') || 'pending'
 
+    // Only genuine user-submitted corrections. CLI/research audit items carry a
+    // synthetic `proposed_action` key and live on the Data Quality → Research
+    // Review tab instead, so this page stays true to its "user-submitted" title.
     const { data, error } = await admin
       .from('place_corrections')
       .select(`
@@ -25,6 +29,7 @@ export async function GET(request: NextRequest) {
         users:user_id (id, username, first_name, last_name, avatar_url)
       `)
       .eq('status', status)
+      .is('corrections->>proposed_action', null)
       .order('created_at', { ascending: false })
       .limit(50)
 
@@ -112,6 +117,21 @@ export async function PUT(request: NextRequest) {
       .eq('id', id)
 
     if (statusError) throw statusError
+
+    // Notify the user their correction was applied. Skip our own CLI/research
+    // audit rows (they carry a synthetic proposed_action and aren't real user
+    // submissions) and the no-actor reject case.
+    const isResearchRow = (correction.corrections as Record<string, unknown> | null)?.proposed_action != null
+    if (action === 'approve' && correction.user_id && !isResearchRow) {
+      const place = correction.places as { name?: string } | null
+      await createNotification({
+        userId: correction.user_id,
+        type: 'correction_approved',
+        entityType: 'place',
+        entityId: correction.place_id,
+        message: `Thanks! Your correction to ${place?.name || 'a place'} is now live.`,
+      })
+    }
 
     return NextResponse.json({ success: true, action })
   } catch (error) {

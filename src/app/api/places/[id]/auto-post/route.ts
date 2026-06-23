@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createPlacePost } from '@/lib/places/place-post'
 
 export async function POST(
   request: NextRequest,
@@ -14,21 +15,17 @@ export async function POST(
 
     const { content, images } = await request.json()
     const admin = createAdminClient()
+    const { data: place } = await admin.from('places').select('name').eq('id', placeId).single()
 
-    const { error } = await admin.from('posts').insert({
-      user_id: session.user.id,
-      content: content || 'Check out this place!',
-      category: 'place',
-      place_id: placeId,
+    const postId = await createPlacePost({
+      userId: session.user.id,
+      placeId,
+      placeName: place?.name || 'this place',
+      content: content || undefined,
       images: images || [],
-      privacy: 'public',
     })
 
-    if (error) {
-      console.error('[auto-post] Failed:', error.message)
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
+    if (!postId) return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })
     return NextResponse.json({ success: true })
   } catch {
     return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })

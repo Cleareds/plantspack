@@ -215,6 +215,38 @@ export default function RootLayout({
             }),
           }}
         />
+        {/*
+          Google Consent Mode v2 bootstrap — MUST run before gtag.js loads.
+          Sets all storage to "denied" by default (GDPR opt-in preserved), then
+          synchronously restores "granted" from a returning visitor's stored
+          choice so they get full cookie measurement on the very first ping.
+          With analytics_storage denied, GA still sends *cookieless* pings that
+          GA4 uses for behavioural/organic modeling — this is what recovers the
+          traffic the old "load nothing until consent" gate was throwing away.
+          send_page_view:false → the single page_view is sent by PageViewTracker
+          (avoids the old config+tracker double-count). ~12 lines, no network,
+          negligible cost on first paint. Production + real domain only.
+        */}
+        {process.env.NODE_ENV === 'production' && (
+          <script
+            id="ga-consent-bootstrap"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer=window.dataLayer||[];
+                function gtag(){dataLayer.push(arguments);}
+                window.gtag=gtag;
+                gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+                try{var c=JSON.parse(localStorage.getItem('plantspack_cookie_consent')||'null');
+                if(c&&c.analytics===true)gtag('consent','update',{analytics_storage:'granted'});
+                if(c&&c.marketing===true)gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted'});}catch(e){}
+                if(location.hostname==='www.plantspack.com'||location.hostname==='plantspack.com'){
+                  gtag('js',new Date());
+                  gtag('config','G-402EVF2GP0',{send_page_view:false,anonymize_ip:true});
+                }
+              `,
+            }}
+          />
+        )}
       </head>
       <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
         {/*

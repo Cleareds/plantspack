@@ -25,15 +25,19 @@ async function checkAdmin() {
   return supabase
 }
 
-const VEGAN_REPORT_TAGS = [
+// Vegan-status flags raised by real users via the place-page report button.
+const COMMUNITY_VEGAN_TAGS = [
   'community_report:not_fully_vegan',
   'community_report:not_vegan_friendly',
   'community_report:non_vegan_chain',
   'community_report:vegan_friendly_chain',
   'community_report:few_vegan_options',
   'community_report:actually_fully_vegan',
-  'google_review_flag',
 ]
+// `google_review_flag` is raised by our own automated Google-review scan, not a
+// user. It lives on its own tab so the community queue isn't buried under it,
+// but all of these are cleared together when an admin resolves vegan status.
+const VEGAN_REPORT_TAGS = [...COMMUNITY_VEGAN_TAGS, 'google_review_flag']
 
 export async function GET(request: NextRequest) {
   const supabase = await checkAdmin()
@@ -101,10 +105,23 @@ export async function GET(request: NextRequest) {
   }
 
   if (tab === 'not_vegan') {
+    // Community vegan-status reports only (raised by users).
     const { data, count } = await supabase
       .from('places')
       .select('id, name, slug, city, country, tags, vegan_level, website, updated_at', { count: 'exact' })
-      .or(VEGAN_REPORT_TAGS.map(t => `tags.cs.{${t}}`).join(','))
+      .or(COMMUNITY_VEGAN_TAGS.map(t => `tags.cs.{${t}}`).join(','))
+      .is('archived_at', null)
+      .order('updated_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+    return NextResponse.json({ places: data || [], total: count || 0 })
+  }
+
+  if (tab === 'google_flag') {
+    // Automated Google-review vegan flags (our own scan, not user reports).
+    const { data, count } = await supabase
+      .from('places')
+      .select('id, name, slug, city, country, tags, vegan_level, website, updated_at', { count: 'exact' })
+      .contains('tags', ['google_review_flag'])
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
@@ -128,11 +145,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ places: data || [], total: count || 0 })
   }
 
-  if (tab === 'corrections') {
-    const { data, count } = await supabase
+  // Genuine user-submitted corrections (no synthetic `proposed_action` key).
+  // CLI/research audit items are inserted with a `proposed_action` field and
+  // are surfaced separately under the `research_queue` tab so the community
+  // queue stays free of our own audit noise.
+  if (tab === 'corrections' || tab === 'research_queue') {
+    let q = supabase
       .from('place_corrections')
       .select('id, place_id, user_id, corrections, note, status, created_at, places(id, name, slug, city, country)', { count: 'exact' })
       .eq('status', 'pending')
+    q = tab === 'research_queue'
+      ? q.not('corrections->>proposed_action', 'is', null)
+      : q.is('corrections->>proposed_action', null)
+    const { data, count } = await q
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -148,7 +173,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (tab === 'stats') {
-    const veganReportOr = VEGAN_REPORT_TAGS.map(t => `tags.cs.{${t}}`).join(',')
+    const communityVeganOr = COMMUNITY_VEGAN_TAGS.map(t => `tags.cs.{${t}}`).join(',')
     const [
       { count: totalPlaces },
       { count: googleClosed },
@@ -157,9 +182,11 @@ export async function GET(request: NextRequest) {
       { count: possiblyClosed },
       { count: reportedClosed },
       { count: reportedHours },
-      { count: pendingCorrections },
+      { count: userCorrections },
+      { count: researchQueue },
       { count: googleNotFound },
       { count: reportedNotVegan },
+      { count: googleReviewFlags },
       { count: unverifiedFullyVegan },
     ] = await Promise.all([
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null),
@@ -169,9 +196,13 @@ export async function GET(request: NextRequest) {
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['possibly_closed']),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['community_report:permanently_closed']),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['community_report:hours_wrong']),
-      supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      // Genuine user corrections vs our own CLI/research audit items.
+      supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending').is('corrections->>proposed_action', null),
+      supabase.from('place_corrections').select('id', { count: 'exact', head: true }).eq('status', 'pending').not('corrections->>proposed_action', 'is', null),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_not_found']),
-      supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).or(veganReportOr),
+      // Community vegan reports only (excludes the automated google_review_flag).
+      supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).or(communityVeganOr),
+      supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_review_flag']),
       supabase.from('places').select('id', { count: 'exact', head: true })
         .eq('vegan_level', 'fully_vegan').is('archived_at', null)
         .not('tags', 'cs', '{websearch_confirmed_vegan}')
@@ -188,9 +219,11 @@ export async function GET(request: NextRequest) {
         possiblyClosed: possiblyClosed || 0,
         reportedClosed: reportedClosed || 0,
         reportedHours: reportedHours || 0,
-        pendingCorrections: pendingCorrections || 0,
+        userCorrections: userCorrections || 0,
+        researchQueue: researchQueue || 0,
         googleNotFound: googleNotFound || 0,
         reportedNotVegan: reportedNotVegan || 0,
+        googleReviewFlags: googleReviewFlags || 0,
         unverifiedFullyVegan: unverifiedFullyVegan || 0,
       }
     })

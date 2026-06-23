@@ -62,6 +62,51 @@ const EMAIL_HEADER = `
         <img src="https://www.plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
       </div>`
 
+export interface SubmissionDigestItem {
+  name: string
+  city: string | null
+  country: string | null
+  submitter: string
+  outcome: 'approved' | 'failed' | 'skipped'
+  slug?: string | null
+  note?: string
+}
+
+/**
+ * Ops digest sent after the daily submissions batch runs — one row per pending
+ * mobile submission it processed. Transactional/internal (no unsubscribe).
+ */
+export async function sendSubmissionsDigestEmail(to: string, items: SubmissionDigestItem[]) {
+  const approved = items.filter(i => i.outcome === 'approved').length
+  const rows = items.map(i => {
+    const link = i.slug ? `https://www.plantspack.com/place/${i.slug}` : null
+    const nameCell = link ? `<a href="${link}" style="color:#059669;">${i.name}</a>` : i.name
+    const color = i.outcome === 'approved' ? '#059669' : i.outcome === 'failed' ? '#dc2626' : '#6b7280'
+    return `<tr>
+      <td style="padding:8px 10px;border-bottom:1px solid #eee;">${nameCell}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #eee;">${[i.city, i.country].filter(Boolean).join(', ')}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #eee;">@${i.submitter}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #eee;color:${color};font-weight:600;">${i.outcome}${i.note ? ` — ${i.note}` : ''}</td>
+    </tr>`
+  }).join('')
+
+  const html = `${EMAIL_HEADER}
+    <div style="padding:24px 20px;font-family:sans-serif;color:#111;">
+      <h2 style="margin:0 0 6px;">Mobile submissions processed</h2>
+      <p style="color:#555;margin:0 0 16px;">${approved} of ${items.length} submission(s) imported (community-submitted, unverified — promote good ones via the place page).</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead><tr style="text-align:left;color:#666;">
+          <th style="padding:8px 10px;">Place</th><th style="padding:8px 10px;">Location</th>
+          <th style="padding:8px 10px;">By</th><th style="padding:8px 10px;">Outcome</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p style="margin-top:20px;"><a href="https://www.plantspack.com/admin/submissions" style="color:#059669;">Review in admin →</a></p>
+    </div>`
+
+  return sendEmail({ to, subject: `PlantsPack: ${approved} place submission(s) processed`, html })
+}
+
 // Welcome email for new users
 export async function sendWelcomeEmail(to: string, username: string) {
   const subject = 'Welcome to Plantspack!'

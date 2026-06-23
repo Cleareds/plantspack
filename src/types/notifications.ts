@@ -1,5 +1,11 @@
-export type NotificationType = 'like' | 'comment' | 'follow' | 'mention' | 'reply'
-export type NotificationEntityType = 'post' | 'comment'
+export type NotificationType =
+  | 'like' | 'comment' | 'follow' | 'mention' | 'reply' | 'pack_update'
+  // Place submission / correction lifecycle + nearby-place alerts. These are
+  // also what the mobile app will read in its next build.
+  | 'submission_received' | 'submission_approved'
+  | 'correction_received' | 'correction_approved'
+  | 'place_nearby'
+export type NotificationEntityType = 'post' | 'comment' | 'place'
 
 export interface Notification {
   id: string

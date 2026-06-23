@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createNotification } from '@/lib/notifications/server'
 
 // POST /api/places/[id]/corrections - Submit a correction
 export async function POST(
@@ -26,7 +27,7 @@ export async function POST(
     const admin = createAdminClient()
 
     // Verify place exists
-    const { data: place } = await admin.from('places').select('id').eq('id', id).single()
+    const { data: place } = await admin.from('places').select('id, name').eq('id', id).single()
     if (!place) {
       return NextResponse.json({ error: 'Place not found' }, { status: 404 })
     }
@@ -44,6 +45,15 @@ export async function POST(
       .single()
 
     if (error) throw error
+
+    // Ack the submitter so they see it landed (system message, no actor).
+    await createNotification({
+      userId: session.user.id,
+      type: 'correction_received',
+      entityType: 'place',
+      entityId: id,
+      message: `Thanks! We got your correction to ${place.name} and will review it.`,
+    })
 
     return NextResponse.json({ correction: data })
   } catch (error) {

@@ -5,11 +5,9 @@
 
 declare global {
   interface Window {
-    gtag?: (
-      command: string,
-      targetId: string,
-      config?: Record<string, any>
-    ) => void
+    // Loosely typed: gtag is called as ('event', …), ('config', …) and
+    // ('consent','update',…) — the variadic shape covers all three.
+    gtag?: (...args: any[]) => void
     dataLayer?: any[]
   }
 }
@@ -45,19 +43,24 @@ function isAnalyticsAvailable(): boolean {
 }
 
 /**
- * Track page views
- * Automatically called on route changes
+ * Track page views. Called on every route change (incl. the landing page,
+ * since head config sets send_page_view:false).
+ *
+ * NOT consent-gated: under Consent Mode v2 the page_view is sent for everyone —
+ * cookieless when analytics_storage is denied, full hit once granted. gtag is
+ * defined by the head bootstrap so this is safe to call before the library
+ * finishes loading (commands queue on dataLayer).
  */
 export function trackPageView(url: string): void {
-  if (!isAnalyticsAvailable()) return
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return
 
   try {
-    window.gtag?.('config', GA_MEASUREMENT_ID, {
+    window.gtag('event', 'page_view', {
       page_path: url,
-      send_page_view: true,
+      page_location: window.location.href,
+      page_title: document.title,
     })
   } catch (error) {
-    // Silently fail to avoid breaking the app
     if (process.env.NODE_ENV === 'development') {
       console.warn('Analytics tracking failed:', error)
     }

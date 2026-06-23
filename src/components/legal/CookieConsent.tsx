@@ -48,7 +48,20 @@ export default function CookieConsent() {
     setShowBanner(false)
     setShowSettings(false)
 
-    // Notify other components (e.g. GoogleAnalytics) about the consent change
+    // Google Consent Mode v2: flip storage grants live, no reload needed. The
+    // gtag stub is defined in the <head> bootstrap (layout.tsx), so this works
+    // even before the GA library has finished loading (commands queue).
+    const g = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag
+    if (typeof g === 'function') {
+      g('consent', 'update', {
+        analytics_storage: prefs.analytics ? 'granted' : 'denied',
+        ad_storage: prefs.marketing ? 'granted' : 'denied',
+        ad_user_data: prefs.marketing ? 'granted' : 'denied',
+        ad_personalization: prefs.marketing ? 'granted' : 'denied',
+      })
+    }
+
+    // Notify other components (e.g. GoogleTagManager) about the consent change
     window.dispatchEvent(new Event('cookie-consent-changed'))
   }
 

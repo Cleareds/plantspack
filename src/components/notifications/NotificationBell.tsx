@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
-import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2 } from 'lucide-react'
+import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2, MapPin, CheckCircle } from 'lucide-react'
 import type { Notification } from '@/types/notifications'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
@@ -129,12 +129,25 @@ export default function NotificationBell() {
         return <UserPlus className="h-4 w-4 text-primary" />
       case 'mention':
         return <AtSign className="h-4 w-4 text-purple-500" />
+      case 'submission_approved':
+      case 'correction_approved':
+        return <CheckCircle className="h-4 w-4 text-emerald-500" />
+      case 'submission_received':
+      case 'correction_received':
+        return <Check className="h-4 w-4 text-emerald-400" />
+      case 'place_nearby':
+        return <MapPin className="h-4 w-4 text-teal-500" />
       default:
         return <Bell className="h-4 w-4 text-outline" />
     }
   }
 
   const getNotificationLink = (notification: Notification) => {
+    // Place-linked notifications (submissions, corrections, nearby) → the place
+    // page resolves a UUID as well as a slug.
+    if (notification.entity_type === 'place' && notification.entity_id) {
+      return `/place/${notification.entity_id}`
+    }
     if (notification.entity_type === 'post' && notification.entity_id) {
       return `/post/${notification.entity_id}`
     }
@@ -224,11 +237,18 @@ export default function NotificationBell() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-on-surface">
-                          <span className="font-semibold">
-                            {notification.actor?.first_name && notification.actor?.last_name
-                              ? `${notification.actor.first_name} ${notification.actor.last_name}`
-                              : notification.actor?.username || 'Someone'}
-                          </span>{' '}
+                          {/* System notifications (submissions, corrections,
+                              nearby places) have no actor — show just the
+                              message, no "Someone" prefix. */}
+                          {notification.actor && (
+                            <>
+                              <span className="font-semibold">
+                                {notification.actor.first_name && notification.actor.last_name
+                                  ? `${notification.actor.first_name} ${notification.actor.last_name}`
+                                  : notification.actor.username || 'Someone'}
+                              </span>{' '}
+                            </>
+                          )}
                           {notification.message ||
                             (notification.type === 'like' ? 'liked your post' :
                              notification.type === 'comment' ? 'commented on your post' :
