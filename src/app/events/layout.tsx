@@ -94,16 +94,25 @@ export default async function EventsLayout({ children }: { children: React.React
       )}
       {children}
       {countries.length > 1 && (
-        <nav aria-label="Vegan events by country" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <h2 className="text-sm font-semibold text-on-surface-variant mb-3">Browse vegan events by country</h2>
+        <nav aria-label="Vegan events by country" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pt-10 pb-16 border-t border-outline-variant/15">
+          <div className="flex items-baseline gap-3 mb-1">
+            <h2 className="text-xl md:text-2xl font-headline font-bold text-on-surface">
+              Vegan events around the world
+            </h2>
+            <span className="text-sm text-on-surface-variant">{countries.length} countries</span>
+          </div>
+          <p className="text-sm text-on-surface-variant mb-5">
+            Browse upcoming vegan festivals and plant-based events by country.
+          </p>
           <div className="flex flex-wrap gap-2">
             {countries.map(c => (
               <Link
                 key={c.slug}
                 href={`/events/${c.slug}`}
-                className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container-low hover:bg-surface-container ghost-border text-sm font-medium text-on-surface transition-colors"
               >
-                {c.name} <span className="text-on-surface-variant">({c.count})</span>
+                {c.name}
+                <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">{c.count}</span>
               </Link>
             ))}
           </div>
