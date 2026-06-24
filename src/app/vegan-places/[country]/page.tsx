@@ -395,39 +395,6 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           )
         })()}
 
-        {auditPost && (
-          <Link
-            href={`/blog/${auditPost.slug}`}
-            className="block mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
-          >
-            {/* On md+ the row is a flex container; image side stretches to
-                match the text side's height (no white gap at the bottom of
-                the image when the text wraps to several lines). On mobile
-                the image keeps a fixed aspect ratio above the text. */}
-            <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
-              {auditPost.image_url && (
-                <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
-                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
-                </div>
-              )}
-              <div className="flex-1 p-5 md:p-6">
-                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
-                  How we audited {countryName}
-                </div>
-                <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
-                  {auditPost.title}
-                </h2>
-                <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                  {auditPost.description}
-                </p>
-                <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
-                  Read the audit →
-                </span>
-              </div>
-            </div>
-          </Link>
-        )}
-
         {/* Regions section — only renders if the country has regions seeded */}
         {regionCards.length > 0 && (
           <CountryRegionsSection
@@ -454,6 +421,37 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
               cityScores={countryScores}
             />
           </>
+        )}
+
+        {/* Country-audit blog callout — answer-first: shown below the city
+            listings so visitors reach cities first; still in the DOM for SEO. */}
+        {auditPost && (
+          <Link
+            href={`/blog/${auditPost.slug}`}
+            className="block mt-10 mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
+          >
+            <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
+              {auditPost.image_url && (
+                <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
+                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                </div>
+              )}
+              <div className="flex-1 p-5 md:p-6">
+                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
+                  How we audited {countryName}
+                </div>
+                <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
+                  {auditPost.title}
+                </h2>
+                <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                  {auditPost.description}
+                </p>
+                <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
+                  Read the audit →
+                </span>
+              </div>
+            </div>
+          </Link>
         )}
 
         {/* All places in country with map.

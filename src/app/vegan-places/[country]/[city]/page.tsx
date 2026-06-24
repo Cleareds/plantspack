@@ -721,70 +721,6 @@ export default async function CityPage({ params, searchParams }: PageProps) {
           </div>
         </div>
 
-        {/* Region back-link banner — shown only when this city is part of a
-            seeded country region (today: Belgium). Lets visitors zoom out to
-            see all places across the wider region. */}
-        {region && (
-          <Link
-            href={`/vegan-places/${country}/region/${region.region_slug}`}
-            className="block mb-6 bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 hover:bg-primary/10 transition-colors"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-sm">
-                <span className="text-on-surface-variant">Part of </span>
-                <span className="font-semibold text-on-surface">{region.region_name}</span>
-                <span className="text-on-surface-variant"> — see every vegan place across the region.</span>
-              </div>
-              <span className="text-primary text-sm font-medium flex-shrink-0">View region →</span>
-            </div>
-          </Link>
-        )}
-
-        {/* Country-audit blog callout — shown on every city within a country
-            that has a published audit post. Same callout shape as the country
-            page so users get a consistent entry point and Google sees the
-            audit referenced from many internal pages. */}
-        {auditPost && (
-          <Link
-            href={`/blog/${auditPost.slug}`}
-            className="block mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
-          >
-            <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
-              {auditPost.image_url && (
-                <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
-                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
-                </div>
-              )}
-              <div className="flex-1 p-5 md:p-6">
-                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
-                  How we audited {countryName}
-                </div>
-                <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
-                  {auditPost.title}
-                </h2>
-                <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                  {auditPost.description}
-                </p>
-                <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
-                  Read the audit →
-                </span>
-              </div>
-            </div>
-          </Link>
-        )}
-
-        {/* Vegan experiences for this city — SSR-fed so there's no loading
-            flash + delete/edit flow uses router.refresh() for re-render. */}
-        <div className="mb-8">
-          <CityExperiencesSection
-            countrySlug={country}
-            citySlug={city}
-            cityName={cityName}
-            initialExperiences={cityExperiences.experiences}
-            initialSummary={cityExperiences.summary}
-          />
-        </div>
-
         {/* Places list with client-side category filter + map */}
         {places.length > 0 ? (
           <>
@@ -848,6 +784,75 @@ export default async function CityPage({ params, searchParams }: PageProps) {
             />
           </div>
         )}
+
+        {/* --- Context below the data --- Answer-first: the place list comes
+            first so visitors see places on the first screen. These SEO/context
+            blocks stay in the DOM (Google reads full document order) but render
+            below the list. */}
+
+        {/* Region back-link banner — shown only when this city is part of a
+            seeded country region (today: Belgium). Lets visitors zoom out to
+            see all places across the wider region. */}
+        {region && (
+          <Link
+            href={`/vegan-places/${country}/region/${region.region_slug}`}
+            className="block mt-8 mb-6 bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 hover:bg-primary/10 transition-colors"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-sm">
+                <span className="text-on-surface-variant">Part of </span>
+                <span className="font-semibold text-on-surface">{region.region_name}</span>
+                <span className="text-on-surface-variant"> — see every vegan place across the region.</span>
+              </div>
+              <span className="text-primary text-sm font-medium flex-shrink-0">View region →</span>
+            </div>
+          </Link>
+        )}
+
+        {/* Country-audit blog callout — shown on every city within a country
+            that has a published audit post. Same callout shape as the country
+            page so users get a consistent entry point and Google sees the
+            audit referenced from many internal pages. */}
+        {auditPost && (
+          <Link
+            href={`/blog/${auditPost.slug}`}
+            className="block mt-8 mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
+          >
+            <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
+              {auditPost.image_url && (
+                <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
+                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                </div>
+              )}
+              <div className="flex-1 p-5 md:p-6">
+                <div className="text-[10px] uppercase tracking-widest font-bold text-primary mb-2">
+                  How we audited {countryName}
+                </div>
+                <h2 className="text-lg md:text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-snug">
+                  {auditPost.title}
+                </h2>
+                <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
+                  {auditPost.description}
+                </p>
+                <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
+                  Read the audit →
+                </span>
+              </div>
+            </div>
+          </Link>
+        )}
+
+        {/* Vegan experiences for this city — SSR-fed so there's no loading
+            flash + delete/edit flow uses router.refresh() for re-render. */}
+        <div className="mb-8">
+          <CityExperiencesSection
+            countrySlug={country}
+            citySlug={city}
+            cityName={cityName}
+            initialExperiences={cityExperiences.experiences}
+            initialSummary={cityExperiences.summary}
+          />
+        </div>
 
         {/* Visible FAQ - mirrors the FAQ JSON-LD for rich-snippet eligibility
             (Google rewards FAQ schema more when the questions are visible
