@@ -141,12 +141,15 @@ export default function AboutPage() {
             </div>
             <div className="bg-primary/5 rounded-xl p-6">
               <div className="text-2xl font-extrabold text-primary mb-2">The pledge</div>
-              <div className="font-semibold text-on-surface mb-1">50% to the animals — once we&apos;re sustainable</div>
+              <div className="font-semibold text-on-surface mb-1">A 50/50 split — once we&apos;re sustainable</div>
               <p className="text-sm text-on-surface-variant">
-                Our commitment: once support covers our costs, half of all profit
-                (after taxes and expenses) will go to animal shelters in Ukraine and
-                community-voted vegan causes — with published receipts. We&apos;re not
-                there yet, and we won&apos;t pretend we are.
+                Our commitment: once support covers our costs, every euro of profit
+                (after taxes and expenses) gets split in half — 50% to animal
+                shelters in Ukraine and community-voted vegan causes, and 50%
+                reinvested in growing and improving PlantsPack: servers, development,
+                and fair pay for the people building it — no bloated salaries, no
+                investor payouts. We&apos;ll publish receipts. We&apos;re not there
+                yet, and we won&apos;t pretend we are.
               </p>
             </div>
           </div>
