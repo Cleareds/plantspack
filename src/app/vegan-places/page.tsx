@@ -136,7 +136,7 @@ export default async function VeganPlacesPage() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 py-5 md:py-8">
         {/* Hero */}
         <div className="text-center mb-8">
           <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight leading-[1.1] mb-3">

@@ -117,7 +117,7 @@ export default async function BestVeganHub({ params }: { params: Promise<RoutePa
     <div className="min-h-screen bg-surface">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumbs) }} />
 
-      <article className="max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-10">
+      <article className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10">
 
         {/* Breadcrumb */}
         <nav className="text-sm text-on-surface-variant mb-4 flex items-center gap-1 flex-wrap">
