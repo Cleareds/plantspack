@@ -747,8 +747,10 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                     See all {dishChips.length} dish guides →
                   </Link>
                 </div>
-                <p className="text-sm text-on-surface-variant mb-3">Curated picks by dish, ranked by community + verification confidence.</p>
-                <div className="flex flex-wrap gap-2">
+                {/* Subtitle + chip grid are desktop-only — on mobile we keep
+                    just the heading + "See all N dish guides" link to save space. */}
+                <p className="hidden md:block text-sm text-on-surface-variant mb-3">Curated picks by dish, ranked by community + verification confidence.</p>
+                <div className="hidden md:flex flex-wrap gap-2">
                   {dishChips.slice(0, 16).map(d => (
                     <Link
                       key={d.slug}
