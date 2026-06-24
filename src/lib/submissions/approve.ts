@@ -63,6 +63,9 @@ export async function approveSubmission(
     : (VALID_LEVELS.includes(sub.vegan_level) ? sub.vegan_level : 'vegan_friendly')
   const category = VALID_CATEGORIES.includes(sub.category) ? sub.category : 'eat'
 
+  // Carry any photos the submitter attached onto the published place.
+  const subImages: string[] = Array.isArray(sub.images) ? sub.images.filter((u: unknown) => typeof u === 'string') : []
+
   const placeRow = {
     name: String(sub.name).slice(0, 200),
     address: sub.address || sub.city || sub.country || 'Unknown',
@@ -76,6 +79,8 @@ export async function approveSubmission(
     category,
     description: sub.notes || null,
     tags: ['mobile-suggest', 'community-submitted'],
+    images: subImages.length ? subImages : null,
+    main_image_url: subImages[0] ?? null,
     is_verified: false,
     verification_status: 'unverified',
     verification_method: 'community_submission',
