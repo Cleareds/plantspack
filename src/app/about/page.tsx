@@ -4,7 +4,7 @@ import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'l
 
 export const metadata: Metadata = {
   title: 'About PlantsPack — Built for the Mission, Not the Markets',
-  description: 'PlantsPack is a community-driven, ad-free vegan platform mapping 37,000+ plant-based places across 170+ countries. No investors — 50% of profit funds animal welfare.',
+  description: 'PlantsPack is a community-driven, ad-free vegan platform mapping 50,000+ plant-based places across 150+ countries. No investors, no ads, no paid listings — with a pledge to share profit with animal-welfare causes once the platform is sustainable.',
   alternates: { canonical: 'https://www.plantspack.com/about' },
 }
 
@@ -119,35 +119,41 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* The 50/50 Pledge */}
+        {/* The 50/50 Pledge — framed honestly as a future commitment. We do not
+            yet cover our running costs, so no profit is being donated today. */}
         <div className="rounded-2xl border-2 border-primary ring-8 ring-primary/5 bg-surface-container-lowest p-8 md:p-10 mb-12">
           <div className="flex items-center gap-3 mb-5">
             <HandHeart className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold text-on-surface">The 50/50 Transparency Pledge</h2>
+            <h2 className="text-2xl font-bold text-on-surface">Our 50/50 Pledge</h2>
           </div>
           <p className="text-on-surface-variant text-lg leading-relaxed mb-6">
-            When you become a Supporter, your contribution does two things:
+            We&apos;ll be upfront about money — including where we actually are today:
           </p>
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <div className="bg-primary/5 rounded-xl p-6">
-              <div className="text-3xl font-extrabold text-primary mb-2">50%</div>
-              <div className="font-semibold text-on-surface mb-1">Goes to the Platform</div>
+              <div className="text-2xl font-extrabold text-primary mb-2">Today</div>
+              <div className="font-semibold text-on-surface mb-1">Keeping it running</div>
               <p className="text-sm text-on-surface-variant">
-                Covers our servers, security, and the tools we need to keep the maps,
-                recipes, and community features running.
+                PlantsPack doesn&apos;t yet cover its own costs. Right now every
+                contribution goes straight to servers, security, and the tools that
+                keep the maps, recipes, and community running.
               </p>
             </div>
             <div className="bg-primary/5 rounded-xl p-6">
-              <div className="text-3xl font-extrabold text-primary mb-2">50%</div>
-              <div className="font-semibold text-on-surface mb-1">Goes to the Animals</div>
+              <div className="text-2xl font-extrabold text-primary mb-2">The pledge</div>
+              <div className="font-semibold text-on-surface mb-1">50% to the animals — once we&apos;re sustainable</div>
               <p className="text-sm text-on-surface-variant">
-                50% of our profit — after taxes and operating expenses — is donated to animal
-                shelters in Ukraine and community-voted vegan causes. We&apos;ll publish receipts.
+                Our commitment: once support covers our costs, half of all profit
+                (after taxes and expenses) will go to animal shelters in Ukraine and
+                community-voted vegan causes — with published receipts. We&apos;re not
+                there yet, and we won&apos;t pretend we are.
               </p>
             </div>
           </div>
           <p className="text-on-surface-variant text-sm italic">
-            No bloated salaries. No shady data selling. Just a community-driven tool that gives back. The 50% donation is calculated from net profit, not gross revenue — because the law requires us to cover taxes and expenses first. We believe in full transparency about this.
+            No bloated salaries. No selling your data. We&apos;d rather under-promise: the
+            donation begins when there&apos;s profit to share. For now, support simply
+            keeps the lights on — and that&apos;s the honest version.
           </p>
         </div>
 
