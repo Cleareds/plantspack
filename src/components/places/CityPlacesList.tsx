@@ -182,8 +182,70 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
 
   return (
     <div>
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      {/* Mobile filters: compact dropdowns so the pill cloud doesn't eat the
+          screen. The full pill bar below is desktop-only (hidden on mobile). */}
+      <div className="md:hidden flex flex-wrap items-center gap-2 mb-4">
+        <select
+          aria-label="Category"
+          value={validCategory ?? ''}
+          onChange={e => setFilter({ category: e.target.value || null, sub: null })}
+          className="cursor-pointer text-sm font-medium rounded-lg bg-surface-container-low text-on-surface px-3 py-1.5 border border-outline-variant/20 focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="">All ({poolForCategoryPills.length})</option>
+          {categories.map(cat => (
+            <option key={cat} value={cat}>{(CATEGORY_LABELS[cat] || cat)} ({poolForCategoryPills.filter(p => p.category === cat).length})</option>
+          ))}
+        </select>
+        {validCategory && subcategories.length > 1 && (
+          <select
+            aria-label="Type"
+            value={validSubcategory ?? ''}
+            onChange={e => setFilter({ sub: e.target.value || null })}
+            className="cursor-pointer text-sm font-medium rounded-lg bg-surface-container-low text-on-surface px-3 py-1.5 border border-outline-variant/20 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="">All types</option>
+            {subcategories.map(sub => sub ? (
+              <option key={sub} value={sub}>{(SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub} ({poolForSubPills.filter(p => p.subcategory === sub).length})</option>
+            ) : null)}
+          </select>
+        )}
+        {!isFullyVeganOnly && (
+          <select
+            aria-label="Vegan level"
+            value={activeVeganLevel ?? ''}
+            onChange={e => setFilter({ vl: e.target.value || null })}
+            className="cursor-pointer text-sm font-medium rounded-lg bg-surface-container-low text-on-surface px-3 py-1.5 border border-outline-variant/20 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {VEGAN_LEVEL_FILTERS.map(({ value, label }) => (
+              <option key={value ?? 'all'} value={value ?? ''}>
+                {label} ({value === null ? poolForVeganLevelPills.length : poolForVeganLevelPills.filter(p => p.vegan_level === value).length})
+              </option>
+            ))}
+          </select>
+        )}
+        <select
+          aria-label="Sort by"
+          value={sortBy}
+          onChange={e => setFilter({ sort: e.target.value === 'vegan' ? null : e.target.value })}
+          className="cursor-pointer text-sm font-medium rounded-lg bg-surface-container-low text-on-surface px-3 py-1.5 border border-outline-variant/20 focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="vegan">🌿 Vegan first</option>
+          <option value="rating">⭐ Rating</option>
+          <option value="name">A-Z</option>
+        </select>
+        <button
+          onClick={() => setFilter({ pet: petOnly ? null : '1' })}
+          aria-pressed={petOnly}
+          aria-label="Pet-friendly only"
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${petOnly ? 'bg-orange-500 text-white' : 'bg-surface-container-low text-on-surface-variant border border-outline-variant/20'}`}
+        >
+          🐾
+        </button>
+        <span className="self-center text-xs text-on-surface-variant ml-auto">{filtered.length} results</span>
+      </div>
+
+      {/* Desktop filters: full pill bar */}
+      <div className="hidden md:flex flex-wrap gap-2 mb-6">
         {/* Category pills */}
         <button onClick={() => setFilter({ category: null, sub: null })}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!validCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
