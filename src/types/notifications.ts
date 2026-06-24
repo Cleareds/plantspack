@@ -20,6 +20,9 @@ export interface Notification {
   message: string | null
   read: boolean
   created_at: string
+  // Target channels; NULL = all. Subset of {web,ios,android}. Used to scope
+  // admin broadcasts to specific surfaces.
+  channels?: string[] | null
   actor?: {
     id: string
     username: string

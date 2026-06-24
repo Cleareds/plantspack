@@ -30,6 +30,8 @@ export async function GET(request: NextRequest) {
         )
       `)
       .eq('user_id', session.user.id)
+      // Only rows targeted at the web channel (NULL = all channels).
+      .or('channels.is.null,channels.cs.{web}')
       .order('created_at', { ascending: false })
       .limit(limit)
 
@@ -53,6 +55,7 @@ export async function GET(request: NextRequest) {
         .select('*', { count: 'exact', head: true })
         .eq('user_id', session.user.id)
         .eq('read', false)
+        .or('channels.is.null,channels.cs.{web}')
       unreadCount = count || 0
     }
 

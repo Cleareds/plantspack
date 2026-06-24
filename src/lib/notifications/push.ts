@@ -34,14 +34,18 @@ async function postExpo(messages: object[]): Promise<void> {
  * the master push toggle. The in-app notification rows are inserted separately
  * by the broadcast route so the bell reaches everyone regardless of opt-in.
  *
+ * `platforms` restricts the push to specific device platforms (e.g. ['ios'] for
+ * an iOS-only broadcast). Omit to push to all platforms.
+ *
  * Returns how many device messages were dispatched. Best-effort on transport.
  */
 export async function sendAnnouncementPush(opts: {
   title: string
   body: string
   data?: Record<string, string | null>
+  platforms?: ('ios' | 'android')[]
 }): Promise<number> {
-  const { title, body, data } = opts
+  const { title, body, data, platforms } = opts
   try {
     const admin = createAdminClient()
 
@@ -59,10 +63,12 @@ export async function sendAnnouncementPush(opts: {
     // Chunk the IN() filter to keep the query well under PostgREST URL limits.
     for (let i = 0; i < optedIn.length; i += 500) {
       const ids = optedIn.slice(i, i + 500)
-      const { data: rows } = await admin
+      let q = admin
         .from('user_push_tokens')
         .select('token')
         .in('user_id', ids)
+      if (platforms?.length) q = q.in('platform', platforms)
+      const { data: rows } = await q
       for (const r of rows ?? []) tokens.push((r as { token: string }).token)
     }
     if (!tokens.length) return 0

@@ -26,28 +26,46 @@ export default function AdminNotificationsPage() {
   )
 }
 
+const CHANNELS = [
+  { key: 'web', label: 'Web', hint: 'in-app bell on plantspack.com' },
+  { key: 'ios', label: 'iOS app', hint: 'in-app + OS push (opted-in)' },
+  { key: 'android', label: 'Android app', hint: 'in-app + OS push (opted-in)' },
+] as const
+
 function BroadcastCard() {
   const [title, setTitle] = useState('')
   const [message, setMessage] = useState('')
   const [url, setUrl] = useState('')
+  // Default: all channels selected (delivered everywhere).
+  const [channels, setChannels] = useState<Record<string, boolean>>({ web: true, ios: true, android: true })
   const [sending, setSending] = useState(false)
   const [result, setResult] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  const selected = CHANNELS.filter((c) => channels[c.key]).map((c) => c.key)
+  const toggle = (key: string) => setChannels((c) => ({ ...c, [key]: !c[key] }))
+
   const send = async () => {
     setError(null); setResult(null)
     if (!message.trim()) { setError('Message is required.'); return }
-    if (!confirm('Send this announcement to ALL users? Everyone sees it in their in-app bell; opted-in users also get a push.')) return
+    if (!selected.length) { setError('Select at least one channel.'); return }
+    const labels = CHANNELS.filter((c) => channels[c.key]).map((c) => c.label).join(', ')
+    const hasPush = channels.ios || channels.android
+    if (!confirm(
+      `Send this announcement to ALL users on: ${labels}?\n\n` +
+      `Everyone on a selected channel sees it in their in-app bell` +
+      (hasPush ? '; opted-in app users also get an OS push.' : '. (Web only — no push.)')
+    )) return
     setSending(true)
     try {
       const res = await fetch('/api/admin/broadcast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim() || undefined, message: message.trim(), url: url.trim() || undefined }),
+        body: JSON.stringify({ title: title.trim() || undefined, message: message.trim(), url: url.trim() || undefined, channels: selected }),
       })
       const json = await res.json()
       if (!res.ok) { setError(json.error || 'Failed to send'); return }
-      setResult(`Delivered to ${json.recipients} bells · ${json.pushed} device pushes (opted-in only).`)
+      setResult(`Delivered to ${json.recipients} bells · ${json.pushed} device pushes (opted-in only) · channels: ${(json.channels ?? selected).join(', ')}.`)
       setTitle(''); setMessage(''); setUrl('')
     } catch (e) {
       setError((e as Error).message)
@@ -91,13 +109,30 @@ function BroadcastCard() {
           className="mt-1 w-full rounded-md border border-outline px-3 py-2 text-sm" />
       </label>
 
+      <div>
+        <span className="text-sm font-medium text-on-surface">Channels</span>
+        <p className="text-xs text-on-surface-variant mt-0.5 mb-2">All selected by default. Uncheck to target a specific surface.</p>
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+          {CHANNELS.map((c) => (
+            <label key={c.key} className="flex items-start gap-2 cursor-pointer">
+              <input type="checkbox" checked={!!channels[c.key]} onChange={() => toggle(c.key)}
+                className="mt-0.5 h-4 w-4 rounded border-outline text-primary" />
+              <span>
+                <span className="text-sm text-on-surface">{c.label}</span>
+                <span className="block text-xs text-on-surface-variant">{c.hint}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
       {error && <p className="text-sm text-red-600 flex items-center gap-1"><AlertTriangle className="h-4 w-4" />{error}</p>}
       {result && <p className="text-sm text-green-700 flex items-center gap-1"><CheckCircle2 className="h-4 w-4" />{result}</p>}
 
       <button onClick={send} disabled={sending}
         className="inline-flex items-center gap-2 rounded-md bg-primary text-white px-4 py-2 text-sm font-medium disabled:opacity-60">
         {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-        {sending ? 'Sending…' : 'Send to all users'}
+        {sending ? 'Sending…' : `Send to ${selected.length === 3 ? 'all users' : selected.length ? selected.join(' + ') : '…'}`}
       </button>
     </section>
   )
