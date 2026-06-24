@@ -476,7 +476,7 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
 
         {/* Sticky Map (lazy-mounted) */}
         <div className="lg:w-[400px] flex-shrink-0">
-          <div className="lg:sticky lg:top-24">
+          <div className="lg:sticky lg:top-20">
             <LazyCityMap
               places={filtered}
               className="h-[300px] lg:h-[calc(100vh-8rem)]"

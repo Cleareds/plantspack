@@ -635,9 +635,9 @@ export default async function CityPage({ params, searchParams }: PageProps) {
         }}
       />
 
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 py-5 md:py-8">
         {/* Breadcrumbs — mobile: Country > City, desktop: full path */}
-        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
+        <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-4">
           <Link href="/" className="hidden md:inline hover:text-primary transition-colors">Home</Link>
           <span className="hidden md:inline text-outline">/</span>
           <Link href="/vegan-places" className="hidden md:inline hover:text-primary transition-colors">Vegan Places</Link>
@@ -648,7 +648,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
         </nav>
 
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-5">
           <div className="flex items-start justify-between gap-4 mb-3">
             <h1 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight">
               {isFullyVeganMode ? '100% Vegan in ' : 'Vegan Places in '}<span className="text-primary">{cityName}</span>

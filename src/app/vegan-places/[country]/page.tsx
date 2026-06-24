@@ -274,7 +274,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(fvItemListJsonLd) }}
         />
       )}
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 py-5 md:py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Home</Link>
