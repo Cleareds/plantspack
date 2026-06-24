@@ -95,35 +95,25 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
 
   return (
     <div className="min-h-screen bg-surface">
-      {/* Header */}
-      <div className="bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/10 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors"
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Breadcrumb (replaces the old "Back to Feed"); supporters get a quick
+            manage link inline. */}
+        <div className="flex items-center justify-between gap-3 mb-8">
+          <nav className="flex items-center gap-2 text-sm text-on-surface-variant">
+            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+            <span className="text-outline">/</span>
+            <span className="text-on-surface font-medium">Support</span>
+          </nav>
+          {isSupporter && (
+            <button
+              onClick={handleManageSubscription}
+              disabled={managingSubscription}
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline disabled:opacity-50"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="text-sm font-medium">Back to Feed</span>
-            </Link>
-            {isSupporter && (
-              <button
-                onClick={handleManageSubscription}
-                disabled={managingSubscription}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/5 rounded-xl transition-colors"
-              >
-                {managingSubscription ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <span>Manage Subscription</span>
-                )}
-              </button>
-            )}
-          </div>
+              {managingSubscription ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>Manage subscription</span>}
+            </button>
+          )}
         </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         {/* Success/Cancel/Error Messages */}
         {success && (
           <div className="mb-12 p-5 bg-primary/5 border border-primary/15 rounded-2xl">
@@ -180,27 +170,28 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
         )}
 
         {/* Hero Section */}
-        <div className="text-center mb-20">
-          <div className="flex justify-center mb-8">
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest">
               <Leaf className="h-3.5 w-3.5" />
               <span>Free Forever</span>
             </div>
           </div>
-          <h1 className="font-headline font-extrabold text-5xl md:text-7xl text-on-surface tracking-tight leading-[1.1] mb-6">
+          <h1 className="font-headline font-extrabold text-4xl md:text-6xl text-on-surface tracking-tight leading-[1.1] mb-4">
             PlantsPack is
             <br />
             <span className="text-primary">free. Forever.</span>
           </h1>
-          <p className="text-on-surface-variant text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto">
+          <p className="text-on-surface-variant text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
             We believe the vegan community should grow without paywalls.
-            Every feature is free for everyone. If you love what we&apos;re building,
+            The full directory and all our tools are free for everyone — no ads,
+            no investors, no paid listings. If you love what we&apos;re building,
             consider supporting us.
           </p>
         </div>
 
         {/* Impact Counters */}
-        <div className="grid grid-cols-3 gap-6 mb-20">
+        <div className="grid grid-cols-3 gap-6 mb-12">
           <div className="text-center p-6 rounded-[2rem] bg-surface-container-lowest border border-outline-variant/10">
             <MapPin className="h-6 w-6 text-primary mx-auto mb-3" />
             <div className="text-3xl font-extrabold text-on-surface tracking-tight">{stats.places.toLocaleString()}</div>
@@ -219,7 +210,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
         </div>
 
         {/* Donate Section */}
-        <div className="rounded-[2.5rem] border-2 border-primary ring-8 ring-primary/5 bg-surface-container-lowest p-8 lg:p-12 mb-20">
+        <div className="rounded-[2.5rem] border-2 border-primary ring-8 ring-primary/5 bg-surface-container-lowest p-8 lg:p-12 mb-12">
           <div className="text-center mb-10">
             <Heart className="h-10 w-10 text-primary mx-auto mb-4" />
             <h2 className="font-headline font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight mb-3">
@@ -325,7 +316,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
 
         {/* Supporter Wall */}
         {supporters.length > 0 && (
-          <div className="mb-20">
+          <div className="mb-12">
             <div className="text-center mb-8">
               <h2 className="font-headline font-extrabold text-2xl md:text-3xl text-on-surface tracking-tight mb-2">
                 Our Supporters

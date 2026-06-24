@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Support PlantsPack — Community-Driven, Ad-Free, Forever | PlantsPack',
-  description: 'Back a community-driven vegan platform. No investors, no ads — 50% of profit goes to verified animal welfare and plant-based charities. Monthly support from €3.',
+  description: 'Back a community-driven vegan platform — no investors, no ads, no paid listings. Supporter contributions keep it free for everyone, from €3/month.',
   alternates: { canonical: 'https://www.plantspack.com/support' },
   openGraph: {
     title: 'Support PlantsPack',
-    description: 'Help keep PlantsPack free and ad-free. 50% of profit funds verified animal welfare and plant-based charities.',
+    description: 'Help keep PlantsPack free and ad-free — community-driven, no investors, no paid listings.',
     type: 'website',
     siteName: 'PlantsPack',
   },
