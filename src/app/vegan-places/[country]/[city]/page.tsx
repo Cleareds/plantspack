@@ -693,12 +693,6 @@ export default async function CityPage({ params, searchParams }: PageProps) {
               : <>Discover vegan-friendly places in {cityName}.</>
             }
           </p>
-          {sceneDescription && (
-            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
-          )}
-          {cityIntro && (
-            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-3">{cityIntro}</p>
-          )}
           <div className="flex flex-wrap gap-3">
             <Link
               href={`/map?location=${encodeURIComponent(cityName + ', ' + countryName)}`}
@@ -789,6 +783,20 @@ export default async function CityPage({ params, searchParams }: PageProps) {
             first so visitors see places on the first screen. These SEO/context
             blocks stay in the DOM (Google reads full document order) but render
             below the list. */}
+
+        {/* Long-form description — moved here so visitors see places first.
+            Still in the DOM for SEO/AI-search; the one-line count stays up top. */}
+        {(sceneDescription || cityIntro) && (
+          <section className="mt-10 mb-6 max-w-3xl">
+            <h2 className="font-headline font-bold text-lg mb-2">About vegan places in {cityName}</h2>
+            {sceneDescription && (
+              <p className="text-on-surface-variant text-sm leading-relaxed mb-2">{sceneDescription}</p>
+            )}
+            {cityIntro && (
+              <p className="text-on-surface-variant text-sm leading-relaxed">{cityIntro}</p>
+            )}
+          </section>
+        )}
 
         {/* Region back-link banner — shown only when this city is part of a
             seeded country region (today: Belgium). Lets visitors zoom out to

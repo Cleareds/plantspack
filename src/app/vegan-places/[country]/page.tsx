@@ -299,9 +299,6 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
-          {sceneDescription && !isFullyVeganMode && (
-            <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl mb-2">{sceneDescription}</p>
-          )}
           <div className="flex flex-wrap gap-3 mt-4">
             <Link href={`/map?location=${encodeURIComponent(countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90">
@@ -421,6 +418,15 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
               cityScores={countryScores}
             />
           </>
+        )}
+
+        {/* Long-form description — moved below the city listings so visitors
+            reach cities first; kept in the DOM for SEO. */}
+        {sceneDescription && !isFullyVeganMode && (
+          <section className="mt-10 mb-6 max-w-3xl">
+            <h2 className="font-headline font-bold text-lg mb-2">About vegan places in {countryName}</h2>
+            <p className="text-on-surface-variant text-sm leading-relaxed">{sceneDescription}</p>
+          </section>
         )}
 
         {/* Country-audit blog callout — answer-first: shown below the city
