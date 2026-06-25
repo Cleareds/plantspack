@@ -9,6 +9,7 @@ import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
+import { eventSchemaDates } from '@/lib/events/event-schema-dates'
 
 // Static shell revalidates every 10 minutes. Comments and the Going/Interested
 // buttons are client components that fetch live data on mount, so this does
@@ -168,9 +169,9 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             '@type': 'Event',
             name: eventTitle,
             // Date-only when we only know the day (avoids advertising a fake
-            // time); full datetime (with the source's offset) otherwise.
-            startDate: event.time_tbd ? event.start_time.slice(0, 10) : event.start_time,
-            ...(event.end_time ? { endDate: event.time_tbd ? event.end_time.slice(0, 10) : event.end_time } : {}),
+            // time); full datetime (with the source's offset) otherwise. endDate
+            // always emitted (falls back to start for single-day events).
+            ...(eventSchemaDates(event) || {}),
             eventStatus: 'https://schema.org/EventScheduled',
             eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
             ...(event.location

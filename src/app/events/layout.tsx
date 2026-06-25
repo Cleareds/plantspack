@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { eventSchemaDates } from '@/lib/events/event-schema-dates'
 
 // The /events page is a client component (interactive search/calendar), so it
 // can't server-render schema. This layout adds a server-rendered ItemList of
@@ -45,8 +46,7 @@ async function upcomingEventsSchema() {
         '@type': 'Event',
         name,
         url,
-        ...(ed.start_time ? { startDate: ed.start_time } : {}),
-        ...(ed.end_time ? { endDate: ed.end_time } : {}),
+        ...(eventSchemaDates(ed) || {}),
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         ...(ed.location ? { location: { '@type': 'Place', name: ed.location, address: ed.location } } : {}),
