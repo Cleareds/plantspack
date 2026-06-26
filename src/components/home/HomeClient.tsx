@@ -538,8 +538,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                   ) : (
                     <p className="text-sm text-on-surface-variant mb-3">
                       {cityPlaceCount && cityPlaceCount > 0
-                        ? `${userCity} has ${cityPlaceCount} vegan ${cityPlaceCount === 1 ? 'place' : 'places'} so far — add ${5 - cityPlaceCount} more to unlock its vegan score.`
-                        : `No vegan places in ${userCity} yet — be the first to add one!`}
+                        ? `${userCity} has ${cityPlaceCount} vegan or vegan-friendly ${cityPlaceCount === 1 ? 'place' : 'places'} so far — add ${5 - cityPlaceCount} more to unlock its vegan score.`
+                        : `No vegan or vegan-friendly places in ${userCity} yet — be the first to add one!`}
                     </p>
                   )}
                   <div className="flex gap-2">

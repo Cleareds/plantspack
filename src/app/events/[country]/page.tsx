@@ -9,7 +9,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import EventCard from '@/components/events/EventCard'
-import { eventSchemaDates } from '@/lib/events/event-schema-dates'
+import { eventSchemaDates, eventSchemaDescription, eventSchemaOrganizer } from '@/lib/events/event-schema-dates'
 
 export const revalidate = 3600
 
@@ -72,6 +72,8 @@ export default async function CountryEventsPage({ params }: { params: Promise<Ro
           url: `https://www.plantspack.com/event/${p.slug || p.id}`,
           ...(eventSchemaDates(ed) || {}),
           ...(ed.location ? { location: { '@type': 'Place', name: ed.location, address: { '@type': 'PostalAddress', addressCountry: country, ...(ed.city ? { addressLocality: ed.city } : {}) } } } : {}),
+          description: eventSchemaDescription(p.content, p.title || ed.title),
+          organizer: eventSchemaOrganizer((p as { users?: unknown }).users as Parameters<typeof eventSchemaOrganizer>[0]),
         },
       }
     }),

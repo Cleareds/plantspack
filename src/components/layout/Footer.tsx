@@ -24,8 +24,8 @@ export default function Footer() {
                 </Link>
             </div>
             <p className="text-sm text-on-surface-variant mb-4">
-              The world&apos;s most supportive vegan community platform.
-              Connect, share, and grow together!
+              A free, community-driven platform for vegans and anyone exploring
+              plant-based living. No investors. No ads. No paywalls.
             </p>
             <div className="flex items-center space-x-1 text-sm text-on-surface-variant">
               <span>Made with</span>

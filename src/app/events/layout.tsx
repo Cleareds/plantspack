@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
-import { eventSchemaDates } from '@/lib/events/event-schema-dates'
+import { eventSchemaDates, eventSchemaDescription, eventSchemaOrganizer } from '@/lib/events/event-schema-dates'
 
 // The /events page is a client component (interactive search/calendar), so it
 // can't server-render schema. This layout adds a server-rendered ItemList of
@@ -30,7 +30,7 @@ async function upcomingEventsSchema() {
     const nowIso = new Date().toISOString()
     const { data } = await sb
       .from('posts')
-      .select('slug, id, title, content, images, image_url, event_data')
+      .select('slug, id, title, content, images, image_url, event_data, users(username, first_name, last_name)')
       .eq('category', 'event')
       .eq('privacy', 'public')
       .gte('event_data->>start_time', nowIso)
@@ -50,6 +50,8 @@ async function upcomingEventsSchema() {
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         ...(ed.location ? { location: { '@type': 'Place', name: ed.location, address: ed.location } } : {}),
+        description: eventSchemaDescription(p.content, name),
+        organizer: eventSchemaOrganizer((p as { users?: unknown }).users as Parameters<typeof eventSchemaOrganizer>[0]),
       }
       const img = (p.images as string[] | null)?.[0] || p.image_url
       if (img) ev.image = [img]
