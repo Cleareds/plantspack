@@ -8,7 +8,7 @@ const navItems = [
   { href: '/map', label: 'Map', icon: 'explore' },
   { href: '/vegan-places', label: 'Places', icon: 'place' },
   { href: '/city-ranks', label: 'Rankings', icon: 'leaderboard' },
-  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
+  { href: '/tools', label: 'Tools', icon: 'handyman' },
   { href: '/feed', label: 'Feed', icon: 'forum' },
 ]
 
