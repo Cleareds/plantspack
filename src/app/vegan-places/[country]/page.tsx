@@ -113,10 +113,22 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     ? `https://www.plantspack.com/vegan-places/${country}/fully-vegan`
     : `https://www.plantspack.com/vegan-places/${country}`
 
+  // Indexation hygiene: mirror the city page. Country hubs with fewer than 5
+  // places are too thin to earn rankings and dilute the site's quality signal
+  // (the 54 such hubs — Maldives, Liechtenstein, Zimbabwe… — were sitting in
+  // GSC's "Discovered – currently not indexed"). They stay crawlable
+  // (follow=true) so internal links to richer pages keep flowing. FV mode
+  // gates on the fully-vegan count, matching the city page.
+  const indexCount = isFullyVeganMode ? totalFv : totalPlaces
+
   return {
     title,
     description: isFullyVeganMode ? fvDesc : metaDesc,
     alternates: { canonical },
+    robots:
+      indexCount < 5
+        ? { index: false, follow: true }
+        : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     openGraph: {
       title: isFullyVeganMode ? `100% Vegan in ${countryName}` : `Vegan ${placeTerm} in ${countryName}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
@@ -203,6 +215,16 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
 
   // Country scores (for city cards, no average displayed)
   const countryScores = allScores.filter((s: any) => s.country === countryName)
+
+  // Top cities by place count — drives unique, data-derived intro copy per
+  // country (A) and server-rendered prose links down to the city hubs that
+  // should rank (B), pushing internal-link equity where it's most useful.
+  // All-mode only (FV mode already has its own verification copy) and gated
+  // at >=5 places so we mirror the city-hub indexability floor.
+  const topCities = (isFullyVeganMode ? [] : [...cities])
+    .filter((c: any) => (c.count ?? 0) >= 5)
+    .sort((a: any, b: any) => b.count - a.count)
+    .slice(0, 6)
 
   // Country description. Categories are counted from the actual `places`
   // array (not the directory_cities MV which only exposes eat/store/hotel)
@@ -299,6 +321,20 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
               : <>Explore vegan-friendly places in {countryName}.</>
             }
           </p>
+          {/* Top-cities intro — unique per country (different cities + real
+              counts) and a crawlable prose link to each strong city hub. */}
+          {topCities.length >= 2 && (
+            <p className="text-on-surface-variant text-base mb-3 leading-relaxed">
+              Most listings cluster in{' '}
+              {topCities.map((c: any, i: number) => (
+                <span key={c.slug}>
+                  <Link href={`/vegan-places/${country}/${c.slug}`} className="text-primary hover:underline font-medium">{c.name}</Link>
+                  {` (${c.count})`}
+                  {i < topCities.length - 1 ? (i === topCities.length - 2 ? ', and ' : ', ') : '.'}
+                </span>
+              ))}
+            </p>
+          )}
           <div className="flex flex-wrap gap-3 mt-4">
             <Link href={`/map?location=${encodeURIComponent(countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90">

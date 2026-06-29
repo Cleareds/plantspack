@@ -220,6 +220,11 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     // we mirror that here to keep the sitemap and the per-page directive in
     // agreement.
     const cityCountryCounts = new Map<string, number>()
+    // Track total places per country so we can skip thin country hubs
+    // (<5 places). Mirrors the city <5 rule and the country page's own
+    // noindex directive — a 1-4 place country hub is too thin to earn
+    // rankings and was padding "Discovered – currently not indexed".
+    const countryCounts = new Map<string, number>()
     // Track fully_vegan counts per country and per city so we only emit
     // /fully-vegan URLs when there's at least one verified FV venue.
     const countryFvCounts = new Map<string, number>()
@@ -229,6 +234,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       const cs = slugifyCityOrCountry(p.country)
       if (!cs) continue
       countries.add(cs)
+      countryCounts.set(cs, (countryCounts.get(cs) ?? 0) + 1)
       const isFv = p.vegan_level === 'fully_vegan'
       if (isFv) countryFvCounts.set(cs, (countryFvCounts.get(cs) ?? 0) + 1)
       if (p.city) {
@@ -242,8 +248,14 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       }
     }
     for (const country of countries) {
+      // Skip thin country hubs (<5 places) — they self-noindex at the page
+      // level, so advertising them in the sitemap only contradicts that.
+      if ((countryCounts.get(country) ?? 0) < 5) continue
       entries.push({ url: `${SITE_URL}/vegan-places/${country}`, changeFreq: 'daily', priority: 0.85 })
-      if ((countryFvCounts.get(country) ?? 0) > 0) {
+      // The /fully-vegan country page noindexes itself when there are <5
+      // fully-vegan venues (a 2-venue "list" is thin), so only advertise it
+      // once it clears that floor — keeps the sitemap and page in agreement.
+      if ((countryFvCounts.get(country) ?? 0) >= 5) {
         entries.push({ url: `${SITE_URL}/vegan-places/${country}/fully-vegan`, changeFreq: 'weekly', priority: 0.9 })
       }
     }
