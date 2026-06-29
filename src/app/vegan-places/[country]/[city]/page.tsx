@@ -765,6 +765,33 @@ export default async function CityPage({ params, searchParams }: PageProps) {
             )}
 
             <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
+
+            {/* Server-rendered crawlable index of EVERY place in the city.
+                CityPlacesList paginates client-side (30/page) and its
+                Next/Prev are onClick buttons, not <a> — so crawlers only ever
+                saw the first 30 place links per city. Deep inventory in big
+                cities had no crawlable inbound link and sat in "Discovered –
+                not indexed". This always-in-DOM <nav> gives Googlebot a real
+                link to every place without touching the interactive UI. Only
+                rendered when the list exceeds one page (otherwise redundant). */}
+            {allPlaces.length > 30 && (
+              <nav aria-label={`All vegan places in ${cityName}`} className="mt-10 pt-6 border-t border-outline-variant/15">
+                <h2 className="font-headline font-bold text-base mb-3 text-on-surface">
+                  All {allPlaces.length} vegan &amp; vegan-friendly places in {cityName}
+                </h2>
+                <ul className="columns-2 md:columns-3 gap-x-6 text-sm [&>li]:mb-1.5 [&>li]:break-inside-avoid">
+                  {[...allPlaces]
+                    .sort((a: Place, b: Place) => (a.name || '').localeCompare(b.name || ''))
+                    .map((p: Place) => (
+                      <li key={p.id}>
+                        <Link href={`/place/${p.slug || p.id}`} prefetch={false} className="text-on-surface-variant hover:text-primary hover:underline">
+                          {p.name}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </nav>
+            )}
           </>
         ) : (
           <div className="text-center py-16">

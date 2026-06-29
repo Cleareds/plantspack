@@ -20,10 +20,11 @@ import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { buildFaqSchema, type FaqItem } from '@/lib/schema/faq'
 import FaqSection from '@/components/seo/FaqSection'
 
-// Use force-dynamic to bypass any cache during the diagnostic phase. Will
-// switch back to `revalidate = 86400` (ISR) once we confirm the route
-// actually executes.
-export const dynamic = 'force-dynamic'
+// ISR: the route is confirmed working, so cache aggressively (24h). Dish
+// pages change rarely and force-dynamic was starving crawl budget — every
+// hit re-ran the queries uncached, so Googlebot crawled these slowly and
+// deprioritised them (they dominated the "Discovered – not indexed" pile).
+export const revalidate = 86400
 
 type RouteParams = { country: string; city: string; dish: string }
 
@@ -97,10 +98,13 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   const heroImg = data.places.find(pl => pl.main_image_url)?.main_image_url
   const canonical = `https://www.plantspack.com${dishPageHref(routeParams.country, routeParams.city, data.dish.slug)}`
 
-  // Noindex pages with <2 actual places. A 1-place page isn't a useful
-  // list - it's just a redundant view of the place page. Indexing it
-  // dilutes Google's signal that the (city, dish) pattern is useful.
-  const shouldNoindex = data.total < 2
+  // Noindex pages with <3 actual places, mirroring the dishes.xml sitemap's
+  // density gate (it only emits dish URLs with >=3 matches). Keeping the page
+  // directive and the sitemap in agreement stops thin 2-place dish pages from
+  // being discovered-via-internal-links but never indexed — they were padding
+  // the "Discovered – currently not indexed" pile and diluting crawl budget.
+  // follow:true so the place links on these pages still pass equity.
+  const shouldNoindex = data.total < 3
 
   return {
     title,
