@@ -143,6 +143,14 @@ export default function Sidebar() {
         )}
 
         <Link
+          href="/app"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-on-surface-variant hover:bg-surface-container-low/50 transition-all"
+        >
+          <span className="material-symbols-outlined text-lg">smartphone</span>
+          Get the app
+        </Link>
+
+        <Link
           href="/support"
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-primary ghost-border hover:bg-primary/5 transition-all"
         >

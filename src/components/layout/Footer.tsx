@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Heart } from 'lucide-react'
 import Image from "next/image";
+import AppBadges from '@/components/app/AppBadges'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -31,6 +32,10 @@ export default function Footer() {
               <span>Made with</span>
               <Heart className="h-4 w-4 text-error fill-current" />
               <span>for vegans</span>
+            </div>
+            <div className="mt-5">
+              <p className="text-xs font-semibold text-on-surface mb-2">Get the app</p>
+              <AppBadges />
             </div>
           </div>
 
