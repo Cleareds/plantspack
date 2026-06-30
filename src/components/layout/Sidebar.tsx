@@ -94,9 +94,9 @@ export default function Sidebar() {
                   onClick={() => toggle(pillar)}
                   aria-label={`${open ? 'Collapse' : 'Expand'} ${pillar.label}`}
                   aria-expanded={open}
-                  className="px-3 py-3 text-on-surface-variant hover:text-primary"
+                  className="flex items-center self-stretch px-3 text-on-surface-variant hover:text-primary"
                 >
-                  <span className="material-symbols-outlined text-lg">
+                  <span className="material-symbols-outlined text-lg leading-none">
                     {open ? 'expand_less' : 'expand_more'}
                   </span>
                 </button>
