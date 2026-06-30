@@ -16,7 +16,7 @@ export default function MapLegend() {
   // Mobile: top-left - the bottom holds the filter overlay (bottom-20) + the bottom nav,
   // so the legend would collide there. Desktop: bottom-left (filter is top-left there).
   return (
-    <div className="absolute top-3 left-2 z-[500] max-w-[calc(100%-1rem)] lg:top-auto lg:bottom-4 lg:left-4">
+    <div className="absolute top-3 left-12 z-[500] max-w-[calc(100%-3.5rem)] lg:top-auto lg:bottom-4 lg:left-4 lg:max-w-[calc(100%-2rem)]">
       <button
         onClick={() => setOpen(v => !v)}
         className="flex items-center gap-1.5 px-3 py-2 bg-surface-container-lowest/95 backdrop-blur-sm ghost-border rounded-full text-xs font-medium text-on-surface hover:bg-surface-container-low transition-colors editorial-shadow"
