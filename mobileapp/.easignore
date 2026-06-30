@@ -1,7 +1,0 @@
-# Keep ios/ in EAS uploads so the committed Package.resolved (correct SPM pins)
-# is used during cloud builds. Only drop derived/local-only artifacts.
-ios/build/
-ios/Pods/
-android/build/
-android/.gradle/
-*.log

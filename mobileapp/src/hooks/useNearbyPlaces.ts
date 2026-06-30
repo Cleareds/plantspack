@@ -1,106 +1,74 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/src/lib/supabase';
-import type { Place } from '@/src/types/database';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '../lib/supabase';
+import { useFilterStore } from '../store/filterStore';
 
-interface UseNearbyPlacesOptions {
+export interface PlaceMarker {
+  id: string;
+  slug: string;
+  name: string;
   latitude: number;
   longitude: number;
-  radiusKm?: number;
+  vegan_level: string | null;
+  category: string | null;
+  main_image_url: string | null;
+  city: string | null;
+  country: string | null;
+  average_rating: number | null;
 }
 
-export const useNearbyPlaces = (options: UseNearbyPlacesOptions) => {
-  const [places, setPlaces] = useState<Place[]>([]);
-  const [loading, setLoading] = useState(true);
+interface Bounds {
+  minLat: number;
+  maxLat: number;
+  minLng: number;
+  maxLng: number;
+}
+
+export function useNearbyPlaces(bounds: Bounds | null) {
+  const veganOnly = useFilterStore((s) => s.veganOnly);
+  const category = useFilterStore((s) => s.category);
+  const subcategory = useFilterStore((s) => s.subcategory);
+  const petFriendly = useFilterStore((s) => s.petFriendly);
+
+  const [places, setPlaces] = useState<PlaceMarker[]>([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (options.latitude && options.longitude) {
-      fetchNearbyPlaces();
-    }
-  }, [options.latitude, options.longitude, options.radiusKm]);
+  const fetchPlaces = useCallback(async () => {
+    if (!bounds) return;
+    setLoading(true);
+    setError(null);
 
-  const fetchNearbyPlaces = async () => {
     try {
-      setLoading(true);
-      setError(null);
-
-      const radius = options.radiusKm || 10; // Default 10km
-
-      // Calculate bounding box (rough approximation)
-      const latDiff = radius / 111; // 1 degree latitude ≈ 111 km
-      const lngDiff = radius / (111 * Math.cos(options.latitude * Math.PI / 180));
-
-      const { data, error: queryError } = await supabase
+      let query = supabase
         .from('places')
-        .select(`
-          *,
-          reviews:place_reviews(rating),
-          favorites:favorite_places(user_id)
-        `)
-        .eq('approved', true)
-        .gte('latitude', options.latitude - latDiff)
-        .lte('latitude', options.latitude + latDiff)
-        .gte('longitude', options.longitude - lngDiff)
-        .lte('longitude', options.longitude + lngDiff)
-        .limit(50);
+        .select('id, slug, name, latitude, longitude, vegan_level, category, main_image_url, city, country, average_rating')
+        .gte('latitude', bounds.minLat)
+        .lte('latitude', bounds.maxLat)
+        .gte('longitude', bounds.minLng)
+        .lte('longitude', bounds.maxLng)
+        .is('archived_at', null)
+        .not('latitude', 'is', null)
+        .not('longitude', 'is', null)
+        .limit(300);
 
-      if (queryError) throw queryError;
+      if (veganOnly) query = query.eq('vegan_level', 'fully_vegan');
+      if (category) query = query.eq('category', category);
+      if (subcategory) query = query.eq('subcategory', subcategory);
+      if (petFriendly) query = query.eq('is_pet_friendly', true);
 
-      // Calculate distance and filter by actual radius
-      const placesWithDistance = (data || []).map((place: any) => {
-        const distance = calculateDistance(
-          options.latitude,
-          options.longitude,
-          place.latitude,
-          place.longitude
-        );
-
-        const reviews = place.reviews || [];
-        const avgRating = reviews.length > 0
-          ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length
-          : 0;
-
-        return {
-          ...place,
-          distance,
-          average_rating: avgRating,
-          reviews_count: reviews.length,
-          is_favorited: place.favorites && place.favorites.length > 0,
-        };
-      })
-      .filter((place: any) => place.distance <= radius)
-      .sort((a: any, b: any) => a.distance - b.distance);
-
-      setPlaces(placesWithDistance);
-    } catch (err: any) {
-      console.error('Error fetching nearby places:', err);
-      setError(err.message || 'Failed to fetch nearby places');
+      const { data, error: err } = await query;
+      if (err) throw err;
+      setPlaces(data ?? []);
+    } catch (e: any) {
+      setError(e.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [bounds?.minLat, bounds?.maxLat, bounds?.minLng, bounds?.maxLng, veganOnly, category, subcategory, petFriendly]);
 
-  return {
-    places,
-    loading,
-    error,
-    refetch: fetchNearbyPlaces,
-  };
-};
+  useEffect(() => {
+    fetchPlaces();
+  }, [fetchPlaces]);
 
-// Haversine formula for distance calculation
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Earth's radius in km
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function toRad(value: number): number {
-  return value * Math.PI / 180;
+  return { places, loading, error, refetch: fetchPlaces };
 }

@@ -2,7 +2,7 @@
   "expo": {
     "name": "PlantsPack",
     "slug": "plantspack",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "plantspack",
@@ -11,12 +11,8 @@
       "android"
     ],
     "userInterfaceStyle": "light",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#10b981"
-    },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.plantspack.app",
       "usesAppleSignIn": true,
       "infoPlist": {
@@ -25,18 +21,16 @@
         "NSPhotoLibraryUsageDescription": "PlantsPack needs photo library access to scan ingredient labels.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "associatedDomains": [
-        "applinks:plantspack.com"
-      ],
-      "buildNumber": "8"
+      "buildNumber": "21"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#f7f7f3"
       },
       "package": "plantspack.app",
+      "googleServicesFile": "./google-services.json",
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
@@ -67,7 +61,7 @@
           ]
         }
       ],
-      "versionCode": 6
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -77,7 +71,13 @@
       "expo-router",
       "expo-status-bar",
       "expo-secure-store",
-      "expo-notifications",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#083510"
+        }
+      ],
       "@maplibre/maplibre-react-native",
       [
         "expo-camera",
@@ -89,6 +89,15 @@
         "expo-location",
         {
           "locationWhenInUsePermission": "Allow PlantsPack to use your location to show nearby vegan places."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#f7f7f3"
         }
       ]
     ],

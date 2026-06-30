@@ -1,24 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)",
-      "Bash(gh repo create:*)",
-      "Bash(git init:*)",
-      "Bash(git remote add:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(npm:*)",
-      "Bash(node:*)",
-      "Bash(npx expo-doctor)",
-      "Bash(/Users/antonkravchuk/sidep/Cleareds/plantspack/mobileapp/README.md:*)",
-      "Bash(xcrun simctl list:*)",
-      "Bash(npx expo install:*)",
-      "Bash(git restore:*)",
-      "Bash(pkill:*)",
-      "Bash(npx expo start:*)",
-      "Bash(grep:*)",
-      "Bash(psql:*)"
+      "Bash(eas build:list --platform ios --limit 5 --non-interactive)",
+      "Bash(grep -E \"^[0-9a-f]{7,}|buildNumber|versionCode\")",
+      "Bash(sips -g pixelWidth -g pixelHeight -g hasAlpha assets/icon.png)"
     ]
   }
 }

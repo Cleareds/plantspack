@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1065560218701",
+    "project_id": "plantspack-bac57",
+    "storage_bucket": "plantspack-bac57.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065560218701:android:5bdc3964145ab092681004",
+        "android_client_info": {
+          "package_name": "plantspack.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAHhlAIH4RlS78F-n_NAikCp_ZZW7fu78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

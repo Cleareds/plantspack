@@ -1,0 +1,45 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "node": "22.19.0",
+      "ios": {
+        "simulator": true,
+        "image": "macos-tahoe-26.4-xcode-26.4"
+      },
+      "channel": "development"
+    },
+    "preview": {
+      "distribution": "internal",
+      "node": "22.19.0",
+      "ios": {
+        "simulator": true,
+        "image": "macos-tahoe-26.4-xcode-26.4"
+      },
+      "channel": "preview"
+    },
+    "production": {
+      "autoIncrement": true,
+      "node": "22.19.0",
+      "ios": {
+        "image": "macos-tahoe-26.4-xcode-26.4"
+      },
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6779618901",
+        "ascApiKeyPath": "./AuthKey_B5M3C3MT42.p8",
+        "ascApiKeyId": "B5M3C3MT42",
+        "ascApiKeyIssuerId": "9f6ca2c0-4814-480a-9f64-3a03a058d180"
+      }
+    }
+  }
+}
