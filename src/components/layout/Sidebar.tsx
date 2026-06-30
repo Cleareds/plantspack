@@ -5,17 +5,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import VeganToggle from '@/components/ui/VeganToggle'
-
-const navItems = [
-  { href: '/', label: 'Home', icon: 'home' },
-  { href: '/map', label: 'Map', icon: 'explore' },
-  { href: '/vegan-places', label: 'Vegan Places', icon: 'location_on' },
-  { href: '/recipes', label: 'Recipes', icon: 'restaurant_menu' },
-  { href: '/packs', label: 'Packs / Trips', icon: 'groups' },
-  { href: '/feed', label: 'Community Feed', icon: 'forum' },
-  { href: '/events', label: 'Events', icon: 'event' },
-  { href: '/blog', label: 'Blog', icon: 'article' },
-]
+import { NAV_PILLARS } from '@/lib/nav'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -36,13 +26,41 @@ export default function Sidebar() {
       </Link>
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-1">
-        {navItems.map((item) => {
-          const isActive = item.href === '/' ? pathname === '/' : pathname?.startsWith(item.href)
+      <nav className="flex flex-col gap-0.5">
+        {NAV_PILLARS.map((pillar) => {
+          // Pillars with children render as a labelled group; others as a direct link.
+          if (pillar.children) {
+            return (
+              <div key={pillar.key} className="mb-1">
+                <div className="px-4 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-on-surface-variant/60">
+                  {pillar.label}
+                </div>
+                {pillar.children.map((child) => {
+                  const isActive = pathname === child.href || pathname?.startsWith(child.href + '/')
+                  return (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      prefetch={false}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`flex items-center pl-6 pr-4 py-2 rounded-xl transition-all duration-300 ${
+                        isActive
+                          ? 'text-primary font-bold bg-surface-container-low'
+                          : 'text-on-surface-variant hover:bg-surface-container-low/50'
+                      }`}
+                    >
+                      <span className="text-sm font-medium">{child.label}</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            )
+          }
+          const isActive = pathname?.startsWith(pillar.href)
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={pillar.key}
+              href={pillar.href}
               prefetch={false}
               aria-current={isActive ? 'page' : undefined}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
@@ -55,9 +73,9 @@ export default function Sidebar() {
                 className="material-symbols-outlined text-xl"
                 style={isActive ? { fontVariationSettings: "'FILL' 1" } : undefined}
               >
-                {item.icon}
+                {pillar.icon}
               </span>
-              <span className="text-sm font-medium">{item.label}</span>
+              <span className="text-sm font-medium">{pillar.label}</span>
             </Link>
           )
         })}

@@ -3,14 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
-
-const navItems = [
-  { href: '/map', label: 'Map', icon: 'explore' },
-  { href: '/vegan-places', label: 'Places', icon: 'place' },
-  { href: '/city-ranks', label: 'Rankings', icon: 'leaderboard' },
-  { href: '/tools', label: 'Tools', icon: 'handyman' },
-  { href: '/feed', label: 'Feed', icon: 'forum' },
-]
+import { BOTTOM_NAV_PILLARS } from '@/lib/nav'
 
 export default function BottomNav() {
   const pathname = usePathname()
@@ -19,7 +12,7 @@ export default function BottomNav() {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 w-full z-40 flex justify-around items-end px-1 pb-[env(safe-area-inset-bottom,4px)] h-16 bg-surface/90 backdrop-blur-xl shadow-[0_-10px_40px_rgba(45,47,44,0.06)]">
-      {navItems.map((item) => {
+      {BOTTOM_NAV_PILLARS.map((item) => {
         const isActive = item.href === '/' ? pathname === '/' : pathname?.startsWith(item.href)
         return (
           <Link

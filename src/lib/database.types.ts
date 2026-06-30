@@ -26,6 +26,28 @@ export interface RecipeNutrition {
   fiber?: string
 }
 
+export type RecipeTexture = 'liquid' | 'creamy' | 'puree' | 'soft' | 'chewable' | 'crunchy'
+
+// Editorial guidance, NOT medical certainty. 'low' means low-FODMAP-FRIENDLY at a normal
+// portion, cross-referenced against published lists - never a clinical claim.
+export type FodmapBand = 'low' | 'moderate' | 'high' | 'unknown'
+
+// Comfort / gentle-food metadata powering the Kitchen collections (soft food, low-FODMAP, etc.).
+// All optional + additive: existing recipes without this object are unaffected.
+export interface RecipeComfort {
+  texture?: RecipeTexture
+  fodmap_band?: FodmapBand
+  soft?: boolean                 // low chewing effort
+  no_chew?: boolean              // fully blendable / post-dental friendly
+  blender_only?: boolean         // needs only a blender, no stovetop
+  high_protein?: boolean
+  weight_loss_friendly?: boolean
+  bloating_conscious?: boolean
+  freezer_friendly?: boolean
+  // Honest, non-medical caution (e.g. "cauliflower may not suit everyone - try a small portion").
+  caution_note?: string
+}
+
 export interface RecipeData {
   ingredients: string[]
   prep_time_min: number
@@ -38,6 +60,10 @@ export interface RecipeData {
   nutrition?: RecipeNutrition
   source_url?: string
   source_attribution?: string
+  // Equipment needed - drives the equipment filter + collection membership.
+  equipment?: ('blender' | 'hand_blender' | 'stovetop' | 'oven' | 'freezer')[]
+  // Gentle/comfort metadata (optional). See RecipeComfort.
+  comfort?: RecipeComfort
 }
 
 export interface EventData {

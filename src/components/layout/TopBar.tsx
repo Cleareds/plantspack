@@ -63,7 +63,7 @@ export default function TopBar() {
             {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
           </button>
 
-          {user && <div className="hidden sm:block"><NotificationBell /></div>}
+          {user && <NotificationBell />}
           {!user && (
             <Link
               href="/auth?mode=signin"
@@ -113,18 +113,29 @@ export default function TopBar() {
 
                   <div className="my-1 border-t border-outline-variant/15" />
 
-                  {/* Resources */}
+                  {/* Community (not in the bottom nav - lives here) */}
                   <div className="px-4 py-2">
-                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Resources</span>
+                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Community</span>
                   </div>
-                  <Link href="/tools" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
-                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>build</span>
-                    <span className="text-sm text-on-surface">Vegan Tools</span>
+                  <Link href="/feed" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>forum</span>
+                    <span className="text-sm text-on-surface">Feed</span>
                   </Link>
-                  <Link href="/vegan" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
-                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>menu_book</span>
-                    <span className="text-sm text-on-surface">Vegan Answers</span>
+                  <Link href="/packs" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>groups</span>
+                    <span className="text-sm text-on-surface">Packs / Trips</span>
                   </Link>
+                  <Link href="/events" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>event</span>
+                    <span className="text-sm text-on-surface">Events</span>
+                  </Link>
+
+                  <div className="my-1 border-t border-outline-variant/15" />
+
+                  {/* Help */}
+                  <div className="px-4 py-2">
+                    <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Help</span>
+                  </div>
                   <Link href="/support" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>payments</span>
                     <span className="text-sm text-on-surface">Pricing</span>
