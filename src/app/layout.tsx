@@ -42,7 +42,7 @@ export const viewport: Viewport = {
 // 10K "cities" have only 1-2 places each - not a directory people can use.
 const SITE_TITLE = 'PlantsPack: Free Vegan Tools, Places & Travel Guides';
 const SITE_DESCRIPTION =
-  'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 50,000+ verified plant-based places across 1,400+ cities in 160+ countries. Ad-free, no tracking, community-built.';
+  'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. Ad-free, no tracking, community-built.';
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
@@ -181,8 +181,8 @@ export default function RootLayout({
                   url: 'https://www.plantspack.com',
                   logo: 'https://www.plantspack.com/plantspack-logo-real.svg',
                   description:
-                    'Community-driven vegan platform with free barcode scanner, baking calculator, menu translator, drinks lookup, plus 50,000+ verified plant-based places across 1,400+ cities in 160+ countries. Ad-free.',
-                  slogan: 'Free vegan tools and verified plant-based places, ad-free.',
+                    'Independent, ad-free vegan discovery platform with free barcode scanner, baking calculator, menu translator, drinks lookup, plus 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. No paid placements.',
+                  slogan: 'Trusted vegan discovery and free tools, ad-free.',
                   sameAs: [
                     'https://x.com/plantspackX',
                     'https://www.instagram.com/plants.pack/',

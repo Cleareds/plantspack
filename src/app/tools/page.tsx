@@ -227,7 +227,7 @@ export default function ToolsHubPage() {
             </Link>
             <Link href="/research/vegan-places-2026" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
               <div className="font-bold text-sm text-on-surface mb-1">Data report 2026</div>
-              <div className="text-xs text-on-surface-variant leading-relaxed">Original analysis of 52,870 verified places.</div>
+              <div className="text-xs text-on-surface-variant leading-relaxed">Original analysis of 52,000+ vegan and vegan-friendly places.</div>
             </Link>
             <Link href="/compare/happycow" className="block rounded-xl ghost-border bg-surface-container-lowest p-4 hover:border-primary/30 transition">
               <div className="font-bold text-sm text-on-surface mb-1">Compare vs HappyCow</div>

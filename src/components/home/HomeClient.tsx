@@ -1022,29 +1022,27 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
         <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/45 to-black/30" />
         <div className="relative h-full flex flex-col justify-center px-5 md:px-7 text-white">
           <h2 className="text-xl md:text-2xl font-headline font-bold leading-tight max-w-md">
-            See vegan places near you
+            Find fully vegan places you can trust
           </h2>
           <p className="text-xs md:text-sm text-white/85 mt-1.5 max-w-md leading-snug">
-            Sign in to see vegan restaurants, cafes, shops and stays near you - we&apos;ll pick up your city automatically and surface what&apos;s closest.
+            52,000+ vegan and vegan-friendly places worldwide, with verification you can see and city rankings. Free, ad-free, no paid placements.
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
-              href="/auth"
-              data-event="cta_click_signup"
-              data-cta="sign_in"
+              href="/search"
+              data-event="home_guest_search"
               data-from="home_guest_banner"
               className="inline-flex items-center gap-2 px-4 py-2 bg-white text-on-surface rounded-xl text-sm font-semibold hover:bg-white/90 transition-colors"
             >
-              Sign in
+              Search your city
             </Link>
             <Link
-              href="/auth?mode=signup"
-              data-event="cta_click_signup"
-              data-cta="create_account"
+              href="/map"
+              data-event="home_guest_map"
               data-from="home_guest_banner"
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm text-white rounded-xl text-sm font-medium border border-white/30 hover:bg-white/25 transition-colors"
             >
-              Create free account
+              Explore the map
             </Link>
           </div>
           {heroImg && (

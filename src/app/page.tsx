@@ -35,11 +35,11 @@ export const revalidate = 1800
 
 export const metadata: Metadata = {
   title: 'PlantsPack: Free Vegan Tools, Places & Travel Guides',
-  description: 'Free vegan barcode scanner, baking calculator, menu translator and drinks lookup, plus 50,000+ verified plant-based places in 160+ countries. Ad-free, no tracking, community-built.',
+  description: 'Free vegan barcode scanner, baking calculator, menu translator and drinks lookup, plus 52,000+ vegan and vegan-friendly places in 160+ countries - 100% vegan spots clearly flagged. Ad-free, no tracking, community-built.',
   alternates: { canonical: 'https://www.plantspack.com' },
   openGraph: {
     title: 'PlantsPack: Free Vegan Tools, Places & Travel Guides',
-    description: 'Free vegan barcode scanner, baking calculator, menu translator, and 50,000+ verified plant-based places worldwide. Ad-free, no tracking.',
+    description: 'Free vegan barcode scanner, baking calculator, menu translator, and 52,000+ vegan and vegan-friendly places worldwide - 100% vegan spots flagged. Ad-free, no tracking.',
     type: 'website',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com',
@@ -48,14 +48,14 @@ export const metadata: Metadata = {
         url: 'https://www.plantspack.com/og-default.png',
         width: 1200,
         height: 630,
-        alt: 'PlantsPack: free vegan tools and verified plant-based places worldwide',
+        alt: 'PlantsPack: free vegan tools and vegan & vegan-friendly places worldwide',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PlantsPack: Free Vegan Tools & Verified Plant-Based Places',
-    description: 'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 50,000+ verified places in 160+ countries. Ad-free.',
+    title: 'PlantsPack: Free Vegan Tools & Vegan Places',
+    description: 'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 52,000+ vegan and vegan-friendly places in 160+ countries. Ad-free.',
     images: ['https://www.plantspack.com/og-default.png'],
   },
 }

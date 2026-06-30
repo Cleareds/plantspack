@@ -9,7 +9,7 @@ import { ImageResponse } from 'next/og'
 // To update the brand mark: replace /public/og-logo.png. The OG endpoint
 // and all downstream social previews will pick it up on next deploy.
 export const runtime = 'edge'
-export const alt = 'PlantsPack: free vegan tools and verified plant-based places worldwide'
+export const alt = 'PlantsPack: free vegan tools and vegan & vegan-friendly places worldwide'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -48,7 +48,7 @@ export default async function Image() {
             lineHeight: 1.3,
           }}
         >
-          Free vegan tools, verified places, honest answers.
+          Free vegan tools, honest vegan listings, clear answers.
         </div>
         <div
           style={{
@@ -60,7 +60,7 @@ export default async function Image() {
             lineHeight: 1.4,
           }}
         >
-          Barcode scanner  ·  Baking calculator  ·  Menu translator  ·  50K+ places
+          Barcode scanner  ·  Baking calculator  ·  Menu translator  ·  52K+ places
         </div>
         <div
           style={{

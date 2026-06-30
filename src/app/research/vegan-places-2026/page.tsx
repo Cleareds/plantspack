@@ -20,12 +20,12 @@ export const revalidate = 86400
 const REPORT_DATE = '2026-06-04'
 
 export const metadata: Metadata = {
-  title: 'Vegan places worldwide: 2026 data report from 52,870 verified spots | PlantsPack',
-  description: 'Original data analysis: top vegan countries and cities, fully-vegan share by region, restaurant subcategories, growth trends. From 52,870 verified vegan and vegan-friendly places across 160+ countries.',
+  title: 'Vegan places worldwide: 2026 data report from 52,870 vegan & vegan-friendly spots | PlantsPack',
+  description: 'Original data analysis: top vegan countries and cities, fully-vegan share by region, restaurant subcategories, growth trends. From 52,870 vegan and vegan-friendly places across 160+ countries.',
   alternates: { canonical: 'https://www.plantspack.com/research/vegan-places-2026' },
   openGraph: {
     title: 'Vegan places worldwide: 2026 data report',
-    description: 'Top countries and cities, fully-vegan share by region, restaurant subcategories. From 52,870 verified places.',
+    description: 'Top countries and cities, fully-vegan share by region, restaurant subcategories. From 52,870 vegan and vegan-friendly places.',
     type: 'article',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com/research/vegan-places-2026',
@@ -124,7 +124,7 @@ export default function ResearchPage() {
     '@type': 'Dataset',
     name: 'PlantsPack Vegan Places 2026 Data Report',
     description:
-      `Original data analysis of ${TOTAL_PLACES.toLocaleString()} verified vegan and vegan-friendly places across ${TOTAL_COUNTRIES}+ countries.`,
+      `Original data analysis of ${TOTAL_PLACES.toLocaleString()} vegan and vegan-friendly places across ${TOTAL_COUNTRIES}+ countries.`,
     url: 'https://www.plantspack.com/research/vegan-places-2026',
     creator: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
     datePublished: REPORT_DATE,
@@ -144,7 +144,7 @@ export default function ResearchPage() {
     '@context': 'https://schema.org',
     '@type': 'ScholarlyArticle',
     headline: 'Vegan places worldwide: 2026 data report',
-    description: 'Original data analysis of 52,870 verified vegan and vegan-friendly places.',
+    description: 'Original data analysis of 52,870 vegan and vegan-friendly places.',
     datePublished: REPORT_DATE,
     dateModified: REPORT_DATE,
     author: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
@@ -164,7 +164,7 @@ export default function ResearchPage() {
           Vegan places worldwide: a 2026 data report
         </h1>
         <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl mb-3">
-          What does the global map of vegan restaurants actually look like? We analysed our database of {TOTAL_PLACES.toLocaleString()} verified vegan and vegan-friendly places across {TOTAL_COUNTRIES}+ countries. Here&apos;s what we found.
+          What does the global map of vegan restaurants actually look like? We analysed our database of {TOTAL_PLACES.toLocaleString()} vegan and vegan-friendly places across {TOTAL_COUNTRIES}+ countries. Here&apos;s what we found.
         </p>
         <p className="text-on-surface-variant text-sm leading-relaxed max-w-2xl mb-10">
           Methodology: data extracted from the live PlantsPack database on {REPORT_DATE}. All places are filtered to <code className="text-xs bg-surface-variant/30 px-1 rounded">archived_at IS NULL</code>. &quot;Fully vegan&quot; share counts only entries with <code className="text-xs bg-surface-variant/30 px-1 rounded">vegan_level=&apos;fully_vegan&apos;</code> AND <code className="text-xs bg-surface-variant/30 px-1 rounded">is_verified=true</code>. Full classification rules: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>.
@@ -176,7 +176,7 @@ export default function ResearchPage() {
           <div className="grid sm:grid-cols-3 gap-3">
             <div className="rounded-2xl ghost-border bg-surface-container-lowest p-5">
               <div className="text-3xl font-extrabold text-on-surface">{TOTAL_PLACES.toLocaleString()}</div>
-              <div className="text-xs text-on-surface-variant mt-1">Verified places</div>
+              <div className="text-xs text-on-surface-variant mt-1">Places analysed</div>
             </div>
             <div className="rounded-2xl ghost-border bg-surface-container-lowest p-5">
               <div className="text-3xl font-extrabold text-on-surface">{TOTAL_COUNTRIES}+</div>
