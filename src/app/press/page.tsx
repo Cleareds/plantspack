@@ -68,19 +68,22 @@ export default function PressPage() {
           <h2 className="text-xl font-semibold text-on-surface mb-3">What makes it different</h2>
           <p className="text-on-surface-variant leading-relaxed">
             Most vegan directories mix vegan and vegetarian and rank by popularity or paid placement.
-            PlantsPack is fully-vegan-first with a transparent verification model: every listing shows
-            how confident we are and how it was checked, the 100% vegan places we have verified are
-            clearly flagged, and nobody can pay to rank higher. It is the trust layer for vegan
-            discovery, not another map.
+            PlantsPack is fully-vegan-first with a transparent, community-driven verification model:
+            anyone can confirm a place is still open and accurate, every listing shows that confidence
+            level and how it was checked, and the 100% vegan places we have hand-checked are flagged
+            separately. Nobody can pay to rank higher. It is the trust layer for vegan discovery, not
+            another map.
           </p>
         </section>
 
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-on-surface mb-3">Who builds it</h2>
           <p className="text-on-surface-variant leading-relaxed">
-            PlantsPack is built by a small independent team. No investors, no ads, no paywalls -
-            funded by optional supporter contributions. Editorial content is credited to the
-            PlantsPack Team.
+            PlantsPack is built by Anton and Oleksandra, a Ukrainian couple - Oleksandra has been
+            vegan for 10+ years and Anton joined her on it. No investors, no ads, no paywalls; funded
+            by optional supporter contributions. Because two people cannot personally check 52,000
+            places, verification is community-driven: confirmations from people on the ground,
+            cross-referenced vegan-first sources, and the fully-vegan spots we hand-check ourselves.
           </p>
         </section>
 
@@ -88,7 +91,7 @@ export default function PressPage() {
           <h2 className="text-xl font-semibold text-on-surface mb-3">Assets &amp; links</h2>
           <ul className="space-y-2 text-on-surface-variant">
             <li><a href="/plantspack.svg" className="text-primary hover:underline">Logo (SVG)</a></li>
-            <li><a href="/og-logo.png" className="text-primary hover:underline">Brand mark (PNG)</a></li>
+            <li><a href="/og-default.png" className="text-primary hover:underline">Brand banner (PNG, 1200x630)</a></li>
             <li><Link href="/app" className="text-primary hover:underline">App page</Link> (App Store + Google Play)</li>
             <li><Link href="/compare/happycow" className="text-primary hover:underline">How we compare</Link></li>
             <li><a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a></li>
