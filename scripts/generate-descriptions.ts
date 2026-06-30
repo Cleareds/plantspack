@@ -11,6 +11,7 @@ import { config } from 'dotenv'; config({ path: '.env.local' });
 import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 import { sleep } from './lib/place-pipeline';
+import { sanitizeDescription, isGenericFiller } from '../src/lib/places/sanitize-description';
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -112,7 +113,11 @@ async function main() {
     for (let j = 0; j < batch.length; j++) {
       const p = batch[j];
       const r = results[j];
-      const desc = r.status === 'fulfilled' ? r.value : null;
+      let desc = r.status === 'fulfilled' ? r.value : null;
+      // Guard: strip dead-site/HTML junk and reject generic AI filler, so the
+      // "cozy atmosphere" / domain-sale pattern can never be published again.
+      desc = sanitizeDescription(desc);
+      if (desc && isGenericFiller(desc)) desc = null;
       if (desc) {
         await sb.from('places').update({ description: desc }).eq('id', p.id);
         generated++;
