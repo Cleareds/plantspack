@@ -34,6 +34,25 @@ export default function LibraryPage() {
           </p>
         </header>
 
+        {/* Quick links - every Library section linked in the first viewport */}
+        <nav aria-label="Library sections" className="mb-10 grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { href: '/vegan', label: 'Answers', sub: 'Is it vegan?' },
+            { href: '#guides', label: 'Guides', sub: 'Country & reference' },
+            { href: '/glossary', label: 'Glossary', sub: 'Vegan terms' },
+            { href: '/blog', label: 'Reads', sub: 'Essays & opinion' },
+          ].map((q) => (
+            <a
+              key={q.href}
+              href={q.href}
+              className="rounded-2xl bg-surface-container-lowest ghost-border p-5 hover:shadow-md transition-shadow"
+            >
+              <span className="block font-semibold text-on-surface">{q.label}</span>
+              <span className="block text-sm text-on-surface-variant mt-0.5">{q.sub}</span>
+            </a>
+          ))}
+        </nav>
+
         {/* Answers */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-3">
@@ -55,7 +74,7 @@ export default function LibraryPage() {
         </section>
 
         {/* Guides & reference */}
-        <section className="mb-10">
+        <section id="guides" className="mb-10 scroll-mt-20">
           <h2 className="text-xl font-semibold text-on-surface mb-3">Guides &amp; reference</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {reference.map((a) => (
@@ -81,17 +100,6 @@ export default function LibraryPage() {
           </div>
         </section>
 
-        {/* Glossary + Reads */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link href="/glossary" className="block rounded-2xl bg-surface-container-lowest ghost-border p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-lg font-semibold text-on-surface mb-1">Glossary</h2>
-            <p className="text-sm text-on-surface-variant">Plain-language definitions of the vegan terms you will run into.</p>
-          </Link>
-          <Link href="/blog" className="block rounded-2xl bg-surface-container-lowest ghost-border p-6 hover:shadow-md transition-shadow">
-            <h2 className="text-lg font-semibold text-on-surface mb-1">Reads</h2>
-            <p className="text-sm text-on-surface-variant">Opinion and essays from our team - personal takes, not settled fact.</p>
-          </Link>
-        </section>
       </div>
     </div>
   )

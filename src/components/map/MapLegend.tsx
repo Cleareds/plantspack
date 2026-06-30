@@ -14,7 +14,8 @@ export default function MapLegend() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="absolute bottom-4 left-4 z-[500] max-w-[calc(100%-2rem)]">
+    {/* Lifted above the mobile bottom nav (64px bar, lg:hidden); restored on desktop. */}
+    <div className="absolute bottom-20 left-4 z-[500] max-w-[calc(100%-2rem)] lg:bottom-4">
       <button
         onClick={() => setOpen(v => !v)}
         className="flex items-center gap-1.5 px-3 py-2 bg-surface-container-lowest/95 backdrop-blur-sm ghost-border rounded-full text-xs font-medium text-on-surface hover:bg-surface-container-low transition-colors editorial-shadow"

@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { Suspense } from 'react'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
-import { RECIPE_COLLECTIONS } from '@/lib/collections'
 
 // Always fresh: new recipes added through the post composer must appear in
 // the directory immediately, not after the next ISR window. The page is not
@@ -158,26 +157,6 @@ export default async function RecipesPage() {
           </p>
         </div>
 
-        {/* Curated collections strip - links into the Kitchen "hoods" */}
-        <div className="mb-6 flex flex-wrap items-center gap-2">
-          <Link
-            href="/recipes/collections"
-            className="text-sm font-semibold text-primary hover:underline"
-          >
-            Collections
-          </Link>
-          <span className="text-on-surface-variant/40">·</span>
-          {RECIPE_COLLECTIONS.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/recipes/collections/${c.slug}`}
-              className="px-2.5 py-1 rounded-full text-xs bg-surface-container-low text-on-surface-variant hover:bg-primary hover:text-on-primary-btn transition-colors"
-            >
-              {c.title}
-            </Link>
-          ))}
-        </div>
-
         {/* Hidden SEO links for Google crawling (not visible to users) */}
         <nav className="sr-only" aria-label="Recipe categories">
           {mealTypes.map(mt => (
@@ -185,9 +164,6 @@ export default async function RecipesPage() {
           ))}
           {tags.slice(0, 15).map(tag => (
             <Link key={tag} href={`/recipes?tag=${encodeURIComponent(tag)}`}>{tag} vegan recipes</Link>
-          ))}
-          {RECIPE_COLLECTIONS.map((c) => (
-            <Link key={c.slug} href={`/recipes/collections/${c.slug}`}>{c.title}</Link>
           ))}
         </nav>
 
