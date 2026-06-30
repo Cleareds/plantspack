@@ -68,6 +68,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/press"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Press &amp; media
+                </Link>
+              </li>
+              <li>
                 <a
                   href="https://cleareds.com"
                   target="_blank"

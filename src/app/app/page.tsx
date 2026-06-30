@@ -1,12 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import AppBadges from '@/components/app/AppBadges'
 
 export const revalidate = 86400
-
-// Store links. iOS App Store id from eas.json (ascAppId); Android package is
-// plantspack.app (intentionally different from the iOS bundle com.plantspack.app).
-const PLAY_URL = 'https://play.google.com/store/apps/details?id=plantspack.app'
-const APPSTORE_URL = 'https://apps.apple.com/app/id6779618901'
 
 export const metadata: Metadata = {
   title: 'Get the PlantsPack App - Free Vegan Places & Tools (iOS & Android)',
@@ -60,25 +56,7 @@ export default function AppPage() {
           </p>
         </header>
 
-        {/* Store buttons. TODO: swap for official Apple / Google badge images in /public. */}
-        <div className="flex flex-wrap gap-3 mb-12">
-          <a
-            href={APPSTORE_URL}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-on-surface text-surface font-semibold text-sm hover:opacity-90 transition-opacity"
-          >
-            Download on the App Store
-          </a>
-          <a
-            href={PLAY_URL}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-on-surface text-surface font-semibold text-sm hover:opacity-90 transition-opacity"
-          >
-            Get it on Google Play
-          </a>
-        </div>
+        <AppBadges className="mb-12" />
 
         <section className="grid gap-4 sm:grid-cols-2">
           {FEATURES.map(([title, body]) => (
