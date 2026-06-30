@@ -30,7 +30,7 @@ interface PlaceMapProps {
   placeSlug?: string | null
 }
 
-const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || 'JfEx435iBIbX7SuVxRuJ'
+const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || '1p2MO19pmpo5G5xadgDF'
 
 export default function PlaceMap({ latitude, longitude, name, address, category, veganLevel, placeId, placeSlug }: PlaceMapProps) {
   const [customIcon, setCustomIcon] = useState<Icon | null>(null)

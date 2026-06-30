@@ -476,7 +476,7 @@ export default function VeganScoreMap() {
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY || 'JfEx435iBIbX7SuVxRuJ'}`}
+                url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY || '1p2MO19pmpo5G5xadgDF'}`}
                 tileSize={256}
               />
               <MapEventHandler onMove={handleMapMove} />
