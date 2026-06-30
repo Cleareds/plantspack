@@ -1,18 +1,6 @@
 'use client'
 
-// Leaflet CSS here so routes that include this component (place/[id]) get the
-// stylesheet via their own route chunk - not via the global app bundle.
-import 'leaflet/dist/leaflet.css'
-
-import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-import type { Icon } from 'leaflet'
 import { useInView } from '@/lib/hooks/use-in-view'
-
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
-
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 
@@ -23,29 +11,19 @@ interface PlaceMapProps {
   address: string
   category?: string
   veganLevel?: string
-  // Optional - when present, /map will center on this exact place and try
-  // to auto-focus its marker instead of geocoding the address (which can
-  // land near the user's current location).
+  // When present, /map centers on this exact place and auto-focuses its marker.
   placeId?: string
   placeSlug?: string | null
 }
 
 const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || '1p2MO19pmpo5G5xadgDF'
 
-export default function PlaceMap({ latitude, longitude, name, address, category, veganLevel, placeId, placeSlug }: PlaceMapProps) {
-  const [customIcon, setCustomIcon] = useState<Icon | null>(null)
-  // Defer mounting the live MapContainer (and the MapTiler tile fetches it
-  // triggers) until the component is near the viewport. Bots and pre-render
-  // crawlers never scroll, so they never trigger tile fetches - this keeps
-  // free-tier quota for real users.
+// This preview is non-interactive (it links to the full /map). A STATIC MapTiler
+// image is ONE request, vs ~5-9 raster tiles for an interactive Leaflet map -
+// and it's still only fetched when scrolled near the viewport (bots/crawlers and
+// users who never reach it cost nothing). Big MapTiler free-tier saving.
+export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug }: PlaceMapProps) {
   const { ref, inView } = useInView<HTMLAnchorElement>({ rootMargin: '300px' })
-
-  useEffect(() => {
-    if (!inView) return
-    import('@/lib/leaflet-config').then((mod) => {
-      setCustomIcon(mod.getCategoryIcon(category || 'eat', veganLevel) as unknown as Icon)
-    })
-  }, [category, veganLevel, inView])
 
   const href = (() => {
     const params = new URLSearchParams()
@@ -57,6 +35,10 @@ export default function PlaceMap({ latitude, longitude, name, address, category,
     return `/map?${params.toString()}`
   })()
 
+  const staticSrc =
+    `https://api.maptiler.com/maps/streets-v2/static/${longitude},${latitude},15/640x280@2x.png` +
+    `?key=${MAPTILER_KEY}&markers=${longitude},${latitude}`
+
   return (
     <Link
       ref={ref}
@@ -64,25 +46,16 @@ export default function PlaceMap({ latitude, longitude, name, address, category,
       className="block h-64 rounded-lg overflow-hidden ghost-border relative z-0 group cursor-pointer"
     >
       {inView ? (
-        <MapContainer
-          center={[latitude, longitude]}
-          zoom={15}
-          style={{ height: '100%', width: '100%', zIndex: 0 }}
-          scrollWheelZoom={false}
-          zoomControl={true}
-          dragging={false}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=${MAPTILER_KEY}`}
-            tileSize={256}
-          />
-          {customIcon && <Marker position={[latitude, longitude]} icon={customIcon} />}
-        </MapContainer>
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={staticSrc}
+          alt={`Map showing the location of ${name}`}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+        />
       ) : (
-        // Lightweight placeholder: no network, no JS, just a CSS gradient
-        // and the same CTA. Becomes the live map when the user scrolls
-        // close to it.
+        // Lightweight placeholder: no network, becomes the static map when scrolled near.
         <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-emerald-50 via-stone-50 to-emerald-50">
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-lowest shadow-sm">
             <MapPin className="h-4 w-4 text-primary" />
