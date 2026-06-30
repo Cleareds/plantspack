@@ -51,8 +51,8 @@ export default function AppPage() {
             PlantsPack on your phone
           </h1>
           <p className="text-lg text-on-surface-variant leading-relaxed">
-            Find fully vegan places you can trust - now on iPhone and Android. 52,000+ vegan and
-            vegan-friendly places worldwide, plus barcode and menu scanning. Free, ad-free, no paid placements.
+            Find vegan and vegan-friendly places - now on iPhone and Android. 52,000+ listings
+            worldwide, plus barcode and menu scanning. Free, ad-free, no paid placements.
           </p>
         </header>
 

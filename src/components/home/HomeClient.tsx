@@ -330,7 +330,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-6xl mx-auto px-4 md:px-8 py-6">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-2 pb-6">
         <div className="xl:flex xl:gap-6">
           <div className="flex-1 min-w-0 space-y-6">
             {/* Value prop. Gated on isSignedIn (server-resolved) rather than
@@ -1022,10 +1022,10 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
         <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/45 to-black/30" />
         <div className="relative h-full flex flex-col justify-center px-5 md:px-7 text-white">
           <h2 className="text-xl md:text-2xl font-headline font-bold leading-tight max-w-md">
-            Find fully vegan places you can trust
+            Find vegan and vegan-friendly places
           </h2>
           <p className="text-xs md:text-sm text-white/85 mt-1.5 max-w-md leading-snug">
-            52,000+ vegan and vegan-friendly places worldwide, with verification you can see and city rankings. Free, ad-free, no paid placements.
+            52,000+ listings worldwide, with verification you can see and city rankings. Free, ad-free, no paid placements.
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
