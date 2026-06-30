@@ -13,8 +13,8 @@ import { CATEGORY_CONFIG } from '@/lib/place-categories'
 export default function MapLegend() {
   const [open, setOpen] = useState(false)
 
+  // Lifted above the mobile bottom nav (64px bar, lg:hidden); restored on desktop.
   return (
-    {/* Lifted above the mobile bottom nav (64px bar, lg:hidden); restored on desktop. */}
     <div className="absolute bottom-20 left-4 z-[500] max-w-[calc(100%-2rem)] lg:bottom-4">
       <button
         onClick={() => setOpen(v => !v)}
