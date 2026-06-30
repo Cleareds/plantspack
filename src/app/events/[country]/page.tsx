@@ -8,6 +8,7 @@ import { ChevronLeft, MapPin } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 import EventCard from '@/components/events/EventCard'
 import { eventSchemaDates, eventSchemaDescription, eventSchemaOrganizer } from '@/lib/events/event-schema-dates'
 
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
     title,
     description,
     alternates: { canonical: `https://www.plantspack.com/events/${slug}` },
-    openGraph: { title, description, type: 'website', url: `https://www.plantspack.com/events/${slug}`, siteName: 'PlantsPack' },
+    openGraph: { title, description, type: 'website', url: `https://www.plantspack.com/events/${slug}`, siteName: 'PlantsPack', images: OG_DEFAULT_IMAGES },
   }
 }
 

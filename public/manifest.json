@@ -7,6 +7,14 @@
   "background_color": "#ffffff",
   "theme_color": "#2d6a4f",
   "orientation": "portrait-primary",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "plantspack.app",
+      "url": "https://play.google.com/store/apps/details?id=plantspack.app"
+    }
+  ],
   "icons": [
     {
       "src": "/icon-192.png",

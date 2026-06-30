@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle2, AlertCircle, HelpCircle, ExternalLink } from '
 import { INGREDIENT_ARTICLES, getIngredientArticle } from '@/lib/vegan-content'
 import type { Verdict } from '@/lib/vegan-content/types'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 import ECodeSearch from './_components/ECodeSearch'
 
 export const revalidate = 86400
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       url: `https://www.plantspack.com/vegan/${article.slug}`,
       siteName: 'PlantsPack',
+      images: OG_DEFAULT_IMAGES,
     },
   }
 }

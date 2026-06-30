@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import SummerHubFooterCta from '@/components/home/SummerHubFooterCta'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // Revalidate daily so editorial copy + counts stay fresh through the
 // summer travel season without re-deploying. Index lookups happen at
@@ -26,11 +27,13 @@ export const metadata: Metadata = {
     siteName: 'PlantsPack',
     url: CANONICAL,
     locale: 'en_US',
+    images: OG_DEFAULT_IMAGES,
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Vegan Summer Destinations 2026',
     description: DESCRIPTION,
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

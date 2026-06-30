@@ -8,6 +8,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     type: 'article',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com/methodology',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

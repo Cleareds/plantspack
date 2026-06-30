@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { eventSchemaDates, eventSchemaDescription, eventSchemaOrganizer } from '@/lib/events/event-schema-dates'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // The /events page is a client component (interactive search/calendar), so it
 // can't server-render schema. This layout adds a server-rendered ItemList of
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://www.plantspack.com/events',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

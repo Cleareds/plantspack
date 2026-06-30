@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft, ArrowRight, MapPin, MessageSquare, Utensils, AlertTriangle, Lightbulb } from 'lucide-react'
 import { TRAVEL_GUIDES, getTravelGuide } from '@/lib/vegan-content'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       url: `https://www.plantspack.com/vegan/travel/${guide.countrySlug}`,
       siteName: 'PlantsPack',
+      images: OG_DEFAULT_IMAGES,
     },
   }
 }

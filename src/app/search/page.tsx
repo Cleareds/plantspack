@@ -6,6 +6,7 @@ import PlaceImage from '@/components/places/PlaceImage'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 import { MapPin, ChefHat, Search } from 'lucide-react'
 import { normalizeQuery } from '@/lib/search/normalize'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // 60s SSR cache + SWR. Search-result pages should be indexable but not
 // over-cached — content changes as places get added or archived.
@@ -80,7 +81,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     title,
     description,
     alternates: { canonical },
-    openGraph: { title, description, url: canonical, type: 'website' },
+    openGraph: { title, description, url: canonical, type: 'website', images: OG_DEFAULT_IMAGES },
     robots: { index: true, follow: true },
   }
 }

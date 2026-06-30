@@ -9,6 +9,7 @@ import { getCountryThumbnail } from '@/lib/city-images'
 import FilteredCount, { FilteredTotal, FilteredLabel } from '@/components/ui/FilteredCount'
 import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
 import RecentlyAddedSection from '@/components/ui/RecentlyAddedSection'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 3600
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     description: 'Browse 37,000+ vegan and vegan-friendly places across 170+ countries. Community-verified, ad-free, free to use.',
     type: 'website',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

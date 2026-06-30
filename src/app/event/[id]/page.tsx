@@ -157,7 +157,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
       {event?.start_time && (() => {
         const eventUrl = `https://www.plantspack.com/event/${post.slug || post.id}`
         const organizerUrl = `https://www.plantspack.com/profile/${post.users.username}`
-        const fallbackImage = 'https://www.plantspack.com/og-logo.png'
+        const fallbackImage = 'https://www.plantspack.com/og-default.png'
         const organizer = {
           '@type': 'Organization',
           name: displayName,

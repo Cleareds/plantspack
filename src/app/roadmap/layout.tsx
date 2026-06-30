@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const metadata: Metadata = {
   title: 'PlantsPack Roadmap — Upcoming Features & Community Voting | PlantsPack',
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
     description: 'Upcoming features and community-voted priorities for the PlantsPack vegan platform.',
     type: 'website',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

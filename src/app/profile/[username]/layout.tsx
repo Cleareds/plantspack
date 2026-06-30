@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
         type: 'profile',
         siteName: 'PlantsPack',
         url: `https://www.plantspack.com/profile/${user.username}`,
+        images: OG_DEFAULT_IMAGES,
       },
     }
   } catch {

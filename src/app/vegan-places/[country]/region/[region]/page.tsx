@@ -10,6 +10,7 @@ import CountryCityGrid from '@/components/places/CountryCityGrid'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // Country redirects mirror the city/country page so an old link to e.g.
 // /vegan-places/italia/region/<r> still resolves to /italy/region/<r>.
@@ -45,6 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'website',
       siteName: 'PlantsPack',
       url: `https://www.plantspack.com/vegan-places/${country}/region/${region}`,
+      images: OG_DEFAULT_IMAGES,
     },
   }
 }

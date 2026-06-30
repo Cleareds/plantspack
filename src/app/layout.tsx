@@ -94,6 +94,11 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'PlantsPack',
   },
+  // Native iOS Smart App Banner. Safari renders its own OS-level banner at the
+  // top of the page from this tag (no custom UI). App Store id 6779618901 — see
+  // src/lib/app-links.ts. Android gets a custom slim banner instead (see
+  // AppInstallBanner) because Chrome's native-app banner is unreliable/deprecated.
+  itunes: { appId: '6779618901' },
 };
 
 export default function RootLayout({

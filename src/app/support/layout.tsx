@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const metadata: Metadata = {
   title: 'Support PlantsPack — Community-Driven, Ad-Free, Forever | PlantsPack',
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
     description: 'Help keep PlantsPack free and ad-free — community-driven, no investors, no paid listings.',
     type: 'website',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

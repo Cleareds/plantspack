@@ -7,6 +7,7 @@ import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 import BottomNav from './BottomNav'
 import Footer from './Footer'
+import AppInstallBanner from '@/components/app/AppInstallBanner'
 import { safeStorage } from '@/lib/safe-storage'
 
 function useGeolocation() {
@@ -150,6 +151,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Bottom nav - mobile only */}
       <BottomNav />
+
+      {/* Android-only "Get the app" banner (iOS uses Safari's native Smart App
+          Banner via the apple-itunes-app meta tag in layout.tsx) */}
+      <AppInstallBanner />
     </>
   )
 }

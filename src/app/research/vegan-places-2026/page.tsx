@@ -14,6 +14,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
     type: 'article',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com/research/vegan-places-2026',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

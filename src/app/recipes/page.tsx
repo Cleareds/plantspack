@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { Suspense } from 'react'
 import RecipeFilters from '@/components/recipes/RecipeFilters'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // Always fresh: new recipes added through the post composer must appear in
 // the directory immediately, not after the next ISR window. The page is not
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step, nutrition data, and photos — filter by meal, cuisine, and difficulty.',
     type: 'website',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

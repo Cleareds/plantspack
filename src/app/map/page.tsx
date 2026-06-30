@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import Map from '@/components/map/Map'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const metadata: Metadata = {
   title: 'Vegan Places Map — Restaurants, Stores & Stays Worldwide | PlantsPack',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     description: 'Explore 37,000+ vegan and vegan-friendly places on an interactive worldwide map. Search by city, filter by category, add your favorites.',
     type: 'website',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

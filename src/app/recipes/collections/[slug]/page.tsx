@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import RecipeCard from '@/components/recipes/RecipeCard'
 import { getCollection, RECIPE_COLLECTIONS, TOOL_META } from '@/lib/collections'
 import type { RecipeCollection } from '@/lib/collections'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // Collections are curated + change rarely; cache for an hour.
 export const revalidate = 3600
@@ -86,6 +87,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: 'website',
       siteName: 'PlantsPack',
       url: canonical,
+      images: OG_DEFAULT_IMAGES,
     },
   }
 }

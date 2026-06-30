@@ -26,6 +26,7 @@ import CityPlacesList from '@/components/places/CityPlacesList'
 import CountryCityGrid from '@/components/places/CountryCityGrid'
 import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 3600
 
@@ -135,6 +136,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       type: 'website',
       siteName: 'PlantsPack',
       url: canonical,
+      images: OG_DEFAULT_IMAGES,
     },
   }
 }

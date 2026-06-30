@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com/press',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 

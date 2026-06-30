@@ -14,6 +14,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getCityDishChips, dishPageHref } from '@/lib/dish-page-data'
 import { DISH_BY_SLUG, type DishDef } from '@/lib/dish-keywords'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
@@ -91,6 +92,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
       type: 'article',
       url: `https://www.plantspack.com/vegan-places/${country}/${city}/best-vegan`,
       siteName: 'PlantsPack',
+      images: OG_DEFAULT_IMAGES,
     },
   }
 }

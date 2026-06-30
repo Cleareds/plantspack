@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const metadata: Metadata = {
   title: 'Vegan Community Feed — Posts, Recipes, Reviews & Events | PlantsPack',
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
     description: 'Vegan community posts — reviews, recipes, events, city ranks, and conversations.',
     type: 'website',
     siteName: 'PlantsPack',
+    images: OG_DEFAULT_IMAGES,
   },
 }
 
