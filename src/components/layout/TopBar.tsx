@@ -52,8 +52,8 @@ export default function TopBar() {
 
         {/* Right side */}
         <div className="flex items-center gap-1 sm:gap-2">
-          {/* Vegan toggle */}
-          <VeganToggle />
+          {/* Vegan toggle - hidden on mobile (lives in the menu) so the header fits */}
+          <div className="hidden sm:block"><VeganToggle /></div>
 
           {/* Mobile search toggle */}
           <button
@@ -64,7 +64,7 @@ export default function TopBar() {
             {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
           </button>
 
-          {user && <div className="hidden sm:block"><NotificationBell /></div>}
+          {user && <NotificationBell />}
           {!user && (
             <Link
               href="/auth?mode=signin"
@@ -91,12 +91,10 @@ export default function TopBar() {
             {isMenuOpen && (
               <div className="absolute right-0 top-full mt-2 w-64 bg-surface-container-lowest glass-float shadow-ambient rounded-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="py-2">
-                  {user && username && (
-                    <Link href={`/profile/${username}/notifications`} onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors sm:hidden">
-                      <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>notifications</span>
-                      <span className="text-sm text-on-surface font-medium">Notifications</span>
-                    </Link>
-                  )}
+                  {/* Vegan-only toggle lives here on mobile (hidden from the header to save space) */}
+                  <div className="px-4 py-2.5 sm:hidden">
+                    <VeganToggle />
+                  </div>
                   <Link href="/app" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>smartphone</span>
                     <span className="text-sm text-on-surface font-medium">Get the app</span>

@@ -13,9 +13,10 @@ import { CATEGORY_CONFIG } from '@/lib/place-categories'
 export default function MapLegend() {
   const [open, setOpen] = useState(false)
 
-  // Lifted above the mobile bottom nav (64px bar, lg:hidden); restored on desktop.
+  // Mobile: top-left - the bottom holds the filter overlay (bottom-20) + the bottom nav,
+  // so the legend would collide there. Desktop: bottom-left (filter is top-left there).
   return (
-    <div className="absolute bottom-20 left-4 z-[500] max-w-[calc(100%-2rem)] lg:bottom-4">
+    <div className="absolute top-3 left-2 z-[500] max-w-[calc(100%-1rem)] lg:top-auto lg:bottom-4 lg:left-4">
       <button
         onClick={() => setOpen(v => !v)}
         className="flex items-center gap-1.5 px-3 py-2 bg-surface-container-lowest/95 backdrop-blur-sm ghost-border rounded-full text-xs font-medium text-on-surface hover:bg-surface-container-low transition-colors editorial-shadow"
