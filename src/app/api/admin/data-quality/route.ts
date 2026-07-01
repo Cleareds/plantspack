@@ -39,6 +39,27 @@ const COMMUNITY_VEGAN_TAGS = [
 // but all of these are cleared together when an admin resolves vegan status.
 const VEGAN_REPORT_TAGS = [...COMMUNITY_VEGAN_TAGS, 'google_review_flag']
 
+// Attach the community reports (reporter + optional "how do you know?" note) to
+// the places in a report-driven queue. Best-effort: if the place_reports table
+// isn't present yet, the places are returned unchanged.
+async function attachReports<T extends { id: string }>(supabase: ReturnType<typeof createAdminClient>, places: T[]) {
+  if (!places?.length) return places
+  try {
+    const ids = places.map((p) => p.id)
+    const { data, error } = await supabase
+      .from('place_reports')
+      .select('place_id, type, note, created_at, users:user_id (username, first_name)')
+      .in('place_id', ids)
+      .order('created_at', { ascending: false })
+    if (error || !data) return places
+    const byPlace: Record<string, unknown[]> = {}
+    for (const r of data as { place_id: string }[]) (byPlace[r.place_id] ||= []).push(r)
+    return places.map((p) => ({ ...p, reports: byPlace[p.id] || [] }))
+  } catch {
+    return places
+  }
+}
+
 export async function GET(request: NextRequest) {
   const supabase = await checkAdmin()
   if (!supabase) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -90,7 +111,7 @@ export async function GET(request: NextRequest) {
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
-    return NextResponse.json({ places: data || [], total: count || 0 })
+    return NextResponse.json({ places: await attachReports(supabase, data || []), total: count || 0 })
   }
 
   if (tab === 'reported_hours') {
@@ -101,7 +122,7 @@ export async function GET(request: NextRequest) {
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
-    return NextResponse.json({ places: data || [], total: count || 0 })
+    return NextResponse.json({ places: await attachReports(supabase, data || []), total: count || 0 })
   }
 
   if (tab === 'not_vegan') {
@@ -113,7 +134,7 @@ export async function GET(request: NextRequest) {
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
-    return NextResponse.json({ places: data || [], total: count || 0 })
+    return NextResponse.json({ places: await attachReports(supabase, data || []), total: count || 0 })
   }
 
   if (tab === 'google_flag') {

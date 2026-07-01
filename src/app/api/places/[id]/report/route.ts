@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { createClient } from '@/lib/supabase-server'
 import { revalidatePath } from 'next/cache'
 
 export async function POST(
@@ -8,7 +9,12 @@ export async function POST(
 ) {
   try {
     const { id } = await params
-    const { type } = await request.json()
+    const body = await request.json()
+    const type = body?.type as string
+    // Optional "how do you know?" evidence note. Capped so it can't be abused.
+    const note = typeof body?.note === 'string' && body.note.trim()
+      ? body.note.trim().slice(0, 500)
+      : null
 
     const validTypes = ['confirmed', 'permanently_closed', 'hours_wrong', 'not_fully_vegan', 'not_vegan_friendly', 'non_vegan_chain', 'vegan_friendly_chain', 'few_vegan_options', 'actually_fully_vegan']
     if (!validTypes.includes(type)) {
@@ -16,6 +22,14 @@ export async function POST(
     }
 
     const supabase = createAdminClient()
+
+    // Best-effort: record who is reporting, if signed in. Never blocks the report.
+    let reporterId: string | null = null
+    try {
+      const ssr = await createClient()
+      const { data: { session } } = await ssr.auth.getSession()
+      reporterId = session?.user?.id ?? null
+    } catch { /* anonymous report */ }
 
     if (type === 'confirmed') {
       // User confirms → promote to community_verified so the amber "help
@@ -55,6 +69,18 @@ export async function POST(
         return NextResponse.json({ error: 'Failed to save report' }, { status: 500 })
       }
     }
+
+    // Record a structured report row capturing the reporter + optional evidence
+    // note. Additive to the tag above. Best-effort: if the place_reports table
+    // isn't present yet, this quietly no-ops and the tag-based flow is unaffected.
+    try {
+      await supabase.from('place_reports').insert({
+        place_id: id,
+        user_id: reporterId,
+        type,
+        note,
+      })
+    } catch { /* table may not exist yet — tag write already succeeded */ }
 
     if (place.slug) revalidatePath(`/place/${place.slug}`)
 

@@ -22,6 +22,8 @@ interface FlaggedPlace {
   vegan_level?: string | null
   opening_hours?: Record<string, string> | null
   updated_at: string
+  // Attached by the API for report-driven tabs: who flagged it + their note.
+  reports?: { type: string; note: string | null; created_at: string; users?: { username: string | null; first_name: string | null } | null }[]
 }
 
 interface Correction {
@@ -819,6 +821,22 @@ function DataQualityInner() {
                             <span key={d} className="mr-2">{d}: {h}</span>
                           ))}
                           {Object.keys(p.opening_hours).length > 3 && <span className="text-gray-600">+more</span>}
+                        </div>
+                      )}
+                      {/* Reporter + evidence note (from place_reports) */}
+                      {(p.reports?.length ?? 0) > 0 && (
+                        <div className="mt-1.5 space-y-1">
+                          {p.reports!.slice(0, 3).map((r, i) => (
+                            <div key={i} className="text-[11px] bg-gray-900/60 rounded px-2 py-1">
+                              <span className="text-gray-500">
+                                {r.users?.username || r.users?.first_name || 'anonymous'}
+                                {r.created_at ? ` · ${new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}` : ''}:
+                              </span>{' '}
+                              {r.note
+                                ? <span className="text-gray-300">{r.note}</span>
+                                : <span className="italic text-gray-600">no source note given</span>}
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
