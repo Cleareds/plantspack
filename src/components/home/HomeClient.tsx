@@ -23,6 +23,10 @@ import SmartImg from '@/components/ui/SmartImg'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { getCityImage } from '@/lib/city-images'
+// Raw localStorage access throws SecurityError (DOMException 18) on Mobile
+// Safari with "Prevent Cross-Site Tracking"/Private mode — safeStorage wraps
+// every access in try/catch so it degrades to "no persistence" instead.
+import { safeStorage } from '@/lib/safe-storage'
 
 interface NearbyPlace {
   id: string; name: string; slug: string; category: string
@@ -161,18 +165,18 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
   // who have a pinned city — they see their city immediately.
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return
-    setIsPinned(!!localStorage.getItem('pinned_city_name'))
+    setIsPinned(!!safeStorage.local.get('pinned_city_name'))
     if (userCity) return
     try {
-      const pinnedCity = localStorage.getItem('pinned_city_name')
-      const pinnedCountry = localStorage.getItem('pinned_country_name')
+      const pinnedCity = safeStorage.local.get('pinned_city_name')
+      const pinnedCountry = safeStorage.local.get('pinned_country_name')
       if (pinnedCity) {
         setUserCity(pinnedCity)
         if (pinnedCountry) setUserCountry(pinnedCountry)
         return
       }
-      const geoCity = localStorage.getItem('user_city')
-      const geoCountry = localStorage.getItem('user_country')
+      const geoCity = safeStorage.local.get('user_city')
+      const geoCountry = safeStorage.local.get('user_country')
       if (geoCity) {
         setUserCity(geoCity)
         if (geoCountry) setUserCountry(geoCountry)
@@ -187,8 +191,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
       if (fallbackCity) {
         setUserCity(fallbackCity)
         setUserCountry(fallbackCountry || '')
-        localStorage.setItem('user_city', fallbackCity)
-        if (fallbackCountry) localStorage.setItem('user_country', fallbackCountry)
+        safeStorage.local.set('user_city', fallbackCity)
+        if (fallbackCountry) safeStorage.local.set('user_country', fallbackCountry)
       }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,7 +233,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
     if (initialLocation) {
       setLocationLoading(false)
       try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify({
+        safeStorage.local.set(CACHE_KEY, JSON.stringify({
           data: initialLocation.data,
           city: initialLocation.city,
           country: initialLocation.country,
@@ -255,7 +259,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
     // Try cached data first — instant render
     try {
-      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
+      const cached = JSON.parse(safeStorage.local.get(CACHE_KEY) || 'null')
       if (cached && Date.now() - cached.ts < CACHE_TTL) {
         applyData(cached.data, cached.city, cached.country)
         setLocationLoading(false)
@@ -265,8 +269,8 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
     async function load() {
       // Check if a city is pinned — overrides geolocation
-      const pinnedCity = localStorage.getItem('pinned_city_name') || ''
-      const pinnedCountry = localStorage.getItem('pinned_country_name') || ''
+      const pinnedCity = safeStorage.local.get('pinned_city_name') || ''
+      const pinnedCountry = safeStorage.local.get('pinned_country_name') || ''
 
       let lat = '', lng = '', city = '', country = ''
       if (pinnedCity) {
@@ -275,18 +279,18 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
         country = pinnedCountry
       } else {
         // Check localStorage for geo data (persists across tabs/reloads)
-        lat = localStorage.getItem('user_lat') || ''
-        lng = localStorage.getItem('user_lng') || ''
-        city = localStorage.getItem('user_city') || ''
-        country = localStorage.getItem('user_country') || ''
+        lat = safeStorage.local.get('user_lat') || ''
+        lng = safeStorage.local.get('user_lng') || ''
+        city = safeStorage.local.get('user_city') || ''
+        country = safeStorage.local.get('user_country') || ''
 
         // If no cached geo, poll briefly for AppShell to set it
         if (!lat && !city) {
           for (let i = 0; i < 10; i++) {
-            lat = localStorage.getItem('user_lat') || ''
-            lng = localStorage.getItem('user_lng') || ''
-            city = localStorage.getItem('user_city') || ''
-            country = localStorage.getItem('user_country') || ''
+            lat = safeStorage.local.get('user_lat') || ''
+            lng = safeStorage.local.get('user_lng') || ''
+            city = safeStorage.local.get('user_city') || ''
+            country = safeStorage.local.get('user_country') || ''
             if (lat || city) break
             await new Promise(r => setTimeout(r, 300))
           }
@@ -304,7 +308,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
         const data = await res.json()
         applyData(data, city, country)
         // Cache the response
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ data, city, country, ts: Date.now() }))
+        safeStorage.local.set(CACHE_KEY, JSON.stringify({ data, city, country, ts: Date.now() }))
       } catch {}
 
       setLocationLoading(false)
@@ -422,10 +426,10 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 </button>
                 {isPinned && (
                   <button onClick={() => {
-                    localStorage.removeItem('pinned_city')
-                    localStorage.removeItem('pinned_city_name')
-                    localStorage.removeItem('pinned_country_name')
-                    localStorage.removeItem('plantspack_home_cache')
+                    safeStorage.local.remove('pinned_city')
+                    safeStorage.local.remove('pinned_city_name')
+                    safeStorage.local.remove('pinned_country_name')
+                    safeStorage.local.remove('plantspack_home_cache')
                     // Clear the pinned cookies too — otherwise SSR on reload
                     // would still render the pinned city before the client
                     // re-sync'd.
