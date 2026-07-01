@@ -16,14 +16,54 @@ const TITLES: Partial<Record<NotificationType, string>> = {
 // Expo's push API accepts at most 100 messages per request.
 const EXPO_BATCH = 100
 
-async function postExpo(messages: object[]): Promise<void> {
+type ExpoTicket = { status: 'ok' | 'error'; id?: string; message?: string; details?: { error?: string } }
+
+// POST the messages in <=100 chunks and return one ticket per message, in the
+// same order (null where a chunk failed at the transport level, so indices stay
+// aligned with the input for token pruning).
+async function sendExpo(messages: object[]): Promise<(ExpoTicket | null)[]> {
+  const tickets: (ExpoTicket | null)[] = []
   for (let i = 0; i < messages.length; i += EXPO_BATCH) {
     const chunk = messages.slice(i, i + EXPO_BATCH)
-    await fetch(EXPO_PUSH_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(chunk),
-    })
+    try {
+      const res = await fetch(EXPO_PUSH_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(chunk),
+      })
+      const json = (await res.json().catch(() => null)) as { data?: ExpoTicket[] } | null
+      const data = json?.data ?? []
+      for (let k = 0; k < chunk.length; k++) tickets.push(data[k] ?? null)
+    } catch {
+      for (let k = 0; k < chunk.length; k++) tickets.push(null)
+    }
+  }
+  return tickets
+}
+
+// Act on the immediate tickets: drop tokens Expo reports as DeviceNotRegistered
+// (uninstalled / permission revoked) so we stop pushing to dead devices, and
+// log any other error. NOTE: DeviceNotRegistered also surfaces later in push
+// *receipts* (fetched ~15 min after send); polling those is a future
+// enhancement — this handles the cases Expo returns synchronously.
+async function pruneDeadTokens(
+  admin: ReturnType<typeof createAdminClient>,
+  tokens: string[],
+  tickets: (ExpoTicket | null)[],
+): Promise<void> {
+  const dead: string[] = []
+  tickets.forEach((t, i) => {
+    if (t?.status !== 'error') return
+    const err = t.details?.error
+    if (err === 'DeviceNotRegistered' && tokens[i]) dead.push(tokens[i])
+    else console.error('[push] ticket error', err ?? t.message)
+  })
+  if (!dead.length) return
+  try {
+    await admin.from('user_push_tokens').delete().in('token', dead)
+    console.log(`[push] pruned ${dead.length} dead token(s)`)
+  } catch (e) {
+    console.error('[push] prune failed', (e as Error)?.message)
   }
 }
 
@@ -76,7 +116,8 @@ export async function sendAnnouncementPush(opts: {
     const messages = tokens.map((to) => ({
       to, title, body, sound: 'default', data: data ?? {},
     }))
-    await postExpo(messages)
+    const tickets = await sendExpo(messages)
+    await pruneDeadTokens(admin, tokens, tickets)
     return messages.length
   } catch (e) {
     console.error('[sendAnnouncementPush] threw', (e as Error)?.message)
@@ -88,7 +129,7 @@ export async function sendAnnouncementPush(opts: {
  * Deliver an Expo push to all of a user's registered devices. Best-effort:
  * swallows every error so it never breaks the notification insert. Respects the
  * user's master push toggle (user_preferences.push_notifications); the mobile
- * app owns that switch.
+ * app owns that switch. Prunes tokens Expo reports as no longer registered.
  *
  * `data` is forwarded to the device so the app can deep-link on tap (mirrors the
  * web NotificationBell link rules: entity_type 'place' → place screen, etc.).
@@ -117,19 +158,17 @@ export async function sendPushToUser(opts: {
       .eq('user_id', userId)
     if (!tokens?.length) return
 
-    const messages = tokens.map(t => ({
-      to: t.token,
+    const toks = tokens.map((t) => (t as { token: string }).token)
+    const messages = toks.map((to) => ({
+      to,
       title: TITLES[type] ?? 'PlantsPack',
       body,
       sound: 'default',
       data: data ?? {},
     }))
 
-    await fetch(EXPO_PUSH_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(messages),
-    })
+    const tickets = await sendExpo(messages)
+    await pruneDeadTokens(admin, toks, tickets)
   } catch (e) {
     console.error('[sendPushToUser] threw', (e as Error)?.message)
   }
