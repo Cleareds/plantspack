@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
   LayoutDashboard,
@@ -24,8 +24,57 @@ import {
   Star,
   BookOpen,
   Smartphone,
-  Megaphone
+  Megaphone,
+  Layers,
+  Sparkles,
+  Inbox,
+  ChevronDown,
+  ChevronRight,
+  type LucideIcon,
 } from 'lucide-react'
+
+type NavLeaf = { name: string; href: string; icon: LucideIcon }
+type NavGroup = { group: string; icon: LucideIcon; collapsible: boolean; defaultOpen: boolean; children: NavLeaf[] }
+type NavNode = NavLeaf | NavGroup
+const isGroup = (n: NavNode): n is NavGroup => 'group' in n
+
+// Grouped admin nav. "Content" = things we publish; "Contributions" = user-
+// generated content that lands on the site (always open); "Moderation & Inbox"
+// = inbound queues awaiting an admin action.
+const NAV: NavNode[] = [
+  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  {
+    group: 'Content', icon: Layers, collapsible: true, defaultOpen: false,
+    children: [
+      { name: 'Posts', href: '/admin/posts', icon: FileText },
+      { name: 'Places', href: '/admin/places', icon: MapPin },
+      { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
+      { name: 'Events', href: '/admin/events', icon: Calendar },
+      { name: 'Staging', href: '/admin/staging', icon: Shield },
+    ],
+  },
+  {
+    group: 'Contributions', icon: Sparkles, collapsible: false, defaultOpen: true,
+    children: [
+      { name: 'Reviews', href: '/admin/reviews', icon: Star },
+      { name: 'Comments', href: '/admin/comments', icon: MessageSquare },
+      { name: 'Mobile Submissions', href: '/admin/submissions', icon: Smartphone },
+      { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },
+    ],
+  },
+  {
+    group: 'Moderation & Inbox', icon: Inbox, collapsible: true, defaultOpen: false,
+    children: [
+      { name: 'Reports', href: '/admin/reports', icon: Flag },
+      { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
+      { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
+      { name: 'Contact Forms', href: '/admin/contact', icon: Mail },
+    ],
+  },
+  { name: 'Blog', href: '/admin/blog', icon: BookOpen },
+  { name: 'Users', href: '/admin/users', icon: Users },
+  { name: 'Notifications', href: '/admin/notifications', icon: Megaphone },
+]
 
 export default function AdminLayout({
   children,
@@ -34,8 +83,23 @@ export default function AdminLayout({
 }) {
   const { user, profile, authReady } = useAuth()
   const router = useRouter()
+  const pathname = usePathname()
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const isActive = (href: string) =>
+    href === '/admin' ? pathname === '/admin' : !!pathname?.startsWith(href)
+
+  // Collapsible-group open state, seeded from defaultOpen and auto-expanded for
+  // whichever group contains the current route.
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    const init: Record<string, boolean> = {}
+    for (const n of NAV) {
+      if (isGroup(n)) init[n.group] = n.defaultOpen || n.children.some((c) => isActive(c.href))
+    }
+    return init
+  })
+  const toggleGroup = (g: string) => setOpenGroups((s) => ({ ...s, [g]: !s[g] }))
 
   useEffect(() => {
     if (authReady && user) {
@@ -73,25 +137,23 @@ export default function AdminLayout({
     return null
   }
 
-  const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Notifications', href: '/admin/notifications', icon: Megaphone },
-    { name: 'Blog', href: '/admin/blog', icon: BookOpen },
-    { name: 'Users', href: '/admin/users', icon: Users },
-    { name: 'Posts', href: '/admin/posts', icon: FileText },
-    { name: 'Comments', href: '/admin/comments', icon: MessageSquare },
-    { name: 'Places', href: '/admin/places', icon: MapPin },
-    { name: 'Reviews', href: '/admin/reviews', icon: Star },
-    { name: 'Recipes', href: '/admin/recipes', icon: ChefHat },
-    { name: 'Events', href: '/admin/events', icon: Calendar },
-    { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },
-    { name: 'Staging', href: '/admin/staging', icon: Shield },
-    { name: 'Mobile Submissions', href: '/admin/submissions', icon: Smartphone },
-    { name: 'Reports', href: '/admin/reports', icon: Flag },
-    { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
-    { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
-    { name: 'Contact Forms', href: '/admin/contact', icon: Mail },
-  ]
+  const renderLeaf = (item: NavLeaf, nested = false) => {
+    const Icon = item.icon
+    const active = isActive(item.href)
+    return (
+      <Link
+        key={item.name}
+        href={item.href}
+        onClick={() => setSidebarOpen(false)}
+        className={`flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors ${nested ? 'ml-3' : ''} ${
+          active ? 'bg-white/10 text-white font-medium' : 'text-outline-variant hover:bg-white/5 hover:text-white'
+        }`}
+      >
+        <Icon className="h-5 w-5 flex-shrink-0" />
+        <span>{item.name}</span>
+      </Link>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-surface-container">
@@ -122,19 +184,33 @@ export default function AdminLayout({
           </button>
         </div>
 
-        <nav className="p-4 space-y-1">
-          {navigation.map((item) => {
-            const Icon = item.icon
+        <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-8rem)]">
+          {NAV.map((node) => {
+            if (!isGroup(node)) return renderLeaf(node)
+            const GroupIcon = node.icon
+            const open = node.collapsible ? (openGroups[node.group] ?? node.defaultOpen) : true
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center space-x-3 px-4 py-3 rounded-lg text-outline-variant hover:bg-on-surface hover:text-white transition-colors"
-              >
-                <Icon className="h-5 w-5" />
-                <span>{item.name}</span>
-              </Link>
+              <div key={node.group} className="pt-3">
+                {node.collapsible ? (
+                  <button
+                    type="button"
+                    onClick={() => toggleGroup(node.group)}
+                    className="w-full flex items-center justify-between px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-outline hover:text-white transition-colors"
+                  >
+                    <span className="flex items-center gap-2">
+                      <GroupIcon className="h-4 w-4" />
+                      {node.group}
+                    </span>
+                    {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-outline">
+                    <GroupIcon className="h-4 w-4" />
+                    {node.group}
+                  </div>
+                )}
+                {open && <div className="mt-1 space-y-1">{node.children.map((c) => renderLeaf(c, true))}</div>}
+              </div>
             )
           })}
         </nav>
