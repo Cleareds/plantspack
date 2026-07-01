@@ -60,6 +60,22 @@ async function createProfileIfNeeded(userId: string, userMetadata: Record<string
   }
 }
 
+// Confirmation links are single-use and time-limited, and can arrive on a
+// different device/browser than signup (so the PKCE code_verifier cookie is
+// absent). All of these are expected, non-alarming outcomes - map them to a
+// calm message that points the user at signing in, NOT a raw error or the
+// generic "something went wrong" boundary.
+function friendlyVerifyMessage(raw: string | null | undefined): string {
+  const m = (raw || '').toLowerCase()
+  if (m.includes('expired') || m.includes('invalid') || m.includes('already') || m.includes('used') || m.includes('not found')) {
+    return 'This confirmation link has already been used or has expired. If you already confirmed, just sign in below - otherwise request a new link.'
+  }
+  if (m.includes('code verifier') || m.includes('pkce') || m.includes('flow state')) {
+    return 'Please open the confirmation link on the same device you signed up on, or just sign in below - your email may already be confirmed.'
+  }
+  return 'We could not complete email verification automatically. Try signing in below - if that fails, request a new confirmation link.'
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
@@ -68,6 +84,10 @@ export async function GET(request: NextRequest) {
   const error_description = searchParams.get('error_description')
   const error_code = searchParams.get('error')
   const next = searchParams.get('next') ?? '/'
+
+  // Any unexpected throw below would otherwise surface as the "Something went
+  // wrong" error boundary. Catch it and send the user to a calm sign-in state.
+  try {
 
   console.log('[Auth Callback] Params:', { code: !!code, token_hash: !!token_hash, type, error_code })
 
@@ -105,7 +125,7 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent(error.message || 'Email verification failed. Please try signing in or request a new confirmation email.')}`)
+      return NextResponse.redirect(`${origin}/auth?mode=signin&error=${encodeURIComponent(friendlyVerifyMessage(error.message))}`)
     }
 
     if (data.user) {
@@ -129,7 +149,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('[Auth Callback] Code exchange failed:', error.message)
-      return NextResponse.redirect(`${origin}/auth?error=${encodeURIComponent(error.message || 'Authentication failed')}`)
+      return NextResponse.redirect(`${origin}/auth?mode=signin&error=${encodeURIComponent(friendlyVerifyMessage(error.message))}`)
     }
 
     if (data.user) {
@@ -141,5 +161,10 @@ export async function GET(request: NextRequest) {
 
   // No valid params — show error
   console.error('[Auth Callback] No valid auth params received. Query:', Object.fromEntries(searchParams.entries()))
-  return NextResponse.redirect(`${origin}/auth?error=Authentication%20failed.%20Please%20try%20again.`)
+  return NextResponse.redirect(`${origin}/auth?mode=signin&error=${encodeURIComponent(friendlyVerifyMessage(null))}`)
+
+  } catch (e) {
+    console.error('[Auth Callback] Unexpected throw:', (e as Error)?.message)
+    return NextResponse.redirect(`${origin}/auth?mode=signin&error=${encodeURIComponent(friendlyVerifyMessage(null))}`)
+  }
 }
