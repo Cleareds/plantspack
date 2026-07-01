@@ -84,7 +84,10 @@ export async function approveSubmission(
     is_verified: false,
     verification_status: 'unverified',
     verification_method: 'community_submission',
-    created_by: ADMIN_USER_ID,
+    // Attribute the place to the community member who suggested it (shows their
+    // name + links to their profile), NOT the admin. Falls back to admin only if
+    // the submission somehow has no user.
+    created_by: sub.user_id || ADMIN_USER_ID,
   }
 
   const { data: place, error: insErr } = await admin
