@@ -13,7 +13,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BadgeCheck, Sparkles, Database, AlertCircle, ChevronRight } from 'lucide-react'
+import { BadgeCheck, Sparkles, Database, AlertCircle, ChevronRight, Users } from 'lucide-react'
 import Link from 'next/link'
 import SuggestCorrectionModal from './SuggestCorrectionModal'
 
@@ -93,7 +93,13 @@ export default function VerificationFooter({
   // Sourced line covers everything else at level >= 1 that doesn't qualify for
   // admin/AI labels — including batch-cross-referenced places at level >= 2.
   const showSourcedLine = level >= 1 && !isAdminReviewed && !isAIVerified && community !== 'confirmed'
-  const showHonestNote = level === 0 // basically never (every place is at least L1) but here for completeness
+  // A community member personally suggested this place (mobile/web suggest flow),
+  // vs. a bulk dataset import. It's genuinely not verified yet, but "Imported" is
+  // both inaccurate and fails to credit the contributor — so it gets its own line.
+  const isCommunitySubmitted =
+    verificationMethod === 'community_submission' || (tags || []).includes('community-submitted')
+  const showCommunitySubmittedLine = isCommunitySubmitted && community !== 'confirmed'
+  const showHonestNote = level === 0 && !isCommunitySubmitted // stray dataset rows only
 
   return (
     <div className="mt-6 px-6 py-4 rounded-xl bg-surface-container-low/50 ghost-border text-xs space-y-2">
@@ -148,6 +154,16 @@ export default function VerificationFooter({
         </div>
       )}
 
+      {showCommunitySubmittedLine && (
+        <div className="flex items-start gap-2">
+          <Users className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+          <div>
+            <span className="font-medium text-on-surface">Suggested by a community member.</span>
+            <span className="text-on-surface-variant">{' '}Not yet verified - you can help confirm it below.</span>
+          </div>
+        </div>
+      )}
+
       {showHonestNote && (
         <div className="flex items-start gap-2">
           <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -168,7 +184,7 @@ export default function VerificationFooter({
         </div>
       )}
 
-      {community === 'not_yet' && (
+      {community === 'not_yet' && !isCommunitySubmitted && (
         <div className="flex items-center justify-between gap-2 text-on-surface-variant">
           <span>Community: not yet confirmed.</span>
         </div>
