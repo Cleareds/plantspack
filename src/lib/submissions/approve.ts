@@ -119,7 +119,9 @@ export async function approveSubmission(
 
   // Side effects — best-effort, never fail the approval.
   const postId = sub.user_id
-    ? await createPlacePost({ userId: sub.user_id, placeId: place.id, placeName: place.name, auto: true })
+    // Pass the submitted photo(s) so the auto feed-post shows a thumbnail on the
+    // homepage — the feed card renders post.images, not the linked place image.
+    ? await createPlacePost({ userId: sub.user_id, placeId: place.id, placeName: place.name, images: subImages, auto: true })
     : null
   if (sub.user_id) {
     await createNotification({
