@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { formatCorrectionValue } from '@/lib/corrections-format'
 import {
   Loader2, ExternalLink, Trash2, XCircle, AlertTriangle,
@@ -150,15 +151,31 @@ function getVeganAction(p: FlaggedPlace): {
   return null
 }
 
-export default function DataQualityPage() {
-  const [tab, setTab] = useState<TabId>('corrections')
+function DataQualityInner() {
+  // Tab + page live in the URL (?tab=&page=) so refresh / back / shared links
+  // land on the same queue and page instead of resetting to the first tab.
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const tab = (TABS.find(t => t.id === searchParams.get('tab'))?.id ?? 'corrections') as TabId
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1)
+  const setTab = (id: TabId) => {
+    const sp = new URLSearchParams(searchParams.toString())
+    sp.set('tab', id)
+    sp.delete('page')
+    router.replace(`/admin/data-quality?${sp.toString()}`, { scroll: false })
+  }
+  const setPage = (updater: number | ((p: number) => number)) => {
+    const next = typeof updater === 'function' ? updater(page) : updater
+    const sp = new URLSearchParams(searchParams.toString())
+    sp.set('page', String(Math.max(1, next)))
+    router.replace(`/admin/data-quality?${sp.toString()}`, { scroll: false })
+  }
   const [places, setPlaces] = useState<FlaggedPlace[]>([])
   const [corrections, setCorrections] = useState<Correction[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const [statsLoading, setStatsLoading] = useState(false)
   const [processing, setProcessing] = useState<string | null>(null)
-  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [bulkProcessing, setBulkProcessing] = useState(false)
@@ -176,7 +193,9 @@ export default function DataQualityPage() {
 
   useEffect(() => { fetchStats() }, [fetchStats])
 
-  useEffect(() => { setPage(1); setSelectedIds(new Set()) }, [tab])
+  // Tab lives in the URL; switching it already drops ?page, so we only reset
+  // the local selection here.
+  useEffect(() => { setSelectedIds(new Set()) }, [tab])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -212,37 +231,6 @@ export default function DataQualityPage() {
     })
     if (res.ok) removePlace(placeId)
     setProcessing(null)
-  }, [removePlace])
-
-  // Run AI verifier on a single place. Tier 1 (description) first, escalates
-  // to Tier 2 (web-search) if uncertain. Updates tags + verification_status
-  // server-side, then removes from this list since the place will no longer
-  // be untagged.
-  const handleVerifyVegan = useCallback(async (placeId: string) => {
-    setProcessing(placeId)
-    try {
-      const res = await fetch('/api/admin/data-quality', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ placeIds: [placeId], action: 'verify_vegan' }),
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setActionError(data?.error || 'Verification failed')
-      } else {
-        const r = data?.results?.[0]
-        if (r?.verdict === 'uncertain') {
-          // Stays on the list - no tag was applied. Surface a small toast.
-          setActionError(`Verifier returned uncertain (tier=${r.tier}). Try Chrome DevTools or skip for now.`)
-        } else {
-          removePlace(placeId)
-        }
-      }
-    } catch (e: any) {
-      setActionError(e?.message || 'Verification failed')
-    } finally {
-      setProcessing(null)
-    }
   }, [removePlace])
 
   // Dismiss a flag — removes the tag(s) without changing the place data
@@ -418,8 +406,12 @@ export default function DataQualityPage() {
   const groupCount = (source: Source): number =>
     source === 'user' ? communityCount : source === 'auto' ? automatedCount : researchCount
 
+  // Pad the bottom when the fixed bulk-action bar is showing so it can't cover
+  // the last card or the pagination.
+  const bulkBarVisible = selectedIds.size > 0 && tab !== 'corrections' && tab !== 'research_queue'
+
   return (
-    <div>
+    <div className={bulkBarVisible ? 'pb-28' : ''}>
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
@@ -602,14 +594,22 @@ export default function DataQualityPage() {
 
       {/* Content */}
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        /* Skeleton matches the card list height so switching tabs doesn't jump. */
+        <div className="space-y-2" aria-busy="true">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="bg-gray-800 rounded-xl p-4 animate-pulse">
+              <div className="h-4 w-1/3 bg-gray-700 rounded mb-2.5" />
+              <div className="h-3 w-1/4 bg-gray-700/70 rounded" />
+            </div>
+          ))}
         </div>
       ) : tab === 'corrections' || tab === 'research_queue' ? (
         corrections.length === 0 ? (
-          <div className="bg-gray-800 rounded-xl p-8 text-center">
-            <p className="text-gray-400">
-              {tab === 'research_queue' ? 'Nothing in the research review queue' : 'No pending user corrections'}
+          <div className="bg-gray-800 rounded-xl p-10 text-center">
+            <CheckCircle className="h-8 w-8 text-emerald-500/70 mx-auto mb-2" />
+            <p className="text-gray-300 font-medium">All caught up</p>
+            <p className="text-gray-500 text-sm mt-0.5">
+              {tab === 'research_queue' ? 'Nothing in the research review queue right now.' : 'No pending user corrections to review.'}
             </p>
           </div>
         ) : tab === 'research_queue' ? (
@@ -723,8 +723,10 @@ export default function DataQualityPage() {
         )
       ) : (
         places.length === 0 ? (
-          <div className="bg-gray-800 rounded-xl p-8 text-center">
-            <p className="text-gray-400">No places with this flag</p>
+          <div className="bg-gray-800 rounded-xl p-10 text-center">
+            <CheckCircle className="h-8 w-8 text-emerald-500/70 mx-auto mb-2" />
+            <p className="text-gray-300 font-medium">All caught up</p>
+            <p className="text-gray-500 text-sm mt-0.5">No places are flagged in this queue right now.</p>
           </div>
         ) : (
           <>
@@ -832,14 +834,14 @@ export default function DataQualityPage() {
                           {veganAction.label}
                         </button>
                       )}
-                      {/* Verify Now (auto-classify via AI) - only on the unverified-100%-vegan tab */}
+                      {/* Manual verification: AI auto-verify was retired 2026-06-01,
+                          so verification happens on the place page. */}
                       {tab === 'unverified_fv' && (
-                        <button onClick={() => handleVerifyVegan(p.id)}
-                          disabled={processing === p.id}
-                          className="flex items-center gap-1 px-2.5 py-1.5 bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 rounded-lg text-xs font-medium disabled:opacity-50">
-                          {processing === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Leaf className="h-3.5 w-3.5" />}
-                          Verify now
-                        </button>
+                        <Link href={`/place/${p.slug || p.id}`} target="_blank"
+                          className="flex items-center gap-1 px-2.5 py-1.5 bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 rounded-lg text-xs font-medium">
+                          <Leaf className="h-3.5 w-3.5" />
+                          Open to verify
+                        </Link>
                       )}
                       {/* Confirm Closed / Archive */}
                       {!isVeganTab && (
@@ -867,7 +869,7 @@ export default function DataQualityPage() {
       )}
 
       {/* Sticky bulk action bar */}
-      {selectedIds.size > 0 && tab !== 'corrections' && tab !== 'research_queue' && (
+      {bulkBarVisible && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-gray-900 border border-gray-700 rounded-2xl px-5 py-3 shadow-2xl">
           <span className="text-sm text-gray-300 font-medium">{selectedIds.size} selected</span>
           <div className="w-px h-4 bg-gray-700" />
@@ -908,5 +910,20 @@ export default function DataQualityPage() {
         </div>
       )}
     </div>
+  )
+}
+
+// useSearchParams requires a Suspense boundary in the App Router.
+export default function DataQualityPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        </div>
+      }
+    >
+      <DataQualityInner />
+    </Suspense>
   )
 }

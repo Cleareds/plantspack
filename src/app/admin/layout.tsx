@@ -66,7 +66,9 @@ const NAV: NavNode[] = [
     group: 'Moderation & Inbox', icon: Inbox, collapsible: true, defaultOpen: false,
     children: [
       { name: 'Reports', href: '/admin/reports', icon: Flag },
-      { name: 'Corrections', href: '/admin/corrections', icon: PenLine },
+      // User corrections live under Data Quality → User Corrections (single
+      // implementation); the old standalone /admin/corrections redirects there.
+      { name: 'Corrections', href: '/admin/data-quality?tab=corrections', icon: PenLine },
       { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
       { name: 'Contact Forms', href: '/admin/contact', icon: Mail },
     ],
@@ -87,8 +89,10 @@ export default function AdminLayout({
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const isActive = (href: string) =>
-    href === '/admin' ? pathname === '/admin' : !!pathname?.startsWith(href)
+  const isActive = (href: string) => {
+    const path = href.split('?')[0]
+    return path === '/admin' ? pathname === '/admin' : !!pathname?.startsWith(path)
+  }
 
   // Collapsible-group open state, seeded from defaultOpen and auto-expanded for
   // whichever group contains the current route.
