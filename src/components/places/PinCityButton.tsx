@@ -1,4 +1,5 @@
 'use client'
+import { safeStorage } from "@/lib/safe-storage"
 
 import { useState, useEffect } from 'react'
 import { MapPinned, Check } from 'lucide-react'
@@ -14,27 +15,27 @@ export default function PinCityButton({ cityName, countryName, className = '' }:
   const [isPinned, setIsPinned] = useState(false)
 
   useEffect(() => {
-    const pinned = localStorage.getItem('pinned_city')
+    const pinned = safeStorage.local.get('pinned_city')
     setIsPinned(pinned === `${cityName}|||${countryName}`)
   }, [cityName, countryName])
 
   const handlePin = () => {
     if (isPinned) {
       // Unpin — revert to geolocation.
-      localStorage.removeItem('pinned_city')
-      localStorage.removeItem('pinned_city_name')
-      localStorage.removeItem('pinned_country_name')
-      localStorage.removeItem('plantspack_home_cache')
+      safeStorage.local.remove('pinned_city')
+      safeStorage.local.remove('pinned_city_name')
+      safeStorage.local.remove('pinned_country_name')
+      safeStorage.local.remove('plantspack_home_cache')
       // Also clear the pinned cookies so the next SSR doesn't show a stale pin.
       // Geo cookies remain so the home page falls back to the detected location.
       clearPinnedLocationCookies()
       setIsPinned(false)
     } else {
       // Pin this city.
-      localStorage.setItem('pinned_city', `${cityName}|||${countryName}`)
-      localStorage.setItem('pinned_city_name', cityName)
-      localStorage.setItem('pinned_country_name', countryName)
-      localStorage.removeItem('plantspack_home_cache')
+      safeStorage.local.set('pinned_city', `${cityName}|||${countryName}`)
+      safeStorage.local.set('pinned_city_name', cityName)
+      safeStorage.local.set('pinned_country_name', countryName)
+      safeStorage.local.remove('plantspack_home_cache')
       // CRITICAL: update cookies directly. Same-tab localStorage writes don't
       // fire `storage` events, so HomeClient's sync effect won't run until the
       // next mount — leaving the cookies pointing at the previous city. That

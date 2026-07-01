@@ -1,4 +1,5 @@
 'use client'
+import { safeStorage } from "@/lib/safe-storage"
 
 import { useState, useEffect } from 'react'
 import { X, Cookie, Settings } from 'lucide-react'
@@ -25,7 +26,7 @@ export default function CookieConsent() {
 
   useEffect(() => {
     // Check if user has already made a choice
-    const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
+    const consent = safeStorage.local.get(COOKIE_CONSENT_KEY)
     if (!consent) {
       // Delay showing banner slightly for better UX
       setTimeout(() => setShowBanner(true), 1000)
@@ -43,7 +44,7 @@ export default function CookieConsent() {
   }, [])
 
   const saveConsent = (prefs: CookiePreferences) => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(prefs))
+    safeStorage.local.set(COOKIE_CONSENT_KEY, JSON.stringify(prefs))
     setPreferences(prefs)
     setShowBanner(false)
     setShowSettings(false)

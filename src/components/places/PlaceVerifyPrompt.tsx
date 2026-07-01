@@ -1,4 +1,5 @@
 'use client'
+import { safeStorage } from "@/lib/safe-storage"
 
 import { useState } from 'react'
 import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store } from 'lucide-react'
@@ -22,7 +23,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
   const key = `verified_${placeId}`
   const [previouslySubmitted] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false
-    return !!sessionStorage.getItem(key)
+    return !!safeStorage.session.get(key)
   })
   const [dismissed, setDismissed] = useState(false)
   const [submitted, setSubmitted] = useState<string | null>(null)
@@ -35,7 +36,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
 
   const handleConfirm = async () => {
     setSubmitting(true)
-    sessionStorage.setItem(key, '1')
+    safeStorage.session.set(key, '1')
     // Confirm via API (uses admin client to bypass RLS)
     await fetch(`/api/places/${placeId}/report`, {
       method: 'POST',
@@ -47,7 +48,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
 
   const handleReport = async (type: string) => {
     setSubmitting(true)
-    sessionStorage.setItem(key, '1')
+    safeStorage.session.set(key, '1')
     const res = await fetch(`/api/places/${placeId}/report`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

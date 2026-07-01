@@ -1,4 +1,5 @@
 'use client'
+import { safeStorage } from "@/lib/safe-storage"
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -8,7 +9,7 @@ export default function BetaBanner() {
   const [isDismissed, setIsDismissed] = useState(true) // default hidden to avoid hydration flash
 
   useEffect(() => {
-    const dismissed = localStorage.getItem('beta-banner-dismissed')
+    const dismissed = safeStorage.local.get('beta-banner-dismissed')
     if (!dismissed) {
       setIsDismissed(false)
     }
@@ -16,7 +17,7 @@ export default function BetaBanner() {
 
   const handleDismiss = () => {
     setIsDismissed(true)
-    localStorage.setItem('beta-banner-dismissed', 'true')
+    safeStorage.local.set('beta-banner-dismissed', 'true')
   }
 
   if (isDismissed) return null

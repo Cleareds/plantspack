@@ -1,4 +1,5 @@
 'use client'
+import { safeStorage } from "@/lib/safe-storage"
 
 import {useState, useEffect, useCallback, useRef} from 'react'
 import {useAuth} from '@/lib/auth'
@@ -57,7 +58,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     const loadDraft = useCallback(() => {
         if (typeof window === 'undefined') return null
         try {
-            const draft = localStorage.getItem(DRAFT_KEY)
+            const draft = safeStorage.local.get(DRAFT_KEY)
             return draft ? JSON.parse(draft) : null
         } catch {
             return null
@@ -133,7 +134,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                 shareLocation,
                 locationData
             }
-            localStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
+            safeStorage.local.set(DRAFT_KEY, JSON.stringify(draft))
         } catch {
             // Ignore localStorage errors
         }
@@ -149,7 +150,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
     // Clear draft
     const clearDraft = useCallback(() => {
         if (typeof window !== 'undefined') {
-            localStorage.removeItem(DRAFT_KEY)
+            safeStorage.local.remove(DRAFT_KEY)
         }
     }, [])
 

@@ -1,4 +1,5 @@
 'use client'
+import { safeStorage } from "@/lib/safe-storage"
 
 import { useState, useEffect } from 'react'
 import { ChevronDown, TrendingUp, Clock, BarChart3, Target } from 'lucide-react'
@@ -60,7 +61,7 @@ export default function FeedSorting({
 
   // Load saved preference from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('feed_sort_preference')
+    const saved = safeStorage.local.get('feed_sort_preference')
     if (saved && SORT_OPTIONS.some(opt => opt.value === saved)) {
       if (currentSort !== saved) {
         onSortChange(saved as SortOption)
@@ -70,7 +71,7 @@ export default function FeedSorting({
 
   // Save preference when changed
   const handleSortChange = (sort: SortOption) => {
-    localStorage.setItem('feed_sort_preference', sort)
+    safeStorage.local.set('feed_sort_preference', sort)
     onSortChange(sort)
     setIsOpen(false)
   }
