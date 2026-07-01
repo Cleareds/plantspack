@@ -634,6 +634,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               ? place.images
               : (mainUrl ? [mainUrl] : [])
             return gallery.length > 0 ? (
+            <>
+            {/* Preload the LCP hero so the browser fetches it before it parses
+                down to the (client) slider. React hoists this to <head>. */}
+            <link rel="preload" as="image" href={gallery[0]} fetchPriority="high" />
             <div className="p-6 border-b border-outline-variant/15 relative">
               <ImageSlider images={gallery} />
               {/* Vegan + Pet badges */}
@@ -655,6 +659,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 )}
               </div>
             </div>
+            </>
             ) : null
           })()}
 

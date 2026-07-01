@@ -94,12 +94,14 @@ export default function ImageSlider({
                   src={image}
                   alt={`Image ${index + 1}`}
                   loading="eager"
+                  fetchPriority={index === 0 ? 'high' : undefined}
+                  decoding="async"
                   onLoad={() => handleImageLoad(index)}
                   onError={() => handleImageError(index)}
                   referrerPolicy="no-referrer"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
-                    isLoaded[index] ? 'opacity-100' : 'opacity-0'
-                  } ${hasError[index] ? 'hidden' : ''}`}
+                  /* No opacity gate: an opacity:0 image is invisible to LCP, which
+                     chains LCP to hydration. Paint on load; skeleton shows until then. */
+                  className={`absolute inset-0 w-full h-full object-cover ${hasError[index] ? 'hidden' : ''}`}
                 />
               </div>
             ))}
@@ -139,12 +141,14 @@ export default function ImageSlider({
                   src={image}
                   alt={`Image ${index + 1}`}
                   loading={index <= 1 ? 'eager' : 'lazy'}
+                  fetchPriority={index === 0 ? 'high' : undefined}
+                  decoding="async"
                   onLoad={() => handleImageLoad(index)}
                   onError={() => handleImageError(index)}
                   referrerPolicy="no-referrer"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
-                    isLoaded[index] ? 'opacity-100' : 'opacity-0'
-                  } ${hasError[index] ? 'hidden' : ''}`}
+                  /* No opacity gate: an opacity:0 image is invisible to LCP, which
+                     chains LCP to hydration. Paint on load; skeleton shows until then. */
+                  className={`absolute inset-0 w-full h-full object-cover ${hasError[index] ? 'hidden' : ''}`}
                 />
               </div>
             ))}
