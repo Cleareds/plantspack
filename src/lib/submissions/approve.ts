@@ -57,6 +57,20 @@ export async function approveSubmission(
       console.warn('[approveSubmission] geocode failed', (e as Error)?.message)
     }
   }
+  // Fallback: a hard-to-parse street address (common for non-Western
+  // addresses) shouldn't block approval — geocode just city + country so we get
+  // an approximate marker instead of failing.
+  if ((latitude == null || longitude == null) && (sub.city || sub.country)) {
+    try {
+      const [hit] = await geocodingService.search([sub.city, sub.country].filter(Boolean).join(', '), { limit: 1 })
+      if (hit) { latitude = parseFloat(hit.lat); longitude = parseFloat(hit.lon) }
+    } catch { /* fall through to the guard below */ }
+  }
+  // Still no coordinates → return a clear, actionable error rather than letting
+  // the NOT NULL constraint throw a raw DB error at insert time.
+  if (latitude == null || longitude == null) {
+    return { ok: false, error: 'Could not geocode this address. Add coordinates to the submission and retry.' }
+  }
 
   const veganLevel = VALID_LEVELS.includes(opts.veganLevel ?? '')
     ? opts.veganLevel
