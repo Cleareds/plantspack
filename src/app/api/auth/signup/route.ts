@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 /**
  * POST /api/auth/signup - Handle user registration with server-side validation
@@ -9,7 +10,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password, username, firstName, lastName, newsletter_opt_in } = body
+    const { email, password, username, firstName, lastName, newsletter_opt_in, captchaToken } = body
     // Coerce to strict boolean — we must never interpret undefined as "yes".
     const newsletterOptIn = newsletter_opt_in === true
 
@@ -43,6 +44,17 @@ export async function POST(request: NextRequest) {
     if (password.length < 6) {
       return NextResponse.json(
         { error: 'Password must be at least 6 characters' },
+        { status: 400 }
+      )
+    }
+
+    // Bot protection — after the cheap synchronous checks (so a format typo
+    // doesn't waste the single-use token) but before the expensive admin
+    // listUsers / signUp below. No-op until TURNSTILE_SECRET_KEY is set.
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null
+    if (!(await verifyTurnstile(captchaToken, ip))) {
+      return NextResponse.json(
+        { error: 'Captcha verification failed. Please try again.' },
         { status: 400 }
       )
     }

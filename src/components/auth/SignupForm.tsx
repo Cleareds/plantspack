@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 import { Mail, Lock, User, Eye, EyeOff, Check, X, Loader2, Sparkles } from 'lucide-react'
 import { pushDataLayerEvent } from '@/lib/analytics'
+import Turnstile, { CAPTCHA_ENABLED } from './Turnstile'
 
 interface SignupFormProps {
   onToggle: () => void
@@ -27,7 +28,12 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   const [success, setSuccess] = useState('')
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle')
   const [usernameError, setUsernameError] = useState('')
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  // Bumping this remounts the widget to issue a fresh token — needed after a
+  // failed submit, since a Turnstile token is single-use once verified.
+  const [captchaResetKey, setCaptchaResetKey] = useState(0)
   const successRef = useRef<HTMLDivElement>(null)
+  const onCaptchaToken = useCallback((t: string | null) => setCaptchaToken(t), [])
 
   const { signUp, signInWithGoogle, signInWithFacebook} = useAuth()
   const next = useSearchParams().get('redirect') || undefined
@@ -122,6 +128,12 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
         return
       }
 
+      if (CAPTCHA_ENABLED && !captchaToken) {
+        setError('Please complete the captcha below.')
+        setLoading(false)
+        return
+      }
+
       // Call server-side signup API with validation
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -135,6 +147,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           firstName,
           lastName,
           newsletter_opt_in: newsletterOptIn,
+          captchaToken,
         }),
       })
 
@@ -143,6 +156,9 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
       if (!response.ok) {
         // Server-side validation errors or signup failures
         setError(data.error || 'Registration failed. Please try again.')
+        // The token was likely consumed server-side — reissue one for the retry.
+        setCaptchaToken(null)
+        setCaptchaResetKey((k) => k + 1)
         setLoading(false)
         return
       }
@@ -407,6 +423,10 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
               </span>
             </label>
           </div>
+
+          {/* Bot protection. Renders only when NEXT_PUBLIC_TURNSTILE_SITE_KEY
+              is set; otherwise this is nothing and the form behaves as before. */}
+          <Turnstile key={captchaResetKey} onToken={onCaptchaToken} />
 
           <button
             type="submit"
