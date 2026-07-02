@@ -187,14 +187,19 @@ function MapViewImpl({
           </Marker>
         )}
 
-        {/* Place markers — wrapped in MarkerClusterGroup */}
+        {/* Place markers — wrapped in MarkerClusterGroup. Only render once the
+            Leaflet-dependent icon factories exist. Mounting the cluster group with
+            a null iconCreateFunction / undefined marker icons and then swapping
+            them in after Leaflet loads corrupted react-leaflet-cluster's internal
+            tree (TypeErrors on createIcon / _leaflet_events on /map). */}
+        {getCategoryIcon && createClusterIcon && (
         <MarkerClusterGroup
           chunkedLoading
           maxClusterRadius={50}
           spiderfyOnMaxZoom
           showCoverageOnHover={false}
           zoomToBoundsOnClick
-          iconCreateFunction={createClusterIcon || undefined}
+          iconCreateFunction={createClusterIcon}
         >
           {places.map((place) => (
             <Marker
@@ -208,16 +213,12 @@ function MapViewImpl({
                   if (m) setTimeout(() => { try { m.openPopup() } catch {} }, 150)
                 }
                 : undefined}
-              icon={
-                getCategoryIcon
-                  ? getCategoryIcon(
-                      place.category,
-                      (place as any).vegan_level,
-                      (place as any).average_rating,
-                      (place as any).review_count,
-                    )
-                  : undefined
-              }
+              icon={getCategoryIcon(
+                place.category,
+                (place as any).vegan_level,
+                (place as any).average_rating,
+                (place as any).review_count,
+              )}
               eventHandlers={{
                 // Desktop hover: open the popup without requiring click so the
                 // user can scan many places quickly (Reddit feedback: "would be
@@ -325,6 +326,7 @@ function MapViewImpl({
             </Marker>
           ))}
         </MarkerClusterGroup>
+        )}
       </LeafletMapContainer>
 
       {loading && (
