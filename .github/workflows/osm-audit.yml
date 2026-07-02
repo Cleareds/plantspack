@@ -1,0 +1,33 @@
+name: OSM Refresh Audit (dry run)
+
+# One-off, manually triggered. Read-only: queries Overpass + our DB and uploads
+# a comparison report as an artifact. NO database writes, no pushes. Runs on a
+# GitHub runner so Overpass is reachable and the job never sleeps (local runs
+# kept getting killed / rate-limited).
+on:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci --ignore-scripts
+      - name: Run OSM audit (dry run, no DB writes)
+        run: node scripts/_osm-audit-dryrun.mjs
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: osm-refresh-audit
+          path: |
+            performance/osm-refresh-audit-2026-07-02.md
+            performance/osm-refresh-audit-2026-07-02.json
+          if-no-files-found: warn
