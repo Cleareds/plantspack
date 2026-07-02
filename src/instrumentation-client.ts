@@ -79,10 +79,26 @@ const initOptions = {
     /SecurityError.*localStorage/,
     /SecurityError.*sessionStorage/,
     /Access is denied for this document/,
+    // Empty / non-Error promise rejections — an unhandled rejection whose value
+    // is a plain {} with no message or stack. Almost always third-party scripts,
+    // browser extensions, or aborted fetches (common on Safari). Untraceable and
+    // non-actionable by design. (Also enforced structurally in beforeSend.)
+    /Non-Error promise rejection captured/,
+    /Object captured as promise rejection with keys/,
   ],
 
   // Filter sensitive data before sending
   beforeSend(event: any, hint: any) {
+    // Drop unhandled rejections that carry no useful payload — i.e. something
+    // rejected with an empty {} (no message, no stack). These are third-party /
+    // extension / aborted-fetch noise (mostly Safari), not our code, and can't
+    // be acted on. Catches the "Object captured as promise rejection with keys:
+    // [object has no keys]" events regardless of how the message is phrased.
+    const orig = hint?.originalException
+    if (orig && typeof orig === 'object' && !(orig instanceof Error) && Object.keys(orig).length === 0) {
+      return null
+    }
+
     // Remove sensitive data from breadcrumbs
     if (event.breadcrumbs) {
       event.breadcrumbs = event.breadcrumbs.map((breadcrumb: any) => {
