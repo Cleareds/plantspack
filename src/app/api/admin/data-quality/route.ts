@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
+import { createNotification } from '@/lib/notifications/server'
 
 // AI vegan-status verification disabled (2026-06-01) per project policy:
 // OpenAI is reserved for the ingredient and menu scanners only. The admin
@@ -57,6 +58,53 @@ async function attachReports<T extends { id: string }>(supabase: ReturnType<type
     return places.map((p) => ({ ...p, reports: byPlace[p.id] || [] }))
   } catch {
     return places
+  }
+}
+
+// When an admin resolves a community report (acts on it or dismisses it),
+// notify the people who filed a still-pending place_reports row and mark those
+// rows resolved so a reporter is never pinged twice for the same report.
+// Reports filed anonymously (user_id null) or that predate place_reports have
+// no one to notify — those places simply get skipped. Best-effort throughout:
+// a failure here must never block the admin action.
+async function notifyReporters(
+  supabase: ReturnType<typeof createAdminClient>,
+  placeIds: string[],
+  resolution: 'reviewed' | 'dismissed',
+) {
+  if (!placeIds?.length) return
+  try {
+    const { data: reports } = await supabase
+      .from('place_reports')
+      .select('id, place_id, user_id')
+      .in('place_id', placeIds)
+      .eq('status', 'pending')
+      .not('user_id', 'is', null)
+    if (!reports?.length) return
+
+    const { data: places } = await supabase.from('places').select('id, name').in('id', placeIds)
+    const nameById = new Map((places || []).map((p) => [p.id, p.name as string]))
+
+    for (const r of reports as { id: string; place_id: string; user_id: string }[]) {
+      const name = nameById.get(r.place_id) || 'a place'
+      await createNotification({
+        userId: r.user_id,
+        type: resolution === 'dismissed' ? 'report_dismissed' : 'report_reviewed',
+        entityType: 'place',
+        entityId: r.place_id,
+        message:
+          resolution === 'dismissed'
+            ? `We reviewed your report on ${name} and kept the current listing for now. Thanks for helping keep PlantsPack accurate.`
+            : `Thanks! We reviewed your report on ${name} and updated the listing.`,
+      })
+    }
+
+    await supabase
+      .from('place_reports')
+      .update({ status: resolution === 'dismissed' ? 'dismissed' : 'reviewed' })
+      .in('id', (reports as { id: string }[]).map((r) => r.id))
+  } catch {
+    // ignore — reporter notification is a nicety, not a requirement
   }
 }
 
@@ -270,6 +318,9 @@ export async function DELETE(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
+  // Archiving a reported place = we acted on the report(s).
+  await notifyReporters(supabase, [placeId], 'reviewed')
+
   const { revalidatePath } = await import('next/cache')
   if (place?.slug) revalidatePath(`/place/${place.slug}`)
   revalidatePath('/vegan-places')
@@ -358,6 +409,9 @@ export async function PUT(request: NextRequest) {
     }
     for (const path of pathsToRevalidate) revalidatePath(path)
 
+    // Archiving a reported place = we acted on the report(s).
+    await notifyReporters(supabase, placeIds, 'reviewed')
+
     return NextResponse.json({ success: true, archived: placeIds.length })
   }
 
@@ -370,6 +424,11 @@ export async function PUT(request: NextRequest) {
       p_tag: removeTag,
     })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    // Dismissing a community vegan flag = we checked and kept the listing.
+    if (COMMUNITY_VEGAN_TAGS.includes(removeTag)) {
+      await notifyReporters(supabase, placeIds, 'dismissed')
+    }
 
     return NextResponse.json({ success: true, dismissed: placeIds.length })
   }
@@ -398,6 +457,12 @@ export async function PATCH(request: NextRequest) {
 
   const { error } = await supabase.from('places').update(update).eq('id', placeId)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  // Ping reporters: a vegan-level change means we acted on their report;
+  // clearing the flags without a level change means we checked and kept it.
+  if (clearVeganReportTags) {
+    await notifyReporters(supabase, [placeId], setVeganLevel ? 'reviewed' : 'dismissed')
+  }
 
   if (setVeganLevel || clearVeganReportTags) {
     const { revalidatePath } = await import('next/cache')

@@ -3,7 +3,10 @@ export type NotificationType =
   // Place submission / correction lifecycle + nearby-place alerts. These are
   // also what the mobile app will read in its next build.
   | 'submission_received' | 'submission_approved'
-  | 'correction_received' | 'correction_approved'
+  | 'correction_received' | 'correction_approved' | 'correction_dismissed'
+  // Community vegan/closure report lifecycle: reviewed = we acted on it,
+  // dismissed = we checked and kept the listing as-is (rare).
+  | 'report_reviewed' | 'report_dismissed'
   | 'place_nearby'
   // Admin broadcast to all users (in-app bell for everyone; OS push only to
   // users who opted in via user_preferences.push_announcements).

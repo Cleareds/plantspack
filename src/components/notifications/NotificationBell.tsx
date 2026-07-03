@@ -131,10 +131,14 @@ export default function NotificationBell() {
         return <AtSign className="h-4 w-4 text-purple-500" />
       case 'submission_approved':
       case 'correction_approved':
+      case 'report_reviewed':
         return <CheckCircle className="h-4 w-4 text-emerald-500" />
       case 'submission_received':
       case 'correction_received':
         return <Check className="h-4 w-4 text-emerald-400" />
+      case 'correction_dismissed':
+      case 'report_dismissed':
+        return <Check className="h-4 w-4 text-outline" />
       case 'place_nearby':
         return <MapPin className="h-4 w-4 text-teal-500" />
       default:

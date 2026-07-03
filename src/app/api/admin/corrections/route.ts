@@ -121,16 +121,30 @@ export async function PUT(request: NextRequest) {
     // Notify the user their correction was applied. Skip our own CLI/research
     // audit rows (they carry a synthetic proposed_action and aren't real user
     // submissions) and the no-actor reject case.
+    // Notify the person who submitted the correction — on approve (it's live)
+    // and on reject (we reviewed it and kept the current info). Research/CLI
+    // rows (proposed_action set) have no human submitter to notify.
     const isResearchRow = (correction.corrections as Record<string, unknown> | null)?.proposed_action != null
-    if (action === 'approve' && correction.user_id && !isResearchRow) {
+    if (correction.user_id && !isResearchRow) {
       const place = correction.places as { name?: string } | null
-      await createNotification({
-        userId: correction.user_id,
-        type: 'correction_approved',
-        entityType: 'place',
-        entityId: correction.place_id,
-        message: `Thanks! Your correction to ${place?.name || 'a place'} is now live.`,
-      })
+      const name = place?.name || 'a place'
+      if (action === 'approve') {
+        await createNotification({
+          userId: correction.user_id,
+          type: 'correction_approved',
+          entityType: 'place',
+          entityId: correction.place_id,
+          message: `Thanks! Your correction to ${name} is now live.`,
+        })
+      } else if (action === 'reject') {
+        await createNotification({
+          userId: correction.user_id,
+          type: 'correction_dismissed',
+          entityType: 'place',
+          entityId: correction.place_id,
+          message: `We reviewed your correction to ${name} and kept the current info for now. Thanks for helping keep PlantsPack accurate.`,
+        })
+      }
     }
 
     return NextResponse.json({ success: true, action })

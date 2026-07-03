@@ -15,6 +15,8 @@
 import { useState } from 'react'
 import { BadgeCheck, Sparkles, Database, AlertCircle, ChevronRight, Users } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@/lib/auth'
 import SuggestCorrectionModal from './SuggestCorrectionModal'
 
 interface VerificationFooterProps {
@@ -80,6 +82,8 @@ export default function VerificationFooter({
   place,
 }: VerificationFooterProps) {
   const [modalOpen, setModalOpen] = useState(false)
+  const { user } = useAuth()
+  const pathname = usePathname()
   const community = communityState(isVerified, tags)
   const level = verificationLevel ?? 0
   const isAdminReviewed = verificationMethod === 'admin_review'
@@ -190,15 +194,26 @@ export default function VerificationFooter({
         </div>
       )}
 
-      {/* Suggest correction is always available, regardless of state. */}
+      {/* Suggest correction is always available, regardless of state. Guests
+          are routed to sign-in first (the submit endpoint requires a session),
+          so they never fill the form only to hit an "Unauthorized" error. */}
       <div className="pt-1 flex items-center gap-4 flex-wrap">
-        <button
-          type="button"
-          onClick={() => setModalOpen(true)}
-          className="inline-flex items-center gap-0.5 text-primary font-medium hover:underline"
-        >
-          Suggest correction <ChevronRight className="h-3 w-3" />
-        </button>
+        {user ? (
+          <button
+            type="button"
+            onClick={() => setModalOpen(true)}
+            className="inline-flex items-center gap-0.5 text-primary font-medium hover:underline"
+          >
+            Suggest correction <ChevronRight className="h-3 w-3" />
+          </button>
+        ) : (
+          <Link
+            href={`/auth?mode=signin&redirect=${encodeURIComponent(pathname || (placeSlug ? `/place/${placeSlug}` : ''))}`}
+            className="inline-flex items-center gap-0.5 text-primary font-medium hover:underline"
+          >
+            Suggest correction <ChevronRight className="h-3 w-3" />
+          </Link>
+        )}
         <Link
           href="/methodology"
           className="text-on-surface-variant hover:text-primary hover:underline"

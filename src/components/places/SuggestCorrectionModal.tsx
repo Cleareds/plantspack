@@ -39,6 +39,7 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [needsAuth, setNeedsAuth] = useState(false)
 
   useEffect(() => {
     if (!isOpen) return
@@ -71,6 +72,7 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
 
     setLoading(true)
     setError(null)
+    setNeedsAuth(false)
 
     try {
       const allCorrections = { ...corrections }
@@ -85,6 +87,10 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
       })
 
       if (!res.ok) {
+        if (res.status === 401) {
+          setNeedsAuth(true)
+          throw new Error('Please sign in to suggest a correction.')
+        }
         const data = await res.json()
         throw new Error(data.error || 'Failed to submit')
       }
@@ -130,6 +136,14 @@ export default function SuggestCorrectionModal({ place, isOpen, onClose }: Sugge
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-sm text-red-800">{error}</p>
+              {needsAuth && (
+                <a
+                  href={`/auth?mode=signin&redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : `/place/${place.id}`)}`}
+                  className="text-sm font-medium text-primary hover:underline mt-1 inline-block"
+                >
+                  Sign in →
+                </a>
+              )}
             </div>
           )}
 
