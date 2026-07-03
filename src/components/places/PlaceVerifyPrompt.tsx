@@ -2,7 +2,7 @@
 import { safeStorage } from "@/lib/safe-storage"
 
 import { useState } from 'react'
-import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store } from 'lucide-react'
+import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store, Copy } from 'lucide-react'
 
 const REPORT_LABELS: Record<string, string> = {
   hours_wrong: 'Hours changed',
@@ -13,6 +13,7 @@ const REPORT_LABELS: Record<string, string> = {
   non_vegan_chain: 'Non-vegan friendly chain',
   vegan_friendly_chain: 'Vegan-friendly chain',
   few_vegan_options: 'Few vegan options only',
+  duplicate: 'Duplicate listing',
 }
 
 interface PlaceVerifyPromptProps {
@@ -154,6 +155,10 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-md transition-colors disabled:opacity-50">
           <Leaf className="h-3 w-3" /> Few vegan options only
         </button>
+        <button onClick={() => setPendingType('duplicate')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors disabled:opacity-50">
+          <Copy className="h-3 w-3" /> Duplicate listing
+        </button>
       </div>
 
       {/* Optional evidence note — only appears after a report type is picked, so
@@ -161,8 +166,14 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
       {pendingType && (
         <div className="mt-2.5 rounded-md bg-surface-container-low p-2.5">
           <label className="block text-[11px] font-medium text-on-surface mb-1">
-            Reporting “{REPORT_LABELS[pendingType] ?? pendingType}” - how do you know?{' '}
-            <span className="font-normal text-on-surface-variant">(optional; a link or what you saw helps us check faster)</span>
+            {pendingType === 'duplicate'
+              ? 'Which listing is this a duplicate of?'
+              : `Reporting “${REPORT_LABELS[pendingType] ?? pendingType}” - how do you know?`}{' '}
+            <span className="font-normal text-on-surface-variant">
+              {pendingType === 'duplicate'
+                ? '(paste the other listing’s name or link so we can merge them)'
+                : '(optional; a link or what you saw helps us check faster)'}
+            </span>
           </label>
           <textarea
             value={note}
@@ -170,7 +181,9 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
             rows={2}
             maxLength={500}
             autoFocus
-            placeholder="e.g. walked past today and it was boarded up, or their website says permanently closed"
+            placeholder={pendingType === 'duplicate'
+              ? 'e.g. same place is also listed as “De Appelier” / paste the other page URL'
+              : 'e.g. walked past today and it was boarded up, or their website says permanently closed'}
             className="w-full text-xs rounded-md border border-outline-variant/30 bg-surface-container-lowest p-2 text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-1 focus:ring-primary/40"
           />
           <div className="mt-2 flex items-center gap-2">

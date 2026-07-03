@@ -241,6 +241,44 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ corrections: enriched, total: count || 0 })
   }
 
+  if (tab === 'duplicates') {
+    // Duplicate candidates — both user "Duplicate listing" reports and the
+    // machine-detected pairs seeded by scripts/find-duplicate-candidates.mjs.
+    // place_id = the reported/removable side, related_place_id = suggested keep
+    // (may be null for a user report that only named the other listing in note).
+    const { data: reports, count } = await supabase
+      .from('place_reports')
+      .select('id, place_id, related_place_id, note, user_id, created_at', { count: 'exact' })
+      .eq('type', 'duplicate')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+    if (!reports?.length) return NextResponse.json({ pairs: [], total: count || 0 })
+
+    const placeIds = [...new Set(reports.flatMap((r: any) => [r.place_id, r.related_place_id]).filter(Boolean))]
+    const { data: places } = await supabase
+      .from('places')
+      .select('id, name, slug, city, country, address, vegan_level, main_image_url, website, source, created_at')
+      .in('id', placeIds)
+    const pmap = Object.fromEntries((places || []).map((p: any) => [p.id, p]))
+    const userIds = [...new Set(reports.map((r: any) => r.user_id).filter(Boolean))]
+    const { data: users } = userIds.length
+      ? await supabase.from('users').select('id, username').in('id', userIds)
+      : { data: [] }
+    const umap = Object.fromEntries((users || []).map((u: any) => [u.id, u]))
+
+    const pairs = reports.map((r: any) => ({
+      id: r.id,
+      note: r.note,
+      created_at: r.created_at,
+      reporter: r.user_id ? (umap[r.user_id] || null) : null,
+      auto: !r.user_id,
+      place: pmap[r.place_id] || null,
+      related: r.related_place_id ? (pmap[r.related_place_id] || null) : null,
+    }))
+    return NextResponse.json({ pairs, total: count || 0 })
+  }
+
   if (tab === 'stats') {
     const communityVeganOr = COMMUNITY_VEGAN_TAGS.map(t => `tags.cs.{${t}}`).join(',')
     const [
@@ -257,6 +295,7 @@ export async function GET(request: NextRequest) {
       { count: reportedNotVegan },
       { count: googleReviewFlags },
       { count: unverifiedFullyVegan },
+      { count: duplicateCandidates },
     ] = await Promise.all([
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_confirmed_closed']),
@@ -277,6 +316,7 @@ export async function GET(request: NextRequest) {
         .not('tags', 'cs', '{websearch_confirmed_vegan}')
         .not('tags', 'cs', '{websearch_review_flag}')
         .not('tags', 'cs', '{websearch_confirmed_closed}'),
+      supabase.from('place_reports').select('id', { count: 'exact', head: true }).eq('type', 'duplicate').eq('status', 'pending'),
     ])
 
     return NextResponse.json({
@@ -294,6 +334,7 @@ export async function GET(request: NextRequest) {
         reportedNotVegan: reportedNotVegan || 0,
         googleReviewFlags: googleReviewFlags || 0,
         unverifiedFullyVegan: unverifiedFullyVegan || 0,
+        duplicateCandidates: duplicateCandidates || 0,
       }
     })
   }
@@ -443,6 +484,16 @@ export async function PATCH(request: NextRequest) {
 
   const body = await request.json()
   const { placeId, removeTag, setVeganLevel, clearVeganReportTags } = body
+
+  // Resolve a single place_reports row (used by the Duplicates tab after a merge
+  // or a "not a duplicate" dismissal). No placeId needed.
+  if (body.resolveReportId) {
+    const status = body.resolveStatus === 'dismissed' ? 'dismissed' : 'reviewed'
+    const { error } = await supabase.from('place_reports').update({ status }).eq('id', body.resolveReportId)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
   if (!placeId) return NextResponse.json({ error: 'Missing placeId' }, { status: 400 })
 
   const { data: place } = await supabase.from('places').select('tags, slug, city, country').eq('id', placeId).single()

@@ -8,7 +8,7 @@ import {
   Loader2, ExternalLink, Trash2, XCircle, AlertTriangle,
   Clock, Globe, WifiOff, Users, CheckCircle, BarChart3, Leaf,
   ArrowUpCircle, ArrowDownCircle, RefreshCw, Square, CheckSquare,
-  PenLine, FlaskConical, Bot, ScanSearch
+  PenLine, FlaskConical, Bot, ScanSearch, Copy, GitMerge
 } from 'lucide-react'
 
 interface FlaggedPlace {
@@ -51,6 +51,30 @@ interface Stats {
   reportedNotVegan: number
   googleReviewFlags: number
   unverifiedFullyVegan: number
+  duplicateCandidates: number
+}
+
+interface PlaceSummary {
+  id: string
+  name: string
+  slug: string | null
+  city: string | null
+  country: string | null
+  address: string | null
+  vegan_level: string | null
+  main_image_url: string | null
+  website: string | null
+  source: string | null
+}
+
+interface DuplicatePair {
+  id: string
+  note: string | null
+  created_at: string
+  auto: boolean
+  reporter: { username: string | null } | null
+  place: PlaceSummary | null
+  related: PlaceSummary | null
 }
 
 // Every queue is tagged with its source so an admin can instantly tell apart
@@ -82,6 +106,7 @@ const TABS = [
   // Community input — what real users sent us
   { id: 'corrections', label: 'User Corrections', icon: PenLine, color: 'text-emerald-400', statKey: 'userCorrections', source: 'user' },
   { id: 'not_vegan', label: 'Vegan Reports', icon: Leaf, color: 'text-teal-400', statKey: 'reportedNotVegan', source: 'user' },
+  { id: 'duplicates', label: 'Duplicates', icon: Copy, color: 'text-indigo-400', statKey: 'duplicateCandidates', source: 'user' },
   { id: 'reported_closed', label: 'Reported Closed', icon: Users, color: 'text-orange-400', statKey: 'reportedClosed', source: 'user' },
   { id: 'reported_hours', label: 'Wrong Hours', icon: AlertTriangle, color: 'text-yellow-400', statKey: 'reportedHours', source: 'user' },
   // Automated scans — our crawlers
@@ -174,6 +199,7 @@ function DataQualityInner() {
   }
   const [places, setPlaces] = useState<FlaggedPlace[]>([])
   const [corrections, setCorrections] = useState<Correction[]>([])
+  const [duplicatePairs, setDuplicatePairs] = useState<DuplicatePair[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const [statsLoading, setStatsLoading] = useState(false)
@@ -206,6 +232,7 @@ function DataQualityInner() {
         const res = await fetch(`/api/admin/data-quality?tab=${tab}&page=${page}`)
         const data = await res.json()
         if (tab === 'corrections' || tab === 'research_queue') setCorrections(data.corrections || [])
+        else if (tab === 'duplicates') setDuplicatePairs(data.pairs || [])
         else setPlaces(data.places || [])
         setTotal(data.total || 0)
       } catch {}
@@ -389,6 +416,63 @@ function DataQualityInner() {
     setProcessing(null)
   }, [fetchStats])
 
+  // Merge a duplicate pair: keep one row, soft-archive the other (the merge
+  // route repoints reviews/favorites/packs/corrections and never deletes), then
+  // mark the duplicate report resolved.
+  const handleMergePair = useCallback(async (reportId: string, keepId: string, removeId: string) => {
+    setProcessing(reportId)
+    setActionError(null)
+    try {
+      const res = await fetch('/api/admin/data-quality/merge', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keepId, removeId }),
+      })
+      if (!res.ok) { const d = await res.json().catch(() => ({})); setActionError(d.error || 'Merge failed'); return }
+      await fetch('/api/admin/data-quality', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resolveReportId: reportId, resolveStatus: 'reviewed' }),
+      })
+      setDuplicatePairs(prev => prev.filter(p => p.id !== reportId))
+      setTotal(prev => Math.max(0, prev - 1))
+      fetchStats()
+    } finally { setProcessing(null) }
+  }, [fetchStats])
+
+  // "Not a duplicate" — just resolve the report, touch no places.
+  const handleDismissDuplicate = useCallback(async (reportId: string) => {
+    setProcessing(reportId)
+    await fetch('/api/admin/data-quality', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resolveReportId: reportId, resolveStatus: 'dismissed' }),
+    })
+    setDuplicatePairs(prev => prev.filter(p => p.id !== reportId))
+    setTotal(prev => Math.max(0, prev - 1))
+    fetchStats()
+    setProcessing(null)
+  }, [fetchStats])
+
+  const renderMiniPlace = (p: PlaceSummary, label: string) => (
+    <div className="bg-gray-900 rounded-lg p-3">
+      <p className="text-[10px] uppercase tracking-wide text-gray-500 mb-1.5">{label}</p>
+      <div className="flex gap-2">
+        {p.main_image_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={p.main_image_url} alt="" className="h-12 w-12 rounded object-cover flex-shrink-0" />
+        ) : (
+          <div className="h-12 w-12 rounded bg-gray-800 flex items-center justify-center flex-shrink-0"><Leaf className="h-4 w-4 text-gray-600" /></div>
+        )}
+        <div className="min-w-0">
+          <Link href={`/place/${p.slug || p.id}`} target="_blank"
+            className="font-medium text-white hover:text-indigo-300 inline-flex items-center gap-1 text-sm">
+            {p.name}<ExternalLink className="h-3 w-3 flex-shrink-0" />
+          </Link>
+          <p className="text-xs text-gray-400 truncate">{p.address || [p.city, p.country].filter(Boolean).join(', ')}</p>
+          <p className="text-[10px] text-gray-500 mt-0.5 truncate">{p.source || 'source unknown'}</p>
+        </div>
+      </div>
+    </div>
+  )
+
   const getStatForTab = (tabId: TabId): number => {
     if (!stats) return 0
     const t = TABS.find(t => t.id === tabId)
@@ -397,7 +481,7 @@ function DataQualityInner() {
   }
 
   const communityCount = stats
-    ? stats.userCorrections + stats.reportedNotVegan + stats.reportedClosed + stats.reportedHours
+    ? stats.userCorrections + stats.reportedNotVegan + stats.reportedClosed + stats.reportedHours + stats.duplicateCandidates
     : 0
   const automatedCount = stats
     ? stats.unreachable + stats.googleTempClosed + stats.googleClosed + stats.googleReviewFlags
@@ -410,7 +494,7 @@ function DataQualityInner() {
 
   // Pad the bottom when the fixed bulk-action bar is showing so it can't cover
   // the last card or the pagination.
-  const bulkBarVisible = selectedIds.size > 0 && tab !== 'corrections' && tab !== 'research_queue'
+  const bulkBarVisible = selectedIds.size > 0 && tab !== 'corrections' && tab !== 'research_queue' && tab !== 'duplicates'
 
   return (
     <div className={bulkBarVisible ? 'pb-28' : ''}>
@@ -717,6 +801,59 @@ function DataQualityInner() {
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm font-medium disabled:opacity-50">
                     <XCircle className="h-3.5 w-3.5" />
                     Reject
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      ) : tab === 'duplicates' ? (
+        duplicatePairs.length === 0 ? (
+          <div className="bg-gray-800 rounded-xl p-10 text-center">
+            <CheckCircle className="h-8 w-8 text-emerald-500/70 mx-auto mb-2" />
+            <p className="text-gray-300 font-medium">All caught up</p>
+            <p className="text-gray-500 text-sm mt-0.5">No duplicate candidates to review. Run <code className="text-gray-400">scripts/find-duplicate-candidates.mjs --apply</code> to seed more.</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {duplicatePairs.map(d => (
+              <div key={d.id} className="bg-gray-800 rounded-xl p-4 border-l-4 border-indigo-500/60">
+                <div className="flex items-center justify-between mb-3 gap-2">
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${d.auto ? 'bg-indigo-900/50 text-indigo-300' : 'bg-emerald-900/50 text-emerald-300'}`}>
+                    {d.auto ? <><Bot className="h-3 w-3" /> auto-detected</> : <><Users className="h-3 w-3" /> {d.reporter?.username || 'user'}</>}
+                  </span>
+                  <p className="text-xs text-gray-500">{new Date(d.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                </div>
+                {d.note && <p className="text-xs text-gray-400 italic mb-3">{d.note}</p>}
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {d.place && renderMiniPlace(d.place, 'Reported / removable')}
+                  {d.related
+                    ? renderMiniPlace(d.related, 'Suggested keep')
+                    : (
+                      <div className="bg-gray-900 rounded-lg p-3 flex items-center text-xs text-gray-500">
+                        No matched listing yet - the reporter named it in the note above. Find it and merge from the place page.
+                      </div>
+                    )}
+                </div>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {d.place && d.related && (
+                    <>
+                      <button onClick={() => handleMergePair(d.id, d.related!.id, d.place!.id)} disabled={processing === d.id}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium disabled:opacity-50">
+                        {processing === d.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <GitMerge className="h-3.5 w-3.5" />}
+                        Keep “{d.related.name}”
+                      </button>
+                      <button onClick={() => handleMergePair(d.id, d.place!.id, d.related!.id)} disabled={processing === d.id}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 rounded-lg text-sm font-medium disabled:opacity-50">
+                        <GitMerge className="h-3.5 w-3.5" />
+                        Keep “{d.place.name}”
+                      </button>
+                    </>
+                  )}
+                  <button onClick={() => handleDismissDuplicate(d.id)} disabled={processing === d.id}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg text-sm font-medium disabled:opacity-50">
+                    <XCircle className="h-3.5 w-3.5" />
+                    Not a duplicate
                   </button>
                 </div>
               </div>

@@ -16,7 +16,7 @@ export async function POST(
       ? body.note.trim().slice(0, 500)
       : null
 
-    const validTypes = ['confirmed', 'permanently_closed', 'hours_wrong', 'not_fully_vegan', 'not_vegan_friendly', 'non_vegan_chain', 'vegan_friendly_chain', 'few_vegan_options', 'actually_fully_vegan']
+    const validTypes = ['confirmed', 'permanently_closed', 'hours_wrong', 'not_fully_vegan', 'not_vegan_friendly', 'non_vegan_chain', 'vegan_friendly_chain', 'few_vegan_options', 'actually_fully_vegan', 'duplicate']
     if (!validTypes.includes(type)) {
       return NextResponse.json({ error: 'Invalid report type' }, { status: 400 })
     }
