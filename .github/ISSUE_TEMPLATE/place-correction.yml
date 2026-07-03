@@ -1,0 +1,36 @@
+name: Place correction
+description: A listing is wrong, closed, mislabelled, or duplicated.
+title: "[Place]: "
+labels: ["place-correction"]
+body:
+  - type: markdown
+    attributes:
+      value: "Tip: the report/correct buttons on the place page are usually faster - but this works too, especially for things that don't fit those buttons."
+  - type: input
+    id: place
+    attributes:
+      label: Which place?
+      description: Name and city, or the plantspack.com/place/... link.
+      placeholder: Amaranth, Merelbeke - https://www.plantspack.com/place/amaranth-merelbeke
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What's the issue?
+      options:
+        - Permanently closed
+        - Temporarily closed (plans to reopen)
+        - Wrong hours / address / contact
+        - Not actually vegan / wrong vegan level
+        - Duplicate of another listing
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What's correct, and how do you know? A link or what you saw helps us check faster.
+    validations:
+      required: false

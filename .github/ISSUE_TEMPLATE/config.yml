@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Suggest or correct a place (in the app)
+    url: https://www.plantspack.com/vegan-places
+    about: The fastest way to add a place or flag wrong info is the report/correct buttons on the place page itself.
+  - name: PlantsPack website
+    url: https://www.plantspack.com
+    about: Browse the directory and tools.
