@@ -221,6 +221,23 @@ export default function RootLayout({
           }}
         />
         {/*
+          React + browser-translate resilience. Safari Translate / Google
+          Translate / extensions mutate the DOM (they wrap text nodes in <font>),
+          so when React later removes a node it manages, node.parentNode is null
+          and it throws "null is not an object (evaluating parentNode.removeChild)"
+          — an uncaught crash of the whole tree (seen on /vegan-places, iOS
+          Safari). This is the widely-used defensive patch: make removeChild /
+          insertBefore no-op when the node isn't actually a child of `this`,
+          instead of throwing. Runs before hydration; normal React ops are
+          unaffected (they only hit the guard in the exact case that would throw).
+        */}
+        <script
+          id="dom-translate-guard"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(typeof Node!=='function'||!Node.prototype)return;var rc=Node.prototype.removeChild;Node.prototype.removeChild=function(c){if(c&&c.parentNode!==this){return c;}return rc.apply(this,arguments);};var ib=Node.prototype.insertBefore;Node.prototype.insertBefore=function(n,r){if(r&&r.parentNode!==this){return n;}return ib.apply(this,arguments);};}catch(e){}})();`,
+          }}
+        />
+        {/*
           Google Consent Mode v2 bootstrap — MUST run before gtag.js loads.
           Sets all storage to "denied" by default (GDPR opt-in preserved), then
           synchronously restores "granted" from a returning visitor's stored
