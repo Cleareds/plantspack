@@ -2,11 +2,12 @@
 import { safeStorage } from "@/lib/safe-storage"
 
 import { useState } from 'react'
-import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store, Copy } from 'lucide-react'
+import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store, Copy, PauseCircle } from 'lucide-react'
 
 const REPORT_LABELS: Record<string, string> = {
   hours_wrong: 'Hours changed',
   permanently_closed: 'Closed',
+  temporarily_closed: 'Temporarily closed',
   not_fully_vegan: 'Not 100% vegan',
   actually_fully_vegan: 'Actually 100% vegan',
   not_vegan_friendly: 'Not vegan-friendly',
@@ -130,6 +131,10 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
         <button onClick={() => setPendingType('permanently_closed')} disabled={submitting}
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md transition-colors disabled:opacity-50">
           <AlertTriangle className="h-3 w-3" /> Closed
+        </button>
+        <button onClick={() => setPendingType('temporarily_closed')} disabled={submitting}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-md transition-colors disabled:opacity-50">
+          <PauseCircle className="h-3 w-3" /> Temporarily closed
         </button>
         <button onClick={() => setPendingType('not_fully_vegan')} disabled={submitting}
           className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 rounded-md transition-colors disabled:opacity-50">

@@ -130,14 +130,15 @@ export async function GET(request: NextRequest) {
   }
 
   if (tab === 'temp_closed') {
+    // Both the automated Google scan tag and user "Temporarily closed" reports.
     const { data, count } = await supabase
       .from('places')
       .select('id, name, slug, city, country, tags, website, updated_at', { count: 'exact' })
-      .contains('tags', ['google_temporarily_closed'])
+      .or('tags.cs.{google_temporarily_closed},tags.cs.{community_report:temporarily_closed}')
       .is('archived_at', null)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)
-    return NextResponse.json({ places: data || [], total: count || 0 })
+    return NextResponse.json({ places: await attachReports(supabase, data || []), total: count || 0 })
   }
 
   if (tab === 'unreachable') {
@@ -299,7 +300,7 @@ export async function GET(request: NextRequest) {
     ] = await Promise.all([
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_confirmed_closed']),
-      supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_temporarily_closed']),
+      supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).or('tags.cs.{google_temporarily_closed},tags.cs.{community_report:temporarily_closed}'),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['website_unreachable']),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['possibly_closed']),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['community_report:permanently_closed']),

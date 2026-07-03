@@ -9,7 +9,7 @@ import Link from 'next/link'
 // call revalidatePath('/place/<slug>') so user actions still feel instant.
 export const revalidate = 3600
 
-import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle } from 'lucide-react'
+import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle, PauseCircle, AlertTriangle } from 'lucide-react'
 import RatingBadge from '@/components/places/RatingBadge'
 import RatingDistribution from '@/components/places/RatingDistribution'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
@@ -582,6 +582,25 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   )
                 })()}
               </h1>
+              {(place as any).business_status === 'temporarily_closed' && (
+                <div className="mb-3 flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 dark:bg-amber-900/20 dark:border-amber-800/40">
+                  <PauseCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" aria-hidden />
+                  <p className="text-sm">
+                    <span className="font-semibold text-amber-800 dark:text-amber-300">Temporarily closed</span>
+                    <span className="text-amber-700/90 dark:text-amber-300/80">
+                      {(place as any).reopen_date
+                        ? ` — expected to reopen ${new Date((place as any).reopen_date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}`
+                        : ' — see the description below for details'}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {(place as any).business_status === 'permanently_closed' && (
+                <div className="mb-3 flex items-center gap-2 rounded-lg bg-red-50 border border-red-200 px-3 py-2 dark:bg-red-900/20 dark:border-red-800/40">
+                  <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" aria-hidden />
+                  <span className="text-sm font-semibold text-red-800 dark:text-red-300">Permanently closed</span>
+                </div>
+              )}
               <div className="mb-3 flex items-center gap-3 flex-wrap">
                 <RatingBadge
                   rating={place.average_rating}

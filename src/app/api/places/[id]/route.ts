@@ -111,7 +111,7 @@ export async function PUT(
     // Fetch existing place to check ownership
     const { data: existingPlace, error: fetchError } = await supabase
       .from('places')
-      .select('id, created_by, images, address')
+      .select('id, created_by, images, address, tags')
       .eq('id', id)
       .single()
 
@@ -151,7 +151,8 @@ export async function PUT(
     const allowedFields = [
       'name', 'description', 'category', 'subcategory', 'address', 'latitude', 'longitude',
       'website', 'phone', 'is_pet_friendly', 'images', 'main_image_url', 'tags',
-      'opening_hours', 'event_time', 'city', 'country', 'vegan_level'
+      'opening_hours', 'event_time', 'city', 'country', 'vegan_level',
+      'business_status', 'reopen_date'
     ]
 
     for (const field of allowedFields) {
@@ -159,6 +160,25 @@ export async function PUT(
         updateData[field] = body[field]
       }
     }
+
+    // Guard the business_status enum so a bad value returns 400, not a raw
+    // check-constraint 500. reopen_date only makes sense while temp-closed.
+    if (updateData.business_status !== undefined) {
+      const ok = ['open', 'temporarily_closed', 'permanently_closed']
+      if (!ok.includes(updateData.business_status)) {
+        return NextResponse.json({ error: 'Invalid business_status' }, { status: 400 })
+      }
+      if (updateData.business_status !== 'temporarily_closed') updateData.reopen_date = null
+      // Reopening clears the temp-closed flags so the place leaves the admin
+      // "Temp Closed" queue and any public banner. Only when the client didn't
+      // already send an explicit tags array.
+      if (updateData.business_status === 'open' && updateData.tags === undefined) {
+        updateData.tags = (existingPlace.tags || []).filter(
+          (t: string) => t !== 'google_temporarily_closed' && t !== 'community_report:temporarily_closed'
+        )
+      }
+    }
+    if (updateData.reopen_date === '') updateData.reopen_date = null
 
     // Admin promotion to fully_vegan: also flip verification_method to
     // admin_review and bump the verification ladder to level 3. Without

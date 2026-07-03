@@ -129,6 +129,8 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
     return ''
   })
   const [veganLevel, setVeganLevel] = useState(place.vegan_level || 'vegan_friendly')
+  const [businessStatus, setBusinessStatus] = useState<string>((place as any).business_status || 'open')
+  const [reopenDate, setReopenDate] = useState<string>((place as any).reopen_date || '')
   const [isPetFriendly, setIsPetFriendly] = useState(place.is_pet_friendly)
   const [existingImages, setExistingImages] = useState<string[]>(place.images || [])
   const [newImages, setNewImages] = useState<string[]>([])
@@ -222,6 +224,8 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
           category,
           subcategory: subcategory || null,
           vegan_level: veganLevel,
+          business_status: businessStatus,
+          reopen_date: businessStatus === 'temporarily_closed' ? (reopenDate || null) : null,
           website: website.trim() || null,
           phone: phone.trim() || null,
           opening_hours: openingHours.trim() || null,
@@ -354,6 +358,31 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                 <option value="vegan_friendly">Vegan-Friendly - genuine vegan options, also serves non-vegan</option>
                 <option value="vegan_options">Has Vegan Options - mainstream place with some vegan choices</option>
               </select>
+            </div>
+
+            {/* Business status */}
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Status</label>
+              <select
+                value={businessStatus}
+                onChange={(e) => setBusinessStatus(e.target.value)}
+                className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+              >
+                <option value="open">Open</option>
+                <option value="temporarily_closed">Temporarily closed - plans to reopen</option>
+                <option value="permanently_closed">Permanently closed</option>
+              </select>
+              {businessStatus === 'temporarily_closed' && (
+                <div className="mt-2">
+                  <label className="block text-xs font-medium text-on-surface-variant mb-1">Expected reopen date (optional)</label>
+                  <input
+                    type="date"
+                    value={reopenDate}
+                    onChange={(e) => setReopenDate(e.target.value)}
+                    className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Description */}
