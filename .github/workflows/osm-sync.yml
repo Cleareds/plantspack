@@ -24,9 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      # Reports NEW vegan/vegan-friendly OSM places as candidates to Storage
-      # (does not auto-insert). Logic lives in scripts/osm-sync.mjs — it adds the
-      # required User-Agent (the old inline version 406'd and silently reported 0)
-      # plus the expanded WAF-safe tag set and conservative vegan_level.
-      - name: Fetch new OSM vegan places
-        run: node scripts/osm-sync.mjs
+      # Reports NEW vegan/vegan-friendly OSM places as candidates to Storage AND
+      # (Option A) auto-imports the high-signal slice: diet:vegan=only / cuisine=vegan,
+      # non-chain, deduped, inserted vegan_friendly + unverified, tagged
+      # osm-auto-sync-<date> for one-line rollback. Everything else stays report-only.
+      # Logic in scripts/osm-sync.mjs (User-Agent fix + WAF-safe tags + conservative level).
+      - name: Fetch + auto-import new OSM vegan places
+        run: node scripts/osm-sync.mjs --import
