@@ -854,7 +854,9 @@ function ActivityList({ items }: { items: ActivityItem[] }) {
 }
 
 function PostRow({ post }: { post: CompactPost }) {
-  const content = post.title || post.content || ''
+  // Place posts: title is just the place name; the sentence ("Just added a
+  // new vegan spot: …") lives in content. Articles/recipes keep title-first.
+  const content = (post.category === 'place' ? post.content || post.title : post.title || post.content) || ''
   const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
   const isArticle = post.category === 'article'
   const postUrl = isArticle && post.slug

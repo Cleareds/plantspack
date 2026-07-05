@@ -74,7 +74,8 @@ export default function CompactFeed() {
   return (
     <div className="space-y-2">
       {posts.map(post => {
-        const content = post.title || post.content || ''
+        // Place posts: title is just the place name; the real sentence is in content.
+        const content = (post.category === 'place' ? post.content || post.title : post.title || post.content) || ''
         const truncated = content.length > 140 ? content.slice(0, 140) + '...' : content
         const postUrl = post.category === 'recipe' && post.slug
           ? `/recipe/${post.slug}`

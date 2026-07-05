@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase-admin'
 import { normalizeCity } from '@/lib/normalize-city'
+import { normalizeCountry } from '@/lib/normalize-country'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { geocodingService } from '@/lib/geocoding'
 import { createPlacePost } from '@/lib/places/place-post'
@@ -83,8 +84,10 @@ export async function approveSubmission(
   const placeRow = {
     name: String(sub.name).slice(0, 200),
     address: sub.address || sub.city || sub.country || 'Unknown',
+    // Mobile submissions arrive in the submitter's phone language ("Italia",
+    // "Deutschland") — normalize to the canonical English name.
     city: normalizeCity(sub.city, sub.country) || sub.city,
-    country: sub.country,
+    country: normalizeCountry(sub.country),
     latitude,
     longitude,
     website: sub.website,
@@ -116,6 +119,21 @@ export async function approveSubmission(
     review_note: opts.reviewNote ?? null,
   }).eq('id', submissionId)
   if (linkErr) return { ok: false, error: `link submission: ${linkErr.message}` }
+
+  // Contributor credit: the submitter is the creator of this place (mirrors
+  // created_by; shown in the place page credits). Best-effort — the UNIQUE
+  // constraint makes re-runs harmless.
+  if (sub.user_id) {
+    const { error: credErr } = await admin.from('place_contributors').insert({
+      place_id: place.id,
+      user_id: sub.user_id,
+      role: 'creator',
+      note: 'mobile submission',
+    })
+    if (credErr && !credErr.message.includes('duplicate')) {
+      console.warn('[approveSubmission] contributor credit failed', credErr.message)
+    }
+  }
 
   // Side effects — best-effort, never fail the approval.
   const postId = sub.user_id
