@@ -120,6 +120,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Apple rejects the AASA file unless it's served as application/json
+        // (public/ files default to octet-stream) — required for iOS universal
+        // links (app opens for plantspack.com/place/* and /vegan/*).
+        source: '/.well-known/apple-app-site-association',
+        headers: [
+          { key: 'Content-Type', value: 'application/json' },
+          { key: 'Cache-Control', value: 'public, max-age=3600' },
+        ],
+      },
+      {
         // Cache static assets (images, fonts, etc.) for 1 year
         source: '/_next/static/:path*',
         headers: [
