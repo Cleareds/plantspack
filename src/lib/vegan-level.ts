@@ -1,25 +1,14 @@
-export type VeganLevel = 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options'
-
-export const VEGAN_LEVEL_ORDER: Record<string, number> = {
-  fully_vegan: 3,
-  mostly_vegan: 2,
-  vegan_friendly: 1,
-  vegan_options: 0,
-}
-
-export const VEGAN_LEVEL_LABEL: Record<string, string> = {
-  fully_vegan: '100% Vegan',
-  mostly_vegan: 'Mostly Vegan',
-  vegan_friendly: 'Vegan-Friendly',
-  vegan_options: 'Has Vegan Options',
-}
-
-export const VEGAN_LEVEL_SHORT: Record<string, string> = {
-  fully_vegan: '100% Vegan',
-  mostly_vegan: 'Mostly Vegan',
-  vegan_friendly: 'Vegan-Friendly',
-  vegan_options: 'Vegan Options',
-}
+// The enum, ordering, labels, and score weights live in src/shared (code
+// shared with the mobile app — see src/shared/README.md). Only the web-specific
+// presentation (Tailwind classes, map marker colors) stays here.
+export {
+  VEGAN_LEVEL_ORDER,
+  VEGAN_LEVEL_LABEL,
+  VEGAN_LEVEL_SHORT,
+  VEGAN_LEVEL_WEIGHT,
+  veganLevelOrder,
+} from '../shared/vegan-level-core'
+export type { VeganLevel } from '../shared/vegan-level-core'
 
 // Overlay badge (on top of images) — only shown for the top 3 tiers
 export const VEGAN_LEVEL_OVERLAY_CLASS: Record<string, string> = {
@@ -51,16 +40,4 @@ export const VEGAN_LEVEL_BORDER_COLOR: Record<string, string> = {
   mostly_vegan: '#0d9488',  // teal-600
   vegan_friendly: '#fbbf24', // amber-400
   vegan_options: '#fbbf24',
-}
-
-// City scoring weights (mirrors SQL CASE in city_scores materialized view)
-export const VEGAN_LEVEL_WEIGHT: Record<string, number> = {
-  fully_vegan: 1.00,
-  mostly_vegan: 0.70,
-  vegan_friendly: 0.35,
-  vegan_options: 0.10,
-}
-
-export function veganLevelOrder(level: string | null | undefined): number {
-  return VEGAN_LEVEL_ORDER[level ?? ''] ?? -1
 }
