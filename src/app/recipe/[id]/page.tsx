@@ -54,7 +54,9 @@ function SimilarRecipes({ postId }: { postId: string }) {
 async function SimilarRecipesClient({ postId }: { postId: string }) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const resp = await fetch(`${baseUrl}/api/recipes?limit=6&offset=0`, { cache: 'no-store' })
+    // Same 6 newest recipes for every recipe page — 1h data cache instead of
+    // no-store, which was re-invoking /api/recipes on every render (cost).
+    const resp = await fetch(`${baseUrl}/api/recipes?limit=6&offset=0`, { next: { revalidate: 3600 } })
     if (!resp.ok) return <p className="text-sm text-on-surface-variant">No recipes found</p>
     const data = await resp.json()
     const similar = (data.recipes || []).filter((r: any) => r.id !== postId).slice(0, 3)

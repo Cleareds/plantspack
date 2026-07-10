@@ -27,6 +27,7 @@ import CountryCityGrid from '@/components/places/CountryCityGrid'
 import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
+import { getCountryPlacesDirect, getScoresDirect } from '@/lib/directory-data'
 
 export const revalidate = 43200 // 12h; country composition changes slowly (cost cut 2026-07-10)
 
@@ -35,27 +36,17 @@ interface PageProps {
   searchParams?: Promise<{ level?: string }>
 }
 
+// Direct-DB loaders (src/lib/directory-data.ts) replaced the self-HTTP
+// fetches 2026-07-11 — one billed invocation per regeneration instead of 3.
 async function getCityScores(): Promise<any[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.scores || []
-  } catch { return [] }
+  return getScoresDirect()
 }
 
 async function fetchCountryPlaces(country: string) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    // 3000 covers every country in our DB except the US — keeps "All N places
-    // in <country>" honest. Paid Vercel/Supabase tiers absorb the bigger SSR
-    // payload; the bottleneck is render, and CityPlacesList paginates client-
-    // side at 30 per page so the DOM stays light.
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&limit=3000`, { next: { revalidate: 3600 } })
-    if (!res.ok) return { places: [], country: country.replace(/-/g, ' '), total: 0 }
-    return res.json()
-  } catch { return { places: [], country: country.replace(/-/g, ' '), total: 0 } }
+  // 3000 covers every country in our DB except the US — keeps "All N places
+  // in <country>" honest. CityPlacesList paginates client-side at 30 per
+  // page so the DOM stays light.
+  return getCountryPlacesDirect(country, 3000)
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {

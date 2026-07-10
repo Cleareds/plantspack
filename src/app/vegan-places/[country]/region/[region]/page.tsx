@@ -11,6 +11,7 @@ import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
+import { getScoresDirect } from '@/lib/directory-data'
 
 // Country redirects mirror the city/country page so an old link to e.g.
 // /vegan-places/italia/region/<r> still resolves to /italy/region/<r>.
@@ -51,14 +52,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
+// Direct call (src/lib/directory-data.ts) replaced the self-HTTP /api/scores
+// fetch 2026-07-11 — see that module's header for the cost rationale.
 async function getCityScores(): Promise<any[]> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
-    if (!res.ok) return []
-    const data = await res.json()
-    return data.scores || []
-  } catch { return [] }
+  return getScoresDirect()
 }
 
 export default async function RegionPage({ params }: PageProps) {

@@ -69,6 +69,7 @@ import { getCityIntro } from '@/lib/city-intros'
 import { getRegionForCity, getRegionCityStats } from '@/lib/regions'
 import { getCountryAuditPost } from '@/lib/country-audit-post'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { getCityPlacesDirect, getScoresDirect, getCityExperiencesDirect } from '@/lib/directory-data'
 
 // SEO: city pages must be cacheable so Google spends crawl budget on them.
 // `force-dynamic` (no-store) means thousands of city pages are uncrawlable.
@@ -356,25 +357,17 @@ function generateFaqJsonLd(args: {
   }
 }
 
+// Direct-DB loaders (src/lib/directory-data.ts) replaced the self-HTTP
+// fetches here 2026-07-11 — one billed invocation per regeneration
+// instead of four. React cache() in the lib dedupes generateMetadata +
+// page body within a single render.
 async function fetchCityPlaces(country: string, city: string) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    // City query paginates server-side so we always get ALL places, no cap.
-    const res = await fetch(`${baseUrl}/api/places/directory?level=places&country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`, { next: { revalidate: 1800 } })
-    if (!res.ok) return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
-    return res.json()
-  } catch {
-    return { places: [], city: city.replace(/-/g, ' '), country: country.replace(/-/g, ' '), total: 0 }
-  }
+  return getCityPlacesDirect(country, city)
 }
 
 async function getCityScore(cityName: string, countryName: string) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
-    if (!res.ok) return null
-    const data = await res.json()
-    const scores = data.scores || []
+    const scores = await getScoresDirect()
     const mine = scores.find((s: any) => s.city === cityName && s.country === countryName)
     if (!mine) return null
     // Rank among scored cities in the same country. Ties share the higher
@@ -422,15 +415,7 @@ async function fetchCityReviews(cityName: string, countryName: string) {
 }
 
 async function fetchCityExperiences(country: string, city: string) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
-    const res = await fetch(`${baseUrl}/api/cities/${country}/${city}/experiences`, { next: { revalidate: 600 } })
-    if (!res.ok) return { experiences: [], summary: { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
-    const data = await res.json()
-    return { experiences: data.experiences || [], summary: data.summary || { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
-  } catch {
-    return { experiences: [], summary: { experience_count: 0, avg_overall_rating: null, avg_eating_out_rating: null, avg_grocery_rating: null } }
-  }
+  return getCityExperiencesDirect(country, city)
 }
 
 export default async function CityPage({ params, searchParams }: PageProps) {
