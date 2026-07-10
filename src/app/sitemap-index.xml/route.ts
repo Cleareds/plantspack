@@ -20,13 +20,15 @@ const SITE_URL = 'https://www.plantspack.com'
 const SEGMENTS = ['priority', 'content', 'dishes'] as const
 
 export function GET() {
-  const now = new Date().toISOString()
+  // No lastmod on the index entries: stamping request-time meant "everything
+  // changed right now" on every fetch, which is the fake-freshness pattern
+  // Google learns to ignore. The real freshness signal is the per-URL
+  // lastmod inside each segment (from DB timestamps, 2026-07-10).
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${SEGMENTS.map(
     id => `  <sitemap>
     <loc>${SITE_URL}/sitemap/${id}.xml</loc>
-    <lastmod>${now}</lastmod>
   </sitemap>`,
   ).join('\n')}
 </sitemapindex>

@@ -129,19 +129,22 @@ function xmlEscape(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
 }
 
+// Date-only lastmod (YYYY-MM-DD). Google reads lastmod only when it's
+// honest — these all come from real DB timestamps, never now(). Day
+// granularity is enough for crawl scheduling and keeps the XML small.
+function isoDate(ts: string | null | undefined): string | undefined {
+  return ts ? ts.slice(0, 10) : undefined
+}
+
 interface SitemapEntry {
   url: string
   lastModified?: string
-  changeFreq?: string
-  priority?: number
   images?: string[]
 }
 
 function renderUrlEntry(e: SitemapEntry): string {
   const parts: string[] = [`  <url>`, `    <loc>${xmlEscape(e.url)}</loc>`]
   if (e.lastModified) parts.push(`    <lastmod>${xmlEscape(e.lastModified)}</lastmod>`)
-  if (e.changeFreq) parts.push(`    <changefreq>${e.changeFreq}</changefreq>`)
-  if (e.priority !== undefined) parts.push(`    <priority>${e.priority.toFixed(1)}</priority>`)
   if (e.images && e.images.length > 0) {
     for (const img of e.images) {
       parts.push(`    <image:image><image:loc>${xmlEscape(img)}</image:loc></image:image>`)
@@ -187,19 +190,22 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
   const entries: SitemapEntry[] = []
 
   if (id === 'priority') {
+    // Google ignores changefreq/priority (lastmod is the only freshness
+    // field it reads, and only when it's honest) — so static URLs carry
+    // just <loc>, and dated content carries <loc> + a real <lastmod>.
     entries.push(
-      { url: SITE_URL, changeFreq: 'daily', priority: 1.0 },
-      { url: `${SITE_URL}/map`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/vegan-places`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/vegan-summer-destinations`, changeFreq: 'weekly', priority: 0.85 },
-      { url: `${SITE_URL}/recipes`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/events`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/packs`, changeFreq: 'daily', priority: 0.8 },
-      { url: `${SITE_URL}/city-ranks`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/blog`, changeFreq: 'daily', priority: 0.9 },
-      { url: `${SITE_URL}/support`, changeFreq: 'monthly', priority: 0.5 },
-      { url: `${SITE_URL}/about`, changeFreq: 'monthly', priority: 0.5 },
-      { url: `${SITE_URL}/contact`, changeFreq: 'yearly', priority: 0.3 },
+      { url: SITE_URL },
+      { url: `${SITE_URL}/map` },
+      { url: `${SITE_URL}/vegan-places` },
+      { url: `${SITE_URL}/vegan-summer-destinations` },
+      { url: `${SITE_URL}/recipes` },
+      { url: `${SITE_URL}/events` },
+      { url: `${SITE_URL}/packs` },
+      { url: `${SITE_URL}/city-ranks` },
+      { url: `${SITE_URL}/blog` },
+      { url: `${SITE_URL}/support` },
+      { url: `${SITE_URL}/about` },
+      { url: `${SITE_URL}/contact` },
     )
 
     // Blog articles — high-priority evergreen content, sitemap-priority tier.
@@ -207,9 +213,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       if (post.category !== 'article' || !post.slug) continue
       entries.push({
         url: `${SITE_URL}/blog/${post.slug}`,
-        lastModified: post.updated_at || post.created_at,
-        changeFreq: 'weekly',
-        priority: 0.9,
+        lastModified: isoDate(post.updated_at || post.created_at),
       })
     }
 
@@ -229,6 +233,18 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     // /fully-vegan URLs when there's at least one verified FV venue.
     const countryFvCounts = new Map<string, number>()
     const cityFvCounts = new Map<string, number>()
+    // Honest per-hub lastmod: the newest place updated_at/created_at in the
+    // country/city (separately for the FV subset, since /fully-vegan only
+    // changes when an FV place does). Date-only granularity — enough for
+    // crawl scheduling, and stable across regenerations. Supabase returns
+    // uniform ISO +00:00 timestamps, so string max is a correct max.
+    const countryMax = new Map<string, string>()
+    const cityMax = new Map<string, string>()
+    const countryFvMax = new Map<string, string>()
+    const cityFvMax = new Map<string, string>()
+    const bump = (m: Map<string, string>, k: string, ts: string) => {
+      if (ts > (m.get(k) || '')) m.set(k, ts)
+    }
     for (const p of places) {
       if (!p.country) continue
       const cs = slugifyCityOrCountry(p.country)
@@ -237,6 +253,11 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       countryCounts.set(cs, (countryCounts.get(cs) ?? 0) + 1)
       const isFv = p.vegan_level === 'fully_vegan'
       if (isFv) countryFvCounts.set(cs, (countryFvCounts.get(cs) ?? 0) + 1)
+      const ts = (p.updated_at || p.created_at || '').slice(0, 10)
+      if (ts) {
+        bump(countryMax, cs, ts)
+        if (isFv) bump(countryFvMax, cs, ts)
+      }
       if (p.city) {
         const ct = slugifyCityOrCountry(p.city)
         if (ct) {
@@ -244,6 +265,10 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
           cityCountry.add(k)
           cityCountryCounts.set(k, (cityCountryCounts.get(k) ?? 0) + 1)
           if (isFv) cityFvCounts.set(k, (cityFvCounts.get(k) ?? 0) + 1)
+          if (ts) {
+            bump(cityMax, k, ts)
+            if (isFv) bump(cityFvMax, k, ts)
+          }
         }
       }
     }
@@ -251,19 +276,19 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       // Skip thin country hubs (<5 places) — they self-noindex at the page
       // level, so advertising them in the sitemap only contradicts that.
       if ((countryCounts.get(country) ?? 0) < 5) continue
-      entries.push({ url: `${SITE_URL}/vegan-places/${country}`, changeFreq: 'daily', priority: 0.85 })
+      entries.push({ url: `${SITE_URL}/vegan-places/${country}`, lastModified: countryMax.get(country) })
       // The /fully-vegan country page noindexes itself when there are <5
       // fully-vegan venues (a 2-venue "list" is thin), so only advertise it
       // once it clears that floor — keeps the sitemap and page in agreement.
       if ((countryFvCounts.get(country) ?? 0) >= 5) {
-        entries.push({ url: `${SITE_URL}/vegan-places/${country}/fully-vegan`, changeFreq: 'weekly', priority: 0.9 })
+        entries.push({ url: `${SITE_URL}/vegan-places/${country}/fully-vegan`, lastModified: countryFvMax.get(country) })
       }
     }
     for (const cc of cityCountry) {
       if ((cityCountryCounts.get(cc) ?? 0) < 5) continue
-      entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, changeFreq: 'daily', priority: 0.9 })
+      entries.push({ url: `${SITE_URL}/vegan-places/${cc}`, lastModified: cityMax.get(cc) })
       if ((cityFvCounts.get(cc) ?? 0) > 0) {
-        entries.push({ url: `${SITE_URL}/vegan-places/${cc}/fully-vegan`, changeFreq: 'weekly', priority: 0.95 })
+        entries.push({ url: `${SITE_URL}/vegan-places/${cc}/fully-vegan`, lastModified: cityFvMax.get(cc) })
       }
     }
     // Region landing pages (Belgium today; generic for any seeded country).
@@ -273,17 +298,13 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     for (const r of regionRows || []) {
       entries.push({
         url: `${SITE_URL}/vegan-places/${r.country_slug}/region/${r.region_slug}`,
-        changeFreq: 'weekly',
-        priority: 0.85,
       })
     }
     for (const p of byTier.priority) {
       const imgs = collectImageUrls(p)
       entries.push({
         url: `${SITE_URL}/place/${p.slug}`,
-        lastModified: p.updated_at || p.created_at || undefined,
-        changeFreq: 'weekly',
-        priority: 0.8,
+        lastModified: isoDate(p.updated_at || p.created_at),
         ...(imgs.length > 0 ? { images: imgs } : {}),
       })
     }
@@ -302,40 +323,32 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
         if (ed.country) { const cs = slugifyCityOrCountry(ed.country); if (cs) eventCountrySlugs.add(cs) }
         entries.push({
           url: `${SITE_URL}/event/${post.slug}`,
-          lastModified: post.updated_at || post.created_at,
-          changeFreq: 'weekly',
-          priority: 0.7,
+          lastModified: isoDate(post.updated_at || post.created_at),
         })
         continue
       }
       // recipe
       entries.push({
         url: `${SITE_URL}/recipe/${post.slug}`,
-        lastModified: post.updated_at || post.created_at,
-        changeFreq: 'weekly',
-        priority: 0.7,
+        lastModified: isoDate(post.updated_at || post.created_at),
       })
     }
     // Country event hubs (/events/[country]) — one per country with upcoming events.
     for (const cs of eventCountrySlugs) {
-      entries.push({ url: `${SITE_URL}/events/${cs}`, changeFreq: 'daily', priority: 0.75 })
+      entries.push({ url: `${SITE_URL}/events/${cs}` })
     }
     for (const pack of packs) {
       if (!pack.slug) continue
       entries.push({
         url: `${SITE_URL}/packs/${pack.slug}`,
-        lastModified: pack.updated_at || pack.created_at,
-        changeFreq: 'weekly',
-        priority: 0.6,
+        lastModified: isoDate(pack.updated_at || pack.created_at),
       })
     }
     for (const p of byTier.content) {
       const imgs = collectImageUrls(p)
       entries.push({
         url: `${SITE_URL}/place/${p.slug}`,
-        lastModified: p.updated_at || p.created_at || undefined,
-        changeFreq: 'weekly',
-        priority: 0.6,
+        lastModified: isoDate(p.updated_at || p.created_at),
         ...(imgs.length > 0 ? { images: imgs } : {}),
       })
     }

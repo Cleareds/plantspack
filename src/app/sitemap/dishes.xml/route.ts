@@ -94,7 +94,6 @@ export async function GET() {
 
   // Build URL list
   const urls: string[] = []
-  const now = new Date().toISOString()
 
   for (const [key, places] of byCity) {
     const [country, city] = key.split('|')
@@ -123,14 +122,14 @@ export async function GET() {
     }
   }
 
-  // Build XML
+  // Build XML. No lastmod: stamping now() on every regeneration is the
+  // dishonest-freshness pattern Google learns to distrust site-wide, and we
+  // have no cheap per-dish timestamp. Bare <loc> is the honest option.
+  // (changefreq/priority dropped too — Google ignores both.)
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(u => `  <url>
     <loc>${u}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
   </url>`).join('\n')}
 </urlset>
 `
