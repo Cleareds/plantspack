@@ -146,3 +146,4 @@ reports/*.log
 /osm-import.log
 .secrets/
 .event-routine-state
+.seo-monitor-state.json
