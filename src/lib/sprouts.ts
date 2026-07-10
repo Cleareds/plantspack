@@ -444,6 +444,31 @@ export async function getMyState(userId: string): Promise<SproutsState | null> {
   }
 }
 
+// ---- PlantsPack Play bridge (read-only) ------------------------------------
+// Vegan City Score of the user's current city in the game, computed
+// server-side from the cloud save (game_saves.state.city3d.tiles). Weights
+// mirror the game's lib/cityStore.ts SCORE_WEIGHT - keep in sync.
+const GAME_SCORE_WEIGHT: Record<string, number> = {
+  falafel: 2, smoothie: 2, bakery: 3, garden: 3, ramen: 3, zerowaste: 3, cheese: 3,
+  verifydesk: 4, windmill: 4, school: 5, hotel: 6, festival: 6, lab: 7, sanctuary: 8,
+}
+export async function gameCityScore(userId: string): Promise<number> {
+  const sb = adminClient()
+  const { data } = await sb.from('game_saves').select('state').eq('user_id', userId).maybeSingle()
+  const city = (data?.state as { city3d?: { tiles?: Record<string, { b?: string; lvl?: number }> } } | null)?.city3d
+  const tiles = city?.tiles
+  if (!tiles || typeof tiles !== 'object') return 0
+  let score = 0
+  for (const k of Object.keys(tiles)) {
+    const t = tiles[k]
+    if (!t || typeof t.b !== 'string') continue
+    score += (GAME_SCORE_WEIGHT[t.b] ?? 2) + Math.max(0, (Number(t.lvl) || 1) - 1)
+  }
+  return score
+}
+// the game score a player needs before the real-tree ceremony unlocks
+export const REAL_TREE_CITY_SCORE = 400
+
 // Helper for redemption flows. Records both the ledger debit and a redemption row.
 export async function redeem(args: {
   userId: string
@@ -466,6 +491,13 @@ export async function redeem(args: {
     if (!u || u.sprouts_lifetime < spec.tierGate) return { ok: false, reason: 'tier_locked' }
   }
 
+  // the real tree is a CEREMONY: contributions pay for it (the sprouts), the
+  // game provides the theater - a finished Vegan City (score 300+) unlocks it
+  if (args.rewardType === 'real_tree') {
+    const score = await gameCityScore(args.userId)
+    if (score < REAL_TREE_CITY_SCORE) return { ok: false, reason: 'city_score_locked' }
+  }
+
   const debit = await spendSprouts({
     userId: args.userId, actionType: spec.actionType,
     referenceType: 'redemption', metadata: { reward: args.rewardType, ...(args.payload ?? {}) },
@@ -486,5 +518,17 @@ export async function redeem(args: {
     payload: args.payload ?? {},
   }).select('id').single()
   if (error || !r) return { ok: false, reason: 'db_error' }
+
+  // real trees also enter the fulfillment queue (admin orders with the
+  // partner, then marks it planted with the certificate details)
+  if (args.rewardType === 'real_tree') {
+    await sb.from('real_world_tree_orders').insert({
+      user_id: args.userId,
+      sprouts_spent: spec.cost,
+      ledger_id: debit.ledgerId,
+      status: 'queued',
+      user_message: typeof args.payload?.dedication === 'string' ? (args.payload.dedication as string).slice(0, 200) : null,
+    })
+  }
   return { ok: true, redemptionId: r.id, code: code ?? undefined }
 }
