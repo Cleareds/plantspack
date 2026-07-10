@@ -23,7 +23,7 @@ const COUNTRY_REDIRECTS: Record<string, string> = {
   'marktheidenfeld-altfeld': 'germany',
 }
 
-export const revalidate = 3600
+export const revalidate = 43200 // 12h; country composition changes slowly (cost cut 2026-07-10)
 
 interface PageProps {
   params: Promise<{ country: string; region: string }>

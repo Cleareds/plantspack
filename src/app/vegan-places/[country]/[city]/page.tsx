@@ -74,7 +74,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 // `force-dynamic` (no-store) means thousands of city pages are uncrawlable.
 // Mutation paths (place add/edit/delete) call revalidatePath() so new places
 // appear immediately.
-export const revalidate = 3600
+export const revalidate = 21600 // 6h; place mutations revalidatePath on-demand (cost cut 2026-07-10)
 
 interface PageProps {
   params: Promise<{ country: string; city: string }>

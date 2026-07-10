@@ -7,7 +7,7 @@ import Link from 'next/link'
 // `revalidate = 0` (no-store) caused 51K pages to land in "Discovered – not
 // indexed". Mutation paths (reviews POST/DELETE, favorites, verify, edit)
 // call revalidatePath('/place/<slug>') so user actions still feel instant.
-export const revalidate = 3600
+export const revalidate = 86400 // 24h safety net; edits+reviews revalidatePath on-demand (cost: crawl-tail ISR writes, 2026-07-10)
 
 import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle, PauseCircle, AlertTriangle } from 'lucide-react'
 import RatingBadge from '@/components/places/RatingBadge'

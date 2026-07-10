@@ -16,7 +16,7 @@ import { eventSchemaDates } from '@/lib/events/event-schema-dates'
 // not stale the interactive parts of the page. Required to fix LCP — the
 // previous `revalidate = 0` re-rendered on every request and skipped the edge
 // cache entirely.
-export const revalidate = 600
+export const revalidate = 3600 // was 600; event data changes via weekly routine (cost cut 2026-07-10)
 
 type EventPost = {
   id: string

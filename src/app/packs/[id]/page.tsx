@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import PackDetailClient from './PackDetailClient'
 
 // Community content — member counts, new posts/places need to update live.
-export const revalidate = 0
+export const revalidate = 3600 // was 0; packs change rarely (cost cut 2026-07-10)
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'
 

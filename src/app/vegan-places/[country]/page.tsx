@@ -28,7 +28,7 @@ import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRe
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
-export const revalidate = 3600
+export const revalidate = 43200 // 12h; country composition changes slowly (cost cut 2026-07-10)
 
 interface PageProps {
   params: Promise<{ country: string }>

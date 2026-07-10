@@ -7,8 +7,8 @@ import { createClient } from '@/lib/supabase-server'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import BlogEngagement from '@/components/blog/BlogEngagement'
 
-// Article pages — fresh reads so edits are reflected quickly.
-export const revalidate = 0
+// Article pages — 1h ISR; article edits are rare and admin-driven (cost cut 2026-07-10).
+export const revalidate = 3600
 
 interface Article {
   id: string

@@ -5,9 +5,9 @@ import PostPageContent from '@/components/posts/PostPageContent'
 import { Tables } from '@/lib/supabase'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 
-// Community content — always fresh. Comment counts, likes and new replies
-// must reflect immediately. Vercel Pro handles the extra invocations fine.
-export const revalidate = 0
+// Community content - 60s ISR takes bot traffic off the function while keeping
+// human-visible engagement effectively fresh (interactions hydrate client-side).
+export const revalidate = 60
 
 type Post = Tables<'posts'> & {
   users: Tables<'users'> & {

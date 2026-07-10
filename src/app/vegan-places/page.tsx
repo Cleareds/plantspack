@@ -11,7 +11,7 @@ import GlobalAddPlaceButton from '@/components/places/GlobalAddPlaceButton'
 import RecentlyAddedSection from '@/components/ui/RecentlyAddedSection'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
-export const revalidate = 3600
+export const revalidate = 43200 // 12h; country composition changes slowly (cost cut 2026-07-10)
 
 export const metadata: Metadata = {
   title: 'Vegan Places Directory Worldwide — Restaurants, Stores, Stays | PlantsPack',
