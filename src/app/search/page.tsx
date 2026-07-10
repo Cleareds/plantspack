@@ -6,6 +6,7 @@ import PlaceImage from '@/components/places/PlaceImage'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 import { MapPin, ChefHat, Search } from 'lucide-react'
 import { normalizeQuery } from '@/lib/search/normalize'
+import { matchSections, matchGuides, searchBlogArticles, type SectionHit } from '@/lib/search/sections'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 // 60s SSR cache + SWR. Search-result pages should be indexable but not
@@ -127,6 +128,13 @@ export default async function SearchPage({ searchParams }: PageProps) {
   const facets = { category: normalized.cat, vl: normalized.vl }
   const { places, cities, countries, recipes } = await runSearch(rpcQ, vl, cat)
 
+  // Static tool/page + guide matches (raw query — normalization strips the
+  // identifying words) plus blog-article title matches from the DB.
+  const sections: SectionHit[] = q ? matchSections(q) : []
+  const guides: SectionHit[] = q
+    ? [...matchGuides(q), ...(await searchBlogArticles(createAdminClient(), q))].slice(0, 4)
+    : []
+
   // ItemList JSON-LD for AI search / Google ItemList preview.
   const itemListJsonLd = places.length > 0 ? {
     '@context': 'https://schema.org',
@@ -206,6 +214,36 @@ export default async function SearchPage({ searchParams }: PageProps) {
             </span>
           )}
         </div>
+      )}
+
+      {/* Tools, feature pages, and guides matching the query — exact-intent
+          hits ("scanner", "is honey vegan") that the geo groups can't serve.
+          Rendered above the search form so a direct hit is the first thing
+          the user sees. */}
+      {(sections.length > 0 || guides.length > 0) && (
+        <section className="mb-8">
+          <h2 className="text-lg font-semibold text-on-surface mb-3">Tools &amp; guides</h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[...sections, ...guides].map((hit) => (
+              <li key={hit.url}>
+                <Link
+                  href={hit.url}
+                  className="flex flex-col gap-1 h-full p-4 rounded-xl bg-surface-container-lowest ghost-border hover:border-primary/30 transition-colors"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-widest font-bold text-primary">
+                      {hit.kind === 'tool' ? 'Tool' : hit.kind === 'guide' ? 'Guide' : 'Page'}
+                    </span>
+                  </span>
+                  <p className="text-sm font-semibold text-on-surface">{hit.title}</p>
+                  {hit.description && (
+                    <p className="text-xs text-on-surface-variant line-clamp-2">{hit.description}</p>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {/* Prominent search field. Pre-fills with the current query so

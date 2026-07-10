@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { normalizeQuery } from '@/lib/search/normalize'
+import { matchSections, matchGuides, searchBlogArticles } from '@/lib/search/sections'
 
 // 10s edge cache + 60s SWR. Search queries repeat heavily across users
 // ("vegan bakery berlin", "bodhi"…), so even short caching cuts Supabase
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url)
   const rawQ = (url.searchParams.get('q') || '').trim()
   if (rawQ.length < 2) {
-    return NextResponse.json({ q: rawQ, places: [], cities: [], recipes: [] })
+    return NextResponse.json({ q: rawQ, sections: [], guides: [], places: [], cities: [], recipes: [] })
   }
 
   // Synonym + intent normalization: pull "100% vegan" -> vl filter,
@@ -37,7 +38,7 @@ export async function GET(req: NextRequest) {
   }
 
   const sb = createAdminClient()
-  const [placesRes, citiesRes, countriesRes, recipesRes] = await Promise.all([
+  const [placesRes, citiesRes, countriesRes, recipesRes, articlesRes] = await Promise.all([
     sb.rpc('search_places', {
       q, vl, cat,
       near_lat: nearLat,
@@ -47,13 +48,23 @@ export async function GET(req: NextRequest) {
     sb.rpc('search_cities', { q, vl, result_limit: 6 }),
     sb.rpc('search_countries', { q, vl, result_limit: 3 }),
     sb.rpc('search_recipes', { q, result_limit: 6 }),
+    searchBlogArticles(sb, q),
   ])
+
+  // Static matchers: tools/feature pages + content-hub guides. Match on the
+  // RAW query (pre-normalization) — normalizeQuery may strip the very words
+  // ("100% vegan", city names) that identify a section, and these matchers
+  // have their own stopword handling.
+  const sections = matchSections(rawQ)
+  const guides = [...matchGuides(rawQ), ...articlesRes].slice(0, 4)
 
   return NextResponse.json(
     {
       q: rawQ,
       normalized_q: q,
       inferred: { vl: normalized.vl || null, cat: normalized.cat || null },
+      sections,
+      guides,
       places:    placesRes.data    || [],
       cities:    citiesRes.data    || [],
       countries: countriesRes.data || [],
