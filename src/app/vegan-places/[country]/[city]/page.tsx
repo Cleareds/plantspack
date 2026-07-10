@@ -374,8 +374,51 @@ async function getCityScore(cityName: string, countryName: string) {
     const res = await fetch(`${baseUrl}/api/scores`, { next: { revalidate: 3600 } })
     if (!res.ok) return null
     const data = await res.json()
-    return data.scores?.find((s: any) => s.city === cityName && s.country === countryName) || null
+    const scores = data.scores || []
+    const mine = scores.find((s: any) => s.city === cityName && s.country === countryName)
+    if (!mine) return null
+    // Rank among scored cities in the same country. Ties share the higher
+    // rank (1224-style ranking). Rendered only when the country has >=5
+    // scored cities so "#1 of 2" never appears.
+    const countryScores = scores.filter((s: any) => s.country === countryName)
+    const countryRank = countryScores.filter((s: any) => s.score > mine.score).length + 1
+    return { ...mine, countryRank, countryCityCount: countryScores.length }
   } catch { return null }
+}
+
+// Latest review excerpts for places in this city — real UGC quotes make the
+// hub page unique in a way no template copy can (no other directory has this
+// text). One review per place so a single venue can't dominate the block;
+// only substantive reviews (>=40 chars) qualify.
+async function fetchCityReviews(cityName: string, countryName: string) {
+  try {
+    const { data } = await createAdminClient()
+      .from('place_reviews')
+      .select('id, rating, content, created_at, users!inner(username, first_name), place:place_id!inner(name, slug, city, country)')
+      .eq('place.city', cityName)
+      .eq('place.country', countryName)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+      .limit(12)
+    const seen = new Set<string>()
+    const out: Array<{ id: string; rating: number; content: string; created_at: string; reviewer: string; placeName: string; placeSlug: string | null }> = []
+    for (const r of (data || []) as any[]) {
+      if (!r.content || r.content.trim().length < 40) continue
+      if (seen.has(r.place?.name)) continue
+      seen.add(r.place?.name)
+      out.push({
+        id: r.id,
+        rating: r.rating,
+        content: r.content.trim(),
+        created_at: r.created_at,
+        reviewer: r.users?.first_name || r.users?.username || 'PlantsPack member',
+        placeName: r.place?.name,
+        placeSlug: r.place?.slug || null,
+      })
+      if (out.length >= 3) break
+    }
+    return out
+  } catch { return [] }
 }
 
 async function fetchCityExperiences(country: string, city: string) {
@@ -431,6 +474,9 @@ export default async function CityPage({ params, searchParams }: PageProps) {
     fetchCityExperiences(country, city),
     getCityDishChips(country, city),
   ])
+  // Depends on the canonical cityName/countryName from fetchCityPlaces, so
+  // it can't join the Promise.all above.
+  const cityReviews = await fetchCityReviews(cityName, countryName)
 
   // FV-mode filters the place list at SSR. Empty filter -> redirect back
   // to the regular city page rather than serving "0 fully vegan in X".
@@ -535,7 +581,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   cityStats.cuisines = filterCuisinesForDisplay(rankedCuisines).slice(0, 5)
   const sceneDescription = generateCityDescription(cityName, countryName, cityStats)
   // Top-100 cities also get a longer auto-generated, data-grounded intro
-  // (public/data/city-intros.json). Null for cities not in the top 100.
+  // (public/data/city-intros.json). Null for cities under 10 places.
   const cityIntro = !isFullyVeganMode ? getCityIntro(cityName, countryName) : null
 
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
@@ -674,6 +720,12 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                 <div className={`h-full rounded-full ${getScoreBarColor(cityScore.score)} transition-all`} style={{ width: `${cityScore.score}%` }} />
               </div>
             </div>
+          )}
+          {cityScore && cityScore.countryCityCount >= 5 && (
+            <p className="text-xs text-on-surface-variant mb-3">
+              Ranked <strong className="text-on-surface">#{cityScore.countryRank}</strong> of {cityScore.countryCityCount} {countryName} cities on the{' '}
+              <Link href="/city-ranks" className="text-primary hover:underline">PlantsPack vegan city score</Link>.
+            </p>
           )}
           <p className="text-on-surface-variant text-base mb-3">
             {places.length > 0
@@ -824,6 +876,33 @@ export default async function CityPage({ params, searchParams }: PageProps) {
             {cityIntro && (
               <p className="text-on-surface-variant text-sm leading-relaxed">{cityIntro}</p>
             )}
+          </section>
+        )}
+
+        {/* Latest community reviews — real quotes from place_reviews rows in
+            this city. Unique UGC text per hub page; grows as the mobile app
+            funnels reviews. Hidden entirely when the city has no substantive
+            reviews (most cities today — renders on ~40 as of 2026-07). */}
+        {cityReviews.length > 0 && (
+          <section className="mt-10 mb-6 max-w-3xl">
+            <h2 className="font-headline font-bold text-lg mb-3">What vegans say about {cityName}</h2>
+            <ul className="space-y-3">
+              {cityReviews.map((r) => (
+                <li key={r.id} className="bg-surface-container-lowest ghost-border rounded-xl p-4">
+                  <blockquote className="text-sm text-on-surface leading-relaxed mb-2">&ldquo;{r.content}&rdquo;</blockquote>
+                  <p className="text-xs text-on-surface-variant">
+                    <span className="text-amber-500" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
+                    {' '}&middot; {r.reviewer} on{' '}
+                    {r.placeSlug ? (
+                      <Link href={`/place/${r.placeSlug}`} className="text-primary hover:underline font-medium">{r.placeName}</Link>
+                    ) : (
+                      <span className="font-medium">{r.placeName}</span>
+                    )}
+                    {' '}&middot; {new Date(r.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+                  </p>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

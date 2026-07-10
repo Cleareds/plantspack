@@ -144,3 +144,4 @@ reports/*.log
 /be-nl-followup.log
 /fix-null-cities.log
 /osm-import.log
+.secrets/
