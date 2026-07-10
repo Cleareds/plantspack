@@ -2,8 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
-import { ACTION_AMOUNTS, TIERS, TREE_STAGES, gameCityScore } from '@/lib/sprouts'
-import RealTreeCeremony from '@/components/sprouts/RealTreeCeremony'
+import { ACTION_AMOUNTS, TIERS, TREE_STAGES } from '@/lib/sprouts'
 import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
 import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
 import ForestPreview from '@/components/sprouts/ForestPreview'
@@ -35,12 +34,6 @@ export default async function SproutsPage() {
     .gt('sprouts_lifetime', 0)
     .order('sprouts_lifetime', { ascending: false })
     .limit(10)
-
-  // real-tree ceremony inputs: viewer's balance + their game city score
-  const [{ data: me }, ceremonyScore] = await Promise.all([
-    admin.from('users').select('sprouts_balance').eq('id', user.id).single(),
-    gameCityScore(user.id),
-  ])
 
   const earnGroups = [
     {
@@ -99,9 +92,6 @@ export default async function SproutsPage() {
             a digital tree. Plant a real one. Trade Sprouts for partner perks.
           </p>
         </div>
-
-        {/* Real-tree ceremony: game score + sprouts -> one real tree */}
-        <RealTreeCeremony score={ceremonyScore} balance={(me as { sprouts_balance?: number } | null)?.sprouts_balance ?? 0} />
 
         {/* Top contributors */}
         {top && top.length > 0 && (
