@@ -463,6 +463,11 @@ function scoreOfTiles(tiles: GameCityState['tiles']): number {
   for (const k of Object.keys(tiles)) {
     const t = tiles[k]
     if (!t || typeof t.b !== 'string') continue
+    // Cosmetic landmarks (lm_*) are beauty, not power - the game scores
+    // them 0 and so must we, or the web gate disagrees with the score the
+    // player sees in the game (mirrors SCORE_WEIGHT in the game repo's
+    // lib/cityStore.ts - keep the two in sync).
+    if (t.b.startsWith('lm_')) continue
     const w = GAME_SCORE_WEIGHT[t.b] ?? 2
     if (w === 0) continue
     score += w + Math.max(0, (Number(t.lvl) || 1) - 1)
@@ -498,7 +503,10 @@ export async function gameCitySummary(userId: string): Promise<GameCitySummary> 
   }
 }
 // the game score a player needs before the real-tree ceremony unlocks
-export const REAL_TREE_CITY_SCORE = 400
+// (re-exported from sprouts-constants so client components can import it
+// without pulling this server-only module into their bundle)
+export { REAL_TREE_CITY_SCORE } from '@/lib/sprouts-constants'
+import { REAL_TREE_CITY_SCORE, REAL_TREE_COST, REAL_TREE_TIER_GATE } from '@/lib/sprouts-constants'
 
 // Helper for redemption flows. Records both the ledger debit and a redemption row.
 export async function redeem(args: {
@@ -510,7 +518,7 @@ export async function redeem(args: {
   const sb = adminClient()
   const COST: Record<string, { actionType: 'spend.cleareds_discount' | 'spend.real_tree' | 'spend.supporter_month' | 'spend.featured_placement'; cost: number; tierGate?: number }> = {
     cleareds_discount_50pct: { actionType: 'spend.cleareds_discount', cost: 500 },
-    real_tree: { actionType: 'spend.real_tree', cost: 1000, tierGate: 2000 }, // Silver+
+    real_tree: { actionType: 'spend.real_tree', cost: REAL_TREE_COST, tierGate: REAL_TREE_TIER_GATE }, // Sapling+
     supporter_month: { actionType: 'spend.supporter_month', cost: 1500 },
     featured_placement_7d: { actionType: 'spend.featured_placement', cost: 300 },
   }
@@ -523,7 +531,8 @@ export async function redeem(args: {
   }
 
   // the real tree is a CEREMONY: contributions pay for it (the sprouts), the
-  // game provides the theater - a finished Vegan City (score 300+) unlocks it
+  // game provides the theater - a finished Vegan City (REAL_TREE_CITY_SCORE)
+  // unlocks it
   if (args.rewardType === 'real_tree') {
     const score = await gameCityScore(args.userId)
     if (score < REAL_TREE_CITY_SCORE) return { ok: false, reason: 'city_score_locked' }

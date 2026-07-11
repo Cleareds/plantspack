@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
-import { ACTION_AMOUNTS, TIERS, gameCityScore } from '@/lib/sprouts'
+import { ACTION_AMOUNTS, TIERS, gameCitySummary } from '@/lib/sprouts'
 import RealTreeCeremony from '@/components/sprouts/RealTreeCeremony'
 import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
 
@@ -35,9 +35,9 @@ export default async function SproutsPage() {
     .limit(10)
 
   // real-tree ceremony inputs: viewer's balance + their game city score
-  const [{ data: me }, ceremonyScore] = await Promise.all([
-    admin.from('users').select('sprouts_balance').eq('id', user.id).single(),
-    gameCityScore(user.id),
+  const [{ data: me }, citySummary] = await Promise.all([
+    admin.from('users').select('sprouts_balance, sprouts_lifetime').eq('id', user.id).single(),
+    gameCitySummary(user.id),
   ])
 
   const earnGroups = [
@@ -99,7 +99,13 @@ export default async function SproutsPage() {
         </div>
 
         {/* Real-tree ceremony: game score + sprouts -> one real tree */}
-        <RealTreeCeremony score={ceremonyScore} balance={(me as { sprouts_balance?: number } | null)?.sprouts_balance ?? 0} />
+        <RealTreeCeremony
+          score={citySummary.score}
+          hasSave={citySummary.hasSave}
+          cityName={citySummary.cityName}
+          balance={(me as { sprouts_balance?: number } | null)?.sprouts_balance ?? 0}
+          lifetime={(me as { sprouts_lifetime?: number } | null)?.sprouts_lifetime ?? 0}
+        />
 
         {/* Top contributors */}
         {top && top.length > 0 && (
@@ -139,7 +145,7 @@ export default async function SproutsPage() {
             <Trophy className="w-6 h-6" /> Lifetime tiers
           </h2>
           <p className="text-gray-700 mb-4">
-            Your tier is set by lifetime Sprouts earned. Spending Sprouts does not lower your tier - once you reach Silver, you stay Silver.
+            Your tier is set by lifetime Sprouts earned. Spending Sprouts never lowers your tier - once you reach Sapling, you stay Sapling.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {TIERS.map(t => (
