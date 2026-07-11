@@ -27,7 +27,6 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
     .select('id, username, avatar_url, sprouts_lifetime, sprouts_balance, sprouts_seeded, forest_size')
     .eq('username', username).maybeSingle()
   if (!targetUser) notFound()
-  const forestSize = (targetUser as any).forest_size ?? 0
 
   const isOwn = viewer.id === targetUser.id
 
@@ -51,14 +50,6 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
               <Link href="/sprouts" className="underline hover:text-emerald-700">What are Sprouts?</Link>
             </p>
           </div>
-          {forestSize > 0 && (
-            <Link
-              href={`/profile/${username}/forest`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 whitespace-nowrap"
-            >
-              <TreeDeciduous className="w-4 h-4" /> View forest ({forestSize})
-            </Link>
-          )}
         </div>
 
         {!state || state.lifetime === 0 ? (

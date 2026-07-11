@@ -195,6 +195,13 @@ export default async function SproutsPage() {
             of every city you finish. Reach score 400 with 1,000 Sprouts and the city
             plants a REAL tree.
           </p>
+          <a
+            href="https://play.plantspack.com"
+            target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 text-white text-sm font-bold hover:bg-emerald-800"
+          >
+            🎮 Play PlantsPack Play
+          </a>
         </section>
 
         {/* Spend */}
@@ -221,8 +228,16 @@ export default async function SproutsPage() {
                 50% off any IT consultancy or development engagement with <a href="https://cleareds.com" className="underline">Cleareds</a> - the company that builds PlantsPack.
               </p>
             </div>
-            <div className="bg-white rounded-xl border border-dashed border-gray-300 p-5 text-sm text-gray-600">
-              More partner rewards coming as we sign them. If you run a vegan brand and want to offer something to Sprouts holders, get in touch.
+            <div className="bg-white rounded-xl border border-dashed border-gray-300 p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+                <div className="text-sm text-gray-600">
+                  <span className="font-semibold text-gray-900">Run a vegan brand?</span> Offer a reward to Sprouts
+                  holders - the most active contributors mapping the vegan world.
+                </div>
+                <Link href="/contact?topic=sprouts-partner" className="shrink-0 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700">
+                  Become a reward partner
+                </Link>
+              </div>
             </div>
           </div>
         </section>

@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     if (viewer?.role !== 'admin') return NextResponse.json({ error: 'forbidden' }, { status: 403 })
   }
 
-  const [summary, { data: planted }] = await Promise.all([
+  const [summary, { data: planted }, archived] = await Promise.all([
     gameCitySummary(userId),
     admin
       .from('real_world_tree_orders')
@@ -30,6 +30,14 @@ export async function GET(req: NextRequest) {
       .eq('status', 'planted')
       .order('planted_at', { ascending: true })
       .limit(24),
+    // finished-cities archive (tolerate the table not existing yet)
+    admin
+      .from('game_city_archive')
+      .select('id, name, score, buildings, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true })
+      .limit(24)
+      .then(({ data }) => data ?? [], () => []),
   ])
-  return NextResponse.json({ ...summary, planted: planted ?? [] })
+  return NextResponse.json({ ...summary, planted: planted ?? [], archived })
 }

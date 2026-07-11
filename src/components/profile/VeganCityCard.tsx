@@ -19,6 +19,13 @@ interface PlantedTree {
   tree_location: string | null
   planted_at: string | null
 }
+interface ArchivedCity {
+  id: string
+  name: string
+  score: number
+  buildings: number
+  created_at: string
+}
 interface CityData {
   score: number
   cityName: string
@@ -26,6 +33,7 @@ interface CityData {
   buildings: number
   hasSave: boolean
   planted: PlantedTree[]
+  archived: ArchivedCity[]
 }
 
 // current-city tree stage by GAME score (mirrors the game's milestones)
@@ -59,7 +67,7 @@ export default function VeganCityCard({
 
   // Phase 1: admin-only, and only when there is anything to show
   if (!viewerIsAdmin || !data) return null
-  if (!data.hasSave && data.planted.length === 0) return null
+  if (!data.hasSave && data.planted.length === 0 && data.archived.length === 0) return null
 
   const stage = stageFor(data.score)
   const name = data.cityName.trim() || 'Vegan City'
@@ -74,7 +82,7 @@ export default function VeganCityCard({
         <a
           href="https://play.plantspack.com"
           target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:underline"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700"
         >
           <Gamepad2 className="w-3.5 h-3.5" /> {isOwnProfile ? 'Open your city' : 'Build yours'}
         </a>
@@ -96,13 +104,32 @@ export default function VeganCityCard({
         </div>
       </div>
 
-      {/* grove: one tree per finished city + golden trees for real planted ones */}
-      {(data.citiesBuilt > 0 || data.planted.length > 0) && (
+      {/* finished cities: a real LIST when the archive has rows, else the
+          legacy grove icons from the counter (pre-archive completions) */}
+      {data.archived.length > 0 ? (
+        <div className="mt-4 divide-y divide-gray-100 border-t border-gray-100">
+          {data.archived.map((c) => (
+            <div key={c.id} className="flex items-center gap-3 py-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/sprouts-trees/ptree_city.png" alt="" className="w-9 h-9 object-contain shrink-0" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
+                <p className="text-xs text-gray-500">Score {c.score} · {c.buildings} places · {new Date(c.created_at).toLocaleDateString()}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : data.citiesBuilt > 0 ? (
         <div className="mt-4 flex items-end gap-1 flex-wrap">
           {Array.from({ length: Math.min(data.citiesBuilt, 12) }).map((_, i) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img key={'c' + i} src="/sprouts-trees/ptree_city.png" alt="Finished city" title="A finished Vegan City" className="w-12 h-12 object-contain" />
           ))}
+        </div>
+      ) : null}
+      {/* golden trees for real planted ones */}
+      {data.planted.length > 0 && (
+        <div className="mt-3 flex items-end gap-1 flex-wrap">
           {data.planted.map((t) => {
             const cert = t.partner_tree_id && t.partner_tree_id.startsWith('http') ? t.partner_tree_id : null
             const title = `Real tree planted${t.tree_location ? ` in ${t.tree_location}` : ''}${t.partner ? ` with ${t.partner}` : ''}`
