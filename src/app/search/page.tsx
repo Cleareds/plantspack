@@ -171,6 +171,11 @@ export default async function SearchPage({ searchParams }: PageProps) {
       </h1>
       {q && (
         <p className="text-sm text-on-surface-variant mb-4">
+          {(sections.length + guides.length) > 0 && (
+            <span className="text-primary font-medium">
+              {sections.length + guides.length} {sections.length + guides.length === 1 ? 'tool/guide' : 'tools & guides'} ·{' '}
+            </span>
+          )}
           {countries.length > 0 && <>{countries.length} {countries.length === 1 ? 'country' : 'countries'} · </>}
           {cities.length} {cities.length === 1 ? 'city' : 'cities'} · {places.length} {places.length === 1 ? 'place' : 'places'} · {recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}
         </p>

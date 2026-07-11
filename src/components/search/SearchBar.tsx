@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Search, X, MapPin, Loader2, Globe, Plus, Clock, ChefHat } from 'lucide-react'
+import { Search, X, MapPin, Loader2, Globe, Plus, Clock, ChefHat, Wrench, BookOpen } from 'lucide-react'
 import { useSearch, logSearchClick } from '@/hooks/useSearch'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -21,7 +21,7 @@ const MAX_RECENT = 5
 interface RecentSearch {
   label: string
   href: string
-  type: 'city' | 'country' | 'place' | 'recipe'
+  type: 'city' | 'country' | 'place' | 'recipe' | 'tool'
 }
 
 function getRecentSearches(): RecentSearch[] {
@@ -50,7 +50,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { cities, countries, places, recipes, loading } = useSearch(query)
+  const { cities, countries, places, recipes, tools, loading } = useSearch(query)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,16 +88,16 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
     if (trimmed.length >= 2) {
       logSearchClick({
         q: trimmed,
-        result_count: cities.length + countries.length + places.length + recipes.length,
+        result_count: cities.length + countries.length + places.length + recipes.length + tools.length,
         clicked_slug: `/search?q=${encodeURIComponent(trimmed)}`,
         clicked_kind: null,
       })
     }
     setIsOpen(false)
     router.push(`/search?q=${encodeURIComponent(trimmed)}`)
-  }, [query, cities.length, countries.length, places.length, recipes.length, router])
+  }, [query, cities.length, countries.length, places.length, recipes.length, tools.length, router])
 
-  const totalResults = cities.length + countries.length + places.length + recipes.length
+  const totalResults = cities.length + countries.length + places.length + recipes.length + tools.length
 
   const handleResultClick = useCallback((item: RecentSearch) => {
     saveRecentSearch(item)
@@ -107,14 +107,14 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
         q: query,
         result_count: totalResults,
         clicked_slug: item.href,
-        clicked_kind: item.type === 'country' ? 'city' : item.type,
+        clicked_kind: item.type === 'country' ? 'city' : item.type === 'tool' ? null : item.type,
       })
     }
     setIsOpen(false)
     setQuery('')
   }, [query, totalResults])
 
-  const hasResults = cities.length > 0 || countries.length > 0 || places.length > 0 || recipes.length > 0
+  const hasResults = cities.length > 0 || countries.length > 0 || places.length > 0 || recipes.length > 0 || tools.length > 0
   const showNoResults = query.length >= 2 && !loading && !hasResults
   const showRecent = query.length < 2 && recentSearches.length > 0
 
@@ -197,6 +197,33 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
 
           {!loading && hasResults && (
             <div className="divide-y divide-outline-variant/10">
+              {/* Tools & guides — exact-intent hits ("scanner", "is honey
+                  vegan") render first: when they match, they are almost
+                  always what the user meant. */}
+              {tools.length > 0 && (
+                <div>
+                  <div className="px-3 py-2 bg-surface-container-low/50">
+                    <span className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider">Tools &amp; guides</span>
+                  </div>
+                  {tools.map(t => (
+                    <Link key={`tool-${t.url}`} href={t.url}
+                      onClick={() => handleResultClick({ label: t.title, href: t.url, type: 'tool' })}
+                      className="flex items-center gap-3 px-3 py-2.5 hover:bg-surface-container-low transition-colors">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        {t.kind === 'guide' ? <BookOpen className="h-4 w-4 text-primary" /> : <Wrench className="h-4 w-4 text-primary" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-on-surface truncate">{t.title}</p>
+                        <p className="text-[11px] text-on-surface-variant truncate">{t.description}</p>
+                      </div>
+                      <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-primary/10 text-primary flex-shrink-0 uppercase">
+                        {t.kind === 'guide' ? 'Guide' : 'Tool'}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+
               {/* Cities & Countries */}
               {(cities.length > 0 || countries.length > 0) && (
                 <div>

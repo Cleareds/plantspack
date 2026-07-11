@@ -43,11 +43,19 @@ export interface RecipeResult {
   cuisine: string | null
 }
 
+export interface ToolResult {
+  title: string
+  url: string
+  description: string
+  kind: 'tool' | 'page' | 'guide'
+}
+
 export interface SearchResults {
   cities: CityResult[]
   countries: CountryResult[]
   places: PlaceResult[]
   recipes: RecipeResult[]
+  tools: ToolResult[]
   loading: boolean
   error: string | null
 }
@@ -62,6 +70,7 @@ export function useSearch(query: string, minLength: number = 2) {
     countries: [],
     places: [],
     recipes: [],
+    tools: [],
     loading: false,
     error: null,
   })
@@ -75,7 +84,7 @@ export function useSearch(query: string, minLength: number = 2) {
   useEffect(() => {
     const performSearch = async () => {
       if (!debouncedQuery || debouncedQuery.length < minLength) {
-        setResults({ cities: [], countries: [], places: [], recipes: [], loading: false, error: null })
+        setResults({ cities: [], countries: [], places: [], recipes: [], tools: [], loading: false, error: null })
         return
       }
       setResults((prev) => ({ ...prev, loading: true, error: null }))
@@ -129,9 +138,13 @@ export function useSearch(query: string, minLength: number = 2) {
           cuisine: null,
         }))
 
-        setResults({ cities, countries, places, recipes, loading: false, error: null })
+        // Tools/feature pages + guides (static matchers server-side).
+        // Merged into one dropdown group — exact-intent hits.
+        const tools: ToolResult[] = [...(data.sections || []), ...(data.guides || [])].slice(0, 4)
+
+        setResults({ cities, countries, places, recipes, tools, loading: false, error: null })
       } catch {
-        setResults({ cities: [], countries: [], places: [], recipes: [], loading: false, error: 'Search failed' })
+        setResults({ cities: [], countries: [], places: [], recipes: [], tools: [], loading: false, error: 'Search failed' })
       }
     }
     performSearch()
