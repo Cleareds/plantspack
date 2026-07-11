@@ -1,9 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { Database } from './database.types'
+import { sharedCookieDomain, SHARED_COOKIE_OPTIONS } from './auth-cookie'
 
 export const createClient = async () => {
   const cookieStore = await cookies()
+  const host = (await headers()).get('host')
+  const cookieDomain = sharedCookieDomain(host)
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
@@ -16,6 +19,7 @@ export const createClient = async () => {
     supabaseUrl,
     supabaseAnonKey,
     {
+      cookieOptions: { ...SHARED_COOKIE_OPTIONS, ...(cookieDomain ? { domain: cookieDomain } : {}) },
       cookies: {
         getAll() {
           return cookieStore.getAll()

@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { stripDiacritics } from '@/lib/slug'
+import { sharedCookieDomain, SHARED_COOKIE_OPTIONS } from '@/lib/auth-cookie'
 
 // Recipe pages removed for source violations (Minimalist Baker et al. per
 // content policy). Listed explicitly because they are one-off deletions.
@@ -163,10 +164,14 @@ export async function middleware(request: NextRequest) {
     console.warn('Supabase environment variables are missing in middleware.')
   }
 
+  // auth cookies are scoped to .plantspack.com so play.plantspack.com shares
+  // the session (host-scoped on localhost / preview hosts)
+  const cookieDomain = sharedCookieDomain(request.headers.get('host'))
   const supabase = createServerClient(
     supabaseUrl,
     supabaseAnonKey,
     {
+      cookieOptions: { ...SHARED_COOKIE_OPTIONS, ...(cookieDomain ? { domain: cookieDomain } : {}) },
       cookies: {
         getAll() {
           return request.cookies.getAll()
@@ -181,6 +186,20 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           )
+          // purge the LEGACY host-scoped variants: a stale host-only cookie
+          // with the same name would shadow the new .plantspack.com cookie
+          // (browsers send both; the older one tends to win), leaving users
+          // pinned to an expired session. Host-only delete kills only it.
+          if (cookieDomain) {
+            for (const { name } of cookiesToSet) {
+              if (name.startsWith('sb-')) {
+                response.headers.append(
+                  'Set-Cookie',
+                  `${name}=deleted; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0`
+                )
+              }
+            }
+          }
         },
       },
     }
