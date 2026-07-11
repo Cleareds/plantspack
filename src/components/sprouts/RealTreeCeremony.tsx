@@ -1,37 +1,36 @@
 'use client'
 
-// The real-tree ceremony: a finished Vegan City (cloud-synced, score 400+ in
-// PlantsPack Play) + Sapling tier + 1,000 Sprouts -> one real tree, ordered
-// with a reforestation partner and fulfilled from /admin/tree-orders.
-// Renders on the (admin-gated) /sprouts page.
+// The real-tree ceremony. Reachable from EITHER engagement loop:
+//   - contribute on PlantsPack -> pay the full price in Sprouts (no game)
+//   - master PlantsPack Play   -> your Vegan City Score discounts the price
+//                                 (2 Sprouts per point, FREE at score 750)
+// Both loops combine smoothly: score 400 city = 700 Sprouts.
 //
-// The three gates are shown as explicit chips so "why is the button
-// disabled" is never a mystery - including the case where the player HAS a
-// great city locally but never signed in inside the game, so no cloud save
-// exists for their account (the #1 support question shape).
+// Only a cloud-synced city counts (the game syncs while signed in). One tree
+// per account per 90 days; orders are fulfilled from /admin/tree-orders.
 
 import { useState } from 'react'
-import { TreeDeciduous, Gamepad2, Award } from 'lucide-react'
-import { REAL_TREE_CITY_SCORE, REAL_TREE_COST, REAL_TREE_TIER_GATE, REAL_TREE_TIER_LABEL } from '@/lib/sprouts-constants'
+import { TreeDeciduous, Gamepad2 } from 'lucide-react'
+import { realTreeCost, REAL_TREE_BASE_COST, REAL_TREE_FREE_SCORE, REAL_TREE_SCORE_DISCOUNT } from '@/lib/sprouts-constants'
 
 interface Props {
   score: number
   hasSave: boolean
   cityName?: string
   balance: number
-  lifetime: number
 }
 
-export default function RealTreeCeremony({ score, hasSave, cityName, balance, lifetime }: Props) {
+export default function RealTreeCeremony({ score, hasSave, cityName, balance }: Props) {
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
   const [dedication, setDedication] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-  const scoreOk = hasSave && score >= REAL_TREE_CITY_SCORE
-  const tierOk = lifetime >= REAL_TREE_TIER_GATE
-  const balanceOk = balance >= REAL_TREE_COST
-  const eligible = scoreOk && tierOk && balanceOk
+  const effectiveScore = hasSave ? score : 0
+  const price = realTreeCost(effectiveScore)
+  const discount = REAL_TREE_BASE_COST - price
+  const isFree = price === 0
+  const eligible = isFree || balance >= price
 
   const plant = async () => {
     setBusy(true); setError(null)
@@ -44,9 +43,8 @@ export default function RealTreeCeremony({ score, hasSave, cityName, balance, li
     setBusy(false)
     if (j.ok) setDone(true)
     else setError(
-      j.reason === 'city_score_locked' ? `Your cloud-synced Vegan City needs a score of ${REAL_TREE_CITY_SCORE} first.`
-      : j.reason === 'tier_locked' ? `You need ${REAL_TREE_TIER_LABEL} tier (${REAL_TREE_TIER_GATE.toLocaleString()} lifetime Sprouts) first.`
-      : j.reason === 'insufficient_balance' ? 'Not enough Sprouts.'
+      j.reason === 'cooldown' ? 'One real tree per 90 days - yours is already growing. Come back soon!'
+      : j.reason === 'insufficient_balance' ? 'Not enough Sprouts for the current price.'
       : `Could not plant (${j.reason ?? res.status}).`)
   }
 
@@ -57,22 +55,22 @@ export default function RealTreeCeremony({ score, hasSave, cityName, balance, li
         <h2 className="font-bold text-gray-900">Plant a real tree</h2>
       </div>
       <p className="text-sm text-gray-700 mb-3">
-        Finish a thriving Vegan City in PlantsPack Play (score {REAL_TREE_CITY_SCORE}+), reach {REAL_TREE_TIER_LABEL} tier,
-        and turn {REAL_TREE_COST.toLocaleString()} Sprouts into a real tree, planted with a reforestation partner.
-        The certificate lands on your profile.
+        A real tree, planted with a reforestation partner, the certificate on your profile. Two ways to earn it:
+        contribute on PlantsPack ({REAL_TREE_BASE_COST.toLocaleString()} Sprouts), or build your Vegan City in
+        PlantsPack Play - every score point cuts the price by {REAL_TREE_SCORE_DISCOUNT} Sprouts, and a
+        score-{REAL_TREE_FREE_SCORE} city makes it <b>free</b>. Mix both however you like.
       </p>
       <div className="flex flex-wrap gap-3 text-sm mb-4">
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${scoreOk ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${discount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>
           <Gamepad2 className="w-4 h-4" />
           {hasSave
-            ? <>{cityName ? `${cityName} · ` : ''}City Score {score} / {REAL_TREE_CITY_SCORE} {scoreOk ? '✓' : ''}</>
-            : 'No cloud city yet'}
+            ? <>{cityName ? `${cityName} · ` : ''}Score {score} = -{discount.toLocaleString()} Sprouts</>
+            : 'No cloud city yet (full price)'}
         </span>
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${tierOk ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>
-          <Award className="w-4 h-4" /> {REAL_TREE_TIER_LABEL} tier {tierOk ? '✓' : `(${lifetime.toLocaleString()} / ${REAL_TREE_TIER_GATE.toLocaleString()} lifetime)`}
-        </span>
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${balanceOk ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>
-          🌱 {balance.toLocaleString()} / {REAL_TREE_COST.toLocaleString()} Sprouts {balanceOk ? '✓' : ''}
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${eligible ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>
+          🌱 Your price: {isFree ? 'FREE' : `${price.toLocaleString()} Sprouts`}
+          {!isFree && <> (you have {balance.toLocaleString()})</>}
+          {eligible ? ' ✓' : ''}
         </span>
       </div>
       {done ? (
@@ -95,16 +93,16 @@ export default function RealTreeCeremony({ score, hasSave, cityName, balance, li
           >{busy ? 'Planting…' : 'Plant my tree 🌳'}</button>
         </div>
       )}
-      {!scoreOk && !done && (
+      {!done && !isFree && (
         <div className="mt-3 flex flex-col sm:flex-row sm:items-center gap-2">
           <a
             href="https://play.plantspack.com"
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700"
-          >🎮 {hasSave ? 'Grow your Vegan City' : 'Build your Vegan City'}</a>
+          >🎮 {hasSave ? 'Grow your city, lower the price' : 'Build your Vegan City'}</a>
           <span className="text-xs text-gray-600">
             {hasSave
-              ? `Your cloud city scores ${score} - keep building to reach ${REAL_TREE_CITY_SCORE}.`
+              ? `Score ${REAL_TREE_FREE_SCORE - score > 0 ? `${REAL_TREE_FREE_SCORE} (` + (REAL_TREE_FREE_SCORE - score).toLocaleString() + ' to go)' : REAL_TREE_FREE_SCORE} makes the tree free.`
               : 'Open the game and SIGN IN with this account - your city syncs to the cloud while signed in. A city built while signed out lives only in that browser; signing in there uploads it.'}
           </span>
         </div>

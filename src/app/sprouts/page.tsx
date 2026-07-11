@@ -104,7 +104,6 @@ export default async function SproutsPage() {
           hasSave={citySummary.hasSave}
           cityName={citySummary.cityName}
           balance={(me as { sprouts_balance?: number } | null)?.sprouts_balance ?? 0}
-          lifetime={(me as { sprouts_lifetime?: number } | null)?.sprouts_lifetime ?? 0}
         />
 
         {/* Top contributors */}
@@ -198,8 +197,8 @@ export default async function SproutsPage() {
             <a href="https://play.plantspack.com" className="text-emerald-700 font-semibold hover:underline">PlantsPack Play</a>:
             turn a grey industrial map into a thriving vegan town, watch your tree move
             from seedling to full blossom as the Vegan City Score climbs, and keep a grove
-            of every city you finish. Reach score 400 with 1,000 Sprouts and the city
-            plants a REAL tree.
+            of every city you finish. Every score point cuts the real-tree price by 2
+            Sprouts - a score-750 city plants a REAL tree for free.
           </p>
           <a
             href="https://play.plantspack.com"
@@ -219,10 +218,10 @@ export default async function SproutsPage() {
             <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between mb-1">
                 <div className="font-semibold text-gray-900">Plant a real tree</div>
-                <div className="font-mono text-emerald-700 font-bold">1,000 Sprouts</div>
+                <div className="font-mono text-emerald-700 font-bold">0-1,500 Sprouts</div>
               </div>
               <p className="text-sm text-gray-700">
-                Reach Vegan City Score 400 in the game and Sapling tier (2,000 lifetime), then convert 1,000 Sprouts into a real tree ordered with a reforestation partner. The certificate lands on your profile as a golden tree.
+                1,500 Sprouts plants a real tree with a reforestation partner - or let your Vegan City in the game pay for it: every score point knocks 2 Sprouts off, and a score-750 city plants it for free. One tree per 90 days; the certificate lands on your profile as a golden tree.
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">

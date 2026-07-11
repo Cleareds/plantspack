@@ -238,7 +238,11 @@ export async function spendSprouts(args: {
   if (!user) return { ok: false, reason: 'user_not_found' }
   if (!SPROUTS_ENABLED_FOR_ALL && user.role !== 'admin') return { ok: false, reason: 'gated' }
 
-  const cost = args.actionType === 'spend.custom'
+  // spend.custom always takes the caller's amount; spend.real_tree may too -
+  // the tree price slides with the player's Vegan City Score (see
+  // sprouts-constants.realTreeCost), so the fixed ACTION_AMOUNTS entry is
+  // only the no-game default.
+  const cost = args.actionType === 'spend.custom' || (args.actionType === 'spend.real_tree' && typeof args.amount === 'number')
     ? -Math.abs(args.amount ?? 0)
     : ACTION_AMOUNTS[args.actionType]
   if (!cost || cost >= 0) return { ok: false, reason: 'no_amount' }
@@ -502,11 +506,8 @@ export async function gameCitySummary(userId: string): Promise<GameCitySummary> 
     hasSave: true,
   }
 }
-// the game score a player needs before the real-tree ceremony unlocks
-// (re-exported from sprouts-constants so client components can import it
-// without pulling this server-only module into their bundle)
-export { REAL_TREE_CITY_SCORE } from '@/lib/sprouts-constants'
-import { REAL_TREE_CITY_SCORE, REAL_TREE_COST, REAL_TREE_TIER_GATE } from '@/lib/sprouts-constants'
+// real-tree price math lives in sprouts-constants (client-safe module)
+import { realTreeCost, REAL_TREE_COOLDOWN_DAYS } from '@/lib/sprouts-constants'
 
 // Helper for redemption flows. Records both the ledger debit and a redemption row.
 export async function redeem(args: {
@@ -516,33 +517,47 @@ export async function redeem(args: {
   silverPlusRequired?: boolean
 }): Promise<{ ok: boolean; reason?: string; redemptionId?: string; code?: string }> {
   const sb = adminClient()
-  const COST: Record<string, { actionType: 'spend.cleareds_discount' | 'spend.real_tree' | 'spend.supporter_month' | 'spend.featured_placement'; cost: number; tierGate?: number }> = {
+  const COST: Record<string, { actionType: 'spend.cleareds_discount' | 'spend.real_tree' | 'spend.supporter_month' | 'spend.featured_placement'; cost: number }> = {
     cleareds_discount_50pct: { actionType: 'spend.cleareds_discount', cost: 500 },
-    real_tree: { actionType: 'spend.real_tree', cost: REAL_TREE_COST, tierGate: REAL_TREE_TIER_GATE }, // Sapling+
+    real_tree: { actionType: 'spend.real_tree', cost: 1500 }, // no-game default; slides with score below
     supporter_month: { actionType: 'spend.supporter_month', cost: 1500 },
     featured_placement_7d: { actionType: 'spend.featured_placement', cost: 300 },
   }
   const spec = COST[args.rewardType]
   if (!spec) return { ok: false, reason: 'unknown_reward' }
 
-  if (spec.tierGate) {
-    const { data: u } = await sb.from('users').select('sprouts_lifetime').eq('id', args.userId).single()
-    if (!u || u.sprouts_lifetime < spec.tierGate) return { ok: false, reason: 'tier_locked' }
-  }
-
-  // the real tree is a CEREMONY: contributions pay for it (the sprouts), the
-  // game provides the theater - a finished Vegan City (REAL_TREE_CITY_SCORE)
-  // unlocks it
+  // The real tree is reachable from EITHER loop: pure contributors pay the
+  // full Sprouts price with no game requirement; a cloud-synced Vegan City
+  // discounts it (2 Sprouts per score point) down to free at score 750.
+  // Anti-abuse for the free path: one tree per account per cooldown window,
+  // and the human-reviewed /admin/tree-orders queue sits before any money.
+  let realTreePrice: number | null = null
   if (args.rewardType === 'real_tree') {
-    const score = await gameCityScore(args.userId)
-    if (score < REAL_TREE_CITY_SCORE) return { ok: false, reason: 'city_score_locked' }
+    const since = new Date(Date.now() - REAL_TREE_COOLDOWN_DAYS * 864e5).toISOString()
+    const { count: recent } = await sb.from('real_world_tree_orders')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', args.userId).gte('created_at', since)
+    if ((recent ?? 0) > 0) return { ok: false, reason: 'cooldown' }
+    realTreePrice = realTreeCost(await gameCityScore(args.userId))
   }
 
-  const debit = await spendSprouts({
-    userId: args.userId, actionType: spec.actionType,
-    referenceType: 'redemption', metadata: { reward: args.rewardType, ...(args.payload ?? {}) },
-  })
-  if (!debit.ok) return { ok: false, reason: debit.reason }
+  let debitLedgerId: string | null = null
+  if (args.rewardType === 'real_tree' && realTreePrice === 0) {
+    // Free tree (score >= 750). No debit - but the phase-1 admin gate that
+    // spendSprouts would normally enforce must still apply.
+    const gateUser = await getUserGateContext(args.userId)
+    if (!gateUser) return { ok: false, reason: 'user_not_found' }
+    if (!SPROUTS_ENABLED_FOR_ALL && gateUser.role !== 'admin') return { ok: false, reason: 'gated' }
+  } else {
+    const debit = await spendSprouts({
+      userId: args.userId, actionType: spec.actionType,
+      ...(realTreePrice !== null ? { amount: realTreePrice } : {}),
+      referenceType: 'redemption', metadata: { reward: args.rewardType, ...(args.payload ?? {}) },
+    })
+    if (!debit.ok) return { ok: false, reason: debit.reason }
+    debitLedgerId = debit.ledgerId ?? null
+  }
+  const spent = realTreePrice ?? spec.cost
 
   const code = args.rewardType === 'cleareds_discount_50pct'
     ? `CLEAREDS-${Math.random().toString(36).slice(2, 8).toUpperCase()}`
@@ -551,8 +566,8 @@ export async function redeem(args: {
   const { data: r, error } = await sb.from('sprouts_redemptions').insert({
     user_id: args.userId,
     reward_type: args.rewardType,
-    sprouts_spent: spec.cost,
-    ledger_id: debit.ledgerId,
+    sprouts_spent: spent,
+    ledger_id: debitLedgerId,
     status: 'pending',
     code,
     payload: args.payload ?? {},
@@ -564,8 +579,8 @@ export async function redeem(args: {
   if (args.rewardType === 'real_tree') {
     await sb.from('real_world_tree_orders').insert({
       user_id: args.userId,
-      sprouts_spent: spec.cost,
-      ledger_id: debit.ledgerId,
+      sprouts_spent: spent,
+      ledger_id: debitLedgerId,
       status: 'queued',
       user_message: typeof args.payload?.dedication === 'string' ? (args.payload.dedication as string).slice(0, 200) : null,
     })
