@@ -452,19 +452,50 @@ const GAME_SCORE_WEIGHT: Record<string, number> = {
   falafel: 2, smoothie: 2, bakery: 3, garden: 3, ramen: 3, zerowaste: 3, cheese: 3,
   verifydesk: 4, windmill: 4, school: 5, hotel: 6, festival: 6, lab: 7, sanctuary: 8,
 }
-export async function gameCityScore(userId: string): Promise<number> {
-  const sb = adminClient()
-  const { data } = await sb.from('game_saves').select('state').eq('user_id', userId).maybeSingle()
-  const city = (data?.state as { city3d?: { tiles?: Record<string, { b?: string; lvl?: number }> } } | null)?.city3d
-  const tiles = city?.tiles
+interface GameCityState {
+  tiles?: Record<string, { b?: string; lvl?: number }>
+  cityName?: string
+  citiesBuilt?: number
+}
+function scoreOfTiles(tiles: GameCityState['tiles']): number {
   if (!tiles || typeof tiles !== 'object') return 0
   let score = 0
   for (const k of Object.keys(tiles)) {
     const t = tiles[k]
     if (!t || typeof t.b !== 'string') continue
-    score += (GAME_SCORE_WEIGHT[t.b] ?? 2) + Math.max(0, (Number(t.lvl) || 1) - 1)
+    const w = GAME_SCORE_WEIGHT[t.b] ?? 2
+    if (w === 0) continue
+    score += w + Math.max(0, (Number(t.lvl) || 1) - 1)
   }
   return score
+}
+export async function gameCityScore(userId: string): Promise<number> {
+  const sb = adminClient()
+  const { data } = await sb.from('game_saves').select('state').eq('user_id', userId).maybeSingle()
+  const city = (data?.state as { city3d?: GameCityState } | null)?.city3d
+  return scoreOfTiles(city?.tiles)
+}
+
+// full summary for the profile Vegan City card
+export interface GameCitySummary {
+  score: number
+  cityName: string
+  citiesBuilt: number
+  buildings: number
+  hasSave: boolean
+}
+export async function gameCitySummary(userId: string): Promise<GameCitySummary> {
+  const sb = adminClient()
+  const { data } = await sb.from('game_saves').select('state').eq('user_id', userId).maybeSingle()
+  const city = (data?.state as { city3d?: GameCityState } | null)?.city3d
+  if (!city) return { score: 0, cityName: '', citiesBuilt: 0, buildings: 0, hasSave: false }
+  return {
+    score: scoreOfTiles(city.tiles),
+    cityName: typeof city.cityName === 'string' ? city.cityName : '',
+    citiesBuilt: Number(city.citiesBuilt) || 0,
+    buildings: city.tiles && typeof city.tiles === 'object' ? Object.keys(city.tiles).length : 0,
+    hasSave: true,
+  }
 }
 // the game score a player needs before the real-tree ceremony unlocks
 export const REAL_TREE_CITY_SCORE = 400

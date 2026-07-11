@@ -4,8 +4,6 @@ import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { getMyState, TREE_STAGES } from '@/lib/sprouts'
 import { Sprout, TreeDeciduous, ArrowLeft } from 'lucide-react'
-import SeedTreeButton from './SeedTreeButton'
-import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,9 +33,6 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
 
   // If the target has no Sprouts yet, show an empty-state page rather than 404
   const state = await getMyState(targetUser.id)
-  const treeProgress = state?.tree.nextStageAt
-    ? Math.min(100, Math.round((state.seeded / state.tree.nextStageAt) * 100))
-    : 100
 
   return (
     <div className="min-h-screen bg-surface">
@@ -101,35 +96,16 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
               </div>
             )}
 
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-8">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <TreeDeciduous className="w-5 h-5 text-emerald-700" /> {isOwn ? 'Your tree' : 'Their tree'}
-                </h2>
-                <span className="text-sm text-gray-600">{state.tree.label}</span>
-              </div>
-              <div className="flex flex-col items-center py-6">
-                <TreeStageSvg stage={state.tree.stage} size={220} />
-                <div className="text-sm text-gray-600 mt-2">Stage {state.tree.stage} of {TREE_STAGES.length - 1}</div>
-              </div>
-              {state.tree.nextStageAt && (
-                <>
-                  <div className="text-xs text-gray-600 mb-1 flex justify-between">
-                    <span>{state.seeded.toLocaleString()}</span>
-                    <span>Next: {state.tree.nextStageAt.toLocaleString()}</span>
-                  </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500" style={{ width: `${treeProgress}%` }} />
-                  </div>
-                </>
-              )}
-              {isOwn && (
-                <div className="mt-5 flex flex-wrap gap-2 justify-center">
-                  <SeedTreeButton balance={state.balance} amount={100} />
-                  <SeedTreeButton balance={state.balance} amount={500} />
-                  <SeedTreeButton balance={state.balance} amount={1000} />
-                </div>
-              )}
+            {/* The digital seed-a-tree loop is retired: your tree now lives on
+                your profile and grows with your Vegan City in the game, and
+                real trees come from the ceremony on /sprouts. */}
+            <div className="bg-emerald-50 rounded-2xl border border-emerald-200 p-6 mb-8 text-center">
+              <TreeDeciduous className="w-8 h-8 text-emerald-700 mx-auto mb-2" />
+              <p className="text-sm text-gray-800 font-semibold">Your tree grows with your Vegan City now.</p>
+              <p className="text-xs text-gray-600 mt-1">
+                Build your city at <a href="https://play.plantspack.com" className="text-emerald-700 font-semibold hover:underline">play.plantspack.com</a> - it appears on your profile,
+                and a finished city + 1,000 Sprouts plants a <a href="/sprouts" className="text-emerald-700 font-semibold hover:underline">real tree</a>.
+              </p>
             </div>
 
             {isOwn && (

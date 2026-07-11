@@ -1,9 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { Sprout, Trophy, TreeDeciduous } from 'lucide-react'
-import { TIERS, TREE_STAGES, tierFor, treeStageFor } from '@/lib/sprouts'
-import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
-import ForestPreview from '@/components/sprouts/ForestPreview'
+import { Sprout, Trophy } from 'lucide-react'
+import { TIERS, tierFor } from '@/lib/sprouts'
 
 export default function SproutsCard({
   username, lifetime, balance, seeded, forestSize, isOwnProfile, viewerIsAdmin = false,
@@ -25,9 +23,6 @@ export default function SproutsCard({
   const idx = TIERS.findIndex(t => t.key === tier.key)
   const nextTier = idx >= 0 && idx < TIERS.length - 1 ? TIERS[idx + 1] : null
   const toNext = nextTier ? Math.max(0, nextTier.min - lifetime) : 0
-  const stage = treeStageFor(seeded)
-  const stageIdx = TREE_STAGES.findIndex(s => s.stage === stage.stage)
-  const nextStageAt = stageIdx >= 0 && stageIdx < TREE_STAGES.length - 1 ? TREE_STAGES[stageIdx + 1].min : null
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
@@ -43,18 +38,8 @@ export default function SproutsCard({
       </div>
 
       <div className="flex items-center gap-5">
-        {(forestSize ?? 0) > 0 ? (
-          <Link href={`/profile/${username}/forest`} className="shrink-0 hover:opacity-90" title={`Forest of ${forestSize}`}>
-            <ForestPreview count={forestSize ?? 0} size={108} />
-          </Link>
-        ) : (
-          <Link href={`/profile/${username}/sprouts`} className="shrink-0 hover:opacity-90" title={stage.label}>
-            <TreeStageSvg stage={stage.stage} size={96} />
-          </Link>
-        )}
-
         <div className="flex-1 min-w-0">
-          <div className={`grid ${isOwnProfile ? 'grid-cols-3' : 'grid-cols-2'} gap-3 mb-2`}>
+          <div className={`grid ${isOwnProfile ? 'grid-cols-2' : 'grid-cols-1'} gap-3 mb-2`}>
             <div>
               <div className="text-xl font-bold text-emerald-700">{lifetime.toLocaleString()}</div>
               <div className="text-[10px] text-gray-600 uppercase tracking-wide">Lifetime</div>
@@ -65,12 +50,6 @@ export default function SproutsCard({
                 <div className="text-[10px] text-gray-600 uppercase tracking-wide">Balance</div>
               </div>
             )}
-            <div>
-              <div className="text-xl font-bold text-rose-700 flex items-center gap-1">
-                <TreeDeciduous className="w-3.5 h-3.5" /> {seeded.toLocaleString()}
-              </div>
-              <div className="text-[10px] text-gray-600 uppercase tracking-wide">Seeded</div>
-            </div>
           </div>
 
           {nextTier && (
@@ -89,22 +68,12 @@ export default function SproutsCard({
 
       <div className="mt-4 flex flex-wrap gap-2">
         <Link href={`/profile/${username}/sprouts`} className="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">
-          {isOwnProfile ? 'View my tree' : 'View tree'}
+          Sprouts detail
         </Link>
-        {(forestSize ?? 0) > 0 && (
-          <Link href={`/profile/${username}/forest`} className="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-600 text-white hover:bg-amber-700">
-            View forest ({forestSize})
-          </Link>
-        )}
         <Link href="/sprouts" className="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
           How to earn
         </Link>
       </div>
-      {!isOwnProfile && nextStageAt && (
-        <div className="text-[11px] text-gray-600 mt-2">
-          Tree stage: <span className="font-semibold">{stage.label}</span> · next at {nextStageAt.toLocaleString()} seeded
-        </div>
-      )}
     </div>
   )
 }

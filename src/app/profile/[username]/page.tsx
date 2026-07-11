@@ -13,6 +13,7 @@ import FollowButton from '@/components/social/FollowButton'
 import ProfileFollowers from '@/components/profile/ProfileFollowers'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import UserStatsCompact from '@/components/profile/UserStatsCompact'
+import VeganCityCard from '@/components/profile/VeganCityCard'
 import ProfileHero from '@/components/profile/ProfileHero'
 import SproutsCard from '@/components/profile/SproutsCard'
 import { getUserSubscription, SUBSCRIPTION_TIERS } from '@/lib/stripe'
@@ -393,6 +394,12 @@ export default function ProfilePage() {
                 )}
               </div>
             }
+          />
+
+          <VeganCityCard
+            userId={profile.id}
+            isOwnProfile={isOwnProfile}
+            viewerIsAdmin={(currentUserProfile as any)?.role === 'admin'}
           />
 
           <SproutsCard

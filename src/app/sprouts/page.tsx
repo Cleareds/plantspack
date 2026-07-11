@@ -2,15 +2,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
-import { ACTION_AMOUNTS, TIERS, TREE_STAGES, gameCityScore } from '@/lib/sprouts'
+import { ACTION_AMOUNTS, TIERS, gameCityScore } from '@/lib/sprouts'
 import RealTreeCeremony from '@/components/sprouts/RealTreeCeremony'
 import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
-import TreeStageSvg from '@/components/sprouts/TreeStageSvg'
-import ForestPreview from '@/components/sprouts/ForestPreview'
 
 export const metadata = {
   title: 'Sprouts - PlantsPack contribution rewards',
-  description: 'Earn Sprouts by adding vegan venues, writing reviews, and sharing your vegan journey. Seed a digital tree, plant real ones, unlock partner perks.',
+  description: 'Earn Sprouts by adding vegan venues, writing reviews, and sharing your vegan journey. Grow your Vegan City in the game, plant real trees, unlock partner perks.',
 }
 // Admin-only during phase 1. Anyone else gets a 404.
 export const dynamic = 'force-dynamic'
@@ -95,8 +93,8 @@ export default async function SproutsPage() {
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
             A way to recognise the people doing the actual work of mapping the plant-based world.
-            Earn Sprouts for adding venues, writing reviews, and sharing your vegan journey. Seed
-            a digital tree. Plant a real one. Trade Sprouts for partner perks.
+            Earn Sprouts for adding venues, writing reviews, and sharing your vegan journey. Grow
+            your Vegan City in the game. Plant a real tree. Trade Sprouts for partner perks.
           </p>
         </div>
 
@@ -112,8 +110,6 @@ export default async function SproutsPage() {
             <ul className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
               {top.map((u: any, i) => {
                 const tier = TIERS.slice().reverse().find(t => u.sprouts_lifetime >= t.min) || TIERS[0]
-                const stage = TREE_STAGES.slice().reverse().find(s => u.sprouts_seeded >= s.min) || TREE_STAGES[0]
-                const forestSize = u.forest_size ?? 0
                 return (
                   <li key={u.id} className="flex items-center gap-3 p-3">
                     <span className="w-6 text-center text-sm font-mono text-gray-500">{i + 1}</span>
@@ -128,15 +124,6 @@ export default async function SproutsPage() {
                     <Link href={`/profile/${u.username}`} className="font-semibold text-gray-900 hover:underline flex-1 truncate">
                       @{u.username}
                     </Link>
-                    {forestSize > 0 ? (
-                      <Link href={`/profile/${u.username}/forest`} title={`Forest of ${forestSize} matured trees`} className="shrink-0 hover:opacity-90">
-                        <ForestPreview count={forestSize} size={56} />
-                      </Link>
-                    ) : (
-                      <Link href={`/profile/${u.username}/sprouts`} title={stage.label} className="shrink-0 hover:opacity-90">
-                        <TreeStageSvg stage={stage.stage} size={42} />
-                      </Link>
-                    )}
                     <span className={`text-xs px-2 py-0.5 rounded-full border font-semibold ${tier.chip}`}>{tier.label}</span>
                     <span className="font-mono font-bold text-emerald-700 w-20 text-right">{u.sprouts_lifetime.toLocaleString()}</span>
                   </li>
@@ -195,23 +182,19 @@ export default async function SproutsPage() {
           </p>
         </section>
 
-        {/* Digital tree */}
+        {/* Your Vegan City: the game is the tree now */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <TreeDeciduous className="w-6 h-6 text-emerald-700" /> Grow a tree
+            <TreeDeciduous className="w-6 h-6 text-emerald-700" /> Grow your Vegan City
           </h2>
           <p className="text-gray-700 mb-4">
-            Seed Sprouts into your digital tree to watch it grow through seven stages. Seeded Sprouts come from your balance, but your lifetime total is untouched - the tree is a way to put your contributions visibly on display, not lose them.
+            Your profile tree grows with your city in{' '}
+            <a href="https://play.plantspack.com" className="text-emerald-700 font-semibold hover:underline">PlantsPack Play</a>:
+            turn a grey industrial map into a thriving vegan town, watch your tree move
+            from seedling to full blossom as the Vegan City Score climbs, and keep a grove
+            of every city you finish. Reach score 400 with 1,000 Sprouts and the city
+            plants a REAL tree.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {TREE_STAGES.map(s => (
-              <div key={s.stage} className="bg-white rounded-xl border border-gray-200 p-3 text-center">
-                <div className="flex justify-center"><TreeStageSvg stage={s.stage} size={72} /></div>
-                <div className="text-xs font-semibold text-gray-900 mt-1">{s.label}</div>
-                <div className="text-xs text-gray-600">{s.min.toLocaleString()}+</div>
-              </div>
-            ))}
-          </div>
         </section>
 
         {/* Spend */}
@@ -226,7 +209,7 @@ export default async function SproutsPage() {
                 <div className="font-mono text-emerald-700 font-bold">1,000 Sprouts</div>
               </div>
               <p className="text-sm text-gray-700">
-                Silver tier (2,000 lifetime) unlocks the ability to convert 1,000 Sprouts into a real tree planted via a reforestation partner (Eden Reforestation Projects). PlantsPack covers the planting cost.
+                Reach Vegan City Score 400 in the game and Sapling tier (2,000 lifetime), then convert 1,000 Sprouts into a real tree ordered with a reforestation partner. The certificate lands on your profile as a golden tree.
               </p>
             </div>
             <div className="bg-white rounded-xl border border-gray-200 p-5">
