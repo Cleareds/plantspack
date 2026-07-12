@@ -18,6 +18,17 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
+// ISR opt-in. Without generateStaticParams a dynamic-segment route is
+// fully DYNAMIC - `revalidate` above is silently ignored and every crawl
+// bills a function render (discovered 2026-07-12: place pages were never
+// cached; the region route, which has GSP, was the only ISR one).
+// Returning [] prerenders nothing at build time; each URL is rendered on
+// first request, then cached for the revalidate window.
+export function generateStaticParams() {
+  return []
+}
+
+
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,

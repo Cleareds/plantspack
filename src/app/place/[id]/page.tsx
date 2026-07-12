@@ -9,6 +9,17 @@ import Link from 'next/link'
 // call revalidatePath('/place/<slug>') so user actions still feel instant.
 export const revalidate = 86400 // 24h safety net; edits+reviews revalidatePath on-demand (cost: crawl-tail ISR writes, 2026-07-10)
 
+// ISR opt-in. Without generateStaticParams a dynamic-segment route is
+// fully DYNAMIC - `revalidate` above is silently ignored and every crawl
+// bills a function render (discovered 2026-07-12: place pages were never
+// cached; the region route, which has GSP, was the only ISR one).
+// Returning [] prerenders nothing at build time; each URL is rendered on
+// first request, then cached for the revalidate window.
+export function generateStaticParams() {
+  return []
+}
+
+
 import { MapPin, Globe, Heart, ExternalLink, Phone, Calendar, User, CheckCircle, PauseCircle, AlertTriangle } from 'lucide-react'
 import RatingBadge from '@/components/places/RatingBadge'
 import RatingDistribution from '@/components/places/RatingDistribution'
