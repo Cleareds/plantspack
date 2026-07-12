@@ -64,7 +64,7 @@ export default function RealTreeCeremony({ score, hasSave, cityName, balance }: 
         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${discount > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>
           <Gamepad2 className="w-4 h-4" />
           {hasSave
-            ? <>{cityName ? `${cityName} · ` : ''}Score {score} = -{discount.toLocaleString()} Sprouts</>
+            ? <>{cityName ? `${cityName} · ` : ''}Score {score} · saves {discount.toLocaleString()} Sprouts</>
             : 'No cloud city yet (full price)'}
         </span>
         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-semibold ${eligible ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-600'}`}>

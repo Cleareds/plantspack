@@ -93,22 +93,23 @@ export const DAILY_CAPS: Partial<Record<ActionType, number>> = {
 // Tiers are named for tree life, not metals. Each tier carries its own
 // Tailwind classes so chips/labels render in tier-appropriate colour.
 // 'forest-guardian' uses a silvery platinum-style gradient.
+// One coherent ramp: neutral seed -> deepening greens -> gold for the top.
 export const TIERS = [
   { key: 'seed', label: 'Seed', min: 0,
-    chip: 'bg-stone-100 border-stone-300 text-stone-700',
-    bar:  'bg-stone-400' },
+    chip: 'bg-gray-50 border-gray-300 text-gray-700',
+    bar:  'bg-gray-400' },
   { key: 'sprout', label: 'Sprout', min: 500,
-    chip: 'bg-lime-50 border-lime-300 text-lime-800',
-    bar:  'bg-lime-500' },
+    chip: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+    bar:  'bg-emerald-300' },
   { key: 'sapling', label: 'Sapling', min: 2000,
-    chip: 'bg-emerald-50 border-emerald-300 text-emerald-800',
+    chip: 'bg-emerald-100 border-emerald-300 text-emerald-800',
     bar:  'bg-emerald-500' },
   { key: 'grove', label: 'Grove', min: 5000,
-    chip: 'bg-teal-50 border-teal-300 text-teal-800',
-    bar:  'bg-teal-600' },
+    chip: 'bg-emerald-200 border-emerald-400 text-emerald-900',
+    bar:  'bg-emerald-700' },
   { key: 'forest-guardian', label: 'Forest Guardian', min: 10000,
-    chip: 'bg-gradient-to-br from-slate-50 via-zinc-100 to-stone-200 border-slate-400 text-slate-900 shadow-sm',
-    bar:  'bg-gradient-to-r from-slate-400 via-emerald-500 to-slate-500' },
+    chip: 'bg-amber-50 border-amber-400 text-amber-800 shadow-sm',
+    bar:  'bg-gradient-to-r from-amber-400 to-yellow-500' },
 ] as const
 
 export type TierKey = (typeof TIERS)[number]['key']
