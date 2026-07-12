@@ -147,6 +147,24 @@ export async function middleware(request: NextRequest) {
         'Vercel-CDN-Cache-Control',
         'public, s-maxage=300, stale-while-revalidate=3600',
       )
+      return res
+    }
+
+    // Signed-in request to the homepage. The CDN cache key does NOT vary on
+    // cookies, so once any guest visit primes the "/" entry (above), a
+    // freshly signed-in user is served the cached GUEST render for up to
+    // s-maxage + SWR - "homepage stays guest after Google login"
+    // (2026-07-12). Middleware runs BEFORE the CDN cache, so rewriting
+    // cookied "/" requests to a distinct key guarantees they reach the
+    // dynamic per-user render. The browser URL stays "/" (rewrite, not
+    // redirect); the variant is never CDN-cached because no CDN header is
+    // set here and the page is cookies()-dynamic. Only "/" needs this: it
+    // is the one public path that server-renders per-user content (pinned
+    // cities etc.) - place/city pages personalize client-side.
+    if (pathname === '/' && !request.nextUrl.searchParams.has('_authed')) {
+      const url = request.nextUrl.clone()
+      url.searchParams.set('_authed', '1')
+      return NextResponse.rewrite(url, { request: { headers: request.headers } })
     }
     return res
   }
