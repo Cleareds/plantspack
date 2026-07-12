@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
 import { gameCitySummary } from '@/lib/sprouts'
+import { SPROUTS_ENABLED_FOR_ALL } from '@/lib/sprouts-constants'
 
 export const dynamic = 'force-dynamic'
 
 // GET /api/profile/vegan-city?userId=<uuid>
 // The profile Vegan City card: game city summary + real planted trees.
-// Phase 1: own data, or any data for admins (mirrors the SproutsCard gate).
+// While the launch flag is off: own data, or any data for admins (mirrors
+// the VeganCityCard gate). Once SPROUTS_ENABLED_FOR_ALL flips, any signed-in
+// viewer can read the summary - it's the same data the profile card shows.
 export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get('userId')
   if (!userId) return NextResponse.json({ error: 'bad_request' }, { status: 400 })
@@ -16,7 +19,7 @@ export async function GET(req: NextRequest) {
   const { data: { user } } = await sb.auth.getUser()
   if (!user) return NextResponse.json({ error: 'unauth' }, { status: 401 })
   const admin = createAdminClient()
-  if (user.id !== userId) {
+  if (user.id !== userId && !SPROUTS_ENABLED_FOR_ALL) {
     const { data: viewer } = await admin.from('users').select('role').eq('id', user.id).maybeSingle()
     if (viewer?.role !== 'admin') return NextResponse.json({ error: 'forbidden' }, { status: 403 })
   }

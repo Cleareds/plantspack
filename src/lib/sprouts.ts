@@ -2,12 +2,12 @@
 //
 // Phase 1 (2026-05-22): ADMIN-ONLY. The library is wired everywhere it
 // belongs, but `awardSprouts`/`spendSprouts`/`seedTree` early-return if
-// the target user isn't role='admin'. Flip the gate in one place
-// (SPROUTS_ENABLED_FOR_ALL) once we open this up to everyone.
+// the target user isn't role='admin'. The gate lives in sprouts-constants
+// (SPROUTS_ENABLED_FOR_ALL) so pages/cards/routes share the same flag -
+// flip it there once we open this up to everyone.
 
 import { createClient } from '@supabase/supabase-js'
-
-const SPROUTS_ENABLED_FOR_ALL = false  // gate; flip when public-launching
+import { sproutsOpenFor } from '@/lib/sprouts-constants'
 
 type SupporterTier = 'free' | 'medium' | 'premium' | null
 
@@ -88,7 +88,20 @@ export const DAILY_CAPS: Partial<Record<ActionType, number>> = {
   review_with_video: 3,
   add_place: 8,
   add_place_with_image: 8,
+  place_correction_approved: 10,
+  post_share_journey: 1,
+  post_recipe: 2,
+  post_tip: 3,
+  post_engagement_milestone: 3,
 }
+
+// Global per-user velocity limits, on top of per-action caps: no account
+// earns from more than N actions or mints more than M Sprouts in a UTC day,
+// whatever mix of actions it uses. Sized so a hyperactive legitimate day
+// (8 places with photos + a full set of reviews, supporter multiplier on)
+// still fits; sustained farming does not. admin_grant is exempt.
+export const GLOBAL_DAILY_EARN_ACTION_CAP = 40
+export const GLOBAL_DAILY_EARN_AMOUNT_CAP = 5000
 
 // Tiers are named for tree life, not metals. Each tier carries its own
 // Tailwind classes so chips/labels render in tier-appropriate colour.
@@ -182,7 +195,7 @@ export async function awardSprouts(args: AwardArgs): Promise<AwardResult> {
   const sb = adminClient()
   const user = await getUserGateContext(args.userId)
   if (!user) return { ok: false, reason: 'user_not_found' }
-  if (!SPROUTS_ENABLED_FOR_ALL && user.role !== 'admin') return { ok: false, reason: 'gated' }
+  if (!sproutsOpenFor(user.role)) return { ok: false, reason: 'gated' }
 
   const baseAmount = args.amountOverride ?? ACTION_AMOUNTS[args.actionType]
   if (!baseAmount || baseAmount <= 0) return { ok: false, reason: 'no_amount' }
@@ -204,6 +217,22 @@ export async function awardSprouts(args: AwardArgs): Promise<AwardResult> {
       .eq('user_id', args.userId).eq('action_type', args.actionType)
       .gte('created_at', today.toISOString()).is('reversed_at', null)
     if ((count ?? 0) >= cap) return { ok: false, reason: 'daily_cap' }
+  }
+
+  // Global velocity limit: total earn actions + total Sprouts minted today,
+  // across ALL action types. Catches farming mixes that stay under each
+  // per-action cap. Admin grants bypass (manual, deliberate).
+  if (args.actionType !== 'admin_grant') {
+    const today = new Date(); today.setUTCHours(0,0,0,0)
+    const { data: todayEarns } = await sb.from('user_sprouts_ledger')
+      .select('amount')
+      .eq('user_id', args.userId).gt('amount', 0)
+      .gte('created_at', today.toISOString()).is('reversed_at', null)
+    const actions = todayEarns?.length ?? 0
+    const minted = (todayEarns ?? []).reduce((s, r) => s + r.amount, 0)
+    if (actions >= GLOBAL_DAILY_EARN_ACTION_CAP || minted >= GLOBAL_DAILY_EARN_AMOUNT_CAP) {
+      return { ok: false, reason: 'daily_cap' }
+    }
   }
 
   const applyMult = args.applySupporterMultiplier !== false
@@ -237,7 +266,7 @@ export async function spendSprouts(args: {
   const sb = adminClient()
   const user = await getUserGateContext(args.userId)
   if (!user) return { ok: false, reason: 'user_not_found' }
-  if (!SPROUTS_ENABLED_FOR_ALL && user.role !== 'admin') return { ok: false, reason: 'gated' }
+  if (!sproutsOpenFor(user.role)) return { ok: false, reason: 'gated' }
 
   // spend.custom always takes the caller's amount; spend.real_tree may too -
   // the tree price slides with the player's Vegan City Score (see
@@ -279,7 +308,7 @@ export async function seedTree(userId: string, amount: number): Promise<AwardRes
   const sb = adminClient()
   const user = await getUserGateContext(userId)
   if (!user) return { ok: false, reason: 'user_not_found' }
-  if (!SPROUTS_ENABLED_FOR_ALL && user.role !== 'admin') return { ok: false, reason: 'gated' }
+  if (!sproutsOpenFor(user.role)) return { ok: false, reason: 'gated' }
 
   const { data: u } = await sb.from('users').select('sprouts_balance').eq('id', userId).single()
   if (!u) return { ok: false, reason: 'user_not_found' }
@@ -548,7 +577,7 @@ export async function redeem(args: {
     // spendSprouts would normally enforce must still apply.
     const gateUser = await getUserGateContext(args.userId)
     if (!gateUser) return { ok: false, reason: 'user_not_found' }
-    if (!SPROUTS_ENABLED_FOR_ALL && gateUser.role !== 'admin') return { ok: false, reason: 'gated' }
+    if (!sproutsOpenFor(gateUser.role)) return { ok: false, reason: 'gated' }
   } else {
     const debit = await spendSprouts({
       userId: args.userId, actionType: spec.actionType,

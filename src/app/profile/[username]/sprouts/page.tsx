@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { getMyState, TREE_STAGES } from '@/lib/sprouts'
+import { sproutsOpenFor } from '@/lib/sprouts-constants'
 import { Sprout, TreeDeciduous, ArrowLeft } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -16,19 +17,22 @@ const admin = createAdmin(
 export default async function ProfileSproutsPage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
 
-  // Admin-only during phase 1
+  // Gated by SPROUTS_ENABLED_FOR_ALL (admin-only while the flag is off)
   const sbAuth = await createClient()
   const { data: { user: viewer } } = await sbAuth.auth.getUser()
-  if (!viewer) notFound()
-  const { data: viewerProf } = await sbAuth.from('users').select('role').eq('id', viewer.id).maybeSingle()
-  if ((viewerProf as any)?.role !== 'admin') notFound()
+  let viewerRole: string | null = null
+  if (viewer) {
+    const { data: viewerProf } = await sbAuth.from('users').select('role').eq('id', viewer.id).maybeSingle()
+    viewerRole = (viewerProf as any)?.role ?? null
+  }
+  if (!sproutsOpenFor(viewerRole)) notFound()
 
   const { data: targetUser } = await admin.from('users')
     .select('id, username, avatar_url, sprouts_lifetime, sprouts_balance, sprouts_seeded, forest_size')
     .eq('username', username).maybeSingle()
   if (!targetUser) notFound()
 
-  const isOwn = viewer.id === targetUser.id
+  const isOwn = viewer?.id === targetUser.id
 
   // If the target has no Sprouts yet, show an empty-state page rather than 404
   const state = await getMyState(targetUser.id)
@@ -95,7 +99,7 @@ export default async function ProfileSproutsPage({ params }: { params: Promise<{
               <p className="text-sm text-gray-800 font-semibold">Your tree grows with your Vegan City now.</p>
               <p className="text-xs text-gray-600 mt-1">
                 Build your city at <a href="https://play.plantspack.com" className="text-emerald-700 font-semibold hover:underline">play.plantspack.com</a> - it appears on your profile,
-                and a finished city + 1,000 Sprouts plants a <a href="/sprouts" className="text-emerald-700 font-semibold hover:underline">real tree</a>.
+                and every city score point cuts the 1,500-Sprout <a href="/sprouts" className="text-emerald-700 font-semibold hover:underline">real-tree</a> price by 2 (free at score 750).
               </p>
             </div>
 

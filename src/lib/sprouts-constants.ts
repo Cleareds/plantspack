@@ -17,6 +17,17 @@
 // Anti-abuse: one real tree per account per 90 days, plus every order goes
 // through the human-reviewed /admin/tree-orders queue before money moves.
 
+// THE launch gate. Phase 1 = admin-only everywhere (library mints/spends,
+// pages, cards, API routes). Flip this one flag to open Sprouts to everyone -
+// every gate in the codebase derives from sproutsOpenFor().
+// DO NOT flip until the real-trees fulfillment setup is finished.
+export const SPROUTS_ENABLED_FOR_ALL = false
+
+/** Whether the Sprouts system is open for a user with this role. */
+export function sproutsOpenFor(role?: string | null): boolean {
+  return SPROUTS_ENABLED_FOR_ALL || role === 'admin'
+}
+
 export const REAL_TREE_BASE_COST = 1500
 /** Sprouts knocked off the price per Vegan City Score point. */
 export const REAL_TREE_SCORE_DISCOUNT = 2

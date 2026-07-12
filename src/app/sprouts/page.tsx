@@ -2,15 +2,17 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
-import { ACTION_AMOUNTS, TIERS, gameCitySummary } from '@/lib/sprouts'
+import { ACTION_AMOUNTS, TIERS, gameCitySummary, type GameCitySummary } from '@/lib/sprouts'
+import { sproutsOpenFor, SPROUTS_ENABLED_FOR_ALL } from '@/lib/sprouts-constants'
 import RealTreeCeremony from '@/components/sprouts/RealTreeCeremony'
-import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, Heart, MapPin, Camera, Users } from 'lucide-react'
+import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, MapPin, Camera } from 'lucide-react'
 
 export const metadata = {
   title: 'Sprouts - PlantsPack contribution rewards',
-  description: 'Earn Sprouts by adding vegan venues, writing reviews, and sharing your vegan journey. Grow your Vegan City in the game, plant real trees, unlock partner perks.',
+  description: 'Earn Sprouts by adding vegan venues and writing reviews. Grow your Vegan City in the game, plant real trees, unlock partner perks.',
 }
-// Admin-only during phase 1. Anyone else gets a 404.
+// Gated by SPROUTS_ENABLED_FOR_ALL (sprouts-constants): admin-only while the
+// flag is off, everyone (signed-in or not) once it flips.
 export const dynamic = 'force-dynamic'
 
 const admin = createAdmin(
@@ -20,14 +22,16 @@ const admin = createAdmin(
 )
 
 export default async function SproutsPage() {
-  // Admin-only gate
   const sb = await createClient()
   const { data: { user } } = await sb.auth.getUser()
-  if (!user) notFound()
-  const { data: viewerProfile } = await sb.from('users').select('role').eq('id', user.id).maybeSingle()
-  if ((viewerProfile as any)?.role !== 'admin') notFound()
+  let viewerRole: string | null = null
+  if (user) {
+    const { data: viewerProfile } = await sb.from('users').select('role').eq('id', user.id).maybeSingle()
+    viewerRole = (viewerProfile as any)?.role ?? null
+  }
+  if (!sproutsOpenFor(viewerRole)) notFound()
 
-  // Top contributors (public, lifetime-ranked). Currently admin-only during phase 1.
+  // Top contributors (public, lifetime-ranked).
   const { data: top } = await admin.from('users')
     .select('id, username, avatar_url, sprouts_lifetime, sprouts_seeded, forest_size')
     .gt('sprouts_lifetime', 0)
@@ -35,17 +39,24 @@ export default async function SproutsPage() {
     .limit(10)
 
   // real-tree ceremony inputs: viewer's balance + their game city score
-  const [{ data: me }, citySummary] = await Promise.all([
-    admin.from('users').select('sprouts_balance, sprouts_lifetime').eq('id', user.id).single(),
-    gameCitySummary(user.id),
-  ])
+  // (guests see the page with zeroed ceremony inputs once the flag is on)
+  const emptyCity: GameCitySummary = { score: 0, cityName: '', citiesBuilt: 0, buildings: 0, hasSave: false }
+  const [{ data: me }, citySummary] = user
+    ? await Promise.all([
+        admin.from('users').select('sprouts_balance, sprouts_lifetime').eq('id', user.id).single(),
+        gameCitySummary(user.id),
+      ])
+    : [{ data: null }, emptyCity]
 
+  // Only actions that actually mint today (add-place + review hooks are the
+  // live ones). Posts / profile / streaks / onboarding actions exist in the
+  // catalog but aren't wired yet - per the honesty rule they don't get
+  // advertised until they credit for real.
   const earnGroups = [
     {
       label: 'Add vegan venues', icon: MapPin, items: [
         ['Add a place', ACTION_AMOUNTS.add_place],
         ['Add a place with photo', ACTION_AMOUNTS.add_place_with_image],
-        ['Correction approved', ACTION_AMOUNTS.place_correction_approved],
       ],
     },
     {
@@ -53,27 +64,6 @@ export default async function SproutsPage() {
         ['Text review', ACTION_AMOUNTS.review_text],
         ['Review with photo', ACTION_AMOUNTS.review_with_photo],
         ['Review with video', ACTION_AMOUNTS.review_with_video],
-        ['Helpful vote received', ACTION_AMOUNTS.review_helpful_vote_received],
-      ],
-    },
-    {
-      label: 'Community', icon: Users, items: [
-        ['Share your vegan journey', ACTION_AMOUNTS.post_share_journey],
-        ['Recipe post', ACTION_AMOUNTS.post_recipe],
-        ['Tip post', ACTION_AMOUNTS.post_tip],
-      ],
-    },
-    {
-      label: 'Tell us about you', icon: Heart, items: [
-        ['Set vegan status', ACTION_AMOUNTS['profile.is_vegan']],
-        ['Add vegan-since date', ACTION_AMOUNTS['profile.vegan_since']],
-        ['Write your transition story', ACTION_AMOUNTS['profile.transition_story']],
-        ['Share why you went vegan', ACTION_AMOUNTS['profile.vegan_reasons']],
-        ['Add favourite vegan meal', ACTION_AMOUNTS['profile.favourite_vegan_meal']],
-        ['Current challenges', ACTION_AMOUNTS['profile.current_challenges']],
-        ['Dietary specifics', ACTION_AMOUNTS['profile.dietary_specifics']],
-        ['Bio', ACTION_AMOUNTS['profile.bio']],
-        ['Avatar', ACTION_AMOUNTS['profile.avatar']],
       ],
     },
   ]
@@ -84,16 +74,18 @@ export default async function SproutsPage() {
 
         {/* Hero */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold mb-3">
-            <Sprout className="w-3.5 h-3.5" /> Currently in admin-only preview
-          </div>
+          {!SPROUTS_ENABLED_FOR_ALL && (
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold mb-3">
+              <Sprout className="w-3.5 h-3.5" /> Currently in admin-only preview
+            </div>
+          )}
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-3">
             <Sprout className="w-10 h-10 text-emerald-600" />
             Sprouts
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
             A way to recognise the people doing the actual work of mapping the plant-based world.
-            Earn Sprouts for adding venues, writing reviews, and sharing your vegan journey. Grow
+            Earn Sprouts for adding vegan venues and writing reviews. Grow
             your Vegan City in the game. Plant a real tree. Trade Sprouts for partner perks.
           </p>
         </div>
@@ -182,8 +174,9 @@ export default async function SproutsPage() {
             ))}
           </div>
           <p className="text-xs text-gray-500 mt-3">
-            Daily caps apply to repeat actions (reviews, helpful votes) so the system rewards meaningful contributions, not farming.
-            One-time profile fields count once each. Earnings are credited when the action is verified.
+            Daily caps apply to repeat actions so the system rewards meaningful contributions, not farming.
+            Earnings are credited when the action is verified. More ways to earn (posts, profile,
+            streaks) are planned and will appear here once they credit for real.
           </p>
         </section>
 

@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { Sprout, Trophy } from 'lucide-react'
 import { TIERS, tierFor } from '@/lib/sprouts'
+import { SPROUTS_ENABLED_FOR_ALL } from '@/lib/sprouts-constants'
 
 export default function SproutsCard({
   username, lifetime, balance, seeded, forestSize, isOwnProfile, viewerIsAdmin = false,
@@ -14,9 +15,9 @@ export default function SproutsCard({
   isOwnProfile: boolean
   viewerIsAdmin?: boolean
 }) {
-  // Phase 1: Sprouts UI is admin-only. Card only renders when the
-  // viewer is an admin and the target has any Sprouts to show.
-  if (!viewerIsAdmin) return null
+  // Renders for admins while the launch flag is off, for everyone after -
+  // and only when the target has any Sprouts to show.
+  if (!SPROUTS_ENABLED_FOR_ALL && !viewerIsAdmin) return null
   if (!lifetime || lifetime <= 0) return null
 
   const tier = tierFor(lifetime)

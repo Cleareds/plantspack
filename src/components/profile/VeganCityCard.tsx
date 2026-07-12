@@ -6,11 +6,12 @@
 // are golden certificate trees. This replaces the old seed-sprouts-into-a-
 // digital-tree "forest" concept.
 //
-// Phase 1: renders for admin viewers only (same gate as SproutsCard); the
-// backing API also allows owners, so flipping the gate later is one line.
+// Gated on SPROUTS_ENABLED_FOR_ALL (admin-only while off, everyone after) -
+// same gate as SproutsCard; the backing API mirrors it.
 
 import { useEffect, useState } from 'react'
 import { Gamepad2, TreeDeciduous, ExternalLink } from 'lucide-react'
+import { SPROUTS_ENABLED_FOR_ALL } from '@/lib/sprouts-constants'
 
 interface PlantedTree {
   id: string
@@ -54,19 +55,20 @@ export default function VeganCityCard({
   viewerIsAdmin: boolean
 }) {
   const [data, setData] = useState<CityData | null>(null)
+  const visible = SPROUTS_ENABLED_FOR_ALL || viewerIsAdmin
 
   useEffect(() => {
-    if (!viewerIsAdmin) return
+    if (!visible) return
     let cancelled = false
     fetch(`/api/profile/vegan-city?userId=${encodeURIComponent(userId)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => { if (!cancelled && j) setData(j) })
       .catch(() => {})
     return () => { cancelled = true }
-  }, [userId, viewerIsAdmin])
+  }, [userId, visible])
 
-  // Phase 1: admin-only, and only when there is anything to show
-  if (!viewerIsAdmin || !data) return null
+  // Admin-only while the launch flag is off, and only when there is anything to show
+  if (!visible || !data) return null
   if (!data.hasSave && data.planted.length === 0 && data.archived.length === 0) return null
 
   const stage = stageFor(data.score)

@@ -65,9 +65,11 @@ export async function POST(req: Request) {
       const v = (prof as any)?.[field === 'avatar' ? 'avatar_url' : field]
       const present = Array.isArray(v) ? v.length > 0 : Boolean(v)
       if (!present) return NextResponse.json({ ok: false, reason: 'field_empty' }, { status: 400 })
+      // referenceId = field name so the ledger's (user, action, reference)
+      // idempotency check makes each profile field a genuine one-time award
       const r = await awardSprouts({
         userId: user.id, actionType: `profile.${field}` as ActionType,
-        referenceType: 'profile_field', referenceId: null, metadata: { field },
+        referenceType: 'profile_field', referenceId: field, metadata: { field },
       })
       return NextResponse.json(r, { status: r.ok ? 200 : 400 })
     }
