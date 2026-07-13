@@ -24,11 +24,14 @@ export default function VeganLevelInlineEditor({ placeId, initialLevel }: Props)
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [level, setLevel] = useState<VeganLevel>((initialLevel as VeganLevel) || 'vegan_friendly')
+  // NULL level is legitimate (sanctuaries/organisations carry no food
+  // badge - community feedback 2026-07-13). Never default it to
+  // vegan_friendly: that painted a dog shelter amber.
+  const [level, setLevel] = useState<VeganLevel | null>((initialLevel as VeganLevel) || null)
 
   const isAdmin = (profile as any)?.role === 'admin'
   if (!isAdmin) {
-    const lab = LABELS[level]
+    const lab = level ? LABELS[level] : null
     return lab ? <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${lab.cls}`}>{lab.text}</span> : null
   }
 
@@ -56,7 +59,7 @@ export default function VeganLevelInlineEditor({ placeId, initialLevel }: Props)
   }
 
   if (!editing) {
-    const lab = LABELS[level]
+    const lab = level ? LABELS[level] : null
     return (
       <button
         type="button"
@@ -75,10 +78,11 @@ export default function VeganLevelInlineEditor({ placeId, initialLevel }: Props)
       <select
         autoFocus
         disabled={saving}
-        value={level}
+        value={level ?? ''}
         onChange={(e) => save(e.target.value as VeganLevel)}
         className="px-2 py-1 rounded-full text-xs font-bold bg-surface-container-low ghost-border focus:outline-none focus:ring-1 focus:ring-primary/40"
       >
+        {level === null && <option value="" disabled>No level (sanctuary)</option>}
         <option value="fully_vegan">100% Vegan</option>
         <option value="mostly_vegan">Mostly Vegan</option>
         <option value="vegan_friendly">Vegan-Friendly</option>
