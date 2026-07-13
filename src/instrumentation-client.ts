@@ -47,12 +47,22 @@ const initOptions = {
   // Noise we can't fix — third-party / in-app-browser issues, browser
   // extensions, and known-benign framework quirks. Keeping these out
   // of Sentry so real bugs don't get buried.
+  // Frames reported as app:/// are scripts INJECTED by in-app browsers
+  // (Instagram/Facebook WebView bridge code like sendDataToNative /
+  // sendPageHideMessage). Never our code; drop everything they throw.
+  denyUrls: [/^app:\/\//],
+
   ignoreErrors: [
     // Meta in-app browser (Facebook / Instagram / Messenger) — fires
     // when the WebView is backgrounded while their analytics bridge is
     // active. Not our code, not actionable.
     'enableButtonsClickedMetaDataLogging',
     'Java object is gone',
+    // iOS Instagram/Facebook WebView: Meta's injected bridge calls
+    // window.webkit.messageHandlers, which is missing on some iOS builds
+    // (seen 2026-07-13: TypeError in sendPageHideMessage, Instagram 437 /
+    // iOS 26). Their crash, our quota - drop it.
+    'webkit.messageHandlers',
     // Meta / TikTok / etc. tracking SDKs that get blocked by ad
     // blockers or aggressive privacy settings.
     /^Meta(Pixel|Analytics)/,
