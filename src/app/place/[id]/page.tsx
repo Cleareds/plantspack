@@ -227,7 +227,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     event: 'Event', organisation: 'Organisation', other: 'Place',
   }
   const cat = categoryLabel[place.category] || 'Place'
-  const veganTag = (place as any).vegan_level === 'fully_vegan' ? 'Fully Vegan' : 'Vegan-Friendly'
+  // vegan_level can be NULL - sanctuaries/organisations don't carry a food
+  // badge (a dog shelter is not "Vegan-Friendly"; community feedback
+  // 2026-07-13). No level -> no vegan prefix in the SERP title.
+  const veganTag = (place as any).vegan_level === 'fully_vegan'
+    ? 'Fully Vegan'
+    : (place as any).vegan_level ? 'Vegan-Friendly' : ''
   const location = [place.city, place.country].filter(Boolean).join(', ')
   const rating = place.average_rating > 0 ? ` · ⭐ ${place.average_rating.toFixed(1)}` : ''
 
@@ -249,8 +254,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const namePart = usefulStreet ? `${place.name} at ${firstSeg}` : place.name
 
   const title = location
-    ? `${namePart} — ${veganTag} ${cat} in ${location}${rating} | PlantsPack`
-    : `${namePart} — ${veganTag} ${cat}${rating} | PlantsPack`
+    ? `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')} in ${location}${rating} | PlantsPack`
+    : `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')}${rating} | PlantsPack`
 
   // Build a rich fallback description if the place has no description
   const cuisines = (place as any).cuisine_types?.filter((c: string) => c && c !== 'vegan').slice(0, 3) || []
@@ -259,7 +264,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ? ` Rated ${place.average_rating.toFixed(1)}/5 from ${place.review_count} review${place.review_count === 1 ? '' : 's'}.`
     : ''
   const addressLine = place.address ? ` ${place.address}.` : ''
-  const fallbackDesc = `${place.name} is a ${veganTag.toLowerCase()} ${cat.toLowerCase()}${location ? ` in ${location}` : ''}.${cuisineStr}${addressLine}${ratingText}`.trim()
+  const fallbackDesc = `${place.name} is a ${[veganTag.toLowerCase(), cat.toLowerCase()].filter(Boolean).join(' ')}${location ? ` in ${location}` : ''}.${cuisineStr}${addressLine}${ratingText}`.trim()
 
   // Prefer real description if long enough; otherwise augment with fallback.
   // Skip the raw description entirely when it is dominantly non-Latin
@@ -325,7 +330,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     alternates: { canonical: `https://www.plantspack.com/place/${place.slug || id}` },
     robots: isThin ? { index: false, follow: true } : undefined,
     openGraph: {
-      title: `${namePart} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
+      title: `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')}${location ? ` in ${location}` : ''}`,
       description,
       type: 'website',
       siteName: 'PlantsPack',
@@ -337,7 +342,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     ...(image ? {
       twitter: {
         card: 'summary_large_image' as const,
-        title: `${namePart} — ${veganTag} ${cat}${location ? ` in ${location}` : ''}`,
+        title: `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')}${location ? ` in ${location}` : ''}`,
         description,
         images: [image],
       },
