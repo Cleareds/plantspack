@@ -43,6 +43,7 @@ import { pickOgImage } from '@/lib/places/og-image'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { buildPlaceFaqJsonLd, PLACE_SPEAKABLE } from '@/lib/places/faq'
 import VeganLevelInlineEditor from '@/components/places/VeganLevelInlineEditor'
+import AdminDelistButton from '@/components/places/AdminDelistButton'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
 
@@ -704,6 +705,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             <div className="space-y-1.5">
               <div className="flex flex-wrap gap-2">
                 <VeganLevelInlineEditor placeId={place.id} initialLevel={(place as any).vegan_level} />
+                {/* Organisations without a subcategory still get an identity
+                    chip - they carry no food-level badge (2026-07-13). */}
+                {place.category === 'organisation' && !(place as any).subcategory && (
+                  <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-surface-container-low text-on-surface-variant">Organisation</span>
+                )}
+                <AdminDelistButton placeId={place.id} placeName={place.name} />
                 {(place as any).subcategory && (
                   <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-surface-container-low text-on-surface-variant">
                     {(place as any).subcategory.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}

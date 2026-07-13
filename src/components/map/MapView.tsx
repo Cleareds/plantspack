@@ -294,7 +294,7 @@ function MapViewImpl({
                       <span className="capitalize">{place.category}</span>
                       {(place as any).vegan_level && (
                         <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${VEGAN_LEVEL_INLINE_CLASS[(place as any).vegan_level] ?? 'bg-amber-100 text-amber-700'}`}>
-                          {VEGAN_LEVEL_LABEL[(place as any).vegan_level] ?? 'Vegan-Friendly'}
+                          {VEGAN_LEVEL_LABEL[(place as any).vegan_level] ?? ((place as any).category === 'organisation' ? 'Organisation' : '')}
                         </span>
                       )}
                       {place.is_pet_friendly && (

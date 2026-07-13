@@ -526,7 +526,7 @@ export default async function Home() {
                         {p.city}{p.country ? `, ${p.country}` : ''}
                       </p>
                       <p className="text-[11px] text-on-surface-variant mt-0.5">
-                        {VEGAN_LEVEL_LABEL[p.vegan_level ?? ''] ?? 'Vegan-Friendly'}
+                        {VEGAN_LEVEL_LABEL[p.vegan_level ?? ''] ?? ''}
                         {p.average_rating ? ` · ★ ${Number(p.average_rating).toFixed(1)}` : ''}
                       </p>
                     </div>

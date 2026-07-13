@@ -128,7 +128,9 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
     }
     return ''
   })
-  const [veganLevel, setVeganLevel] = useState(place.vegan_level || 'vegan_friendly')
+  // '' = no food level (organisations/sanctuaries). Never default it back
+  // to vegan_friendly - saving would repollute the row (2026-07-13 taxonomy).
+  const [veganLevel, setVeganLevel] = useState(place.vegan_level || '')
   const [businessStatus, setBusinessStatus] = useState<string>((place as any).business_status || 'open')
   const [reopenDate, setReopenDate] = useState<string>((place as any).reopen_date || '')
   const [isPetFriendly, setIsPetFriendly] = useState(place.is_pet_friendly)
@@ -223,7 +225,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
           description: description.trim() || null,
           category,
           subcategory: subcategory || null,
-          vegan_level: veganLevel,
+          ...(veganLevel ? { vegan_level: veganLevel } : {}),
           business_status: businessStatus,
           reopen_date: businessStatus === 'temporarily_closed' ? (reopenDate || null) : null,
           website: website.trim() || null,

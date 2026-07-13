@@ -147,3 +147,4 @@ reports/*.log
 .secrets/
 .event-routine-state
 .seo-monitor-state.json
+backups/
