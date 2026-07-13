@@ -394,7 +394,27 @@ export function mapOsmCategory(tags: Record<string, string>): 'eat' | 'hotel' | 
  * conservative default. Downstream evidence (HappyCow, Yelp, manual
  * review) can upgrade later.
  */
+// Animal-centric name/cuisine signals. A place whose identity is a meat dish
+// (döner, steak, fish...) must never be imported above vegan_options on OSM
+// tags alone — mistagged diet:vegan=only produced "King Döner fully_vegan"
+// (false-positive audit 2026-07). A vegan qualifier in the name lifts the veto
+// ("Vegan Döner", "Fleischlos").
+const MEAT_NAME_RE = /(döner|doner|kebab|kebap|shawarma|gyros|fisch|fish|seafood|steak|grill|bbq|barbecue|burger|butcher|metzger|fleisch|schlacht|bratwurst|currywurst|hähnchen|chicken|wurst|sausage|schnitzel|carne|poisson|vlees)/i;
+const VEGAN_NAME_RE = /(vegan|vegi|veggie|vegetar|plant|fleischlos|fleischfrei|meatless|sin carne)/i;
+const MEAT_CUISINES = new Set(['kebab', 'doner', 'steak', 'steak_house', 'barbecue', 'bbq', 'grill', 'fish', 'seafood', 'fish_and_chips', 'burger', 'chicken', 'fried_chicken', 'sausage', 'currywurst', 'meat']);
+
+export function hasMeatVeto(tags: Record<string, string>): boolean {
+  const name = tags['name'] ?? '';
+  const cuisines = (tags['cuisine'] ?? '').toLowerCase().split(';').map((c) => c.trim());
+  const meatSignal = (MEAT_NAME_RE.test(name) || cuisines.some((c) => MEAT_CUISINES.has(c)));
+  return meatSignal && !VEGAN_NAME_RE.test(name);
+}
+
 export function mapVeganLevel(tags: Record<string, string>): 'fully_vegan' | 'mostly_vegan' | 'vegan_friendly' | 'vegan_options' {
+  // A meat-identity name/cuisine caps the import at vegan_options no matter
+  // what the diet tags claim — OSM mistags are common, and a wrong
+  // "100% vegan" on a fish shop is the worst failure the platform can ship.
+  if (hasMeatVeto(tags)) return 'vegan_options';
   // cuisine=vegan is a strong signal — OSM mappers use it specifically
   // for fully-vegan venues. Trust it the same as diet:vegan=only.
   if (tags['cuisine'] === 'vegan' || tags['diet:vegan'] === 'only') return 'fully_vegan';

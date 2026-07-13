@@ -73,6 +73,9 @@ const NEGATIVE_HINTS = [
   /\b(also|with|and|&)\s+vegan\b/,     // "X & Vegan", "with vegan"
   /\bvegan@home\b/,
   /\bnon[\s\-]?vegan\b/,
+  // Meat-identity names: "Grillhaus Vegan Corner" etc. must never be promoted
+  // on the "vegan" token alone (produced mostly_vegan grill houses, audit 2026-07).
+  /\b(doner|kebab|kebap|shawarma|gyros|fisch|fish|seafood|steak|grill|bbq|barbecue|bratwurst|currywurst|hahnchen|chicken|wurst|sausage|schnitzel|metzger|fleisch(?!los|frei)|schlacht|butcher)\b/,
 ];
 
 function isDisqualified(n: string): boolean {

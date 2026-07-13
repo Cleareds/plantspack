@@ -1,0 +1,51 @@
+[
+ {
+  "id": "67a2980e-add9-4842-81aa-bcde81048ebb",
+  "name": "Döner Summer",
+  "description": "Döner Summer offers a vibrant spin on the classic döner kebab, featuring succulent, marinated seitan, freshly grilled vegetables, and a selection of house-made sauces, all wrapped in warm, fluffy pita or served with hearty sides. The casual atmosphere evokes a summer festival vibe, making it the perfect spot for a quick, satisfying meal or a leisurely hangout with friends, complete with a variety ",
+  "tags": [],
+  "city": "York",
+  "country": "United Kingdom",
+  "vegan_level": "vegan_friendly",
+  "source": "osm-import-2026-04",
+  "verification_level": 1,
+  "verification_method": "osm-diet-crossref-downgrade-2026-07-03",
+  "is_verified": false,
+  "review_count": 0,
+  "website": "https://www.donersummer.com/"
+ },
+ {
+  "id": "91d9abc6-a200-4af8-b11b-8df9ea4fc511",
+  "name": "Hos Fischer",
+  "description": "Hos Fischer Onsdag — Lørdag Se mere og book bord",
+  "tags": [],
+  "city": "Copenhagen",
+  "country": "Denmark",
+  "vegan_level": "vegan_friendly",
+  "source": "osm-import-2026-04",
+  "verification_level": 0,
+  "verification_method": null,
+  "is_verified": false,
+  "review_count": 0,
+  "website": "https://hosfischer.dk/"
+ },
+ {
+  "id": "da950466-a790-4d33-917b-12736e700997",
+  "name": "Franz-Fischer-Hütte",
+  "description": "Die Franz-Fischer-Hütte ist eine Alpenvereinshütte der Sektion Lungau des ÖAV in den Radstädter Tauern auf 2020 m ü. A. Sie ist nach Franz Fischer benannt, der von 1923 bis zu seinem Tod im Jahr 1944 Vorsitzender der Wiener Sektion Tauriskia des DuOeAV war. Sie liegt im Gemeindegebiet von Zederhaus in Salzburg und dient als Stützpunkt am Zentralalpenweg, einem österreichischen Weitwanderweg von Hainburg an der Donau nach Feldkirch.",
+  "tags": [
+   "image_from_wikidata",
+   "desc_from_wikipedia",
+   "osm_enriched"
+  ],
+  "city": "Zederhaus",
+  "country": "Austria",
+  "vegan_level": "vegan_friendly",
+  "source": "osm-import-2026-04",
+  "verification_level": 1,
+  "verification_method": "imported",
+  "is_verified": false,
+  "review_count": 0,
+  "website": "https://franzfischer-huette.at/"
+ }
+]

@@ -79,7 +79,10 @@ function processElements(elements, countryName) {
       source_id: 'osm:' + e.type + '/' + e.id,
       opening_hours: t.opening_hours || null,
       cuisine_types: t.cuisine ? t.cuisine.split(';').map(c => c.trim()) : [],
-      vegan_level: t['diet:vegan'] === 'only' ? 'fully_vegan' : 'vegan_friendly',
+      // diet:vegan=only → fully; anything else (=yes means "has a vegan dish")
+      // → vegan_options. The old else-branch defaulted =yes to vegan_friendly,
+      // which put fish/steak houses on the map as vegan-friendly (audit 2026-07).
+      vegan_level: t['diet:vegan'] === 'only' ? 'fully_vegan' : 'vegan_options',
     };
   });
 }

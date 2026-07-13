@@ -1,0 +1,1472 @@
+[
+ {
+  "id": "43b4e88a-a533-47db-8ed5-c2d3fe7be12f",
+  "name": "The Butcher's Son",
+  "verdict": "vegan",
+  "evidence": "Official site thebutchersveganson.com: 100% plant-based Vegan Deli & Bakery; listed on HappyCow; PETA vegan steak award.",
+  "city": "Berkeley",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "1368e6f6-cb60-40e2-bf05-f1e53fb6260d",
+  "name": "Mission Burger Co.",
+  "verdict": "vegan",
+  "evidence": "Atlanta Magazine 'vegan eatery Mission Burger Co.'; HappyCow-listed plant-based burger restaurant using Impossible/Gardein/seitan.",
+  "city": "Atlanta",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "2c49737b-3465-40ff-95c9-aa47f25deb31",
+  "name": "Kebab Kitchen",
+  "verdict": "not_vegan",
+  "evidence": "Official site kebab-kitchen-essen.de markets meat d\u00f6ner ('perfectly seasoned meat in flatbread'); falafel/veggie are side options only.",
+  "city": "Essen",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "77a4aaf4-1844-44a2-b341-fd4fabb7e3e7",
+  "name": "Next Level Burger",
+  "verdict": "vegan",
+  "evidence": "America's first 100% plant-based burger chain (nextlevelvg.com); Seattle locations Yelp-categorized Vegan (rebranding to Next Level Veggie Grill; Roosevelt spot shown closed on Yelp).",
+  "city": "Seattle",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "44a1508f-550c-4ae6-864b-c58dac1407f3",
+  "name": "Meisterb\u00e4ckerei Schneckenburger",
+  "verdict": "not_vegan",
+  "evidence": "Conventional artisan bakery chain; own site meisterbaeckerei.de flags only select breads/rolls as vegan, i.e. the rest of the catalog is not.",
+  "city": "Bad Durrheim",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "309a308a-f240-4d7c-b36e-636e5f9e94d8",
+  "name": "Nice Burger",
+  "verdict": "vegan",
+  "evidence": "Trades as 'Nice Burger 100% Vegan' (niceguysvegan.com); HappyCow-listed; OC's first 100% vegan charbroiled burger drive-thru.",
+  "city": "Santa Ana",
+  "country": "United States",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "9c715670-35d8-4b34-b6f0-4f2568b330e3",
+  "name": "Rolle Kebap",
+  "verdict": "not_vegan",
+  "evidence": "Menu of 110 dishes includes classic meat d\u00f6ner ('meat is crispy and fresh'); vegan seitan d\u00f6ner is only an option (so-lebt-dresden.de).",
+  "city": "Dresden",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6f6e89f7-5d58-4236-8665-165f977c9702",
+  "name": "Kebap Del\u00fc\u00fcxe",
+  "verdict": "not_vegan",
+  "evidence": "Own site kebap-deluuxe.de: traditional d\u00f6ner with beef and chicken, 100% halal; vegan seitan d\u00f6ner is a separate menu line.",
+  "city": "Darmstadt",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "3d2101da-d14d-4535-844b-b0ee0f7cdbe3",
+  "name": "Mauer Food Kebab",
+  "verdict": "not_vegan",
+  "evidence": "Restaurant Guru: offers both meat and vegan options; reviews praise the (meat) d\u00f6ner; vegan seitan d\u00f6ner is one menu option.",
+  "city": "Freiburg im Breisgau",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "7bd6432a-9dfe-4eb7-b837-bd0c04a626ba",
+  "name": "Nice Burger",
+  "verdict": "vegan",
+  "evidence": "Same 100% vegan chain; Irvine location listed as 'NICE BURGER 100% VEGAN - IRVINE' on ordering platforms and HappyCow.",
+  "city": "Irvine",
+  "country": "United States",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a1d73e20-a210-47d5-ae89-b290bffd1d7a",
+  "name": "PLNT Burger",
+  "verdict": "vegan",
+  "evidence": "plntburger.com: menu is entirely vegan/plant-based; DC locations Yelp-categorized Vegan.",
+  "city": "Washington",
+  "country": "United States",
+  "source": "osm_validated_batch3",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "547a0f1c-a752-48c3-8b16-269a0909a194",
+  "name": "Next Level Burger",
+  "verdict": "vegan",
+  "evidence": "Denver location now Next Level Veggie Grill, 100% plant-based menu (nextlevelvg.com, Yelp Vegan category).",
+  "city": "Denver",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "0100acd8-8c2b-469a-a74a-e6f1eb87dd57",
+  "name": "Shawarma Al Shami",
+  "verdict": "unknown",
+  "evidence": "Facebook page categorized 'Vegetarian/Vegan Restaurant' but place serves shawarma (typically meat); menu not verifiable in two searches \u2014 inconclusive.",
+  "city": "Ludwigsburg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6b67d8dc-283d-4ddf-94f0-4acd68827a4f",
+  "name": "Schloss D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Schloss D\u00f6ner und Pizza Haus menu includes steaks, meat dishes, rotisserie and classic d\u00f6ner; vegan dishes are just a category.",
+  "city": "Karlsruhe",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "82be5d60-c6fa-4e90-934c-408423181b28",
+  "name": "Kebab & Pizza Haus",
+  "verdict": "unknown",
+  "evidence": "No exact match found in two searches; generic name matches several Karlsruhe d\u00f6ner shops \u2014 cannot identify the specific place.",
+  "city": "Karlsruhe",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "55e35a49-1cd0-4460-99ff-c031621a2d3a",
+  "name": "Flower Burger Pescara",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is a 100% vegan Italian chain; Pescara location opened 2024, described as first fully vegan fast food in Abruzzo (flowerburger.it, HappyCow, Food News Italia).",
+  "city": "Pescara",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "36b02033-a4f9-4a61-b012-66203e8a8696",
+  "name": "Rise Above Pizza & Wings",
+  "verdict": "vegan",
+  "evidence": "Hamilton's first and only 100% vegan pizzeria per its own site, HappyCow, and vKind.",
+  "city": "Hamilton",
+  "country": "Canada",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6cf9ed2c-a66d-4905-9ed9-0af65efa65ef",
+  "name": "Karma Kebab",
+  "verdict": "vegan",
+  "evidence": "100% vegan kebab brand (celeriac/seitan kebab), confirmed by karmakebab.nl and Dutch vegetarian society; note HappyCow flags the Amsterdam location as CLOSED.",
+  "city": "Amsterdam",
+  "country": "Netherlands",
+  "source": "osm-global-2026-04-12",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "87b109a6-0adc-4090-a1df-21c43f7ef0f7",
+  "name": "Memo Kebab",
+  "verdict": "not_vegan",
+  "evidence": "Ordinary halal Turkish doner shop in Esslingen; menu centers on meat doner, pide, lahmacun (memo-kebab.menufyy.com).",
+  "city": "Esslingen am Neckar",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f53bbff5-be8a-41f3-843f-f261a15dbd83",
+  "name": "King D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Regular doner kebab restaurant in Dresden serving meat doner as the core menu; vegan seitan/falafel items are options only (king-doner-dresden.de, Wolt).",
+  "city": "Dresden",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "14c7dcd3-e468-4759-80fe-b57a9444222e",
+  "name": "LuvBurger",
+  "verdict": "vegan",
+  "evidence": "Self-described vegan plant-based burger joint with entirely vegan menu (luvburger.com, HappyCow, Tripadvisor reviews).",
+  "city": "Nosara",
+  "country": "Costa Rica",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "2231677e-c849-48e7-aae4-c6407ce009b4",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is Canada's well-known all-vegan fast food chain (oddburger.com, vegconomist, VegNews).",
+  "city": "Ottawa",
+  "country": "Canada",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "0777abee-921a-4f62-9697-d48886d25b85",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is an all-vegan chain; Whitby is one of its Ontario locations (country appears mislabeled as US \u2014 it is Whitby, Ontario, Canada).",
+  "city": "Whitby",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5e7b70be-1adf-4ecd-8609-a4934b57ca65",
+  "name": "Burger Fianc\u00e9",
+  "verdict": "vegan",
+  "evidence": "100% plant-based burger restaurant in Old Montreal per HappyCow, Yelp, and The Main.",
+  "city": "Montreal",
+  "country": "Canada",
+  "source": "mobile-suggest",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6a98c018-8222-4fc9-a99f-4570402ba7f7",
+  "name": "BurgerPatch",
+  "verdict": "vegan",
+  "evidence": "Burger Patch is Sacramento's 100% vegan fast food brand since 2017 (burgerpatch.com); note Yelp marks the Midtown and East Sac locations as CLOSED though the official site remains active.",
+  "city": "Sacramento",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "80798a70-7b98-457a-a550-09a069bd097d",
+  "name": "UNiQ Burger",
+  "verdict": "vegan",
+  "evidence": "Self-described 100% plant-based restaurant in Scottsdale, Yelp category Vegan, voted best vegan restaurant 2023-2025 (uniqburger.com).",
+  "city": "Scottsdale",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b8bf74b1-abd8-447a-871d-4f015802c118",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is an all-vegan chain headquartered in London, Ontario (country appears mislabeled as US \u2014 it is London, Ontario, Canada).",
+  "city": "London",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "add71ec7-9b19-425c-9cdf-2a9116dae311",
+  "name": "Mission Burger Co.",
+  "verdict": "vegan",
+  "evidence": "All-vegan burger joint on South Lamar in Austin per its own site, The Infatuation, and abillion.",
+  "city": "Austin",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b5020ed1-cd63-4ffa-bdad-b596ea615ddf",
+  "name": "Jimmy's Burger",
+  "verdict": "unknown",
+  "evidence": "Ordinary fast-food burger/delivery shop in Leonberg; no menu details found and no source describes it as vegan \u2014 almost certainly not vegan but no direct menu evidence located.",
+  "city": "Leonberg",
+  "country": "Germany",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f74af4be-3f90-41cc-be55-593292729064",
+  "name": "Th\u00fcringer Rostbratwurst",
+  "verdict": "not_vegan",
+  "evidence": "An 'Original Th\u00fcringer Rostbratwurst' imbiss sells the traditional PGI pork sausage by definition; Facebook page 'Imbiss Original Th\u00fcringer Rostbratwurst aus JENA' confirms a standard bratwurst stand, no vegan evidence.",
+  "city": "Jena",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "61281cd0-5bd6-40cc-ae71-fc30dd38c5f9",
+  "name": "Zero Kebab",
+  "verdict": "vegan",
+  "evidence": "Zer\u00f6 Kebab is a 100% plant-based d\u00f6ner shop (HappyCow 'Fully Vegan', official Instagram 'Plant-Based D\u00f6ner', Wolt listing).",
+  "city": "Berlin",
+  "country": "Germany",
+  "source": "osm_validated_batch3",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "11c6035d-954b-4513-9438-2cd0321e6f7a",
+  "name": "NoButcher",
+  "verdict": "unknown",
+  "evidence": "Genuine vegan deli/butcher brand, but permanently CLOSED both Las Vegas locations (July 2025 per Review-Journal, Yelp marked CLOSED).",
+  "city": "Las Vegas",
+  "country": "United States",
+  "source": "us-restaurants-overnight-2026-05-25",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "1aed80a5-13c1-4c0b-85da-7d1fb43bf0cc",
+  "name": "Sin Carne Cantina",
+  "verdict": "unknown",
+  "evidence": "Fully vegan Latin American cafe, but located in Matlock Bath (Derbyshire), not Bath, and HappyCow marks it CLOSED.",
+  "city": "Bath",
+  "country": "United Kingdom",
+  "source": "uk-restaurants-overnight-2026-05-25",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b44d0f48-3c44-42f5-beca-1306b4f1b5ff",
+  "name": "Next Level Burger",
+  "verdict": "vegan",
+  "evidence": "100% plant-based chain; Beaverton location now operates as 'Veggie Grill by Next Level' with an all-vegan menu (Yelp category Vegan, official site).",
+  "city": "Beaverton",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "47d13af2-38d2-4956-a165-2bac00872354",
+  "name": "Sun Day Burgers - Mauer Park",
+  "verdict": "vegan",
+  "evidence": "Vegan burger stall at Mauerpark flea market (grilled tofu burgers, raw vegan desserts; HappyCow and vegan Berlin guides list it as vegan).",
+  "city": "Berlin",
+  "country": "Germany",
+  "source": "vegguide-import-2026-04-17",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b04a0e6a-ec23-4e29-a1a3-60619b9c9cae",
+  "name": "Fishoria",
+  "verdict": "not_vegan",
+  "evidence": "Regular fish & chips restaurant serving real fish, seafood baskets and prawns; has a vegan section (banana blossom fish) but is not a vegan place.",
+  "city": "London",
+  "country": "United Kingdom",
+  "source": "uk-restaurants-overnight-2026-05-25",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "d0d50e4b-31b9-4138-9d1b-2025f0a37c40",
+  "name": "Monty's Good Burger",
+  "verdict": "vegan",
+  "evidence": "Well-known 100% plant-based burger chain in LA (official site, Yelp, The Infatuation all describe it as fully vegan).",
+  "city": "Los Angeles",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "46fc248a-3886-483b-9e82-845cad5c4ff1",
+  "name": "Next Level Burger",
+  "verdict": "vegan",
+  "evidence": "Part of America's first 100% plant-based burger chain; SF Potrero Hill location listed on HappyCow as vegan.",
+  "city": "San Francisco",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a71bbcaa-7402-41b8-92a9-d730d7929e5a",
+  "name": "K\u00f6nig Kebap",
+  "verdict": "not_vegan",
+  "evidence": "Ordinary Turkish d\u00f6ner/kebab shop in Freiburg serving meat d\u00f6ner and pizza; falafel is the only notable veg option, no evidence of being vegan.",
+  "city": "Freiburg im Breisgau",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a387819b-2e93-457b-94b4-177d35594958",
+  "name": "The Fisherman",
+  "verdict": "vegan",
+  "evidence": "The Fisherman Vegan Restaurant is a 100% vegan former-seafood restaurant at An Bang Beach (Hoi An, Da Nang region); no meat restaurant of this name found in Da Nang.",
+  "city": "Da Nang",
+  "country": "Vietnam",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "3200bbf6-6b69-4e26-8a08-dbe8fd05ac05",
+  "name": "BETR BURGERS",
+  "verdict": "vegan",
+  "evidence": "Fully vegan American-style burger shop in St. Pauli, Hamburg (pea-protein patties, oat milkshakes; Yelp category Vegan, HappyCow listed).",
+  "city": "Hamburg",
+  "country": "Germany",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "7b34a109-cb85-4ee7-9244-ec774466ec0b",
+  "name": "G\u00f6zleme Kebab Turkish Street food",
+  "verdict": "not_vegan",
+  "evidence": "Regular Turkish gozleme/kebab vendor (Docklands) serving lamb, feta and meat kebabs; vegan gozleme is only an option.",
+  "city": "Melbourne",
+  "country": "Australia",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "ca9930c8-c45e-4d85-a384-d7cc5367d59e",
+  "name": "Klaus Kebab",
+  "verdict": "not_vegan",
+  "evidence": "D\u00f6ner shop that serves meat d\u00f6ner alongside seitan/falafel vegan options ('serves meat with vegan options' per listings; Wolt menu has crunchy chicken etc.).",
+  "city": "Bremen",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "d1d073ef-eacf-49c4-8692-bb121995c7c1",
+  "name": "Ahimsa Burgers",
+  "verdict": "vegan",
+  "evidence": "Fully vegan burger restaurant in Lagoa da Concei\u00e7\u00e3o, Florian\u00f3polis ('Ahimsa Vegan Burgers' on Tripadvisor; Spinach/HappyCow list as fully vegan).",
+  "city": "Florianopolis",
+  "country": "Brazil",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f2262a6a-9309-45f0-b66d-6a30cfa74c63",
+  "name": "Odd Burger",
+  "verdict": "unknown",
+  "evidence": "Odd Burger is a 100% vegan fast-food chain (Canada \u2014 this is Hamilton, Ontario, not US), but HappyCow reports this location permanently closed.",
+  "city": "Hamilton",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "c81fdb35-ff9f-407b-b51a-a1cad672a288",
+  "name": "The Happy Fish",
+  "verdict": "vegan",
+  "evidence": "Scotland's first 100% vegan chippy (HappyCow, Yelp, myveggietravels); serves fake fish/tofish only",
+  "city": "Edinburgh",
+  "country": "United Kingdom",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "ccfe2d57-0cb0-457d-8f46-50ec7ec4f4d7",
+  "name": "Kalinski Wurstwagen",
+  "verdict": "not_vegan",
+  "evidence": "Currywurst stand with real sausages from regional butchers; vegan currywurst is only one menu option",
+  "city": "Saarbr\u00fccken",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "ae9816c0-88f2-4ccd-ad33-10add1c08850",
+  "name": "Hiro Burger",
+  "verdict": "not_vegan",
+  "evidence": "Regular American-style smashburger joint (hiroburger.de); meat burgers standard, only one Beyond patty option",
+  "city": "Dresden",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "de9e9367-653c-4b45-82c2-fd52a132507b",
+  "name": "Flower Burger Milano Vittorio Veneto",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's first 100% vegan burger chain (flowerburger.it, HappyCow, Yelp 'Vegan' category)",
+  "city": "Milan",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "65cfd406-4122-488b-9ec4-8ca8b1f74f86",
+  "name": "Flower Burger Bari",
+  "verdict": "vegan",
+  "evidence": "Same 100% vegan Flower Burger chain; Bari branch listed on HappyCow and esserevegan.it",
+  "city": "Bari",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b9a11d49-8c38-475c-afec-63e55bef2ccc",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Canada's first vegan fast-food chain; Oakville branch fully vegan (HappyCow, Oakville News) \u2014 note: located in Ontario, Canada, not US",
+  "city": "Oakville",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "aef89e21-4eea-4f8a-b3a7-c229927fe277",
+  "name": "Neat Burger Milano",
+  "verdict": "vegan",
+  "evidence": "Neat Burger is a 100% plant-based chain (Hamilton/DiCaprio); note HappyCow reports Porta Venezia branch closed March 2026, Merlata Bloom branch open",
+  "city": "Milan",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "015632a1-2886-4772-ba84-8e60c2832fe5",
+  "name": "Jim's Burger",
+  "verdict": "not_vegan",
+  "evidence": "Ordinary German burger restaurant; sources indicate meat burgers standard and no fully-vegan dishes",
+  "city": "Mindelheim",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "23a70180-57b1-4928-8746-aef7d4080e75",
+  "name": "Hungry Jack's Burgers Mornington",
+  "verdict": "not_vegan",
+  "evidence": "Hungry Jack's is Burger King's Australian franchise \u2014 meat fast food with a few plant-based options",
+  "city": "Mornington",
+  "country": "Australia",
+  "source": "foursquare-discover-2026-04-18",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b7ad573e-ad53-4629-a04c-49299ae319bd",
+  "name": "Next Level Burger",
+  "verdict": "vegan",
+  "evidence": "America's first 100% plant-based burger chain; Concord branch all-vegan (HappyCow, Visit Concord)",
+  "city": "Concord",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b828d0a3-342b-4c2b-9904-e52746bb5c47",
+  "name": "MOS Burger",
+  "verdict": "not_vegan",
+  "evidence": "Japanese fast-food chain serving beef/chicken/pork/seafood burgers as core menu; only isolated plant-based items",
+  "city": "Taipei",
+  "country": "Taiwan",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f43eac0a-2bf7-4a80-be2f-8262fe077a64",
+  "name": "Ribs",
+  "verdict": "not_vegan",
+  "evidence": "Ribs Bistro & Bar in Tammisaari/Raseborg is famous for Dutch-style pork ribs and French bistro dishes",
+  "city": "Raseborg",
+  "country": "Finland",
+  "source": "osm_validated_batch3",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6e3d5586-14d7-41a2-8006-774ccf46991d",
+  "name": "Monty's Good Burger",
+  "verdict": "vegan",
+  "evidence": "100% plant-based burger and shake spot (montysgoodburger.com, Impossible patties, vegan cheese) with multiple LA locations",
+  "city": "Los Angeles",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "2f96e61a-2f35-43ca-a1d8-ce9435c39556",
+  "name": "Mexiterranean Grill",
+  "verdict": "not_vegan",
+  "evidence": "Mexican/Mediterranean grill; regular menu includes animal products (e.g. goat cheese sandwiches), standard taco/burrito grill, not a vegan restaurant",
+  "city": "New York",
+  "country": "United States",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f0d3a03f-1a4e-48bd-ac08-999916b38912",
+  "name": "Nice Burger",
+  "verdict": "vegan",
+  "evidence": "Branded 'Nice Burger 100% Vegan' on Grubhub/UberEats/DoorDash; HappyCow-listed all-vegan menu",
+  "city": "Long Beach",
+  "country": "United States",
+  "source": "osm_validated_batch3",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "48707815-36a9-4564-a07d-555993855dc4",
+  "name": "Restaurant Sushi Bar KOI",
+  "verdict": "not_vegan",
+  "evidence": "General Asian fusion/sushi restaurant in Bamberg serving fish sushi; only a few vegan items (e.g. tofu poke bowl) per koibamberg.de menu and Yelp/Tripadvisor.",
+  "city": "Bamberg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "3da38bc1-935a-4c08-be06-e4dd5b45d52b",
+  "name": "Oyster Oyster",
+  "verdict": "not_vegan",
+  "evidence": "Michelin-starred plant-focused DC restaurant, but official site describes a vegetarian tasting menu that 'can be made vegan or oystertarian' \u2014 oysters (animal) are a regular menu option, so not 100% vegan.",
+  "city": "Washington",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5510e323-c4fb-4f32-aaba-b5567faf4ed9",
+  "name": "Garden Grill",
+  "verdict": "vegan",
+  "evidence": "All-vegan brick-and-mortar in Summerlin, Las Vegas ('GARDEN GRILL Vegan Kitchen'); Yelp category Vegan, covered by vegansbaby.com as fully vegan.",
+  "city": "Las Vegas",
+  "country": "United States",
+  "source": "vegguide-import-2026-04-17",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "3103b8fa-df48-402d-9fa7-34c993d27745",
+  "name": "York grill",
+  "verdict": "not_vegan",
+  "evidence": "yorkgrill.com.br self-describes as 'Shawarma e Vegetariano' \u2014 meat shawarma restaurant that added vegan dishes in 2019, not fully vegan.",
+  "city": "S\u00e3o Paulo",
+  "country": "Brazil",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "60f423ab-cdcb-4f71-9c36-934997d6b06f",
+  "name": "LoveBurger",
+  "verdict": "vegan",
+  "evidence": "Branded 'LoveBurger 100% Vegan' in Neuk\u00f6lln, Berlin; listed on HappyCow and Tripadvisor as fully vegan burger restaurant.",
+  "city": "Berlin",
+  "country": "Germany",
+  "source": "berlin-google-map-2026-05-15",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6949b0ca-3af5-466b-9364-d3d6fda84d3b",
+  "name": "Happy Kebab",
+  "verdict": "not_vegan",
+  "evidence": "Turkish d\u00f6ner shop with a vegan seitan spit alongside regular meat d\u00f6ner; reviews note meat and seitan are cut with the same equipment \u2014 vegan-friendly, not fully vegan.",
+  "city": "M\u00fcnster",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f774020a-bbdb-4664-a14a-e9607deb1c75",
+  "name": "Neat Burger",
+  "verdict": "vegan",
+  "evidence": "Neat Burger is the 100% vegan plant-based burger chain backed by Lewis Hamilton (neat-food.com, HappyCow, Camden Market listing).",
+  "city": "Westminster",
+  "country": "United Kingdom",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f5a4d9b0-bba6-4a03-bb39-f145380ca008",
+  "name": "Next Level Burger",
+  "verdict": "vegan",
+  "evidence": "America's first 100% plant-based burger chain; Austin location inside Whole Foods flagship confirmed on nextlevelvg.com and HappyCow.",
+  "city": "Austin",
+  "country": "United States",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "0af7db42-1aee-47b6-a4bd-6cd3e063f0df",
+  "name": "Plnt Burger",
+  "verdict": "vegan",
+  "evidence": "PLNT Burger's menu is entirely vegan (plntburger.com, Boston.com, Yelp category Vegan); Boston location at South End Ink Block Whole Foods.",
+  "city": "Boston",
+  "country": "United States",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a88f9ffc-df83-4a81-a477-e894f6f72e9e",
+  "name": "Kurdischer D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Ordinary d\u00f6ner/pizza shop in Erfurt; reviews praise fresh d\u00f6ner and 'juicy meat' \u2014 regular meat menu.",
+  "city": "Erfurt",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "cf5e4ba1-7463-495a-992a-8f124bb4fad2",
+  "name": "NAR Holzkohlegrill",
+  "verdict": "not_vegan",
+  "evidence": "Turkish charcoal grill in Dresden serving 'juicy kebabs' and meat dishes from the grill, with only some vegetarian meze/falafel.",
+  "city": "Dresden",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "8df69387-5b70-4abd-96ff-29b6061dc8d1",
+  "name": "Pizzeria Kebab Haus Horhausen",
+  "verdict": "not_vegan",
+  "evidence": "Ordinary fast-food pizzeria/d\u00f6ner shop in Horhausen serving d\u00f6ner kebabs and pizzas (restaurantguru, doenieren.in).",
+  "city": "Horhausen (Westerwald)",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "9e66d6bf-e5a9-4dd6-9e1b-bb07bed53129",
+  "name": "Flower Burger Milano Bicocca",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's first 100% vegan gourmet burger chain, founded in Milan 2015; menu entirely vegan (HappyCow, Yelp category Vegan).",
+  "city": "Milan",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f142fae1-d2c2-4ef0-88fb-7b467bd9af98",
+  "name": "Prima's Kebap Haus",
+  "verdict": "not_vegan",
+  "evidence": "Regular kebab fast-food shop in Heidelberg; reviews call it 'best kebab in Germany' (meat d\u00f6ner), with falafel/vegetarian kebab as options only.",
+  "city": "Heidelberg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f28b0cb5-66d4-4851-8881-58281cccc448",
+  "name": "Hot Dog King",
+  "verdict": "not_vegan",
+  "evidence": "Conventional hot dog pavilion at Dresden Hauptbahnhof serving American hot dogs (meat sausages) per official site and Uber Eats menu.",
+  "city": "Dresden",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "59971d48-aa9b-4a7f-9bd2-8afe035345f1",
+  "name": "Lucky's Burger",
+  "verdict": "not_vegan",
+  "evidence": "Official site/Lieferando: 100% halal meat burger shop (cheeseburgers, BBQ burgers) with only some veggie/vegan options",
+  "city": "Mannheim",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b721e532-2330-4b8b-bd4e-169fdfaa58bf",
+  "name": "KH62 Kebab",
+  "verdict": "not_vegan",
+  "evidence": "Kebabhaus 62 Ludwigsburg is a regular Turkish doner kebab & pizza shop (Wolt/UberEats/Lieferando menus feature meat doner)",
+  "city": "Ludwigsburg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "e783ee6b-c85c-4039-ae93-88cc8d5bb371",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is Canada's first vegan fast-food chain, 100% plant-based (oddburger.com, VegNews, Plant Based News)",
+  "city": "Waterloo",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "97e3d159-809a-4949-aa6c-9d8b7c3f9fb1",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is Canada's first vegan fast-food chain, 100% plant-based (oddburger.com, VegNews, Plant Based News)",
+  "city": "Brampton",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b6cfb2d9-deca-4e66-8c5e-e9b782b4dac4",
+  "name": "Blatch's Backyard BBQ",
+  "verdict": "vegan",
+  "evidence": "All-vegan BBQ spot in SLC Avenues; blatchsbbq.com 'Discover Vegan BBQ', Yelp categorizes as Vegan (note: Yelp says temporarily closed)",
+  "city": "Salt Lake City",
+  "country": "United States",
+  "source": "osm-global-2026-04-12",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b01cf232-b1ac-4ad3-b262-d00b102cc10e",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is Canada's first vegan fast-food chain, 100% plant-based (oddburger.com, VegNews, Plant Based News)",
+  "city": "Toronto",
+  "country": "Canada",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "694b8283-2a73-4753-b179-fda0290cecfa",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is Canada's first vegan fast-food chain, 100% plant-based (oddburger.com, VegNews, Plant Based News)",
+  "city": "Toronto",
+  "country": "Canada",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5054e851-cada-4f18-8fd7-b3f46bcd1b42",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Odd Burger is Canada's first vegan fast-food chain, 100% plant-based (oddburger.com, VegNews, Plant Based News)",
+  "city": "Toronto",
+  "country": "Canada",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "d7d4324d-f951-49ce-a6f6-d543e07acc84",
+  "name": "Flower Burger Milano Garibaldi",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% vegan gourmet burger chain founded in Milan (flowerburger.it, HappyCow, Yelp 'Vegan')",
+  "city": "Milan",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "68df1bdc-f972-4693-ad25-728aa0ea940e",
+  "name": "O\u00dfweil Bistro Kebap",
+  "verdict": "not_vegan",
+  "evidence": "Regular Turkish doner kebab imbiss in Ludwigsburg-Ossweil (onlinestreet.de: 'Doner Kebab, Fast Food'); no vegan indication",
+  "city": "Ludwigsburg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "c70fab9c-07a0-4d78-8bac-3d6eb61c4d71",
+  "name": "Vedas Burger",
+  "verdict": "vegan",
+  "evidence": "Vegan burger delivery in SJC: all sandwiches made with soy/lentil/bean/chickpea patties (degustavale.com, Tripadvisor vegan listings)",
+  "city": "Sao Jose dos Campos",
+  "country": "Brazil",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f93750ec-18d8-44d1-a471-674e9331c36f",
+  "name": "Hungry Jack's Burgers Port Macquarie",
+  "verdict": "not_vegan",
+  "evidence": "Hungry Jack's is the Australian Burger King franchise; core menu is beef/chicken Whoppers with a small plant-based range",
+  "city": "Port Macquarie",
+  "country": "Australia",
+  "source": "foursquare-discover-2026-04-18",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "9bb520aa-9fde-4e37-98d2-5ddc99deef33",
+  "name": "Eskinivvach Burger",
+  "verdict": "not_vegan",
+  "evidence": "Official site/Tripadvisor: regular burger restaurant with classic (meat) burgers plus vegetarian options",
+  "city": "Eisenach",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "fc6af5ec-d542-4d18-b44d-3ddd9119f529",
+  "name": "Ruff's Burger",
+  "verdict": "not_vegan",
+  "evidence": "Ruff's Burger brand tagline 'Frisches Beef & saftige Burger'; beef/chicken menu with some Greenforce vegan options",
+  "city": "Erding",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "4ba5ac83-2903-4c1c-ba08-e7a0bb600307",
+  "name": "Flower Burger Milano Tortona",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% vegan gourmet burger chain founded in Milan (flowerburger.it, HappyCow, Yelp 'Vegan')",
+  "city": "Milan",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5e659902-7a26-4cca-a848-f0d0efa1b278",
+  "name": "Piraten Burger",
+  "verdict": "not_vegan",
+  "evidence": "Heide Park theme-park burger bar; HappyCow lists it as serving meat with one vegan burger/nuggets option (reviews compare chicken vs vegan nuggets)",
+  "city": "Soltau",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "674db0a5-87dc-4702-b356-03501d2754bd",
+  "name": "Hungry Jack's Burgers Kambah",
+  "verdict": "not_vegan",
+  "evidence": "Hungry Jack's is Burger King Australia \u2014 a meat fast-food chain with a few plant-based Whopper options, not a vegan restaurant",
+  "city": "Canberra",
+  "country": "Australia",
+  "source": "foursquare-discover-2026-04-18",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5dfb2365-6034-40c5-95c6-da497a51b388",
+  "name": "BIBIBOP Asian Grill",
+  "verdict": "not_vegan",
+  "evidence": "Official menu proteins include chicken, spicy chicken, steak, Korean BBQ beef and salmon; tofu is the vegan option \u2014 vegan-friendly, not vegan",
+  "city": "Reynoldsburg",
+  "country": "United States",
+  "source": "foursquare-discover-2026-04-18",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "2f04a3f0-f931-4994-9422-ec771eb48083",
+  "name": "Die Bratwurst",
+  "verdict": "not_vegan",
+  "evidence": "Sausage snack stand serving Bratwurst/Currywurst (linked with 'Das Fischhus'); at best vegetarian-friendly per Tripadvisor/Yelp",
+  "city": "Langeoog",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "8b540963-9068-4106-a482-223fabafcf4c",
+  "name": "Hungry Jack's Burgers Port Adelaide",
+  "verdict": "not_vegan",
+  "evidence": "Hungry Jack's is Burger King Australia \u2014 a meat fast-food chain with a few plant-based Whopper options, not a vegan restaurant",
+  "city": "Port Adelaide",
+  "country": "Australia",
+  "source": "foursquare-discover-2026-04-18",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "76c61c69-fc3f-49ca-b579-67c293cbd436",
+  "name": "Chin Burger",
+  "verdict": "not_vegan",
+  "evidence": "Xi'an roujiamo (meat burger) restaurant in Cologne; HappyCow/menus note only a very limited vegan selection (tofu roujiamo, gan mian pi)",
+  "city": "Cologne",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f9469444-3da7-4246-bdb6-c208f0c9f993",
+  "name": "Grill hau rein",
+  "verdict": "not_vegan",
+  "evidence": "Small burger/pizza grill in Cham serving fresh fish per menu sites; no vegan positioning found anywhere",
+  "city": "Cham",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "33d6adf7-b63d-42f6-b0b7-48be5dc5bb3f",
+  "name": "Mam-Mam Burger",
+  "verdict": "not_vegan",
+  "evidence": "Regular burger chain (Nuremberg/F\u00fcrth/Erlangen/W\u00fcrzburg) with meat burgers plus 3 vegan options marked on menu \u2014 vegan-friendly, not fully vegan",
+  "city": "Nuremberg",
+  "country": "Germany",
+  "source": "foursquare-discover-2026-04-18",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "ab37598e-6bcb-484b-940d-b333e484ee6d",
+  "name": "Les P'tits Poissons Verts",
+  "verdict": "vegan",
+  "evidence": "Self-described 'resto bio et vegan' in N\u00eemes; multiple sources (Facebook, local press, Veg Nature) describe a 100% vegan organic menu",
+  "city": "Nimes",
+  "country": "France",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "d75e996d-8495-47fb-a6bd-da73affc5541",
+  "name": "Flower Burger Bologna",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% plant-based vegan burger chain (founded Milan 2015); all locations serve a fully vegan menu",
+  "city": "Bologna",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "9888960a-016a-40f5-9641-77e4301df8fa",
+  "name": "Flower Burger Milano Santa Giulia",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% plant-based vegan burger chain (founded Milan 2015); all locations serve a fully vegan menu",
+  "city": "Milan",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "711e990b-ba92-4c62-82f8-c5bf619b43fe",
+  "name": "Flower Burger Verona",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% plant-based vegan burger chain; Verona branch listed as a vegan restaurant",
+  "city": "Verona",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5c3cd49b-3b67-4b64-8550-2ad805833e7f",
+  "name": "Flower Burger Bergamo",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% plant-based vegan burger chain; Bergamo branch listed as vegan/plant-based burgers",
+  "city": "Bergamo",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "714d51b0-b99f-4589-b6e0-7362b44156f6",
+  "name": "Flower Burger Monza",
+  "verdict": "vegan",
+  "evidence": "Flower Burger is Italy's 100% plant-based vegan burger chain (~14 stores in Italy); all locations serve a fully vegan menu",
+  "city": "Monza",
+  "country": "Italy",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "513edba1-9a9b-497e-803b-e4d75396f7a2",
+  "name": "Konak Kebap Haus",
+  "verdict": "not_vegan",
+  "evidence": "Turkish kebab shop in Essen serving conventional meat d\u00f6ner; offers veggie d\u00f6ner/falafel as options only",
+  "city": "Essen",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "1d3bcce5-0410-4958-a7fd-7aaa6b1ed3fb",
+  "name": "My Gem\u00fcse D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Signature Gem\u00fcse d\u00f6ner includes chicken meat per reviews; vegan seitan option exists but menu is not fully vegan (prinz.de, arcaden listing).",
+  "city": "D\u00fcsseldorf",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "3cee2e68-a3ce-45ca-823a-322ef9188e6b",
+  "name": "Muharrems D\u00f6ner Treff",
+  "verdict": "not_vegan",
+  "evidence": "Regular kebab shop; signature dish is meat d\u00f6ner kebab, falafel only as vegetarian alternative (restaurantguru, own site lists pizza/d\u00f6ner).",
+  "city": "Kiel",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "9fb157fd-f06e-43f8-a71e-9cf8660a1822",
+  "name": "Vauban D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Turkish d\u00f6ner shop with meat kebab as specialty; caters to 'meat lovers and vegetarians' (restaurantguru, Yelp kebab category).",
+  "city": "Freiburg im Breisgau",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a135e183-02fe-4ba6-a9f9-8d84cb63f701",
+  "name": "MyCurrywurst",
+  "verdict": "not_vegan",
+  "evidence": "Currywurst restaurant offering a vegan soy sausage option alongside regular meat currywurst; HappyCow lists it as veg-options, not vegan.",
+  "city": "Heidelberg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a45ff000-a227-4c40-bac9-8b4ddd1dfaef",
+  "name": "Sultan D\u00f6ner Kebap",
+  "verdict": "not_vegan",
+  "evidence": "Regular d\u00f6ner shop in Freiburg serving d\u00f6ner kebab, pizza and yufka (Yelp kebab category, freiburg-geniessen); no vegan indication.",
+  "city": "Freiburg im Breisgau",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "bf5d7ec0-6e90-4cef-a6ab-c311be7f68f8",
+  "name": "Uyghur D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Uygur Kebap, a standard Turkish d\u00f6ner/kebab shop known for its meat d\u00f6ner (restaurantguru reviews); no vegan indication anywhere.",
+  "city": "Gilching",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "482040eb-6e43-43eb-977a-e3e4d9f87ec4",
+  "name": "Honisch D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Meat d\u00f6ner kebab is the specialty; menu is d\u00f6ner, d\u00fcr\u00fcm, pizza with falafel only as a side option (own site, restaurantguru).",
+  "city": "Niedernberg",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "80f4d80d-e092-4d7a-84c3-05cf81e4f4d1",
+  "name": "Veburger",
+  "verdict": "vegan",
+  "evidence": "Fully vegan fast-food restaurant, 100% plant-based menu (veburger.co.uk, HappyCow, Bristol247 'vegan burger joint').",
+  "city": "Bristol",
+  "country": "United Kingdom",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "c6d90877-176a-44ff-94c4-1e0241e8671c",
+  "name": "Masters of D\u00f6ner",
+  "verdict": "not_vegan",
+  "evidence": "Regular d\u00f6ner restaurant; reviews praise the 'juicy, well-seasoned meat', menu is meat d\u00f6ner plates and d\u00f6ner pizza (own site, wheree).",
+  "city": "Neustadt an der Weinstrasse",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b4a6d2e7-57a3-490e-b4b2-68bc3b757e2e",
+  "name": "Kebab Kollektiv",
+  "verdict": "not_vegan",
+  "evidence": "Menu offers chicken, veal and k\u00f6fte (beef) kebabs alongside falafel/feta (bahnhof.de listing, kebabkollektiv.com).",
+  "city": "Munich",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "bc25fb72-319f-408b-910a-deb6726904fe",
+  "name": "V\u00f6ner (+ Wagenburger)",
+  "verdict": "vegan",
+  "evidence": "Iconic vegan snack bar in Friedrichshain since 2006; seitan-spit vegan d\u00f6ner, listed on berlin-vegan.de, vegman.org, HappyCow.",
+  "city": "Berlin",
+  "country": "Germany",
+  "source": "vegguide-import-2026-04-17",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "7d234b93-c325-4133-a6a7-f48f426d5ee6",
+  "name": "Garden Grill",
+  "verdict": "vegan",
+  "evidence": "All-vegan restaurant in Las Vegas (Yelp category 'Vegan', HappyCow, Instagram 'GARDEN GRILL Vegan Kitchen').",
+  "city": "Las Vegas",
+  "country": "United States",
+  "source": "vegguide-import-2026-04-17",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a35ab1c9-db2a-4320-be18-3622e9b6ca1d",
+  "name": "Liman D\u00f6ner",
+  "verdict": "unknown",
+  "evidence": "No Liman D\u00f6ner found in Tannenheim/Tannheim; only unrelated meat kebab shops of the same name in Mannheim and Barth \u2014 cannot verify this location.",
+  "city": "Tannenheim",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a7cf84f1-5eca-4d22-ad22-eb734fc47953",
+  "name": "Istanbul Grill",
+  "verdict": "not_vegan",
+  "evidence": "Anatolian grill serving chicken d\u00f6ner, veal, Adana kebab, lamb chops as core menu; vegan items are a small subsection (own site, Wolt menu).",
+  "city": "Erfurt",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "9b1934be-4dd3-4870-8dad-9061001027a2",
+  "name": "Garden Grill",
+  "verdict": "vegan",
+  "evidence": "Duplicate of same Las Vegas place: all-vegan restaurant per Yelp 'Vegan' category, HappyCow and its own branding 'Vegan Kitchen'.",
+  "city": "Las Vegas",
+  "country": "United States",
+  "source": "vegguide-import-2026-04-17",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "5c02a729-0c20-4fd5-b860-3448d120a761",
+  "name": "Mivan Kebab",
+  "verdict": "not_vegan",
+  "evidence": "Regular doner kebab shop in Jena (restaurantguru/speisekarte.menu show meat kebab menu); offers falafel as vegan option but meat is the core menu",
+  "city": "Jena",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "548ac41f-0d3d-4aec-b33d-6a5ab0fc7681",
+  "name": "Kebab Piraten",
+  "verdict": "not_vegan",
+  "evidence": "Standard kebab imbiss in Westerland/Sylt (Tripadvisor, restaurantguru menu); doner/meat is the normal menu, only vegetarian options noted, no vegan-brand evidence",
+  "city": "Sylt",
+  "country": "Germany",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "aa6b5d2f-d62b-4eca-9e3e-9c199a54d840",
+  "name": "Soul Burger",
+  "verdict": "vegan",
+  "evidence": "Australia's first entirely plant-based burger chain (soulburger.com.au, Broadsheet, PETA); 100% vegan menu",
+  "city": "Sydney",
+  "country": "Australia",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "cf084d1b-765f-4fa3-8079-cf211247bf7d",
+  "name": "Glasgow Burgers",
+  "verdict": "vegan",
+  "evidence": "Fully vegan burger restaurant in Nantes per HappyCow, Petit Fute ('Vegan restaurant'), and own site; also sells vegan groceries",
+  "city": "Nantes",
+  "country": "France",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "811943e4-d9b7-48fd-ac6a-b2395b184866",
+  "name": "Nonno's Butcher",
+  "verdict": "vegan",
+  "evidence": "Nonno's Plant-Based Butcher at Hamilton Farmers' Market; 100% meat- and dairy-free vegan deli (HappyCow, hamiltonfarmersmarket.ca)",
+  "city": "Hamilton",
+  "country": "Canada",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "2ac6630b-6521-4f2e-94d3-e1ff7654c90e",
+  "name": "Monty's Good Burger",
+  "verdict": "vegan",
+  "evidence": "Well-known 100% plant-based burger chain in LA (montysgoodburger.com, Yelp 'Vegan' category, LiveKindly)",
+  "city": "Los Angeles",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "d88b4fae-0673-44e0-a1db-333db266a5d9",
+  "name": "Goginara Korean charcoal BBQ",
+  "verdict": "not_vegan",
+  "evidence": "Name means 'Meat Land'; Korean charcoal BBQ with premium beef/pork cuts, minimum two beef/pork items required to use the grill (gogi-nara.nl, Tripadvisor)",
+  "city": "Rotterdam",
+  "country": "Netherlands",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "fcb0062b-097e-4db9-b459-e5eb292f14de",
+  "name": "Hot Doggie",
+  "verdict": "unknown",
+  "evidence": "Was a 100% vegan hot dog/burger bar (pea/wheat-protein sausages) but HappyCow lists it as CLOSED",
+  "city": "Gdynia",
+  "country": "Poland",
+  "source": "osm-import-2026-04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f441d5e5-133e-4add-9cf7-58eadc9f465f",
+  "name": "Odd Burger",
+  "verdict": "vegan",
+  "evidence": "Canadian vegan fast-food chain (oddburger.com, HappyCow, Daily Hive); Edmonton locations are fully plant-based",
+  "city": "Edmonton",
+  "country": "Canada",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "2a4eab17-4682-4176-94c3-cbc88704189c",
+  "name": "Garden Grill",
+  "verdict": "vegan",
+  "evidence": "All-vegan restaurant in Summerlin, Las Vegas (Yelp 'Vegan', HappyCow, gardengrilllv 'GARDEN GRILL Vegan Kitchen')",
+  "city": "Las Vegas",
+  "country": "United States",
+  "source": "vegguide-import-2026-04-17",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "bab643ca-888c-409b-b17e-04fffb48695d",
+  "name": "Burger Patch",
+  "verdict": "unknown",
+  "evidence": "Was Sacramento's 100% vegan burger spot, but last location permanently closed Sep 2025 (vegconomist, Yelp marked CLOSED)",
+  "city": "Sacramento",
+  "country": "United States",
+  "source": "openstreetmap",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "62108299-a0b2-49c7-8658-ad6220b91149",
+  "name": "Nice Burger",
+  "verdict": "vegan",
+  "evidence": "Operates as 'Nice Burger 100% Vegan' \u2014 OC's first 100% vegan charbroiled burger place (niceburgervegan.com, HappyCow, Yelp 'Vegan')",
+  "city": "Mission Viejo",
+  "country": "United States",
+  "source": "osm_fresh_2026_04",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "c04e2db5-d7c5-4e3a-ac06-024ffccaf10b",
+  "name": "Wings of Heart Sanctuary",
+  "verdict": "vegan",
+  "evidence": "Vegan farmed-animal sanctuary in Spain (wingsofheart.org); explicitly vegan ethos, volunteers' food/clothing must be vegan",
+  "city": "Almer\u00eda",
+  "country": "Spain",
+  "source": "sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "4aa54d7f-33a3-4140-b2e9-9e97a5fd5a28",
+  "name": "Happy Hen Chicken Rescue",
+  "verdict": "vegan",
+  "evidence": "Happy Hen Animal Sanctuary, 40-acre farmed-animal rescue in San Luis Obispo founded by animal-rights activist Zoe Rosenberg (happyhen.org); genuine sanctuary, not a food business",
+  "city": "San Luis Obispo",
+  "country": "United States",
+  "source": "vegancom-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "de31b39a-69ed-4b88-9d23-169a4eab522e",
+  "name": "Redwings Horse Sanctuary",
+  "verdict": "vegan",
+  "evidence": "GFAS-accredited equine rescue sanctuary in Paso Robles (redwingshorsesanctuary.org); genuine animal sanctuary, no animal products sold",
+  "city": "Paso Robles",
+  "country": "United States",
+  "source": "gfas-import-2026-05-24",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "1326e551-15a0-43a9-8606-d7ca97bc9a46",
+  "name": "Sanctuario Wings of Heart",
+  "verdict": "vegan",
+  "evidence": "Well-known vegan farm animal sanctuary in Spain (wingsofheart.org, now 'Santuario Vegan'); ~300 rescued farm animals, strict vegan policy for volunteers.",
+  "city": "Spain",
+  "country": "Spain",
+  "source": "vegancom-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f55ad505-3e65-4267-b2ab-80b6a395faa1",
+  "name": "Hooves & Wings Rescue",
+  "verdict": "unknown",
+  "evidence": "Two searches found no organization by this name in any Bedford (US); only similarly-named orgs elsewhere (Hooves & Paws, A Home for Hooves).",
+  "city": "Bedford",
+  "country": "United States",
+  "source": "sanctuary-v4-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "b30609b5-6969-42b8-b4ed-a1f9e7e818b7",
+  "name": "Santuario Wings of Heart",
+  "verdict": "vegan",
+  "evidence": "Same known vegan farm animal sanctuary (Wings of Heart / Santuario Vegan); note sources place it near Madrid, not Velez-Malaga \u2014 location may need review.",
+  "city": "V\u00e9lez-M\u00e1laga",
+  "country": "Spain",
+  "source": "sanctuary-v5-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6c10636e-4d23-455b-aed9-392b802ecf43",
+  "name": "Chicken Run Rescue",
+  "verdict": "vegan",
+  "evidence": "Genuine hen rescue sanctuary (chickenrunrescue.org, founded 2001, oldest US urban chicken rescue); listed as 'Vegan Hen Sanctuary' on veganparadise.org.",
+  "city": "Minnesota",
+  "country": "United States",
+  "source": "cfei-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "f0147d75-edf1-41f6-8663-83baebc7a138",
+  "name": "Happy Hen Chicken Rescue (Chickens)",
+  "verdict": "vegan",
+  "evidence": "Happy Hen Animal Sanctuary (happyhen.org), 40-acre farmed animal sanctuary in San Luis Obispo founded by animal-rights activist Zoe Rosenberg.",
+  "city": "San Luis Obispo",
+  "country": "United States",
+  "source": "cfei-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "6cfe4d71-75de-4249-a24e-4c43bb426856",
+  "name": "Chocowinity Chicken Sanctuary",
+  "verdict": "vegan",
+  "evidence": "Genuine 501(c)(3) chicken sanctuary in Chocowinity NC (chocochickensanctuary.org); rescues chickens and educates against factory farming.",
+  "city": "Chocowinity",
+  "country": "United States",
+  "source": "cfei-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "99756e83-2986-46e3-8ece-3da53f1665f1",
+  "name": "Redwings Horse Sanctuary",
+  "verdict": "vegan",
+  "evidence": "Genuine horse rescue sanctuary \u2014 UK's largest horse welfare charity (redwings.org.uk), HQ Norfolk; an animal sanctuary, not a food business (not vegan-branded).",
+  "city": "Norwich",
+  "country": "United Kingdom",
+  "source": "european-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a17f882f-993a-46a8-930c-b902c4ad5335",
+  "name": "Eagle Wings Sanctuary",
+  "verdict": "unknown",
+  "evidence": "No animal sanctuary by this name found in any Manchester; closest matches are a domestic-violence nonprofit (eagleswingssanctuary.org) and Eaglewing Sanctuary in Yoder, CO.",
+  "city": "Manchester",
+  "country": "United States",
+  "source": "sanctuary-v4-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "aceba788-e367-443e-a746-a635f0e4cfe5",
+  "name": "Chickenlandia",
+  "verdict": "not_vegan",
+  "evidence": "'Welcome to Chickenlandia' is a backyard chicken-keeping (egg/husbandry) education brand and YouTube channel at a private Bellingham residence \u2014 not an animal sanctuary or vegan business.",
+  "city": "Bellingham",
+  "country": "United States",
+  "source": "sanctuary-v2-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "ee95321b-6981-4100-b96e-82ea71cedfb5",
+  "name": "Chicken Run Rescue",
+  "verdict": "vegan",
+  "evidence": "Same genuine vegan hen sanctuary as the Minnesota entry (chickenrunrescue.org); likely duplicate record.",
+  "city": "Minneapolis",
+  "country": "United States",
+  "source": "vegancom-sanctuary-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "7d9056ec-38f4-4ed0-8751-8306d976d2d0",
+  "name": "The Herbivorous Butcher",
+  "verdict": "vegan",
+  "evidence": "The nation's first all-vegan butcher shop (theherbivorousbutcher.com), 507 1st Ave NE Minneapolis; makes only vegan meats and cheeses.",
+  "city": "Minneapolis",
+  "country": "United States",
+  "source": "osm-global-2026-04-12",
+  "vegan_level": "fully_vegan"
+ },
+ {
+  "id": "a20729c8-09c1-42eb-a36d-c0254d7e5066",
+  "name": "Wilmersburger K\u00e4seersatz HQ",
+  "verdict": "vegan",
+  "evidence": "Wilmersburger is a 100% vegan cheese-alternative producer (wilmersburger.de); note official imprint puts HQ in Langenfeld, not Hamburg \u2014 location may need review.",
+  "city": "Hamburg",
+  "country": "Germany",
+  "source": "grocery-brand-import-2026-05-23",
+  "vegan_level": "fully_vegan"
+ }
+]

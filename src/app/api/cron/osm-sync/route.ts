@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { veganLevelFromOSMTags } from '@/lib/places/vegan-level-from-osm'
 
 // Weekly OSM diff scraper — finds new/changed vegan places worldwide
 // Runs every Sunday at 5:00 AM UTC
@@ -106,7 +107,11 @@ export async function GET(request: Request) {
       }
 
       const { category, subcategory } = categorizePlace(tags)
-      const veganLevel = tags['diet:vegan'] === 'only' ? 'fully_vegan' : 'vegan_friendly'
+      // Canonical mapper: diet:vegan=yes → vegan_options (never vegan_friendly+).
+      // The old inline ternary here defaulted =yes to vegan_friendly, which is
+      // how fish restaurants ended up "vegan friendly" (audit 2026-07).
+      const veganLevel = veganLevelFromOSMTags(tags)
+      if (!veganLevel) continue
 
       // Build opening hours string
       const openingHours = tags.opening_hours || null
