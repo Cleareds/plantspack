@@ -212,7 +212,12 @@ export async function PUT(
         // also pass the query parameter (which is authoritative).
         const geoRes = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(body.address)}&limit=1&addressdetails=1&accept-language=en`,
-          { headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)', 'Accept-Language': 'en' } }
+          {
+            headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)', 'Accept-Language': 'en' },
+            // Nominatim occasionally hangs; without a timeout the whole PUT
+            // rides to the function limit and the client sees an opaque 504.
+            signal: AbortSignal.timeout(5000),
+          }
         )
         if (geoRes.ok) {
           const geoData = await geoRes.json()
@@ -244,7 +249,10 @@ export async function PUT(
 
     if (updateError) {
       console.error('[Place API] Update error:', updateError)
-      return NextResponse.json({ error: 'Failed to update place' }, { status: 500 })
+      // Surface the real DB reason - a trigger/constraint message is exactly
+      // what the (owner/admin) editor needs to fix their input, and this
+      // endpoint is only reachable by creator/owner/admin anyway.
+      return NextResponse.json({ error: `Failed to update place: ${updateError.message}` }, { status: 500 })
     }
 
     // Sync images to linked posts (posts with place_id pointing to this place)
@@ -281,7 +289,8 @@ export async function PUT(
     return NextResponse.json({ place: updatedPlace })
   } catch (error) {
     console.error('[Place API] Error:', error)
-    return NextResponse.json({ error: 'Failed to update place' }, { status: 500 })
+    const detail = error instanceof Error ? error.message : 'unknown'
+    return NextResponse.json({ error: `Failed to update place (${detail})` }, { status: 500 })
   }
 }
 
