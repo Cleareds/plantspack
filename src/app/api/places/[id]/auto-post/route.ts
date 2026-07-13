@@ -13,15 +13,19 @@ export async function POST(
     const { data: { session } } = await supabaseUser.auth.getSession()
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { content, images } = await request.json()
+    const { images } = await request.json()
     const admin = createAdminClient()
     const { data: place } = await admin.from('places').select('name').eq('id', placeId).single()
 
+    // Content is deliberately NOT client-controlled: the mobile add flow was
+    // passing the user's notes/address field here, so the feed filled with
+    // raw addresses and opening hours instead of announcements (2026-07-13).
+    // The auto-post always reads "Just added a new vegan spot: <name>"; the
+    // user's notes belong on the place row, not the feed card.
     const postId = await createPlacePost({
       userId: session.user.id,
       placeId,
       placeName: place?.name || 'this place',
-      content: content || undefined,
       images: images || [],
     })
 
