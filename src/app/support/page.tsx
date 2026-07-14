@@ -13,7 +13,7 @@ async function fetchStats() {
         .single(),
       supabase
         .from('users')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('is_banned', false),
     ])
     return {

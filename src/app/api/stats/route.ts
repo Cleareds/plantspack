@@ -11,7 +11,7 @@ export async function GET() {
     const [placesResult, recipesResult, membersResult] = await Promise.all([
       supabase.from('places').select('*', { count: 'exact', head: true }).is('archived_at', null),
       supabase.from('posts').select('*', { count: 'exact', head: true }).eq('category', 'recipe'),
-      supabase.from('users').select('*', { count: 'exact', head: true }).eq('is_banned', false),
+      supabase.from('users').select('id', { count: 'exact', head: true }).eq('is_banned', false),
     ])
 
     return NextResponse.json({

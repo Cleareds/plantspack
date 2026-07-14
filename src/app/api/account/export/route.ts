@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 
 export async function GET(_request: NextRequest) {
   try {
@@ -25,8 +26,11 @@ export async function GET(_request: NextRequest) {
       note: 'Limited to 1000 most recent items per category. Contact support for complete export if needed.'
     }
 
-    // 1. User profile
-    const { data: profile } = await supabase
+    // 1. User profile — service role: this is the user's own GDPR export so
+    // it must include email etc., which the authenticated key can no longer
+    // read via select('*') (2026-07-14 column lock). Authorized by the
+    // verified session above + the userId filter.
+    const { data: profile } = await createAdminClient()
       .from('users')
       .select('*')
       .eq('id', userId)

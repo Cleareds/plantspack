@@ -73,7 +73,7 @@ export default function AdminDashboard() {
         { data: closedPlaces },
         { data: hoursPlaces },
       ] = await Promise.all([
-        supabase.from('users').select('*', { count: 'exact', head: true }),
+        supabase.from('users').select('id', { count: 'exact', head: true }),
         supabase.from('posts').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('comments').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('places').select('*', { count: 'exact', head: true }),
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
         supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('place_claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('place_corrections').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('users').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
+        supabase.from('users').select('id', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
         supabase.from('posts').select('*', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
         supabase.from('places').select('id, name, slug, city, country, tags').contains('tags', ['community_report:permanently_closed']).limit(20),
         supabase.from('places').select('id, name, slug, city, country, tags').contains('tags', ['community_report:hours_wrong']).limit(20),
