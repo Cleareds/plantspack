@@ -1,6 +1,6 @@
 'use client'
 
-import { Leaf, Salad, Heart, Sparkles } from 'lucide-react'
+import { Leaf, Salad, Heart, Sparkles, BedDouble, UtensilsCrossed, ShoppingBag } from 'lucide-react'
 
 interface PlaceTagBadgesProps {
   tags: string[]
@@ -47,6 +47,24 @@ const tagConfig: Record<string, { label: string; icon: any; color: string }> = {
     label: 'Locally Sourced',
     icon: Heart,
     color: 'bg-tertiary-container text-white border-tertiary-container'
+  },
+  // Secondary-category tags: a place has ONE primary category (drives
+  // filters/counts), but hybrids (cafe that is also a B&B + farm shop,
+  // e.g. Mormors bakeri 2026-07-14) surface the rest as chips.
+  'also:hotel': {
+    label: 'Also a B&B / stay',
+    icon: BedDouble,
+    color: 'bg-secondary-container text-on-surface border-secondary-container'
+  },
+  'also:eat': {
+    label: 'Also serves food',
+    icon: UtensilsCrossed,
+    color: 'bg-secondary-container text-on-surface border-secondary-container'
+  },
+  'also:store': {
+    label: 'Also a shop',
+    icon: ShoppingBag,
+    color: 'bg-secondary-container text-on-surface border-secondary-container'
   }
 }
 
