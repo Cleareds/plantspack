@@ -283,12 +283,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         return result
       } else {
-        // Username login - first get the email associated with the username
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('email')
-          .eq('username', identifier)
-          .single()
+        // Username login - resolve username -> email via a server route
+        // (service role). The email column on public.users is no longer
+        // readable by the anon key (2026-07-14 security fix), so the old
+        // direct `.from('users').select('email')` here would now fail.
+        let resolvedEmail: string | null = null
+        try {
+          const resp = await fetch('/api/auth/resolve-username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier }),
+          })
+          if (resp.ok) resolvedEmail = (await resp.json())?.email ?? null
+        } catch {
+          resolvedEmail = null
+        }
+        const userData = resolvedEmail ? { email: resolvedEmail } : null
+        const userError = resolvedEmail ? null : { message: 'lookup failed' }
 
         if (userError || !userData) {
           // Try fallback: attempt direct login in case it's actually an email without @
