@@ -26,6 +26,15 @@ interface AuthContextType {
   validateSession: () => Promise<boolean>
 }
 
+// Explicit safe-column list for reading public.users from the browser
+// (authenticated) key. NOT select('*'): email / stripe ids /
+// marketing_email_token are revoked from the anon+authenticated roles
+// (2026-07-14 security fix), so select('*') now 403s and would break
+// profile loading for every logged-in user. Own email comes from the auth
+// session (user.email), never from this table.
+const PROFILE_COLUMNS =
+  'id, username, first_name, last_name, bio, avatar_url, is_private, created_at, updated_at, subscription_tier, subscription_status, subscription_period_start, subscription_period_end, subscription_ends_at, role, is_banned, ban_reason, banned_at, banned_by, newsletter_opt_in, newsletter_opted_in_at, newsletter_unsubscribed_at, newsletter_source, trust_score, donor_source, sprouts_lifetime, sprouts_balance, sprouts_seeded, is_vegan, vegan_since, vegan_reasons, transition_story, favourite_vegan_meal, current_challenges, dietary_specifics, cooking_frequency, home_city, home_country, forest_size'
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -100,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const { data, error } = await supabase
           .from('users')
-          .select('*, role')
+          .select(PROFILE_COLUMNS)
           .eq('id', userId)
           .maybeSingle()
 
@@ -388,12 +397,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data, error } = await supabase
         .from('users')
         .upsert(profileData, { onConflict: 'id' })
-        .select()
+        .select(PROFILE_COLUMNS)
         .single()
 
       if (error) throw error
 
-      setProfile(data)
+      setProfile(data as any)
       profileCache.current.set(user.id, data as any)
       log.debug('Profile updated successfully')
       
