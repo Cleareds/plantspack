@@ -50,43 +50,24 @@ export default function UsersManagement() {
   const loadUsers = async () => {
     setLoading(true)
     try {
-      // Build query
-      let query = supabase
-        .from('users')
-        .select('*', { count: 'exact' })
-
-      // Apply search filter
-      if (searchQuery) {
-        query = query.or(`username.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%`)
-      }
-
-      // Apply role filter
-      if (filterRole !== 'all') {
-        query = query.eq('role', filterRole)
-      }
-
-      // Apply banned filter
-      if (filterBanned === 'banned') {
-        query = query.eq('is_banned', true)
-      } else if (filterBanned === 'active') {
-        query = query.eq('is_banned', false)
-      }
-
-      // Apply pagination
-      const from = (currentPage - 1) * USERS_PER_PAGE
-      const to = from + USERS_PER_PAGE - 1
-      query = query.range(from, to).order('created_at', { ascending: false })
-
-      const { data, error, count } = await query
-
-      if (error) throw error
+      // Admin user list (incl. email) comes from a server route using the
+      // service role — the email column is no longer readable via the
+      // browser/authenticated key (2026-07-14 security fix). Was a direct
+      // supabase.from('users').select('*') here.
+      const params = new URLSearchParams({ page: String(currentPage) })
+      if (searchQuery) params.set('search', searchQuery)
+      if (filterRole !== 'all') params.set('role', filterRole)
+      if (filterBanned !== 'all') params.set('banned', filterBanned)
+      const res = await fetch(`/api/admin/users?${params.toString()}`, { credentials: 'include' })
+      if (!res.ok) throw new Error(`user list failed (${res.status})`)
+      const { users: data, total } = await res.json() as { users: User[]; total: number }
 
       setUsers(data || [])
-      setTotalUsers(count || 0)
+      setTotalUsers(total || 0)
 
       // Fetch report counts for these users
       if (data && data.length > 0) {
-        const userIds = data.map(u => u.id)
+        const userIds = data.map((u) => u.id)
         const { data: reportsData } = await supabase
           .from('reports')
           .select('reported_id')
