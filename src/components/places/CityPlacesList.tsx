@@ -129,9 +129,20 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
   // Counts pool: use the unfiltered universe (not the SSR-filtered display
   // set) so vl pills show the real cross-tier numbers when on /fully-vegan.
   const baseForCounts = isFullyVeganOnly ? placesForCounts.filter(p => p.vegan_level === 'fully_vegan') : placesForCounts
-  const categories = [...new Set(baseForCounts.map(p => p.category))].sort()
 
-  // Get available subcategories for active category
+  // A place has a primary `category`, and may declare extra roles as
+  // `also:<category>` tags (hybrid venues — e.g. a shop that is also a
+  // restaurant). categoriesOf returns every category a place counts under,
+  // so it shows up in each of those category filters.
+  const categoriesOf = (p: Place): string[] => {
+    const extra = (p.tags || [])
+      .filter((t): t is string => typeof t === 'string' && t.startsWith('also:'))
+      .map(t => t.slice(5))
+    return [...new Set([p.category, ...extra])]
+  }
+  const categories = [...new Set(baseForCounts.flatMap(categoriesOf))].sort()
+
+  // Get available subcategories for active category (primary-category rows only)
   const subcategories = activeCategory
     ? [...new Set(baseForCounts.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
     : []
@@ -146,7 +157,7 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
   // Faceted-count predicates: each pill's count reflects every OTHER active
   // filter but not its own facet. Lets users see how many places they'd land
   // on if they swapped a value within the same facet.
-  const matchCategory = (p: Place) => !validCategory || p.category === validCategory
+  const matchCategory = (p: Place) => !validCategory || categoriesOf(p).includes(validCategory)
   const matchSubcategory = (p: Place) => !validSubcategory || p.subcategory === validSubcategory
   const matchPet = (p: Place) => !petOnly || p.is_pet_friendly
   const matchVeganLevel = (p: Place) => !activeVeganLevel || p.vegan_level === activeVeganLevel
@@ -159,7 +170,7 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
   const poolForVeganLevelPills = baseForCounts.filter(p => matchCategory(p) && matchSubcategory(p) && matchPet(p))
 
   const filtered = basePlaces.filter(p => {
-    if (validCategory && p.category !== validCategory) return false
+    if (validCategory && !categoriesOf(p).includes(validCategory)) return false
     if (validSubcategory && p.subcategory !== validSubcategory) return false
     if (petOnly && !p.is_pet_friendly) return false
     if (activeVeganLevel && p.vegan_level !== activeVeganLevel) return false
@@ -193,7 +204,7 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
         >
           <option value="">All ({poolForCategoryPills.length})</option>
           {categories.map(cat => (
-            <option key={cat} value={cat}>{(CATEGORY_LABELS[cat] || cat)} ({poolForCategoryPills.filter(p => p.category === cat).length})</option>
+            <option key={cat} value={cat}>{(CATEGORY_LABELS[cat] || cat)} ({poolForCategoryPills.filter(p => categoriesOf(p).includes(cat)).length})</option>
           ))}
         </select>
         {validCategory && subcategories.length > 1 && (
@@ -252,7 +263,7 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
           All ({poolForCategoryPills.length})
         </button>
         {categories.map(cat => {
-          const count = poolForCategoryPills.filter(p => p.category === cat).length
+          const count = poolForCategoryPills.filter(p => categoriesOf(p).includes(cat)).length
           return (
             <button key={cat} onClick={() => setFilter({ category: validCategory === cat ? null : cat, sub: null })}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${validCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
