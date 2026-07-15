@@ -37,7 +37,11 @@ export default function ClaimsManagement() {
   const { user } = useAuth()
   const [claims, setClaims] = useState<PlaceClaim[]>([])
   const [loading, setLoading] = useState(true)
-  const [filterStatus, setFilterStatus] = useState<string>('pending')
+  // Default to 'all' so the panel shows the full claim history (incl.
+  // approved/rejected) on open — the volume is tiny and hiding everything
+  // but pending was confusing (2026-07-15). Switch to 'pending' via the
+  // dropdown to work the actionable queue.
+  const [filterStatus, setFilterStatus] = useState<string>('all')
   const [processingClaim, setProcessingClaim] = useState<string | null>(null)
   const [rejectionReason, setRejectionReason] = useState('')
   const [showRejectModal, setShowRejectModal] = useState<string | null>(null)
