@@ -29,7 +29,7 @@ export default function Sidebar() {
         <Image
           src="/plantspack.svg"
           alt="PlantsPack"
-          width={1967}
+          width={2117}
           height={233}
           className="h-7 w-auto"
         />

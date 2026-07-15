@@ -39,9 +39,9 @@ export default function TopBar() {
           <Image
             src="/plantspack.svg"
             alt="PlantsPack"
-            width={1967}
+            width={2117}
             height={233}
-            className="h-[18px] w-[152px] shrink-0"
+            className="h-[18px] w-[164px] shrink-0"
           />
         </Link>
 
