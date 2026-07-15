@@ -67,7 +67,7 @@ export default function ClaimsManagement() {
           reviewed_at,
           rejection_reason,
           places!place_claim_requests_place_id_fkey (name, address),
-          users!place_claim_requests_user_id_fkey (username, email, first_name, last_name)
+          users!place_claim_requests_user_id_fkey (username, first_name, last_name)
         `)
         .order('created_at', { ascending: false })
 
