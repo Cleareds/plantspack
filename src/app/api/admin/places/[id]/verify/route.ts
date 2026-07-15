@@ -12,7 +12,7 @@ import { revalidatePath } from 'next/cache'
  *   - verification_status = 'approved'
  *   - verified_at timestamp updates
  *
- * The place page renders a "Verified by PlantsPack" badge when
+ * The place page renders a "Verified by Plants Pack" badge when
  * verification_level >= 3.
  *
  * POST /api/admin/places/[id]/verify

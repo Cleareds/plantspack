@@ -207,7 +207,7 @@ export async function GET(req: NextRequest) {
     const timeoutId = setTimeout(() => controller.abort(), 8000)
     const r = await fetch(url, {
       headers: {
-        'User-Agent': 'PlantsPack-VeganTools/1.0 (https://www.plantspack.com; hello@plantspack.com)',
+        'User-Agent': 'Plants Pack-VeganTools/1.0 (https://www.plantspack.com; hello@plantspack.com)',
         Accept: 'application/json',
       },
       signal: controller.signal,

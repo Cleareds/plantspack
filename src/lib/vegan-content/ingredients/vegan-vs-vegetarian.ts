@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const veganVsVegetarianArticle: IngredientArticle = {
   slug: 'vegan-vs-vegetarian',
   title: 'Vegan vs vegetarian: what is the actual difference?',
-  metaTitle: 'Vegan vs vegetarian: the actual difference, sub-types, and which is harder | PlantsPack',
+  metaTitle: 'Vegan vs vegetarian: the actual difference, sub-types, and which is harder | Plants Pack',
   metaDescription: 'Vegetarians avoid meat and fish. Vegans also exclude eggs, dairy, honey, and other animal products. Here is the full breakdown - sub-types, ethics, health, and which is easier socially.',
   category: 'lifestyle',
   searchQueries: [
@@ -26,13 +26,13 @@ export const veganVsVegetarianArticle: IngredientArticle = {
     'Why do some vegetarians eventually become vegan? Usually because they learn what the dairy and egg industries actually involve. Dairy cows are kept lactating by being impregnated yearly; the dairy industry kills male calves shortly after birth because they cannot produce milk, and slaughters dairy cows themselves after 4-7 productive years (a cow\'s natural lifespan is closer to 20). The egg industry kills all male chicks within a day of hatching - regardless of whether the eggs are free-range, organic, or pasture-raised - because male chicks do not lay eggs and are not the breeds raised for meat. Many lifelong vegetarians who learn this make the switch, on the reasoning that not eating meat but funding the dairy and egg industries still funds animal killing at scale.',
     'A note on "plant-based" vs "vegan." These are not synonyms, though they overlap heavily. Plant-based usually describes the diet only - no animal products in food - and may or may not extend to clothing, household products, or ethics. Vegan is broader: a lifestyle and ethical position that covers diet plus other animal uses. Brands frequently say "plant-based" on packaging when they mean "vegan diet," because "plant-based" is perceived as less political and more health-coded. In practice, a plant-based packaged product is functionally vegan in food terms; the difference matters more for how people describe themselves than for what is in the package.',
     'Which is healthier? Both can be healthy or unhealthy depending on how they are done. The Position Paper of the Academy of Nutrition and Dietetics (2016) states that "appropriately planned vegetarian, including vegan, diets are healthful, nutritionally adequate, and may provide health benefits for the prevention and treatment of certain diseases." Both diets benefit from including legumes, whole grains, vegetables, fruits, nuts, and seeds rather than relying on processed substitutes. The B12 question matters more for vegans than for lacto-ovo vegetarians, because B12 is reliably found only in animal products and fortified foods - vegans need a supplement or fortified foods, and many vegetarians who do not eat much dairy or eggs benefit from one too. Iron, calcium, omega-3, iodine, and vitamin D are the other nutrients worth tracking on either diet.',
-    'Which is easier? Vegetarianism is easier socially. Pasta with cheese, omelettes, cheese pizza, and most Indian restaurant menus are all instantly vegetarian-friendly without any label-reading. Veganism requires more attention - reading labels for whey, casein, gelatin, shellac, carmine, certain E-numbers - and asking servers about dishes that look plant-based but contain butter, ghee, or honey. That said, the food world has caught up significantly since 2020: most major supermarket chains carry vegan ranges, most chain restaurants flag vegan options, and city centres usually have at least one fully-vegan venue. PlantsPack catalogues 9,000+ vegan-friendly venues plus 1,000+ fully-vegan venues globally to make finding food on the road easier, whether you are vegetarian, vegan, or somewhere in between.',
+    'Which is easier? Vegetarianism is easier socially. Pasta with cheese, omelettes, cheese pizza, and most Indian restaurant menus are all instantly vegetarian-friendly without any label-reading. Veganism requires more attention - reading labels for whey, casein, gelatin, shellac, carmine, certain E-numbers - and asking servers about dishes that look plant-based but contain butter, ghee, or honey. That said, the food world has caught up significantly since 2020: most major supermarket chains carry vegan ranges, most chain restaurants flag vegan options, and city centres usually have at least one fully-vegan venue. Plants Pack catalogues 9,000+ vegan-friendly venues plus 1,000+ fully-vegan venues globally to make finding food on the road easier, whether you are vegetarian, vegan, or somewhere in between.',
   ],
   whatToLookFor: {
     good: [
       'Look for "vegan" labels on packaged food (Vegan Society sunflower, V-Label, Certified Vegan)',
       'In restaurants ask: "Is this vegan?" not "Is this vegetarian?" - the second leaves dairy and eggs in scope',
-      'PlantsPack lets you filter by vegan-level (fully vegan vs vegan-friendly)',
+      'Plants Pack lets you filter by vegan-level (fully vegan vs vegan-friendly)',
     ],
     avoid: [
       '"Vegetarian" labelled products if you are vegan - they can contain milk, eggs, honey, or gelatin',
@@ -59,7 +59,7 @@ export const veganVsVegetarianArticle: IngredientArticle = {
     },
     {
       question: 'Which is harder - vegan or vegetarian?',
-      answer: 'Veganism is harder socially and requires more label-reading. Vegetarianism is easier because cheese, eggs, and dairy are everywhere. That said, the gap has narrowed significantly since 2020 - most supermarkets carry vegan ranges, and most cities have fully-vegan venues. PlantsPack exists in part to make the vegan side easier.',
+      answer: 'Veganism is harder socially and requires more label-reading. Vegetarianism is easier because cheese, eggs, and dairy are everywhere. That said, the gap has narrowed significantly since 2020 - most supermarkets carry vegan ranges, and most cities have fully-vegan venues. Plants Pack exists in part to make the vegan side easier.',
     },
     {
       question: 'Are vegans and vegetarians both healthy?',

@@ -28,7 +28,7 @@ export default function Sidebar() {
       <Link href="/" className="flex items-center mb-3">
         <Image
           src="/plantspack.svg"
-          alt="PlantsPack"
+          alt="Plants Pack"
           width={2117}
           height={233}
           className="h-7 w-auto"

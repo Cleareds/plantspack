@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Heart, Leaf, Shield, HandHeart, MapPin, BookOpen, Users, Vote } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'About PlantsPack — Built for the Mission, Not the Markets',
-  description: 'PlantsPack is a community-driven, ad-free vegan platform mapping 50,000+ plant-based places across 150+ countries. No investors, no ads, no paid listings — with a pledge to share profit with animal-welfare causes once the platform is sustainable.',
+  title: 'About Plants Pack — Built for the Mission, Not the Markets',
+  description: 'Plants Pack is a community-driven, ad-free vegan platform mapping 50,000+ plant-based places across 150+ countries. No investors, no ads, no paid listings — with a pledge to share profit with animal-welfare causes once the platform is sustainable.',
   alternates: { canonical: 'https://www.plantspack.com/about' },
 }
 
@@ -27,14 +27,14 @@ export default function AboutPage() {
             <span className="text-primary">Not the Markets</span>
           </h1>
           <p className="text-on-surface-variant text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            PlantsPack is a free, community-driven platform for vegans and anyone exploring plant-based living.
+            Plants Pack is a free, community-driven platform for vegans and anyone exploring plant-based living.
             No investors. No ads. No paywalls.
           </p>
         </div>
 
-        {/* What is PlantsPack */}
+        {/* What is Plants Pack */}
         <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8 md:p-10 mb-12">
-          <h2 className="text-2xl font-bold text-on-surface mb-6">What is PlantsPack?</h2>
+          <h2 className="text-2xl font-bold text-on-surface mb-6">What is Plants Pack?</h2>
           <div className="grid sm:grid-cols-2 gap-5">
             <div className="flex gap-3">
               <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
@@ -78,7 +78,7 @@ export default function AboutPage() {
         <div className="bg-surface-container-lowest rounded-2xl editorial-shadow ghost-border p-8 md:p-10 mb-12">
           <div className="space-y-5 text-on-surface-variant text-lg leading-relaxed">
             <p>
-              We built PlantsPack because we were tired of seeing great vegan platforms disappear.
+              We built Plants Pack because we were tired of seeing great vegan platforms disappear.
               Most apps today are built on venture capital &mdash; millions of dollars in debt that force them
               to prioritize growth and ads over the actual community. When the money runs out, the platform dies.
             </p>
@@ -86,7 +86,7 @@ export default function AboutPage() {
               We are doing things differently.
             </p>
             <p>
-              PlantsPack is independent and community-driven. We don&apos;t answer to investors &mdash;
+              Plants Pack is independent and community-driven. We don&apos;t answer to investors &mdash;
               we answer to you. Our goal isn&apos;t to become a billion-dollar company. It&apos;s to create a
               <strong> permanent, digital home for the vegan movement</strong>.
             </p>
@@ -114,7 +114,7 @@ export default function AboutPage() {
               &mdash; without constant debates about the basics of our lifestyle.
             </p>
             <p className="font-semibold text-on-surface">
-              That&apos;s how PlantsPack was born.
+              That&apos;s how Plants Pack was born.
             </p>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function AboutPage() {
               <div className="text-2xl font-extrabold text-primary mb-2">Today</div>
               <div className="font-semibold text-on-surface mb-1">Keeping it running</div>
               <p className="text-sm text-on-surface-variant">
-                PlantsPack doesn&apos;t yet cover its own costs. Right now every
+                Plants Pack doesn&apos;t yet cover its own costs. Right now every
                 contribution goes straight to servers, security, and the tools that
                 keep the maps, recipes, and community running.
               </p>
@@ -146,7 +146,7 @@ export default function AboutPage() {
                 Our commitment: once support covers our costs, every euro of profit
                 (after taxes and expenses) gets split in half — 50% to animal
                 shelters in Ukraine and community-voted vegan causes, and 50%
-                reinvested in growing and improving PlantsPack: servers, development,
+                reinvested in growing and improving Plants Pack: servers, development,
                 and fair pay for the people building it — no bloated salaries, no
                 investor payouts. We&apos;ll publish receipts. We&apos;re not there
                 yet, and we won&apos;t pretend we are.
@@ -173,7 +173,7 @@ export default function AboutPage() {
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold mt-1">2.</span>
-              <span><strong>No hate.</strong> PlantsPack is a safe, drama-light space. We moderate actively to keep it that way.</span>
+              <span><strong>No hate.</strong> Plants Pack is a safe, drama-light space. We moderate actively to keep it that way.</span>
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold mt-1">3.</span>

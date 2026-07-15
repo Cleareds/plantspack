@@ -9,7 +9,7 @@ config({ path: '.env.local' })
 import { createClient } from '@supabase/supabase-js'
 
 const DRY_RUN = process.argv.includes('--dry-run')
-const UA = 'PlantsPack-Verifier/1.0 (+https://plantspack.com)'
+const UA = 'Plants Pack-Verifier/1.0 (+https://plantspack.com)'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

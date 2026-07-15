@@ -3,7 +3,7 @@ import type { TravelGuide } from '../types'
 export const germanyGuide: TravelGuide = {
   countrySlug: 'germany',
   countryName: 'Germany',
-  metaTitle: 'How to eat vegan in Germany — phrasebook & dish guide | PlantsPack',
+  metaTitle: 'How to eat vegan in Germany — phrasebook & dish guide | Plants Pack',
   metaDescription: 'Germany is one of the easiest countries in the world to eat vegan: Berlin is a world capital of vegan dining, and every supermarket stocks a huge V-Label range. A practical guide.',
   vegFriendliness: 5,
   vegFriendlinessNote: 'Outstanding. Germany has the highest density of vegan products in supermarkets globally and Berlin is one of the world capitals of vegan dining.',
@@ -64,11 +64,11 @@ export const germanyGuide: TravelGuide = {
     'Honey (Honig) in some mustards, salad dressings, and breakfast pastries.',
   ],
   tips: [
-    'Download PlantsPack or HappyCow before a Berlin trip - between them you have over a thousand listings in the city alone, more than any other capital in Europe.',
+    'Download Plants Pack or HappyCow before a Berlin trip - between them you have over a thousand listings in the city alone, more than any other capital in Europe.',
     'Veganz operates 100% vegan supermarkets in Berlin, Hamburg, Munich, Frankfurt, and Cologne. Worth a visit even if you are not shopping - it is a useful snapshot of what the vegan grocery market actually looks like.',
     'Rewe, Edeka, Lidl, Aldi, and Kaufland all carry serious vegan ranges. The V-Label on packaging is third-party audited and reliable - trust it.',
     'Berlin is the densest city for vegan options anywhere in Europe. Even kebab shops do vegan döner. You basically do not need to plan meals.',
-    'Bavaria and rural areas need slightly more planning. Find the nearest Kaufland or Edeka for groceries, and check PlantsPack for the city before heading into smaller towns.',
+    'Bavaria and rural areas need slightly more planning. Find the nearest Kaufland or Edeka for groceries, and check Plants Pack for the city before heading into smaller towns.',
     'Bakeries everywhere stock at least one vegan bread - look for "vegan" labelled loaves. Roggenbrot (rye bread) and most Vollkornbrot (wholegrain) are usually vegan by default.',
     '"Pflanzlich" (plant-based) labelling on menus and packaging is reliable in Germany - it is used precisely, not as marketing fluff.',
     'ProVeg International runs the V-Label scheme and certifies restaurants - a V-Label vegan stamp on a menu item is the strongest restaurant-level signal you will find anywhere in Europe.',

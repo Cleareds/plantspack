@@ -13,7 +13,7 @@ const TITLE = "Beyond Berlin: 6 best vegan cities in Germany (2026 audit)"
 // Body now omits the H1 + hero image (template renders both)
 const content = `Berlin gets all the vegan press, and most of it is earned: [178 verified 100% vegan venues](/vegan-places/germany/berlin), plant-based restaurants on most corners, and Germany's first fully plant-based supermarket ([REWE voll pflanzlich](https://vegconomist.com/retail-e-commerce/rewe-inaugurates-first-fully-plant-based-supermarket-berlin/), opened 11 April 2024 on Warschauer Brücke). But Berlin is one city in a country of 80 million people, and if you're plant-based and not landing at BER, the question is: where else does Germany actually work?
 
-We audited every German city on PlantsPack against a single strict metric — venues where the menu is verified 100% vegan, not just "has vegan options". Six non-Berlin cities consistently delivered.
+We audited every German city on Plants Pack against a single strict metric — venues where the menu is verified 100% vegan, not just "has vegan options". Six non-Berlin cities consistently delivered.
 
 ## [Hamburg](/vegan-places/germany/hamburg)
 
@@ -140,13 +140,13 @@ REWE voll pflanzlich is at Warschauer Brücke in Berlin's Friedrichshain distric
 
 Halle (Saale), Heidelberg, Freiburg im Breisgau, Münster, Kiel, Mannheim, Bamberg and Kassel each have 14–19 verified 100% vegan venues — disproportionately high for cities of their size. We're working on a dedicated guide.
 
-### How do you verify a restaurant as "100% vegan" on PlantsPack?
+### How do you verify a restaurant as "100% vegan" on Plants Pack?
 
 We require at least one of: (a) the venue's own website explicitly says 100% vegan / rein vegan / plant-based only; (b) OSM's \`diet:vegan=only\` community tag combined with a second independent source; or (c) manual admin verification for well-known venues without a website. Anything ambiguous defaults to vegan_friendly and is excluded from the fully-vegan count.
 
 ---
 
-**Want to support work like this?** PlantsPack is free and ad-free. We publish posts like this one because supporters fund the audit work behind them. [Support us for EUR 3/month](/support).`
+**Want to support work like this?** Plants Pack is free and ad-free. We publish posts like this one because supporters fund the audit work behind them. [Support us for EUR 3/month](/support).`
 
 const POST_ID = '030ebac1-b79b-43ff-b8f2-894cdb4b3f27'
 const post = { id: POST_ID }

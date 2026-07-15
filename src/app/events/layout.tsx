@@ -13,15 +13,15 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Vegan Events Near You — Meetups, Festivals & Potlucks | PlantsPack',
+  title: 'Vegan Events Near You — Meetups, Festivals & Potlucks | Plants Pack',
   description: 'Find upcoming vegan events, meetups, potlucks, and festivals posted by the community. Filter by city, category, and date. Free to join, free to post your own event.',
   alternates: { canonical: 'https://www.plantspack.com/events' },
   openGraph: {
-    title: 'Vegan Events Near You — Festivals, Meetups & Potlucks | PlantsPack',
+    title: 'Vegan Events Near You — Festivals, Meetups & Potlucks | Plants Pack',
     description: 'Upcoming vegan festivals and plant-based events worldwide — dates, locations, and tickets.',
     type: 'website',
     url: 'https://www.plantspack.com/events',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     images: OG_DEFAULT_IMAGES,
   },
 }

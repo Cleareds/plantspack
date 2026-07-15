@@ -6,7 +6,7 @@ export const RECIPE_COLLECTIONS: RecipeCollection[] = [
   {
     slug: 'soft-vegan-food-after-dental-work',
     title: 'Soft Vegan Food After Dental Work',
-    metaTitle: 'Soft Vegan Food After Dental Work & Surgery | PlantsPack',
+    metaTitle: 'Soft Vegan Food After Dental Work & Surgery | Plants Pack',
     metaDescription:
       'Gentle, no-chew vegan smoothies and cream soups for after wisdom teeth, dental surgery, or with braces. Blender-friendly, protein-conscious, ready in minutes.',
     searchQueries: [
@@ -29,7 +29,7 @@ export const RECIPE_COLLECTIONS: RecipeCollection[] = [
   {
     slug: 'low-fodmap-vegan-smoothies',
     title: 'Low-FODMAP-Friendly Vegan Smoothies',
-    metaTitle: 'Low-FODMAP-Friendly Vegan Smoothies | PlantsPack',
+    metaTitle: 'Low-FODMAP-Friendly Vegan Smoothies | Plants Pack',
     metaDescription:
       'Light, bloating-conscious vegan smoothies built around lower-FODMAP ingredients. Plant-based, blender-only, with honest portion notes.',
     searchQueries: [
@@ -51,7 +51,7 @@ export const RECIPE_COLLECTIONS: RecipeCollection[] = [
   {
     slug: 'high-protein-vegan-cream-soups',
     title: 'High-Protein Vegan Cream Soups',
-    metaTitle: 'High-Protein Vegan Cream Soups | PlantsPack',
+    metaTitle: 'High-Protein Vegan Cream Soups | Plants Pack',
     metaDescription:
       'Silky, comforting vegan cream soups built for protein - tofu, lentils, and greens blended smooth. Soft-textured and freezer-friendly.',
     searchQueries: [

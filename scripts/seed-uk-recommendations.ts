@@ -135,7 +135,7 @@ async function geocodeOnce(query: string): Promise<{ lat: number; lng: number; d
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=gb`
   const res = await fetch(url, {
     headers: {
-      'User-Agent': 'PlantsPack/1.0 (hello@plantspack.com) seed-uk-recommendations',
+      'User-Agent': 'Plants Pack/1.0 (hello@plantspack.com) seed-uk-recommendations',
       'Accept': 'application/json',
     },
   })

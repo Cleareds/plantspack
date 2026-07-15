@@ -6,16 +6,16 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Vegan Recipe Collections | PlantsPack',
+  title: 'Vegan Recipe Collections | Plants Pack',
   description:
     'Curated vegan recipe collections for real situations - soft food after dental work, low-FODMAP-friendly smoothies, high-protein cream soups, and more.',
   alternates: { canonical: 'https://www.plantspack.com/recipes/collections' },
   openGraph: {
-    title: 'Vegan Recipe Collections | PlantsPack',
+    title: 'Vegan Recipe Collections | Plants Pack',
     description:
       'Curated vegan recipe collections for real situations - soft food after dental work, low-FODMAP-friendly smoothies, high-protein cream soups, and more.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/recipes/collections',
     images: OG_DEFAULT_IMAGES,
   },

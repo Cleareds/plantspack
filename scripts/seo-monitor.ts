@@ -88,7 +88,7 @@ async function main() {
     if (!DRY && Date.now() - lastWarn > 7 * 864e5) {
       await sendEmail({
         to: TO,
-        subject: '[PlantsPack] SEO monitor blocked — gcloud re-auth needed',
+        subject: '[Plants Pack] SEO monitor blocked — gcloud re-auth needed',
         html: '<p>The weekly SEO monitor could not authenticate. Run <code>gcloud auth login</code> on the laptop (or extend the Google Cloud session length in the Workspace admin console) and it will resume on its own.</p>',
         text: 'SEO monitor blocked - run: gcloud auth login',
       })
@@ -200,7 +200,7 @@ async function main() {
   if (!DRY) {
     await sendEmail({
       to: TO,
-      subject: `[PlantsPack] SEO weekly: ${lastW.clicks} clicks (${pct(lastW.clicks, prevW?.clicks || 0)}), churn ${lost.length}`,
+      subject: `[Plants Pack] SEO weekly: ${lastW.clicks} clicks (${pct(lastW.clicks, prevW?.clicks || 0)}), churn ${lost.length}`,
       html: `<pre style="font-family:monospace;font-size:13px">${report.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</pre>`,
       text: report,
     })

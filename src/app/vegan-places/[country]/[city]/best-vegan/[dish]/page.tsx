@@ -77,11 +77,11 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   // content); lead with the count when it's compelling.
   let title: string
   if (data.total >= 5) {
-    title = `${data.total} Best ${phrase} in ${data.city} (${YEAR}) | PlantsPack`
+    title = `${data.total} Best ${phrase} in ${data.city} (${YEAR}) | Plants Pack`
   } else if (data.total >= 2) {
-    title = `${phrase} in ${data.city}, ${data.country} (${YEAR}) | PlantsPack`
+    title = `${phrase} in ${data.city}, ${data.country} (${YEAR}) | Plants Pack`
   } else {
-    title = `${phrase} in ${data.city} | PlantsPack`
+    title = `${phrase} in ${data.city} | Plants Pack`
   }
 
   // Description leads with actual place names when we have them, not with
@@ -116,7 +116,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
       description,
       type: 'article',
       url: canonical,
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       images: heroImg ? [{ url: heroImg }] : undefined,
     },
   }
@@ -187,7 +187,7 @@ export default async function DishPage({ params, searchParams }: { params: Promi
   if (total > 0) {
     faqItems.push({
       question: `How many vegan ${dishLc} places are there in ${city}?`,
-      answer: `PlantsPack lists ${total} vegan ${dishLc} ${total === 1 ? 'spot' : 'spots'} in ${city}, ${country}${fullyVeganCount > 0 ? `, of which ${fullyVeganCount} ${fullyVeganCount === 1 ? 'is' : 'are'} 100% vegan` : ''}.`,
+      answer: `Plants Pack lists ${total} vegan ${dishLc} ${total === 1 ? 'spot' : 'spots'} in ${city}, ${country}${fullyVeganCount > 0 ? `, of which ${fullyVeganCount} ${fullyVeganCount === 1 ? 'is' : 'are'} 100% vegan` : ''}.`,
     })
   }
   if (topNames.length > 0) {

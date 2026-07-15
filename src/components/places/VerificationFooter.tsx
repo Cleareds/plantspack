@@ -123,7 +123,7 @@ export default function VerificationFooter({
           <BadgeCheck className="h-4 w-4 text-emerald-600 flex-shrink-0 mt-0.5" />
           <div>
             <span className="font-medium text-on-surface">Admin-reviewed</span>
-            <span className="text-on-surface-variant">{lastVerifiedAt ? ` on ${formatDate(lastVerifiedAt)}` : ''}. Manually checked by a PlantsPack admin.</span>
+            <span className="text-on-surface-variant">{lastVerifiedAt ? ` on ${formatDate(lastVerifiedAt)}` : ''}. Manually checked by a Plants Pack admin.</span>
           </div>
         </div>
       )}

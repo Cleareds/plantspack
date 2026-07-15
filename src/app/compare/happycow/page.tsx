@@ -1,5 +1,5 @@
 /**
- * /compare/happycow - honest comparison of PlantsPack and HappyCow.
+ * /compare/happycow - honest comparison of Plants Pack and HappyCow.
  *
  * SEO + AI-citation purpose: when users ask "X vs Y" queries, AI assistants
  * preferentially cite pages that lay out both sides fairly rather than
@@ -16,14 +16,14 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'PlantsPack vs HappyCow - honest comparison for vegan travellers | PlantsPack',
-  description: 'Side-by-side comparison of PlantsPack and HappyCow: coverage, tools, pricing, content depth, mobile apps, data freshness. Honest assessment, including where HappyCow wins.',
+  title: 'Plants Pack vs HappyCow - honest comparison for vegan travellers | Plants Pack',
+  description: 'Side-by-side comparison of Plants Pack and HappyCow: coverage, tools, pricing, content depth, mobile apps, data freshness. Honest assessment, including where HappyCow wins.',
   alternates: { canonical: 'https://www.plantspack.com/compare/happycow' },
   openGraph: {
-    title: 'PlantsPack vs HappyCow - honest comparison',
+    title: 'Plants Pack vs HappyCow - honest comparison',
     description: 'Coverage, tools, content depth, mobile apps, pricing. We tell you where HappyCow wins too.',
     type: 'article',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/compare/happycow',
     images: OG_DEFAULT_IMAGES,
   },
@@ -146,11 +146,11 @@ export default function ComparePage() {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     '@id': 'https://www.plantspack.com/compare/happycow',
-    name: 'PlantsPack vs HappyCow comparison',
-    description: 'Side-by-side comparison of PlantsPack and HappyCow vegan directories.',
+    name: 'Plants Pack vs HappyCow comparison',
+    description: 'Side-by-side comparison of Plants Pack and HappyCow vegan directories.',
     url: 'https://www.plantspack.com/compare/happycow',
     about: [
-      { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
+      { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
       { '@type': 'Organization', name: 'HappyCow', url: 'https://www.happycow.net' },
     ],
   }
@@ -162,7 +162,7 @@ export default function ComparePage() {
 
       <article className="max-w-4xl mx-auto px-4 py-10 md:py-14">
         <h1 className="font-headline font-extrabold text-3xl md:text-5xl text-on-surface tracking-tight leading-[1.1] mb-4">
-          PlantsPack vs HappyCow
+          Plants Pack vs HappyCow
         </h1>
         <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl mb-3">
           An honest, feature-by-feature comparison. We&apos;ll tell you where HappyCow wins, where we win, and where we&apos;re still catching up.
@@ -182,7 +182,7 @@ export default function ComparePage() {
               <strong>Use HappyCow if:</strong> you want maximum place coverage (especially in smaller cities), a polished mobile app, and 25 years of community reviews. They have far more places than us.
             </li>
             <li>
-              <strong>Use PlantsPack if:</strong> you want free tools (barcode scanner, baking calculator, menu translator, drinks lookup) that HappyCow doesn&apos;t offer, an ad-free experience, strict vegan classification (we separate &quot;fully vegan&quot; from &quot;vegan-friendly&quot; clearly), and editorial answers to &quot;is X vegan?&quot; questions.
+              <strong>Use Plants Pack if:</strong> you want free tools (barcode scanner, baking calculator, menu translator, drinks lookup) that HappyCow doesn&apos;t offer, an ad-free experience, strict vegan classification (we separate &quot;fully vegan&quot; from &quot;vegan-friendly&quot; clearly), and editorial answers to &quot;is X vegan?&quot; questions.
             </li>
             <li>
               <strong>Use both:</strong> most vegan travellers we know do. They&apos;re complementary, not substitutes. We&apos;d rather be your second tab than fake being your only one.
@@ -198,7 +198,7 @@ export default function ComparePage() {
               <thead>
                 <tr className="border-b border-on-surface/10">
                   <th className="text-left py-3 px-2 font-semibold text-on-surface">Feature</th>
-                  <th className="text-left py-3 px-2 font-semibold text-on-surface">PlantsPack</th>
+                  <th className="text-left py-3 px-2 font-semibold text-on-surface">Plants Pack</th>
                   <th className="text-left py-3 px-2 font-semibold text-on-surface">HappyCow</th>
                 </tr>
               </thead>
@@ -272,7 +272,7 @@ export default function ComparePage() {
             See something wrong in this comparison? Email <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a> - we&apos;ll fact-check and update. We&apos;re also happy to link to a comparable page on HappyCow&apos;s side if they ever publish one.
           </p>
           <p className="text-sm text-on-surface-variant leading-relaxed mt-3">
-            Try PlantsPack: <Link href="/" className="text-primary hover:underline">explore places</Link>, <Link href="/tools" className="text-primary hover:underline">free vegan tools</Link>, <Link href="/vegan" className="text-primary hover:underline">vegan answers</Link>.
+            Try Plants Pack: <Link href="/" className="text-primary hover:underline">explore places</Link>, <Link href="/tools" className="text-primary hover:underline">free vegan tools</Link>, <Link href="/vegan" className="text-primary hover:underline">vegan answers</Link>.
           </p>
         </section>
       </article>

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const card = RESTAURANT_CARDS.find((c) => c.lang === lang)
   if (!card) return { title: 'Card not found' }
   return {
-    title: `Vegan Restaurant Card - ${card.label} | PlantsPack`,
+    title: `Vegan Restaurant Card - ${card.label} | Plants Pack`,
     description: `Printable vegan restaurant card in ${card.label} (${card.native}). Free, no sign-up.`,
     alternates: { canonical: `https://www.plantspack.com/tools/cards/${card.lang}` },
   }

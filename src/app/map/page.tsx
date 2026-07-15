@@ -4,14 +4,14 @@ import Map from '@/components/map/Map'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const metadata: Metadata = {
-  title: 'Vegan Places Map — Restaurants, Stores & Stays Worldwide | PlantsPack',
+  title: 'Vegan Places Map — Restaurants, Stores & Stays Worldwide | Plants Pack',
   description: 'Interactive map of 37,000+ vegan and vegan-friendly places worldwide. Find fully-vegan restaurants, plant-based stores, and vegan-friendly hotels near you or anywhere you travel.',
   alternates: { canonical: 'https://www.plantspack.com/map' },
   openGraph: {
-    title: 'Vegan Places Map | PlantsPack',
+    title: 'Vegan Places Map | Plants Pack',
     description: 'Explore 37,000+ vegan and vegan-friendly places on an interactive worldwide map. Search by city, filter by category, add your favorites.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     images: OG_DEFAULT_IMAGES,
   },
 }

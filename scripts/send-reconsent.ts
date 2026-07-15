@@ -116,7 +116,7 @@ function renderEmail(recipient: Recipient) {
   const subscribeUrl = `${SITE_URL}/api/newsletter/subscribe?u=${encodeURIComponent(recipient.marketing_email_token)}&source=${encodeURIComponent(CAMPAIGN)}`
   const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?u=${encodeURIComponent(recipient.marketing_email_token)}`
 
-  const subject = 'Want weekly vegan discoveries from PlantsPack?'
+  const subject = 'Want weekly vegan discoveries from Plants Pack?'
 
   const html = `
     <!DOCTYPE html>
@@ -128,12 +128,12 @@ function renderEmail(recipient: Recipient) {
     <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5;">
       <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <div style="text-align: center; padding: 32px 20px; border-bottom: 1px solid #e5e7eb;">
-          <img src="https://plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
+          <img src="https://plantspack.com/plantspack-logo-real.svg" alt="Plants Pack" height="48" style="height: 48px; width: auto;" />
         </div>
         <div style="padding: 40px 30px;">
           <p>Hi <strong>${name}</strong>,</p>
           <p>
-            Quick note — we're launching a periodic PlantsPack newsletter covering new vegan
+            Quick note — we're launching a periodic Plants Pack newsletter covering new vegan
             places near you, top-rated spots worldwide, and platform updates. You signed up
             before this existed, so we're asking once whether you'd like to receive it.
           </p>
@@ -157,7 +157,7 @@ function renderEmail(recipient: Recipient) {
             emails (notifications you've enabled, claim responses, password resets)
             regardless of your newsletter choice.
           </p>
-          <p style="margin-top: 24px;"><strong>The PlantsPack Team</strong></p>
+          <p style="margin-top: 24px;"><strong>The Plants Pack Team</strong></p>
         </div>
         <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
           <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">

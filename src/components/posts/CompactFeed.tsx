@@ -53,7 +53,7 @@ export default function CompactFeed() {
     e.stopPropagation()
     const url = `${window.location.origin}/${post.category === 'recipe' && post.slug ? `recipe/${post.slug}` : `post/${post.id}`}`
     if (navigator.share) {
-      navigator.share({ title: post.title || 'PlantsPack', url })
+      navigator.share({ title: post.title || 'Plants Pack', url })
     } else {
       navigator.clipboard.writeText(url)
     }

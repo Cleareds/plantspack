@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   const { country, city } = await params
   const loc = await loadCity(country, city)
   if (!loc) return { title: 'Page not found', robots: { index: false } }
-  const title = `Best Vegan Food in ${loc.city} - Guides by Dish | PlantsPack`
+  const title = `Best Vegan Food in ${loc.city} - Guides by Dish | Plants Pack`
   const description = `Curated dish-by-dish guides to vegan food in ${loc.city}, ${loc.country}. Verified spots for pizza, donuts, ramen, burgers, and more - ranked by community trust.`
   return {
     title,
@@ -102,7 +102,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
       description,
       type: 'article',
       url: `https://www.plantspack.com/vegan-places/${country}/${city}/best-vegan`,
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       images: OG_DEFAULT_IMAGES,
     },
   }

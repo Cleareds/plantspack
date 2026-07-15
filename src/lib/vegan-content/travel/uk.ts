@@ -3,7 +3,7 @@ import type { TravelGuide } from '../types'
 export const ukGuide: TravelGuide = {
   countrySlug: 'united-kingdom',
   countryName: 'the UK',
-  metaTitle: 'How to eat vegan in the UK — phrasebook & dish guide | PlantsPack',
+  metaTitle: 'How to eat vegan in the UK — phrasebook & dish guide | Plants Pack',
   metaDescription: 'The UK is one of the easiest countries in the world to travel as a vegan. Supermarket vegan ranges are huge, chains have dedicated vegan menus, and Brighton, Bristol, London and Glasgow are dense with options.',
   vegFriendliness: 5,
   vegFriendlinessNote: 'Excellent. The UK has the most developed vegan retail and dining scene in Europe outside Germany.',
@@ -27,7 +27,7 @@ export const ukGuide: TravelGuide = {
     vegan: [
       { name: 'Jacket potato with baked beans', nativeName: 'Jacket potato with beans', status: 'vegan', note: 'Pub and cafe staple. Skip the butter and cheese - ask for it plain with beans. Naturally vegan.' },
       { name: 'Vegan full English breakfast', nativeName: 'Vegan full English', status: 'usually-vegan', note: 'Most cafes and chains (Wetherspoons, Greggs, Pret) now do a vegan version: vegan sausage, beans, hash browns, mushrooms, tomato, toast.' },
-      { name: 'Vegan fish & chips', nativeName: 'Vegan fish & chips', status: 'vegan', note: 'Banana blossom or tofu battered "fish." Sutton & Sons (London), The Vurger Co, and many modern chippies do this - look it up on PlantsPack first.' },
+      { name: 'Vegan fish & chips', nativeName: 'Vegan fish & chips', status: 'vegan', note: 'Banana blossom or tofu battered "fish." Sutton & Sons (London), The Vurger Co, and many modern chippies do this - look it up on Plants Pack first.' },
       { name: 'Buddha bowl / grain bowl', nativeName: 'Buddha bowl', status: 'vegan', note: 'Standard cafe and chain offering: grains, roasted veg, hummus, beans. Pret, Leon, Itsu all do reliable versions.' },
       { name: 'Vegan curry house dishes', nativeName: 'Vegan curry', status: 'usually-vegan', note: 'Chana masala, aloo gobi, tarka dal, vegetable biryani, bhindi masala. Always ask "no ghee, no cream" - many curry houses cook with ghee by default.' },
       { name: 'Welsh rarebit (vegan)', nativeName: 'Vegan Welsh rarebit', status: 'vegan', note: 'Toasted bread with vegan cheese sauce and mustard. Increasingly on gastropub menus in Wales and the southwest.' },
@@ -61,7 +61,7 @@ export const ukGuide: TravelGuide = {
     'Gelatin in jelly babies, dolly mixtures, wine gums, and most traditional UK sweets. Look for "suitable for vegans" on the back - The Natural Confectionery Co and Candy Kittens do vegan versions.',
   ],
   tips: [
-    'Use PlantsPack and HappyCow together - both have strong UK coverage. PlantsPack is denser in London, Brighton, Bristol, and Manchester; HappyCow has wider tail coverage in smaller towns.',
+    'Use Plants Pack and HappyCow together - both have strong UK coverage. Plants Pack is denser in London, Brighton, Bristol, and Manchester; HappyCow has wider tail coverage in smaller towns.',
     'Supermarket own-brand vegan ranges are excellent and cheap. Tesco Wicked Kitchen, Sainsbury\'s Plant Pioneers, M&S Plant Kitchen, Asda Plant-Based, and Waitrose all have dedicated vegan sections. A meal-deal vegan sandwich + crisps + drink is around GBP 4.',
     'Major chains (Pret, Itsu, Wagamama, Leon, Pizza Express, Zizzi, Nando\'s, Wetherspoons) all have explicit vegan menus. Wetherspoons in particular is reliable on motorways and in small towns.',
     'Greggs is not 100% vegan but the vegan sausage roll, vegan steak bake, vegan sausage bean & cheeze melt, and vegan glazed ring doughnut are all reliable. Every UK high street has one.',

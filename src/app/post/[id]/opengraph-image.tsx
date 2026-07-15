@@ -5,7 +5,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
 export const runtime = 'edge'
-export const alt = 'PlantsPack Post'
+export const alt = 'Plants Pack Post'
 export const size = {
   width: 1200,
   height: 630,
@@ -48,7 +48,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               justifyContent: 'center',
             }}
           >
-            PlantsPack
+            Plants Pack
           </div>
         ),
         { ...size }
@@ -57,7 +57,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
     const userName = (post.users as any)?.first_name
       ? `${(post.users as any).first_name} ${(post.users as any).last_name || ''}`.trim()
-      : (post.users as any)?.username || 'PlantsPack User'
+      : (post.users as any)?.username || 'Plants Pack User'
 
     // Get first image if available
     const postImage = post.images?.[0] || post.image_url
@@ -139,7 +139,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
                 fontWeight: 700,
               }}
             >
-              · PlantsPack
+              · Plants Pack
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             justifyContent: 'center',
           }}
         >
-          PlantsPack
+          Plants Pack
         </div>
       ),
       { ...size }

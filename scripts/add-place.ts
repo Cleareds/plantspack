@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Reusable "add a vegan place to PlantsPack" CLI.
+ * Reusable "add a vegan place to Plants Pack" CLI.
  *
  * Reads a JSON payload on stdin describing a place, auto-fills the gaps
  * (geocode via Nominatim, scrape hero image from the website's og:image /
@@ -107,7 +107,7 @@ async function nominatim(query: string, countryCode = 'gb'): Promise<{ lat: numb
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=${countryCode}&addressdetails=1`
   try {
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'PlantsPack/1.0 (hello@plantspack.com) add-place CLI', 'Accept': 'application/json' },
+      headers: { 'User-Agent': 'Plants Pack/1.0 (hello@plantspack.com) add-place CLI', 'Accept': 'application/json' },
       signal: AbortSignal.timeout(10000),
     })
     if (!res.ok) return null

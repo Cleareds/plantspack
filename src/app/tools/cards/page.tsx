@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import CardsClient from './CardsClient'
 
 export const metadata: Metadata = {
-  title: 'Printable Vegan Restaurant Cards & Cheat Sheets | PlantsPack',
+  title: 'Printable Vegan Restaurant Cards & Cheat Sheets | Plants Pack',
   description: 'Free printable vegan restaurant cards in 20+ languages, E-number guide, and hidden non-vegan ingredient lists. Print or save to your phone.',
   alternates: { canonical: 'https://www.plantspack.com/tools/cards' },
 }

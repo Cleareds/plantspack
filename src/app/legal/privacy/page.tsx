@@ -14,12 +14,12 @@ export default function PrivacyPolicy() {
           <div className="prose prose-green max-w-none">
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">1. Introduction</h2>
             <p className="text-on-surface-variant mb-4">
-              Welcome to PlantsPack. We respect your privacy and are committed to protecting your personal data.
+              Welcome to Plants Pack. We respect your privacy and are committed to protecting your personal data.
               This Privacy Policy explains how we collect, use, store, and protect your information when you use
               our platform.
             </p>
             <p className="text-on-surface-variant mb-4">
-              This policy applies to all users of PlantsPack, regardless of location. For users in the European
+              This policy applies to all users of Plants Pack, regardless of location. For users in the European
               Union, we comply with the General Data Protection Regulation (GDPR).
             </p>
 
@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
 
             <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">2.1 Information You Provide</h3>
             <p className="text-on-surface-variant mb-4">
-              When you create an account and use PlantsPack, we collect:
+              When you create an account and use Plants Pack, we collect:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Account Information:</strong> Username, email address, password (encrypted), name, and profile picture</li>
@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
 
             <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">2.2 Automatically Collected Information</h3>
             <p className="text-on-surface-variant mb-4">
-              When you use PlantsPack, we automatically collect:
+              When you use Plants Pack, we automatically collect:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Usage Data:</strong> How you interact with the platform, features you use, and time spent</li>
@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
               <li><strong>Communication:</strong> Send transactional emails (account confirmations, notifications you've enabled, password resets) and respond to inquiries</li>
               <li><strong>Security:</strong> Protect against fraud, abuse, and unauthorized access</li>
               <li><strong>Moderation:</strong> Enforce Community Guidelines and Terms of Service</li>
-              <li><strong>Analytics:</strong> Understand how users interact with PlantsPack to improve our services</li>
+              <li><strong>Analytics:</strong> Understand how users interact with Plants Pack to improve our services</li>
               <li><strong>Legal Compliance:</strong> Comply with legal obligations and respond to lawful requests</li>
             </ul>
 
@@ -156,7 +156,7 @@ export default function PrivacyPolicy() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">9. Cookies and Tracking</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack uses cookies to:
+              Plants Pack uses cookies to:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Essential Cookies:</strong> Required for authentication and basic functionality</li>
@@ -169,7 +169,7 @@ export default function PrivacyPolicy() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">10. Third-Party Services</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack integrates with third-party services:
+              Plants Pack integrates with third-party services:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Supabase:</strong> Database and authentication services</li>
@@ -185,7 +185,7 @@ export default function PrivacyPolicy() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">11. Children's Privacy</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is not intended for users under 16 years of age. We do not knowingly collect information
+              Plants Pack is not intended for users under 16 years of age. We do not knowingly collect information
               from children. If you believe a child has provided us with personal data, please contact us immediately.
             </p>
 
@@ -198,13 +198,13 @@ export default function PrivacyPolicy() {
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">13. Changes to Privacy Policy</h2>
             <p className="text-on-surface-variant mb-4">
               We may update this Privacy Policy from time to time. We will notify you of significant changes via
-              email or platform notification. Your continued use of PlantsPack after changes constitutes acceptance
+              email or platform notification. Your continued use of Plants Pack after changes constitutes acceptance
               of the updated policy.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">14. Mobile Applications (iOS and Android)</h2>
             <p className="text-on-surface-variant mb-4">
-              In addition to the website, PlantsPack is available as a mobile application on iOS
+              In addition to the website, Plants Pack is available as a mobile application on iOS
               (Apple App Store, bundle identifier <code>com.plantspack.app</code>) and Android
               (Google Play, package <code>plantspack.app</code>). Everything in this Privacy Policy
               applies to the mobile apps. The sections below describe the additional, mobile-specific
@@ -263,13 +263,13 @@ export default function PrivacyPolicy() {
               The iOS app supports Sign in with Apple. When you use it, Apple shares with us a stable
               user identifier and either your real email address or a private relay email address
               (your choice at sign-in). We use this identifier solely to create and authenticate your
-              PlantsPack account. We do not receive any other information from your Apple ID.
+              Plants Pack account. We do not receive any other information from your Apple ID.
             </p>
 
             <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.4 Data Collection Summary (Apple App Privacy / Google Data Safety)</h3>
             <p className="text-on-surface-variant mb-4">
               For Apple App Store &ldquo;App Privacy&rdquo; and Google Play &ldquo;Data Safety&rdquo;
-              disclosures, the following categories apply to PlantsPack:
+              disclosures, the following categories apply to Plants Pack:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li><strong>Contact Info — Email Address:</strong> Collected, linked to identity, used for account functionality and (if you opt in) the newsletter. Not used for tracking.</li>
@@ -290,7 +290,7 @@ export default function PrivacyPolicy() {
             <h3 className="text-xl font-semibold text-on-surface mt-6 mb-3">14.5 Account Deletion (In-App)</h3>
             <p className="text-on-surface-variant mb-4">
               Per Apple App Store guideline 5.1.1(v) and Google Play account-deletion policy, you can
-              delete your PlantsPack account and associated personal data directly from the app:
+              delete your Plants Pack account and associated personal data directly from the app:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Open the app and go to <strong>Profile → Account → Delete account</strong>, or</li>
@@ -333,7 +333,7 @@ export default function PrivacyPolicy() {
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Contact Us</h2>
             <p className="text-on-surface-variant mb-4">
               If you have questions about this Privacy Policy or how we handle your data, please contact us.
-              PlantsPack is operated by Cleareds, a company registered in Belgium.
+              Plants Pack is operated by Cleareds, a company registered in Belgium.
             </p>
             <ul className="list-none text-on-surface-variant mb-4 space-y-2">
               <li><strong>Data Controller:</strong> Cleareds (Belgium)</li>
@@ -351,7 +351,7 @@ export default function PrivacyPolicy() {
 
             <div className="mt-12 pt-8 border-t border-outline-variant/15">
               <p className="text-sm text-on-surface-variant mb-4">
-                By using PlantsPack, you acknowledge that you have read and understood this Privacy Policy.
+                By using Plants Pack, you acknowledge that you have read and understood this Privacy Policy.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link

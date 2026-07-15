@@ -55,7 +55,7 @@ export default function AppInstallBanner() {
           className="h-9 w-9 rounded-lg flex-shrink-0"
         />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-on-surface leading-tight">Get the PlantsPack app</p>
+          <p className="text-sm font-semibold text-on-surface leading-tight">Get the Plants Pack app</p>
           <p className="text-xs text-on-surface-variant leading-tight truncate">
             Vegan places near you, on the go
           </p>

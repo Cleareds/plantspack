@@ -6,16 +6,16 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Get the PlantsPack App - Free Vegan Places & Tools (iOS & Android)',
+  title: 'Get the Plants Pack App - Free Vegan Places & Tools (iOS & Android)',
   description:
-    'Download PlantsPack for iPhone and Android: find vegan and vegan-friendly places worldwide, scan barcodes and menus, and check what is vegan - free, ad-free, no paid placements.',
+    'Download Plants Pack for iPhone and Android: find vegan and vegan-friendly places worldwide, scan barcodes and menus, and check what is vegan - free, ad-free, no paid placements.',
   alternates: { canonical: 'https://www.plantspack.com/app' },
   openGraph: {
-    title: 'Get the PlantsPack App (iOS & Android)',
+    title: 'Get the Plants Pack App (iOS & Android)',
     description:
       'Find vegan places worldwide, scan barcodes and menus, check what is vegan. Free, ad-free, no paid placements.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/app',
     images: OG_DEFAULT_IMAGES,
   },
@@ -33,14 +33,14 @@ export default function AppPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'PlantsPack',
+    name: 'Plants Pack',
     applicationCategory: 'TravelApplication',
     operatingSystem: 'iOS, Android',
     url: 'https://www.plantspack.com/app',
     description:
       'Find vegan and vegan-friendly places worldwide, scan barcodes and menus, and check what is vegan. Free, ad-free, no paid placements.',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    publisher: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
+    publisher: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
   }
 
   return (
@@ -50,7 +50,7 @@ export default function AppPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="max-w-2xl mb-8">
           <h1 className="text-3xl md:text-4xl font-headline font-bold text-on-surface mb-3 tracking-tight">
-            PlantsPack on your phone
+            Plants Pack on your phone
           </h1>
           <p className="text-lg text-on-surface-variant leading-relaxed">
             Find vegan and vegan-friendly places - now on iPhone and Android. 52,000+ listings

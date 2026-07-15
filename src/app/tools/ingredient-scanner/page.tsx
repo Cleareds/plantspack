@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import PhotoScanner from '../_components/PhotoScanner'
 
 export const metadata: Metadata = {
-  title: 'Vegan Ingredient Label Scanner | PlantsPack',
+  title: 'Vegan Ingredient Label Scanner | Plants Pack',
   description: 'Photograph any product ingredient label and we flag animal-derived ingredients like gelatin, carmine, whey, casein, and shellac.',
   alternates: { canonical: 'https://www.plantspack.com/tools/ingredient-scanner' },
 }

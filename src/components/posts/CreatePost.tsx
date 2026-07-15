@@ -1232,7 +1232,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                             {/* Support note for free tier users */}
                             {(!subscription || subscription.tier === 'free') && (
                                 <p className="text-xs text-on-surface-variant">
-                                    Enjoying PlantsPack? Consider{' '}
+                                    Enjoying Plants Pack? Consider{' '}
                                     <Link
                                         href="/support"
                                         className="text-primary hover:text-primary-container underline font-medium"

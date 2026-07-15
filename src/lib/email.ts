@@ -59,7 +59,7 @@ export async function sendEmail({ to, subject, html, text, headers }: SendEmailO
 // Shared email header with logo
 const EMAIL_HEADER = `
       <div style="text-align: center; padding: 32px 20px; border-bottom: 1px solid #e5e7eb;">
-        <img src="https://www.plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
+        <img src="https://www.plantspack.com/plantspack-logo-real.svg" alt="Plants Pack" height="48" style="height: 48px; width: auto;" />
       </div>`
 
 export interface SubmissionDigestItem {
@@ -104,7 +104,7 @@ export async function sendSubmissionsDigestEmail(to: string, items: SubmissionDi
       <p style="margin-top:20px;"><a href="https://www.plantspack.com/admin/submissions" style="color:#059669;">Review in admin →</a></p>
     </div>`
 
-  return sendEmail({ to, subject: `PlantsPack: ${approved} place submission(s) processed`, html })
+  return sendEmail({ to, subject: `Plants Pack: ${approved} place submission(s) processed`, html })
 }
 
 // Welcome email for new users
@@ -123,11 +123,11 @@ export async function sendWelcomeEmail(to: string, username: string) {
       ${EMAIL_HEADER}
 
       <div style="padding: 40px 30px;">
-        <h2 style="color: #16a34a; margin-top: 0;">Welcome to PlantsPack!</h2>
+        <h2 style="color: #16a34a; margin-top: 0;">Welcome to Plants Pack!</h2>
 
         <p>Hi <strong>${username}</strong>,</p>
 
-        <p>Thanks for joining PlantsPack! We're excited to have you in our vegan community.</p>
+        <p>Thanks for joining Plants Pack! We're excited to have you in our vegan community.</p>
 
         <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
           <h3 style="color: #16a34a; margin-top: 0;">Here's what you can do:</h3>
@@ -147,12 +147,12 @@ export async function sendWelcomeEmail(to: string, username: string) {
 
         <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
-        <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
+        <p style="margin-top: 30px;"><strong>The Plants Pack Team</strong></p>
       </div>
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
-          You're receiving this because you signed up for PlantsPack.<br>
+          You're receiving this because you signed up for Plants Pack.<br>
           <a href="https://www.plantspack.com" style="color: #16a34a;">plantspack.com</a>
         </p>
       </div>
@@ -220,7 +220,7 @@ export async function sendNotificationEmail(
         ${entityUrl ? `
         <div style="text-align: center; margin: 30px 0;">
           <a href="${entityUrl}" style="background: #16a34a; color: white; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-            View on PlantsPack
+            View on Plants Pack
           </a>
         </div>
         ` : ''}
@@ -269,7 +269,7 @@ export async function sendSubscriptionEmail(
 
         <p>Hi <strong>${username}</strong>,</p>
 
-        <p>Thank you for becoming a <strong>PlantsPack ${tierNames[tier]}</strong>! Your support helps keep PlantsPack free for everyone and allows us to build a better vegan community.</p>
+        <p>Thank you for becoming a <strong>Plants Pack ${tierNames[tier]}</strong>! Your support helps keep Plants Pack free for everyone and allows us to build a better vegan community.</p>
 
         <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
           <h2 style="color: #16a34a; margin: 0 0 10px 0;">${tierNames[tier]}</h2>
@@ -292,7 +292,7 @@ export async function sendSubscriptionEmail(
 
         <p>If you have any questions about your subscription, reach out at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
-        <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
+        <p style="margin-top: 30px;"><strong>The Plants Pack Team</strong></p>
       </div>
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
@@ -471,7 +471,7 @@ export async function sendClaimApprovedEmail(
 
       <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
-      <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
+      <p style="margin-top: 30px;"><strong>The Plants Pack Team</strong></p>
       </div>
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
@@ -533,7 +533,7 @@ export async function sendClaimRejectedEmail(
 
       <p>If you believe this was an error or have additional information to support your claim, please contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
-      <p style="margin-top: 30px;"><strong>The PlantsPack Team</strong></p>
+      <p style="margin-top: 30px;"><strong>The Plants Pack Team</strong></p>
       </div>
 
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
@@ -558,7 +558,7 @@ export function renderNewsletterFooter(unsubscribeUrl: string, emailAddress: str
   return `
       <div style="background: #f9fafb; padding: 20px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">
-          You're receiving this because you opted in to the PlantsPack newsletter
+          You're receiving this because you opted in to the Plants Pack newsletter
           (${emailAddress}).
         </p>
         <p style="font-size: 12px; color: #6b7280; margin: 5px 0;">

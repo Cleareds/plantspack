@@ -11,17 +11,17 @@ import { getCityImage } from '@/lib/city-images'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Blog — PlantsPack',
+  title: 'Blog — Plants Pack',
   description:
     'Data-driven essays on veganism, restaurant rankings by city, and insights from 37,000+ verified vegan places worldwide.',
   alternates: { canonical: 'https://www.plantspack.com/blog' },
   openGraph: {
-    title: 'PlantsPack Blog',
+    title: 'Plants Pack Blog',
     description:
       'Data-driven essays on veganism, restaurant rankings by city, and insights from 37,000+ verified vegan places worldwide.',
     type: 'website',
     url: 'https://www.plantspack.com/blog',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
   },
 }
 
@@ -121,7 +121,7 @@ export default async function BlogIndex() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <header className="mb-10">
           <h1 className="font-headline font-extrabold text-4xl md:text-5xl text-on-surface tracking-tight mb-3">
-            PlantsPack <span className="text-primary">Blog</span>
+            Plants Pack <span className="text-primary">Blog</span>
           </h1>
           <p className="text-on-surface-variant text-lg max-w-2xl">
             Data-driven essays on veganism, city-by-city rankings, and what 37,000+ verified vegan places tell us about the world.
@@ -196,7 +196,7 @@ export default async function BlogIndex() {
               const user = normaliseUser(a.users)
               const name = user?.first_name
                 ? `${user.first_name} ${user.last_name || ''}`.trim()
-                : (user?.username || 'PlantsPack')
+                : (user?.username || 'Plants Pack')
               const heroImage = a.image_url || a.images?.[0] || null
               const href = `/blog/${a.slug || a.id}`
               return (

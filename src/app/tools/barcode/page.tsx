@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react'
 import BarcodeClient from './BarcodeClient'
 
 export const metadata: Metadata = {
-  title: 'Vegan Barcode Scanner - Free | PlantsPack',
+  title: 'Vegan Barcode Scanner - Free | Plants Pack',
   description: 'Scan any product barcode with your phone camera to check if it is vegan. Powered by Open Food Facts. Free, no sign-up.',
   alternates: { canonical: 'https://www.plantspack.com/tools/barcode' },
 }

@@ -66,7 +66,7 @@ async function headCheck(url: string, timeoutMs = 5000): Promise<{ ok: boolean; 
       method: 'HEAD',
       signal: ctrl.signal,
       redirect: 'follow',
-      headers: { 'User-Agent': 'PlantsPack-ImageAudit/1.0' },
+      headers: { 'User-Agent': 'Plants Pack-ImageAudit/1.0' },
     })
     clearTimeout(t)
     // Some CDNs reject HEAD with 405 but serve the image; treat 200/206/300s/403/405 as alive.

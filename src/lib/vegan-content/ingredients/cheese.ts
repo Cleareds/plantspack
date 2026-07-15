@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const cheeseArticle: IngredientArticle = {
   slug: 'cheese',
   title: 'Is cheese vegan?',
-  metaTitle: 'Is cheese vegan? Dairy, rennet, and the vegan alternatives | PlantsPack',
+  metaTitle: 'Is cheese vegan? Dairy, rennet, and the vegan alternatives | Plants Pack',
   metaDescription: 'Dairy cheese is never vegan - it is milk plus, in most hard cheeses, animal rennet. Here is what to avoid, what to buy, and which vegan cheeses actually melt.',
   category: 'ingredient',
   searchQueries: [

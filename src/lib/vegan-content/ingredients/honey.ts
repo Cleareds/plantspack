@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const honeyArticle: IngredientArticle = {
   slug: 'honey',
   title: 'Is honey vegan?',
-  metaTitle: 'Is honey vegan? Why most vegans say no, and what to use instead | PlantsPack',
+  metaTitle: 'Is honey vegan? Why most vegans say no, and what to use instead | Plants Pack',
   metaDescription: 'Honey is produced by bees, who are animals — so the mainstream vegan position is that honey is not vegan. Here is the reasoning, the dissenting view, and the best alternatives.',
   category: 'ingredient',
   searchQueries: [

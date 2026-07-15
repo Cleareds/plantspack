@@ -174,7 +174,7 @@ async function geocode(address: string, countryCode: string): Promise<{ lat: num
   await new Promise(r => setTimeout(r, 1200))
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&countrycodes=${countryCode}`
-    const resp = await fetch(url, { headers: { 'User-Agent': 'PlantsPack/1.0' } })
+    const resp = await fetch(url, { headers: { 'User-Agent': 'Plants Pack/1.0' } })
     if (!resp.ok) return null
     const data = await resp.json() as any[]
     if (!data?.length) return null

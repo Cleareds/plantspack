@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const chocolateArticle: IngredientArticle = {
   slug: 'chocolate',
   title: 'Is chocolate vegan?',
-  metaTitle: 'Is chocolate vegan? Dark, milk, and white chocolate explained | PlantsPack',
+  metaTitle: 'Is chocolate vegan? Dark, milk, and white chocolate explained | Plants Pack',
   metaDescription: 'Plain dark chocolate is usually vegan, milk and white chocolate are not. Here is how to read the label, the hidden non-vegan ingredients, and the brands that are reliably vegan.',
   category: 'ingredient',
   searchQueries: [

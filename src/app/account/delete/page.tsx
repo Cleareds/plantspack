@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Delete your account · PlantsPack',
-  description: 'How to delete your PlantsPack account and all associated data.',
+  title: 'Delete your account · Plants Pack',
+  description: 'How to delete your Plants Pack account and all associated data.',
   robots: { index: true, follow: true },
 }
 
@@ -13,9 +13,9 @@ export default function DeleteAccountPage() {
   return (
     <main className="min-h-screen bg-surface-container-low px-4 py-12">
       <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm border border-outline-variant p-8">
-        <h1 className="text-3xl font-bold text-on-surface mb-2">Delete your PlantsPack account</h1>
+        <h1 className="text-3xl font-bold text-on-surface mb-2">Delete your Plants Pack account</h1>
         <p className="text-on-surface-variant mb-8">
-          You can permanently delete your PlantsPack account and the data associated with it at any
+          You can permanently delete your Plants Pack account and the data associated with it at any
           time. This applies to both the website and the mobile app (the same account).
         </p>
 
@@ -23,7 +23,7 @@ export default function DeleteAccountPage() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-on-surface mb-3">Delete it yourself (instant)</h2>
           <ol className="list-decimal list-inside space-y-2 text-on-surface-variant">
-            <li>Sign in to PlantsPack (website or mobile app).</li>
+            <li>Sign in to Plants Pack (website or mobile app).</li>
             <li>Go to your <strong>Profile → Account &amp; privacy</strong> (on the website: Profile → Settings).</li>
             <li>Tap <strong>Delete account</strong> and confirm.</li>
           </ol>
@@ -43,7 +43,7 @@ export default function DeleteAccountPage() {
             we&apos;ll delete it for you within <strong>30 days</strong>.
           </p>
           <a
-            href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Account deletion request')}&body=${encodeURIComponent('Please delete my PlantsPack account and associated data. (Send this from the email address on the account.)')}`}
+            href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('Account deletion request')}&body=${encodeURIComponent('Please delete my Plants Pack account and associated data. (Send this from the email address on the account.)')}`}
             className="inline-flex items-center px-5 py-2.5 rounded-lg border border-primary text-primary font-medium hover:bg-primary/5"
           >
             Email {SUPPORT_EMAIL}

@@ -4,7 +4,7 @@ import { Leaf, Wine, Plane, ArrowRight, Barcode, ChefHat, UtensilsCrossed, Spark
 import { INGREDIENT_ARTICLES, TRAVEL_GUIDES } from '@/lib/vegan-content'
 
 export const metadata: Metadata = {
-  title: 'Vegan answers — is it vegan? Travel guides | PlantsPack',
+  title: 'Vegan answers — is it vegan? Travel guides | Plants Pack',
   description: 'Researched answers to "is X vegan?" questions plus practical country-by-country travel guides for vegans. Free, no fluff.',
   alternates: { canonical: 'https://www.plantspack.com/vegan' },
 }
@@ -136,7 +136,7 @@ export default function VeganHubPage() {
           },
           {
             href: '/compare/happycow',
-            title: 'PlantsPack vs HappyCow - honest comparison',
+            title: 'Plants Pack vs HappyCow - honest comparison',
             subtitle: 'Where they win, where we win, where we are catching up. We use both.',
           },
         ]} />

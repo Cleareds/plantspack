@@ -8,7 +8,7 @@ import sharp from 'sharp'
 dotenv.config({ path: '.env.local' })
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
 const BUCKET = 'city-images'
-const UA = 'PlantsPack/1.0 (https://plantspack.com; info@plantspack.com) summer-hub-quality-fix'
+const UA = 'Plants Pack/1.0 (https://plantspack.com; info@plantspack.com) summer-hub-quality-fix'
 
 const SUMMER_HUB = [
   ['Rome','Italy'], ['Florence','Italy'], ['Naples','Italy'], ['Venice','Italy'], ['Palermo','Italy'], ['Catania','Italy'],

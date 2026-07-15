@@ -61,7 +61,7 @@ function formatDate(d: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const article = await getArticle(slug)
-  if (!article) return { title: 'Article not found — PlantsPack' }
+  if (!article) return { title: 'Article not found — Plants Pack' }
 
   const canonical = `https://www.plantspack.com/blog/${article.slug || article.id}`
   const title = article.title || article.content.slice(0, 80)
@@ -79,7 +79,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const image = article.image_url || article.images?.[0] || inlineImageMatch?.[1] || null
 
   return {
-    title: `${title} — PlantsPack`,
+    title: `${title} — Plants Pack`,
     description,
     alternates: { canonical },
     openGraph: {
@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description,
       type: 'article',
       url: canonical,
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       publishedTime: article.created_at,
       modifiedTime: article.updated_at || article.created_at,
       authors: [article.users.username],
@@ -197,7 +197,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
     articleBody: article.content,
     publisher: {
       '@type': 'Organization',
-      name: 'PlantsPack',
+      name: 'Plants Pack',
       url: 'https://www.plantspack.com',
       logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/plantspack-logo-real.svg' },
     },

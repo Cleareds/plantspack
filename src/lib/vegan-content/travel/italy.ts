@@ -3,7 +3,7 @@ import type { TravelGuide } from '../types'
 export const italyGuide: TravelGuide = {
   countrySlug: 'italy',
   countryName: 'Italy',
-  metaTitle: 'How to eat vegan in Italy — phrasebook & dish guide | PlantsPack',
+  metaTitle: 'How to eat vegan in Italy — phrasebook & dish guide | Plants Pack',
   metaDescription: 'Italy is easier than people think for vegans: pasta, pizza, beans, vegetables are everywhere. The catch is the hidden parmesan, lard in focaccia, and egg-pasta. A practical guide.',
   vegFriendliness: 4,
   vegFriendlinessNote: 'Easier than reputation suggests. Vegetables, beans, and grain dishes are central to Italian cuisine. Watch for hidden cheese, anchovies in pasta sauces, and egg pasta.',
@@ -67,7 +67,7 @@ export const italyGuide: TravelGuide = {
     'Dry pasta from any supermarket (Barilla, De Cecco, Garofalo) is almost always vegan. Stock up if you have access to a kitchen.',
     'Aperitivo culture is forgiving - olives, focaccia bites, marinated vegetables. Just verify the focaccia is lard-free.',
     'Vegan gelato exists in most cities now - look for "gelato vegano" or sorbetto. Fruit sorbets are almost always vegan.',
-    'PlantsPack and HappyCow both have decent coverage of Italian cities; cross-check both before committing to a trip.',
+    'Plants Pack and HappyCow both have decent coverage of Italian cities; cross-check both before committing to a trip.',
   ],
   relatedTopics: ['wine'],
   updatedAt: '2026-05-22',

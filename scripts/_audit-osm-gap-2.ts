@@ -46,7 +46,7 @@ async function overpassCount(iso: string): Promise<number | null> {
         body: `data=${encodeURIComponent(COUNT_QUERY(iso))}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'PlantsPack-Coverage-Audit/1.0',
+          'User-Agent': 'Plants Pack-Coverage-Audit/1.0',
           'Accept': 'application/json',
         },
       })

@@ -11,7 +11,7 @@ const content = `# Beyond Berlin: Germany's strongest vegan cities
 
 Berlin gets all the vegan press, and most of it is earned: [178 verified 100% vegan venues](/vegan-places/germany/berlin), plant-based restaurants on most corners, and the world's first 100% plant-based supermarket (REWE voll pflanzlich, opened April 2024). But Berlin is one city in a country of 80 million people, and if you're plant-based and not landing at BER, the question is: where else does Germany actually work?
 
-We audited every German city on PlantsPack against a single strict metric — venues where the menu is verified 100% vegan, not just "has vegan options". Six non-Berlin cities consistently delivered.
+We audited every German city on Plants Pack against a single strict metric — venues where the menu is verified 100% vegan, not just "has vegan options". Six non-Berlin cities consistently delivered.
 
 ## [Hamburg](/vegan-places/germany/hamburg)
 
@@ -118,7 +118,7 @@ If you spot something we got wrong, every place page has a "report update" butto
 
 ---
 
-**Want to support work like this?** PlantsPack is free and ad-free. We publish posts like this one because supporters fund the audit work behind them. [Support us for EUR 3/month](/support).`
+**Want to support work like this?** Plants Pack is free and ad-free. We publish posts like this one because supporters fund the audit work behind them. [Support us for EUR 3/month](/support).`
 
 const { data: post } = await sb.from('posts').select('id,image_url').eq('slug','beyond-berlin-germany-s-strongest-vegan-cities-2026').maybeSingle()
 if (!post) { console.log('post not found'); process.exit(1) }

@@ -20,7 +20,7 @@ const VEGAN_SIGNAL = /\b(vegan|plant[\s-]?based|pflanzlich|rein\s+vegan|veggie|p
 const RESCUE_SLUGS = new Set([
   // FREA — Berlin zero-waste vegan flagship
   // Balaram — Berlin Friedrichshain vegan ice cream
-  // (Identified via existing PlantsPack imports + my session knowledge)
+  // (Identified via existing Plants Pack imports + my session knowledge)
 ])
 const RESCUE_NAME_MATCH = /^(frea|balaram|garden gourmet)/i
 

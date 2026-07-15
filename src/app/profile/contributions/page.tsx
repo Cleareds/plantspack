@@ -6,7 +6,7 @@ import ContributionsClient from '@/components/profile/ContributionsClient'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'My Contributions — PlantsPack',
+  title: 'My Contributions — Plants Pack',
   description: 'Manage the places, reviews and posts you\u2019ve contributed.',
 }
 

@@ -7,16 +7,13 @@
 import { createClient } from '@supabase/supabase-js'
 import fs from 'fs'
 
-// overpass-api.de is the reliable host; the community mirrors hard-429 under
-// load, so keep them only as a last-resort fallback.
-const ENDPOINTS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-]
+// overpass-api.de works from a residential IP; community mirrors + cloud IPs
+// (GitHub runners) get 429'd. Run this locally.
+const ENDPOINTS = ['https://overpass-api.de/api/interpreter']
 const OUT_JSON = 'performance/osm-refresh-audit-2026-07-02.json'
 const OUT_MD = 'performance/osm-refresh-audit-2026-07-02.md'
-const PAUSE_MS = 15000
-const TIMEOUT_S = 120
+const PAUSE_MS = 8000
+const TIMEOUT_S = 150
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // Names MUST match our DB `country` values so per-country counts line up.
@@ -29,14 +26,15 @@ const COUNTRIES = [
   { iso: 'KR', name: 'South Korea' },
 ]
 
-// Split into lighter per-family queries (a single combined query 504s on big
-// countries). Current sync tags (diet:vegan yes|only) are derived from the vegan
-// family client-side, so no separate query is needed for it.
-const FAMILIES = {
-  vegan: ['node["diet:vegan"~"yes|only|limited"]', 'way["diet:vegan"~"yes|only|limited"]'],
-  cuisine: ['node["cuisine"~"vegan"]', 'way["cuisine"~"vegan"]'],
-  vegOnly: ['node["diet:vegetarian"="only"]', 'way["diet:vegetarian"="only"]'],
-}
+// WAF-safe filter set: overpass-api.de's mod_security returns 406 for the
+// 3-alternation regex ~"yes|only|limited", so use ~"yes|only" + exact ="limited".
+// One combined query per country (fewer requests = less rate-limit risk).
+const FILTERS = [
+  'node["diet:vegan"~"yes|only"]', 'way["diet:vegan"~"yes|only"]',
+  'node["diet:vegan"="limited"]', 'way["diet:vegan"="limited"]',
+  'node["cuisine"~"vegan"]', 'way["cuisine"~"vegan"]',
+  'node["diet:vegetarian"="only"]', 'way["diet:vegetarian"="only"]',
+]
 const buildQuery = (iso, filters) =>
   `[out:json][timeout:${TIMEOUT_S}];area["ISO3166-1"="${iso}"][admin_level=2]->.a;(${filters.map((f) => `${f}(area.a);`).join('')});out center tags;`
 
@@ -46,7 +44,9 @@ async function overpass(query, tries = 5) {
     try {
       const ctl = new AbortController()
       const t = setTimeout(() => ctl.abort(), (TIMEOUT_S + 40) * 1000)
-      const res = await fetch(ep, { method: 'POST', body: 'data=' + encodeURIComponent(query), headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, signal: ctl.signal })
+      // overpass-api.de's WAF returns 406 to requests with Node's default
+      // User-Agent — a descriptive UA (Overpass etiquette) is REQUIRED.
+      const res = await fetch(ep, { method: 'POST', body: 'data=' + encodeURIComponent(query), headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Plants Pack-OSM-audit/1.0 (anton.kravchuk@vaimo.com)' }, signal: ctl.signal })
       clearTimeout(t)
       if (res.status === 429 || res.status === 504) { console.log(`    ${res.status} from ${ep}, backoff`); await sleep(20000 * (i + 1)); continue }
       if (!res.ok) { await sleep(10000); continue }
@@ -115,23 +115,23 @@ async function main() {
   }
   console.log(`loaded ${rows.length} places`)
 
+  // Resumable: keep any country already completed in a prior run so a kill
+  // (laptop sleep) doesn't force starting over; only re-query the unfinished ones.
+  let prior = []
+  try { prior = JSON.parse(fs.readFileSync(OUT_JSON, 'utf8')) } catch {}
+  const priorDone = new Map(prior.filter((r) => r.osmExpanded != null).map((r) => [r.country, r]))
   const results = []
   const save = () => { fs.writeFileSync(OUT_JSON, JSON.stringify(results, null, 2)); fs.writeFileSync(OUT_MD, renderMd(results)) }
 
   for (const co of COUNTRIES) {
+    if (priorDone.has(co.name)) { console.log(`skip ${co.name} (already done)`); results.push(priorDone.get(co.name)); save(); continue }
     console.log(`\n=== ${co.name} (${co.iso}) ===`)
-    const byId = new Map()
-    let failed = false
-    for (const [fam, filters] of Object.entries(FAMILIES)) {
-      const els = await overpass(buildQuery(co.iso, filters))
-      await sleep(PAUSE_MS)
-      if (els === null) { console.log(`  family ${fam} failed`); failed = true; break }
-      for (const e of els) if (e.tags?.name) byId.set(`${e.type}/${e.id}`, e)
-      console.log(`  ${fam}: ${els.length}`)
-    }
+    const els = await overpass(buildQuery(co.iso, FILTERS))
+    await sleep(PAUSE_MS)
     const rec = { country: co.name, iso: co.iso, ourCount: ourCountByCountry[co.name] || 0 }
-    if (failed) { rec.osmCurrent = null; rec.osmExpanded = null; results.push(rec); save(); continue }
-
+    if (els === null) { console.log('  query failed'); rec.osmCurrent = null; rec.osmExpanded = null; results.push(rec); save(); continue }
+    const byId = new Map()
+    for (const e of els) if (e.tags?.name) byId.set(`${e.type}/${e.id}`, e)
     const named = [...byId.values()]
     rec.osmExpanded = named.length
     rec.osmCurrent = named.filter((e) => ['yes', 'only'].includes(e.tags['diet:vegan'])).length

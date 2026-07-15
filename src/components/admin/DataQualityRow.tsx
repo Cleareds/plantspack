@@ -225,7 +225,7 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
             {place.address && <div className="text-[11px] text-on-surface-variant truncate max-w-xs">{place.address}</div>}
             <div className="flex items-center gap-2 mt-1 text-[11px] text-on-surface-variant">
               {place.review_count != null && place.review_count > 0 && (
-                <span title="reviews on PlantsPack">★ {(place.average_rating || 0).toFixed(1)} · {place.review_count}</span>
+                <span title="reviews on Plants Pack">★ {(place.average_rating || 0).toFixed(1)} · {place.review_count}</span>
               )}
               {place.source && <span title="import source">{place.source}</span>}
               {lastVerified && <span title="last verified">verif {lastVerified}</span>}

@@ -3,7 +3,7 @@ import type { TravelGuide } from '../types'
 export const greeceGuide: TravelGuide = {
   countrySlug: 'greece',
   countryName: 'Greece',
-  metaTitle: 'How to eat vegan in Greece — phrasebook & dish guide | PlantsPack',
+  metaTitle: 'How to eat vegan in Greece — phrasebook & dish guide | Plants Pack',
   metaDescription: 'Greek Orthodox fasting tradition produced some of Europe\'s best vegan food: lathera (oil-cooked) vegetable dishes, legume stews, fava, gigantes. Phrasebook + dish guide.',
   vegFriendliness: 4,
   vegFriendlinessNote: 'One of Europe\'s easiest vegan countries thanks to Orthodox fasting (nistisimo) cuisine. Many traditional dishes are vegan by religious tradition; look for "nistisimo" on menus.',
@@ -70,7 +70,7 @@ export const greeceGuide: TravelGuide = {
     'Loukoumades (Greek doughnuts) traditionally use honey syrup but some vegan-aware places offer them with sugar syrup or agave - ask before assuming.',
     'Greek coffee (ellinikos) is vegan; frappé is usually with milk powder unless ordered "sketos" (plain) or with plant milk in newer cafés.',
     'Island travel: Mediterranean islands are easier than expected because tomato, olive oil, beans, and herbs are the cuisine foundation. Smaller islands may have fewer options but the traditional ones are mostly vegan.',
-    'PlantsPack covers the main Greek cities and tourist islands; check before booking accommodation in smaller spots.',
+    'Plants Pack covers the main Greek cities and tourist islands; check before booking accommodation in smaller spots.',
   ],
   relatedTopics: ['wine'],
   updatedAt: '2026-05-22',

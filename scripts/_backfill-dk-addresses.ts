@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
 
 const NOMINATIM = 'https://nominatim.openstreetmap.org'
-const UA = 'PlantsPack/1.0 (plantspack.com; admin@plantspack.com)'
+const UA = 'Plants Pack/1.0 (plantspack.com; admin@plantspack.com)'
 
 async function reverseFullAddress(lat: number, lon: number): Promise<string | null> {
   const url = `${NOMINATIM}/reverse?lat=${lat}&lon=${lon}&format=json&zoom=18&addressdetails=1`

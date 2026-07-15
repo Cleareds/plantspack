@@ -5,7 +5,7 @@ import { ImageResponse } from 'next/og'
 // events with images, etc. set their own and are unaffected. Image-less pages
 // fall back to the brand banner shipped at /public/og-default.png.
 export const runtime = 'edge'
-export const alt = 'PlantsPack: free vegan tools and vegan & vegan-friendly places worldwide'
+export const alt = 'Plants Pack: free vegan tools and vegan & vegan-friendly places worldwide'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 

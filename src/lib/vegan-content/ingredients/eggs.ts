@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const eggsArticle: IngredientArticle = {
   slug: 'eggs',
   title: 'Are eggs vegan?',
-  metaTitle: 'Are eggs vegan? Backyard eggs, mayo, hidden sources, and the best substitutes | PlantsPack',
+  metaTitle: 'Are eggs vegan? Backyard eggs, mayo, hidden sources, and the best substitutes | Plants Pack',
   metaDescription: 'Eggs are animal products, so by the mainstream vegan definition they are not vegan, regardless of how the hens were raised. Here is where eggs hide on labels, the backyard-egg debate, and what to use instead.',
   category: 'ingredient',
   searchQueries: [

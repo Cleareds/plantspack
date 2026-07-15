@@ -203,7 +203,7 @@ export default function SubscriptionDashboard() {
       {/* Upgrade Options */}
       {subscription.tier === 'free' && (
         <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6">
-          <h3 className="text-lg font-semibold text-on-surface mb-4">Support PlantsPack</h3>
+          <h3 className="text-lg font-semibold text-on-surface mb-4">Support Plants Pack</h3>
 
           <div className="ghost-border rounded-lg p-4 max-w-md">
             <div className="flex items-center justify-between mb-3">

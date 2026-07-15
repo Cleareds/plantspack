@@ -58,7 +58,7 @@ export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>PlantsPack — Vegan places, ranked by the community</title>
+    <title>Plants Pack — Vegan places, ranked by the community</title>
     <link>${SITE}</link>
     <description>Country-by-country audits of fully vegan venues, plus reflections on building a free vegan discovery directory.</description>
     <language>en</language>
@@ -66,7 +66,7 @@ export async function GET() {
     <atom:link href="${SITE}/blog/feed.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>${SITE}/icon-512.png</url>
-      <title>PlantsPack</title>
+      <title>Plants Pack</title>
       <link>${SITE}</link>
     </image>
     ${items}

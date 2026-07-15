@@ -11,14 +11,14 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'Vegan Recipes — Plant-Based Cooking Made Easy | PlantsPack',
+  title: 'Vegan Recipes — Plant-Based Cooking Made Easy | Plants Pack',
   description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step instructions, nutrition data, prep times, and photos. Filter by meal, cuisine, and difficulty.',
   alternates: { canonical: 'https://www.plantspack.com/recipes' },
   openGraph: {
-    title: 'Vegan Recipes — Plant-Based Cooking Made Easy | PlantsPack',
+    title: 'Vegan Recipes — Plant-Based Cooking Made Easy | Plants Pack',
     description: 'Browse 580+ vegan recipes from verified 100% vegan creators. Step-by-step, nutrition data, and photos — filter by meal, cuisine, and difficulty.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     images: OG_DEFAULT_IMAGES,
   },
 }

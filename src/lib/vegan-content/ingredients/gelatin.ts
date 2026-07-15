@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const gelatinArticle: IngredientArticle = {
   slug: 'gelatin',
   title: 'Is gelatin vegan?',
-  metaTitle: 'Is gelatin vegan? What it is made of, where it hides, and what to use instead | PlantsPack',
+  metaTitle: 'Is gelatin vegan? What it is made of, where it hides, and what to use instead | Plants Pack',
   metaDescription: 'Gelatin is collagen extracted from boiled animal bones, skin and connective tissue, usually pig or cow. It is never vegan. Here is where it hides and what to use instead.',
   category: 'ingredient',
   searchQueries: [

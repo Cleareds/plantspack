@@ -48,7 +48,7 @@ const html = `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>PlantsPack SEO Pass — ${ts}</title>
+<title>Plants Pack SEO Pass — ${ts}</title>
 <style>
   body { font: 15px/1.5 -apple-system, BlinkMacSystemFont, sans-serif; max-width: 980px; margin: 40px auto; padding: 0 20px; color: #111; }
   h1 { margin-bottom: 4px; }
@@ -69,7 +69,7 @@ const html = `<!doctype html>
 </style>
 </head>
 <body>
-<h1>PlantsPack SEO Pass</h1>
+<h1>Plants Pack SEO Pass</h1>
 <p class="muted">Run date: ${ts}. Focus: dedup duplicate-slug places (#1), enrich city descriptions (#2), indexation hygiene (#3), OSM backfill (#5).</p>
 
 <h2>Summary</h2>

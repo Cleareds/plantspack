@@ -41,13 +41,13 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   const { country: slug } = await params
   const { country, events } = await loadCountryEvents(slug)
   if (!country || events.length === 0) return { title: 'Vegan events', robots: { index: false } }
-  const title = `Vegan Events & Festivals in ${country} (2026) | PlantsPack`
+  const title = `Vegan Events & Festivals in ${country} (2026) | Plants Pack`
   const description = `${events.length} upcoming vegan festival${events.length === 1 ? '' : 's'} and plant-based event${events.length === 1 ? '' : 's'} in ${country} — dates, locations, and tickets. Updated regularly.`
   return {
     title,
     description,
     alternates: { canonical: `https://www.plantspack.com/events/${slug}` },
-    openGraph: { title, description, type: 'website', url: `https://www.plantspack.com/events/${slug}`, siteName: 'PlantsPack', images: OG_DEFAULT_IMAGES },
+    openGraph: { title, description, type: 'website', url: `https://www.plantspack.com/events/${slug}`, siteName: 'Plants Pack', images: OG_DEFAULT_IMAGES },
   }
 }
 

@@ -29,7 +29,7 @@ const limit = Number(process.argv.find(a => a.startsWith('--limit='))?.split('='
 const REPORT_FILE = 'logs/address-backfill.jsonl'
 // Nominatim policy: 1 request / second, max. We stay well under.
 const DELAY_MS = 1100
-const UA = 'PlantsPack-AddressBackfill/1.0 (+https://plantspack.com)'
+const UA = 'Plants Pack-AddressBackfill/1.0 (+https://plantspack.com)'
 
 interface Place {
   id: string

@@ -1,8 +1,8 @@
 'use client'
 
 // The real-tree ceremony. Reachable from EITHER engagement loop:
-//   - contribute on PlantsPack -> pay the full price in Sprouts (no game)
-//   - master PlantsPack Play   -> your Vegan City Score discounts the price
+//   - contribute on Plants Pack -> pay the full price in Sprouts (no game)
+//   - master Plants Pack Play   -> your Vegan City Score discounts the price
 //                                 (2 Sprouts per point, FREE at score 750)
 // Both loops combine smoothly: score 400 city = 700 Sprouts.
 //
@@ -56,8 +56,8 @@ export default function RealTreeCeremony({ score, hasSave, cityName, balance }: 
       </div>
       <p className="text-sm text-gray-700 mb-3">
         A real tree, planted with a reforestation partner, the certificate on your profile. Two ways to earn it:
-        contribute on PlantsPack ({REAL_TREE_BASE_COST.toLocaleString()} Sprouts), or build your Vegan City in
-        PlantsPack Play - every score point cuts the price by {REAL_TREE_SCORE_DISCOUNT} Sprouts, and a
+        contribute on Plants Pack ({REAL_TREE_BASE_COST.toLocaleString()} Sprouts), or build your Vegan City in
+        Plants Pack Play - every score point cuts the price by {REAL_TREE_SCORE_DISCOUNT} Sprouts, and a
         score-{REAL_TREE_FREE_SCORE} city makes it <b>free</b>. Mix both however you like.
       </p>
       <div className="flex flex-wrap gap-3 text-sm mb-4">

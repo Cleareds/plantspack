@@ -6,7 +6,7 @@ export default function GuestWelcome() {
   return (
     <div className="bg-surface-container-lowest rounded-lg editorial-shadow ghost-border p-6 mb-6 text-center">
       <h2 className="text-2xl font-bold text-on-surface mb-3">
-        Welcome to PlantsPack! 🌱
+        Welcome to Plants Pack! 🌱
       </h2>
       <p className="text-on-surface-variant mb-6">
           Community Platform for Vegans and People Exploring Plant-Based Living<br />
@@ -18,7 +18,7 @@ export default function GuestWelcome() {
           href="/auth?mode=signup"
           className="inline-block w-full silk-gradient hover:opacity-90 text-on-primary px-6 py-3 rounded-lg font-medium transition-colors"
         >
-          Join PlantsPack - Free Forever
+          Join Plants Pack - Free Forever
         </Link>
         
         <p className="text-sm text-outline">

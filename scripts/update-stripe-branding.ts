@@ -41,7 +41,7 @@ async function updateStripeBranding() {
     // Update the billing portal configuration
     const configuration = await stripe.billingPortal.configurations.create({
       business_profile: {
-        headline: 'Manage your PlantsPack subscription',
+        headline: 'Manage your Plants Pack subscription',
         privacy_policy_url: 'https://plantspack.com/privacy',
         terms_of_service_url: 'https://plantspack.com/terms',
       },
@@ -91,7 +91,7 @@ async function updateStripeBranding() {
 
     console.log('✅ Customer Portal configuration created!')
     console.log(`   Configuration ID: ${configuration.id}`)
-    console.log(`   Business name: PlantsPack`)
+    console.log(`   Business name: Plants Pack`)
     console.log(`   Default return URL: https://plantspack.com/settings`)
     console.log(`\n   Features enabled:`)
     console.log(`   - Update email and address`)
@@ -115,7 +115,7 @@ async function updateStripeBranding() {
         console.log('   You can update it manually in the Stripe Dashboard:')
         console.log('   1. Go to: https://dashboard.stripe.com/test/settings/billing/portal')
         console.log('   2. Update "Business information":')
-        console.log('      - Business name: PlantsPack')
+        console.log('      - Business name: Plants Pack')
         console.log('      - Support email: support@plantspack.com')
         console.log('   3. Update "Default settings":')
         console.log('      - Default return URL: https://plantspack.com/settings')

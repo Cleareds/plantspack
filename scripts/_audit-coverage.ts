@@ -1,4 +1,4 @@
-// Coverage audit: current PlantsPack place counts by country, identifying
+// Coverage audit: current Plants Pack place counts by country, identifying
 // territories where we have thin coverage and OSM likely has more.
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'

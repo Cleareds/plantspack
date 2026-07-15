@@ -213,7 +213,7 @@ export async function PUT(
         const geoRes = await fetch(
           `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(body.address)}&limit=1&addressdetails=1&accept-language=en`,
           {
-            headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)', 'Accept-Language': 'en' },
+            headers: { 'User-Agent': 'Plants Pack/1.0 (plantspack.com)', 'Accept-Language': 'en' },
             // Nominatim occasionally hangs; without a timeout the whole PUT
             // rides to the function limit and the client sees an opaque 504.
             signal: AbortSignal.timeout(5000),

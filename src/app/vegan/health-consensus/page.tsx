@@ -12,7 +12,7 @@ const DESCRIPTION =
 const URL = 'https://www.plantspack.com/vegan/health-consensus'
 
 export const metadata: Metadata = {
-  title: `${TITLE} | PlantsPack`,
+  title: `${TITLE} | Plants Pack`,
   description: DESCRIPTION,
   alternates: { canonical: URL },
   openGraph: {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: 'article',
     url: URL,
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     images: OG_DEFAULT_IMAGES,
   },
 }
@@ -152,10 +152,10 @@ export default function HealthConsensusPage() {
     '@type': 'Article',
     headline: TITLE,
     description: DESCRIPTION,
-    author: { '@type': 'Organization', name: 'PlantsPack' },
+    author: { '@type': 'Organization', name: 'Plants Pack' },
     publisher: {
       '@type': 'Organization',
-      name: 'PlantsPack',
+      name: 'Plants Pack',
       logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/icon.png' },
     },
     mainEntityOfPage: URL,

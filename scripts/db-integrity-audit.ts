@@ -73,7 +73,7 @@ async function reverseGeocode(lat: number, lon: number): Promise<string | null> 
   try {
     const res = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=5&addressdetails=1&accept-language=en`,
-      { headers: { 'User-Agent': 'PlantsPack/1.0' }, signal: AbortSignal.timeout(8000) }
+      { headers: { 'User-Agent': 'Plants Pack/1.0' }, signal: AbortSignal.timeout(8000) }
     );
     if (!res.ok) return null;
     const data = await res.json();
@@ -192,7 +192,7 @@ async function main() {
       try {
         const res = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.latitude}&lon=${p.longitude}&zoom=12&addressdetails=1&accept-language=en`,
-          { headers: { 'User-Agent': 'PlantsPack/1.0' }, signal: AbortSignal.timeout(8000) }
+          { headers: { 'User-Agent': 'Plants Pack/1.0' }, signal: AbortSignal.timeout(8000) }
         );
         if (res.ok) {
           const data = await res.json();

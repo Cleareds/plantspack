@@ -41,11 +41,11 @@ export function eventSchemaDescription(content?: string | null, fallbackName?: s
 /**
  * schema.org `organizer` Organization for an Event, from the posting user.
  * Google flags a missing `organizer` as a non-critical issue. Falls back to a
- * generic PlantsPack community organizer when no user is joined.
+ * generic Plants Pack community organizer when no user is joined.
  */
 export function eventSchemaOrganizer(userOrArray: EventUser | EventUser[]): { '@type': 'Organization'; name: string; url: string } {
   const user = Array.isArray(userOrArray) ? userOrArray[0] : userOrArray
-  const name = [user?.first_name, user?.last_name].filter(Boolean).join(' ').trim() || user?.username || 'PlantsPack community'
+  const name = [user?.first_name, user?.last_name].filter(Boolean).join(' ').trim() || user?.username || 'Plants Pack community'
   const url = user?.username
     ? `https://www.plantspack.com/profile/${user.username}`
     : 'https://www.plantspack.com/events'

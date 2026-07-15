@@ -370,7 +370,7 @@ async function main() {
   const skipArg = args.find(a => a.startsWith('--skip='))?.split('=')[1] || '';
   const skipSet = new Set(skipArg.split(',').map(s => s.trim().toUpperCase()).filter(Boolean));
 
-  console.log('🌿 PlantsPack OSM Import — TERRITORIES & ISLANDS');
+  console.log('🌿 Plants Pack OSM Import — TERRITORIES & ISLANDS');
   console.log(`Mode: ${dryRun ? 'DRY RUN' : 'LIVE'}`);
 
   const cp = loadCheckpoint();

@@ -142,7 +142,7 @@ export async function PUT(request: NextRequest) {
           type: 'correction_dismissed',
           entityType: 'place',
           entityId: correction.place_id,
-          message: `We reviewed your correction to ${name} and kept the current info for now. Thanks for helping keep PlantsPack accurate.`,
+          message: `We reviewed your correction to ${name} and kept the current info for now. Thanks for helping keep Plants Pack accurate.`,
         })
       }
     }

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Unsubscribed · PlantsPack',
+  title: 'Unsubscribed · Plants Pack',
   robots: { index: false, follow: false },
 }
 
@@ -31,7 +31,7 @@ export default function NewsletterUnsubscribedPage({
           <>
             <h1 className="text-2xl font-bold text-on-surface mb-3">You're unsubscribed</h1>
             <p className="text-on-surface-variant mb-6">
-              We won't send you any more PlantsPack newsletters. Transactional emails (notifications
+              We won't send you any more Plants Pack newsletters. Transactional emails (notifications
               you've enabled, password resets, claim responses) continue to work.
             </p>
             <p className="text-sm text-outline mb-6">
@@ -44,7 +44,7 @@ export default function NewsletterUnsubscribedPage({
           href="/"
           className="inline-block silk-gradient text-on-primary font-medium py-2 px-5 rounded-md hover:opacity-90 transition"
         >
-          Back to PlantsPack
+          Back to Plants Pack
         </Link>
       </div>
     </div>

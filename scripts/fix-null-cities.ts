@@ -21,7 +21,7 @@ async function main() {
     await sleep(1100);
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${p.latitude}&lon=${p.longitude}&format=json&zoom=13&addressdetails=1`;
-      const r = await fetch(url, { headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com)' } });
+      const r = await fetch(url, { headers: { 'User-Agent': 'Plants Pack/1.0 (plantspack.com)' } });
       if (!r.ok) continue;
       const d = await r.json();
       const addr = d.address || {};

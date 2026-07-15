@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const proteinArticle: IngredientArticle = {
   slug: 'protein',
   title: 'How do vegans get protein?',
-  metaTitle: 'How do vegans get protein? The actual numbers, foods, and day-in-the-life | PlantsPack',
+  metaTitle: 'How do vegans get protein? The actual numbers, foods, and day-in-the-life | Plants Pack',
   metaDescription: 'Most adults need about 0.8g of protein per kg of bodyweight. A varied vegan diet of beans, tofu, tempeh, seitan, lentils, and whole grains hits that comfortably. Here are the numbers.',
   category: 'lifestyle',
   searchQueries: [

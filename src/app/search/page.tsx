@@ -70,13 +70,13 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const q = (sp.q || '').trim()
   if (!q) {
     return {
-      title: 'Search — PlantsPack',
+      title: 'Search — Plants Pack',
       description: 'Search 50,000+ vegan and vegan-friendly places across 10,000+ cities in 160+ countries.',
       alternates: { canonical: 'https://www.plantspack.com/search' },
     }
   }
-  const title = `"${q}" — Vegan places matching your search | PlantsPack`
-  const description = `Search results for "${q}" across vegan and vegan-friendly places, cities, and recipes on PlantsPack.`
+  const title = `"${q}" — Vegan places matching your search | Plants Pack`
+  const description = `Search results for "${q}" across vegan and vegan-friendly places, cities, and recipes on Plants Pack.`
   const canonical = `https://www.plantspack.com/search?q=${encodeURIComponent(q)}`
   return {
     title,
@@ -167,7 +167,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
       <h1 className="text-2xl sm:text-3xl font-semibold text-on-surface mb-2">
-        {q ? <>Results for &ldquo;{q}&rdquo;</> : 'Search PlantsPack'}
+        {q ? <>Results for &ldquo;{q}&rdquo;</> : 'Search Plants Pack'}
       </h1>
       {q && (
         <p className="text-sm text-on-surface-variant mb-4">
@@ -270,7 +270,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
           defaultValue={q}
           placeholder="Search vegan places, cities, recipes..."
           className="w-full pl-12 pr-28 py-3.5 rounded-2xl bg-surface-container-low ghost-border text-base text-on-surface placeholder-on-surface-variant focus:ring-2 focus:ring-primary focus:outline-none transition-shadow"
-          aria-label="Search PlantsPack"
+          aria-label="Search Plants Pack"
           autoComplete="off"
         />
         <button

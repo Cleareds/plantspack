@@ -33,11 +33,11 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country, region } = await params
   const r = await getRegion(country, region)
-  if (!r) return { title: 'Region not found | PlantsPack' }
+  if (!r) return { title: 'Region not found | Plants Pack' }
   // Use the directory_countries display name via getCities (deduped through cache())
   const { country: countryName } = await getCities(country)
   return {
-    title: `Vegan Places in ${r.region_name}, ${countryName} | PlantsPack`,
+    title: `Vegan Places in ${r.region_name}, ${countryName} | Plants Pack`,
     description: r.description ?? `Vegan and vegan-friendly places across ${r.region_name}, ${countryName}.`,
     alternates: { canonical: `https://www.plantspack.com/vegan-places/${country}/region/${region}` },
     robots: { index: true, follow: true },
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `Vegan Places in ${r.region_name}`,
       description: r.description ?? '',
       type: 'website',
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       url: `https://www.plantspack.com/vegan-places/${country}/region/${region}`,
       images: OG_DEFAULT_IMAGES,
     },

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Subscribed · PlantsPack',
+  title: 'Subscribed · Plants Pack',
   robots: { index: false, follow: false },
 }
 
@@ -31,7 +31,7 @@ export default function NewsletterSubscribedPage({
           <>
             <h1 className="text-2xl font-bold text-on-surface mb-3">You're subscribed</h1>
             <p className="text-on-surface-variant mb-6">
-              Thanks! You'll start receiving the PlantsPack newsletter. Every email includes a
+              Thanks! You'll start receiving the Plants Pack newsletter. Every email includes a
               one-click unsubscribe link if you ever change your mind.
             </p>
           </>
@@ -40,7 +40,7 @@ export default function NewsletterSubscribedPage({
           href="/"
           className="inline-block silk-gradient text-on-primary font-medium py-2 px-5 rounded-md hover:opacity-90 transition"
         >
-          Back to PlantsPack
+          Back to Plants Pack
         </Link>
       </div>
     </div>

@@ -38,7 +38,7 @@ async function main() {
 
     try {
       const res = await fetch(wikiUrl, {
-        headers: { 'User-Agent': 'PlantsPack/1.0 (https://plantspack.com; info@plantspack.com) city-image-mirror' },
+        headers: { 'User-Agent': 'Plants Pack/1.0 (https://plantspack.com; info@plantspack.com) city-image-mirror' },
         signal: AbortSignal.timeout(15000),
       });
 

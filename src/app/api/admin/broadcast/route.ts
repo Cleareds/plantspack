@@ -19,7 +19,7 @@ type Channel = (typeof ALL_CHANNELS)[number]
 /**
  * Admin broadcast: writes one `announcement` notification row per recipient (the
  * in-app bell, web + mobile) and fires an OS push to opted-in devices. Title is
- * optional (defaults to "PlantsPack" in the push).
+ * optional (defaults to "Plants Pack" in the push).
  *
  * Body: { message: string; title?: string; url?: string; channels?: string[] }
  *   - message  : required, the announcement text (rendered verbatim, no actor).
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   try { payload = await req.json() } catch { return NextResponse.json({ error: 'Bad JSON' }, { status: 400 }) }
 
   const message = (payload.message ?? '').trim()
-  const title = (payload.title ?? '').trim() || 'PlantsPack'
+  const title = (payload.title ?? '').trim() || 'Plants Pack'
   const url = (payload.url ?? '').trim() || null
   if (!message) return NextResponse.json({ error: 'message is required' }, { status: 400 })
   if (message.length > 500) return NextResponse.json({ error: 'message too long (max 500)' }, { status: 400 })

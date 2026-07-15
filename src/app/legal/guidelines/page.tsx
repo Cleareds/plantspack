@@ -15,7 +15,7 @@ export default function CommunityGuidelines() {
             <div className="bg-primary-container/20 border border-primary-container rounded-lg p-6 mb-8">
               <h2 className="text-xl font-semibold text-on-surface mb-2">Our Drama-Light Philosophy</h2>
               <p className="text-primary">
-                PlantsPack is dedicated to creating a supportive, positive community where vegans and plant-based
+                Plants Pack is dedicated to creating a supportive, positive community where vegans and plant-based
                 enthusiasts can share their journey without unnecessary conflict or negativity. We believe in
                 constructive conversation, mutual respect, and focusing on what brings us together: compassion
                 for animals and love for plant-based living.
@@ -48,7 +48,7 @@ export default function CommunityGuidelines() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">3. Stay On-Topic</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is a space for plant-based and vegan-related content:
+              Plants Pack is a space for plant-based and vegan-related content:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Share recipes, meal ideas, and food discoveries</li>
@@ -60,7 +60,7 @@ export default function CommunityGuidelines() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">4. No Harassment or Bullying</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack has zero tolerance for harassment, bullying, or intimidation:
+              Plants Pack has zero tolerance for harassment, bullying, or intimidation:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Do not repeatedly target or harass any user</li>
@@ -94,7 +94,7 @@ export default function CommunityGuidelines() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">7. No Spam or Commercial Abuse</h2>
             <p className="text-on-surface-variant mb-4">
-              We want PlantsPack to be authentic and valuable:
+              We want Plants Pack to be authentic and valuable:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Don't post repetitive or irrelevant content</li>
@@ -162,7 +162,7 @@ export default function CommunityGuidelines() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
               <h3 className="text-lg font-semibold text-blue-900 mb-2">Remember</h3>
               <p className="text-blue-800">
-                PlantsPack is what we make it together. By following these guidelines, you help create a welcoming,
+                Plants Pack is what we make it together. By following these guidelines, you help create a welcoming,
                 positive space for everyone to share their plant-based journey. Thank you for being part of our
                 community!
               </p>
@@ -183,7 +183,7 @@ export default function CommunityGuidelines() {
 
             <div className="mt-12 pt-8 border-t border-outline-variant/15">
               <p className="text-sm text-on-surface-variant mb-4">
-                By using PlantsPack, you agree to follow these Community Guidelines.
+                By using Plants Pack, you agree to follow these Community Guidelines.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link

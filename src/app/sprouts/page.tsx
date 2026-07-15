@@ -8,7 +8,7 @@ import RealTreeCeremony from '@/components/sprouts/RealTreeCeremony'
 import { Sprout, TreeDeciduous, Trophy, Coins, Leaf, MapPin, Camera } from 'lucide-react'
 
 export const metadata = {
-  title: 'Sprouts - PlantsPack contribution rewards',
+  title: 'Sprouts - Plants Pack contribution rewards',
   description: 'Earn Sprouts by adding vegan venues and writing reviews. Grow your Vegan City in the game, plant real trees, unlock partner perks.',
 }
 // Gated by SPROUTS_ENABLED_FOR_ALL (sprouts-constants): admin-only while the
@@ -187,7 +187,7 @@ export default async function SproutsPage() {
           </h2>
           <p className="text-gray-700 mb-4">
             Your profile tree grows with your city in{' '}
-            <a href="https://play.plantspack.com" className="text-emerald-700 font-semibold hover:underline">PlantsPack Play</a>:
+            <a href="https://play.plantspack.com" className="text-emerald-700 font-semibold hover:underline">Plants Pack Play</a>:
             turn a grey industrial map into a thriving vegan town, watch your tree move
             from seedling to full blossom as the Vegan City Score climbs, and keep a grove
             of every city you finish. Every score point cuts the real-tree price by 2
@@ -198,7 +198,7 @@ export default async function SproutsPage() {
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-700 text-white text-sm font-bold hover:bg-emerald-800"
           >
-            🎮 Play PlantsPack Play
+            🎮 Play Plants Pack Play
           </a>
         </section>
 
@@ -223,7 +223,7 @@ export default async function SproutsPage() {
                 <div className="font-mono text-emerald-700 font-bold">500 Sprouts</div>
               </div>
               <p className="text-sm text-gray-700">
-                50% off any IT consultancy or development engagement with <a href="https://cleareds.com" className="underline">Cleareds</a> - the company that builds PlantsPack.
+                50% off any IT consultancy or development engagement with <a href="https://cleareds.com" className="underline">Cleareds</a> - the company that builds Plants Pack.
               </p>
             </div>
             <div className="bg-white rounded-xl border border-dashed border-gray-300 p-5">
@@ -241,7 +241,7 @@ export default async function SproutsPage() {
         </section>
 
         <div className="text-center text-xs text-gray-500 mt-12">
-          Sprouts are non-transferable, have no cash value, and are not a security or cryptocurrency. They are a way to recognise contributions on PlantsPack.
+          Sprouts are non-transferable, have no cash value, and are not a security or cryptocurrency. They are a way to recognise contributions on Plants Pack.
         </div>
       </div>
     </div>

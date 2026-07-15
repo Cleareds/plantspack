@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const beerArticle: IngredientArticle = {
   slug: 'beer',
   title: 'Is beer vegan?',
-  metaTitle: 'Is beer vegan? Isinglass, gelatin, and the brands to buy | PlantsPack',
+  metaTitle: 'Is beer vegan? Isinglass, gelatin, and the brands to buy | Plants Pack',
   metaDescription: 'Beer is barley + hops + yeast + water — all vegan. But many breweries clarify with isinglass (fish bladder) or gelatin. Here are the safe brands and how to check yours.',
   category: 'drink',
   searchQueries: [

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import BakingClient from './BakingClient'
 
 export const metadata: Metadata = {
-  title: 'Vegan baking substitute calculator | PlantsPack',
+  title: 'Vegan baking substitute calculator | Plants Pack',
   description: 'Convert any baking recipe to vegan. Type in how much butter, egg, milk, buttermilk, cream, honey, gelatin, yogurt or condensed milk your recipe needs - get exact plant-based replacement amounts.',
   alternates: { canonical: 'https://www.plantspack.com/tools/baking' },
 }

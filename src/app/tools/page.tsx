@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Vegan Tools — Barcode, Ingredient, Menu, Drinks & Baking | PlantsPack',
+  title: 'Vegan Tools — Barcode, Ingredient, Menu, Drinks & Baking | Plants Pack',
   description: 'Free vegan tools that work the way real life does: scan barcodes, check ingredient labels, translate menus, calculate baking substitutes, look up beer/wine vegan status. No ads, no tracking.',
   alternates: { canonical: 'https://www.plantspack.com/tools' },
 }
@@ -246,7 +246,7 @@ export default function ToolsHubPage() {
 
         <div className="mt-4 p-5 rounded-2xl ghost-border text-sm text-on-surface-variant leading-relaxed">
           <p>
-            <strong className="text-on-surface">Why supporter-gated?</strong> Image scans cost real money per request. Supporters keep these tools free of ads and tracking. One free scan is on us — after that, <Link href="/support" className="text-primary underline">back PlantsPack</Link> for unlimited use.
+            <strong className="text-on-surface">Why supporter-gated?</strong> Image scans cost real money per request. Supporters keep these tools free of ads and tracking. One free scan is on us — after that, <Link href="/support" className="text-primary underline">back Plants Pack</Link> for unlimited use.
           </p>
         </div>
 

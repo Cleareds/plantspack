@@ -67,7 +67,7 @@ export function getConfidenceBadge(place: PlaceLike): ConfidenceBadge {
       icon: 'BadgeCheck',
       chipClass: 'bg-emerald-50 text-emerald-800 border-emerald-300 ring-1 ring-emerald-200',
       iconClass: 'text-emerald-600',
-      description: 'A PlantsPack admin manually verified this place via the venue\'s own website and cross-referenced the vegan claim. Highest trust level.',
+      description: 'A Plants Pack admin manually verified this place via the venue\'s own website and cross-referenced the vegan claim. Highest trust level.',
       subKind: 'admin_review',
     }
   }
@@ -82,12 +82,12 @@ export function getConfidenceBadge(place: PlaceLike): ConfidenceBadge {
       icon: 'Users',
       chipClass: 'bg-emerald-50 text-emerald-800 border-emerald-300',
       iconClass: 'text-emerald-600',
-      description: 'Confirmed through a community correction reviewed and approved by an admin. Community feedback is treated as a strong trust signal on PlantsPack.',
+      description: 'Confirmed through a community correction reviewed and approved by an admin. Community feedback is treated as a strong trust signal on Plants Pack.',
       subKind: 'community_confirmed',
     }
   }
 
-  // Tier 1C: COMMUNITY-ADDED - a real PlantsPack user (not the admin / CLI)
+  // Tier 1C: COMMUNITY-ADDED - a real Plants Pack user (not the admin / CLI)
   // chose to add this place. Elevated to high tier per 2026-05-24 directive.
   if (place.created_by && place.created_by !== ADMIN_USER_ID) {
     return {
@@ -97,7 +97,7 @@ export function getConfidenceBadge(place: PlaceLike): ConfidenceBadge {
       icon: 'Users',
       chipClass: 'bg-emerald-50 text-emerald-800 border-emerald-200',
       iconClass: 'text-emerald-600',
-      description: 'Added to PlantsPack by a member of the community who personally knows this place. We trust community contributions as a strong primary source - a real human bothered to add this venue.',
+      description: 'Added to Plants Pack by a member of the community who personally knows this place. We trust community contributions as a strong primary source - a real human bothered to add this venue.',
       subKind: 'community_added',
     }
   }

@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Create a community post from the PlantsPack admin account welcoming
+ * Create a community post from the Plants Pack admin account welcoming
  * new users and summarizing recent platform updates.
  *
  * Usage:
@@ -20,9 +20,9 @@ const supabase = createClient(
 
 const commit = process.argv.includes('--commit')
 
-const content = `🌱 Welcome to PlantsPack — and a quick update!
+const content = `🌱 Welcome to Plants Pack — and a quick update!
 
-If you just joined: PlantsPack is a community-first directory of 100% vegan and vegan-friendly places — restaurants, cafés, bakeries, stores, hotels and sanctuaries — plus recipes, trip packs, and the people who love them. Everything here is either submitted by community members or carefully sourced and verified.
+If you just joined: Plants Pack is a community-first directory of 100% vegan and vegan-friendly places — restaurants, cafés, bakeries, stores, hotels and sanctuaries — plus recipes, trip packs, and the people who love them. Everything here is either submitted by community members or carefully sourced and verified.
 
 A few things that landed this week you might like:
 
@@ -49,7 +49,7 @@ Coming up soon:
 
 Thanks for being here. If you notice something off, hit the flag button — it really helps us keep the data honest. And if you want to add your favourite place, the "+ Add place" button at the top is yours.
 
-— The PlantsPack team 🌱`
+— The Plants Pack team 🌱`
 
 async function main() {
   const { data: adminUser, error: uErr } = await supabase

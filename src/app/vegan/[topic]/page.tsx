@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.tldr,
       type: 'article',
       url: `https://www.plantspack.com/vegan/${article.slug}`,
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       images: OG_DEFAULT_IMAGES,
     },
   }
@@ -80,8 +80,8 @@ export default async function IngredientArticlePage({ params }: Props) {
     description: article.tldr,
     datePublished: article.updatedAt,
     dateModified: article.updatedAt,
-    author: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
-    publisher: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
+    author: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
+    publisher: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
   }
 

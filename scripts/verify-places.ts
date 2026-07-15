@@ -253,7 +253,7 @@ async function verifyWebsite(place: PlaceInput): Promise<WebResult> {
     const response = await fetch(place.website, {
       signal: controller.signal,
       redirect: 'follow',
-      headers: { 'User-Agent': 'PlantsPack-Verifier/1.0' },
+      headers: { 'User-Agent': 'Plants Pack-Verifier/1.0' },
     })
     clearTimeout(timeout)
 
@@ -584,7 +584,7 @@ async function main() {
     (globalThis as any).__SKIP_AI = true
   }
 
-  console.log('🌿 PlantsPack Place Verification Pipeline')
+  console.log('🌿 Plants Pack Place Verification Pipeline')
   console.log('=========================================')
   console.log(`OSM:    ✅ Available (Overpass API)`)
   console.log(`Google: ${GOOGLE_API_KEY ? '✅ Available' : '⚠️  No API key (set GOOGLE_PLACES_API_KEY)'}`)

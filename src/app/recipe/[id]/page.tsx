@@ -108,7 +108,7 @@ async function getRecipePost(id: string): Promise<RecipePost | null> {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const post = await getRecipePost(id)
-  if (!post) return { title: 'Recipe Not Found - PlantsPack' }
+  if (!post) return { title: 'Recipe Not Found - Plants Pack' }
 
   const rawTitle = post.title || post.content.split('\n')[0].substring(0, 80)
   const recipe = post.recipe_data
@@ -117,8 +117,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const servings = recipe?.servings
 
   const titleTail = recipe && totalMin > 0
-    ? ` — Vegan Recipe in ${totalMin} min | PlantsPack`
-    : ' — Vegan Recipe | PlantsPack'
+    ? ` — Vegan Recipe in ${totalMin} min | Plants Pack`
+    : ' — Vegan Recipe | Plants Pack'
   const title = `${rawTitle}${titleTail}`
 
   // Rich narrative description: blend content + stats + cuisine tags
@@ -141,7 +141,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     title,
     description,
     alternates: { canonical: `https://www.plantspack.com/recipe/${post.slug || id}` },
-    openGraph: { title: `${rawTitle} — Vegan Recipe`, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
+    openGraph: { title: `${rawTitle} — Vegan Recipe`, description, type: 'article', siteName: 'Plants Pack', ...(image ? { images: [image] } : {}) },
     // Mirror the recipe's image into the Twitter card.
     ...(image ? {
       twitter: { card: 'summary_large_image' as const, title: `${rawTitle} — Vegan Recipe`, description, images: [image] },

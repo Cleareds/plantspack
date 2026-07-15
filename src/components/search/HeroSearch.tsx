@@ -43,7 +43,7 @@ export default function HeroSearch() {
       onSubmit={onSubmit}
       className="relative mx-auto max-w-2xl"
       role="search"
-      aria-label="Search PlantsPack"
+      aria-label="Search Plants Pack"
     >
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-on-surface-variant" />
       <input

@@ -121,7 +121,7 @@ async function fetchOSMNodes(ids: number[]): Promise<Record<string, Record<strin
   try {
     const res = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'PlantsPack/1.0' },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Plants Pack/1.0' },
       body: 'data=' + encodeURIComponent(query),
       signal: AbortSignal.timeout(70000),
     })
@@ -160,7 +160,7 @@ async function scanWebsite(url: string): Promise<{ status: number | string; html
   for (const c of candidates) {
     try {
       const res = await fetch(c, {
-        headers: { 'User-Agent': 'Mozilla/5.0 PlantsPack/1.0', 'Accept-Language': 'en,nl,fr' },
+        headers: { 'User-Agent': 'Mozilla/5.0 Plants Pack/1.0', 'Accept-Language': 'en,nl,fr' },
         signal: AbortSignal.timeout(10000),
         redirect: 'follow',
       })

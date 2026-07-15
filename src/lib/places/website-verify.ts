@@ -48,7 +48,7 @@ export interface VerifyOptions {
   userAgent?: string
 }
 
-const DEFAULT_UA = 'PlantsPack-Verify/1.0 (+https://www.plantspack.com)'
+const DEFAULT_UA = 'Plants Pack-Verify/1.0 (+https://www.plantspack.com)'
 
 // Closure keywords in 12 languages — same set that already ships in verify-places.yml.
 const CLOSURE_KEYWORDS = [

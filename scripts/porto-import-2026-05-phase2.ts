@@ -212,7 +212,7 @@ async function geocode(addr: string): Promise<{ lat: number; lon: number } | nul
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}&limit=1&addressdetails=1&accept-language=en`
   const res = await fetch(url, {
     headers: {
-      'User-Agent': 'PlantsPack/1.0 (plantspack.com)',
+      'User-Agent': 'Plants Pack/1.0 (plantspack.com)',
       'Accept-Language': 'en',
     },
   })

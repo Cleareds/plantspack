@@ -177,9 +177,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
   const title = isFullyVeganMode
     ? eatDominant
-      ? `100% Vegan Restaurants in ${locLabel} — ${places.length} Verified | PlantsPack`
-      : `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | PlantsPack`
-    : `Vegan ${placeTerm} in ${locLabel}${countSuffix} | PlantsPack`
+      ? `100% Vegan Restaurants in ${locLabel} — ${places.length} Verified | Plants Pack`
+      : `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | Plants Pack`
+    : `Vegan ${placeTerm} in ${locLabel}${countSuffix} | Plants Pack`
 
   // FV-mode-specific meta description that emphasises hand-verification
   const fvDesc = `Manually verified directory of ${places.length} fully vegan ${places.length === 1 ? 'venue' : 'venues'} in ${cityName}, ${countryName}. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
@@ -215,7 +215,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         : `Vegan ${placeTerm} in ${locLabel}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       url: canonical,
       // Only set images when we actually have a city hero. Otherwise
       // omit so Next.js inherits the file-based default (the brand-mark
@@ -314,7 +314,7 @@ function generateFaqJsonLd(args: {
     name: `How many vegan places are in ${cityName}?`,
     acceptedAnswer: {
       '@type': 'Answer',
-      text: `${total} vegan and vegan-friendly places in ${cityName}, ${countryName} on PlantsPack, including ${fullyVegan} fully vegan${storeCount ? `, ${storeCount} vegan stores` : ''}${hotelCount ? `, ${hotelCount} vegan-friendly stays` : ''}.`,
+      text: `${total} vegan and vegan-friendly places in ${cityName}, ${countryName} on Plants Pack, including ${fullyVegan} fully vegan${storeCount ? `, ${storeCount} vegan stores` : ''}${hotelCount ? `, ${hotelCount} vegan-friendly stays` : ''}.`,
     },
   })
   if (fullyVegan > 0) {
@@ -336,7 +336,7 @@ function generateFaqJsonLd(args: {
         : `What's the most-reviewed vegan-friendly spot in ${cityName}?`,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: `${topPlace.name}${isFv ? ' is fully vegan and' : ''} has the highest community rating (${topPlace.average_rating!.toFixed(1)}/5 from ${topPlace.review_count} ${topPlace.review_count === 1 ? 'review' : 'reviews'}) on PlantsPack.`,
+        text: `${topPlace.name}${isFv ? ' is fully vegan and' : ''} has the highest community rating (${topPlace.average_rating!.toFixed(1)}/5 from ${topPlace.review_count} ${topPlace.review_count === 1 ? 'review' : 'reviews'}) on Plants Pack.`,
       },
     })
   }
@@ -404,7 +404,7 @@ async function fetchCityReviews(cityName: string, countryName: string) {
         rating: r.rating,
         content: r.content.trim(),
         created_at: r.created_at,
-        reviewer: r.users?.first_name || r.users?.username || 'PlantsPack member',
+        reviewer: r.users?.first_name || r.users?.username || 'Plants Pack member',
         placeName: r.place?.name,
         placeSlug: r.place?.slug || null,
       })
@@ -709,7 +709,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
           {cityScore && cityScore.countryCityCount >= 5 && (
             <p className="text-xs text-on-surface-variant mb-3">
               Ranked <strong className="text-on-surface">#{cityScore.countryRank}</strong> of {cityScore.countryCityCount} {countryName} cities on the{' '}
-              <Link href="/city-ranks" className="text-primary hover:underline">PlantsPack vegan city score</Link>.
+              <Link href="/city-ranks" className="text-primary hover:underline">Plants Pack vegan city score</Link>.
             </p>
           )}
           <p className="text-on-surface-variant text-base mb-3">

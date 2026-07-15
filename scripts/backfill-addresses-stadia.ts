@@ -33,7 +33,7 @@ const limit = Number(process.argv.find(a => a.startsWith('--limit='))?.split('='
 const concurrency = Number(process.argv.find(a => a.startsWith('--concurrency='))?.split('=')[1] ?? 10)
 
 const REPORT_FILE = 'logs/address-backfill-stadia.jsonl'
-const UA = 'PlantsPack-AddressBackfill-Stadia/1.0 (+https://plantspack.com)'
+const UA = 'Plants Pack-AddressBackfill-Stadia/1.0 (+https://plantspack.com)'
 
 interface Place {
   id: string

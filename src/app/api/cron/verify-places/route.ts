@@ -43,7 +43,7 @@ export async function GET(request: Request) {
         method: 'HEAD',
         signal: controller.signal,
         redirect: 'follow',
-        headers: { 'User-Agent': 'PlantsPack-Verify/1.0' },
+        headers: { 'User-Agent': 'Plants Pack-Verify/1.0' },
       })
       clearTimeout(t)
 

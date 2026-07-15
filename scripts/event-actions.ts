@@ -255,7 +255,7 @@ async function cmdDigest() {
 <tr><th align="left" style="padding:4px 8px">Event</th><th align="left" style="padding:4px 8px">Where</th><th align="left" style="padding:4px 8px">Outcome</th><th align="left" style="padding:4px 8px">Note</th></tr>
 ${rows}</table>
 <p><a href="https://www.plantspack.com/events">plantspack.com/events</a></p>`
-  await sendEmail({ to: ADMIN_DIGEST_TO, subject: `[PlantsPack] Events routine: ${items.length} item(s)`, html, text: JSON.stringify(items, null, 2) })
+  await sendEmail({ to: ADMIN_DIGEST_TO, subject: `[Plants Pack] Events routine: ${items.length} item(s)`, html, text: JSON.stringify(items, null, 2) })
   console.log(`digest emailed to ${ADMIN_DIGEST_TO}`)
 }
 

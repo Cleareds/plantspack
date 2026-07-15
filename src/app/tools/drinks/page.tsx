@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import DrinksClient from './DrinksClient'
 
 export const metadata: Metadata = {
-  title: 'Is this drink vegan? Beer, wine, spirits lookup | PlantsPack',
+  title: 'Is this drink vegan? Beer, wine, spirits lookup | Plants Pack',
   description: 'Look up whether a beer, wine, spirit, liqueur or cider is vegan. Curated list of mainstream brands with publicly-confirmed vegan status.',
   alternates: { canonical: 'https://www.plantspack.com/tools/drinks' },
 }

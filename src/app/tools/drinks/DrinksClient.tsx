@@ -93,7 +93,7 @@ export default function DrinksClient() {
           <p className="text-xs text-on-surface-variant leading-relaxed">
             Our list focuses on confirmed mainstream brands. Check the producer&apos;s website or look for a Vegan Society / V-Label mark on the bottle.{' '}
             <a
-              href={`mailto:hello@plantspack.com?subject=Add%20drink%20to%20PlantsPack&body=Brand%20%2F%20product%3A%20${encodeURIComponent(query)}%0A%0ALink%20to%20manufacturer%20vegan%20statement%3A%0A`}
+              href={`mailto:hello@plantspack.com?subject=Add%20drink%20to%20Plants%20Pack&body=Brand%20%2F%20product%3A%20${encodeURIComponent(query)}%0A%0ALink%20to%20manufacturer%20vegan%20statement%3A%0A`}
               className="text-primary underline"
             >
               Suggest a brand

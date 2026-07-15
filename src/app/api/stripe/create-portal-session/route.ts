@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create portal session with PlantsPack configuration
+    // Create portal session with Plants Pack configuration
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
     const returnUrl = user.username
       ? `${baseUrl}/profile/${user.username}/subscription`

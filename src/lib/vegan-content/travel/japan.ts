@@ -3,8 +3,8 @@ import type { TravelGuide } from '../types'
 export const japanGuide: TravelGuide = {
   countrySlug: 'japan',
   countryName: 'Japan',
-  metaTitle: 'How to eat vegan in Japan — phrasebook & dish guide | PlantsPack',
-  metaDescription: 'Practical guide to eating vegan in Japan: key phrases, dishes that are safe, dishes that hide dashi, and what to watch for. Pairs with PlantsPack\'s directory of vegan places in Japan.',
+  metaTitle: 'How to eat vegan in Japan — phrasebook & dish guide | Plants Pack',
+  metaDescription: 'Practical guide to eating vegan in Japan: key phrases, dishes that are safe, dishes that hide dashi, and what to watch for. Pairs with Plants Pack\'s directory of vegan places in Japan.',
   vegFriendliness: 3,
   vegFriendlinessNote: 'Improving fast in Tokyo, Kyoto, and Osaka with dedicated vegan restaurants. Outside the big cities, eating vegan needs more planning - dashi (fish stock) hides in almost everything traditional.',
   tldr: 'Japan has a strong vegan scene in Tokyo, Kyoto, and Osaka but limited outside them. The hidden ingredient that catches travellers most often is dashi - fish/bonito stock - which is in miso soup, ramen broth, most simmered dishes, and even some "vegetable" tempura batters. Learn one phrase and you are set: "Dashi nuki de onegaishimasu" (without dashi, please).',
@@ -54,7 +54,7 @@ export const japanGuide: TravelGuide = {
   ],
   tips: [
     'Convenience stores (7-Eleven, FamilyMart, Lawson) are your friend for snacks: onigiri with ume/kombu/seaweed, edamame, fruit, plain mochi, dark chocolate.',
-    'Use HappyCow + PlantsPack to plan ahead - many cities have one or two great vegan spots but no broader scene.',
+    'Use HappyCow + Plants Pack to plan ahead - many cities have one or two great vegan spots but no broader scene.',
     'In a non-vegan restaurant, "Dashi nuki de" (without dashi) is the magic phrase. Many places can accommodate.',
     'Mount Koya offers an overnight temple stay (shukubo) with shojin ryori dinner and breakfast - one of the most reliable vegan experiences in Japan.',
     'Donguri Republic and Calbee chips often have vegan flavours; some Pocky and Hi-Chew flavours are vegan but check the wrapper.',

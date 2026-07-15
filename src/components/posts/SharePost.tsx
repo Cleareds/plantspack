@@ -102,7 +102,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
 
   const handleShareToTwitter = () => {
     // Twitter will use Twitter Card meta tags and include the text
-    const twitterText = `${shareText}\n\nvia @PlantsPack`
+    const twitterText = `${shareText}\n\nvia @Plants Pack`
     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(twitterText)}`
     window.open(twitterUrl, '_blank', 'width=600,height=400')
   }
@@ -122,7 +122,7 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
           : post.users.username
 
         await navigator.share({
-          title: `${userName} on PlantsPack`,
+          title: `${userName} on Plants Pack`,
           text: shareText,
           url: postUrl
         })
@@ -199,9 +199,9 @@ export default function SharePost({ post, isOpen, onClose, onShared }: SharePost
             </div>
           </div>
 
-          {/* Share within PlantsPack */}
+          {/* Share within Plants Pack */}
           <div className="border-t border-surface-container-high pt-4">
-            <h3 className="text-sm font-medium text-on-surface-variant mb-3">Share within PlantsPack</h3>
+            <h3 className="text-sm font-medium text-on-surface-variant mb-3">Share within Plants Pack</h3>
 
             {/* Share Type Selection */}
             <div className="flex space-x-2 mb-4">

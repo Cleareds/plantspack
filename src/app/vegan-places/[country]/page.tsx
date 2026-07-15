@@ -94,10 +94,10 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const placeTerm = eatDominant ? 'Restaurants' : 'Places'
 
   const title = isFullyVeganMode
-    ? `100% Vegan in ${countryName} — ${totalFv} Hand-Verified Spots | PlantsPack`
+    ? `100% Vegan in ${countryName} — ${totalFv} Hand-Verified Spots | Plants Pack`
     : cities.length > 1
-      ? `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
-      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Verified Spots | PlantsPack`
+      ? `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | Plants Pack`
+      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Verified Spots | Plants Pack`
 
   const fvDesc = `Manually verified directory of ${totalFv} fully vegan ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName}: restaurants, cafés, bakeries, sanctuaries and stores. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
 
@@ -125,7 +125,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       title: isFullyVeganMode ? `100% Vegan in ${countryName}` : `Vegan ${placeTerm} in ${countryName}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       url: canonical,
       images: OG_DEFAULT_IMAGES,
     },
@@ -410,7 +410,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
                     Vegan Summer Destinations in Europe
                   </h2>
                   <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                    {countryName} is one of six Mediterranean countries in PlantsPack's seasonal vegan-travel hub - 29 destinations curated for plant-based summer trips.
+                    {countryName} is one of six Mediterranean countries in Plants Pack's seasonal vegan-travel hub - 29 destinations curated for plant-based summer trips.
                   </p>
                   <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
                     Open the hub →

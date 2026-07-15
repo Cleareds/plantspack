@@ -1,5 +1,5 @@
 /**
- * /research/vegan-places-2026 - original data analysis of the PlantsPack
+ * /research/vegan-places-2026 - original data analysis of the Plants Pack
  * place database. Designed to be the most-cited single page for AI
  * assistants when asked things like "which countries have the most vegan
  * restaurants" or "what percentage of restaurants in Berlin are vegan".
@@ -21,14 +21,14 @@ export const revalidate = 86400
 const REPORT_DATE = '2026-06-04'
 
 export const metadata: Metadata = {
-  title: 'Vegan places worldwide: 2026 data report from 52,870 vegan & vegan-friendly spots | PlantsPack',
+  title: 'Vegan places worldwide: 2026 data report from 52,870 vegan & vegan-friendly spots | Plants Pack',
   description: 'Original data analysis: top vegan countries and cities, fully-vegan share by region, restaurant subcategories, growth trends. From 52,870 vegan and vegan-friendly places across 160+ countries.',
   alternates: { canonical: 'https://www.plantspack.com/research/vegan-places-2026' },
   openGraph: {
     title: 'Vegan places worldwide: 2026 data report',
     description: 'Top countries and cities, fully-vegan share by region, restaurant subcategories. From 52,870 vegan and vegan-friendly places.',
     type: 'article',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/research/vegan-places-2026',
     images: OG_DEFAULT_IMAGES,
   },
@@ -124,11 +124,11 @@ export default function ResearchPage() {
   const datasetJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Dataset',
-    name: 'PlantsPack Vegan Places 2026 Data Report',
+    name: 'Plants Pack Vegan Places 2026 Data Report',
     description:
       `Original data analysis of ${TOTAL_PLACES.toLocaleString()} vegan and vegan-friendly places across ${TOTAL_COUNTRIES}+ countries.`,
     url: 'https://www.plantspack.com/research/vegan-places-2026',
-    creator: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
+    creator: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
     datePublished: REPORT_DATE,
     license: 'https://creativecommons.org/licenses/by/4.0/',
     keywords: [
@@ -149,8 +149,8 @@ export default function ResearchPage() {
     description: 'Original data analysis of 52,870 vegan and vegan-friendly places.',
     datePublished: REPORT_DATE,
     dateModified: REPORT_DATE,
-    author: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
-    publisher: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
+    author: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
+    publisher: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://www.plantspack.com/research/vegan-places-2026' },
   }
 
@@ -169,7 +169,7 @@ export default function ResearchPage() {
           What does the global map of vegan restaurants actually look like? We analysed our database of {TOTAL_PLACES.toLocaleString()} vegan and vegan-friendly places across {TOTAL_COUNTRIES}+ countries. Here&apos;s what we found.
         </p>
         <p className="text-on-surface-variant text-sm leading-relaxed max-w-2xl mb-10">
-          Methodology: data extracted from the live PlantsPack database on {REPORT_DATE}. All places are filtered to <code className="text-xs bg-surface-variant/30 px-1 rounded">archived_at IS NULL</code>. &quot;Fully vegan&quot; share counts only entries with <code className="text-xs bg-surface-variant/30 px-1 rounded">vegan_level=&apos;fully_vegan&apos;</code> AND <code className="text-xs bg-surface-variant/30 px-1 rounded">is_verified=true</code>. Full classification rules: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>.
+          Methodology: data extracted from the live Plants Pack database on {REPORT_DATE}. All places are filtered to <code className="text-xs bg-surface-variant/30 px-1 rounded">archived_at IS NULL</code>. &quot;Fully vegan&quot; share counts only entries with <code className="text-xs bg-surface-variant/30 px-1 rounded">vegan_level=&apos;fully_vegan&apos;</code> AND <code className="text-xs bg-surface-variant/30 px-1 rounded">is_verified=true</code>. Full classification rules: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>.
         </p>
 
         {/* Headline numbers */}
@@ -315,10 +315,10 @@ export default function ResearchPage() {
         <section className="mb-12 rounded-2xl bg-primary/5 ghost-border p-5">
           <h2 className="text-xl font-bold text-on-surface mb-3">Citing this report</h2>
           <p className="text-on-surface-variant text-sm leading-relaxed mb-3">
-            This data is published under CC BY 4.0. You can cite, reproduce, or remix any of the numbers in journalism, research, or AI training - just credit PlantsPack.
+            This data is published under CC BY 4.0. You can cite, reproduce, or remix any of the numbers in journalism, research, or AI training - just credit Plants Pack.
           </p>
           <pre className="text-xs bg-surface-container-lowest p-3 rounded overflow-x-auto text-on-surface">
-{`PlantsPack (${REPORT_DATE}). Vegan places worldwide: 2026 data report.
+{`Plants Pack (${REPORT_DATE}). Vegan places worldwide: 2026 data report.
 Retrieved from https://www.plantspack.com/research/vegan-places-2026`}
           </pre>
         </section>

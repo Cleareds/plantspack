@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const sugarArticle: IngredientArticle = {
   slug: 'sugar',
   title: 'Is sugar vegan?',
-  metaTitle: 'Is sugar vegan? The bone char question, explained | PlantsPack',
+  metaTitle: 'Is sugar vegan? The bone char question, explained | Plants Pack',
   metaDescription: 'Most sugar is technically plant-derived but some refined cane sugar is filtered through bone char. Here is how to tell, what to look for, and which brands are safe.',
   category: 'ingredient',
   searchQueries: [

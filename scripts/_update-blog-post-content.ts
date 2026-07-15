@@ -4,7 +4,7 @@ const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPAB
 
 const content = `Let me be upfront about something: I haven't eaten at any of the restaurants in this article. Not one. This is a list built entirely from research - Michelin guides, chef interviews, travel journalism, and the kind of deep review-reading you do when you're building a platform about vegan food and want to understand what "the best" actually looks like.
 
-I'm writing this because PlantsPack now tracks Michelin-recognized vegan restaurants as a dedicated pack, and going through that data was genuinely eye-opening. There are 9 restaurants in the world right now that are both fully vegan and Michelin-recognized. Nine. That's a tiny number. Each one has a story worth knowing.
+I'm writing this because Plants Pack now tracks Michelin-recognized vegan restaurants as a dedicated pack, and going through that data was genuinely eye-opening. There are 9 restaurants in the world right now that are both fully vegan and Michelin-recognized. Nine. That's a tiny number. Each one has a story worth knowing.
 
 Explore the full pack: https://www.plantspack.com/packs/michelin-recognized-vegan-restaurants
 
@@ -26,7 +26,7 @@ His team makes a "butter" from sunflowers. They torch the fermented skin from ko
 
 **The dream:** Sitting in a centuries-old Dutch cellar while a 30-person kitchen performs fermentation alchemy and serves you something that tastes of the sea but contains none of it.
 
-View on PlantsPack: https://www.plantspack.com/place/de-nieuwe-winkel-nijmegen
+View on Plants Pack: https://www.plantspack.com/place/de-nieuwe-winkel-nijmegen
 
 ---
 
@@ -68,7 +68,7 @@ This is the most important data point in the whole vegan fine dining story: the 
 
 The dish everyone talks about: a celery root "roasted like a duck" - lacquered, carved tableside, served with a broth made from 40+ vegetables. Zero animal products. Reportedly one of the most impressive dishes in New York regardless of dietary category.
 
-View on PlantsPack: https://www.plantspack.com/place/eleven-madison-park-new-york
+View on Plants Pack: https://www.plantspack.com/place/eleven-madison-park-new-york
 
 ---
 
@@ -89,7 +89,7 @@ This is one of the few Michelin-recognized vegan restaurants that wasn't built a
 
 **The dream:** Going back to basics. Sitting in a restaurant where vegan food has never needed to justify itself.
 
-View on PlantsPack: https://www.plantspack.com/place/millennium-oakland
+View on Plants Pack: https://www.plantspack.com/place/millennium-oakland
 
 ---
 
@@ -103,7 +103,7 @@ Michelin recognition followed, along with a clientele that includes enough celeb
 
 **Why it made the list:** Crossroads proved you could have a full-service, upscale vegan restaurant that attracted people who weren't vegan - and made them regulars.
 
-View on PlantsPack: https://www.plantspack.com/place/crossroads-los-angeles
+View on Plants Pack: https://www.plantspack.com/place/crossroads-los-angeles
 
 ---
 
@@ -120,7 +120,7 @@ The menu is rooted in traditional Mexican techniques. Masa made in-house. Cashew
 - Tacos de hongos (mushroom tacos with house-made salsa)
 - The agua fresca program, which is somehow both simple and exceptional
 
-View on PlantsPack: https://www.plantspack.com/place/gracias-madre-west-hollywood
+View on Plants Pack: https://www.plantspack.com/place/gracias-madre-west-hollywood
 
 ---
 
@@ -164,9 +164,9 @@ I haven't eaten at any of them yet. That's going to change.
 
 ---
 
-*All restaurants on this list are tracked on PlantsPack. Check the full Michelin-recognized vegan pack here: https://www.plantspack.com/packs/michelin-recognized-vegan-restaurants*
+*All restaurants on this list are tracked on Plants Pack. Check the full Michelin-recognized vegan pack here: https://www.plantspack.com/packs/michelin-recognized-vegan-restaurants*
 
-*If you've visited any of these restaurants, leave a review on their PlantsPack page - I'd genuinely love to know what it's like.*`;
+*If you've visited any of these restaurants, leave a review on their Plants Pack page - I'd genuinely love to know what it's like.*`;
 
 async function main() {
   const { error } = await sb.from('posts').update({ content }).eq('slug', 'michelin-vegan-restaurants-world-bucket-list');

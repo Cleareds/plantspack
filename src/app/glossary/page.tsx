@@ -19,14 +19,14 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Vegan glossary — plain-language definitions of vegan terms | PlantsPack',
+  title: 'Vegan glossary — plain-language definitions of vegan terms | Plants Pack',
   description: 'Concise definitions of vegan ingredients, certifications, fining agents, dietary categories, and additive families. Free, no fluff, sources cited.',
   alternates: { canonical: 'https://www.plantspack.com/glossary' },
   openGraph: {
     title: 'Vegan glossary - definitions of vegan terms',
     description: 'Plain-language definitions of vegan ingredients, certifications, fining agents, additive families, and dietary categories.',
     type: 'article',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/glossary',
     images: OG_DEFAULT_IMAGES,
   },
@@ -268,29 +268,29 @@ const ENTRIES: Entry[] = [
 
   // ----- Cuisine concepts -----
   {
-    term: 'Fully vegan (PlantsPack tier)',
+    term: 'Fully vegan (Plants Pack tier)',
     category: 'cuisine',
     definition:
-      'On PlantsPack, "fully vegan" places have a 100% vegan menu with zero animal products served. Verified against the venue\'s own website and (where possible) a third-party source (HappyCow, vegan blog).',
+      'On Plants Pack, "fully vegan" places have a 100% vegan menu with zero animal products served. Verified against the venue\'s own website and (where possible) a third-party source (HappyCow, vegan blog).',
     link: { href: '/methodology', label: 'See full classification methodology' },
   },
   {
-    term: 'Mostly vegan (PlantsPack tier)',
+    term: 'Mostly vegan (Plants Pack tier)',
     category: 'cuisine',
     definition:
       'A venue that presents as vegan but has a few non-vegan exceptions (e.g. "we added salmon"). Used sparingly.',
   },
   {
-    term: 'Vegan-friendly (PlantsPack tier)',
+    term: 'Vegan-friendly (Plants Pack tier)',
     category: 'cuisine',
     definition:
       'A non-vegan venue with substantial vegan accommodation - typically 3+ dedicated vegan dishes or a labelled vegan section. The default for ambiguous classifications.',
   },
   {
-    term: 'Vegan options (PlantsPack tier)',
+    term: 'Vegan options (Plants Pack tier)',
     category: 'cuisine',
     definition:
-      'A mainstream venue with one or two vegan items but no vegan focus. The lowest tier shown on PlantsPack.',
+      'A mainstream venue with one or two vegan items but no vegan focus. The lowest tier shown on Plants Pack.',
   },
   {
     term: 'Accidentally vegan',
@@ -334,7 +334,7 @@ const CATEGORIES: { key: Entry['category']; label: string; description: string }
   { key: 'additive', label: 'Additives & flavourings', description: 'Food additive families and ambiguous categories' },
   { key: 'fining', label: 'Fining agents', description: 'Why some wines, beers, and sugars are not vegan' },
   { key: 'certification', label: 'Certifications', description: 'Trademarks that verify vegan or cruelty-free status' },
-  { key: 'cuisine', label: 'Cuisine & classification', description: 'Terms PlantsPack uses to describe places' },
+  { key: 'cuisine', label: 'Cuisine & classification', description: 'Terms Plants Pack uses to describe places' },
   { key: 'farming', label: 'Farming & sanctuaries', description: 'Agricultural and welfare concepts' },
 ]
 
@@ -350,7 +350,7 @@ export default function GlossaryPage() {
     '@context': 'https://schema.org',
     '@type': 'DefinedTermSet',
     '@id': 'https://www.plantspack.com/glossary#vegan-glossary',
-    name: 'PlantsPack Vegan Glossary',
+    name: 'Plants Pack Vegan Glossary',
     description:
       'Plain-language definitions of vegan ingredients, certifications, fining agents, additive families, and dietary categories.',
     url: 'https://www.plantspack.com/glossary',
@@ -373,7 +373,7 @@ export default function GlossaryPage() {
           Vegan glossary
         </h1>
         <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl mb-3">
-          Plain-language definitions of the terms you&apos;ll encounter on PlantsPack and on packaged food. {ENTRIES.length} entries, sources cited inline where we get specific.
+          Plain-language definitions of the terms you&apos;ll encounter on Plants Pack and on packaged food. {ENTRIES.length} entries, sources cited inline where we get specific.
         </p>
         <p className="text-on-surface-variant text-sm leading-relaxed max-w-2xl mb-10">
           Need more depth on a specific ingredient? Check the{' '}

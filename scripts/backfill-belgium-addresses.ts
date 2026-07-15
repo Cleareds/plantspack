@@ -9,7 +9,7 @@ import { config } from 'dotenv'; config({ path: '.env.local' })
 import { createClient } from '@supabase/supabase-js'
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
-const UA = 'PlantsPack/1.0 (vegan directory; contact@plantspack.com)'
+const UA = 'Plants Pack/1.0 (vegan directory; contact@plantspack.com)'
 
 interface NominatimResp {
   address?: {

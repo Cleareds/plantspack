@@ -106,7 +106,7 @@ const PAGE_SECTIONS: SectionEntry[] = [
   {
     title: 'City Ranks',
     url: '/city-ranks',
-    description: 'Cities ranked by the PlantsPack vegan city score.',
+    description: 'Cities ranked by the Plants Pack vegan city score.',
     kind: 'page',
     keywords: ['city ranks', 'ranking', 'best city', 'best cities', 'most vegan city', 'best vegan city', 'best vegan cities', 'top vegan cities', 'city score'],
   },
@@ -141,7 +141,7 @@ const PAGE_SECTIONS: SectionEntry[] = [
   {
     title: 'All tools',
     url: '/tools',
-    description: 'Every free PlantsPack tool: scanners, lookups, calculators.',
+    description: 'Every free Plants Pack tool: scanners, lookups, calculators.',
     kind: 'page',
     keywords: ['tools', 'tool'],
   },

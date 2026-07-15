@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import PhotoScanner from '../_components/PhotoScanner'
 
 export const metadata: Metadata = {
-  title: 'Vegan Menu Scanner | PlantsPack',
+  title: 'Vegan Menu Scanner | Plants Pack',
   description: 'Photograph a restaurant menu in any language and we highlight vegan dishes, flag ones to ask about, and suggest swaps.',
   alternates: { canonical: 'https://www.plantspack.com/tools/menu-scanner' },
 }

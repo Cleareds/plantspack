@@ -17,7 +17,7 @@ export default function Footer() {
                 <Link href="/" className="flex items-center">
                     <Image
                         src="/plantspack.svg"
-                        alt="PlantsPack"
+                        alt="Plants Pack"
                         width={2117}
                         height={233}
                         className="h-7 w-auto"
@@ -48,7 +48,7 @@ export default function Footer() {
                   href="/about"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
-                  About PlantsPack
+                  About Plants Pack
                 </Link>
               </li>
               <li>

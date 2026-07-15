@@ -3,7 +3,7 @@ import type { TravelGuide } from '../types'
 export const thailandGuide: TravelGuide = {
   countrySlug: 'thailand',
   countryName: 'Thailand',
-  metaTitle: 'How to eat vegan in Thailand — phrasebook & dish guide | PlantsPack',
+  metaTitle: 'How to eat vegan in Thailand — phrasebook & dish guide | Plants Pack',
   metaDescription: 'Thailand can be wonderful for vegans if you know about fish sauce, shrimp paste, and oyster sauce. Phrasebook, dish guide, and the magic phrase "jay" for strict Buddhist vegan food.',
   vegFriendliness: 4,
   vegFriendlinessNote: 'Excellent in Bangkok and Chiang Mai with dedicated jay (Buddhist vegan) restaurants. Outside cities, the challenge is fish sauce and shrimp paste in almost every savoury sauce - learn one phrase and you are sorted.',
@@ -65,7 +65,7 @@ export const thailandGuide: TravelGuide = {
     'The single most useful phrase: "Pom/Chan gin jay" (I eat jay food). Many Thai cooks will then automatically exclude fish sauce, shrimp paste, oyster sauce, eggs, and the five strong-smelling vegetables.',
     'Look for the **yellow flag with red Chinese/Thai characters** (เจ / 齋) on small restaurants. Everything in a jay restaurant is fully vegan by religious rule. Reliable and cheap.',
     'During the **Vegetarian Festival** (Tesagan Gin Je, late September / early October), jay food is everywhere across Thailand - even 7-Eleven runs special jay packaging on instant noodles.',
-    'Bangkok has the densest dedicated vegan scene. If transiting, search PlantsPack and HappyCow before leaving the airport.',
+    'Bangkok has the densest dedicated vegan scene. If transiting, search Plants Pack and HappyCow before leaving the airport.',
     'Coconut milk (gathi) is everywhere and vegan - many curries and desserts are coconut-based and easy to veganise.',
     'Street food: rice with vegetable stir-fry, fresh fruit, coconut, and grilled corn or sweet potato are reliable. Ask one careful question and you usually have a meal in 60 seconds.',
     'Lactasoy and Vitamilk soy milks are sold in every 7-Eleven, in original and chocolate. Coffee shops increasingly stock oat and soy milk in cities.',

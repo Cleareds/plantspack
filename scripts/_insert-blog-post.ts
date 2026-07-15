@@ -13,7 +13,7 @@ async function main() {
 
   const content = `Let me be upfront about something: I haven't eaten at any of the restaurants in this article. Not one. This is a list built entirely from research — Michelin guides, chef interviews, travel journalism, and the kind of deep review-reading you do when you're building a platform about vegan food and want to understand what "the best" actually looks like.
 
-I'm writing this because PlantsPack now tracks Michelin-recognized vegan restaurants as a dedicated pack, and going through that data was genuinely eye-opening. There are 9 restaurants in the world right now that are both fully vegan and Michelin-recognized. Nine. That's a tiny number. Each one has a story worth knowing.
+I'm writing this because Plants Pack now tracks Michelin-recognized vegan restaurants as a dedicated pack, and going through that data was genuinely eye-opening. There are 9 restaurants in the world right now that are both fully vegan and Michelin-recognized. Nine. That's a tiny number. Each one has a story worth knowing.
 
 This is my bucket list. If you've been to any of them, I'd love to hear about it.
 
@@ -124,7 +124,7 @@ Nine restaurants. Nine cities. A short list that might be the most impressive co
 
 I haven't been to any of them. But I will. This list will get shorter, one country at a time.
 
-If you've been to any of these places — I genuinely want to know. Leave a review on PlantsPack, or find me on @plantspackX. The personal experiences are the part I can't research my way into.`;
+If you've been to any of these places — I genuinely want to know. Leave a review on Plants Pack, or find me on @plantspackX. The personal experiences are the part I can't research my way into.`;
 
   const { data, error } = await sb.from('posts').insert({
     title,

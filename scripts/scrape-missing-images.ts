@@ -42,7 +42,7 @@ const onlyFlagged = args.includes('--only-flagged')
 const limit = Number(args.find(a => a.startsWith('--limit='))?.split('=')[1] ?? 0)
 const concurrency = Number(args.find(a => a.startsWith('--concurrency='))?.split('=')[1] ?? 25)
 const REPORT_FILE = 'logs/image-scrape.jsonl'
-const UA = 'PlantsPack-ImageScrape/1.0 (+https://plantspack.com)'
+const UA = 'Plants Pack-ImageScrape/1.0 (+https://plantspack.com)'
 
 interface Place {
   id: string

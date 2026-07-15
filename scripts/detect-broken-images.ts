@@ -38,7 +38,7 @@ async function checkUrl(url: string): Promise<{ ok: boolean; reason?: string }> 
       method: 'HEAD',
       signal: ctrl.signal,
       redirect: 'follow',
-      headers: { 'User-Agent': 'PlantsPack-ImageCheck/1.0' },
+      headers: { 'User-Agent': 'Plants Pack-ImageCheck/1.0' },
     });
     clearTimeout(t);
     if (res.status === 404 || res.status === 410) return { ok: false, reason: `${res.status}` };

@@ -43,7 +43,7 @@ const ITEMS: VoteItem[] = [
   { id: 'event-calendar', category: 'feature', label: 'Event calendar', description: 'Local + travel-worthy vegan events. Notifications for cities you follow.', status: 'shipped', quarter: 'Q2 2026', votable: false },
   { id: 'companion', category: 'feature', label: 'Companion (vegan platform guide)', description: 'A non-AI companion that surfaces personalised picks from your follows and pinned city.', status: 'planned', votable: true },
   { id: 'mobile-app', category: 'feature', label: 'iOS & Android app', description: 'Native mobile wrapper around the platform with offline + push.', status: 'planned', votable: true },
-  { id: 'browser-extension', category: 'feature', label: 'Browser extension', description: 'Right-click any place on Google Maps to add it to PlantsPack.', status: 'exploring', votable: true },
+  { id: 'browser-extension', category: 'feature', label: 'Browser extension', description: 'Right-click any place on Google Maps to add it to Plants Pack.', status: 'exploring', votable: true },
   { id: 'internal-messaging', category: 'feature', label: 'Direct messages', description: 'Private DMs between members so trip planning + place tips stay on-platform.', status: 'exploring', votable: true },
   { id: 'better-packs', category: 'feature', label: 'Pack collaborations', description: 'Co-build a Pack with friends; shared trip planning.', status: 'exploring', votable: true },
   { id: 'improve-notifications', category: 'feature', label: 'Smarter notifications', description: 'Tunable digest for new places in your follows / friends activity.', status: 'planned', votable: true },

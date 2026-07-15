@@ -97,7 +97,7 @@ async function getCityVeganPlaces(city?: string, country?: string): Promise<{ pl
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const post = await getEventPost(id)
-  if (!post) return { title: 'Event Not Found - PlantsPack' }
+  if (!post) return { title: 'Event Not Found - Plants Pack' }
 
   const title = post.content.split('\n')[0].substring(0, 80)
   const event = post.event_data
@@ -112,11 +112,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const endIso = event?.end_time || event?.start_time
   const wellPast = endIso ? (Date.now() - new Date(endIso).getTime()) > 21 * 864e5 : false
   return {
-    title: `${title} - Event | PlantsPack`,
+    title: `${title} - Event | Plants Pack`,
     description,
     alternates: { canonical: `https://www.plantspack.com/event/${post.slug || id}` },
     ...(wellPast ? { robots: { index: false, follow: true } } : {}),
-    openGraph: { title, description, type: 'article', siteName: 'PlantsPack', ...(image ? { images: [image] } : {}) },
+    openGraph: { title, description, type: 'article', siteName: 'Plants Pack', ...(image ? { images: [image] } : {}) },
   }
 }
 

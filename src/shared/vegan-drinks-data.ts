@@ -13,7 +13,7 @@
  *
  * Scope is deliberately narrow: we ship a small set of confident
  * entries rather than a huge auto-imported list that would inevitably
- * contain stale or unverifiable claims. Per PlantsPack data policy,
+ * contain stale or unverifiable claims. Per Plants Pack data policy,
  * we'd rather have 100 reliable entries than 5,000 noisy ones.
  *
  * To suggest additions, the /tools/drinks UI links to an email and

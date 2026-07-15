@@ -14,13 +14,13 @@ export default function TermsOfService() {
           <div className="prose prose-green max-w-none">
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">1. Acceptance of Terms</h2>
             <p className="text-on-surface-variant mb-4">
-              Welcome to PlantsPack! By accessing or using our platform, you agree to be bound by these Terms of Service.
+              Welcome to Plants Pack! By accessing or using our platform, you agree to be bound by these Terms of Service.
               If you do not agree to these terms, please do not use our services.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">2. Description of Service</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is a free, community-driven platform for vegans and anyone exploring plant-based living.
+              Plants Pack is a free, community-driven platform for vegans and anyone exploring plant-based living.
               We are independent — no investors, no ads. Our mission is to create a safe, supportive space where users can:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
@@ -34,7 +34,7 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">3. User Accounts</h2>
             <p className="text-on-surface-variant mb-4">
-              To use certain features of PlantsPack, you must create an account. You agree to:
+              To use certain features of Plants Pack, you must create an account. You agree to:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Provide accurate, current, and complete information during registration</li>
@@ -45,7 +45,7 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">4. Community Guidelines</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is committed to maintaining a drama-light, respectful environment. Users agree to:
+              Plants Pack is committed to maintaining a drama-light, respectful environment. Users agree to:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Be respectful and kind to all community members</li>
@@ -64,13 +64,13 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">5. Content Ownership and Rights</h2>
             <p className="text-on-surface-variant mb-4">
-              <strong>Your Content:</strong> You retain all ownership rights to the content you post on PlantsPack.
-              By posting content, you grant PlantsPack a non-exclusive, worldwide, royalty-free license to use,
+              <strong>Your Content:</strong> You retain all ownership rights to the content you post on Plants Pack.
+              By posting content, you grant Plants Pack a non-exclusive, worldwide, royalty-free license to use,
               reproduce, modify, and display your content in connection with providing our services.
             </p>
             <p className="text-on-surface-variant mb-4">
-              <strong>Platform Content:</strong> All PlantsPack branding, logos, and platform features are owned by
-              PlantsPack and protected by intellectual property laws.
+              <strong>Platform Content:</strong> All Plants Pack branding, logos, and platform features are owned by
+              Plants Pack and protected by intellectual property laws.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">6. Prohibited Activities</h2>
@@ -89,7 +89,7 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">7. Moderation and Enforcement</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack reserves the right to:
+              Plants Pack reserves the right to:
             </p>
             <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
               <li>Remove any content that violates these Terms or Community Guidelines</li>
@@ -100,7 +100,7 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">8. Free Platform and Voluntary Support</h2>
             <p className="text-on-surface-variant mb-4">
-              PlantsPack is free for all users. Every feature — including unlimited posts, images, videos, recipes,
+              Plants Pack is free for all users. Every feature — including unlimited posts, images, videos, recipes,
               places, packs, and location sharing — is available to everyone at no cost.
             </p>
             <p className="text-on-surface-variant mb-4">
@@ -109,10 +109,10 @@ export default function TermsOfService() {
               Supporter donations are non-refundable and may be cancelled at any time through the Stripe customer portal.
             </p>
             <p className="text-on-surface-variant mb-4">
-              <strong>The 50/50 Pledge:</strong> this is a future commitment, not a current practice — PlantsPack does
+              <strong>The 50/50 Pledge:</strong> this is a future commitment, not a current practice — Plants Pack does
               not yet cover its own running costs, so no profit is being donated today. Once support covers our costs,
               we pledge to split every euro of net profit (after taxes and operating expenses) in half: 50% donated to
-              animal welfare causes selected by the community and the PlantsPack team, and 50% reinvested in growing and
+              animal welfare causes selected by the community and the Plants Pack team, and 50% reinvested in growing and
               improving the platform — servers, security, development, and fair pay for the people building it (no
               bloated salaries, no investor payouts).
             </p>
@@ -147,11 +147,11 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">11. Disclaimers and Limitations of Liability</h2>
             <p className="text-on-surface-variant mb-4">
-              <strong>Service Availability:</strong> PlantsPack is provided "as is" without warranties of any kind.
+              <strong>Service Availability:</strong> Plants Pack is provided "as is" without warranties of any kind.
               We do not guarantee uninterrupted or error-free service.
             </p>
             <p className="text-on-surface-variant mb-4">
-              <strong>User Content:</strong> PlantsPack is not responsible for user-generated content. Users are
+              <strong>User Content:</strong> Plants Pack is not responsible for user-generated content. Users are
               solely responsible for their posts and interactions.
             </p>
             <p className="text-on-surface-variant mb-4">
@@ -159,21 +159,21 @@ export default function TermsOfService() {
               from our platform.
             </p>
             <p className="text-on-surface-variant mb-4">
-              <strong>Liability Limitation:</strong> To the fullest extent permitted by law, PlantsPack shall not
+              <strong>Liability Limitation:</strong> To the fullest extent permitted by law, Plants Pack shall not
               be liable for any indirect, incidental, special, or consequential damages arising from your use of
               the platform.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">12. Indemnification</h2>
             <p className="text-on-surface-variant mb-4">
-              You agree to indemnify and hold PlantsPack harmless from any claims, damages, or expenses arising
+              You agree to indemnify and hold Plants Pack harmless from any claims, damages, or expenses arising
               from your use of the platform, your content, or your violation of these Terms.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">13. Changes to Terms</h2>
             <p className="text-on-surface-variant mb-4">
               We reserve the right to modify these Terms at any time. We will notify users of significant changes
-              via email or platform notification. Continued use of PlantsPack after changes constitutes acceptance
+              via email or platform notification. Continued use of Plants Pack after changes constitutes acceptance
               of the modified Terms.
             </p>
 
@@ -181,18 +181,18 @@ export default function TermsOfService() {
             <p className="text-on-surface-variant mb-4">
               Either party may terminate this agreement at any time. You may delete your account through your
               account settings. We may suspend or terminate your account for violations of these Terms. Upon
-              termination, your right to use PlantsPack ceases immediately.
+              termination, your right to use Plants Pack ceases immediately.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Governing Law</h2>
             <p className="text-on-surface-variant mb-4">
-              These Terms shall be governed by and construed in accordance with the laws of Belgium. PlantsPack
+              These Terms shall be governed by and construed in accordance with the laws of Belgium. Plants Pack
               is operated by Cleareds, a company registered in Belgium.
             </p>
 
             <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">16. Dispute Resolution</h2>
             <p className="text-on-surface-variant mb-4">
-              Any disputes arising from these Terms or your use of PlantsPack shall be resolved through good
+              Any disputes arising from these Terms or your use of Plants Pack shall be resolved through good
               faith negotiation. If negotiation fails, disputes may be resolved through binding arbitration or
               court proceedings as permitted by law.
             </p>
@@ -212,7 +212,7 @@ export default function TermsOfService() {
 
             <div className="mt-12 pt-8 border-t border-outline-variant/15">
               <p className="text-sm text-on-surface-variant mb-4">
-                By using PlantsPack, you acknowledge that you have read, understood, and agree to be bound by
+                By using Plants Pack, you acknowledge that you have read, understood, and agree to be bound by
                 these Terms of Service.
               </p>
               <div className="flex flex-wrap gap-4">

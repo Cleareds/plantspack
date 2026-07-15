@@ -217,7 +217,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!place) {
     return {
-      title: 'Place Not Found - PlantsPack'
+      title: 'Place Not Found - Plants Pack'
     }
   }
 
@@ -256,8 +256,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const namePart = usefulStreet ? `${place.name} at ${firstSeg}` : place.name
 
   const title = location
-    ? `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')} in ${location}${rating} | PlantsPack`
-    : `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')}${rating} | PlantsPack`
+    ? `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')} in ${location}${rating} | Plants Pack`
+    : `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')}${rating} | Plants Pack`
 
   // Build a rich fallback description if the place has no description
   const cuisines = (place as any).cuisine_types?.filter((c: string) => c && c !== 'vegan').slice(0, 3) || []
@@ -335,7 +335,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: `${namePart} — ${[veganTag, cat].filter(Boolean).join(' ')}${location ? ` in ${location}` : ''}`,
       description,
       type: 'website',
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       ...(image ? { images: [image] } : {}),
     },
     // Mirror the place's hero image into the Twitter card too. Without this,
@@ -630,7 +630,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 {(place as any).last_verified_at && ((place as any).verification_level ?? 0) >= 2 && (
                   <span
                     className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-                    title={`Manually verified by PlantsPack ${(place as any).verification_method === 'admin_review' ? 'admin' : 'community'}`}
+                    title={`Manually verified by Plants Pack ${(place as any).verification_method === 'admin_review' ? 'admin' : 'community'}`}
                   >
                     <CheckCircle className="h-3 w-3" aria-hidden />
                     Verified {new Date((place as any).last_verified_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -898,7 +898,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 <div>
                   <div className="text-sm font-medium text-on-surface">Added by</div>
                   {place.users.username === 'admin' ? (
-                    <span className="text-sm text-on-surface-variant">PlantsPack Team</span>
+                    <span className="text-sm text-on-surface-variant">Plants Pack Team</span>
                   ) : (
                     <Link
                       href={`/profile/${place.users.username}`}

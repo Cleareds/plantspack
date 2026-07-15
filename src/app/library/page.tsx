@@ -6,16 +6,16 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Vegan Library - Answers, Guides, Glossary & Reads | PlantsPack',
+  title: 'Vegan Library - Answers, Guides, Glossary & Reads | Plants Pack',
   description:
-    'The PlantsPack Library: clear "is it vegan?" answers, country guides, a plain-language glossary, and reads from our team. Reference and opinion, kept honest.',
+    'The Plants Pack Library: clear "is it vegan?" answers, country guides, a plain-language glossary, and reads from our team. Reference and opinion, kept honest.',
   alternates: { canonical: 'https://www.plantspack.com/library' },
   openGraph: {
-    title: 'Vegan Library | PlantsPack',
+    title: 'Vegan Library | Plants Pack',
     description:
       'Clear "is it vegan?" answers, country guides, a plain-language glossary, and reads from our team.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/library',
     images: OG_DEFAULT_IMAGES,
   },
@@ -31,7 +31,7 @@ export default function LibraryPage() {
         <header className="mb-8 max-w-3xl">
           <h1 className="text-3xl font-headline font-bold text-on-surface mb-2 tracking-tight">Library</h1>
           <p className="text-on-surface-variant leading-relaxed">
-            Everything to read on PlantsPack in one place - sourced answers and reference, plus
+            Everything to read on Plants Pack in one place - sourced answers and reference, plus
             opinion and essays from our team. We keep the two clearly apart.
           </p>
         </header>

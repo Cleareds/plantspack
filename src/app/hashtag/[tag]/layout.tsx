@@ -6,13 +6,13 @@ export async function generateMetadata({ params }: { params: Promise<{ tag: stri
   const decodedTag = decodeURIComponent(tag)
 
   return {
-    title: `#${decodedTag} - PlantsPack`,
-    description: `Browse posts tagged with #${decodedTag} on PlantsPack, the vegan community platform.`,
+    title: `#${decodedTag} - Plants Pack`,
+    description: `Browse posts tagged with #${decodedTag} on Plants Pack, the vegan community platform.`,
     openGraph: {
-      title: `#${decodedTag} - PlantsPack`,
-      description: `Browse posts tagged with #${decodedTag} on PlantsPack.`,
+      title: `#${decodedTag} - Plants Pack`,
+      description: `Browse posts tagged with #${decodedTag} on Plants Pack.`,
       type: 'website',
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       images: OG_DEFAULT_IMAGES,
     },
   }

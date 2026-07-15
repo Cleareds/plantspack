@@ -5,15 +5,15 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Press & Media Kit | PlantsPack',
+  title: 'Press & Media Kit | Plants Pack',
   description:
-    'PlantsPack press kit: what we are, the numbers, positioning, logo and screenshots, and contact. An independent, ad-free vegan discovery platform.',
+    'Plants Pack press kit: what we are, the numbers, positioning, logo and screenshots, and contact. An independent, ad-free vegan discovery platform.',
   alternates: { canonical: 'https://www.plantspack.com/press' },
   openGraph: {
-    title: 'Press & Media Kit | PlantsPack',
+    title: 'Press & Media Kit | Plants Pack',
     description: 'Independent, ad-free vegan discovery platform - facts, numbers, assets, and contact.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/press',
     images: OG_DEFAULT_IMAGES,
   },
@@ -35,14 +35,14 @@ export default function PressPage() {
           Press &amp; media kit
         </h1>
         <p className="text-lg text-on-surface-variant leading-relaxed mb-8">
-          Everything you need to write about PlantsPack accurately. Questions:{' '}
+          Everything you need to write about Plants Pack accurately. Questions:{' '}
           <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.
         </p>
 
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-on-surface mb-3">One-paragraph description</h2>
           <p className="rounded-2xl bg-surface-container-lowest ghost-border p-5 text-on-surface-variant leading-relaxed">
-            PlantsPack is a free, ad-free vegan discovery app and directory: 52,000+ vegan and
+            Plants Pack is a free, ad-free vegan discovery app and directory: 52,000+ vegan and
             vegan-friendly places across 160+ countries, transparent verification you can see, city
             rankings, and free tools like barcode and menu scanning. Fully-vegan-first. No ads, no
             paid placements.
@@ -70,7 +70,7 @@ export default function PressPage() {
           <h2 className="text-xl font-semibold text-on-surface mb-3">What makes it different</h2>
           <p className="text-on-surface-variant leading-relaxed">
             Most vegan directories mix vegan and vegetarian and rank by popularity or paid placement.
-            PlantsPack is fully-vegan-first with a transparent, community-driven verification model:
+            Plants Pack is fully-vegan-first with a transparent, community-driven verification model:
             anyone can confirm a place is still open and accurate, every listing shows that confidence
             level and how it was checked, and the 100% vegan places we have hand-checked are flagged
             separately. Nobody can pay to rank higher. It is the trust layer for vegan discovery, not
@@ -81,7 +81,7 @@ export default function PressPage() {
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-on-surface mb-3">Who builds it</h2>
           <p className="text-on-surface-variant leading-relaxed">
-            PlantsPack is built by Anton and Oleksandra, a Ukrainian couple - Oleksandra has been
+            Plants Pack is built by Anton and Oleksandra, a Ukrainian couple - Oleksandra has been
             vegan for 10+ years and Anton joined her on it. No investors, no ads, no paywalls; funded
             by optional supporter contributions. Because two people cannot personally check 52,000
             places, verification is community-driven: confirmations from people on the ground,

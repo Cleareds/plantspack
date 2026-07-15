@@ -65,7 +65,7 @@ async function fetchWithTimeout(url: string, ms: number): Promise<string | null>
   try {
     const res = await fetch(url, {
       signal: ctrl.signal,
-      headers: { 'User-Agent': 'PlantsPack/1.0 (vegan-only directory; hello@plantspack.com) verification' },
+      headers: { 'User-Agent': 'Plants Pack/1.0 (vegan-only directory; hello@plantspack.com) verification' },
       redirect: 'follow',
     })
     clearTimeout(to)

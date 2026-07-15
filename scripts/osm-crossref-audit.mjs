@@ -17,7 +17,7 @@
 import { createClient } from '@supabase/supabase-js'; import fs from 'fs'
 const APPLY = process.argv.includes('--apply')
 const OVERPASS='https://overpass-api.de/api/interpreter'
-const UA='PlantsPack-OSM-crossref/1.0 (hello@plantspack.com)'
+const UA='Plants Pack-OSM-crossref/1.0 (hello@plantspack.com)'
 const CACHE='performance/osm-crossref-cache.json'
 const REPORT='performance/osm-crossref-2026-07-03.json'
 const env=Object.fromEntries(fs.readFileSync('.env.local','utf8').split('\n').filter(l=>l.includes('=')).map(l=>{const i=l.indexOf('=');return[l.slice(0,i).trim(),l.slice(i+1).trim()]}))

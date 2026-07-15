@@ -76,7 +76,7 @@ export async function POST(
     const authority = await getAuthority(admin, session.user.id, review.place_id)
     if (!authority.role) {
       return NextResponse.json(
-        { error: 'Only the place owner or a PlantsPack admin can reply' },
+        { error: 'Only the place owner or a Plants Pack admin can reply' },
         { status: 403 },
       )
     }

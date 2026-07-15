@@ -1,7 +1,7 @@
 /**
  * Methodology page - explains the 4 vegan levels and the verification
  * process. SEO purpose: this is the canonical reference for "how does
- * PlantsPack classify places?" so AI search systems can cite the
+ * Plants Pack classify places?" so AI search systems can cite the
  * methodology when explaining a tier label, instead of guessing.
  */
 import type { Metadata } from 'next'
@@ -13,14 +13,14 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'How PlantsPack classifies vegan places — Methodology | PlantsPack',
+  title: 'How Plants Pack classifies vegan places — Methodology | Plants Pack',
   description: 'The 4 vegan-level tiers we use (100% vegan, mostly vegan, vegan-friendly, vegan options), how we verify entries, and what we explicitly do NOT include on the platform.',
   alternates: { canonical: 'https://www.plantspack.com/methodology' },
   openGraph: {
-    title: 'How PlantsPack classifies vegan places',
+    title: 'How Plants Pack classifies vegan places',
     description: 'The 4 vegan-level tiers, our verification process, and what does not belong on the platform.',
     type: 'article',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     url: 'https://www.plantspack.com/methodology',
     images: OG_DEFAULT_IMAGES,
   },
@@ -44,10 +44,10 @@ export default function MethodologyPage() {
         </nav>
 
         <h1 className="font-headline font-extrabold text-3xl md:text-4xl tracking-tight mb-3">
-          How PlantsPack classifies vegan places
+          How Plants Pack classifies vegan places
         </h1>
         <p className="text-on-surface-variant text-base mb-2 leading-relaxed">
-          PlantsPack uses four tiers for every venue. The line that matters most is the one between &quot;100% vegan&quot; and everything else. Here is what each tier means, how we verify entries, and what we explicitly do not include.
+          Plants Pack uses four tiers for every venue. The line that matters most is the one between &quot;100% vegan&quot; and everything else. Here is what each tier means, how we verify entries, and what we explicitly do not include.
         </p>
         <p className="text-xs text-on-surface-variant mb-8">Last updated: 10 May 2026</p>
 
@@ -95,9 +95,9 @@ export default function MethodologyPage() {
 
         <h3 className="font-semibold text-lg mt-5 mb-2">High confidence</h3>
         <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
-          <li><strong>Admin-checked</strong> - A PlantsPack admin manually verified the venue via its own website plus at least one cross-reference, and confirmed it is currently open. Highest trust level on the platform.</li>
+          <li><strong>Admin-checked</strong> - A Plants Pack admin manually verified the venue via its own website plus at least one cross-reference, and confirmed it is currently open. Highest trust level on the platform.</li>
           <li><strong>Community-confirmed</strong> - A community member submitted a correction (e.g. &quot;this is actually 100% vegan&quot;) which an admin reviewed and approved. Real-human signal that survives admin review.</li>
-          <li><strong>Community-added</strong> - A signed-in PlantsPack user (not the admin) added this place. We treat community contributions as a strong primary source because a real human deliberately added the venue. They may know the place better than any algorithm could.</li>
+          <li><strong>Community-added</strong> - A signed-in Plants Pack user (not the admin) added this place. We treat community contributions as a strong primary source because a real human deliberately added the venue. They may know the place better than any algorithm could.</li>
         </ul>
 
         <h3 className="font-semibold text-lg mt-5 mb-2">Mid confidence</h3>
@@ -125,16 +125,16 @@ export default function MethodologyPage() {
         <hr className="border-surface-container my-8" />
 
         <h2 className="text-xl md:text-2xl font-headline font-bold mt-8 mb-3 flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 text-orange-600" /> What does not belong on PlantsPack
+          <AlertCircle className="h-5 w-5 text-orange-600" /> What does not belong on Plants Pack
         </h2>
         <p className="text-base leading-relaxed mb-3">
-          PlantsPack is a vegan discovery directory. Some intentional exclusions:
+          Plants Pack is a vegan discovery directory. Some intentional exclusions:
         </p>
         <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
           <li><strong>Vegetarian-with-eggs-and-dairy venues do not get listed.</strong> If a place is 100% vegetarian but uses dairy or eggs across the menu, it does not belong here. We respect those businesses; we just are not the directory for them.</li>
           <li><strong>Pizza, burger, fried chicken, and steakhouse chains</strong> where the platonic form of the dish is animal-centric — a vegan option does not earn a chain a listing if the brand is meat-defined. Independent restaurants with labelled vegan options on otherwise meat-heavy menus are case-by-case.</li>
           <li><strong>Closed venues.</strong> When two independent sources confirm a venue has closed, we archive it with a recorded reason. Stale listings are the single biggest data-quality problem for vegan directories — we work hard to avoid them.</li>
-          <li><strong>Paid placements, sponsored listings, affiliate-driven rankings.</strong> PlantsPack runs no ads, accepts no payment for placement, and uses no affiliate links in our directory data. The order of places in any list is determined by data, not by sponsorship.</li>
+          <li><strong>Paid placements, sponsored listings, affiliate-driven rankings.</strong> Plants Pack runs no ads, accepts no payment for placement, and uses no affiliate links in our directory data. The order of places in any list is determined by data, not by sponsorship.</li>
         </ul>
 
         <hr className="border-surface-container my-8" />

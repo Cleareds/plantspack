@@ -30,7 +30,7 @@ export function CityFaq(props: CityFaqProps) {
     a: (
       <>
         <strong>{props.total}</strong> vegan and vegan-friendly places in{' '}
-        {props.cityName}, {props.countryName} on PlantsPack
+        {props.cityName}, {props.countryName} on Plants Pack
         {props.fullyVegan > 0 ? <>, including <strong>{props.fullyVegan}</strong> fully vegan</> : null}
         {props.storeCount > 0 ? <>, <strong>{props.storeCount}</strong> vegan {props.storeCount === 1 ? 'shop' : 'shops'}</> : null}
         {props.hotelCount > 0 ? <>, <strong>{props.hotelCount}</strong> vegan-friendly {props.hotelCount === 1 ? 'stay' : 'stays'}</> : null}
@@ -55,7 +55,7 @@ export function CityFaq(props: CityFaqProps) {
       q: `Are there fully vegan restaurants in ${props.cityName}?`,
       a: (
         <>
-          Not yet on PlantsPack. The {props.total} places listed have vegan options on
+          Not yet on Plants Pack. The {props.total} places listed have vegan options on
           the menu but aren't 100% plant-based. Know one we're missing? Add it and we'll verify.
         </>
       ),

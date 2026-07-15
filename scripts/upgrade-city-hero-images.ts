@@ -21,7 +21,7 @@ import { readFileSync, writeFileSync } from 'fs'
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 const BUCKET = 'city-images'
-const UA = 'PlantsPack/1.0'
+const UA = 'Plants Pack/1.0'
 const TARGET_WIDTH = 1600
 
 /**

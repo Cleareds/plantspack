@@ -130,7 +130,7 @@ async function overpassFetch(refs: { type: string; id: string }[]) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': 'PlantsPack/1.0 (vegan directory; hello@plantspack.com)',
+      'User-Agent': 'Plants Pack/1.0 (vegan directory; hello@plantspack.com)',
       'Accept': 'application/json',
     },
     body: 'data=' + encodeURIComponent(q),

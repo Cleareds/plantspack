@@ -230,7 +230,7 @@ export default function VeganScoreMap() {
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1&accept-language=en&dedupe=1`,
-        { headers: { 'User-Agent': 'PlantsPack/1.0' } },
+        { headers: { 'User-Agent': 'Plants Pack/1.0' } },
       )
       const data = await res.json()
       if (data[0]) {

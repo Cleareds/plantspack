@@ -6,7 +6,7 @@
 //   2. fetch:     for each ID, GET the detail page, parse name, address,
 //      country, phone, image, website redirect. Saves to state file
 //      every 25 entries for resumability.
-//   3. import:    push to PlantsPack via shared lib (separate script).
+//   3. import:    push to Plants Pack via shared lib (separate script).
 //
 // Usage:
 //   node scripts/scrape-veggiehotels.mjs enumerate
@@ -22,7 +22,7 @@ const OUT = 'scripts/seo-out/veggiehotels-2026-05-24'
 mkdirSync(OUT, { recursive: true })
 
 const HOST = 'https://www.veggie-hotels.com'
-const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 PlantsPack-Directory/1.0'
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Plants Pack-Directory/1.0'
 
 function curlOne(url) {
   return new Promise(resolve => {

@@ -394,7 +394,7 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
         )}
         {isQuota && (
           <Link href="/support" className="px-5 py-3 rounded-xl ghost-border bg-surface text-on-surface font-semibold hover:border-primary/30">
-            Back PlantsPack for unlimited
+            Back Plants Pack for unlimited
           </Link>
         )}
         <button onClick={onReset} className="px-5 py-3 rounded-xl text-on-surface-variant text-sm">

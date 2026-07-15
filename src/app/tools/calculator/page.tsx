@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import CalculatorClient from './CalculatorClient'
 
 export const metadata: Metadata = {
-  title: 'Vegan Impact Calculator | PlantsPack',
+  title: 'Vegan Impact Calculator | Plants Pack',
   description: 'See how many animals, kilograms of CO2, and litres of water your vegan years have saved. Based on peer-reviewed studies (Poore & Nemecek 2018, Scarborough 2023).',
   alternates: { canonical: 'https://www.plantspack.com/tools/calculator' },
 }

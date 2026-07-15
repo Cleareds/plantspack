@@ -92,7 +92,7 @@ function BroadcastCard() {
       <label className="block">
         <span className="text-sm font-medium text-on-surface">Push title (optional)</span>
         <input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={60}
-          placeholder="PlantsPack"
+          placeholder="Plants Pack"
           className="mt-1 w-full rounded-md border border-outline px-3 py-2 text-sm" />
       </label>
 

@@ -85,7 +85,7 @@ const UPDATES: Enrichment[] = [
 async function geocode(query: string): Promise<{ lat: number; lng: number; display_name: string } | null> {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=gb`
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'PlantsPack/1.0 (hello@plantspack.com) enrich-uk-recommendations', 'Accept': 'application/json' },
+    headers: { 'User-Agent': 'Plants Pack/1.0 (hello@plantspack.com) enrich-uk-recommendations', 'Accept': 'application/json' },
   })
   if (!res.ok) return null
   const data = await res.json() as any[]

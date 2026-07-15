@@ -6,9 +6,9 @@ const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABA
 const COLLAGE = 'https://mfeelaqjbtnypoojhfjp.supabase.co/storage/v1/object/public/blog-images/beyond-berlin-germany-collage-mpe7p13v.webp'
 const TITLE = 'Beyond Berlin: 6 best vegan cities in Germany (2026 audit)'
 
-const content = `Berlin has Germany's biggest vegan scene by a wide margin - 178 venues we currently classify as 100% vegan. But six other German cities also deliver enough verified plant-based dining to anchor a weekend, a city break, or a longer plant-based trip. This guide is based on PlantsPack's May 2026 audit. Counts will shift as venues open, close, or get reclassified after we verify them.
+const content = `Berlin has Germany's biggest vegan scene by a wide margin - 178 venues we currently classify as 100% vegan. But six other German cities also deliver enough verified plant-based dining to anchor a weekend, a city break, or a longer plant-based trip. This guide is based on Plants Pack's May 2026 audit. Counts will shift as venues open, close, or get reclassified after we verify them.
 
-A note on terminology: "100% vegan" on PlantsPack means every food and drink item the venue serves is vegan. Places with a strong vegan menu but mixed items elsewhere sit at \`mostly vegan\`, \`vegan friendly\`, or \`vegan options\` and are excluded from the counts below.
+A note on terminology: "100% vegan" on Plants Pack means every food and drink item the venue serves is vegan. Places with a strong vegan menu but mixed items elsewhere sit at \`mostly vegan\`, \`vegan friendly\`, or \`vegan options\` and are excluded from the counts below.
 
 ## At a glance: how the six cities compare
 
@@ -148,13 +148,13 @@ Yes. 47 verified fully vegan venues, including Bodhi (Bavarian vegan since Decem
 
 Halle (Saale), Heidelberg, Freiburg im Breisgau, Münster, Kiel, Mannheim, Bamberg and Kassel each have 14-19 verified 100% vegan venues - high counts relative to their populations. A dedicated guide is on the way.
 
-### What does "verified 100% vegan" mean on PlantsPack?
+### What does "verified 100% vegan" mean on Plants Pack?
 
-It means at least one of: (a) the venue's own website explicitly states 100% vegan / rein vegan / plant-based only; (b) OpenStreetMap's \`diet:vegan=only\` community tag is supported by a second independent source; or (c) the venue is manually verified by a PlantsPack admin. Anything ambiguous defaults to \`vegan friendly\` and is excluded from the 100% vegan count.
+It means at least one of: (a) the venue's own website explicitly states 100% vegan / rein vegan / plant-based only; (b) OpenStreetMap's \`diet:vegan=only\` community tag is supported by a second independent source; or (c) the venue is manually verified by a Plants Pack admin. Anything ambiguous defaults to \`vegan friendly\` and is excluded from the 100% vegan count.
 
 ---
 
-*Last audited: May 2026. PlantsPack is free, ad-free, and supported by readers. [Support us for EUR 3/month](/support).*`
+*Last audited: May 2026. Plants Pack is free, ad-free, and supported by readers. [Support us for EUR 3/month](/support).*`
 
 const POST_ID = '030ebac1-b79b-43ff-b8f2-894cdb4b3f27'
 const { error } = await sb.from('posts').update({

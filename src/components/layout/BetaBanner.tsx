@@ -25,7 +25,7 @@ export default function BetaBanner() {
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] h-8 bg-secondary-container text-on-secondary flex items-center justify-center px-4">
       <p className="text-xs font-medium">
-        PlantsPack is in beta — report bugs via{' '}
+        Plants Pack is in beta — report bugs via{' '}
         <Link href="/contact" className="underline hover:opacity-80">Contact</Link>
       </p>
       <button

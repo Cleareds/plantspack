@@ -652,7 +652,7 @@ export default function ProfileSettingsPage() {
                 {/* Translation Notice */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <p className="text-sm text-blue-800">
-                    <span className="font-semibold">ℹ️ Note:</span> PlantsPack currently works only in English.
+                    <span className="font-semibold">ℹ️ Note:</span> Plants Pack currently works only in English.
                     Multi-language support is in progress and will be available soon.
                   </p>
                 </div>

@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const vitaminsArticle: IngredientArticle = {
   slug: 'vitamins',
   title: 'Are vitamins vegan? B12, D3, omega-3 and the hidden ones',
-  metaTitle: 'Are vitamins vegan? B12, D3, omega-3 and what to look for | PlantsPack',
+  metaTitle: 'Are vitamins vegan? B12, D3, omega-3 and what to look for | Plants Pack',
   metaDescription: 'Most vitamins themselves are synthesised, but capsules and certain forms (D3 from lanolin, omega-3 from fish, gelatin shells) often are not vegan. A practical buyer\'s guide.',
   category: 'lifestyle',
   searchQueries: [

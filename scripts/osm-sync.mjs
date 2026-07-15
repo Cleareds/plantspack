@@ -21,7 +21,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 const OVERPASS = 'https://overpass-api.de/api/interpreter'
-const UA = 'PlantsPack-OSM-sync/1.0 (hello@plantspack.com)'
+const UA = 'Plants Pack-OSM-sync/1.0 (hello@plantspack.com)'
 const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
 const DO_IMPORT = process.argv.includes('--import') || process.env.OSM_AUTO_IMPORT === '1'
 const DRY_RUN = process.argv.includes('--dry-run')

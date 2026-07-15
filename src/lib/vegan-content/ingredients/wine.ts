@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const wineArticle: IngredientArticle = {
   slug: 'wine',
   title: 'Is wine vegan?',
-  metaTitle: 'Is wine vegan? Fining agents, brands, and how to tell | PlantsPack',
+  metaTitle: 'Is wine vegan? Fining agents, brands, and how to tell | Plants Pack',
   metaDescription: 'Wine is grape juice fermented with yeast, but the fining step often uses animal products: isinglass, gelatin, egg whites, or casein. Here is how to find vegan wine.',
   category: 'drink',
   searchQueries: [

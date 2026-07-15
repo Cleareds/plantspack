@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!post) {
     return {
-      title: 'Post Not Found - PlantsPack'
+      title: 'Post Not Found - Plants Pack'
     }
   }
 
@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     : `@${post.users.username}`
 
   // Use title if available, otherwise fall back to content preview
-  const pageTitle = post.title || `${username} on PlantsPack`
+  const pageTitle = post.title || `${username} on Plants Pack`
 
   const contentPreview = post.content.length > 160
     ? post.content.substring(0, 160) + '...'
@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       title: pageTitle,
       description,
       type: 'article',
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       ...(image ? { images: [image] } : {}),
     },
     // Mirror the post's hero image into the Twitter card so a post with
@@ -126,7 +126,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
 
   const authorName = post.users?.first_name
     ? `${post.users.first_name} ${post.users.last_name || ''}`.trim()
-    : post.users?.username || 'PlantsPack User'
+    : post.users?.username || 'Plants Pack User'
   const postUrl = `https://www.plantspack.com/post/${post.slug || id}`
   const postImage = post.images?.[0] || post.image_url
   const articleJsonLd = {
@@ -146,7 +146,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     articleBody: post.content,
     publisher: {
       '@type': 'Organization',
-      name: 'PlantsPack',
+      name: 'Plants Pack',
       logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/plantspack-logo-real.svg' },
     },
   }

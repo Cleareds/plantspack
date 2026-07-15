@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const breadArticle: IngredientArticle = {
   slug: 'bread',
   title: 'Is bread vegan?',
-  metaTitle: 'Is bread vegan? Mostly yes, but watch for milk, eggs, butter, honey and L-cysteine | PlantsPack',
+  metaTitle: 'Is bread vegan? Mostly yes, but watch for milk, eggs, butter, honey and L-cysteine | Plants Pack',
   metaDescription: 'Most plain bread is vegan - flour, water, yeast, salt. But brioche, challah, milk bread, and many supermarket loaves hide dairy, eggs, honey, or animal-derived dough conditioners like L-cysteine and mono- and diglycerides.',
   category: 'ingredient',
   searchQueries: [

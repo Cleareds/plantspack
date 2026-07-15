@@ -24,7 +24,7 @@ async function count(filter: (q: any) => any): Promise<number> {
 
 async function main() {
   const now = new Date().toISOString();
-  console.log(`=== PlantsPack Data Quality Report — ${now} ===\n`);
+  console.log(`=== Plants Pack Data Quality Report — ${now} ===\n`);
 
   // Active counts
   const active = await count(q => q.is('archived_at', null));

@@ -168,7 +168,7 @@ async function main() {
         type: 'submission_approved',
         entityType: 'place',
         entityId: place.id,
-        message: `Good eye — ${place.name} is already on PlantsPack. We credited you as a co-submitter 🌱`,
+        message: `Good eye — ${place.name} is already on Plants Pack. We credited you as a co-submitter 🌱`,
       })
     }
     console.log(JSON.stringify({ ok: true, duplicateOf: place.slug }))

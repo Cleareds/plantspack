@@ -50,7 +50,7 @@ export const OVERPASS_API = 'https://overpass-api.de/api/interpreter';
 export const NOMINATIM_API = 'https://nominatim.openstreetmap.org';
 
 // Chains excluded per Platonic-form-is-vegan policy
-// A chain belongs on PlantsPack if the Platonic form of what it sells is plant-based.
+// A chain belongs on Plants Pack if the Platonic form of what it sells is plant-based.
 // Excluded: animal-centric Platonic form (burger, pizza, fried chicken, steak, seafood).
 export const EXCLUDED_CHAINS = new Set([
   "mcdonald's", 'mcdonalds', 'burger king', 'kfc',
@@ -489,7 +489,7 @@ export async function runOverpassQuery(query: string, label: string): Promise<Os
         body: `data=${encodeURIComponent(query)}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'PlantsPack/1.0 (plantspack.com; admin@plantspack.com)',
+          'User-Agent': 'Plants Pack/1.0 (plantspack.com; admin@plantspack.com)',
         },
       });
       if (resp.status === 429 || resp.status === 406) {
@@ -578,7 +578,7 @@ export async function reverseGeocode(lat: number, lon: number, delayMs = 1200): 
     // structured address object we use to build both city + full address.
     const url = `${NOMINATIM_API}/reverse?lat=${lat}&lon=${lon}&format=json&zoom=18&addressdetails=1`;
     const resp = await fetch(url, {
-      headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com; admin@plantspack.com)' },
+      headers: { 'User-Agent': 'Plants Pack/1.0 (plantspack.com; admin@plantspack.com)' },
     });
     if (!resp.ok) { const empty = { city: '', address: '' }; nominatimCache.set(key, empty); return empty; }
     const data = await resp.json();
@@ -657,7 +657,7 @@ export async function forwardGeocode(query: string, countryCode = 'gb'): Promise
   try {
     const url = `${NOMINATIM_API}/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=${countryCode}&addressdetails=1`;
     const resp = await fetch(url, {
-      headers: { 'User-Agent': 'PlantsPack/1.0 (plantspack.com; admin@plantspack.com)', Accept: 'application/json' },
+      headers: { 'User-Agent': 'Plants Pack/1.0 (plantspack.com; admin@plantspack.com)', Accept: 'application/json' },
       signal: AbortSignal.timeout(10000),
     });
     if (!resp.ok) return null;
@@ -740,7 +740,7 @@ export async function scrapeHeroImage(url: string): Promise<string | null> {
   for (const u of list) {
     try {
       const r = await fetch(u, {
-        headers: { 'User-Agent': 'Mozilla/5.0 PlantsPack/1.0', Accept: 'image/*' },
+        headers: { 'User-Agent': 'Mozilla/5.0 Plants Pack/1.0', Accept: 'image/*' },
         signal: AbortSignal.timeout(8000),
       });
       if (!r.ok || !r.headers.get('content-type')?.startsWith('image/')) continue;

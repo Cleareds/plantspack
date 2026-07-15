@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
     if (error || !post) {
       return {
-        title: 'Post not found | PlantsPack',
+        title: 'Post not found | Plants Pack',
         description: 'This post could not be found.',
       }
     }
 
     const userName = (post.users as any)?.first_name
       ? `${(post.users as any).first_name} ${(post.users as any).last_name || ''}`.trim()
-      : (post.users as any)?.username || 'PlantsPack User'
+      : (post.users as any)?.username || 'Plants Pack User'
 
     // Get content excerpt (first 160 characters)
     const contentExcerpt = post.content.length > 160
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     // Get first image if available
     const postImage = post.images?.[0] || post.image_url
 
-    const title = `${userName} on PlantsPack`
+    const title = `${userName} on Plants Pack`
     const description = contentExcerpt
 
     return {
@@ -76,8 +76,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   } catch (error) {
     console.error('Error generating metadata:', error)
     return {
-      title: 'PlantsPack',
-      description: 'Join the plant-based community on PlantsPack',
+      title: 'Plants Pack',
+      description: 'Join the plant-based community on Plants Pack',
     }
   }
 }

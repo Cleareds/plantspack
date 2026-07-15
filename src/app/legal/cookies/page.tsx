@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { ArrowLeft, Cookie } from 'lucide-react'
 
 export const metadata = {
-  title: 'Cookie Policy — How PlantsPack Uses Cookies | PlantsPack',
-  description: 'PlantsPack uses a minimal set of cookies for authentication, saved preferences, and anonymous analytics. No third-party ad cookies. Read the full policy here.',
+  title: 'Cookie Policy — How Plants Pack Uses Cookies | Plants Pack',
+  description: 'Plants Pack uses a minimal set of cookies for authentication, saved preferences, and anonymous analytics. No third-party ad cookies. Read the full policy here.',
   alternates: { canonical: 'https://www.plantspack.com/legal/cookies' },
 }
 
@@ -48,7 +48,7 @@ export default function CookiePolicyPage() {
             <p className="text-on-surface-variant leading-relaxed">
               Cookies are small text files that are placed on your device when you visit our website.
               They help us provide you with a better experience by remembering your preferences and
-              understanding how you use PlantsPack.
+              understanding how you use Plants Pack.
             </p>
           </section>
 
@@ -147,7 +147,7 @@ export default function CookiePolicyPage() {
             </div>
             <p className="text-on-surface-variant leading-relaxed mt-4">
               Please note that blocking all cookies may affect your ability to use certain features
-              of PlantsPack.
+              of Plants Pack.
             </p>
           </section>
 

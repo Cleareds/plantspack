@@ -28,7 +28,7 @@ export default function SummerHubFooterCta() {
           Visited a great vegan spot this summer?
         </h2>
         <p className="text-on-surface-variant max-w-xl mx-auto mb-3">
-          Add it to PlantsPack and mention &quot;great summer location&quot;
+          Add it to Plants Pack and mention &quot;great summer location&quot;
           in the description - we&apos;ll consider it for next edition of
           this Mediterranean summer guide.
         </p>
@@ -53,7 +53,7 @@ export default function SummerHubFooterCta() {
         Found a great vegan spot on your trip?
       </h2>
       <p className="text-on-surface-variant max-w-xl mx-auto mb-5">
-        Help future travellers by adding it. Every entry on PlantsPack is free -
+        Help future travellers by adding it. Every entry on Plants Pack is free -
         we don&apos;t take paid listings, and we don&apos;t run ads.
       </p>
       <Link

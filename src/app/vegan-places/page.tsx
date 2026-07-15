@@ -14,14 +14,14 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 export const revalidate = 43200 // 12h; country composition changes slowly (cost cut 2026-07-10)
 
 export const metadata: Metadata = {
-  title: 'Vegan Places Directory Worldwide — Restaurants, Stores, Stays | PlantsPack',
+  title: 'Vegan Places Directory Worldwide — Restaurants, Stores, Stays | Plants Pack',
   description: 'Browse 37,000+ vegan and vegan-friendly restaurants, shops, stays, and sanctuaries across 170+ countries and 1,000+ cities. Community-verified with ratings, opening hours, and reviews.',
   alternates: { canonical: 'https://www.plantspack.com/vegan-places' },
   openGraph: {
-    title: 'Vegan Places Directory — Worldwide | PlantsPack',
+    title: 'Vegan Places Directory — Worldwide | Plants Pack',
     description: 'Browse 37,000+ vegan and vegan-friendly places across 170+ countries. Community-verified, ad-free, free to use.',
     type: 'website',
-    siteName: 'PlantsPack',
+    siteName: 'Plants Pack',
     images: OG_DEFAULT_IMAGES,
   },
 }

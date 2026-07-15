@@ -34,13 +34,13 @@ async function setDefaultPortal() {
       console.log('')
     })
 
-    // Find the PlantsPack configuration (most recent one with our headline)
+    // Find the Plants Pack configuration (most recent one with our headline)
     const plantspackConfig = configurations.data.find(
-      config => config.business_profile.headline?.includes('PlantsPack')
+      config => config.business_profile.headline?.includes('Plants Pack')
     )
 
     if (!plantspackConfig) {
-      console.error('❌ Could not find PlantsPack configuration')
+      console.error('❌ Could not find Plants Pack configuration')
       console.log('   Run: npx tsx scripts/update-stripe-branding.ts')
       return
     }
@@ -56,11 +56,11 @@ async function setDefaultPortal() {
     console.log('✅ Portal configuration updated!')
     console.log(`   Configuration ID: ${updated.id}`)
     console.log(`   Is Default: ${updated.is_default ? '✅ YES' : '❌ NO'}`)
-    console.log(`\n✅ PlantsPack portal is now the default!`)
+    console.log(`\n✅ Plants Pack portal is now the default!`)
     console.log(`\nTest it:`)
     console.log(`1. Go to: https://plantspack.com/settings`)
     console.log(`2. Click "Manage Subscription"`)
-    console.log(`3. You should see "PlantsPack" branding`)
+    console.log(`3. You should see "Plants Pack" branding`)
     console.log(`4. Return URL should be https://plantspack.com/settings`)
   } catch (error) {
     if (error instanceof Error) {

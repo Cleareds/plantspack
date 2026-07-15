@@ -331,7 +331,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
           </div>
           <h3 className="text-lg font-bold text-on-surface mb-2">Place Added!</h3>
           <p className="text-sm text-on-surface-variant mb-4">
-            <strong>{successPlace.name}</strong> has been added to PlantsPack.
+            <strong>{successPlace.name}</strong> has been added to Plants Pack.
           </p>
           <div className="flex flex-col gap-2">
             <a

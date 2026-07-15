@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: guide.tldr,
       type: 'article',
       url: `https://www.plantspack.com/vegan/travel/${guide.countrySlug}`,
-      siteName: 'PlantsPack',
+      siteName: 'Plants Pack',
       images: OG_DEFAULT_IMAGES,
     },
   }
@@ -49,8 +49,8 @@ export default async function TravelGuidePage({ params }: Props) {
     description: guide.tldr,
     datePublished: guide.updatedAt,
     dateModified: guide.updatedAt,
-    author: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
-    publisher: { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
+    author: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
+    publisher: { '@type': 'Organization', name: 'Plants Pack', url: 'https://www.plantspack.com' },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     about: { '@type': 'Country', name: guide.countryName },
   }
@@ -99,7 +99,7 @@ export default async function TravelGuidePage({ params }: Props) {
               <div className="font-bold text-on-surface group-hover:text-primary transition-colors">
                 Vegan restaurants &amp; cafés in {guide.countryName}
               </div>
-              <div className="text-sm text-on-surface-variant">PlantsPack&apos;s verified directory</div>
+              <div className="text-sm text-on-surface-variant">Plants Pack&apos;s verified directory</div>
             </div>
             <ArrowRight className="h-5 w-5 text-primary flex-shrink-0" />
           </div>

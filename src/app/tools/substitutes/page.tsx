@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 import SubstitutesClient from './SubstitutesClient'
 
 export const metadata: Metadata = {
-  title: 'Vegan Substitute Finder | PlantsPack',
+  title: 'Vegan Substitute Finder | Plants Pack',
   description: 'Search for vegan swaps - milk, butter, cheese, eggs, gelatin, honey, mayo, meat, fish. With notes on what each works best for in cooking and baking.',
   alternates: { canonical: 'https://www.plantspack.com/tools/substitutes' },
 }

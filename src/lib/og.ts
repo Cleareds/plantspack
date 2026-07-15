@@ -14,7 +14,7 @@ export const OG_DEFAULT_IMAGE = {
   url: '/og-default.png',
   width: 1200,
   height: 630,
-  alt: 'PlantsPack - vegan places, city rankings, and free vegan tools',
+  alt: 'Plants Pack - vegan places, city rankings, and free vegan tools',
 } as const
 
 // Array form for direct use in metadata `images` fields.

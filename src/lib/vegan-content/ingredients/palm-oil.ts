@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const palmOilArticle: IngredientArticle = {
   slug: 'palm-oil',
   title: 'Is palm oil vegan?',
-  metaTitle: 'Is palm oil vegan? Yes — but the ethics are complicated | PlantsPack',
+  metaTitle: 'Is palm oil vegan? Yes — but the ethics are complicated | Plants Pack',
   metaDescription: 'Palm oil is plant-derived and technically vegan. The harder question is the environmental and animal-welfare impact of palm cultivation. Here is the nuanced answer.',
   category: 'ingredient',
   searchQueries: [

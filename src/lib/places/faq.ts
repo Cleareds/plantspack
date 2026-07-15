@@ -17,7 +17,7 @@
 
 const VL_FAQ: Record<string, string> = {
   fully_vegan:
-    'Yes — {name} is a fully vegan venue. Every item on the menu is plant-based with no animal products. This is verified manually by the PlantsPack team against the venue\'s own menu.',
+    'Yes — {name} is a fully vegan venue. Every item on the menu is plant-based with no animal products. This is verified manually by the Plants Pack team against the venue\'s own menu.',
   mostly_vegan:
     '{name} is mostly vegan. The menu is plant-based with a small number of named exceptions. Check the menu before ordering if you avoid all animal products.',
   vegan_friendly:
@@ -91,7 +91,7 @@ export function buildPlaceFaqJsonLd(place: PlaceForFaq): Record<string, unknown>
   if (place.is_pet_friendly === true) {
     entries.push({
       q: `Is ${name} dog-friendly?`,
-      a: `Yes — ${name} is flagged as pet-friendly on PlantsPack. Confirm with the venue before bringing a dog, especially for indoor seating.`,
+      a: `Yes — ${name} is flagged as pet-friendly on Plants Pack. Confirm with the venue before bringing a dog, especially for indoor seating.`,
     })
   }
 

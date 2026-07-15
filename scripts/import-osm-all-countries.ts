@@ -324,7 +324,7 @@ async function main() {
   const todo = isos.filter(iso => !doneSet.has(iso));
   const sourceTag = `osm-import-${new Date().toISOString().slice(0, 7)}`;
 
-  console.log(`🌿 PlantsPack OSM Import — ALL COUNTRIES${dryRun ? ' [DRY RUN]' : ''}`);
+  console.log(`🌿 Plants Pack OSM Import — ALL COUNTRIES${dryRun ? ' [DRY RUN]' : ''}`);
   console.log(`Countries: ${todo.length} to process (${isos.length - todo.length} skipped)`);
   console.log(`Source tag: ${sourceTag}`);
   console.log('='.repeat(60));

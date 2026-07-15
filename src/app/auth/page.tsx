@@ -62,7 +62,7 @@ function AuthContent() {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <div className="text-2xl font-bold text-on-surface mb-1">🌱 PlantsPack</div>
+          <div className="text-2xl font-bold text-on-surface mb-1">🌱 Plants Pack</div>
           <p className="text-sm text-on-surface-variant">Find 54,000+ vegan places across 154 countries</p>
           <div className="flex items-center justify-center gap-3 mt-3">
             <span className="text-xs text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">Save places</span>

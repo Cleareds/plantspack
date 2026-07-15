@@ -38,7 +38,7 @@ export default function TopBar() {
         <Link href="/" className="flex items-center shrink-0 lg:hidden">
           <Image
             src="/plantspack.svg"
-            alt="PlantsPack"
+            alt="Plants Pack"
             width={2117}
             height={233}
             className="h-[18px] w-[164px] shrink-0"
@@ -107,7 +107,7 @@ export default function TopBar() {
                   </div>
                   <Link href="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>info</span>
-                    <span className="text-sm text-on-surface">About PlantsPack</span>
+                    <span className="text-sm text-on-surface">About Plants Pack</span>
                   </Link>
                   <Link href="/roadmap" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>map</span>

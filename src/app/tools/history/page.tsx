@@ -6,7 +6,7 @@ import { createClient as createServerClient } from '@/lib/supabase-server'
 import type { ScanResult } from '@/lib/tool-quota'
 
 export const metadata: Metadata = {
-  title: 'My scan history | PlantsPack',
+  title: 'My scan history | Plants Pack',
   description: 'Your previous ingredient, menu, and barcode scans.',
   robots: { index: false, follow: false },
 }
