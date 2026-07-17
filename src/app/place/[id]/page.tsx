@@ -674,8 +674,13 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             return gallery.length > 0 ? (
             <>
             {/* Preload the LCP hero so the browser fetches it before it parses
-                down to the (client) slider. React hoists this to <head>. */}
-            <link rel="preload" as="image" href={gallery[0]} fetchPriority="high" />
+                down to the (client) slider. React hoists this to <head>.
+                referrerPolicy MUST match the <img> in ImageSlider (which sets
+                referrerPolicy="no-referrer") — otherwise the browser treats the
+                preload and the img as different requests, discards the preload,
+                and the hero loads late during hydration (measured 2026-07-17:
+                a 535ms LCP "load delay" from exactly this attribute mismatch). */}
+            <link rel="preload" as="image" href={gallery[0]} fetchPriority="high" referrerPolicy="no-referrer" />
             <div className="p-6 border-b border-outline-variant/15 relative">
               <ImageSlider images={gallery} />
               {/* Vegan + Pet badges */}
