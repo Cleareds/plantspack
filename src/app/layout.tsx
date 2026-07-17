@@ -124,7 +124,12 @@ export default function RootLayout({
           is demoted to dns-prefetch — only used for signed-in user avatars
           (never on guest first paint, never the LCP element).
         */}
-        <link rel="preconnect" href="https://mfeelaqjbtnypoojhfjp.supabase.co" crossOrigin="anonymous" />
+        {/* NO crossOrigin here: the hero/place images load as plain <img> in
+            no-cors mode, so a crossOrigin="anonymous" (CORS) preconnect warms a
+            connection they can't reuse — the image then pays a fresh cross-origin
+            TCP+TLS handshake inside the LCP load-delay (verified 2026-07-17 on
+            Slow 4G). Guest first paint makes no CORS calls to this origin. */}
+        <link rel="preconnect" href="https://mfeelaqjbtnypoojhfjp.supabase.co" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
         {/*
