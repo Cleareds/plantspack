@@ -18,7 +18,12 @@ const SUPPORTER_MONTHLY_BUDGET_USD = 1.0
 // Global daily $ ceiling. Kill switch if something goes wrong.
 const GLOBAL_DAILY_BUDGET_USD = 5.0
 
-const SUPPORTER_TIERS = new Set(['supporter', 'premium', 'business'])
+// Real paid subscription_tier values in the DB are 'medium' (the €3/month
+// Supporter tier) and legacy 'premium'. The earlier set used 'supporter' /
+// 'business', which NEVER exist in the DB — so paying 'medium' supporters were
+// silently capped at the free 3/month and the advertised "unlimited scans"
+// perk did not work for them. Fixed 2026-07-24.
+const SUPPORTER_TIERS = new Set(['medium', 'premium'])
 
 function adminClient() {
   return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {

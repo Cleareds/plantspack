@@ -56,6 +56,7 @@ import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { buildPlaceFaqJsonLd, PLACE_SPEAKABLE } from '@/lib/places/faq'
 import VeganLevelInlineEditor from '@/components/places/VeganLevelInlineEditor'
 import AdminDelistButton from '@/components/places/AdminDelistButton'
+import RequestVerificationButton from '@/components/places/RequestVerificationButton'
 import { formatDistanceToNow } from 'date-fns'
 import type { PlaceOwnerPublic } from '@/types/place-claims'
 
@@ -685,6 +686,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   opening_hours: place.opening_hours,
                   owner: place.owner ? { user_id: place.owner.user_id } : null,
                 }} />
+                <RequestVerificationButton placeId={place.id} />
               </div>
               <MyPlaceNote placeId={place.id} />
             </div>

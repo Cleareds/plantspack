@@ -88,7 +88,7 @@ export default function ProfilePage() {
     // future-proofs against the anon column grant being locked down.
     const { data: profileData, error } = await supabase
       .from('users')
-      .select('id, username, first_name, last_name, bio, avatar_url, is_private, created_at, updated_at, subscription_tier, role, sprouts_lifetime, sprouts_balance, sprouts_seeded, forest_size, is_vegan, vegan_since, vegan_reasons, transition_story, favourite_vegan_meal, current_challenges, dietary_specifics, cooking_frequency, home_city, home_country, donor_source')
+      .select('id, username, first_name, last_name, bio, avatar_url, is_private, created_at, updated_at, subscription_tier, founding_supporter, role, sprouts_lifetime, sprouts_balance, sprouts_seeded, forest_size, is_vegan, vegan_since, vegan_reasons, transition_story, favourite_vegan_meal, current_challenges, dietary_specifics, cooking_frequency, home_city, home_country, donor_source')
       .eq('username', username)
       .single()
 

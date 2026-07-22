@@ -11,6 +11,7 @@ import FollowButton from '../social/FollowButton'
 import ReportButton from '../moderation/ReportButton'
 import ReviewReactions from '../reactions/ReviewReactions'
 import StarRating from './StarRating'
+import TierBadge from '../ui/TierBadge'
 import ImageUploader from '../ui/ImageUploader'
 import VideoUploader from '../ui/VideoUploader'
 import VideoPlayer from '../ui/VideoPlayer'
@@ -37,6 +38,7 @@ type Review = {
     first_name: string | null
     last_name: string | null
     avatar_url: string | null
+    subscription_tier?: 'free' | 'medium' | 'premium' | null
   }
   replies?: ReviewReply[]
 }
@@ -144,7 +146,8 @@ export default function PlaceReviews({
             username,
             first_name,
             last_name,
-            avatar_url
+            avatar_url,
+            subscription_tier
           )
         `)
         .eq('place_id', placeId)
@@ -582,6 +585,9 @@ export default function PlaceReviews({
                           >
                             @{review.users?.username || 'unknown'}
                           </Link>
+                          {review.users?.subscription_tier && (
+                            <TierBadge tier={review.users.subscription_tier} size="sm" />
+                          )}
                           <span className="text-outline">·</span>
                           <span className="text-outline text-sm">
                             {formatDistanceToNow(new Date(review.created_at), { addSuffix: true })}

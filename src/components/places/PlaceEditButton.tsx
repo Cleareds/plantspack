@@ -40,7 +40,7 @@ export default function PlaceEditButton({ place }: PlaceEditButtonProps) {
   const isAdmin = (profile as any)?.role === 'admin'
   const isCreator = user.id === place.created_by
   const isOwner = user.id === place.owner?.user_id
-  const isSupporter = (profile as any)?.subscription_tier === 'medium'
+  const isSupporter = ['medium', 'premium'].includes((profile as any)?.subscription_tier)
 
   // Direct edit: admin, creator, owner, or supporter
   const canDirectEdit = isAdmin || isCreator || isOwner || isSupporter

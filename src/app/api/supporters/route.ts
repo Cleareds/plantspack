@@ -15,7 +15,7 @@ export async function GET() {
     //     integration yet so these are set manually for now.
     const { data: supporters, error } = await supabase
       .from('users')
-      .select('username, first_name, avatar_url, subscription_tier, donor_source')
+      .select('username, first_name, avatar_url, subscription_tier, donor_source, founding_supporter')
       .or('and(subscription_tier.neq.free,subscription_tier.not.is.null),donor_source.not.is.null')
       .eq('is_banned', false)
       // Exclude internal/operational accounts that hold a paid tier for a

@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import ContributionsView from '@/components/profile/ContributionsView'
+import ExportPacksButton from '@/components/support/ExportPacksButton'
 
 export const revalidate = 0
 
@@ -16,6 +17,9 @@ export default async function ProfilePacksPage({ params }: { params: Promise<{ u
   const { username } = await params
   return (
     <div className="min-h-screen bg-surface">
+      <div className="max-w-5xl mx-auto pt-4">
+        <ExportPacksButton username={username} />
+      </div>
       <ContributionsView username={username} type="packs" />
     </div>
   )

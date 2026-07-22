@@ -197,6 +197,22 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       }
     }
 
+    // Founding Supporter: grant the permanent founding badge while the founding
+    // cohort is still small. Best-effort — never blocks provisioning.
+    try {
+      const FOUNDING_CAP = 100
+      const { count: foundingCount } = await supabase
+        .from('users')
+        .select('id', { count: 'exact', head: true })
+        .eq('founding_supporter', true)
+      if ((foundingCount ?? 0) < FOUNDING_CAP) {
+        await supabase.from('users').update({ founding_supporter: true }).eq('id', userId)
+        log.debug('🌱 Founding Supporter granted:', userId)
+      }
+    } catch (e) {
+      console.error('Founding grant check failed (non-fatal):', e)
+    }
+
     // Check for early purchaser promotion after successful subscription activation
     if (tierId === 'medium') {
       try {

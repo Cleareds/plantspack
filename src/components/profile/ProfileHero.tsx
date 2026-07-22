@@ -16,6 +16,7 @@ interface ProfileUser {
   avatar_url?: string | null
   bio?: string | null
   subscription_tier?: 'free' | 'medium' | 'premium' | null
+  founding_supporter?: boolean | null
   is_banned?: boolean | null
 }
 
@@ -108,7 +109,7 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
             <div className="flex items-center space-x-3 mb-1 flex-wrap">
               <h1 className="text-2xl font-bold text-on-surface truncate">{displayName}</h1>
               {user.subscription_tier && user.subscription_tier !== 'free' && (
-                <TierBadge tier={user.subscription_tier as 'medium' | 'premium'} size="md" />
+                <TierBadge tier={user.subscription_tier as 'medium' | 'premium'} founding={!!user.founding_supporter} size="md" />
               )}
               {user.is_banned && (
                 <div className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">

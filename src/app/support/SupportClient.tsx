@@ -29,6 +29,7 @@ interface Supporter {
   avatar_url: string | null
   subscription_tier: string
   donor_source: string | null
+  founding_supporter?: boolean
 }
 
 interface Stats {
@@ -283,6 +284,9 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
                 <h3 className="font-bold text-base text-on-surface mb-3">Supporter — everything in Free, plus</h3>
                 <ul className="space-y-2 text-sm text-on-surface">
                   {[
+                    'Founding Supporter badge — permanent recognition for the first 100 supporters',
+                    'Export your Packs as CSV or GPX — take your vegan list offline / into Google Maps for a trip',
+                    'Request a verification — ask us to deep-check any place, and we prioritise it',
                     'Vote on the public roadmap — shape what we build next AND which countries/cities get the next deep coverage pass',
                     'Direct edit access to any place — fix opening hours, add photos, correct details without waiting for moderation',
                     'Supporter badge visible on your profile, posts, and reviews',

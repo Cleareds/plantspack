@@ -1,9 +1,11 @@
 'use client'
 
-import { Heart } from 'lucide-react'
+import { Heart, Star } from 'lucide-react'
 
 interface TierBadgeProps {
   tier: 'free' | 'medium' | 'premium'
+  /** Early supporter — shows the distinct permanent "Founding Supporter" badge. */
+  founding?: boolean
   size?: 'sm' | 'md' | 'lg'
   showIcon?: boolean
   className?: string
@@ -16,6 +18,7 @@ const tierStyles: Record<string, string> = {
 
 export default function TierBadge({
   tier,
+  founding = false,
   size = 'sm',
   showIcon = true,
   className = ''
@@ -35,17 +38,22 @@ export default function TierBadge({
     lg: 'h-5 w-5'
   }
 
+  const Icon = founding ? Star : Heart
+  const styleCls = founding ? 'bg-primary text-on-primary' : (tierStyles[tier] || '')
+  const label = founding ? 'Founding Supporter' : 'Supporter'
+
   return (
     <span
+      title={label}
       className={`
         inline-flex items-center space-x-1 rounded-full font-medium
         ${sizes[size]}
-        ${tierStyles[tier] || ''}
+        ${styleCls}
         ${className}
       `}
     >
-      {showIcon && <Heart className={iconSizes[size]} />}
-      <span className={"hidden sm:inline"}>{tier === 'premium' ? 'Supporter' : 'Supporter'}</span>
+      {showIcon && <Icon className={`${iconSizes[size]} ${founding ? 'fill-current' : ''}`} />}
+      <span className={"hidden sm:inline"}>{label}</span>
     </span>
   )
 }
