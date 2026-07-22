@@ -261,12 +261,19 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
     // Determine tier from actual price ID (not metadata, which doesn't update on plan changes)
     const priceId = subscription.items.data[0]?.price?.id
-    let tierId: 'medium' | 'premium' | 'free' = 'free'
+    let tierId: 'medium' | 'premium'
 
     if (priceId === process.env.STRIPE_PREMIUM_PRICE_ID) {
       tierId = 'premium'
     } else if (priceId === process.env.STRIPE_MEDIUM_PRICE_ID) {
       tierId = 'medium'
+    } else {
+      // Not a PlantsPack price — this event belongs to another product in the
+      // same Stripe account (e.g. Reelfleur). Skip rather than defaulting to
+      // 'free', so an unrelated subscription can never downgrade a PlantsPack
+      // user (e.g. if its metadata.userId ever collided with ours).
+      log.debug(`Ignoring non-PlantsPack price ${priceId} in invoice.payment_succeeded`)
+      return
     }
 
     // Update subscription status
@@ -344,7 +351,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     log.debug('🔧 Expected Premium Price ID:', process.env.STRIPE_PREMIUM_PRICE_ID)
     log.debug('🔧 Expected Medium Price ID:', process.env.STRIPE_MEDIUM_PRICE_ID)
 
-    let tierId: 'medium' | 'premium' | 'free' = 'free'
+    let tierId: 'medium' | 'premium'
 
     if (priceId === process.env.STRIPE_PREMIUM_PRICE_ID) {
       tierId = 'premium'
@@ -353,8 +360,12 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       tierId = 'medium'
       log.debug('✅ Detected tier: SUPPORTER (medium)')
     } else {
-      console.warn(`⚠️  Unknown price ID: ${priceId}, defaulting to free tier`)
-      console.warn('   This price ID does not match any configured tiers!')
+      // Not a PlantsPack price — belongs to another product in the same Stripe
+      // account (e.g. Reelfleur). Skip rather than defaulting to 'free', so an
+      // unrelated subscription can never downgrade a PlantsPack user. Genuine
+      // downgrades come through customer.subscription.deleted (cancellation).
+      log.debug(`Ignoring non-PlantsPack price ${priceId} in subscription.updated`)
+      return
     }
 
     const status = mapStripeStatusToLocal(extendedSubscription.status)

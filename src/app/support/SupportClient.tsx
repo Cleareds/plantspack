@@ -314,8 +314,38 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
           </div>
         </div>
 
-        {/* Supporter Wall */}
-        {supporters.length > 0 && (
+        {/* Aggregate, mission-first framing (replaces a sparse 1-2-face grid,
+            which reads as "nobody supports this"). Cost figure ~ €70/mo
+            (infra + services; owner-confirmed 2026). Switches to the avatar
+            grid below once there are >=12 faces. */}
+        {supporters.length < 12 && (
+          <div className="mb-12">
+            <div className="max-w-xl mx-auto text-center rounded-[2rem] border border-outline-variant/10 bg-surface-container-lowest p-8">
+              <h2 className="font-headline font-extrabold text-2xl md:text-3xl text-on-surface tracking-tight mb-3">
+                Reader-funded, not investor-funded
+              </h2>
+              <p className="text-on-surface-variant leading-relaxed mb-4">
+                Plants Pack runs on about €70 a month — servers, databases and services —
+                with no ads, no trackers, and no investors. It stays free for everyone
+                because people choose to chip in.
+              </p>
+              {supporters.length > 0 && (
+                <p className="text-sm text-on-surface-variant mb-4">
+                  Right now {supporters.length === 1 ? 'one person keeps' : `${supporters.length} people keep`} it going — thank you{' '}
+                  {supporters.map((s) => s.first_name || s.username).join(', ')}.
+                </p>
+              )}
+              <p className="text-sm text-on-surface font-medium">
+                Your €3 a month keeps it free — and puts your name here.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Supporter Wall — once supporters pass the threshold the avatar grid
+            becomes real social proof; below it we show the aggregate block
+            above instead of a sparse, discouraging grid. */}
+        {supporters.length >= 12 && (
           <div className="mb-12">
             <div className="text-center mb-8">
               <h2 className="font-headline font-extrabold text-2xl md:text-3xl text-on-surface tracking-tight mb-2">
