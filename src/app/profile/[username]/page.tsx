@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
+import SupportNudge from '@/components/support/SupportNudge'
 import { useParams } from 'next/navigation'
 import { useScrollRestoration } from '@/hooks/useScrollRestoration'
 import { savePageState, loadPageState } from '@/lib/page-state-storage'
@@ -352,6 +353,9 @@ export default function ProfilePage() {
 
         {/* Main content */}
         <div className={isOwnProfile ? 'lg:col-span-3' : 'lg:col-span-4'}>
+          {/* Honest, cost-transparent supporter ask — own profile only; the
+              component further self-gates to free-tier + 21-day dismissal. */}
+          {isOwnProfile && <SupportNudge placement="profile" />}
           <ProfileHero
             user={profile}
             mode={isOwnProfile ? 'owner' : 'public'}

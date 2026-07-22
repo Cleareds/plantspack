@@ -385,7 +385,13 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
   return (
     <div className="rounded-2xl ghost-border editorial-shadow bg-surface-container-lowest p-6 text-center">
       <AlertCircle className="h-8 w-8 text-error mx-auto mb-3" />
-      <p className="text-on-surface mb-5 leading-relaxed">{message}</p>
+      <p className="text-on-surface mb-3 leading-relaxed">{message}</p>
+      {isQuota && (
+        <p className="text-sm text-on-surface-variant mb-5 leading-relaxed max-w-sm mx-auto">
+          These AI scans cost real money to run. Plants Pack runs on about €70 a month
+          with no ads or investors — supporters keep the tools free and get unlimited scans.
+        </p>
+      )}
       <div className="flex flex-col gap-2">
         {isQuota && tier === 'guest' && (
           <Link href="/login" className="px-5 py-3 rounded-xl bg-primary text-on-primary font-semibold">
