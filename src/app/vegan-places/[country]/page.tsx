@@ -93,13 +93,20 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const eatDominant = totalPlaces >= 5 && eatShare >= 0.6
   const placeTerm = eatDominant ? 'Restaurants' : 'Places'
 
+  // Honesty (2026-07-22): titles previously claimed "Verified"/"Hand-Verified"
+  // Spots, but totalPlaces/totalFv come from the directory_cities MV which
+  // counts by vegan_level with NO is_verified filter — so most are unverified
+  // OSM/imports (e.g. Brazil: 349 fully_vegan, 0 admin-verified). Per the
+  // no-marketing-BS rule we only claim what's provably true of every row:
+  // totalFv = places classified/listed 100% vegan; genuine admin verification
+  // shows as the per-place "Confirmed" badge, not a hub-level count.
   const title = isFullyVeganMode
-    ? `100% Vegan in ${countryName} — ${totalFv} Hand-Verified Spots | Plants Pack`
+    ? `100% Vegan in ${countryName} — ${totalFv} Fully Vegan ${totalFv === 1 ? 'Spot' : 'Spots'} | Plants Pack`
     : cities.length > 1
       ? `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | Plants Pack`
-      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Verified Spots | Plants Pack`
+      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} ${totalPlaces === 1 ? 'Spot' : 'Spots'} | Plants Pack`
 
-  const fvDesc = `Manually verified directory of ${totalFv} fully vegan ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName}: restaurants, cafés, bakeries, sanctuaries and stores. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
+  const fvDesc = `${totalFv} ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName} listed as 100% vegan — fully plant-based restaurants, cafés, bakeries and stores. Admin-confirmed spots carry a verified badge. Free, ad-free, no paid listings.`
 
   const canonical = isFullyVeganMode
     ? `https://www.plantspack.com/vegan-places/${country}/fully-vegan`
@@ -259,7 +266,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `100% Vegan Places in ${countryName}`,
-    description: `Manually verified 100% vegan venues in ${countryName}.`,
+    description: `Venues in ${countryName} with fully plant-based (100% vegan) menus.`,
     numberOfItems: fvSet.length,
     itemListElement: fvSet.slice(0, 200).map((p: any, i: number) => ({
       '@type': 'ListItem',
@@ -307,7 +314,7 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
           <p className="text-on-surface-variant text-base mb-3">
             {totalPlaces > 0
               ? isFullyVeganMode
-                ? <>{totalFv} fully vegan {totalFv === 1 ? 'venue' : 'venues'} across {cities.length} {cities.length === 1 ? 'city' : 'cities'}, hand-verified against each venue&apos;s own website.</>
+                ? <>{totalFv} fully vegan {totalFv === 1 ? 'venue' : 'venues'} across {cities.length} {cities.length === 1 ? 'city' : 'cities'}, listed with 100% plant-based menus{fvAdminReviewed > 0 ? <>; {fvAdminReviewed} admin-verified against the venue&apos;s own website</> : null}.</>
                 : <><FilteredTotal total={totalPlaces} fullyVegan={totalFv} />{' '}
                     <FilteredLabel allLabel="vegan and vegan-friendly" veganLabel="fully vegan" />{' '}
                     places across {cities.length} {cities.length === 1 ? 'city' : 'cities'}<FullyVeganNote count={totalFv} />.</>
@@ -500,9 +507,11 @@ export default async function CountryPage({ params, searchParams }: PageProps) {
             </h2>
             {isFullyVeganMode && (
               <section className="mb-6 rounded-2xl bg-emerald-50 ghost-border border-emerald-100/80 p-5 text-sm leading-relaxed text-on-surface">
-                <h3 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is verified</h3>
+                <h3 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is compiled</h3>
                 <p className="mb-2">
-                  Every venue here was opened on its own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs), and confirmed currently open before being tagged 100% vegan. {fvAdminReviewed} of {fvSet.length} entries are at the highest verification tier (admin-reviewed){fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}.
+                  {fvAdminReviewed > 0
+                    ? `${fvAdminReviewed} of ${fvSet.length} ${fvSet.length === 1 ? 'venue' : 'venues'} here are at our highest verification tier — opened on their own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs) and confirmed currently open before being tagged 100% vegan${fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}. The rest are listed as 100% vegan from vegan-first source data and haven't been individually re-checked yet.`
+                    : `These ${fvSet.length} ${fvSet.length === 1 ? 'venue is' : 'venues are'} listed as 100% vegan based on vegan-first source data (OpenStreetMap, VegGuide, HappyCow and local vegan blogs). None have been individually admin-verified against the venue's own website yet — once checked, a venue carries a "Confirmed" badge on its page.`}
                 </p>
                 <p className="text-xs text-on-surface-variant">
                   Full audit methodology: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>. Found a place we have classified wrong, or know of a fully vegan venue in {countryName} that should be here? Use Suggest Correction on any place page or write to <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.

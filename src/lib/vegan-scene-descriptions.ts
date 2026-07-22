@@ -121,6 +121,30 @@ const COUNTRY_CONTEXT: Record<string, { veganCulture: string; localDishes: strin
     veganCulture: 'despite challenges, Ukrainian cities maintain passionate vegan communities',
     localDishes: 'vegan borscht, plant-based varenyky, and Ukrainian-style pickled vegetables',
   },
+  'United States': {
+    veganCulture: 'the US is home to North America\'s largest plant-based market — Portland packs in the most vegan spots per capita, while New York and Los Angeles field thousands between them',
+    localDishes: 'vegan soul food, plant-based burgers and mac & cheese, dairy-free cheesecake, and California-style grain bowls',
+  },
+  'Canada': {
+    veganCulture: 'Canada\'s plant-based scene clusters in Montreal, Vancouver and Toronto, with British Columbia — led by Victoria — regularly topping national vegan-friendliness rankings',
+    localDishes: 'vegan poutine, plant-based butter tarts, and dairy-free maple treats',
+  },
+  'Japan': {
+    veganCulture: 'Japan\'s Buddhist temple tradition of shōjin ryōri has refined plant-based cooking over centuries, and Kyoto and Tokyo now pair it with a fast-growing modern vegan scene',
+    localDishes: 'vegan ramen, shōjin ryōri temple cuisine, plant-based sushi, and dairy-free matcha desserts',
+  },
+  'India': {
+    veganCulture: 'India has the world\'s largest vegetarian population, and while traditional cooking leans heavily on dairy such as ghee and paneer, its Jain and South Indian kitchens produce some of the most naturally plant-based food anywhere',
+    localDishes: 'masala dosa, chana masala, vegetable biryani, and coconut-based South Indian curries',
+  },
+  'Brazil': {
+    veganCulture: 'Brazil\'s plant-based movement is the largest in Latin America, centred on São Paulo where dozens of fully vegan kitchens — including fine-dining names on Latin America\'s 50 Best — have reinvented local classics',
+    localDishes: 'vegan feijoada, plant-based coxinha, dairy-free pão de queijo, and açaí bowls',
+  },
+  'Thailand': {
+    veganCulture: 'Thailand\'s Buddhist "jay" (เจ) tradition — celebrated each year at the Phuket Vegetarian Festival — is strictly plant-based, so vegan food runs deep well beyond the modern cafés of Bangkok and Chiang Mai',
+    localDishes: 'vegan pad thai, plant-based green curry, mango sticky rice, and jay street food',
+  },
 }
 
 const CITY_CONTEXT: Record<string, string> = {

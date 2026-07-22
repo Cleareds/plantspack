@@ -38,6 +38,17 @@ import AddToPackButton from '@/components/places/AddToPackButton'
 import PlaceImage from '@/components/places/PlaceImage'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { getCityDishChips } from '@/lib/dish-page-data'
+import { unstable_cache } from 'next/cache'
+
+// Cache dish-chip computation per (country, city) for 24h so the "Best vegan
+// {dish} in {city}" links are computed once per city, not once per place-page
+// render across the 54K place corpus. Keyed by args (country, city).
+const getCachedCityDishChips = unstable_cache(
+  async (country: string, city: string) => getCityDishChips(country, city),
+  ['place-city-dish-chips-v1'],
+  { revalidate: 86400 },
+)
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
@@ -454,6 +465,20 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
       .map(([city, count]) => ({ city, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 3)
+  }
+
+  // "Best vegan {dish} in {city}" — SSR internal links from each place page
+  // into the city's dish pages (/…/best-vegan/{dish}). Dish pages win the
+  // high-CTR "vegan {dish} {city}" query pattern (GSC: vegan sushi/pizza/
+  // crepes {city} convert at 15-33% when they hit page 1), so funnelling
+  // link equity from every place page into them is the highest-leverage
+  // internal link we have. Only lists dishes with >=3 places (getCityDishChips
+  // enforces the density gate), so we never link to a noindexed thin page.
+  // Cached per city for 24h so this is computed once per city, not once per
+  // place-page render across the 54K place corpus.
+  let cityDishChips: { slug: string; label: string; count: number }[] = []
+  if (place.city && place.country) {
+    cityDishChips = (await getCachedCityDishChips(place.country, place.city)).slice(0, 8)
   }
 
   // JSON-LD for LocalBusiness
@@ -1074,6 +1099,30 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   All vegan places in {place.city} →
                 </Link>
               </p>
+            </div>
+          )}
+
+          {/* Best vegan {dish} in {city} — SSR internal links into the
+              city's dish pages. Feeds link equity to the pages that win the
+              high-CTR "vegan {dish} {city}" query pattern. */}
+          {cityDishChips.length > 0 && place.city && place.country && (
+            <div className="p-6 border-t border-outline-variant/10">
+              <h2 className="text-lg font-semibold text-on-surface mb-4">
+                Best vegan dishes in {place.city}
+              </h2>
+              <ul className="flex flex-wrap gap-2">
+                {cityDishChips.map((d) => (
+                  <li key={d.slug}>
+                    <Link
+                      href={`/vegan-places/${slugifyCityOrCountry(place.country || '')}/${slugifyCityOrCountry(place.city || '')}/best-vegan/${d.slug}`}
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-surface-container-lowest ghost-border hover:border-primary/30 text-sm transition-colors"
+                    >
+                      <span className="font-medium text-on-surface">Best vegan {d.label.toLowerCase()}</span>
+                      <span className="text-[11px] text-on-surface-variant">{d.count}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 

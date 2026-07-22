@@ -181,8 +181,10 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
       : `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | Plants Pack`
     : `Vegan ${placeTerm} in ${locLabel}${countSuffix} | Plants Pack`
 
-  // FV-mode-specific meta description that emphasises hand-verification
-  const fvDesc = `Manually verified directory of ${places.length} fully vegan ${places.length === 1 ? 'venue' : 'venues'} in ${cityName}, ${countryName}. Each entry hand-checked against the venue's own website. Free, ad-free, no paid listings.`
+  // FV-mode meta description. Honest: "fully vegan" is the vegan_level
+  // classification (source-provided for imports), NOT an is_verified flag —
+  // so we say "listed as 100% vegan", not "manually verified/hand-checked".
+  const fvDesc = `${places.length} ${places.length === 1 ? 'venue' : 'venues'} in ${cityName}, ${countryName} listed as 100% vegan — fully plant-based restaurants, cafés, bakeries and stores. Admin-confirmed spots carry a verified badge. Free, ad-free, no paid listings.`
 
   // Per-city og:image - improves SERP rich snippets and social previews.
   // When the city has no hero image on disk, return undefined so Next.js
@@ -592,7 +594,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `100% Vegan Places in ${cityName}, ${countryName}`,
-    description: `Manually verified 100% vegan venues in ${cityName}, ${countryName}.`,
+    description: `Venues in ${cityName}, ${countryName} with fully plant-based (100% vegan) menus.`,
     numberOfItems: fvSet.length,
     itemListElement: fvSet.map((p: Place, i: number) => ({
       '@type': 'ListItem',
@@ -717,7 +719,7 @@ export default async function CityPage({ params, searchParams }: PageProps) {
               ? (() => {
                   const fv = places.filter((p: any) => p.vegan_level === 'fully_vegan').length
                   if (isFullyVeganMode) {
-                    return <>{places.length} fully vegan {places.length === 1 ? 'place' : 'places'} in {cityName}, {countryName}, hand-verified against each venue&apos;s own website.</>
+                    return <>{places.length} fully vegan {places.length === 1 ? 'place' : 'places'} in {cityName}, {countryName}, listed with 100% plant-based menus{fvAdminReviewed > 0 ? <>; {fvAdminReviewed} admin-verified against the venue&apos;s own website</> : null}.</>
                   }
                   return (
                     <>
@@ -763,9 +765,11 @@ export default async function CityPage({ params, searchParams }: PageProps) {
                     systems can quote it as a reliability signal. */}
             {isFullyVeganMode && (
               <section className="mb-6 rounded-2xl bg-emerald-50 ghost-border border-emerald-100/80 p-5 text-sm leading-relaxed text-on-surface">
-                <h2 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is verified</h2>
+                <h2 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is compiled</h2>
                 <p className="mb-2">
-                  Every venue above was opened on its own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs), and confirmed currently open before being tagged 100% vegan. {fvAdminReviewed} of {fvSet.length} entries here are at the highest verification tier (admin-reviewed){fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}.
+                  {fvAdminReviewed > 0
+                    ? `${fvAdminReviewed} of ${fvSet.length} ${fvSet.length === 1 ? 'venue' : 'venues'} here are at our highest verification tier — opened on their own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs) and confirmed currently open before being tagged 100% vegan${fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}. The rest are listed as 100% vegan from vegan-first source data and haven't been individually re-checked yet.`
+                    : `These ${fvSet.length} ${fvSet.length === 1 ? 'venue is' : 'venues are'} listed as 100% vegan based on vegan-first source data (OpenStreetMap, VegGuide, HappyCow and local vegan blogs). None have been individually admin-verified against the venue's own website yet — once checked, a venue carries a "Confirmed" badge on its page.`}
                 </p>
                 <p className="text-xs text-on-surface-variant">
                   Full audit methodology: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>. Found a place we have classified wrong, or know of a fully vegan venue in {cityName} that should be here? Use Suggest Correction on any place page or write to <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.
