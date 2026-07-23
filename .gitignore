@@ -148,3 +148,6 @@ reports/*.log
 .event-routine-state
 .seo-monitor-state.json
 backups/
+
+# Mobile app is its own repo (papasoft23/plantspack-mobile), nested here with its own .git
+mobileapp/
