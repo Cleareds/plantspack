@@ -64,7 +64,11 @@ export async function preClassify(
   })
 
   const answer = (resp.choices?.[0]?.message?.content ?? '').trim().toUpperCase()
-  const inTok = resp.usage?.prompt_tokens ?? 800
+  // gpt-4o-mini bills images at ~33x the token count of the larger models, so
+  // even a `detail: 'low'` image lands around 2,850 prompt tokens (measured
+  // 2026-07-25). The old 800-token fallback under-logged the cost 3.5x whenever
+  // the usage block was missing, which quietly ate into the daily budget cap.
+  const inTok = resp.usage?.prompt_tokens ?? 2900
   const outTok = resp.usage?.completion_tokens ?? 2
   return {
     ok: answer.startsWith('Y'),

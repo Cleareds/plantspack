@@ -389,7 +389,8 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
       {isQuota && (
         <p className="text-sm text-on-surface-variant mb-5 leading-relaxed max-w-sm mx-auto">
           These AI scans cost real money to run. Plants Pack runs on about €70 a month
-          with no ads or investors — supporters keep the tools free and get unlimited scans.
+          with no ads or investors — supporters keep the tools free and get unlimited scans
+          (up to $1 of AI cost a month, which is roughly 200 label scans).
         </p>
       )}
       <div className="flex flex-col gap-2">

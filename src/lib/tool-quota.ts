@@ -18,6 +18,19 @@ const SUPPORTER_MONTHLY_BUDGET_USD = 1.0
 // Global daily $ ceiling. Kill switch if something goes wrong.
 const GLOBAL_DAILY_BUDGET_USD = 5.0
 
+// Guest scans are counted per guest_id, which is a client-supplied value (a
+// cookie on web, an `x-guest-id` header from the app). Anyone can rotate it and
+// get a fresh monthly allowance, so guest_id alone is a nudge, not a limit.
+// These two per-IP daily caps are the actual backstop: generous enough that a
+// shared café/carrier NAT never blocks real users, tight enough that grinding
+// the endpoint costs us cents rather than the whole daily budget.
+const GUEST_IP_DAILY_LIMIT = 8
+
+// Pre-classifier rejects don't consume a monthly scan (the user got nothing),
+// but they DO cost money — roughly $0.0005 each. Without a cap, rejects are a
+// free unlimited spend channel. Applies to every non-admin tier.
+const REJECT_IP_DAILY_LIMIT = 10
+
 // Real paid subscription_tier values in the DB are 'medium' (the €3/month
 // Supporter tier) and legacy 'premium'. The earlier set used 'supporter' /
 // 'business', which NEVER exist in the DB — so paying 'medium' supporters were
@@ -96,6 +109,76 @@ async function getTier(userId: string | null): Promise<UserTier> {
   return 'user'
 }
 
+/**
+ * Sum cost_usd over a window. PostgREST caps a single read at 1000 rows, so the
+ * previous `select('cost_usd').gte(...)` + JS reduce silently under-counted once
+ * a day crossed ~1000 scans — at ~$0.005/scan that ceiling sits just under the
+ * $5 kill switch, so the switch could never actually trip. Page through instead
+ * and stop early once we're past the ceiling we're testing against.
+ */
+async function sumCostSince(
+  sb: ReturnType<typeof adminClient>,
+  sinceIso: string,
+  opts: { userId?: string; stopAtUsd?: number } = {},
+): Promise<number> {
+  const PAGE = 1000
+  let total = 0
+  for (let page = 0; page < 100; page++) {
+    let q = sb
+      .from('tool_scans')
+      .select('cost_usd')
+      .gte('created_at', sinceIso)
+      .order('created_at', { ascending: true })
+      .range(page * PAGE, page * PAGE + PAGE - 1)
+    if (opts.userId) q = q.eq('user_id', opts.userId)
+    const { data, error } = await q
+    if (error || !data) break
+    total += data.reduce((s, r) => s + Number(r.cost_usd ?? 0), 0)
+    if (data.length < PAGE) break
+    if (opts.stopAtUsd !== undefined && total >= opts.stopAtUsd) break
+  }
+  return total
+}
+
+/**
+ * Daily abuse counters. Guests are keyed on IP hash — the one identifier they
+ * can't rotate at will — while signed-in users are keyed on their own account so
+ * that a shared carrier/office IP can never block them for someone else's
+ * behaviour.
+ */
+async function dailyCounts(
+  sb: ReturnType<typeof adminClient>,
+  ctx: QuotaContext,
+  tier: UserTier,
+  dayStartIso: string,
+): Promise<{ rejects: number; guestScans: number }> {
+  const ipHash = ctx.ip ? hashIp(ctx.ip) : null
+  const actor: { col: 'ip_hash' | 'guest_id' | 'user_id'; val: string } | null =
+    tier === 'guest'
+      ? ipHash
+        ? { col: 'ip_hash', val: ipHash }
+        : ctx.guestId
+          ? { col: 'guest_id', val: ctx.guestId }
+          : null
+      : ctx.userId
+        ? { col: 'user_id', val: ctx.userId }
+        : null
+
+  // Only the two AI tools cost money. Barcode/cosmetics lookups also land in
+  // tool_scans (as free history rows) and must never consume an AI allowance.
+  const AI_TOOLS = ['ingredient', 'menu']
+  const rejectQ = sb.from('tool_scans').select('id', { count: 'exact', head: true })
+    .in('tool', AI_TOOLS).eq('rejected', true).gte('created_at', dayStartIso)
+  const guestQ = sb.from('tool_scans').select('id', { count: 'exact', head: true })
+    .in('tool', AI_TOOLS).is('user_id', null).eq('rejected', false).gte('created_at', dayStartIso)
+  if (actor) {
+    rejectQ.eq(actor.col, actor.val)
+    guestQ.eq(actor.col, actor.val)
+  }
+  const [rej, gst] = await Promise.all([rejectQ, guestQ])
+  return { rejects: rej.count ?? 0, guestScans: gst.count ?? 0 }
+}
+
 export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
   const sb = adminClient()
   const tier = await getTier(ctx.userId)
@@ -141,16 +224,37 @@ export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
   // 1. Global kill switch
   const dayStart = new Date()
   dayStart.setUTCHours(0, 0, 0, 0)
-  const { data: dailySpend } = await sb
-    .from('tool_scans')
-    .select('cost_usd')
-    .gte('created_at', dayStart.toISOString())
-  const todayUsd = (dailySpend ?? []).reduce((s, r) => s + Number(r.cost_usd ?? 0), 0)
+  const todayUsd = await sumCostSince(sb, dayStart.toISOString(), {
+    stopAtUsd: GLOBAL_DAILY_BUDGET_USD,
+  })
   if (todayUsd >= GLOBAL_DAILY_BUDGET_USD) {
     return { allowed: false, tier, reason: 'Daily scan budget reached. Try again tomorrow.' }
   }
 
-  // 2. Per-user limits
+  // 2. Daily backstops. These sit in front of the monthly per-identity limits
+  //    because guest_id is client-supplied and trivially rotated. Supporters are
+  //    skipped: their rejects are already billed against the $1 monthly budget
+  //    below, so they're bounded without an extra wall in a paying user's face.
+  const daily =
+    tier === 'supporter'
+      ? { rejects: 0, guestScans: 0 }
+      : await dailyCounts(sb, ctx, tier, dayStart.toISOString())
+  if (daily.rejects >= REJECT_IP_DAILY_LIMIT) {
+    return {
+      allowed: false,
+      tier,
+      reason: 'Too many unreadable photos today. Try again tomorrow with a clearer shot.',
+    }
+  }
+  if (tier === 'guest' && daily.guestScans >= GUEST_IP_DAILY_LIMIT) {
+    return {
+      allowed: false,
+      tier,
+      reason: 'This network has used its free scans for today. Sign in to keep scanning.',
+    }
+  }
+
+  // 3. Per-identity monthly limits
   if (tier === 'guest') {
     const monthStart = new Date()
     monthStart.setUTCDate(1)
@@ -201,12 +305,10 @@ export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
   const monthStart = new Date()
   monthStart.setUTCDate(1)
   monthStart.setUTCHours(0, 0, 0, 0)
-  const { data: spend } = await sb
-    .from('tool_scans')
-    .select('cost_usd')
-    .eq('user_id', ctx.userId!)
-    .gte('created_at', monthStart.toISOString())
-  const usedUsd = (spend ?? []).reduce((s, r) => s + Number(r.cost_usd ?? 0), 0)
+  const usedUsd = await sumCostSince(sb, monthStart.toISOString(), {
+    userId: ctx.userId!,
+    stopAtUsd: SUPPORTER_MONTHLY_BUDGET_USD,
+  })
   if (usedUsd >= SUPPORTER_MONTHLY_BUDGET_USD) {
     return {
       allowed: false,
@@ -246,4 +348,6 @@ export const LIMITS = {
   USER_MONTHLY_LIMIT,
   SUPPORTER_MONTHLY_BUDGET_USD,
   GLOBAL_DAILY_BUDGET_USD,
+  GUEST_IP_DAILY_LIMIT,
+  REJECT_IP_DAILY_LIMIT,
 } as const
