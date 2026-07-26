@@ -385,7 +385,12 @@ async function main() {
   console.log(`\n✓ Inserted.`)
   console.log(`  Public URL: https://www.plantspack.com/place/${data.slug}`)
   console.log(`  Source tag: ${source} / ${source_id}`)
-  console.log(`  Status:     ${PENDING ? 'pending (visible in admin queue)' : 'approved + verified (live)'}`)
+  // Don't print "verified" — this script deliberately writes is_verified=false
+  // and verification_method='imported'. Saying otherwise trains us to believe a
+  // trust signal the row doesn't carry.
+  console.log(
+    `  Status:     ${PENDING ? 'pending (visible in admin queue)' : `live (approved, not admin-verified — L${payload.verification_level}/${payload.verification_method})`}`,
+  )
 }
 
 main().catch(e => { console.error(e); process.exit(1) })
