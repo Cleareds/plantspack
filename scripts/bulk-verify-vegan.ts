@@ -1,6 +1,6 @@
 /**
  * Bulk verifies unverified fully_vegan places using OpenAI gpt-4o-mini-search-preview.
- * Checkpoints to /tmp/vegan-verify-checkpoint.json so it can be resumed.
+ * Checkpoints to data/vegan-verify-checkpoint.json so it can be resumed.
  *
  * Usage:
  *   npx tsx scripts/bulk-verify-vegan.ts            # run live
@@ -11,7 +11,7 @@
 import { config } from 'dotenv'; config({ path: '.env.local' });
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
-import { writeFileSync, readFileSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,7 +20,12 @@ const sb = createClient(
 );
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const CHECKPOINT_FILE = '/tmp/vegan-verify-checkpoint.json';
+// Must match bulk-verify-vegan-fast.ts — the two share this file so runs are
+// additive. Not /tmp: macOS purges it between weekly cron runs, which made the
+// job re-pay for verdicts it already had. See the note in the fast script.
+const CHECKPOINT_DIR = 'data';
+const CHECKPOINT_FILE = `${CHECKPOINT_DIR}/vegan-verify-checkpoint.json`;
+const LEGACY_CHECKPOINT_FILE = '/tmp/vegan-verify-checkpoint.json';
 const CONCURRENCY = 8;
 const BATCH_SLEEP_MS = 500;
 const MAX_RETRIES = 3;
@@ -40,12 +45,18 @@ interface CheckpointEntry {
 }
 
 function loadCheckpoint(): Map<string, CheckpointEntry> {
-  if (!existsSync(CHECKPOINT_FILE)) return new Map();
-  const data = JSON.parse(readFileSync(CHECKPOINT_FILE, 'utf-8')) as CheckpointEntry[];
+  const path = existsSync(CHECKPOINT_FILE)
+    ? CHECKPOINT_FILE
+    : existsSync(LEGACY_CHECKPOINT_FILE)
+      ? LEGACY_CHECKPOINT_FILE
+      : null;
+  if (!path) return new Map();
+  const data = JSON.parse(readFileSync(path, 'utf-8')) as CheckpointEntry[];
   return new Map(data.map(e => [e.id, e]));
 }
 
 function saveCheckpoint(entries: Map<string, CheckpointEntry>) {
+  mkdirSync(CHECKPOINT_DIR, { recursive: true });
   writeFileSync(CHECKPOINT_FILE, JSON.stringify([...entries.values()], null, 2));
 }
 

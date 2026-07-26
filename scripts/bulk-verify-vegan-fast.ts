@@ -20,7 +20,7 @@
 import { config } from 'dotenv'; config({ path: '.env.local' });
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
-import { writeFileSync, readFileSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -29,7 +29,16 @@ const sb = createClient(
 );
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 20000, maxRetries: 0 });
 
-const CHECKPOINT_FILE = '/tmp/vegan-verify-checkpoint.json';
+// Durable, NOT /tmp. This job runs weekly from cron, and macOS purges /tmp
+// files that haven't been touched for ~3 days — so the checkpoint was always
+// gone by the next run. Observed 2026-07-26: the weekly run reported
+// "Checkpoint: 0 already processed" and re-spent 224 calls (91 of them on
+// gpt-4o-mini-search-preview, the priciest model we run) to re-derive 218
+// "uncertain" verdicts it had already paid for the week before. `data/` is
+// gitignored, so this stays local but survives reboots and tmp cleanups.
+const CHECKPOINT_DIR = 'data';
+const CHECKPOINT_FILE = `${CHECKPOINT_DIR}/vegan-verify-checkpoint.json`;
+const LEGACY_CHECKPOINT_FILE = '/tmp/vegan-verify-checkpoint.json';
 
 // Tier 1: description-based. OpenAI usage tier 2 lifts gpt-4o-mini RPM
 // from 500 to 5,000 so we can crank.
@@ -69,11 +78,18 @@ interface CheckpointEntry {
 }
 
 function loadCheckpoint(): Map<string, CheckpointEntry> {
-  if (!existsSync(CHECKPOINT_FILE)) return new Map();
-  const data = JSON.parse(readFileSync(CHECKPOINT_FILE, 'utf-8')) as CheckpointEntry[];
+  // Fall back to the legacy /tmp copy once, so an in-flight week isn't re-spent.
+  const path = existsSync(CHECKPOINT_FILE)
+    ? CHECKPOINT_FILE
+    : existsSync(LEGACY_CHECKPOINT_FILE)
+      ? LEGACY_CHECKPOINT_FILE
+      : null;
+  if (!path) return new Map();
+  const data = JSON.parse(readFileSync(path, 'utf-8')) as CheckpointEntry[];
   return new Map(data.map(e => [e.id, e]));
 }
 function saveCheckpoint(entries: Map<string, CheckpointEntry>) {
+  mkdirSync(CHECKPOINT_DIR, { recursive: true });
   writeFileSync(CHECKPOINT_FILE, JSON.stringify([...entries.values()], null, 2));
 }
 
