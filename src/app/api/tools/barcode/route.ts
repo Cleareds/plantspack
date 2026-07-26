@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { findECodeHits, findProblematicECodes, type ECode } from '@/lib/e-codes'
-import { findAllergenHits } from '@/lib/allergens'
+import { findAllergenMatches, type AllergenMatch } from '@/lib/allergens'
 import { findCosmeticHits, type MatchedIngredient } from '@/lib/cosmetic-ingredients'
 
 export const runtime = 'nodejs'
@@ -59,6 +59,7 @@ export interface BarcodeResult {
   ingredients: string | null
   nonVeganHits: string[]
   allergenHits: string[]
+  allergenMatches: AllergenMatch[]
   /** E-codes found in the ingredient list (lookup data + status). Empty when
    *  no codes detected. Includes vegan ones so the UI can surface a full
    *  "what's in this" view if desired. */
@@ -213,6 +214,7 @@ export async function GET(req: NextRequest) {
       ingredients: null,
       nonVeganHits: [],
       allergenHits: [],
+      allergenMatches: [],
       eCodeHits: [],
       labels: [],
       source: sourceTag,
@@ -265,7 +267,12 @@ export async function GET(req: NextRequest) {
     })
   }
 
-  const allergenHits = findAllergenHits(ingredientsText, allergens)
+  // 'contains' vs 'may contain': the matcher knows which side of a
+  // precautionary warning each match sat on, so a "may contain nuts" line is
+  // no longer reported the same way as nuts in the ingredient list.
+  const allergenKinds = new Map<string, AllergenMatch['kind']>()
+  for (const m of findAllergenMatches(ingredientsText, allergens)) allergenKinds.set(m.allergen, m.kind)
+
   // E-code scan covers ingredient lists that the OFF analysis tags miss
   // (e.g. an "E441" in a body of text where OFF didn't classify the
   // additive). Surfaced in the response so the UI can render explanations.
@@ -273,15 +280,17 @@ export async function GET(req: NextRequest) {
   // not E-codes (except CI 75470 which our cosmetic dictionary covers).
   const eCodeHits = kind === 'cosmetics' ? [] : findECodeHits(ingredientsText)
   // Also fold E-code-tagged allergens into the allergen hit list if the
-  // user is sensitive to them (e.g. E966 lactitol → dairy).
+  // user is sensitive to them (e.g. E966 lactitol → dairy). An additive is an
+  // ingredient, so these are always 'contains'.
   if (allergens.length > 0) {
     const allergenSet = new Set(allergens)
     for (const e of eCodeHits) {
-      if (e.allergen && allergenSet.has(e.allergen) && !allergenHits.includes(e.allergen)) {
-        allergenHits.push(e.allergen)
-      }
+      if (e.allergen && allergenSet.has(e.allergen)) allergenKinds.set(e.allergen, 'contains')
     }
   }
+  const allergenMatches: AllergenMatch[] = Array.from(allergenKinds, ([allergen, kind]) => ({ allergen, kind }))
+  // Plain array kept for clients that predate allergenMatches.
+  const allergenHits = allergenMatches.map((m) => m.allergen)
 
   const result: BarcodeResult = {
     barcode,
@@ -293,6 +302,7 @@ export async function GET(req: NextRequest) {
     ingredients: ingredientsText || null,
     nonVeganHits: v.hits,
     allergenHits,
+    allergenMatches,
     eCodeHits,
     cosmeticHits,
     labels: ((p.labels_tags as string[]) ?? []).filter((l) => l.startsWith('en:')).map((l) => l.replace('en:', '')),

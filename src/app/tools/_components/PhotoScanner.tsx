@@ -414,6 +414,61 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
   )
 }
 
+/**
+ * Allergen findings, kept on their own axis away from the vegan verdict, and
+ * split by whether the allergen is actually an ingredient or only a
+ * precautionary "may contain" warning. Those are different decisions: one is in
+ * the recipe, the other is shared-equipment risk that many people knowingly
+ * accept. Older API responses only sent a flat list — treat those as "contains",
+ * which is the safer reading.
+ */
+function AllergenPanel({ result }: { result: ScanResult }) {
+  const matches =
+    result.allergenMatches?.length
+      ? result.allergenMatches
+      : (result.allergenHits ?? []).map((allergen) => ({ allergen, kind: 'contains' as const }))
+  if (matches.length === 0) return null
+
+  const contains = matches.filter((m) => m.kind === 'contains').map((m) => labelAllergen(m.allergen))
+  const mayContain = matches.filter((m) => m.kind === 'may_contain').map((m) => labelAllergen(m.allergen))
+  const hard = contains.length > 0
+
+  return (
+    <div
+      className={`flex gap-2 items-start p-3 rounded-lg mb-4 border ${
+        hard ? 'bg-warning/10 border-warning/30' : 'bg-surface-variant/40 border-transparent'
+      }`}
+    >
+      <ShieldAlert
+        className={`h-4 w-4 flex-shrink-0 mt-0.5 ${hard ? 'text-warning' : 'text-on-surface-variant'}`}
+      />
+      <div className="text-sm space-y-1">
+        <div
+          className={`font-semibold text-xs uppercase tracking-wider ${
+            hard ? 'text-warning' : 'text-on-surface-variant'
+          }`}
+        >
+          Your allergens
+        </div>
+        {contains.length > 0 && (
+          <div className="text-on-surface leading-relaxed">
+            <span className="font-semibold">Contains:</span> {contains.join(', ')}.
+          </div>
+        )}
+        {mayContain.length > 0 && (
+          <div className="text-on-surface leading-relaxed">
+            <span className="font-semibold">May contain:</span> {mayContain.join(', ')} — a
+            cross-contamination warning, not an ingredient.
+          </div>
+        )}
+        <div className="text-xs text-on-surface-variant">
+          AI and keyword check, not a lab test. Confirm on the package or with staff.
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ResultCard({
   result,
   cached,
@@ -456,21 +511,7 @@ function ResultCard({
         {/* Allergens are a separate axis from the vegan verdict — a vegan
             product can still be unsafe for this user. Never folded into the
             verdict card above. */}
-        {result.allergenHits && result.allergenHits.length > 0 && (
-          <div className="flex gap-2 items-start p-3 rounded-lg bg-warning/10 border border-warning/30 mb-4">
-            <ShieldAlert className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <div className="font-semibold text-warning text-xs uppercase tracking-wider mb-0.5">
-                Your allergens
-              </div>
-              <div className="text-on-surface leading-relaxed">
-                Flagged: {result.allergenHits.map(labelAllergen).join(', ')}. This is a
-                keyword and AI check, not a lab test — confirm on the package or with staff,
-                and treat &quot;may contain&quot; warnings as your own call.
-              </div>
-            </div>
-          </div>
-        )}
+        <AllergenPanel result={result} />
 
         {result.visibility && result.visibility.fully_readable === false && result.visibility.issues && (
           <div className="flex gap-2 items-start p-3 rounded-lg bg-warning/5 mb-4">

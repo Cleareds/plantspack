@@ -5,7 +5,7 @@ import { createClient as createServerClient } from '@/lib/supabase-server'
 import { checkQuota, logScan, hashImage, type ToolName, LIMITS } from '@/lib/tool-quota'
 import { preClassify, scanImage, scanText } from '@/lib/tool-scanner'
 import { findECodeHits } from '@/lib/e-codes'
-import { findAllergenHits } from '@/lib/allergens'
+import { findAllergenMatches, hasPrecautionaryMarker } from '@/lib/allergens'
 import crypto from 'crypto'
 
 export const runtime = 'nodejs'
@@ -205,24 +205,38 @@ export async function POST(req: NextRequest) {
     // populate the field, so the deterministic passes act as a backstop.
     if (allergens.length > 0) {
       const wanted = new Set(allergens)
-      const found = new Set<string>()
+
+      // The keyword matcher goes first and WINS, because it's the only source
+      // that knows where in the text the match sat — before or after a "may
+      // contain" line. The model and the E-code pass can only assert presence,
+      // so letting them contribute a kind would silently upgrade every
+      // cross-contamination warning to a flat "contains".
+      const kinds = new Map<string, 'contains' | 'may_contain'>()
+      for (const m of findAllergenMatches(haystack, allergens)) {
+        if (wanted.has(m.allergen)) kinds.set(m.allergen, m.kind)
+      }
+
+      // Presence-only sources fill gaps the keywords missed. Their kind comes
+      // from whatever text they came with, defaulting to 'contains'.
+      const fill = (a: string, context?: string) => {
+        const key = a.trim().toLowerCase()
+        if (!key || !wanted.has(key) || kinds.has(key)) return
+        kinds.set(key, context && hasPrecautionaryMarker(context) ? 'may_contain' : 'contains')
+      }
       const modelReported = (result as { allergens_found?: unknown }).allergens_found
-      if (Array.isArray(modelReported)) {
-        for (const a of modelReported) {
-          const key = String(a).trim().toLowerCase()
-          if (wanted.has(key)) found.add(key)
-        }
-      }
+      if (Array.isArray(modelReported)) for (const a of modelReported) fill(String(a))
       for (const item of result.items ?? []) {
-        const key = item.allergen?.trim().toLowerCase()
-        if (key && wanted.has(key)) found.add(key)
+        if (item.allergen) fill(item.allergen, `${item.name} ${item.note ?? ''}`)
       }
-      for (const a of findAllergenHits(haystack, allergens)) found.add(a)
       for (const e of result.eCodeHits ?? []) {
-        if (e.allergen && wanted.has(e.allergen)) found.add(e.allergen)
+        if (e.allergen) fill(e.allergen)
       }
+
       delete (result as { allergens_found?: unknown }).allergens_found
-      if (found.size > 0) result.allergenHits = Array.from(found)
+      if (kinds.size > 0) {
+        result.allergenMatches = Array.from(kinds, ([allergen, kind]) => ({ allergen, kind }))
+        result.allergenHits = Array.from(kinds.keys())
+      }
     }
     await logScan({ ctx, costUsd: preCost + costUsd, result, allergens })
     return NextResponse.json({ result, tier: quota.tier, cached: false })

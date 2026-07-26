@@ -75,8 +75,12 @@ export interface ScanResult {
     allergen?: string
   }[]
   /** Union of the user's allergens found anywhere in this scan. Reported by the
-   *  model and cross-checked server-side against the shared keyword matcher. */
+   *  model and cross-checked server-side against the shared keyword matcher.
+   *  Kept as a plain string array for clients that predate allergenMatches. */
   allergenHits?: string[]
+  /** Same findings, split by whether the allergen is an actual ingredient or
+   *  only a precautionary "may contain" warning. */
+  allergenMatches?: { allergen: string; kind: 'contains' | 'may_contain' }[]
   /** E-codes detected in the OCR'd / submitted text (ingredient scanner).
    *  Populated by api/tools/scan after the model returns its verdict;
    *  surfaces additive-level explanations in the UI. */
