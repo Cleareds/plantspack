@@ -9,6 +9,7 @@
  */
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
+import { INGREDIENT_ARTICLES, TRAVEL_GUIDES } from '@/lib/vegan-content'
 import { log } from '@/lib/logger'
 
 const SITE_URL = 'https://www.plantspack.com'
@@ -206,7 +207,36 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: `${SITE_URL}/support` },
       { url: `${SITE_URL}/about` },
       { url: `${SITE_URL}/contact` },
+      // Evergreen reference surfaces. These were absent from every segment
+      // until 2026-07-26, so the whole /vegan hub and all the tools were
+      // discoverable only via internal links and never advertised to Google —
+      // which matched their GSC numbers (tools: 0 clicks / 80 impressions).
+      { url: `${SITE_URL}/vegan` },
+      { url: `${SITE_URL}/vegan/health-consensus` },
+      { url: `${SITE_URL}/library` },
+      { url: `${SITE_URL}/glossary` },
+      { url: `${SITE_URL}/methodology` },
+      { url: `${SITE_URL}/vegan-score` },
+      { url: `${SITE_URL}/roadmap` },
+      { url: `${SITE_URL}/tools` },
+      { url: `${SITE_URL}/tools/ingredient-scanner` },
+      { url: `${SITE_URL}/tools/menu-scanner` },
+      { url: `${SITE_URL}/tools/barcode` },
+      { url: `${SITE_URL}/tools/substitutes` },
+      { url: `${SITE_URL}/tools/baking` },
+      { url: `${SITE_URL}/tools/drinks` },
+      { url: `${SITE_URL}/tools/cards` },
+      { url: `${SITE_URL}/tools/calculator` },
     )
+
+    // "Is X vegan?" ingredient articles and country travel guides. Driven off
+    // the same registries the pages use, so adding an article ships its URL.
+    for (const a of INGREDIENT_ARTICLES) {
+      entries.push({ url: `${SITE_URL}/vegan/${a.slug}`, lastModified: a.updatedAt })
+    }
+    for (const g of TRAVEL_GUIDES) {
+      entries.push({ url: `${SITE_URL}/vegan/travel/${g.countrySlug}` })
+    }
 
     // Blog articles — high-priority evergreen content, sitemap-priority tier.
     for (const post of posts) {

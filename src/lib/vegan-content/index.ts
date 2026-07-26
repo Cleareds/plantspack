@@ -12,6 +12,11 @@ import { eggsArticle } from './ingredients/eggs'
 import { proteinArticle } from './ingredients/protein'
 import { eCodesArticle } from './ingredients/e-codes'
 import { veganVsVegetarianArticle } from './ingredients/vegan-vs-vegetarian'
+import { frenchFriesArticle } from './ingredients/french-fries'
+import { worcestershireSauceArticle } from './ingredients/worcestershire-sauce'
+import { pestoArticle } from './ingredients/pesto'
+import { naanArticle } from './ingredients/naan'
+import { kimchiArticle } from './ingredients/kimchi'
 import { japanGuide } from './travel/japan'
 import { italyGuide } from './travel/italy'
 import { thailandGuide } from './travel/thailand'
@@ -31,6 +36,14 @@ export const INGREDIENT_ARTICLES: IngredientArticle[] = [
   sugarArticle,
   honeyArticle,
   palmOilArticle,
+  // Prepared foods where the animal ingredient is authentic to the recipe rather
+  // than incidental — the cases where "check the label" is the actual answer, so
+  // each one routes to the scanners.
+  frenchFriesArticle,
+  worcestershireSauceArticle,
+  pestoArticle,
+  naanArticle,
+  kimchiArticle,
   // Drinks
   wineArticle,
   beerArticle,

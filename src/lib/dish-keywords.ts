@@ -31,7 +31,7 @@ export interface DishDef {
 export const DISHES: DishDef[] = [
   // Sweet
   { slug: 'donut',       label: 'Donut',        needles: ['donut','doughnut','krapfen','berliner','sufganiyot'], specialised: true },
-  { slug: 'ice-cream',   label: 'Ice cream',    needles: ['ice cream','ice-cream','gelato','sorbet','soft serve','soft-serve','glaceria'], subcategoryHint: 'ice-cream' },
+  { slug: 'ice-cream',   label: 'Ice cream',    needles: ['ice cream','ice-cream','ice_cream','gelato','sorbet','soft serve','soft-serve','glaceria'], subcategoryHint: 'ice-cream' },
   { slug: 'gelato',      label: 'Gelato',       needles: ['gelato','gelateria'], specialised: true },
   { slug: 'cake',        label: 'Cake',         needles: ['cake','tort','torte','gateau','cheesecake'] },
   { slug: 'cheesecake',  label: 'Cheesecake',   needles: ['cheesecake'], specialised: true },
@@ -41,6 +41,8 @@ export const DISHES: DishDef[] = [
   { slug: 'pastry',      label: 'Pastry',       needles: ['pastry','pastries','viennoiserie','patisserie'] },
   { slug: 'croissant',   label: 'Croissant',    needles: ['croissant'] },
   { slug: 'bakery',      label: 'Bakery',       needles: ['bakery','baker','boulangerie','panaderia','panaderia','padaria','bäckerei','panificio'], subcategoryHint: 'bakery' },
+  { slug: 'bagel',       label: 'Bagel',        needles: ['bagel'], specialised: true },
+  { slug: 'dessert',     label: 'Dessert',      needles: ['dessert','postre','dolci','patisserie'] },
 
   // Italian / Mediterranean
   { slug: 'pizza',       label: 'Pizza',        needles: ['pizza','pizzeria'], subcategoryHint: 'pizzeria' },
@@ -53,9 +55,15 @@ export const DISHES: DishDef[] = [
 
   // Burger & American
   { slug: 'burger',      label: 'Burger',       needles: ['burger','hamburger','smash-burger','smashburger','burgers'], subcategoryHint: 'burger' },
-  { slug: 'hot-dog',     label: 'Hot dog',      needles: ['hot dog','hot-dog','hotdog','frankfurter'] },
+  { slug: 'hot-dog',     label: 'Hot dog',      needles: ['hot dog','hot-dog','hot_dog','hotdog','frankfurter'] },
   { slug: 'bbq',         label: 'BBQ',          needles: ['bbq','barbecue','barbeque','smoked'] },
   { slug: 'mac-and-cheese', label: 'Mac & cheese', needles: ['mac and cheese','mac & cheese','macaroni cheese'] },
+  // Plant versions of traditionally animal dishes — high-intent queries
+  // ("vegan fried chicken berlin"). The label must never contain "vegan": the
+  // page title is already `Best Vegan ${label} in ${city}`.
+  { slug: 'chicken',     label: 'Chicken',      needles: ['chicken','fried chicken','nugget'] },
+  { slug: 'fish-and-chips', label: 'Fish and chips', needles: ['fish and chips','fish_and_chips','fish & chips','fish-and-chips'] },
+  { slug: 'fries',       label: 'Fries',        needles: ['fries','frite','friture','frituur','pommes','patat'] },
 
   // Asian
   { slug: 'ramen',       label: 'Ramen',        needles: ['ramen'], specialised: true },
@@ -66,6 +74,9 @@ export const DISHES: DishDef[] = [
   { slug: 'bao',         label: 'Bao',          needles: ['bao','baozi'] },
   { slug: 'dumpling',    label: 'Dumpling',     needles: ['dumpling','jiaozi','potsticker','gyoza','mandu'] },
   { slug: 'pad-thai',    label: 'Pad Thai',     needles: ['pad thai','pad-thai'], specialised: true },
+  // 'noodle' also matches the cuisine value 'noodles' by substring.
+  { slug: 'noodles',     label: 'Noodles',      needles: ['noodle','nudel'] },
+  { slug: 'indonesian-food', label: 'Indonesian food', needles: ['indonesian','nasi goreng','tempeh warung'] },
   { slug: 'thai',        label: 'Thai food',    needles: ['thai','siam','isan'] },
   { slug: 'curry',       label: 'Curry',        needles: ['curry','curri','tikka','masala'] },
   { slug: 'biryani',     label: 'Biryani',      needles: ['biryani','biriyani'] },
@@ -78,6 +89,11 @@ export const DISHES: DishDef[] = [
   { slug: 'gyros',       label: 'Gyros',        needles: ['gyros','gyro','souvlaki'] },
   { slug: 'mediterranean', label: 'Mediterranean food', needles: ['mediterranean','levantine'] },
   { slug: 'ethiopian',   label: 'Ethiopian food', needles: ['ethiopian','injera','habesha'] },
+  { slug: 'turkish-food', label: 'Turkish food', needles: ['turkish','türkisch','turkiye','anatolian'] },
+  { slug: 'lebanese-food', label: 'Lebanese food', needles: ['lebanese','libanais','libanesisch'] },
+  { slug: 'middle-eastern', label: 'Middle Eastern food', needles: ['middle eastern','middle_eastern','middle-eastern','arab','arabic','syrian','persian'] },
+  { slug: 'greek-food',  label: 'Greek food',   needles: ['greek','griechisch','hellenic'] },
+  { slug: 'moroccan-food', label: 'Moroccan food', needles: ['moroccan','marocain','tagine','tajine'] },
 
   // Mexican / Latin
   { slug: 'taco',        label: 'Taco',         needles: ['taco','tacos','taqueria'], specialised: true },
@@ -85,6 +101,8 @@ export const DISHES: DishDef[] = [
   { slug: 'tamale',      label: 'Tamale',       needles: ['tamale','tamales'] },
   { slug: 'mexican',     label: 'Mexican food', needles: ['mexican','mexicana','mexicano'] },
   { slug: 'arepa',       label: 'Arepa',        needles: ['arepa','arepas'] },
+  { slug: 'brazilian-food', label: 'Brazilian food', needles: ['brazilian','brasileir','feijoada'] },
+  { slug: 'peruvian-food', label: 'Peruvian food', needles: ['peruvian','peruana','ceviche'] },
 
   // Bowl & casual
   { slug: 'bowl',        label: 'Bowl',         needles: ['bowl','poke','poké','rice bowl','grain bowl','buddha bowl'] },
@@ -106,7 +124,7 @@ export const DISHES: DishDef[] = [
   { slug: 'coffee',      label: 'Coffee',       needles: ['coffee','café','cafe','espresso','specialty coffee'], subcategoryHint: 'cafe' },
   { slug: 'smoothie',    label: 'Smoothie',     needles: ['smoothie','juice bar'] },
   { slug: 'matcha',      label: 'Matcha',       needles: ['matcha'] },
-  { slug: 'bubble-tea',  label: 'Bubble tea',   needles: ['bubble tea','boba','milk tea'] },
+  { slug: 'bubble-tea',  label: 'Bubble tea',   needles: ['bubble tea','bubble_tea','boba','milk tea'] },
   { slug: 'kombucha',    label: 'Kombucha',     needles: ['kombucha'] },
 
   // Regional & national
@@ -117,6 +135,11 @@ export const DISHES: DishDef[] = [
   { slug: 'korean-food', label: 'Korean food',  needles: ['korean','bibimbap','kimchi'] },
   { slug: 'chinese-food', label: 'Chinese food', needles: ['chinese','china','sichuan','cantonese'] },
   { slug: 'vietnamese-food', label: 'Vietnamese food', needles: ['vietnamese','viet'] },
+  { slug: 'american-food', label: 'American food', needles: ['american','diner'] },
+  { slug: 'british-food', label: 'British food', needles: ['british','english breakfast','pub food'] },
+  { slug: 'spanish-food', label: 'Spanish food', needles: ['spanish','española','espanola','catalan'] },
+  { slug: 'polish-food', label: 'Polish food',  needles: ['polish','polska','pierogi'] },
+  { slug: 'african-food', label: 'African food', needles: ['african','afrikan','nigerian','senegal'] },
 
   // Allergen / diet niches
   { slug: 'gluten-free', label: 'Gluten-free',  needles: ['gluten-free','gluten free','glutenfree','sans gluten','glutenfrei'] },
