@@ -29,7 +29,18 @@ function track(action: string, placement: string) {
   } catch { /* analytics is best-effort */ }
 }
 
-export default function SupportNudge({ placement = 'profile' }: { placement?: string }) {
+export default function SupportNudge({
+  placement = 'profile',
+  variant = 'default',
+}: {
+  placement?: string
+  /**
+   * 'contributor' reframes the lead for people who've already given us data
+   * (submitters, reviewers) — they've earned an ask that acknowledges it rather
+   * than pitching them cold. The cost numbers stay identical either way.
+   */
+  variant?: 'default' | 'contributor'
+}) {
   const { user } = useAuth()
   const [tier, setTier] = useState<string | null>(null)
   const [stats, setStats] = useState<Stats | null>(null)
@@ -86,8 +97,13 @@ export default function SupportNudge({ placement = 'profile' }: { placement?: st
           <Heart className="h-4 w-4 text-primary fill-primary" />
         </div>
         <div className="min-w-0">
-          <h3 className="font-semibold text-on-surface mb-1">Keep Plants Pack free</h3>
+          <h3 className="font-semibold text-on-surface mb-1">
+            {variant === 'contributor' ? 'You already help build this' : 'Keep Plants Pack free'}
+          </h3>
           <p className="text-sm text-on-surface-variant leading-relaxed mb-4">
+            {variant === 'contributor' && (
+              <>The places and reviews you add are what make this directory worth using. </>
+            )}
             Plants Pack costs about €{cost} a month to run — no ads, no investors.{' '}
             {n > 0 && (
               <>Right now {n === 1 ? 'one supporter covers' : `${n} supporters cover`} about {pct}% of that. </>
