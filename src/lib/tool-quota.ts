@@ -65,7 +65,18 @@ export interface ScanResult {
   verdict: 'vegan' | 'not_vegan' | 'uncertain' | 'unclear' | 'invalid_image'
   summary: string
   visibility?: { fully_readable: boolean; issues?: string }
-  items?: { name: string; status: 'vegan' | 'not_vegan' | 'uncertain'; note?: string }[]
+  items?: {
+    name: string
+    /** Vegan judgement ONLY. Never carries allergen information. */
+    status: 'vegan' | 'not_vegan' | 'uncertain'
+    note?: string
+    /** Which of the user's allergens this item contains, if any. A vegan item
+     *  can carry an allergen — the two signals are independent. */
+    allergen?: string
+  }[]
+  /** Union of the user's allergens found anywhere in this scan. Reported by the
+   *  model and cross-checked server-side against the shared keyword matcher. */
+  allergenHits?: string[]
   /** E-codes detected in the OCR'd / submitted text (ingredient scanner).
    *  Populated by api/tools/scan after the model returns its verdict;
    *  surfaces additive-level explanations in the UI. */

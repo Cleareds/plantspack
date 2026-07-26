@@ -17,8 +17,10 @@ import {
   Image as ImageIcon,
   Plus,
   Eye,
+  ShieldAlert,
 } from 'lucide-react'
 import type { ScanResult, ToolName } from '@/lib/tool-quota'
+import { labelAllergen } from '@/lib/allergens'
 
 type Status = 'idle' | 'loading' | 'scanning' | 'result' | 'error'
 type Mode = 'photo' | 'text'
@@ -451,6 +453,25 @@ function ResultCard({
       <div className="p-5">
         <p className="text-on-surface leading-relaxed mb-4">{result.summary}</p>
 
+        {/* Allergens are a separate axis from the vegan verdict — a vegan
+            product can still be unsafe for this user. Never folded into the
+            verdict card above. */}
+        {result.allergenHits && result.allergenHits.length > 0 && (
+          <div className="flex gap-2 items-start p-3 rounded-lg bg-warning/10 border border-warning/30 mb-4">
+            <ShieldAlert className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <div className="font-semibold text-warning text-xs uppercase tracking-wider mb-0.5">
+                Your allergens
+              </div>
+              <div className="text-on-surface leading-relaxed">
+                Flagged: {result.allergenHits.map(labelAllergen).join(', ')}. This is a
+                keyword and AI check, not a lab test — confirm on the package or with staff,
+                and treat &quot;may contain&quot; warnings as your own call.
+              </div>
+            </div>
+          </div>
+        )}
+
         {result.visibility && result.visibility.fully_readable === false && result.visibility.issues && (
           <div className="flex gap-2 items-start p-3 rounded-lg bg-warning/5 mb-4">
             <Eye className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
@@ -473,7 +494,14 @@ function ResultCard({
                 <div key={i} className={`p-3 rounded-lg ${it.bg}`}>
                   <div className="flex items-baseline justify-between gap-2 mb-1">
                     <span className="font-semibold text-on-surface">{item.name}</span>
-                    <span className={`text-xs font-bold uppercase tracking-wider ${it.text}`}>{it.label}</span>
+                    <span className="flex items-center gap-1.5 flex-shrink-0">
+                      {item.allergen && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-warning/15 text-warning">
+                          {labelAllergen(item.allergen)}
+                        </span>
+                      )}
+                      <span className={`text-xs font-bold uppercase tracking-wider ${it.text}`}>{it.label}</span>
+                    </span>
                   </div>
                   {item.note && <div className="text-sm text-on-surface-variant">{item.note}</div>}
                 </div>

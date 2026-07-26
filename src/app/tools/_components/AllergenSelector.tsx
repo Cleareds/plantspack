@@ -3,35 +3,10 @@
 import { useEffect, useState } from 'react'
 import { ShieldAlert, ChevronDown } from 'lucide-react'
 
-export const COMMON_ALLERGENS = [
-  'gluten',
-  'soy',
-  'nuts',
-  'peanuts',
-  'sesame',
-  'mustard',
-  'celery',
-  'lupin',
-  'sulphites',
-  'corn',
-  'nightshades',
-  'coconut',
-] as const
-
-const ALLERGEN_LABEL: Record<string, string> = {
-  gluten: 'Gluten / wheat',
-  soy: 'Soy',
-  nuts: 'Tree nuts',
-  peanuts: 'Peanuts',
-  sesame: 'Sesame',
-  mustard: 'Mustard',
-  celery: 'Celery',
-  lupin: 'Lupin',
-  sulphites: 'Sulphites',
-  corn: 'Corn',
-  nightshades: 'Nightshades',
-  coconut: 'Coconut',
-}
+// Vocabulary and labels live in src/shared/allergens.ts so web, mobile and the
+// text matchers can't drift apart. Re-exported because callers import from here.
+import { ALLERGEN_LABEL, COMMON_ALLERGENS } from '@/lib/allergens'
+export { COMMON_ALLERGENS, ALLERGEN_LABEL }
 
 export default function AllergenSelector({
   value,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { findECodeHits, findProblematicECodes, type ECode } from '@/lib/e-codes'
+import { findAllergenHits } from '@/lib/allergens'
 import { findCosmeticHits, type MatchedIngredient } from '@/lib/cosmetic-ingredients'
 
 export const runtime = 'nodejs'
@@ -145,43 +146,6 @@ function verdictFromOff(off: {
     reason: 'Open Food Facts has this product but no ingredient list yet.',
     hits: [],
   }
-}
-
-// Quick keyword sets for allergen detection in ingredient text.
-const ALLERGEN_KEYWORDS: Record<string, string[]> = {
-  gluten: ['wheat', 'barley', 'rye', 'spelt', 'malt', 'gluten'],
-  soy: ['soy', 'soja', 'soia', 'soybean', 'edamame'],
-  nuts: ['almond', 'hazelnut', 'walnut', 'pecan', 'cashew', 'pistachio', 'macadamia', 'brazil nut'],
-  peanuts: ['peanut', 'groundnut', 'arachide'],
-  sesame: ['sesame', 'tahini'],
-  mustard: ['mustard', 'moutarde'],
-  celery: ['celery', 'celeri'],
-  lupin: ['lupin'],
-  sulphites: ['sulphite', 'sulfite', 'sulphur dioxide', 'sulfur dioxide', 'e220', 'e221', 'e222', 'e223', 'e224', 'e226', 'e227', 'e228'],
-  corn: ['corn ', 'maize', 'cornstarch', 'corn starch', 'high-fructose', 'high fructose'],
-  nightshades: ['tomato', 'potato', 'pepper', 'eggplant', 'aubergine', 'paprika'],
-  coconut: ['coconut'],
-}
-
-function findAllergenHits(text: string, allergens: string[]): string[] {
-  if (!text || allergens.length === 0) return []
-  const lower = text.toLowerCase()
-  const hits = new Set<string>()
-  for (const a of allergens) {
-    const known = ALLERGEN_KEYWORDS[a]
-    if (known) {
-      for (const kw of known) {
-        if (lower.includes(kw)) {
-          hits.add(a)
-          break
-        }
-      }
-    } else if (lower.includes(a)) {
-      // Custom allergen - just look for the literal string
-      hits.add(a)
-    }
-  }
-  return Array.from(hits)
 }
 
 export async function GET(req: NextRequest) {

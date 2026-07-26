@@ -159,7 +159,19 @@ Rules:
 function allergenSuffix(allergens: string[] | undefined): string {
   if (!allergens || allergens.length === 0) return ''
   const list = allergens.map((a) => `"${a}"`).join(', ')
-  return `\n\nALLERGY CONSTRAINTS: The user must avoid: ${list}. In each item, if the dish/product contains or likely contains any of these, mark status as "not_vegan" (or "uncertain" if you can't tell) and call out which allergen is the problem in the note. Treat allergens with the same seriousness as animal products - "vegan but contains peanuts" must NOT be tagged "vegan" for this user.`
+  // Allergens are reported on their own axis, NOT by corrupting "status".
+  // The previous version told the model to mark an allergen-containing item
+  // "not_vegan", which produced a red "Not vegan" verdict for products that
+  // were perfectly vegan and merely contained soy. Two different questions:
+  // "is this vegan" and "is this safe for me".
+  return `
+
+ALLERGY CONSTRAINTS: The user must avoid: ${list}.
+- Add an "allergen" field to any item that contains, or likely contains, one of those allergens, set to the allergen name from that list (e.g. "allergen": "soy"). Say which ingredient is responsible in the note.
+- This overrides the rule about which items to list: ALSO include an item for anything carrying one of these allergens even when it is perfectly vegan. A vegan ingredient the user is allergic to is exactly what they need to see.
+- Do NOT change "status" or "verdict" because of an allergen. Those two fields answer "is this vegan", nothing else. An item that is vegan but contains soy stays status "vegan" and gets "allergen": "soy".
+- Also add a top-level "allergens_found" array listing every allergen from the user's list that appears anywhere in this scan (empty array if none).
+- If an allergen appears only in a precautionary warning ("may contain nuts", "produced in a factory that handles sesame"), still report it, and say in the note that it's a cross-contamination warning rather than an ingredient.`
 }
 
 export async function scanImage(

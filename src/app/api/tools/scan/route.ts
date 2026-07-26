@@ -5,6 +5,7 @@ import { createClient as createServerClient } from '@/lib/supabase-server'
 import { checkQuota, logScan, hashImage, type ToolName, LIMITS } from '@/lib/tool-quota'
 import { preClassify, scanImage, scanText } from '@/lib/tool-scanner'
 import { findECodeHits } from '@/lib/e-codes'
+import { findAllergenHits } from '@/lib/allergens'
 import crypto from 'crypto'
 
 export const runtime = 'nodejs'
@@ -182,10 +183,13 @@ export async function POST(req: NextRequest) {
     // directly. For image input we scan whatever the model echoed back
     // via items[].name + items[].note (catches "E471" mentions in named
     // ingredients). Cheap and additive — never blocks the response.
+    // Everything the model gave us back in text form. Used for both E-code
+    // detection and the allergen cross-check below.
+    const haystack = inputKind === 'text'
+      ? (text ?? '')
+      : (result.items ?? []).map(i => `${i.name} ${i.note ?? ''}`).join(' ')
+
     if (tool === 'ingredient') {
-      const haystack = inputKind === 'text'
-        ? (text ?? '')
-        : (result.items ?? []).map(i => `${i.name} ${i.note ?? ''}`).join(' ')
       const hits = findECodeHits(haystack)
       if (hits.length > 0) {
         result.eCodeHits = hits.map(h => ({
@@ -193,6 +197,32 @@ export async function POST(req: NextRequest) {
           allergen: h.allergen,
         }))
       }
+    }
+
+    // Allergens: union of what the model reported, what the keyword matcher
+    // finds in the same text, and any E-code carrying an allergen tag. The
+    // model is the only one that can read the photo, but it does forget to
+    // populate the field, so the deterministic passes act as a backstop.
+    if (allergens.length > 0) {
+      const wanted = new Set(allergens)
+      const found = new Set<string>()
+      const modelReported = (result as { allergens_found?: unknown }).allergens_found
+      if (Array.isArray(modelReported)) {
+        for (const a of modelReported) {
+          const key = String(a).trim().toLowerCase()
+          if (wanted.has(key)) found.add(key)
+        }
+      }
+      for (const item of result.items ?? []) {
+        const key = item.allergen?.trim().toLowerCase()
+        if (key && wanted.has(key)) found.add(key)
+      }
+      for (const a of findAllergenHits(haystack, allergens)) found.add(a)
+      for (const e of result.eCodeHits ?? []) {
+        if (e.allergen && wanted.has(e.allergen)) found.add(e.allergen)
+      }
+      delete (result as { allergens_found?: unknown }).allergens_found
+      if (found.size > 0) result.allergenHits = Array.from(found)
     }
     await logScan({ ctx, costUsd: preCost + costUsd, result, allergens })
     return NextResponse.json({ result, tier: quota.tier, cached: false })
