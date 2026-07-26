@@ -1,0 +1,13 @@
+-- Fix a regression from 20260724120000_founding_supporter.sql: it added the
+-- users.founding_supporter column but never granted column-level SELECT on it.
+--
+-- Since the 2026-07-14 lockdown, public.users uses a column-grant allowlist
+-- (anon/authenticated have SELECT only on explicitly-granted safe columns, so
+-- email/stripe ids/marketing_email_token stay hidden). Because founding_supporter
+-- was never granted, the public profile page's select of that column failed with
+-- "permission denied for table users", which 404'd every freshly-rendered profile
+-- (older ones were still ISR-cached, so only newly-registered users hit it).
+--
+-- founding_supporter is a public badge flag — safe to expose. This does NOT touch
+-- any sensitive column.
+GRANT SELECT (founding_supporter) ON public.users TO anon, authenticated;
