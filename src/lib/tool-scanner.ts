@@ -1,14 +1,48 @@
 import type { ScanResult, ToolName } from './tool-quota'
 
-// Pricing as of 2026-05. Both per 1M tokens. Vision images ~1k input tokens at
-// 1024px-ish. We pad costs upward to stay safely within the budget cap.
+// Pricing as of 2026-07. Both per 1M tokens. We pad costs upward to stay safely
+// within the budget cap.
 const PRICING = {
   'gpt-4o-mini': { input: 0.15, output: 0.6 }, // pre-classifier
-  'gpt-4o': { input: 2.5, output: 10 }, // main scanner
+  'gpt-5.4-mini': { input: 0.75, output: 4.5 }, // main scanner
+  'gpt-4o': { input: 2.5, output: 10 }, // previous main scanner, kept for rollback
 } as const
 
 const PRECLASSIFY_MODEL = 'gpt-4o-mini'
-const SCAN_MODEL = 'gpt-4o'
+
+// Benchmarked 2026-07-26 against 7 real ingredient-label photos from Open Food
+// Facts, scored on OFF's own ingredient analysis, plus 2 negative controls
+// (brand-recognisable packaging with no readable ingredient list):
+//
+//   model          correct  mean cost   confabulates on unreadable photo?
+//   gpt-4o           7/7    $0.00405    no
+//   gpt-5.4-mini     7/7    $0.00280    no
+//   gpt-5.4-nano     6/7    $0.00085    no  (but twice said "unclear" on a
+//                                            perfectly readable label)
+//   gpt-4.1-mini     7/7    $0.00156    YES - invented "skimmed milk powder"
+//                                            from a photo of a Nutella jar front
+//
+// gpt-5.4-mini matches gpt-4o's accuracy at 31% less cost, and matches it on the
+// two things that matter for a vegan verdict: it says "unclear" instead of
+// guessing when the label isn't readable, and it still flags plant-or-animal
+// ingredients as "uncertain" rather than waving them through as vegan (gpt-4.1-
+// mini called Coca-Cola's "natural flavourings" plain vegan). gpt-5.4-nano is
+// 4.8x cheaper but pays for it in false "couldn't read this" answers, which cost
+// a user their monthly scan for nothing.
+//
+// `detail: 'high' | 'low'` makes no difference to input tokens on the 5.x vision
+// pipeline (measured: 3,012 tokens either way), so there is no cheaper detail
+// tier to reach for here.
+const SCAN_MODEL = 'gpt-5.4-mini'
+
+// The 5.x models reject `max_tokens` and `temperature`, and bill reasoning
+// tokens as output — so the completion cap has to cover reasoning plus the
+// visible JSON, or the response comes back empty with finish_reason 'length'.
+function completionParams(model: keyof typeof PRICING, cap: number) {
+  return model.startsWith('gpt-5')
+    ? { max_completion_tokens: cap, reasoning_effort: 'low' }
+    : { max_tokens: cap, temperature: 0.1 }
+}
 
 // Pad estimates upward by 30% so we never under-charge against the budget cap.
 function estimateCostUsd(model: keyof typeof PRICING, inTok: number, outTok: number) {
@@ -33,7 +67,7 @@ async function openai<T = unknown>(body: Record<string, unknown>): Promise<T> {
 }
 
 interface ChatResp {
-  choices: { message: { content: string } }[]
+  choices: { message: { content: string }; finish_reason?: string }[]
   usage?: { prompt_tokens: number; completion_tokens: number }
 }
 
@@ -91,7 +125,8 @@ Rules:
 - "unclear" if the photo is blurry/unreadable. Leave items empty in that case.
 - Only list ingredients that are non-vegan or uncertain. Don't list every vegan ingredient.
 - "uncertain" for ingredients that can be plant or animal (mono- and diglycerides, lecithin, vitamin D3, natural flavours, lactic acid).
-- Be honest about uncertainty - don't guess "vegan" when you can't tell.`
+- Be honest about uncertainty - don't guess "vegan" when you can't tell.
+- Write "summary" and every "note" in English, using only Latin script. Keep each ingredient "name" exactly as printed on the label, in its original language.`
 
 const MENU_PROMPT = `You are a vegan menu analyser. Look at this restaurant menu and classify EVERY dish you can read.
 
@@ -118,7 +153,8 @@ Rules:
   - "not_vegan" if no usable options even with swaps
   - "unclear" if the image is too unreadable to assess
 - For multi-image uploads: combine all into one items array, deduplicate dishes that appear on multiple pages.
-- If a dish name is unreadable but the section header is visible (e.g. "MAINS" section but one item too blurry), note that in visibility.issues - don't fabricate the dish.`
+- If a dish name is unreadable but the section header is visible (e.g. "MAINS" section but one item too blurry), note that in visibility.issues - don't fabricate the dish.
+- Write "summary", "visibility.issues" and every "note" in English, using only Latin script. Dish "name" values stay in the menu's original language.`
 
 function allergenSuffix(allergens: string[] | undefined): string {
   if (!allergens || allergens.length === 0) return ''
@@ -139,8 +175,9 @@ export async function scanImage(
 
   const resp = await openai<ChatResp>({
     model: SCAN_MODEL,
-    max_tokens: 1500,
-    temperature: 0.1,
+    // Menus can run to 40+ dishes, and on a reasoning model the cap covers
+    // reasoning tokens too — leave headroom or the JSON comes back truncated.
+    ...completionParams(SCAN_MODEL, 3000),
     response_format: { type: 'json_object' },
     messages: [
       {
@@ -161,11 +198,16 @@ export async function scanImage(
   try {
     parsed = JSON.parse(content) as ScanResult
   } catch {
-    parsed = { verdict: 'unclear', summary: 'Could not read this image clearly. Try a sharper photo.' }
+    parsed =
+      resp.choices?.[0]?.finish_reason === 'length'
+        ? { verdict: 'unclear', summary: 'That menu was too long to read in one go. Try fewer pages at a time.' }
+        : { verdict: 'unclear', summary: 'Could not read this image clearly. Try a sharper photo.' }
   }
 
-  const inTok = resp.usage?.prompt_tokens ?? 2000 * dataUrls.length
-  const outTok = resp.usage?.completion_tokens ?? 400
+  // Fallbacks measured on gpt-5.4-mini: ~3,000 prompt tokens per label photo,
+  // ~150 completion tokens including reasoning. Padded upward.
+  const inTok = resp.usage?.prompt_tokens ?? 3000 * dataUrls.length
+  const outTok = resp.usage?.completion_tokens ?? 500
   return {
     result: parsed,
     costUsd: estimateCostUsd(SCAN_MODEL, inTok, outTok),
@@ -186,7 +228,8 @@ Respond ONLY with JSON matching this schema:
 Rules:
 - "unclear" if the text is not actually an ingredient list (e.g. random text, just a product name).
 - Only list ingredients that are non-vegan or uncertain. Don't list every vegan ingredient.
-- "uncertain" for ingredients that can be plant or animal (mono- and diglycerides, lecithin, vitamin D3, natural flavours, lactic acid).`
+- "uncertain" for ingredients that can be plant or animal (mono- and diglycerides, lecithin, vitamin D3, natural flavours, lactic acid).
+- Write "summary" and every "note" in English, using only Latin script. Keep each ingredient "name" as the user wrote it.`
 
 const MENU_TEXT_PROMPT = `You are a vegan menu analyser. Analyse this pasted menu text and classify EVERY dish.
 
@@ -201,6 +244,7 @@ Respond ONLY with JSON matching this schema:
 
 Rules:
 - List ALL dishes from the text. Include obviously non-vegan ones too so the user sees the complete menu landscape.
+- Write "summary" and every "note" in English, using only Latin script. Dish "name" values stay in the menu's original language.
 - "unclear" if the input is not actually a menu (random text, just a single word, etc).
 - "verdict" reflects vegan-friendliness overall: "vegan" if 2+ clear options, "uncertain" if only askable/swappable, "not_vegan" if nothing works.`
 
@@ -223,8 +267,7 @@ export async function scanText(
 
   const resp = await openai<ChatResp>({
     model: SCAN_MODEL,
-    max_tokens: 1200,
-    temperature: 0.1,
+    ...completionParams(SCAN_MODEL, 2500),
     response_format: { type: 'json_object' },
     messages: [
       { role: 'system', content: prompt },
