@@ -13,9 +13,14 @@ import PageViewTracker from "@/components/analytics/PageViewTracker";
 import NavigationProgress from "@/components/layout/NavigationProgress";
 import MaterialSymbolsSwap from "@/components/layout/MaterialSymbolsSwap";
 
+// preload:false — with display:'swap' the fallback text paints immediately, so
+// the web fonts don't gate text-LCP anyway. Not preloading them frees the mobile
+// critical path for the hero-image preload (they were 9 competing font preloads).
+// next/font's size-adjusted fallback keeps CLS ~0 through the swap.
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: 'swap',
+  preload: false,
   variable: '--font-jakarta',
   weight: ['400', '500', '600', '700', '800'],
 });
@@ -23,6 +28,7 @@ const jakarta = Plus_Jakarta_Sans({
 const manrope = Manrope({
   subsets: ["latin"],
   display: 'swap',
+  preload: false,
   variable: '--font-manrope',
   weight: ['400', '500', '600', '700'],
 });

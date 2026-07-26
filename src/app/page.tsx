@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import { cookies } from 'next/headers'
+import { unstable_cache } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
@@ -75,7 +76,11 @@ function getTopCitiesFromHome(initData: any): any[] {
  * executing JS. Shrinks crawl-depth from 4 clicks → 2 clicks for these
  * pages, which addresses the "Discovered but not indexed" bucket in GSC.
  */
-async function getFeaturedPlaces() {
+// Shared, user-independent homepage data. Wrapped in unstable_cache so the hot
+// path stops re-querying Supabase on every (dynamic) render — cuts TTFB for anon
+// AND signed-in without touching auth/location (those stay per-request below).
+// Content refreshes within 300s; add/edit mutations already call revalidatePath('/').
+const getFeaturedPlaces = unstable_cache(async () => {
   const supabase = createAdminClient()
   const { data } = await supabase
     .from('places')
@@ -100,7 +105,7 @@ async function getFeaturedPlaces() {
     return typeof src === 'string' && src.includes('supabase.co')
   })
   return onSupabase.slice(0, 12)
-}
+}, ['home-featured-places'], { revalidate: 300, tags: ['home'] })
 
 /**
  * Fetch the logged-in user's followed cities with live scores + deltas,
@@ -185,7 +190,7 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
   }
 }
 
-async function getRecentPosts() {
+const getRecentPosts = unstable_cache(async () => {
   const supabase = createAdminClient()
   const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
   const { data } = await supabase
@@ -212,14 +217,14 @@ async function getRecentPosts() {
     post_reactions: Array(p.post_reactions?.[0]?.count ?? 0).fill({ id: '' }),
     comments: Array(p.comments?.[0]?.count ?? 0).fill({ id: '' }),
   }))
-}
+}, ['home-recent-posts'], { revalidate: 300, tags: ['home'] })
 
 /**
  * Recent place reviews for the homepage sidebar feed. Mixed with recent posts
  * and sorted by created_at so the sidebar reflects all community activity, not
  * just posts. Reviews are read-only items here — the link goes to the place.
  */
-async function getRecentReviews() {
+const getRecentReviews = unstable_cache(async () => {
   const supabase = createAdminClient()
   const { data } = await supabase
     .from('place_reviews')
@@ -236,7 +241,7 @@ async function getRecentReviews() {
     ...r,
     place_review_reactions: Array(r.place_review_reactions?.[0]?.count ?? 0).fill({ id: '' }),
   }))
-}
+}, ['home-recent-reviews'], { revalidate: 300, tags: ['home'] })
 
 function getCityImages(): Record<string, string> {
   try {
