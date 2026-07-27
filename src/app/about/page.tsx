@@ -101,8 +101,7 @@ export default function AboutPage() {
           </div>
           <div className="space-y-4 text-on-surface-variant text-lg leading-relaxed">
             <p>
-              We&apos;re Oleksandra and Anton, originally from Ukraine.
-              Oleksandra is 10+ years vegan and Anton joined her on this journey 2 years ago.
+              We&apos;re Oleksandra and Anton, and we&apos;ve both been vegan for the last two years.
             </p>
             <p>
               There is no safe space for vegans to express their thoughts and share their joys
@@ -145,7 +144,7 @@ export default function AboutPage() {
               <p className="text-sm text-on-surface-variant">
                 Our commitment: once support covers our costs, every euro of profit
                 (after taxes and expenses) gets split in half — 50% to animal
-                shelters in Ukraine and community-voted vegan causes, and 50%
+                shelters and community-voted vegan causes, and 50%
                 reinvested in growing and improving Plants Pack: servers, development,
                 and fair pay for the people building it — no bloated salaries, no
                 investor payouts. We&apos;ll publish receipts. We&apos;re not there

@@ -23,7 +23,7 @@ const FACTS: [string, string][] = [
   ['Listings', '52,000+ vegan and vegan-friendly places'],
   ['Coverage', '160+ countries, 1,400+ cities with 5+ places each'],
   ['Apps', 'Live on iOS and Android (free)'],
-  ['Business model', 'Free, ad-free, no paid placements or paid rankings'],
+  ['Business model', 'Free and ad-free. Funded by an optional Supporter tier (EUR3/month) and one-off donations - never by paid placements or paid rankings'],
   ['Verification', 'Transparent confidence levels shown on every listing'],
 ]
 
@@ -81,9 +81,9 @@ export default function PressPage() {
         <section className="mb-10">
           <h2 className="text-xl font-semibold text-on-surface mb-3">Who builds it</h2>
           <p className="text-on-surface-variant leading-relaxed">
-            Plants Pack is built by Anton and Oleksandra, a Ukrainian couple - Oleksandra has been
-            vegan for 10+ years and Anton joined her on it. No investors, no ads, no paywalls; funded
-            by optional supporter contributions. Because two people cannot personally check 52,000
+            Plants Pack is built by two people, Anton and Oleksandra, who have both been vegan for
+            the last two years. No investors, no ads, no paywalls; funded by an optional EUR3/month
+            Supporter tier and one-off donations. Because two people cannot personally check 52,000
             places, verification is community-driven: confirmations from people on the ground,
             cross-referenced vegan-first sources, and the fully-vegan spots we hand-check ourselves.
           </p>
