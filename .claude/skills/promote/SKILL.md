@@ -183,9 +183,13 @@ rating prompt reachable (4 moments, shipped OTA) · SupportNudge on
 present by the user** - the empty `screenshotUrls` in the iTunes lookup API is a
 legacy-API artifact, do not raise it again · **iOS reviews replied to**.
 
+Also done 2026-07-26: **`sitemap-index.xml` submitted in GSC.** Do not re-suggest.
+Google takes days to process it - the read date for the 42 new URLs is ~2026-08-09.
+
 Still open:
-1. **Submit `sitemap-index.xml` in GSC** + request indexing for `/tools/ingredient-scanner`,
-   `/tools/barcode`, `/vegan/french-fries`, `/vegan/pesto`. Manual requests cap ~10/day.
+1. **Request indexing** (URL Inspection) for `/tools/ingredient-scanner`,
+   `/tools/barcode`, `/vegan/french-fries`, `/vegan/pesto` - separate action from
+   submitting the sitemap, and the faster path for those four. Caps ~10/day.
 2. **Message the 37 place submitters** personally - highest-intent audience,
    start with 5, not a template blast.
 3. Store listing localisation **DE / PT / NL / ES** (strongest data regions, listings are EN-only).
