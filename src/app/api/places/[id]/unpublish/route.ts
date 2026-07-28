@@ -1,3 +1,4 @@
+import { toSlug } from '@/lib/slug'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -70,10 +71,10 @@ export async function POST(
   const { revalidatePath } = await import('next/cache')
   if (place.slug) revalidatePath(`/place/${place.slug}`)
   if (place.country) {
-    const countrySlug = place.country.toLowerCase().replace(/\s+/g, '-')
+    const countrySlug = toSlug(place.country)
     revalidatePath(`/vegan-places/${countrySlug}`)
     if (place.city) {
-      const citySlug = place.city.toLowerCase().replace(/\s+/g, '-')
+      const citySlug = toSlug(place.city)
       revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
     }
   }

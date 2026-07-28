@@ -1,5 +1,6 @@
 'use client'
 
+import { toSlug } from '@/lib/slug'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Search, X, MapPin, Loader2, Globe, Plus, Clock, ChefHat, Wrench, BookOpen } from 'lucide-react'
 import { useSearch, logSearchClick } from '@/hooks/useSearch'
@@ -244,7 +245,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                     </Link>
                   ))}
                   {cities.map(c => {
-                    const href = `/vegan-places/${c.country.toLowerCase().replace(/\s+/g, '-')}/${c.slug}`
+                    const href = `/vegan-places/${toSlug(c.country)}/${c.slug}`
                     return (
                       <Link key={`city-${c.slug}-${c.country}`} href={href}
                         onClick={() => handleResultClick({ label: `${c.city}, ${c.country}`, href, type: 'city' })}

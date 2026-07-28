@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createAuthClient } from '@/lib/supabase-server'
 import { slugifyCityOrCountry, slugToDisplay } from '@/lib/places/slugify'
+import { canonicalCitySlug } from '@/lib/city-resolve'
 
 function admin() {
   return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
@@ -14,7 +15,10 @@ export async function GET(
 ) {
   const { country, city } = await params
   const countrySlug = slugifyCityOrCountry(country)
-  const citySlug = slugifyCityOrCountry(city)
+  // city_experiences is keyed by the SQL `city_slug`; normalise so the
+  // transliterated form of an accented city (/vietnam/thu-duc) reaches the same
+  // rows as the legacy form (/vietnam/th-c).
+  const citySlug = await canonicalCitySlug(countrySlug, city)
 
   const url = new URL(request.url)
   const page = Math.max(1, parseInt(url.searchParams.get('page') || '1'))
@@ -86,7 +90,10 @@ export async function POST(
 ) {
   const { country, city } = await params
   const countrySlug = slugifyCityOrCountry(country)
-  const citySlug = slugifyCityOrCountry(city)
+  // city_experiences is keyed by the SQL `city_slug`; normalise so the
+  // transliterated form of an accented city (/vietnam/thu-duc) reaches the same
+  // rows as the legacy form (/vietnam/th-c).
+  const citySlug = await canonicalCitySlug(countrySlug, city)
 
   const authSupa = await createAuthClient()
   const { data: { session } } = await authSupa.auth.getSession()
@@ -206,7 +213,10 @@ export async function DELETE(
 ) {
   const { country, city } = await params
   const countrySlug = slugifyCityOrCountry(country)
-  const citySlug = slugifyCityOrCountry(city)
+  // city_experiences is keyed by the SQL `city_slug`; normalise so the
+  // transliterated form of an accented city (/vietnam/thu-duc) reaches the same
+  // rows as the legacy form (/vietnam/th-c).
+  const citySlug = await canonicalCitySlug(countrySlug, city)
 
   const authSupa = await createAuthClient()
   const { data: { session } } = await authSupa.auth.getSession()

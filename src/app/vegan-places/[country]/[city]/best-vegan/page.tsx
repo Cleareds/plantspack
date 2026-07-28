@@ -12,6 +12,7 @@ import { notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import { getCityDishChips, dishPageHref } from '@/lib/dish-page-data'
+import { resolveCity } from '@/lib/city-resolve'
 import { DISH_BY_SLUG, type DishDef } from '@/lib/dish-keywords'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
@@ -37,24 +38,23 @@ const sb = createClient(
 
 type RouteParams = { country: string; city: string }
 
+// Resolve canonical city + country names. The previous
+// `citySlug.replace(/-/g, ' ')` guess could only ever match cities whose names
+// are already ASCII, so this page 404'd for every accented city while
+// simultaneously matching the *non-canonical* accented URL — which then hit the
+// ISR 500 (see middleware).
 async function loadCity(country: string, city: string) {
-  // Resolve canonical city + country names from the DB
-  const { data } = await sb.from('places')
-    .select('city, country')
-    .ilike('country', country.replace(/-/g, ' '))
-    .ilike('city', city.replace(/-/g, ' '))
-    .is('archived_at', null)
-    .limit(1)
-  if (!data?.[0]) return null
-  return { city: data[0].city as string, country: data[0].country as string }
+  const loc = await resolveCity(country, city)
+  if (!loc) return null
+  return { city: loc.city, country: loc.country }
 }
 
 async function loadTopThumbsForDishes(country: string, city: string, dishSlugs: string[]) {
   // Pull all places once, then filter per dish for thumbnails
   const { data } = await sb.from('places')
     .select('id, slug, name, main_image_url, cuisine_types, subcategory, description, vegan_level, average_rating, review_count')
-    .ilike('country', country.replace(/-/g, ' '))
-    .ilike('city', city.replace(/-/g, ' '))
+    .ilike('country', country)
+    .ilike('city', city)
     .is('archived_at', null)
     .not('main_image_url', 'is', null)
     .limit(2000)
@@ -116,7 +116,9 @@ export default async function BestVeganHub({ params }: { params: Promise<RoutePa
   const chips = await getCityDishChips(country, city)
   if (chips.length === 0) notFound()
 
-  const thumbs = await loadTopThumbsForDishes(country, city, chips.map(c => c.slug))
+  // Pass the resolved names, not the URL slugs — the query matches on the
+  // stored `places.city` / `places.country` values.
+  const thumbs = await loadTopThumbsForDishes(loc.country, loc.city, chips.map(c => c.slug))
 
   const ldBreadcrumbs = buildBreadcrumbs([
     HOME_CRUMB,

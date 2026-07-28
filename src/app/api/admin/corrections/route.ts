@@ -1,3 +1,4 @@
+import { toSlug } from '@/lib/slug'
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
@@ -101,7 +102,7 @@ export async function PUT(request: NextRequest) {
         const place = correction.places as any
         revalidatePath(`/place/${place?.slug || correction.place_id}`)
         if (place?.city && place?.country) {
-          revalidatePath(`/vegan-places/${place.country.toLowerCase().replace(/\s+/g, '-')}/${place.city.toLowerCase().replace(/\s+/g, '-')}`)
+          revalidatePath(`/vegan-places/${toSlug(place.country)}/${toSlug(place.city)}`)
         }
       } catch {}
     }

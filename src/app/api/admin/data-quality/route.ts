@@ -1,3 +1,4 @@
+import { toSlug } from '@/lib/slug'
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient } from '@/lib/supabase-server'
@@ -367,9 +368,9 @@ export async function DELETE(request: NextRequest) {
   if (place?.slug) revalidatePath(`/place/${place.slug}`)
   revalidatePath('/vegan-places')
   if (place?.country) {
-    const countrySlug = place.country.toLowerCase().replace(/\s+/g, '-')
+    const countrySlug = toSlug(place.country)
     revalidatePath(`/vegan-places/${countrySlug}`)
-    if (place.city) revalidatePath(`/vegan-places/${countrySlug}/${place.city.toLowerCase().replace(/\s+/g, '-')}`)
+    if (place.city) revalidatePath(`/vegan-places/${countrySlug}/${toSlug(place.city)}`)
   }
   revalidatePath('/city-ranks')
 
@@ -444,9 +445,9 @@ export async function PUT(request: NextRequest) {
     for (const place of places || []) {
       if (place.slug) pathsToRevalidate.add(`/place/${place.slug}`)
       if (place.country) {
-        const cs = place.country.toLowerCase().replace(/\s+/g, '-')
+        const cs = toSlug(place.country)
         pathsToRevalidate.add(`/vegan-places/${cs}`)
-        if (place.city) pathsToRevalidate.add(`/vegan-places/${cs}/${place.city.toLowerCase().replace(/\s+/g, '-')}`)
+        if (place.city) pathsToRevalidate.add(`/vegan-places/${cs}/${toSlug(place.city)}`)
       }
     }
     for (const path of pathsToRevalidate) revalidatePath(path)
@@ -520,8 +521,8 @@ export async function PATCH(request: NextRequest) {
     const { revalidatePath } = await import('next/cache')
     if (place.slug) revalidatePath(`/place/${place.slug}`)
     if (place.country && place.city) {
-      const cs = place.country.toLowerCase().replace(/\s+/g, '-')
-      const ci = place.city.toLowerCase().replace(/\s+/g, '-')
+      const cs = toSlug(place.country)
+      const ci = toSlug(place.city)
       revalidatePath(`/vegan-places/${cs}/${ci}`)
     }
     revalidatePath('/city-ranks')

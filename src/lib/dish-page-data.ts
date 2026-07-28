@@ -4,6 +4,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { DISH_BY_SLUG, type DishDef } from './dish-keywords'
 import { getConfidenceBadge, confidenceTierRank, type ConfidenceBadge } from './verification-badge'
+import { resolveCity } from './city-resolve'
+import { toSlug } from './slug'
+import { log } from './logger'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -110,9 +113,14 @@ export async function getDishPageData(
   const dish = DISH_BY_SLUG[dishSlug]
   if (!dish) return null
 
-  const country = countrySlug.replace(/-/g, ' ')
-  const city = citySlug.replace(/-/g, ' ')
-  console.log(`[dish] enter ${dishSlug} country="${country}" city="${city}" env=${!!process.env.SUPABASE_SERVICE_ROLE_KEY ? 'KEY_OK' : 'NO_KEY'}`)
+  // Resolve the slug pair to the stored city/country names. The old
+  // `citySlug.replace(/-/g, ' ')` guess only matched cities that are already
+  // ASCII, so every accented city (São Paulo, Düsseldorf, Thủ Đức, ...) 404'd
+  // here regardless of how many matching places it had.
+  const loc = await resolveCity(countrySlug, citySlug)
+  if (!loc) return null
+  const { city, country } = loc
+  log.debug(`[dish] enter ${dishSlug} country="${country}" city="${city}"`)
 
   const { data, error } = await sb.from('places')
     .select(`
@@ -126,7 +134,7 @@ export async function getDishPageData(
     .is('archived_at', null)
     .limit(2000)
 
-  console.log(`[dish] query result for ${dishSlug}/${city}: ${data?.length || 0} rows, error=${error?.message || 'none'}`)
+  log.debug(`[dish] query result for ${dishSlug}/${city}: ${data?.length || 0} rows, error=${error?.message || 'none'}`)
 
   if (error) return null
   if (!data?.length) return null
@@ -143,7 +151,7 @@ export async function getDishPageData(
     scored.push({ ...p, matchScore: ms, rankScore, badge })
   }
 
-  console.log(`[dish] scored ${dishSlug}/${city}: ${scored.length} of ${data.length} rows match`)
+  log.debug(`[dish] scored ${dishSlug}/${city}: ${scored.length} of ${data.length} rows match`)
   if (scored.length < 3) return null
 
   // Sort by composite rank
@@ -170,11 +178,13 @@ export async function getDishPageData(
  * Used to populate the "best vegan X in {city}" chip grid on city pages.
  */
 export async function getCityDishChips(country: string, city: string): Promise<{ slug: string; label: string; count: number }[]> {
+  const loc = await resolveCity(country, city)
+  if (!loc) return []
   // Pull all places once, score against every dish
   const { data } = await sb.from('places')
     .select('name, description, cuisine_types, subcategory')
-    .ilike('country', country.replace(/-/g, ' '))
-    .ilike('city', city.replace(/-/g, ' '))
+    .ilike('country', loc.country)
+    .ilike('city', loc.city)
     .is('archived_at', null)
     .limit(2000)
   if (!data?.length) return []
@@ -217,9 +227,13 @@ export async function getNearbyDishCities(
   if (!data?.length) return []
 
   const byCity: Record<string, { country: string; count: number }> = {}
+  // Compare on the slug form so the current city is excluded even when its name
+  // is accented — `'Thủ Đức'.toLowerCase() === 'thu duc'` was never true, so the
+  // page listed itself under "nearby cities".
+  const excludeKey = toSlug(excludeCity)
   for (const p of data) {
     if (!p.city) continue
-    if (p.city.toLowerCase() === excludeCity.replace(/-/g, ' ').toLowerCase()) continue
+    if (toSlug(p.city) === excludeKey) continue
     const score = matchScoreFor(p, dish)
     if (score >= minScore(dish)) {
       const key = p.city
@@ -240,7 +254,9 @@ export async function getNearbyDishCities(
  *  the metadata function. */
 export function dishPageHref(country: string | undefined, city: string | undefined, dishSlug: string | undefined): string {
   if (!country || !city || !dishSlug) return '/'
-  const c = country.toLowerCase().replace(/\s+/g, '-')
-  const ci = city.toLowerCase().replace(/\s+/g, '-')
-  return `/vegan-places/${c}/${ci}/best-vegan/${dishSlug}`
+  // toSlug (not a bare whitespace swap): accepts either a display name
+  // ("São Paulo") or an already-slugged param, and always emits ASCII. The old
+  // lowercase-and-hyphenate produced `/vegan-places/vietnam/hội-an-tây-ward/...`
+  // hrefs, which are the URLs that ended up 500ing in GSC.
+  return `/vegan-places/${toSlug(country)}/${toSlug(city)}/best-vegan/${dishSlug}`
 }

@@ -1,3 +1,4 @@
+import { toSlug } from '@/lib/slug'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -107,11 +108,11 @@ const COUNTRY_INTROS: Record<string, string> = {
 }
 
 function citySlug(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  return toSlug(name).replace(/[^a-z0-9-]/g, '')
 }
 
 function countrySlug(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-')
+  return toSlug(name)
 }
 
 type CityCount = { city: string; country: string; total: number; fv: number }

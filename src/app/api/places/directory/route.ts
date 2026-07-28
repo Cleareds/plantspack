@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { resolveCity } from '@/lib/city-resolve'
 
 /**
  * Edge cache for crawler-heavy listing endpoints. Short TTL + long SWR so
@@ -224,24 +225,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (level === 'places' && country && city) {
-      // Look up actual city name from directory view (handles hyphens, accents etc.).
-      // CRITICAL: match country too — otherwise e.g. "oxford" returns Oxford NZ
-      // on a /united-kingdom/oxford URL because both share a city_slug.
-      // .single() fails and .maybeSingle() returns null when multiple view
-      // rows match — happens for casing/accent variants in the same country
-      // (e.g. "Paris"/"paris", "Montreal"/"Montréal"). Order by place_count
-      // and take the biggest row.
-      const { data: cityRows } = await supabase
-        .from('directory_cities')
-        .select('city, country')
-        .eq('city_slug', city)
-        .ilike('country', fromSlug(country))
-        .order('place_count', { ascending: false })
-        .limit(1)
-
-      const cityRow = cityRows?.[0]
-      const actualCity = cityRow?.city || fromSlug(city)
-      const actualCountry = cityRow?.country || fromSlug(country)
+      // Look up the actual city name (handles hyphens, accents etc.).
+      // resolveCity() matches on country too — otherwise e.g. "oxford" returns
+      // Oxford NZ on a /united-kingdom/oxford URL because both share a
+      // city_slug — and breaks casing/accent variant ties by place_count
+      // ("Paris"/"paris", "Montreal"/"Montréal"). It accepts both the SQL
+      // `city_slug` and the transliterated form, so an accented city resolves
+      // either way instead of falling back to a `fromSlug()` guess.
+      const resolved = await resolveCity(country, city)
+      const actualCity = resolved?.city || fromSlug(city)
+      const actualCountry = resolved?.country || fromSlug(country)
 
       // Paginate server-side through Supabase's 1000-row-per-request cap so
       // large cities (Berlin 1300+) return in full. The cap-free `all`

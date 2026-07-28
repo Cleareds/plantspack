@@ -16,6 +16,7 @@
 import { cache } from 'react'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { slugToDisplay } from '@/lib/places/slugify'
+import { resolveCity, canonicalCitySlug } from '@/lib/city-resolve'
 import { computeAllScores } from '@/lib/compute-scores'
 
 function fromSlug(slug: string): string {
@@ -44,17 +45,14 @@ export const getCityPlacesDirect = cache(async function getCityPlacesDirect(coun
   const empty = { places: [] as any[], city: fromSlug(citySlug), country: fromSlug(countrySlug), total: 0 }
   try {
     const supabase = createAdminClient()
-    // Canonical display-cased city/country from the directory view (handles
-    // hyphens/accents; ties broken by place_count for casing variants).
-    const { data: cityRows } = await supabase
-      .from('directory_cities')
-      .select('city, country')
-      .eq('city_slug', citySlug)
-      .ilike('country', fromSlug(countrySlug))
-      .order('place_count', { ascending: false })
-      .limit(1)
-    const actualCity = cityRows?.[0]?.city || fromSlug(citySlug)
-    const actualCountry = cityRows?.[0]?.country || fromSlug(countrySlug)
+    // Canonical display-cased city/country. resolveCity() accepts both slug
+    // alphabets in play (the SQL `city_slug` our older links use, and the
+    // properly transliterated form), so accented cities resolve either way
+    // instead of falling back to a `fromSlug()` guess that can never match a
+    // name like "Düsseldorf" or "Thủ Đức".
+    const resolved = await resolveCity(countrySlug, citySlug)
+    const actualCity = resolved?.city || fromSlug(citySlug)
+    const actualCountry = resolved?.country || fromSlug(countrySlug)
 
     const all: any[] = []
     const BATCH = 1000
@@ -143,9 +141,12 @@ const EMPTY_EXPERIENCES_SUMMARY = {
 }
 
 /** Mirrors GET /api/cities/[country]/[city]/experiences (first page). */
-export const getCityExperiencesDirect = cache(async function getCityExperiencesDirect(countrySlug: string, citySlug: string) {
+export const getCityExperiencesDirect = cache(async function getCityExperiencesDirect(countrySlug: string, citySlugParam: string) {
   try {
     const supa = createAdminClient()
+    // city_experiences is keyed by the slug the URL carried when the row was
+    // written; normalise so a transliterated URL still finds those rows.
+    const citySlug = await canonicalCitySlug(countrySlug, citySlugParam)
     const [{ data: experiences }, { data: summaryRows }] = await Promise.all([
       supa
         .from('city_experiences')

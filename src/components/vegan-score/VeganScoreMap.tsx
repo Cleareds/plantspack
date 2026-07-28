@@ -1,6 +1,7 @@
 'use client'
 
 // Leaflet + marker-cluster CSS scoped to /vegan-score route.
+import { toSlug } from '@/lib/slug'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
@@ -421,7 +422,7 @@ export default function VeganScoreMap() {
                 </div>
               )}
               <Link
-                href={`/vegan-places/${selectedCity.country.toLowerCase().replace(/\s+/g, '-')}/${selectedCity.city.toLowerCase().replace(/\s+/g, '-')}`}
+                href={`/vegan-places/${toSlug(selectedCity.country)}/${toSlug(selectedCity.city)}`}
                 className="flex items-center justify-center gap-1 w-full mt-2 px-2 py-1 text-[11px] font-medium text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-colors"
               >
                 View all places <ChevronRight className="h-3 w-3" />

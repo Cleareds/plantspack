@@ -340,10 +340,8 @@ export default async function DishPage({ params, searchParams }: { params: Promi
             <div className="flex flex-wrap gap-2">
               {nearbyCities.map(nc => {
                 if (!nc.country || !nc.city) return null
-                const ccSlug = nc.country.toLowerCase().replace(/\s+/g, '-')
-                const ciSlug = nc.city.toLowerCase().replace(/\s+/g, '-')
                 return (
-                  <Link key={nc.city} href={`/vegan-places/${ccSlug}/${ciSlug}/best-vegan/${dish.slug}`}
+                  <Link key={nc.city} href={dishPageHref(nc.country, nc.city, dish.slug)}
                     className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface"
                   >
                     {nc.city} <span className="text-on-surface-variant">({nc.count})</span>

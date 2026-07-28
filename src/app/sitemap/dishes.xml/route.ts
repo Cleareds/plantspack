@@ -19,6 +19,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { DISHES } from '@/lib/dish-keywords'
+import { toSlug } from '@/lib/slug'
 
 const SITE_URL = 'https://www.plantspack.com'
 
@@ -54,8 +55,12 @@ function matchScore(p: PlaceRow, needles: string[]): number {
   return score
 }
 
+// Must transliterate, not just hyphenate. A bare lowercase+hyphen pass emitted
+// accented <loc> values ("/vegan-places/vietnam/hội-an-tây-ward/best-vegan"),
+// Google crawled them, and every one came back 500 because ISR routes cannot
+// carry a character above Latin-1 (GSC "Server error (5xx)", 2026-07-28).
 function slugify(s: string): string {
-  return s.toLowerCase().replace(/\s+/g, '-')
+  return toSlug(s)
 }
 
 export async function GET() {

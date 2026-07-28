@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { stripDiacritics } from '@/lib/slug'
+import { asciiFold, isAscii, hasNonAscii } from '@/lib/slug'
 import { sharedCookieDomain, SHARED_COOKIE_OPTIONS } from '@/lib/auth-cookie'
 
 // Recipe pages removed for source violations (Minimalist Baker et al. per
@@ -22,8 +22,25 @@ function goneResponse() {
   })
 }
 
-const NON_ASCII = /[-￿]/
-const ASCII_ONLY = /^[ -~]+$/
+// A path we cannot map onto an ASCII slug has no page behind it. Answering 404
+// here is not merely tidier than letting it through: any route that opts into
+// ISR via generateStaticParams() - place pages, dish hubs, /vegan topics,
+// region hubs, recipe collections - returns a hard 500 instead of a 404 when a
+// segment carries a character above Latin-1, because the prerender path cannot
+// round-trip it through a Latin-1 HTTP header.
+function notFoundResponse() {
+  return new NextResponse(
+    '<!doctype html><meta charset="utf-8"><title>404 - Page not found</title>'
+    + '<p>This page does not exist. <a href="/">Go to Plants Pack</a>.</p>',
+    {
+      status: 404,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600',
+      },
+    },
+  )
+}
 
 // Paths that never need a logged-in user state to render. Skipping
 // supabase.auth.getUser() here removes one round-trip per request to the
@@ -94,17 +111,41 @@ export async function middleware(request: NextRequest) {
     return goneResponse()
   }
 
-  // City/country slugs are stored as ASCII (e.g. "dusseldorf"), but legacy
-  // links and external sites sometimes use the accented form
-  // ("/vegan-places/germany/dusseldorf" with u-umlaut, encoded as %C3%BC).
-  // Redirect any path containing non-ASCII chars to its canonical ASCII
-  // form so those URLs resolve instead of 404ing.
-  if (NON_ASCII.test(pathname)) {
-    const canonical = stripDiacritics(pathname).toLowerCase()
-    if (canonical !== pathname && ASCII_ONLY.test(canonical)) {
-      const url = request.nextUrl.clone()
-      url.pathname = canonical
-      return NextResponse.redirect(url, 301)
+  // City/country slugs are stored as ASCII ("dusseldorf"), but legacy links,
+  // our own older sitemap output and external sites sometimes use the accented
+  // form ("/vegan-places/germany/dusseldorf" spelled with u-umlaut, which
+  // travels on the wire as %C3%BC). Fold those onto the canonical ASCII slug
+  // with a 301 so they resolve instead of 404ing.
+  //
+  // `nextUrl.pathname` returns the PERCENT-ENCODED path, so the previous
+  // `NON_ASCII.test(pathname)` guard never matched and this whole redirect was
+  // dead code for encoded URLs - which is exactly how Googlebot sends them.
+  // Those requests fell through to the route, and any ISR route answers 500
+  // rather than 404 for a character above Latin-1. That was the GSC
+  // "Server error (5xx)" cluster on the Vietnamese dish hubs (2026-07-28).
+  //
+  // /api/* is exempt: those routes are always dynamic (so they cannot 500 this
+  // way) and their callers pass slugs through verbatim.
+  if (!pathname.startsWith('/api/')) {
+    let decodedPath = pathname
+    if (pathname.includes('%')) {
+      try {
+        decodedPath = decodeURIComponent(pathname)
+      } catch {
+        // Malformed percent-escape; nothing sane to route to.
+        return notFoundResponse()
+      }
+    }
+    if (hasNonAscii(decodedPath)) {
+      const canonical = asciiFold(decodedPath).toLowerCase()
+      if (isAscii(canonical)) {
+        const url = request.nextUrl.clone()
+        url.pathname = canonical
+        return NextResponse.redirect(url, 301)
+      }
+      // Cyrillic / Greek / CJK / Arabic: nothing to fold onto and no page
+      // exists, so stop here rather than 500 inside the ISR renderer.
+      return notFoundResponse()
     }
   }
 

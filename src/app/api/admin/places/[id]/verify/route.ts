@@ -1,3 +1,4 @@
+import { toSlug } from '@/lib/slug'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase-server'
@@ -61,9 +62,9 @@ export async function POST(
 
   if (place?.slug) revalidatePath(`/place/${place.slug}`)
   if (place?.country) {
-    const cs = place.country.toLowerCase().replace(/\s+/g, '-')
+    const cs = toSlug(place.country)
     revalidatePath(`/vegan-places/${cs}`)
-    if (place.city) revalidatePath(`/vegan-places/${cs}/${place.city.toLowerCase().replace(/\s+/g, '-')}`)
+    if (place.city) revalidatePath(`/vegan-places/${cs}/${toSlug(place.city)}`)
   }
 
   return NextResponse.json({ ok: true, verification_level: update.verification_level })

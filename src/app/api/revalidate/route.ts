@@ -1,3 +1,4 @@
+import { toSlug } from '@/lib/slug'
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -24,10 +25,10 @@ export async function POST(request: NextRequest) {
 
     // Revalidate specific city/country pages if provided
     if (country) {
-      const countrySlug = country.toLowerCase().replace(/\s+/g, '-')
+      const countrySlug = toSlug(country)
       revalidatePath(`/vegan-places/${countrySlug}`)
       if (city) {
-        const citySlug = city.toLowerCase().replace(/\s+/g, '-')
+        const citySlug = toSlug(city)
         revalidatePath(`/vegan-places/${countrySlug}/${citySlug}`)
       }
     }
