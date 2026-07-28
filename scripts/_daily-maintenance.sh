@@ -34,7 +34,14 @@ npx tsx scripts/moderate-content.ts >> /tmp/daily-moderation.log 2>&1 || echo "[
 echo "[$(date)] Recompute stats..." >> $LOG
 npx tsx scripts/recompute-place-stats.ts >> /tmp/daily-recompute.log 2>&1 || echo "[$(date)] recompute failed (non-fatal)" >> $LOG
 
-# 4. Daily quality snapshot
+# 4. PostGIS spatial_ref_sys tamper guard.
+# anon holds write privileges on that table and we cannot revoke them (owned by
+# supabase_admin; see supabase/migrations/20260728220000_*.sql). Wiping it would
+# break the map, nearby-places and distance sorting, so check daily and self-heal.
+echo "[$(date)] spatial_ref_sys guard..." >> $LOG
+npx tsx scripts/check-spatial-ref-sys.ts --repair >> $LOG 2>&1 || echo "[$(date)] SPATIAL_REF_SYS PROBLEM - see above" >> $LOG
+
+# 5. Daily quality snapshot
 echo "[$(date)] Quality report..." >> $LOG
 DATE=$(date +%Y-%m-%d)
 npx tsx scripts/data-quality-report.ts > /tmp/quality-${DATE}.log 2>&1 || true
