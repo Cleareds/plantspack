@@ -366,7 +366,12 @@ const nextConfig: NextConfig = {
       { source: '/vegan-places/turkey/ka%C5%9F', destination: '/vegan-places/turkey/kas', permanent: true },
 
       // Israel
-      { source: '/vegan-places/israel/tel-aviv', destination: '/vegan-places/israel/tel-aviv', permanent: false }, // same slug, no-op
+      // NOTE: there used to be a `/vegan-places/israel/tel-aviv` ->
+      // `/vegan-places/israel/tel-aviv` entry here, commented "same slug,
+      // no-op". It was not a no-op: next.config redirects are evaluated before
+      // middleware and before the filesystem, so it matched its own
+      // destination and looped, making the Tel Aviv city page (81 places)
+      // permanently unreachable and uncrawlable. Removed 2026-07-28.
       { source: '/vegan-places/israel/beer-sheva', destination: '/vegan-places/israel/beersheba', permanent: true },
 
       // Ukraine
