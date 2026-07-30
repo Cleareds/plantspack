@@ -120,7 +120,14 @@ export async function GET(request: NextRequest) {
     // Apply sorting
     switch (sort) {
       case 'popular':
-        query = query.order('view_count', { ascending: false })
+        // Until 2026-07-30 nothing ever wrote view_count, so this ordered every
+        // pack by a permanently-zero column. `record_content_view` now maintains
+        // it via trigger. The created_at tiebreaker matters regardless: without
+        // it, equal view_counts give Postgres an unstable order and paginated
+        // results can repeat or skip rows.
+        query = query
+          .order('view_count', { ascending: false })
+          .order('created_at', { ascending: false })
         break
       case 'posts':
         // TODO: Need to join with pack_posts count

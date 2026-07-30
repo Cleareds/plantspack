@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import PackDetailClient from './PackDetailClient'
+import ViewTracker from '@/components/analytics/ViewTracker'
 
 // Community content — member counts, new posts/places need to update live.
 export const revalidate = 3600 // was 0; packs change rarely (cost cut 2026-07-10)
@@ -86,6 +87,9 @@ export default async function PackPage({ params }: { params: Promise<{ id: strin
         </div>
       </div>
     }>
+      {/* pack.id, not the route param — the URL may carry a slug and the counter
+          keys on the real uuid. */}
+      {pack?.id && <ViewTracker entityType="pack" entityId={pack.id} />}
       <PackDetailClient id={id} initialPack={pack} initialPlaces={places} initialPosts={posts} />
     </Suspense>
   )

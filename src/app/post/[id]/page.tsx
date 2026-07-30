@@ -4,6 +4,7 @@ import Link from 'next/link'
 import PostPageContent from '@/components/posts/PostPageContent'
 import { Tables } from '@/lib/supabase'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
+import ViewTracker from '@/components/analytics/ViewTracker'
 
 // Community content - 60s ISR takes bot traffic off the function while keeping
 // human-visible engagement effectively fresh (interactions hydrate client-side).
@@ -160,6 +161,8 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     <div className="min-h-screen bg-surface">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {/* post.id, not the route param — the URL may carry a slug. */}
+      <ViewTracker entityType="post" entityId={post.id} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-6">

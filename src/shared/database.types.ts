@@ -442,6 +442,27 @@ export type Database = {
           },
         ]
       }
+      content_view_daily: {
+        Row: {
+          day: string
+          entity_id: string
+          entity_type: string
+          views: number
+        }
+        Insert: {
+          day?: string
+          entity_id: string
+          entity_type: string
+          views?: number
+        }
+        Update: {
+          day?: string
+          entity_id?: string
+          entity_type?: string
+          views?: number
+        }
+        Relationships: []
+      }
       country_regions: {
         Row: {
           city_names: string[]
@@ -1638,6 +1659,50 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      place_search_stats: {
+        Row: {
+          avg_position: number | null
+          clicks: number
+          ctr: number | null
+          fetched_at: string
+          impressions: number
+          period_end: string
+          period_start: string
+          place_id: string
+          source: string
+        }
+        Insert: {
+          avg_position?: number | null
+          clicks?: number
+          ctr?: number | null
+          fetched_at?: string
+          impressions?: number
+          period_end: string
+          period_start: string
+          place_id: string
+          source?: string
+        }
+        Update: {
+          avg_position?: number | null
+          clicks?: number
+          ctr?: number | null
+          fetched_at?: string
+          impressions?: number
+          period_end?: string
+          period_start?: string
+          place_id?: string
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_search_stats_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: true
+            referencedRelation: "places"
             referencedColumns: ["id"]
           },
         ]
@@ -3685,6 +3750,7 @@ export type Database = {
           favourite_vegan_meal: string | null
           first_name: string | null
           forest_size: number
+          founding_supporter: boolean
           home_city: string | null
           home_country: string | null
           id: string
@@ -3730,6 +3796,7 @@ export type Database = {
           favourite_vegan_meal?: string | null
           first_name?: string | null
           forest_size?: number
+          founding_supporter?: boolean
           home_city?: string | null
           home_country?: string | null
           id: string
@@ -3775,6 +3842,7 @@ export type Database = {
           favourite_vegan_meal?: string | null
           first_name?: string | null
           forest_size?: number
+          founding_supporter?: boolean
           home_city?: string | null
           home_country?: string | null
           id?: string
@@ -4530,6 +4598,13 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      place_view_totals: {
+        Args: { p_place_ids: string[] }
+        Returns: {
+          place_id: string
+          views: number
+        }[]
+      }
       places_submitted_by_user_24h: {
         Args: { p_user_id: string }
         Returns: number
@@ -4574,7 +4649,24 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      record_content_view: {
+        Args: { p_entity_id: string; p_entity_type: string }
+        Returns: undefined
+      }
       refresh_directory_views: { Args: never; Returns: undefined }
+      rls_audit: {
+        Args: never
+        Returns: {
+          anon_privs: string
+          approx_rows: number
+          authenticated_privs: string
+          kind: string
+          policy_count: number
+          rls_enabled: boolean
+          rls_forced: boolean
+          table_name: string
+        }[]
+      }
       search_cities: {
         Args: { q: string; result_limit?: number; vl?: string }
         Returns: {
@@ -5215,6 +5307,10 @@ export type Database = {
       st_wrapx: {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
+      }
+      sync_place_review_stats: {
+        Args: { p_place_id: string }
+        Returns: undefined
       }
       toggle_comment_reaction: {
         Args: { comment_uuid: string; reaction: string }

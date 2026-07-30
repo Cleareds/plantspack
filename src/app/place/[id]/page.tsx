@@ -50,6 +50,7 @@ const getCachedCityDishChips = unstable_cache(
   { revalidate: 86400 },
 )
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
+import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
@@ -557,6 +558,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeFaqJsonLd) }} />
       )}
       <HashScroller />
+      <ViewTracker entityType="place" entityId={place.id} />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb — full on desktop, short on mobile */}
         <nav className="mb-6 text-sm text-on-surface-variant">
