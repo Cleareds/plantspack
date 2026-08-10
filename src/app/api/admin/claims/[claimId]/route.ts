@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { sendClaimApprovedEmail, sendClaimRejectedEmail } from '@/lib/email'
@@ -68,6 +69,7 @@ export async function PATCH(
         status,
         places!place_claim_requests_place_id_fkey (
           id,
+          slug,
           name,
           address
         ),
@@ -125,6 +127,29 @@ export async function PATCH(
       if (ownerError) {
         console.error('[Admin Claims API] Error creating place owner:', ownerError)
         throw ownerError
+      }
+
+      // Bust the place page's ISR cache. Without this the owner cannot edit.
+      //
+      // /place/[id] is ISR with revalidate = 86400, and it bakes the owner
+      // (from get_place_owner) into the rendered HTML. PlaceEditButton decides
+      // between "Edit" and "Suggest correction" by comparing the signed-in user
+      // against that baked-in `owner.user_id`. So until the page regenerates,
+      // a freshly approved owner is served HTML where owner === null and only
+      // ever sees "Suggest correction" — for up to 24 hours after approval.
+      //
+      // Reported 2026-08-10 for /place/kookplant-drongen: ownership granted
+      // 12:45 UTC, owner still submitting suggestions hours later because the
+      // cached page predated the approval. The server-side permission check in
+      // PUT /api/places/[id] already accepted them the whole time; only the UI
+      // was stale. Every other place-mutating route already does this.
+      const placeSlug = (claim.places as any)?.slug as string | undefined
+      try {
+        revalidatePath(`/place/${claim.place_id}`)
+        if (placeSlug) revalidatePath(`/place/${placeSlug}`)
+      } catch (revalidateErr) {
+        // Never fail an approved claim because cache busting failed.
+        console.error('[Admin Claims API] revalidatePath failed:', revalidateErr)
       }
 
       // Send approval email
