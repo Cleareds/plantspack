@@ -57,6 +57,31 @@ async function mintSaToken(): Promise<string | null> {
 function iso(d: Date): string { return d.toISOString().slice(0, 10) }
 function daysAgo(n: number): Date { const d = new Date(); d.setDate(d.getDate() - n); return d }
 
+/**
+ * Queries whose impressions are automated, not human.
+ *
+ * "where to eat vegan" logged 64,110 impressions in the 28 days to 2026-08-07
+ * — 17% of every impression the property received — at average position 7.8
+ * with EXACTLY ZERO clicks, 64,070 of them on desktop, smeared across ~200
+ * country codes and landing mostly on Latin American hubs. Zero clicks out of
+ * 64k at position 7.8 is not a CTR problem; it is a rank tracker. The "* near
+ * me" variants show the same desktop-only, zero-click signature.
+ *
+ * Leaving them in inflated the impression trend (the +31% WoW headline was
+ * substantially this) and dragged reported desktop CTR to 0.32% vs 1.31% on
+ * mobile. Clicks were never affected — only impressions, position and CTR.
+ *
+ * Excluded via RE2 excludingRegex, anchored so we drop only the exact head
+ * terms and not the long tail that legitimately contains these words.
+ */
+const BOT_QUERY_REGEX =
+  '^(where to eat vegan|vegan (dinner|food|restaurants?|breakfast|lunch|places?) near me)$'
+
+/** GSC filter group that strips the automated queries above. */
+const EXCLUDE_BOT_QUERIES = [{
+  filters: [{ dimension: 'query', operator: 'excludingRegex', expression: BOT_QUERY_REGEX }],
+}]
+
 async function gscQuery(token: string, body: any): Promise<any[]> {
   const res = await fetch(`https://www.googleapis.com/webmasters/v3/sites/${GSC_SITE}/searchAnalytics/query`, {
     method: 'POST',
@@ -104,7 +129,7 @@ async function main() {
   const prevEnd = iso(daysAgo(3 + 14))
 
   // 1) Weekly totals, 12 weeks
-  const daily = await gscQuery(token, { startDate: start12w, endDate: end, dimensions: ['date'] })
+  const daily = await gscQuery(token, { startDate: start12w, endDate: end, dimensions: ['date'], dimensionFilterGroups: EXCLUDE_BOT_QUERIES })
   const weeks = new Map<string, { clicks: number; impr: number; posW: number }>()
   for (const r of daily) {
     const d = new Date(r.keys[0])
@@ -117,8 +142,8 @@ async function main() {
 
   // 2) Cohorts: current 14d vs previous 14d, page-level
   const [curPages, prevPages] = await Promise.all([
-    gscQuery(token, { startDate: curStart, endDate: end, dimensions: ['page'], rowLimit: 25000 }),
-    gscQuery(token, { startDate: prevStart, endDate: prevEnd, dimensions: ['page'], rowLimit: 25000 }),
+    gscQuery(token, { startDate: curStart, endDate: end, dimensions: ['page'], rowLimit: 25000, dimensionFilterGroups: EXCLUDE_BOT_QUERIES }),
+    gscQuery(token, { startDate: prevStart, endDate: prevEnd, dimensions: ['page'], rowLimit: 25000, dimensionFilterGroups: EXCLUDE_BOT_QUERIES }),
   ])
   const agg = (rows: any[]) => {
     const m = new Map<string, { clicks: number; impr: number; posW: number; pages: number }>()
@@ -133,10 +158,22 @@ async function main() {
   const curCo = agg(curPages)
   const prevCo = agg(prevPages)
 
-  // 3) Churn alarm: pages with >=5 impressions in the previous window and 0 now
-  const curSet = new Set(curPages.map(r => r.keys[0]))
-  const lost = prevPages.filter(r => r.impressions >= 5 && !curSet.has(r.keys[0]))
-  lost.sort((a, b) => b.impressions - a.impressions)
+  // 3) Churn alarm: pages with >=5 impressions in the previous window and 0 now.
+  // Host-normalized so www + apex (plantspack.com 301→www.plantspack.com)
+  // collapse to a single path — otherwise Google consolidating the apex
+  // duplicate into the www canonical is miscounted as a page "loss".
+  const normPath = (u: string) => u.replace(/^https?:\/\/[^/]+/, '').replace(/\/+$/, '') || '/'
+  const imprByPath = (rows: any[]) => {
+    const m = new Map<string, number>()
+    for (const r of rows) m.set(normPath(r.keys[0]), (m.get(normPath(r.keys[0])) || 0) + r.impressions)
+    return m
+  }
+  const curByPath = imprByPath(curPages)
+  const prevByPath = imprByPath(prevPages)
+  const lost = [...prevByPath.entries()]
+    .filter(([p, impr]) => impr >= 5 && !((curByPath.get(p) || 0) > 0))
+    .map(([path, impressions]) => ({ path, impressions }))
+    .sort((a, b) => b.impressions - a.impressions)
 
   // 4) GA4 organic vs total, weekly
   const gaRes = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${GA4_PROPERTY}:runReport`, {
@@ -170,7 +207,7 @@ async function main() {
   const lines: string[] = []
   lines.push(`GSC last full week: ${lastW.clicks} clicks (${pct(lastW.clicks, prevW?.clicks || 0)} WoW), ${lastW.impr.toLocaleString()} impressions (${pct(lastW.impr, prevW?.impr || 0)}), avg pos ${(lastW.posW / Math.max(lastW.impr, 1)).toFixed(1)}`)
   lines.push('')
-  lines.push('Weekly trend (Mon-start | clicks | impressions | pos):')
+  lines.push('Weekly trend (Mon-start | clicks | impressions | pos) — automated queries excluded:')
   for (const k of fullWeeks.slice(-8)) {
     const w = weeks.get(k)!
     lines.push(`  ${k}  ${String(w.clicks).padStart(5)}  ${String(w.impr).padStart(8)}  ${(w.posW / Math.max(w.impr, 1)).toFixed(1)}`)
@@ -186,7 +223,7 @@ async function main() {
   lines.push('')
   lines.push(`Index churn: ${lost.length} pages had >=5 impressions in the previous 14d and ZERO in the last 14d${lost.length ? ' — top losses:' : '.'}`)
   for (const r of lost.slice(0, 10)) {
-    lines.push(`  -${r.impressions} impr  ${r.keys[0].replace('https://www.plantspack.com', '')}`)
+    lines.push(`  -${r.impressions} impr  ${r.path}`)
   }
   lines.push('')
   lines.push('GA4 weekly sessions (total | organic):')

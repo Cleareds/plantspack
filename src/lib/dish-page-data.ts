@@ -3,6 +3,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { DISH_BY_SLUG, type DishDef } from './dish-keywords'
+import { matchScoreFor, minScore, DISH_PAGE_MIN_PLACES } from './dish-match'
 import { getConfidenceBadge, confidenceTierRank, type ConfidenceBadge } from './verification-badge'
 import { resolveCity } from './city-resolve'
 import { toSlug } from './slug'
@@ -13,6 +14,41 @@ const sb = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
   { auth: { persistSession: false, autoRefreshToken: false } },
 )
+
+/**
+ * PostgREST caps every response at 1000 rows regardless of the `.limit()` you
+ * ask for — `.limit(2000)` silently returns 1000 and reports no error.
+ *
+ * That silently broke dish pages in the two cities that matter most. Berlin has
+ * 1,781 live places and London 1,247, so 781 and 247 places respectively were
+ * invisible to every dish page, chip grid and nearby-city list in our #1 and #2
+ * markets by clicks. `dishes.xml` paginates properly, so the sitemap counted a
+ * dish over the >=3 gate while the page — scoring a truncated 1000-row slice —
+ * found fewer and returned 404. That is the source of the 404 the URL
+ * Inspection sample caught on /vegan-places/germany/berlin/best-vegan/ethiopian.
+ *
+ * getNearbyDishCities was worse: it pulls a whole COUNTRY with .limit(5000),
+ * so for Germany it was ranking "nearby cities" off an arbitrary 1000-row slice.
+ *
+ * Always page through with .range(). Never trust .limit() above 1000.
+ */
+async function fetchAllRows<T>(select: string, filters: (q: any) => any): Promise<T[]> {
+  const PAGE = 1000
+  const out: T[] = []
+  let from = 0
+  while (true) {
+    const { data, error } = await filters(sb.from('places').select(select)).range(from, from + PAGE - 1)
+    if (error) {
+      log.debug(`[dish] paged fetch failed at offset ${from}: ${error.message}`)
+      break
+    }
+    if (!data?.length) break
+    out.push(...(data as T[]))
+    if (data.length < PAGE) break
+    from += PAGE
+  }
+  return out
+}
 
 export interface DishPlace {
   id: string
@@ -43,26 +79,8 @@ export interface DishPlace {
   badge: ConfidenceBadge
 }
 
-function matchScoreFor(place: any, dish: DishDef): number {
-  const name = (place.name ?? '').toLowerCase()
-  const desc = (place.description ?? '').toLowerCase()
-  // cuisine_types is jsonb in the DB and occasionally contains null entries
-  // (legacy data from old imports). Filter falsy before lowercasing.
-  const cuisines = ((place.cuisine_types ?? []) as unknown[])
-    .filter((c): c is string => typeof c === 'string' && c.length > 0)
-    .map(c => c.toLowerCase())
-  const subcat = (place.subcategory ?? '').toLowerCase()
-  let score = 0
-  for (const n of dish.needles) {
-    const needle = n.toLowerCase()
-    if (name.includes(needle)) { score += 10; continue }
-    if (cuisines.some(c => c.includes(needle))) { score += 6; continue }
-    if (subcat === needle || subcat.includes(needle)) { score += 4; continue }
-    if (desc.includes(needle)) { score += 2; continue }
-  }
-  if (dish.subcategoryHint && subcat === dish.subcategoryHint) score += 4
-  return score
-}
+// matchScoreFor / minScore now live in ./dish-match so this file and
+// sitemap/dishes.xml score identically — see that module for the rationale.
 
 function veganLevelBonus(vl: string | null): number {
   switch (vl) {
@@ -95,12 +113,6 @@ export interface DishPageData {
   fullyVeganCount: number
 }
 
-/** Minimum match score to include a place. Tighter for specialised dishes
- *  (donut, ramen, falafel) to avoid false positives from broad menus. */
-function minScore(dish: DishDef): number {
-  return dish.specialised ? 6 : 4
-}
-
 /**
  * Fetch + rank places matching a dish in a city.
  * Returns null if no matches OR fewer than 3 places (density gate).
@@ -122,22 +134,17 @@ export async function getDishPageData(
   const { city, country } = loc
   log.debug(`[dish] enter ${dishSlug} country="${country}" city="${city}"`)
 
-  const { data, error } = await sb.from('places')
-    .select(`
-      id, slug, name, city, country, address, description, main_image_url,
-      vegan_level, category, subcategory, cuisine_types, average_rating,
-      review_count, is_verified, verification_level, verification_method,
-      source, created_by, tags
-    `)
-    .ilike('country', country)
-    .ilike('city', city)
-    .is('archived_at', null)
-    .limit(2000)
+  const data = await fetchAllRows<any>(
+    `id, slug, name, city, country, address, description, main_image_url,
+     vegan_level, category, subcategory, cuisine_types, average_rating,
+     review_count, is_verified, verification_level, verification_method,
+     source, created_by, tags`,
+    q => q.ilike('country', country).ilike('city', city).is('archived_at', null),
+  )
 
-  log.debug(`[dish] query result for ${dishSlug}/${city}: ${data?.length || 0} rows, error=${error?.message || 'none'}`)
+  log.debug(`[dish] query result for ${dishSlug}/${city}: ${data.length} rows`)
 
-  if (error) return null
-  if (!data?.length) return null
+  if (!data.length) return null
 
   const scored: DishPlace[] = []
   for (const p of data) {
@@ -152,7 +159,7 @@ export async function getDishPageData(
   }
 
   log.debug(`[dish] scored ${dishSlug}/${city}: ${scored.length} of ${data.length} rows match`)
-  if (scored.length < 3) return null
+  if (scored.length < DISH_PAGE_MIN_PLACES) return null
 
   // Sort by composite rank
   scored.sort((a, b) => b.rankScore - a.rankScore)
@@ -181,13 +188,11 @@ export async function getCityDishChips(country: string, city: string): Promise<{
   const loc = await resolveCity(country, city)
   if (!loc) return []
   // Pull all places once, score against every dish
-  const { data } = await sb.from('places')
-    .select('name, description, cuisine_types, subcategory')
-    .ilike('country', loc.country)
-    .ilike('city', loc.city)
-    .is('archived_at', null)
-    .limit(2000)
-  if (!data?.length) return []
+  const data = await fetchAllRows<any>(
+    'name, description, cuisine_types, subcategory',
+    q => q.ilike('country', loc.country).ilike('city', loc.city).is('archived_at', null),
+  )
+  if (!data.length) return []
 
   const counts: Record<string, number> = {}
   for (const p of data) {
@@ -200,7 +205,7 @@ export async function getCityDishChips(country: string, city: string): Promise<{
   }
 
   return Object.entries(counts)
-    .filter(([, n]) => n >= 3)
+    .filter(([, n]) => n >= DISH_PAGE_MIN_PLACES)
     .map(([slug, count]) => ({ slug, label: DISH_BY_SLUG[slug].label, count }))
     .sort((a, b) => b.count - a.count)
 }
@@ -218,13 +223,11 @@ export async function getNearbyDishCities(
   const dish = DISH_BY_SLUG[dishSlug]
   if (!dish) return []
   // Pull all places in the country, count dish matches per city
-  const { data } = await sb.from('places')
-    .select('name, description, cuisine_types, subcategory, city, country')
-    .ilike('country', country.replace(/-/g, ' '))
-    .not('city', 'is', null)
-    .is('archived_at', null)
-    .limit(5000)
-  if (!data?.length) return []
+  const data = await fetchAllRows<any>(
+    'name, description, cuisine_types, subcategory, city, country',
+    q => q.ilike('country', country.replace(/-/g, ' ')).not('city', 'is', null).is('archived_at', null),
+  )
+  if (!data.length) return []
 
   const byCity: Record<string, { country: string; count: number }> = {}
   // Compare on the slug form so the current city is excluded even when its name
@@ -242,7 +245,7 @@ export async function getNearbyDishCities(
     }
   }
   return Object.entries(byCity)
-    .filter(([, v]) => v.count >= 3)
+    .filter(([, v]) => v.count >= DISH_PAGE_MIN_PLACES)
     .map(([city, v]) => ({ city, country: v.country, count: v.count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit)

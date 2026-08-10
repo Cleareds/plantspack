@@ -29,6 +29,8 @@ export interface PlaceRow {
   updated_at: string | null
   created_at: string | null
   website?: string | null
+  is_verified?: boolean | null
+  verification_level?: number | null
 }
 
 function getSupabase(): SupabaseClient {
@@ -118,12 +120,28 @@ function placeTier(p: PlaceRow): SegmentId {
       ? p.opening_hours.trim().length > 0
       : Object.keys(p.opening_hours).length > 0)
   if (hasDescription && hasImage && (hasReview || isFullyVegan)) return 'priority'
-  // Mirror the per-page noindex predicate so the sitemap never advertises
-  // URLs the page tells Google not to index. Vegan-tier (fully/mostly) is
-  // always at least 'content' — it's a rare, high-value signal even with
-  // no description.
-  if (isFullyVegan || isMostlyVegan || hasDescription || hasImage || hasReview || hasHours || hasWebsite) return 'content'
-  return 'thin'
+
+  // This block claimed to "mirror the per-page noindex predicate" but had
+  // drifted from it, and the drift was measurable: a URL Inspection API sample
+  // (n=45, 2026-08-10) found 13% of content-tier place URLs come back
+  // "Excluded by 'noindex' tag" — we were submitting pages to Google that the
+  // page itself tells Google not to index. Across the 45,816-row content tier
+  // that is roughly 6,000 URLs of pure crawl waste, spent on a site where
+  // crawl budget is the binding constraint on the dish pages that actually
+  // convert.
+  //
+  // The gap was single-weak-signal rows: 4,246 places qualified on opening
+  // hours ALONE and 71 on an image alone, plus descriptions in the 50-79 char
+  // band. src/app/place/[id]/page.tsx requires TWO of {description >= 80,
+  // image, hours} unless there is a stronger signal, so all of those noindex.
+  //
+  // Now literally the same predicate. Keep these two in sync — if the page's
+  // `keep` changes, change it here in the same commit.
+  const hasDesc80 = !!(p.description && p.description.trim().length >= 80)
+  const isVerified = !!p.is_verified || (p.verification_level ?? 0) >= 2
+  const compositeCount = [hasDesc80, hasImage, hasHours].filter(Boolean).length
+  const keep = isFullyVegan || isMostlyVegan || isVerified || hasReview || hasWebsite || compositeCount >= 2
+  return keep ? 'content' : 'thin'
 }
 
 function xmlEscape(s: string): string {
@@ -163,7 +181,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
     fetchAll<PlaceRow>(
       sb,
       'places',
-      'slug, city, country, description, images, main_image_url, review_count, vegan_level, opening_hours, website, updated_at, created_at',
+      'slug, city, country, description, images, main_image_url, review_count, vegan_level, opening_hours, website, is_verified, verification_level, updated_at, created_at',
       (q) => q.is('archived_at', null),
     ),
     fetchAll<any>(

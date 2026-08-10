@@ -92,7 +92,11 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   const loc = await loadCity(country, city)
   if (!loc) return { title: 'Page not found', robots: { index: false } }
   const title = `Best Vegan Food in ${loc.city} - Guides by Dish | Plants Pack`
-  const description = `Curated dish-by-dish guides to vegan food in ${loc.city}, ${loc.country}. Verified spots for pizza, donuts, ramen, burgers, and more - ranked by community trust.`
+  // HONESTY (2026-08-10): was "Verified spots for pizza, donuts, ramen...".
+  // These lists are built from vegan-first source data, not from per-venue
+  // verification, so "verified" was an overclaim. Same correction the country
+  // and city hubs got on 2026-07-22.
+  const description = `Dish-by-dish guides to vegan food in ${loc.city}, ${loc.country}. Where to find vegan pizza, donuts, ramen, burgers and more - ranked by community trust.`
   return {
     title,
     description,

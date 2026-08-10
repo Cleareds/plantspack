@@ -19,6 +19,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { DISHES } from '@/lib/dish-keywords'
+import { matchScoreFor, minScore, DISH_PAGE_MIN_PLACES } from '@/lib/dish-match'
 import { toSlug } from '@/lib/slug'
 
 const SITE_URL = 'https://www.plantspack.com'
@@ -37,23 +38,10 @@ interface PlaceRow {
   country: string | null
 }
 
-function matchScore(p: PlaceRow, needles: string[]): number {
-  const name = (p.name ?? '').toLowerCase()
-  const desc = (p.description ?? '').toLowerCase()
-  const cuisines = ((p.cuisine_types ?? []) as unknown[])
-    .filter((c): c is string => typeof c === 'string' && c.length > 0)
-    .map(c => c.toLowerCase())
-  const subcat = (p.subcategory ?? '').toLowerCase()
-  let score = 0
-  for (const n of needles) {
-    const needle = n.toLowerCase()
-    if (name.includes(needle)) { score += 10; continue }
-    if (cuisines.some(c => c.includes(needle))) { score += 6; continue }
-    if (subcat === needle || subcat.includes(needle)) { score += 4; continue }
-    if (desc.includes(needle)) { score += 2; continue }
-  }
-  return score
-}
+// Scoring lives in @/lib/dish-match, shared with dish-page-data.ts. A local
+// copy used to live here and had already drifted (it never applied the
+// subcategoryHint bonus), so the sitemap could advertise a URL the page then
+// refused to render.
 
 // Must transliterate, not just hyphenate. A bare lowercase+hyphen pass emitted
 // accented <loc> values ("/vegan-places/vietnam/hội-an-tây-ward/best-vegan"),
@@ -103,21 +91,22 @@ export async function GET() {
   for (const [key, places] of byCity) {
     const [country, city] = key.split('|')
     if (!country || !city) continue
-    if (places.length < 3) continue  // tiny cities have no useful dish pages
+    // tiny cities have no useful dish pages
+    if (places.length < DISH_PAGE_MIN_PLACES) continue
     const countrySlug = slugify(country)
     const citySlug = slugify(city)
 
     let cityHasAnyDish = false
     for (const dish of DISHES) {
-      const minScore = dish.specialised ? 6 : 4
+      const gate = minScore(dish)
       let count = 0
       for (const p of places) {
-        if (matchScore(p, dish.needles) >= minScore) {
+        if (matchScoreFor(p, dish) >= gate) {
           count++
-          if (count >= 3) break  // early-exit at the density gate
+          if (count >= DISH_PAGE_MIN_PLACES) break  // early-exit at the density gate
         }
       }
-      if (count >= 3) {
+      if (count >= DISH_PAGE_MIN_PLACES) {
         urls.push(`${SITE_URL}/vegan-places/${countrySlug}/${citySlug}/best-vegan/${dish.slug}`)
         cityHasAnyDish = true
       }

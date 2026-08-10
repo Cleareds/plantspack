@@ -85,15 +85,27 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   }
 
   // Description leads with actual place names when we have them, not with
-  // platform statistics. "Hand-verified" is the curation signal. We never
-  // mention "0 are 100% vegan" - that was the single biggest CTR killer.
+  // platform statistics. We never mention "0 are 100% vegan" - that was the
+  // single biggest CTR killer.
+  //
+  // HONESTY (2026-08-10): this used to open "Hand-verified ... Cross-referenced
+  // against menus and community reviews." Neither is true of the cohort. Most
+  // rows on these pages are unverified OSM/VegGuide imports; only places at
+  // verification_level >= 3 have been opened on their own website. The country
+  // and city hubs were corrected on 2026-07-22 but these 3,065 dish and hub
+  // pages were missed. Same rule as there: state the count we can prove and
+  // let the badge carry the rest.
   const top3Names = data.places.slice(0, 3).map(p => p.name).filter(Boolean)
   const namesStr = top3Names.length > 0 ? top3Names.join(', ') : ''
   const moreCount = Math.max(0, data.total - top3Names.length)
   const moreStr = moreCount > 0 ? `, and ${moreCount} more` : ''
+  const adminReviewed = data.places.filter(p => (p.verification_level ?? 0) >= 3).length
+  const provenance = adminReviewed > 0
+    ? `${adminReviewed} checked against the venue's own website.`
+    : `Compiled from vegan-first sources and community reports.`
   const description = namesStr
-    ? `Hand-verified ${phraseLc} in ${data.city}, ${data.country}: ${namesStr}${moreStr}. Cross-referenced against menus and community reviews. Updated ${YEAR}.`
-    : `Hand-verified ${phraseLc} in ${data.city}, ${data.country}. Cross-referenced against menus and community reviews. Updated ${YEAR}.`
+    ? `${phrase} in ${data.city}, ${data.country}: ${namesStr}${moreStr}. ${provenance} Updated ${YEAR}.`
+    : `${phrase} in ${data.city}, ${data.country}. ${provenance} Updated ${YEAR}.`
 
   const heroImg = data.places.find(pl => pl.main_image_url)?.main_image_url
   const canonical = `https://www.plantspack.com${dishPageHref(routeParams.country, routeParams.city, data.dish.slug)}`
@@ -239,14 +251,24 @@ export default async function DishPage({ params, searchParams }: { params: Promi
               <h1 className="font-headline font-extrabold text-3xl md:text-4xl tracking-tight mb-2">
                 {total >= 5 ? `${total} Best ` : ''}{phrase} in {city}
               </h1>
+              {/* HONESTY (2026-08-10): was "Hand-verified ... Cross-referenced
+                  across HappyCow, venue websites, and OSM tags." Only rows at
+                  verification_level >= 3 have been opened on their own website;
+                  the rest are vegan-first source data. Say the provable number
+                  and name the sources without implying each entry was checked. */}
               <p className="text-on-surface-variant text-base mb-4 leading-relaxed">
-                Hand-verified {phraseLc} in {city}, {country}.{' '}
+                {phrase} in {city}, {country}.{' '}
                 {fullyVeganCount > 0 && (
                   <span className="font-semibold text-emerald-700">
-                    {fullyVeganCount} fully vegan.{' '}
+                    {fullyVeganCount} listed as 100% vegan.{' '}
                   </span>
                 )}
-                Cross-referenced across HappyCow, venue websites, and OSM tags.
+                {(() => {
+                  const adminReviewed = places.filter(pl => (pl.verification_level ?? 0) >= 3).length
+                  return adminReviewed > 0
+                    ? <>{adminReviewed} of {total} checked against the venue&apos;s own website; the rest come from vegan-first sources (OpenStreetMap, VegGuide, HappyCow) and haven&apos;t been individually re-checked.</>
+                    : <>Compiled from vegan-first sources (OpenStreetMap, VegGuide, HappyCow) and community reports. None have been individually checked against the venue&apos;s own website yet.</>
+                })()}
               </p>
             </>
           )

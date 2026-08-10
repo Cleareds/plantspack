@@ -52,7 +52,7 @@ function citySlugSafe(c: CityRow): string {
 
 export async function GET() {
   const sb = createAdminClient()
-  const [countriesRes, citiesRes, postsRes] = await Promise.all([
+  const [countriesRes, citiesRes, postsRes, totalRes, fvVerifiedRes, fvTotalRes] = await Promise.all([
     sb.from('directory_countries')
       .select('country, country_slug, place_count, city_count')
       .order('place_count', { ascending: false })
@@ -67,6 +67,18 @@ export async function GET() {
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
       .limit(15),
+    // The headline total used to be the sum of the top-25 countries only,
+    // which understated the real figure. Count it properly.
+    sb.from('places').select('id', { count: 'exact', head: true })
+      .is('archived_at', null),
+    // "fully vegan" split, so the copy below can state what is actually true:
+    // how many fully-vegan rows have been admin-confirmed vs how many carry
+    // the tag from source data. Per the project rule these are NOT the same
+    // number and must never be conflated.
+    sb.from('places').select('id', { count: 'exact', head: true })
+      .is('archived_at', null).eq('vegan_level', 'fully_vegan').gte('verification_level', 3),
+    sb.from('places').select('id', { count: 'exact', head: true })
+      .is('archived_at', null).eq('vegan_level', 'fully_vegan'),
   ])
 
   const countries  = (countriesRes.data || []) as CountryRow[]
@@ -76,9 +88,18 @@ export async function GET() {
   const md = [
     `# Plants Pack`,
     ``,
-    `> Free, ad-free directory of vegan and vegan-friendly places worldwide. ${countries.reduce((s, c) => s + c.place_count, 0).toLocaleString()}+ places across 10,000+ cities in 160+ countries. Each "fully vegan" listing is manually verified against the venue's own menu.`,
+    // HONESTY (2026-08-10): this block claimed "Each 'fully vegan' listing is
+    // manually verified against the venue's own menu" and "Every venue tagged
+    // fully_vegan has been opened on its own website". Neither is true — most
+    // fully_vegan rows carry that tag from vegan-first source data and have
+    // never been individually checked. "Each"/"Every" absolutes about listing
+    // quality are exactly what CLAUDE.md bans, and this file exists to be
+    // quoted verbatim by language models, so a false claim here propagates.
+    // State the split instead; it is a stronger claim precisely because it is
+    // checkable.
+    `> Free, ad-free directory of vegan and vegan-friendly places worldwide. ${(totalRes.count ?? 0).toLocaleString()} places across 10,000+ cities in 160+ countries.`,
     ``,
-    `Community-driven, no paid listings, no ads. Every venue tagged \`fully_vegan\` has been opened on its own website and cross-referenced against secondary sources (HappyCow, local vegan press) before being flagged.`,
+    `Community-driven, no paid listings, no ads. ${(fvTotalRes.count ?? 0).toLocaleString()} venues are tagged \`fully_vegan\`; of those, ${(fvVerifiedRes.count ?? 0).toLocaleString()} have been opened on their own website and cross-referenced against a secondary source (HappyCow, local vegan press) by a human. The rest carry the tag from vegan-first source data (OpenStreetMap, VegGuide) and have not been individually re-checked — those show a lower confidence badge on the site.`,
     ``,
     `## About Plants Pack`,
     ``,

@@ -33,7 +33,9 @@ export const DISHES: DishDef[] = [
   { slug: 'donut',       label: 'Donut',        needles: ['donut','doughnut','krapfen','berliner','sufganiyot'], specialised: true },
   { slug: 'ice-cream',   label: 'Ice cream',    needles: ['ice cream','ice-cream','ice_cream','gelato','sorbet','soft serve','soft-serve','glaceria'], subcategoryHint: 'ice-cream' },
   { slug: 'gelato',      label: 'Gelato',       needles: ['gelato','gelateria'], specialised: true },
-  { slug: 'cake',        label: 'Cake',         needles: ['cake','tort','torte','gateau','cheesecake'] },
+  // 'tort' removed 2026-08-10: it matched "tortilla" on every burrito place.
+  // 'torte' keeps the German/Italian cake sense without the collision.
+  { slug: 'cake',        label: 'Cake',         needles: ['cake','torte','gateau','cheesecake'] },
   { slug: 'cheesecake',  label: 'Cheesecake',   needles: ['cheesecake'], specialised: true },
   { slug: 'brownie',     label: 'Brownie',      needles: ['brownie'], specialised: true },
   { slug: 'chocolate',   label: 'Chocolate',    needles: ['chocolate','choco','schoko','cacao','cocoa'], subcategoryHint: 'chocolatier' },
