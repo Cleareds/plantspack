@@ -819,7 +819,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                     </a>
                     <span className="text-outline">•</span>
                     <a
-                      href={`https://www.openstreetmap.org/?mlat=${place.latitude}&mlon=${place.longitude}&zoom=17`}
+                      /* Deep-link the actual OSM element when we hold its ref
+                         (osm_ref format "node:123" per intake.ts); coordinates
+                         are the fallback for unmatched places. */
+                      href={/^(node|way|relation):\d+$/.test((place as any).osm_ref ?? '')
+                        ? `https://www.openstreetmap.org/${(place as any).osm_ref.replace(':', '/')}`
+                        : `https://www.openstreetmap.org/?mlat=${place.latitude}&mlon=${place.longitude}&zoom=17`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary"

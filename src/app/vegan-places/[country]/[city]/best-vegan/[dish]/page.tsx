@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { getDishPageData, getNearbyDishCities, dishPageHref, type DishPageData } from '@/lib/dish-page-data'
+import { getArticlesForDish } from '@/lib/vegan-content/dish-article-links'
 import { normaliseDishSlug, DISHES } from '@/lib/dish-keywords'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from '@/components/places/VerificationConfidenceBadge'
@@ -147,6 +148,7 @@ export default async function DishPage({ params, searchParams }: { params: Promi
 
   // Nearby cities for same dish
   const nearbyCities = await getNearbyDishCities(dish.slug, country, city, 6)
+  const relatedArticles = getArticlesForDish(dish.slug)
 
   // Other dishes in this same city (we re-query to find sibling dish chips)
   const siblingDishes = await (async () => {
@@ -371,6 +373,22 @@ export default async function DishPage({ params, searchParams }: { params: Promi
                 )
               })}
             </div>
+          </section>
+        )}
+
+        {/* Related /vegan/<topic> articles — internal links so the content hub
+            inherits authority from the dish cohort (its strongest). */}
+        {relatedArticles.length > 0 && (
+          <section className="mb-8">
+            <h2 className="font-headline font-bold text-xl mb-3">Worth knowing</h2>
+            <ul className="space-y-2">
+              {relatedArticles.map(a => (
+                <li key={a.slug} className="text-sm leading-relaxed">
+                  <Link href={`/vegan/${a.slug}`} className="text-primary font-medium hover:underline">{a.title}</Link>
+                  <span className="text-on-surface-variant"> - {a.verdictHeadline}</span>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

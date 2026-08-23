@@ -17,6 +17,9 @@ import { worcestershireSauceArticle } from './ingredients/worcestershire-sauce'
 import { pestoArticle } from './ingredients/pesto'
 import { naanArticle } from './ingredients/naan'
 import { kimchiArticle } from './ingredients/kimchi'
+import { oreosArticle } from './ingredients/oreos'
+import { soySauceArticle } from './ingredients/soy-sauce'
+import { peanutButterArticle } from './ingredients/peanut-butter'
 import { japanGuide } from './travel/japan'
 import { italyGuide } from './travel/italy'
 import { thailandGuide } from './travel/thailand'
@@ -44,6 +47,9 @@ export const INGREDIENT_ARTICLES: IngredientArticle[] = [
   pestoArticle,
   naanArticle,
   kimchiArticle,
+  oreosArticle,
+  soySauceArticle,
+  peanutButterArticle,
   // Drinks
   wineArticle,
   beerArticle,

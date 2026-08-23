@@ -99,6 +99,9 @@ async function reverseGeocode(lat, lng) {
       city: tags['addr:city'] || null,
       country: tags['addr:country'] || null,
       source_id: `osm-${el.type}-${el.id}`,
+      // Canonical OSM element ref (intake.ts format) — powers the POI deep
+      // link on place pages and future OSM comparison work.
+      osm_ref: `${el.type}:${el.id}`,
     }
   }).filter(Boolean)
   console.log('Parsed ' + places.length + ' places with names')
@@ -140,7 +143,7 @@ async function reverseGeocode(lat, lng) {
         address: p.address || city || country || 'Unknown', city, country,
         category: catFor(p.name), vegan_level: 'vegan_friendly',
         website: p.website, phone: p.phone, opening_hours: p.opening_hours,
-        source_id: p.source_id, source: `osm-auto-sync-${today}`, created_by: ADMIN_ID,
+        source_id: p.source_id, osm_ref: p.osm_ref, source: `osm-auto-sync-${today}`, created_by: ADMIN_ID,
         verification_status: 'unverified', verification_method: 'osm-auto-sync', verification_level: 1,
         is_verified: false, slug, tags: ['osm-auto-import'],
       }

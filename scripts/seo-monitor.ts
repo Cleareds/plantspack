@@ -75,7 +75,11 @@ function daysAgo(n: number): Date { const d = new Date(); d.setDate(d.getDate() 
  * terms and not the long tail that legitimately contains these words.
  */
 const BOT_QUERY_REGEX =
-  '^(where to eat vegan|vegan (dinner|food|restaurants?|breakfast|lunch|places?) near me)$'
+  '(^(where to eat vegan|vegan (dinner|food|restaurants?|breakfast|lunch|places?) near me)$|")'
+// The trailing |" drops any query containing a double quote: quoted-operator
+// searches ("bellevue" "fully vegan" indian restaurant, dozens of permutations,
+// 0 clicks at pos 3-5) are scripted rank checks, not humans — found 2026-08-23
+// polluting the striking-distance pull.
 
 /** GSC filter group that strips the automated queries above. */
 const EXCLUDE_BOT_QUERIES = [{
