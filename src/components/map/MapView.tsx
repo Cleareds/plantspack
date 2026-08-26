@@ -16,6 +16,7 @@ import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
 import RatingBadge from '@/components/places/RatingBadge'
 import MapLegend from './MapLegend'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
+import { MAP_TILES, OSM_TILES, MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
 
 // Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -134,25 +135,15 @@ function MapViewImpl({
         style={{ height: '100%', width: '100%', minHeight: '400px' }}
         className="z-10"
       >
-        {/* Tile source:
-              - If NEXT_PUBLIC_STADIA_KEY is set, use Stadia Alidade Smooth (200K/mo free tier, prettiest).
-                Signup: https://client.stadiamaps.com — create a key, add the production domain, copy key.
-              - Otherwise fall back to OSM raw tiles (no key, unlimited, legally simple).
-            */}
-        {process.env.NEXT_PUBLIC_STADIA_KEY ? (
-          <TileLayer
-            attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
-            url={`https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${process.env.NEXT_PUBLIC_STADIA_KEY}`}
-            tileSize={256}
-          />
-        ) : (
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
-            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-            tileSize={256}
-            maxZoom={19}
-          />
-        )}
+        {/* Tile source lives in @/lib/map-tiles so every map surface swaps at
+            once. Falls back to raw OSM tiles when no provider key is set. */}
+        <TileLayer
+          attribution={(MAP_TILES ?? OSM_TILES).attribution}
+          url={(MAP_TILES ?? OSM_TILES).url}
+          tileSize={256}
+          maxZoom={(MAP_TILES ?? OSM_TILES).maxZoom}
+          referrerPolicy={MAP_TILE_REFERRER_POLICY}
+        />
 
         <MapClickHandler onMapClick={onMapClick} />
         <MapEventHandler onMapMove={onMapMove} />

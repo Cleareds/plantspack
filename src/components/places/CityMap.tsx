@@ -9,6 +9,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 
 import { useEffect, useRef, useState } from 'react'
+import { MAP_TILES, OSM_TILES, MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
 
 interface CityMapPlace {
   id: string
@@ -74,25 +75,14 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
         worldCopyJump: true,
       }).setView([20, 0], 2)
 
-      // Tile source: prefer Stadia (matches /map page) with OSM fallback.
-      const stadiaKey = process.env.NEXT_PUBLIC_STADIA_KEY
-      if (stadiaKey) {
-        L.tileLayer(
-          `https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${stadiaKey}`,
-          {
-            attribution:
-              '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            tileSize: 256,
-            maxZoom: 19,
-          }
-        ).addTo(map)
-      } else {
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-          maxZoom: 19,
-          referrerPolicy: 'origin',
-        }).addTo(map)
-      }
+      // Tile source: shared with /map via @/lib/map-tiles, OSM as the fallback.
+      const tiles = MAP_TILES ?? OSM_TILES
+      L.tileLayer(tiles.url, {
+        attribution: tiles.attribution,
+        tileSize: 256,
+        maxZoom: tiles.maxZoom,
+        referrerPolicy: MAP_TILE_REFERRER_POLICY,
+      }).addTo(map)
 
       // Use the shared green-gradient cluster icon from leaflet-config so
       // we don't render bare numbers. The default MarkerCluster styles

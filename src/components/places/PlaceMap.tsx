@@ -3,6 +3,7 @@
 import { useInView } from '@/lib/hooks/use-in-view'
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
+import { MAP_TILES_ENABLED, MAP_TILE_CREDIT, staticTileUrl } from '@/lib/map-tiles'
 
 interface PlaceMapProps {
   latitude: number
@@ -16,15 +17,13 @@ interface PlaceMapProps {
   placeSlug?: string | null
 }
 
-// Free Stadia raster tiles (same provider + key as the main /map). We do NOT use
-// any Static Maps API here: MapTiler's and Stadia's /static/ endpoints are gated
-// behind paid plans (they return a 403 error-PNG on the free tier - that was the
-// gray placeholder bug). Raster tiles are on the free tier and cost nothing extra
-// on Stadia. Auth is via the api_key query param, so no Referer/origin lock to
-// break. This preview is non-interactive (it links to the full /map) and only
-// fetches tiles when scrolled near the viewport, so bots/crawlers cost nothing
-// and we never ship Leaflet to the place-page bundle.
-const STADIA_KEY = process.env.NEXT_PUBLIC_STADIA_KEY
+// Raster tiles from the shared provider in @/lib/map-tiles (same source as the
+// main /map). We do NOT use any Static Maps API here: MapTiler's and Stadia's
+// /static/ endpoints are gated behind paid plans (they return a 403 error-PNG on
+// the free tier - that was the gray placeholder bug). Raster tiles are on the
+// free tier. This preview is non-interactive (it links to the full /map) and
+// only fetches tiles when scrolled near the viewport, so bots/crawlers cost
+// nothing and we never ship Leaflet to the place-page bundle.
 const TILE = 256 // CSS px per tile (the @2x URL delivers 512px for retina crispness)
 const ZOOM = 15
 const GRID = 3 // 3x3 tiles = 768x768, enough to keep the point centered for any offset
@@ -64,7 +63,7 @@ export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug
   const pointOffsetY = (half + (cy - centerTileY)) * TILE
 
   const tiles = []
-  if (STADIA_KEY && inView) {
+  if (MAP_TILES_ENABLED && inView) {
     for (let r = 0; r < GRID; r++) {
       for (let c = 0; c < GRID; c++) {
         const tx = ((centerTileX - half + c) % n + n) % n // wrap around the antimeridian
@@ -74,7 +73,8 @@ export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={`${c}-${r}`}
-            src={`https://tiles.stadiamaps.com/tiles/alidade_smooth/${ZOOM}/${tx}/${ty}@2x.png?api_key=${STADIA_KEY}`}
+            src={staticTileUrl(ZOOM, tx, ty)}
+            referrerPolicy="origin"
             alt=""
             aria-hidden
             width={TILE}
@@ -95,7 +95,7 @@ export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug
       aria-label={`View ${name} on the full map`}
       className="block h-64 rounded-lg overflow-hidden ghost-border relative z-0 group cursor-pointer bg-gradient-to-br from-emerald-50 via-stone-50 to-emerald-50"
     >
-      {STADIA_KEY && inView ? (
+      {MAP_TILES_ENABLED && inView ? (
         <>
           {/* Tile grid, translated so the exact coordinate lands at the container center. */}
           <div
@@ -113,10 +113,10 @@ export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full pointer-events-none z-10">
             <MapPin className="h-8 w-8 text-primary drop-shadow-md" fill="currentColor" stroke="white" strokeWidth={1.5} />
           </div>
-          {/* Attribution (Stadia + OSM ToS). Non-link text since this whole
+          {/* Attribution (provider + OSM ToS). Non-link text since this whole
               preview is already a <Link>; full clickable credits live on /map. */}
           <span className="absolute bottom-0 right-0 z-10 px-1 text-[9px] leading-tight text-on-surface-variant/80 bg-surface-container-lowest/70 rounded-tl pointer-events-none">
-            © Stadia Maps © OpenStreetMap
+            {MAP_TILE_CREDIT}
           </span>
         </>
       ) : (
