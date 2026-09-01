@@ -38,6 +38,8 @@ type EventPost = {
     time_tbd?: boolean
     latitude?: number
     longitude?: number
+    cancelled?: boolean
+    update_note?: string
   } | null
   created_at: string
   users: {
@@ -111,11 +113,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   // We don't 404 it (keeps any link equity) — just drop it from the index.
   const endIso = event?.end_time || event?.start_time
   const wellPast = endIso ? (Date.now() - new Date(endIso).getTime()) > 21 * 864e5 : false
+  // Cancelled events noindex immediately: an indexed page for an event that
+  // won't happen is exactly the staleness that costs us trust.
+  const isCancelled = !!event?.cancelled
   return {
-    title: `${title} - Event | Plants Pack`,
+    title: `${isCancelled ? 'CANCELLED: ' : ''}${title} - Event | Plants Pack`,
     description,
     alternates: { canonical: `https://www.plantspack.com/event/${post.slug || id}` },
-    ...(wellPast ? { robots: { index: false, follow: true } } : {}),
+    ...(wellPast || isCancelled ? { robots: { index: false, follow: true } } : {}),
     openGraph: { title, description, type: 'article', siteName: 'Plants Pack', ...(image ? { images: [image] } : {}) },
   }
 }
@@ -172,7 +177,9 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
             // time); full datetime (with the source's offset) otherwise. endDate
             // always emitted (falls back to start for single-day events).
             ...(eventSchemaDates(event) || {}),
-            eventStatus: 'https://schema.org/EventScheduled',
+            eventStatus: event.cancelled
+              ? 'https://schema.org/EventCancelled'
+              : 'https://schema.org/EventScheduled',
             eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
             ...(event.location
               ? {
@@ -243,6 +250,23 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
               {post.content.split('\n')[0]}
             </h1>
 
+            {/* Cancelled banner. Set by the update-events routine when the
+                organizer announces a cancellation; the page also noindexes and
+                drops out of the sitemap so we never advertise a dead event. */}
+            {event?.cancelled && (
+              <div className="mb-6 p-4 rounded-xl bg-error-container/20 border border-error/30">
+                <div className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-error" style={{ fontSize: '20px' }}>event_busy</span>
+                  <div>
+                    <div className="font-semibold text-error">This event has been cancelled</div>
+                    {event.update_note && (
+                      <div className="text-sm text-on-surface-variant mt-0.5">{event.update_note}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Date/time block */}
             {event?.start_time && (
               <div className="mb-6 p-4 bg-tertiary-container/10 rounded-xl">
@@ -255,17 +279,32 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                       {new Date(event.start_time).getDate()}
                     </span>
                   </div>
-                  <div>
-                    <div className="font-medium text-on-surface">
-                      {new Date(event.start_time).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-                    </div>
-                    {!event.time_tbd && (
-                      <div className="text-sm text-on-surface-variant mt-0.5">
-                        {new Date(event.start_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
-                        {event.end_time && ` – ${new Date(event.end_time).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`}
+                  {(() => {
+                    // Multi-day events (festivals) used to render only the first
+                    // day plus a start-to-end time range, which reads as "closes
+                    // 17:00 on Friday" for a three-day show. Show the full range
+                    // instead, and say which day the end time belongs to.
+                    const start = new Date(event.start_time!)
+                    const end = event.end_time ? new Date(event.end_time) : null
+                    const multiDay = !!end && end.toDateString() !== start.toDateString()
+                    const time = (d: Date) => d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+                    return (
+                      <div>
+                        <div className="font-medium text-on-surface">
+                          {multiDay
+                            ? `${start.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })} to ${end!.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`
+                            : start.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                        </div>
+                        {!event.time_tbd && (
+                          <div className="text-sm text-on-surface-variant mt-0.5">
+                            {multiDay
+                              ? `Opens ${time(start)}, closes ${time(end!)} on ${end!.toLocaleDateString(undefined, { weekday: 'long' })}`
+                              : `${time(start)}${end ? ` – ${time(end)}` : ''}`}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                    )
+                  })()}
                 </div>
               </div>
             )}

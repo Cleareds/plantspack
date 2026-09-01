@@ -15,6 +15,7 @@ type EventPost = {
     location?: string
     ticket_url?: string
     time_tbd?: boolean
+    cancelled?: boolean
   } | null
   users: {
     id: string
@@ -39,7 +40,7 @@ export default function EventCard({ event }: { event: EventPost }) {
           <span className="text-[10px] font-bold text-primary uppercase">
             {startDate.toLocaleDateString(undefined, { month: 'short' })}
           </span>
-          <span className="text-xl font-bold text-on-surface leading-none">
+          <span className={`text-xl font-bold text-on-surface leading-none${data?.cancelled ? ' line-through opacity-60' : ''}`}>
             {startDate.getDate()}
           </span>
         </Link>
@@ -48,7 +49,14 @@ export default function EventCard({ event }: { event: EventPost }) {
       {/* Content */}
       <div className="flex-1 min-w-0">
         <Link href={`/event/${event.id}`}>
-          <h3 className="font-semibold text-on-surface text-sm line-clamp-1 mb-1 hover:text-primary transition-colors">{title}</h3>
+          <h3 className="font-semibold text-on-surface text-sm line-clamp-1 mb-1 hover:text-primary transition-colors">
+            {data?.cancelled && (
+              <span className="mr-1.5 inline-block align-middle rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-error-container/30 text-error">
+                Cancelled
+              </span>
+            )}
+            {title}
+          </h3>
         </Link>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-on-surface-variant mb-2">
