@@ -16,7 +16,8 @@ import { PlaceWithDistance } from '@/hooks/useNearbyPlaces'
 import RatingBadge from '@/components/places/RatingBadge'
 import MapLegend from './MapLegend'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
-import { MAP_TILES, OSM_TILES, MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
+import { MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
+import { useTileSource } from '@/lib/hooks/use-tile-source'
 
 // Dynamic imports for react-leaflet (SSR-safe)
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -125,6 +126,9 @@ function MapViewImpl({
   loading,
   focusPlace,
 }: MapViewProps) {
+  const { tiles, degraded, onTileError } = useTileSource()
+  const tileKey = degraded ? 'osm' : 'keyed'
+
   return (
     <div className="flex-1 relative min-h-0 w-full">
       <MapLegend />
@@ -136,13 +140,18 @@ function MapViewImpl({
         className="z-10"
       >
         {/* Tile source lives in @/lib/map-tiles so every map surface swaps at
-            once. Falls back to raw OSM tiles when no provider key is set. */}
+            once, and useTileSource drops to raw OSM when the keyed provider
+            stops serving. `key` forces a remount on a swap: react-leaflet
+            pushes a changed `url` through setUrl but leaves the rendered
+            attribution stale. */}
         <TileLayer
-          attribution={(MAP_TILES ?? OSM_TILES).attribution}
-          url={(MAP_TILES ?? OSM_TILES).url}
+          key={tileKey}
+          attribution={tiles.attribution}
+          url={tiles.url}
           tileSize={256}
-          maxZoom={(MAP_TILES ?? OSM_TILES).maxZoom}
+          maxZoom={tiles.maxZoom}
           referrerPolicy={MAP_TILE_REFERRER_POLICY}
+          eventHandlers={{ tileerror: onTileError }}
         />
 
         <MapClickHandler onMapClick={onMapClick} />

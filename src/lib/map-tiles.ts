@@ -46,6 +46,16 @@ export const MAP_TILES = STADIA_KEY
     }
   : null
 
+/**
+ * Concrete OSM tile URL for the place-page preview grid when the keyed
+ * provider has failed. OSM serves 256px tiles and has no @2x variant, so this
+ * is softer than the keyed tile at the same CSS size - acceptable for a
+ * degraded state, and far better than a grid of error tiles.
+ */
+export function osmStaticTileUrl(z: number, x: number, y: number): string {
+  return `https://tile.openstreetmap.org/${z}/${x}/${y}.png`
+}
+
 /** Keyless fallback. Fine at low volume; OSM's tile policy caps heavy use. */
 export const OSM_TILES = {
   url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -69,3 +79,116 @@ export const MAP_TILES_ENABLED = Boolean(STADIA_KEY)
 export function staticTileUrl(z: number, x: number, y: number): string {
   return `https://tiles.stadiamaps.com/tiles/${STADIA_STYLE}/${z}/${x}/${y}@2x.png?api_key=${STADIA_KEY}`
 }
+
+// ---------------------------------------------------------------------------
+// Runtime health check
+// ---------------------------------------------------------------------------
+//
+// Why this is a `fetch` and not an `onerror` handler: raster tile providers
+// ship their failures as a *valid PNG* with the reason drawn into the pixels
+// ("Account Limit Exceeded", "Invalid key"). Verified in Chrome 2026-09-08 -
+// an <img> pointing at a 401, 403, 429 or 500 whose body decodes as an image
+// fires `load`, NOT `error`, so Leaflet's `tileerror` never sees it. That is
+// precisely how both the 2026-08 quota blowout and the MapTiler dead key
+// rendered grey for weeks with nothing to catch them. `fetch()` is the only
+// client-side path to the real HTTP status, and Stadia sends
+// `access-control-allow-origin: *` on its error responses so the status is
+// readable cross-origin.
+//
+// Cost: one tile request per browser session. The probe deliberately asks for
+// a fixed low-zoom tile (z3, ~33KB @2x) that is identical for every user and
+// every page, so the CDN and the browser cache absorb almost all of it, and it
+// goes through staticTileUrl() on purpose - probing the exact URL shape the
+// place-page grid uses, rather than a separate code path that could pass while
+// the real one fails.
+
+/** Fixed, tiny, user-independent tile used only for the health check. */
+const PROBE_TILE = { z: 3, x: 4, y: 3 }
+
+/** sessionStorage key holding the verdict, so it is one probe per session. */
+const PROBE_CACHE_KEY = 'pp:tile-provider'
+
+export type TileHealth = 'ok' | 'bad' | 'unknown'
+
+let memoized: TileHealth = 'unknown'
+let inFlight: Promise<TileHealth> | null = null
+
+function readCachedHealth(): TileHealth {
+  if (memoized !== 'unknown') return memoized
+  try {
+    const v = sessionStorage.getItem(PROBE_CACHE_KEY)
+    if (v === 'ok' || v === 'bad') return (memoized = v)
+  } catch {
+    // Private mode / blocked site data. Fall through and just re-probe.
+  }
+  return 'unknown'
+}
+
+function cacheHealth(v: TileHealth) {
+  memoized = v
+  try {
+    if (v !== 'unknown') sessionStorage.setItem(PROBE_CACHE_KEY, v)
+  } catch {
+    // Non-fatal: we keep the module-level memo either way.
+  }
+}
+
+/**
+ * Synchronous read of an already-known verdict. Lets a component start on the
+ * right provider with no error-tile flash on the second and later map views of
+ * a session.
+ */
+export function cachedTileHealth(): TileHealth {
+  if (!MAP_TILES) return 'bad'
+  if (typeof window === 'undefined') return 'unknown'
+  return readCachedHealth()
+}
+
+/**
+ * Fetch one tile and report whether the keyed provider is really serving.
+ *
+ * A non-OK status is the only thing treated as `bad`. A thrown fetch is
+ * `unknown` on purpose and is never cached: an offline blip or a blocked
+ * request would otherwise pin the whole session to OSM tiles, which is a worse
+ * outcome than briefly trusting a provider that is probably fine.
+ */
+export function probeTileProvider(): Promise<TileHealth> {
+  if (!MAP_TILES) return Promise.resolve<TileHealth>('bad')
+  if (typeof window === 'undefined') return Promise.resolve<TileHealth>('unknown')
+
+  const cached = readCachedHealth()
+  if (cached !== 'unknown') return Promise.resolve(cached)
+  if (inFlight) return inFlight
+
+  const { z, x, y } = PROBE_TILE
+  inFlight = fetch(staticTileUrl(z, x, y), {
+    method: 'GET',
+    // Same referrer the tile layers send, so the probe authenticates exactly
+    // the way the real tiles do rather than testing a different code path.
+    referrerPolicy: MAP_TILE_REFERRER_POLICY,
+  })
+    .then((res): TileHealth => {
+      const verdict: TileHealth = res.ok ? 'ok' : 'bad'
+      cacheHealth(verdict)
+      return verdict
+    })
+    .catch((): TileHealth => 'unknown')
+    .finally(() => {
+      inFlight = null
+    })
+
+  return inFlight
+}
+
+/**
+ * Records that Leaflet reported dead tiles. This is the second net, not the
+ * first: it cannot see an error-PNG (see the note above), but it does catch
+ * what the probe cannot - DNS failure, a refused connection, and truncated or
+ * non-image bodies.
+ */
+export function reportTileFailure() {
+  cacheHealth('bad')
+}
+
+/** Consecutive Leaflet tile errors tolerated before dropping to OSM. */
+export const TILE_ERROR_THRESHOLD = 4

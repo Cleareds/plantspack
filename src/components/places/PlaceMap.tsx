@@ -3,7 +3,8 @@
 import { useInView } from '@/lib/hooks/use-in-view'
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
-import { MAP_TILES_ENABLED, MAP_TILE_CREDIT, staticTileUrl } from '@/lib/map-tiles'
+import { MAP_TILES_ENABLED, osmStaticTileUrl, staticTileUrl } from '@/lib/map-tiles'
+import { useTileSource } from '@/lib/hooks/use-tile-source'
 
 interface PlaceMapProps {
   latitude: number
@@ -39,6 +40,12 @@ function latToTileY(lat: number, z: number) {
 
 export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug }: PlaceMapProps) {
   const { ref, inView } = useInView<HTMLAnchorElement>({ rootMargin: '300px' })
+  // Degrades this grid to OSM tiles when the keyed provider stops serving.
+  // Note the gate below stays on MAP_TILES_ENABLED: when no key is configured
+  // at all we keep the gradient placeholder rather than pointing every place
+  // page at OSM, which their bulk-use policy does not allow. OSM is only for
+  // the outage case.
+  const { degraded, onTileError, credit } = useTileSource()
 
   const href = (() => {
     const params = new URLSearchParams()
@@ -73,8 +80,9 @@ export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={`${c}-${r}`}
-            src={staticTileUrl(ZOOM, tx, ty)}
+            src={degraded ? osmStaticTileUrl(ZOOM, tx, ty) : staticTileUrl(ZOOM, tx, ty)}
             referrerPolicy="origin"
+            onError={onTileError}
             alt=""
             aria-hidden
             width={TILE}
@@ -116,7 +124,7 @@ export default function PlaceMap({ latitude, longitude, name, placeId, placeSlug
           {/* Attribution (provider + OSM ToS). Non-link text since this whole
               preview is already a <Link>; full clickable credits live on /map. */}
           <span className="absolute bottom-0 right-0 z-10 px-1 text-[9px] leading-tight text-on-surface-variant/80 bg-surface-container-lowest/70 rounded-tl pointer-events-none">
-            {MAP_TILE_CREDIT}
+            {credit}
           </span>
         </>
       ) : (

@@ -9,7 +9,15 @@ import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 
 import { useEffect, useRef, useState } from 'react'
-import { MAP_TILES, OSM_TILES, MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
+import {
+  MAP_TILES,
+  OSM_TILES,
+  MAP_TILE_REFERRER_POLICY,
+  TILE_ERROR_THRESHOLD,
+  cachedTileHealth,
+  probeTileProvider,
+  reportTileFailure,
+} from '@/lib/map-tiles'
 
 interface CityMapPlace {
   id: string
@@ -75,14 +83,52 @@ export default function CityMap({ places, className = '' }: CityMapProps) {
         worldCopyJump: true,
       }).setView([20, 0], 2)
 
-      // Tile source: shared with /map via @/lib/map-tiles, OSM as the fallback.
-      const tiles = MAP_TILES ?? OSM_TILES
-      L.tileLayer(tiles.url, {
-        attribution: tiles.attribution,
+      // Tile source: shared with /map via @/lib/map-tiles, OSM as the
+      // fallback. This map is built imperatively rather than through
+      // react-leaflet, so it cannot use the useTileSource hook and instead
+      // swaps the layer in place. Same two detectors as the hook: a fetch
+      // probe for provider error-PNGs (which report as a successful image
+      // load and are invisible to `tileerror`) and a tileerror run for dead
+      // connections.
+      const keyed = MAP_TILES
+      let layer = L.tileLayer((keyed ?? OSM_TILES).url, {
+        attribution: (keyed ?? OSM_TILES).attribution,
         tileSize: 256,
-        maxZoom: tiles.maxZoom,
+        maxZoom: (keyed ?? OSM_TILES).maxZoom,
         referrerPolicy: MAP_TILE_REFERRER_POLICY,
-      }).addTo(map)
+      })
+
+      let demoted = false
+      const demote = () => {
+        if (!keyed || demoted) return
+        demoted = true
+        map.removeLayer(layer)
+        layer = L.tileLayer(OSM_TILES.url, {
+          attribution: OSM_TILES.attribution,
+          tileSize: 256,
+          maxZoom: OSM_TILES.maxZoom,
+          referrerPolicy: MAP_TILE_REFERRER_POLICY,
+        })
+        layer.addTo(map)
+      }
+
+      if (keyed) {
+        let tileErrors = 0
+        layer.on('tileerror', () => {
+          if (++tileErrors < TILE_ERROR_THRESHOLD) return
+          reportTileFailure()
+          demote()
+        })
+      }
+
+      layer.addTo(map)
+
+      if (keyed) {
+        if (cachedTileHealth() === 'bad') demote()
+        else probeTileProvider().then(health => {
+          if (!cancelled && health === 'bad') demote()
+        })
+      }
 
       // Use the shared green-gradient cluster icon from leaflet-config so
       // we don't render bare numbers. The default MarkerCluster styles

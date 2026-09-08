@@ -14,7 +14,8 @@ import { supabase } from '@/lib/supabase'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import RatingBadge from '@/components/places/RatingBadge'
 import { useInView } from '@/lib/hooks/use-in-view'
-import { MAP_TILES, OSM_TILES, MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
+import { MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
+import { useTileSource } from '@/lib/hooks/use-tile-source'
 
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -66,6 +67,8 @@ interface CityScore {
 interface ScoreBreakdown { accessibility: number; choice: number; variety: number; quality: number }
 
 export default function VeganScoreMap() {
+  const { tiles, degraded, onTileError } = useTileSource()
+  const tileKey = degraded ? 'osm' : 'keyed'
   const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -478,13 +481,16 @@ export default function VeganScoreMap() {
             >
               {/* Tile source is shared with /map and the city maps via
                   @/lib/map-tiles, so a provider swap can never leave this one
-                  surface pointed at a dead key. */}
+                  surface pointed at a dead key, and useTileSource degrades it
+                  to OSM alongside every other map. */}
               <TileLayer
-                attribution={(MAP_TILES ?? OSM_TILES).attribution}
-                url={(MAP_TILES ?? OSM_TILES).url}
+                key={tileKey}
+                attribution={tiles.attribution}
+                url={tiles.url}
                 tileSize={256}
-                maxZoom={(MAP_TILES ?? OSM_TILES).maxZoom}
+                maxZoom={tiles.maxZoom}
                 referrerPolicy={MAP_TILE_REFERRER_POLICY}
+                eventHandlers={{ tileerror: onTileError }}
               />
               <MapEventHandler onMove={handleMapMove} />
               {Object.keys(icons).length > 0 && clusterIcon && (
