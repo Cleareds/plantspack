@@ -27,6 +27,12 @@ interface VerificationFooterProps {
   tags: string[] | null | undefined
   placeId: string
   placeSlug: string | null | undefined
+  /**
+   * OSM element this record is linked to, e.g. "node:123". When set, the
+   * record derives from OpenStreetMap and the ODbL credit must travel with it,
+   * so it is rendered per place rather than only in the site footer.
+   */
+  osmRef?: string | null
   /** Full place subset needed for the SuggestCorrectionModal pre-fill. */
   place: {
     id: string
@@ -72,6 +78,7 @@ function methodLabel(method: string | null | undefined): string {
 }
 
 export default function VerificationFooter({
+  osmRef,
   verificationLevel = 0,
   verificationMethod,
   lastVerifiedAt,
@@ -191,6 +198,36 @@ export default function VerificationFooter({
       {community === 'not_yet' && !isCommunitySubmitted && (
         <div className="flex items-center justify-between gap-2 text-on-surface-variant">
           <span>Community: not yet confirmed.</span>
+        </div>
+      )}
+
+      {/* ODbL credit for records derived from OpenStreetMap. Required by the
+          licence and shown on the record itself, so the credit cannot be lost
+          when a single place page is what someone actually reads or shares. */}
+      {osmRef && /^(node|way|relation):\d+$/.test(osmRef) && (
+        <div className="flex items-start gap-2 pt-1 text-xs text-on-surface-variant">
+          <Database className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+          <div>
+            This record derives from{' '}
+            <a
+              href={`https://www.openstreetmap.org/${osmRef.replace(':', '/')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-primary transition-colors"
+            >
+              OpenStreetMap
+            </a>
+            . &copy; OpenStreetMap contributors, under{' '}
+            <a
+              href="https://opendatacommons.org/licenses/odbl/1-0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-primary transition-colors"
+            >
+              ODbL
+            </a>
+            .
+          </div>
         </div>
       )}
 

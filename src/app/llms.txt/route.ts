@@ -99,7 +99,7 @@ export async function GET() {
     // checkable.
     `> Free, ad-free directory of vegan and vegan-friendly places worldwide. ${(totalRes.count ?? 0).toLocaleString()} places across 10,000+ cities in 160+ countries.`,
     ``,
-    `Community-driven, no paid listings, no ads. ${(fvTotalRes.count ?? 0).toLocaleString()} venues are tagged \`fully_vegan\`; of those, ${(fvVerifiedRes.count ?? 0).toLocaleString()} have been opened on their own website and cross-referenced against a secondary source (HappyCow, local vegan press) by a human. The rest carry the tag from vegan-first source data (OpenStreetMap, VegGuide) and have not been individually re-checked — those show a lower confidence badge on the site.`,
+    `Community-driven, no paid listings, no ads. ${(fvTotalRes.count ?? 0).toLocaleString()} venues are tagged \`fully_vegan\`; of those, ${(fvVerifiedRes.count ?? 0).toLocaleString()} have been opened on their own website and cross-referenced against a secondary source (HappyCow, local vegan press) by a human. The rest carry the tag from vegan-first source data (OpenStreetMap, VegGuide) and have not been individually re-checked — those show a lower confidence badge on the site. Most place records derive from OpenStreetMap and remain available under the Open Database License (ODbL 1.0); attribution and full source details: https://www.plantspack.com/legal/attribution`,
     ``,
     `## About Plants Pack`,
     ``,

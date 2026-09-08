@@ -206,6 +206,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/legal/attribution"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  Data Attribution
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/account/delete"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >
@@ -218,6 +226,35 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-outline-variant/15">
+          {/* ODbL attribution. Most of our place records originate from
+              OpenStreetMap, and the ODbL requires the credit to travel with
+              the produced work - so it sits on every page, not only on maps
+              (map tiles carry their own credit in the map corner). */}
+          <div className="mb-4 text-xs text-on-surface-variant text-center md:text-left">
+            Place data &copy;{' '}
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors underline decoration-outline-variant/60 underline-offset-2"
+            >
+              OpenStreetMap contributors
+            </a>
+            , under{' '}
+            <a
+              href="https://opendatacommons.org/licenses/odbl/1-0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors underline decoration-outline-variant/60 underline-offset-2"
+            >
+              ODbL
+            </a>
+            .{' '}
+            <Link href="/legal/attribution" className="hover:text-primary transition-colors underline decoration-outline-variant/60 underline-offset-2">
+              Full attribution
+            </Link>
+          </div>
+
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
             <div className="text-sm text-on-surface-variant text-center md:text-left">

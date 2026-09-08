@@ -1043,6 +1043,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               tags={(place as any).tags}
               placeId={place.id}
               placeSlug={(place as any).slug}
+              osmRef={(place as any).osm_ref}
               place={{
                 id: place.id,
                 name: place.name,

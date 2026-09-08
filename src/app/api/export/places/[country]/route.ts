@@ -97,6 +97,13 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
       country: dbCountry,
       country_slug: country,
       exported_at: new Date().toISOString(),
+      // ODbL attribution travels with the data. This endpoint redistributes a
+      // database most of whose records derive from OpenStreetMap, so anyone
+      // consuming the JSON gets the credit and the licence terms with it.
+      attribution: '\u00a9 OpenStreetMap contributors',
+      license: 'ODbL-1.0',
+      license_url: 'https://opendatacommons.org/licenses/odbl/1-0/',
+      attribution_url: 'https://www.plantspack.com/legal/attribution',
       counts: {
         places: places.length,
         cities: cities.length,
