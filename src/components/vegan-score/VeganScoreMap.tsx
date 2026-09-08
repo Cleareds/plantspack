@@ -14,6 +14,7 @@ import { supabase } from '@/lib/supabase'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import RatingBadge from '@/components/places/RatingBadge'
 import { useInView } from '@/lib/hooks/use-in-view'
+import { MAP_TILES, OSM_TILES, MAP_TILE_REFERRER_POLICY } from '@/lib/map-tiles'
 
 const LeafletMapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
@@ -475,10 +476,15 @@ export default function VeganScoreMap() {
               style={{ height: '100%', width: '100%' }}
               className="z-10"
             >
+              {/* Tile source is shared with /map and the city maps via
+                  @/lib/map-tiles, so a provider swap can never leave this one
+                  surface pointed at a dead key. */}
               <TileLayer
-                attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url={`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}@2x.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY || '1p2MO19pmpo5G5xadgDF'}`}
+                attribution={(MAP_TILES ?? OSM_TILES).attribution}
+                url={(MAP_TILES ?? OSM_TILES).url}
                 tileSize={256}
+                maxZoom={(MAP_TILES ?? OSM_TILES).maxZoom}
+                referrerPolicy={MAP_TILE_REFERRER_POLICY}
               />
               <MapEventHandler onMove={handleMapMove} />
               {Object.keys(icons).length > 0 && clusterIcon && (
