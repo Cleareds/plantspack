@@ -1,6 +1,6 @@
 # Two-way OSM sync — plan
 
-**Status:** proposed. Step 0 (ODbL attribution) shipped 2026-09-08.
+**Status:** steps 0-2 shipped (2026-09-08 / 2026-09-09). Steps 3+ proposed.
 **Author:** drafted 2026-09-08 from a full provenance audit of `places`.
 
 ---
@@ -241,8 +241,8 @@ we already hold.
 | # | Step | Depends on | Risk |
 |---|---|---|---|
 | **0** | **ODbL attribution on the site** — *shipped 2026-09-08* | — | none |
-| 1 | Resolve 287 `osm_ref` collisions; re-verify mis-links; add unique index | duplicate merge | low |
-| 2 | `osm_sync_state` + `place_field_provenance` + backfill locks | 1 | low |
+| **1** | **Resolve 287 `osm_ref` collisions; add unique index** — *shipped 2026-09-09* | — | low |
+| **2** | **`osm_sync_state` + `place_field_provenance` + backfill locks** — *shipped 2026-09-09* | — | low |
 | 3 | Upgrade `osm-sync.mjs` to three-way merge; conflict queue in Data Quality | 2 | medium |
 | 4 | Monthly full per-country reconciliation (deletions/retags), review-only | 3 | low |
 | 5 | ToS amendment + contributor opt-in for ODbL relicensing | legal | — |
@@ -250,7 +250,7 @@ we already hold.
 | 7 | OSM wiki page + community consultation | 0, 6 | — |
 | 8 | MapRoulette challenge from the verified slice | 7 | medium |
 
-**Steps 1–4 deliver the whole "we get updates from OSM" half and are safe today.**
+**Step 3 is now the next piece of engineering, and steps 1-2 have unblocked it.**
 Steps 5–8 are mostly legal and diplomatic work, not engineering.
 
 ---
@@ -269,7 +269,52 @@ ODbL attribution was absent from the entire codebase while 87% of the data is OS
 
 ---
 
-## 7. Known issues found while auditing
+## 7. Steps 1-2 — what shipped 2026-09-09
+
+Migrations `20260909100000` (tables) and `20260909110000` (unique index).
+Script: `scripts/_osm-sync-step1-2-2026-09-09.mjs`.
+
+| Result | |
+|---|---|
+| `osm_ref` collisions resolved | 287 → **0** |
+| Live rows holding a now-unique `osm_ref` | 44,719 |
+| Malformed `osm_ref` values | 0 |
+| Provenance locks written | **2,430** across 522 places (1,799 `user`, 631 `admin`) |
+| Rollback | `backups/osm-ref-cleared-2026-09-09.json` (287 rows, id + original ref) |
+
+### Two deliberate deviations from §2 and §3.4
+
+**1. Collisions are resolved by clearing the weaker claim, not by classifying them.**
+
+§2.1 implied triaging each collision into same-venue / mislinked. That was tried and
+abandoned: no name metric available here can make the call.
+
+| pair | metric said | truth |
+|---|---|---|
+| `"Gajimaru"` / `"ガジマル"` | 0.00 — different | same venue, transliterated |
+| `"Vlachos Tavern"` / `"Vlachos Taverna"` | 0.33 — different | same venue |
+| `"The Vegan Bar"` / `"Vegan Bar"` | 0.00 — different | same venue (both reduce to an *empty* token set) |
+| `"Govindas"` / `"Govinda's Vegetarian Restaurant"` | 0.00 — different | same venue (apostrophe splits the token) |
+
+So the resolution ignores names entirely. The element's owner is the row whose own
+`source` really is OSM (it came from that element), falling back to data richness.
+The other row simply has `osm_ref` set to NULL.
+
+This is safe because **clearing a ref removes an unreliable link, not a place** - nothing
+disappears from the site and no content changes. Genuine duplicates among the 287 still
+reach a human through the duplicate queue. And where the two rows *were* the same venue,
+the loser's ref pointed at the same element as the winner's, so clearing it lost nothing.
+
+**2. Provenance locks only fields that currently hold a value.**
+
+A null field is left deliberately unlocked. OSM filling a gap we never had adds data and
+overrides no human, so locking empty fields would freeze 522 places against all future
+improvement for no protective gain. This is what makes "never overridden" and "mutual
+benefit" compatible rather than opposed.
+
+---
+
+## 8. Known issues found while auditing
 
 - **`scripts/osm-sync.mjs:112`** paginates with `.range()` and no `.order()`. Per our own DB
   notes this can repeat rows across pages, so the dedup set it builds may be incomplete — it can
