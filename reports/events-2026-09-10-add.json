@@ -1,0 +1,39 @@
+[
+  {
+    "title": "Veggie Naplavka Spring 2027",
+    "content": "Veggie Naplavka is Prague's plant-based riverside market, held on the Rasinovo nabrezi embankment. The organizer has announced 1 May 2027 for the spring edition. Opening hours for this edition are not published yet - past editions ran through the day and entry was free. Check veggienaplavka.cz closer to the date for the vendor list and times.",
+    "event_data": {
+      "title": "Veggie Naplavka Spring 2027",
+      "description": "Prague's riverside plant-based market on Rasinovo nabrezi.",
+      "start_time": "2027-05-01T10:00:00+02:00",
+      "end_time": "2027-05-01T19:00:00+02:00",
+      "time_tbd": true,
+      "location": "Naplavka, Rasinovo nabrezi, Prague 2",
+      "city": "Prague",
+      "country": "Czech Republic",
+      "ticket_url": "https://www.veggienaplavka.cz/en/",
+      "update_note": "added 2026-09-10 from veggienaplavka.cz, which lists 1.5.2027 at Rasinovo nabrezi. The organizer publishes no hours or price for this edition, so times are flagged as to be confirmed."
+    },
+    "images": [],
+    "secondary_tags": ["vegan festival", "Czech Republic"],
+    "verified": true
+  },
+  {
+    "title": "Tier.Natur.und Wir Expo Biel 2027",
+    "content": "Tier.Natur.und Wir is the Swiss expo behind the Basel and Winterthur vegan fairs, mixing plant-based food and products with animal, nature and climate organisations. The organizer has announced 24-25 April 2027 for a Biel edition. The venue and opening hours are not published yet, so treat the times shown here as provisional and check tiernaturundwir.ch before travelling.",
+    "event_data": {
+      "title": "Tier.Natur.und Wir Expo Biel 2027",
+      "description": "Swiss vegan lifestyle and animal-advocacy expo, Biel edition.",
+      "start_time": "2027-04-24T10:00:00+02:00",
+      "end_time": "2027-04-25T18:00:00+02:00",
+      "time_tbd": true,
+      "location": "Biel, Switzerland (venue to be announced)",
+      "city": "Biel",
+      "country": "Switzerland",
+      "ticket_url": "https://tiernaturundwir.ch/",
+      "update_note": "added 2026-09-10 from tiernaturundwir.ch, which announces 24./25. April 2027 in Biel. No venue or hours announced yet, so not marked verified."
+    },
+    "images": [],
+    "secondary_tags": ["vegan festival", "Switzerland"]
+  }
+]

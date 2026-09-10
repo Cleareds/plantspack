@@ -15,7 +15,7 @@
  *                                slug AND by same-city date overlap + title
  *                                token match. Never overwrites.
  *   update <slug> [--start ISO] [--end ISO] [--ticket-url U] [--location L]
- *                [--cancelled] [--note "…"]
+ *                [--free|--paid] [--cancelled] [--note "…"]
  *                                Patch event_data fields on an existing event.
  *                                NEVER updates title (posts has a slug-regen
  *                                trigger on title changes — the URL would
@@ -235,6 +235,8 @@ async function cmdUpdate(slug: string) {
   if (arg('--end')) { ed.end_time = arg('--end'); ed.time_tbd = false }
   if (arg('--ticket-url')) ed.ticket_url = arg('--ticket-url')
   if (arg('--location')) ed.location = arg('--location')
+  if (has('--free')) ed.is_free = true
+  if (has('--paid')) ed.is_free = false
   if (has('--cancelled')) ed.cancelled = true
   if (arg('--note')) ed.update_note = arg('--note')
   patch.event_data = ed

@@ -1,0 +1,22 @@
+[
+  {"title": "Plant Based Fest 2026 (3rd edition)", "city": "Iasi", "country": "Romania", "outcome": "updated", "note": "Dates corrected 9-11 Oct -> 10-11 Oct and admission corrected to free, per asociatiavegania.ro. Our record had never been verified against the organizer page."},
+  {"title": "Vegan Fest Catalunya 2026", "city": "Barcelona", "country": "Spain", "outcome": "updated", "note": "Sunday closing corrected to 20:00 (organizer: Sat 10-23, Sun 10-20)."},
+  {"title": "Veggie Naplavka Spring 2027", "city": "Prague", "country": "Czech Republic", "outcome": "added", "note": "1 May 2027, Rasinovo nabrezi, from the organizer site. Hours not published, flagged to be confirmed."},
+  {"title": "Tier.Natur.und Wir Expo Biel 2027", "city": "Biel", "country": "Switzerland", "outcome": "added", "note": "24-25 Apr 2027 announced by tiernaturundwir.ch. Venue and hours not announced, so not marked verified."},
+  {"title": "Wigan Vegan Festival 2026", "city": "Wigan", "country": "United Kingdom", "outcome": "skipped", "note": "Re-verified, unchanged (13 Sep, 10:30-16:30, The Brick Community Stadium)."},
+  {"title": "Triangle VegFest 2026", "city": "Durham", "country": "United States", "outcome": "skipped", "note": "Re-verified, unchanged (13 Sep, 12:00-17:00)."},
+  {"title": "Veganmania Vienna Autumn 2026", "city": "Vienna", "country": "Austria", "outcome": "skipped", "note": "Re-verified, unchanged (18-20 Sep, Donauinsel)."},
+  {"title": "NLVegan Fair", "city": "Rotterdam", "country": "Netherlands", "outcome": "skipped", "note": "Re-verified, unchanged (19 Sep, 11:00-18:00, Laurenskerk)."},
+  {"title": "The Veggie Taste - Plant-Based/Vegan Festival", "city": "Atlanta", "country": "United States", "outcome": "skipped", "note": "Re-verified, unchanged (19 Sep, 14:00-19:00)."},
+  {"title": "Twin Cities Veg Fest", "city": "Saint Paul", "country": "United States", "outcome": "skipped", "note": "Re-verified, unchanged (20 Sep, 10:00-16:00, Harriet Island)."},
+  {"title": "VegFest Kelowna 2026", "city": "Kelowna", "country": "Canada", "outcome": "skipped", "note": "Re-verified, unchanged (20 Sep, 10:00-16:00, City Park North Field)."},
+  {"title": "Veggie Naplavka Autumn 2026", "city": "Prague", "country": "Czech Republic", "outcome": "skipped", "note": "Re-verified, unchanged (20 Sep, Rasinovo nabrezi)."},
+  {"title": "Compassionfest 2026", "city": "New Haven", "country": "United States", "outcome": "skipped", "note": "Verified for the first time: 4 Oct, 10:00-17:00, Moore Field House SCSU. Unchanged."},
+  {"title": "Vegan Messe Basel 2026", "city": "Basel", "country": "Switzerland", "outcome": "skipped", "note": "A search result claimed 19-20 Sep; the organizer page confirms our 17-18 Oct dates are right. No change."},
+  {"title": "Vegan Festival Leipzig Winter Edition", "city": "Leipzig", "country": "Germany", "outcome": "skipped", "note": "Not published: the venue page still shows the Dec 2025 edition, so the reported 14-15 Nov 2026 dates are unconfirmed by the organizer."},
+  {"title": "VeggieWorld Paris", "city": "Paris", "country": "France", "outcome": "skipped", "note": "France stays a gap: veggieworld.eco lists only German editions for 2026-2027, so there is no French edition to publish."},
+  {"title": "Wege Festiwal Krakow", "city": "Krakow", "country": "Poland", "outcome": "skipped", "note": "Poland stays a gap: only city-listing sites give 16-17 Nov 2026 (a Monday and Tuesday, so probably an old year), the organizer's ticket page lists nothing, and wegefestiwal.pl could not be reached."},
+  {"title": "Veganario Fest", "city": "Lisbon", "country": "Portugal", "outcome": "skipped", "note": "veganario.org does not resolve. No Lisbon autumn event could be confirmed; Portugal runs dry after FAVA on 18 Sep."},
+  {"title": "VegTO Fest", "city": "Toronto", "country": "Canada", "outcome": "skipped", "note": "veg.ca states VegTO Fest is taking a break in 2026, so nothing to add."},
+  {"title": "Vegan Awards 2027", "city": "Utrecht", "country": "Netherlands", "outcome": "skipped", "note": "Lead only. veganisme.org lists 30 Jan 2027, 18:30, Utrecht as 'save the date' with no venue and no tickets. Revisit when the venue is announced - the Netherlands has nothing after 19 Sep."}
+]
