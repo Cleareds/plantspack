@@ -44,13 +44,15 @@ export default function ContactAdminPage() {
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null)
   const [adminNotes, setAdminNotes] = useState('')
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   const loadContacts = useCallback(async () => {
     setLoading(true)
+    setLoadError(null)
     try {
       let query = supabase
         .from('contact_submissions')
-        .select('*, users(username)', { count: 'exact' })
+        .select('*, users!contact_submissions_user_id_fkey(username)', { count: 'exact' })
 
       if (searchQuery) {
         query = query.or(`name.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%,subject.ilike.%${searchQuery}%`)
@@ -72,6 +74,7 @@ export default function ContactAdminPage() {
       setTotalContacts(count || 0)
     } catch (error) {
       console.error('Error loading contacts:', error)
+      setLoadError(error instanceof Error ? error.message : 'Failed to load contact submissions')
     } finally {
       setLoading(false)
     }
@@ -228,6 +231,12 @@ export default function ContactAdminPage() {
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white rounded-lg shadow">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : loadError ? (
+        <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
+          <AlertCircle className="h-12 w-12 text-error mb-2" />
+          <p className="text-on-surface-variant">Could not load contact submissions</p>
+          <p className="text-sm text-outline mt-2">{loadError}</p>
         </div>
       ) : contacts.length === 0 && !searchQuery && filterStatus === 'all' ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">

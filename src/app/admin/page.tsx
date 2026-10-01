@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         supabase.from('places').select('*', { count: 'exact', head: true }),
         supabase.from('place_reviews').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).in('status', ['new', 'in_progress']),
         supabase.from('place_claim_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('place_corrections').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('users').select('id', { count: 'exact', head: true }).gte('created_at', today.toISOString()),
