@@ -189,7 +189,7 @@ export async function getCityDishChips(country: string, city: string): Promise<{
   if (!loc) return []
   // Pull all places once, score against every dish
   const data = await fetchAllRows<any>(
-    'name, description, cuisine_types, subcategory',
+    'name, description, cuisine_types, subcategory, category',
     q => q.ilike('country', loc.country).ilike('city', loc.city).is('archived_at', null),
   )
   if (!data.length) return []
@@ -224,7 +224,7 @@ export async function getNearbyDishCities(
   if (!dish) return []
   // Pull all places in the country, count dish matches per city
   const data = await fetchAllRows<any>(
-    'name, description, cuisine_types, subcategory, city, country',
+    'name, description, cuisine_types, subcategory, category, city, country',
     q => q.ilike('country', country.replace(/-/g, ' ')).not('city', 'is', null).is('archived_at', null),
   )
   if (!data.length) return []

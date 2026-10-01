@@ -34,6 +34,7 @@ interface PlaceRow {
   description: string | null
   cuisine_types: unknown
   subcategory: string | null
+  category: string | null
   city: string | null
   country: string | null
 }
@@ -64,7 +65,7 @@ export async function GET() {
   const PAGE = 1000
   while (true) {
     const { data } = await sb.from('places')
-      .select('name, description, cuisine_types, subcategory, city, country')
+      .select('name, description, cuisine_types, subcategory, category, city, country')
       .is('archived_at', null)
       .not('city', 'is', null)
       .not('country', 'is', null)

@@ -14,6 +14,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getCityDishChips, dishPageHref } from '@/lib/dish-page-data'
 import { resolveCity } from '@/lib/city-resolve'
 import { DISH_BY_SLUG, type DishDef } from '@/lib/dish-keywords'
+import { matchScoreFor, minScore } from '@/lib/dish-match'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
@@ -52,7 +53,7 @@ async function loadCity(country: string, city: string) {
 async function loadTopThumbsForDishes(country: string, city: string, dishSlugs: string[]) {
   // Pull all places once, then filter per dish for thumbnails
   const { data } = await sb.from('places')
-    .select('id, slug, name, main_image_url, cuisine_types, subcategory, description, vegan_level, average_rating, review_count')
+    .select('id, slug, name, main_image_url, cuisine_types, subcategory, category, description, vegan_level, average_rating, review_count')
     .ilike('country', country)
     .ilike('city', city)
     .is('archived_at', null)
@@ -65,17 +66,11 @@ async function loadTopThumbsForDishes(country: string, city: string, dishSlugs: 
     const matches: { id: string; slug: string | null; name: string; img: string; score: number }[] = []
     for (const p of data || []) {
       if (!p.main_image_url) continue
-      const name = (p.name ?? '').toLowerCase()
-      const cuisines = ((p.cuisine_types ?? []) as unknown[]).filter((c): c is string => typeof c === 'string').map(c => c.toLowerCase())
-      const subcat = (p.subcategory ?? '').toLowerCase()
-      let score = 0
-      for (const n of dish.needles) {
-        const needle = n.toLowerCase()
-        if (name.includes(needle)) { score = 10; break }
-        if (cuisines.some(c => c.includes(needle))) { score = Math.max(score, 6); continue }
-        if (subcat === needle) { score = Math.max(score, 4); continue }
-      }
-      if (score >= (dish.specialised ? 6 : 4)) {
+      // Shared matcher (src/lib/dish-match.ts) - this used to be an inline
+      // copy that had drifted (no word-boundary rules, no description tier,
+      // no category tier), so the thumbnails could disagree with the page.
+      const score = matchScoreFor(p, dish)
+      if (score >= minScore(dish)) {
         // Bump by rating quality (Wilson-ish)
         const r = (p.average_rating ?? 0) * Math.log(1 + (p.review_count ?? 0))
         matches.push({ id: p.id, slug: p.slug, name: p.name, img: p.main_image_url, score: score + r })

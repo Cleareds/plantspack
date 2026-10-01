@@ -56,6 +56,15 @@ function buildHeadingPhrase(dishLabel: string): { phrase: string; phraseLc: stri
   return { phrase, phraseLc: phrase.toLowerCase() }
 }
 
+/**
+ * Venue-type pages ("Grocery stores & shops", "Juice bars") already name the
+ * venue, so "12 vegan grocery stores & shops spots" would read wrong. For those
+ * the unit word is dropped: "12 vegan grocery stores & shops in Berlin".
+ */
+function isVenueType(dish: { categoryMatch?: string; label: string }): boolean {
+  return !!dish.categoryMatch || /\b(bars?|shops?|stores?)$/i.test(dish.label.trim())
+}
+
 export async function buildDishMetadata(routeParams: RouteParams): Promise<Metadata> {
   // Defensive: any of these being undefined would crash toLowerCase calls
   // downstream. Return a noindex page rather than 500.
@@ -139,6 +148,9 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
 
   const { dish, city, country, places, total, fullyVeganCount } = data
   const baseHref = dishPageHref(p.country, p.city, dish.slug)
+  const venueType = isVenueType(dish)
+  const spots = venueType ? '' : ' spots'
+  const spot = venueType ? '' : ' spot'
   const filtered = fvOnly ? places.filter(x => x.vegan_level === 'fully_vegan') : places
   const top3WithPhotos = places.filter(x => x.main_image_url).slice(0, 3)
 
@@ -162,7 +174,7 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `Best Vegan ${dish.label} in ${city}`,
-    description: `${total} vegan ${dish.label.toLowerCase()} spots in ${city}, ${country}.`,
+    description: `${total} vegan ${dish.label.toLowerCase()}${spots} in ${city}, ${country}.`,
     numberOfItems: filtered.length,
     itemListElement: filtered.slice(0, 20).map((pl, i) => {
       const placeUrl = `https://www.plantspack.com/place/${pl.slug || pl.id}`
@@ -197,12 +209,12 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
   if (total > 0) {
     faqItems.push({
       question: `How many vegan ${dishLc} places are there in ${city}?`,
-      answer: `Plants Pack lists ${total} vegan ${dishLc} ${total === 1 ? 'spot' : 'spots'} in ${city}, ${country}${fullyVeganCount > 0 ? `, of which ${fullyVeganCount} ${fullyVeganCount === 1 ? 'is' : 'are'} 100% vegan` : ''}.`,
+      answer: `Plants Pack lists ${total} vegan ${dishLc}${total === 1 ? spot : spots} in ${city}, ${country}${fullyVeganCount > 0 ? `, of which ${fullyVeganCount} ${fullyVeganCount === 1 ? 'is' : 'are'} 100% vegan` : ''}.`,
     })
   }
   if (topNames.length > 0) {
     faqItems.push({
-      question: `Which are the best vegan ${dishLc} spots in ${city}?`,
+      question: `Which are the best vegan ${dishLc}${spots} in ${city}?`,
       answer: `Popular picks include ${topNames.join(', ')}. Each listing is cross-referenced against menus and community reviews.`,
     })
   }
@@ -308,8 +320,8 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
         {/* Ranked list */}
         {filtered.length === 0 ? (
           <div className="bg-surface-container-low rounded-xl p-8 text-center text-on-surface-variant">
-            No 100% vegan {dish.label.toLowerCase()} spots in {city} yet.{' '}
-            <Link href={baseHref} className="text-primary underline">View all {total} vegan-friendly spots →</Link>
+            No 100% vegan {dish.label.toLowerCase()}{spots} in {city} yet.{' '}
+            <Link href={baseHref} className="text-primary underline">View all {total} vegan-friendly{spots || ' places'} →</Link>
           </div>
         ) : (
           <ol className="space-y-3 mb-8">

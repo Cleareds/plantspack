@@ -26,6 +26,13 @@ export interface DishDef {
   specialised?: boolean
   /** Subcategory hint (matched on subcategory field for +4 bonus) */
   subcategoryHint?: string
+  /** Category-based match: a place in this `places.category` scores +10 (same
+   *  weight as a name hit) regardless of needles. Used for pages that are a
+   *  venue TYPE rather than a dish - vegan grocery stores, for example, where
+   *  the name rarely says "grocery" but the category always does. */
+  categoryMatch?: string
+  /** Subcategories that never belong on this page even when they match. */
+  excludeSubcategories?: string[]
 }
 
 export const DISHES: DishDef[] = [
@@ -147,6 +154,15 @@ export const DISHES: DishDef[] = [
   { slug: 'gluten-free', label: 'Gluten-free',  needles: ['gluten-free','gluten free','glutenfree','sans gluten','glutenfrei'] },
   { slug: 'raw',         label: 'Raw',          needles: ['raw food','raw vegan','crudo'] },
   { slug: 'organic',     label: 'Organic',      needles: ['organic','bio','biologico'] },
+
+  // Venue types (added 2026-10-01). Measured against the live DB before adding:
+  // grocery = 212 cities with >=3 stores (London 90, Budapest 56, Berlin 48,
+  // New York 42), juice = 30 cities, street-food = 14 (Berlin 24). Other
+  // candidates (schnitzel, cookie, wine bar, tea, hot pot, poke...) unlock 0-5
+  // cities each and were not added - see scripts/_dish-candidates-estimate.mjs.
+  { slug: 'grocery',     label: 'Grocery stores & shops', needles: ['grocery','supermarket','supermarkt','biomarkt','bio-markt','bioladen','épicerie','epicerie','unverpackt','zero waste','health food','health-food'], categoryMatch: 'store', excludeSubcategories: ['brand-hq'] },
+  { slug: 'juice',       label: 'Juice bars',    needles: ['juice','juicery','saftbar','jugos','zumos','sucos','sucolandia'], specialised: true },
+  { slug: 'street-food', label: 'Street food',  needles: ['street food','streetfood','food truck','foodtruck','imbiss','food stall','hawker'] },
 ]
 
 /** O(1) lookup by slug */
@@ -190,6 +206,17 @@ export function normaliseDishSlug(input: string | undefined | null): string | nu
     'acai': 'acai-bowl',
     'thai-food': 'thai',
     'curry-house': 'curry',
+    'shop': 'grocery',
+    'shops': 'grocery',
+    'store': 'grocery',
+    'stores': 'grocery',
+    'supermarket': 'grocery',
+    'groceries': 'grocery',
+    'juice-bar': 'juice',
+    'juices': 'juice',
+    'food-truck': 'street-food',
+    'food-trucks': 'street-food',
+    'streetfood': 'street-food',
   }
   return ALIAS[s] || null
 }

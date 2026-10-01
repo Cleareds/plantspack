@@ -105,6 +105,9 @@ export interface MatchablePlace {
   description?: string | null
   cuisine_types?: unknown
   subcategory?: string | null
+  /** Needed only by dishes with `categoryMatch`; callers that never select it
+   *  simply never match those dishes on the category tier. */
+  category?: string | null
 }
 
 export function matchScoreFor(place: MatchablePlace, dish: DishDef): number {
@@ -118,7 +121,12 @@ export function matchScoreFor(place: MatchablePlace, dish: DishDef): number {
   const rawDesc = place.description ?? ''
   const desc = isBoilerplateDescription(rawDesc) ? '' : rawDesc.toLowerCase()
 
+  if (dish.excludeSubcategories?.includes(subcat)) return 0
+
   let score = 0
+  // Venue-type pages: the category is the evidence (a store is a store whatever
+  // it is called). Weighted like a name hit so it clears either gate alone.
+  if (dish.categoryMatch && (place.category ?? '').toLowerCase() === dish.categoryMatch) score += 10
   for (const n of dish.needles) {
     const needle = n.toLowerCase()
     if (matchesNeedle(name, needle)) { score += 10; continue }
