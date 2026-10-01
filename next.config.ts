@@ -104,18 +104,10 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-  // The /fully-vegan filter pages share their layout with the parent
-  // country/city directory page - they are NOT a separate layout. We
-  // rewrite /vegan-places/<country>[/<city>]/fully-vegan to the directory
-  // page with ?level=fully-vegan so the URL stays clean for indexing
-  // while the same page component renders, just with places filtered to
-  // fully_vegan and the metadata adjusted.
-  async rewrites() {
-    return [
-      { source: '/vegan-places/:country/fully-vegan', destination: '/vegan-places/:country?level=fully-vegan' },
-      { source: '/vegan-places/:country/:city/fully-vegan', destination: '/vegan-places/:country/:city?level=fully-vegan' },
-    ]
-  },
+  // /vegan-places/<country>[/<city>]/fully-vegan used to be a rewrite to
+  // ?level=fully-vegan. That made the hub pages read `searchParams`, which
+  // forces dynamic rendering and defeated their `revalidate`. They are real
+  // route segments now (app/vegan-places/[country]/fully-vegan etc.).
 
   async headers() {
     return [

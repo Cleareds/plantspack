@@ -185,7 +185,7 @@ async function deletePlace(place: PlaceRecord) {
   try {
     await fetch(`${SITE_URL}/api/revalidate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.REVALIDATE_SECRET || process.env.CRON_SECRET || ''}` },
       body: JSON.stringify({ path: `/place/${slug}` }),
     })
   } catch {}
@@ -203,7 +203,7 @@ async function revalidateCache() {
     try {
       await fetch(`${SITE_URL}/api/revalidate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.REVALIDATE_SECRET || process.env.CRON_SECRET || ''}` },
         body: JSON.stringify({ path }),
       })
     } catch {
@@ -215,7 +215,7 @@ async function revalidateCache() {
   try {
     await fetch(`${SITE_URL}/api/revalidate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.REVALIDATE_SECRET || process.env.CRON_SECRET || ''}` },
       body: JSON.stringify({}),
     })
   } catch {}

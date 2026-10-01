@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight, Map } from 'lucide-react'
@@ -85,10 +85,28 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
   const activeSubcategory = searchParams?.get('sub') || null
   const petOnly = searchParams?.get('pet') === '1'
   // /<city>/fully-vegan and ?vl=fully_vegan are equivalent. The path-based
-  // form is the canonical URL (rewritten server-side to ?level=fully-vegan).
-  // Detect both so the UI shows the same active pill regardless.
+  // form is the canonical URL (a real route segment that server-filters to
+  // fully_vegan). Detect both so the UI shows the same active pill regardless.
   const isOnFvPath = pathname?.endsWith('/fully-vegan') ?? false
-  const activeVeganLevel = isOnFvPath ? 'fully_vegan' : (searchParams?.get('vl') || null)
+  const rawVl = searchParams?.get('vl') || null
+  const activeVeganLevel = isOnFvPath ? 'fully_vegan' : rawVl
+
+  // URL conflict resolution (was server-side when the hubs read searchParams;
+  // the hubs are static now, so the client owns it): ?vl=fully_vegan on the
+  // base URL -> canonical /fully-vegan path; /fully-vegan?vl=<other> -> honour
+  // the explicit ?vl= on the base URL.
+  useEffect(() => {
+    if (!pathname || !rawVl) return
+    const params = new URLSearchParams(searchParams?.toString() || '')
+    if (!isOnFvPath && rawVl === 'fully_vegan') {
+      params.delete('vl')
+      const qs = params.toString()
+      router.replace(`${pathname}/fully-vegan${qs ? '?' + qs : ''}`, { scroll: false })
+    } else if (isOnFvPath && rawVl !== 'fully_vegan') {
+      const qs = params.toString()
+      router.replace(`${pathname.replace(/\/fully-vegan$/, '')}${qs ? '?' + qs : ''}`, { scroll: false })
+    }
+  }, [pathname, rawVl, isOnFvPath, searchParams, router])
   // Default: fully-vegan places first, then by rating, then by name. A Lemmy
   // reviewer rightly pointed out that alphabetical default put Bojangles (a
   // chicken chain that shouldn't be here anyway) at the top. Now vegan-first

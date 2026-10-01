@@ -383,8 +383,9 @@ export default async function Home() {
 
   return (
     <>
-      {/* SSR h1 for SEO crawlers that don't execute JS */}
-      <h1 className="sr-only">Plants Pack — Vegan Places &amp; City Rankings Worldwide</h1>
+      {/* The visible h1 lives in HomeClient (server-rendered, isSignedIn is
+          resolved on the server). A second sr-only h1 here used to ship two
+          h1 elements per page. */}
       <HomeClient
         topCities={topCities}
         recentPosts={normalizedPosts}
