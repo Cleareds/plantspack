@@ -69,10 +69,30 @@ function daysAgo(n: number): Date { const d = new Date(); d.setDate(d.getDate() 
  *
  * Leaving them in inflated the impression trend (the +31% WoW headline was
  * substantially this) and dragged reported desktop CTR to 0.32% vs 1.31% on
- * mobile. Clicks were never affected — only impressions, position and CTR.
+ * mobile.
  *
- * Excluded via RE2 excludingRegex, anchored so we drop only the exact head
- * terms and not the long tail that legitimately contains these words.
+ * !! DO NOT apply this filter to totals, trend or cohort queries. !!
+ *
+ * Measured 2026-09-01 on the week 2026-08-17..23:
+ *   no dimensions, no filter      1135 clicks / 161,827 impr   <- the truth
+ *   dimensions:['query'], NO filter 218 clicks /  72,449 impr
+ *   dimensions:['query'] + filter   217 clicks /  61,126 impr
+ *   no dimensions   + filter        217 clicks /  61,126 impr
+ *   dimensions:['page'], no filter 1139 clicks / 139,855 impr
+ *
+ * Any query-dimension GROUPING **or FILTER** makes GSC drop every
+ * anonymized-query row — 81% of this property's clicks, because our traffic is
+ * long-tail. The regex itself only removes 1 click. So the earlier claim that
+ * "clicks were never affected" was wrong: the filter's mere presence, not its
+ * content, was cutting the reported headline from 1,135 to 217 and had been
+ * understating the whole channel ~5x in every weekly email.
+ *
+ * Totals/trend/cohorts therefore run UNFILTERED (page-dimension totals track
+ * the true totals within 0.4%). Impressions consequently include rank-tracker
+ * noise — read clicks, not impressions, as the channel signal. Keep the regex
+ * for query-level pulls only, e.g. scripts/_gsc-striking-distance.mjs, where
+ * dropping scripted rank checks is the whole point and the anonymized long
+ * tail is already invisible regardless.
  */
 const BOT_QUERY_REGEX =
   '(^(where to eat vegan|vegan (dinner|food|restaurants?|breakfast|lunch|places?) near me)$|")'
@@ -82,7 +102,7 @@ const BOT_QUERY_REGEX =
 // polluting the striking-distance pull.
 
 /** GSC filter group that strips the automated queries above. */
-const EXCLUDE_BOT_QUERIES = [{
+export const EXCLUDE_BOT_QUERIES = [{
   filters: [{ dimension: 'query', operator: 'excludingRegex', expression: BOT_QUERY_REGEX }],
 }]
 
@@ -133,7 +153,7 @@ async function main() {
   const prevEnd = iso(daysAgo(3 + 14))
 
   // 1) Weekly totals, 12 weeks
-  const daily = await gscQuery(token, { startDate: start12w, endDate: end, dimensions: ['date'], dimensionFilterGroups: EXCLUDE_BOT_QUERIES })
+  const daily = await gscQuery(token, { startDate: start12w, endDate: end, dimensions: ['date'] })
   const weeks = new Map<string, { clicks: number; impr: number; posW: number }>()
   for (const r of daily) {
     const d = new Date(r.keys[0])
@@ -146,8 +166,8 @@ async function main() {
 
   // 2) Cohorts: current 14d vs previous 14d, page-level
   const [curPages, prevPages] = await Promise.all([
-    gscQuery(token, { startDate: curStart, endDate: end, dimensions: ['page'], rowLimit: 25000, dimensionFilterGroups: EXCLUDE_BOT_QUERIES }),
-    gscQuery(token, { startDate: prevStart, endDate: prevEnd, dimensions: ['page'], rowLimit: 25000, dimensionFilterGroups: EXCLUDE_BOT_QUERIES }),
+    gscQuery(token, { startDate: curStart, endDate: end, dimensions: ['page'], rowLimit: 25000 }),
+    gscQuery(token, { startDate: prevStart, endDate: prevEnd, dimensions: ['page'], rowLimit: 25000 }),
   ])
   const agg = (rows: any[]) => {
     const m = new Map<string, { clicks: number; impr: number; posW: number; pages: number }>()
@@ -211,7 +231,7 @@ async function main() {
   const lines: string[] = []
   lines.push(`GSC last full week: ${lastW.clicks} clicks (${pct(lastW.clicks, prevW?.clicks || 0)} WoW), ${lastW.impr.toLocaleString()} impressions (${pct(lastW.impr, prevW?.impr || 0)}), avg pos ${(lastW.posW / Math.max(lastW.impr, 1)).toFixed(1)}`)
   lines.push('')
-  lines.push('Weekly trend (Mon-start | clicks | impressions | pos) — automated queries excluded:')
+  lines.push('Weekly trend (Mon-start | clicks | impressions | pos) — unfiltered; impressions include rank-tracker noise, read clicks:')
   for (const k of fullWeeks.slice(-8)) {
     const w = weeks.get(k)!
     lines.push(`  ${k}  ${String(w.clicks).padStart(5)}  ${String(w.impr).padStart(8)}  ${(w.posW / Math.max(w.impr, 1)).toFixed(1)}`)

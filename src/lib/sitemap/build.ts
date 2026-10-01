@@ -368,6 +368,9 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
         // the sitemap doesn't advertise stale events Google won't surface.
         const endIso = ed.end_time || ed.start_time
         if (endIso && Date.now() - new Date(endIso).getTime() > 21 * 864e5) continue
+        // Cancelled events noindex on the page, so keep them out of the sitemap
+        // too rather than advertising an event that won't happen.
+        if (ed.cancelled) continue
         if (ed.country) { const cs = slugifyCityOrCountry(ed.country); if (cs) eventCountrySlugs.add(cs) }
         entries.push({
           url: `${SITE_URL}/event/${post.slug}`,
