@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -773,7 +774,12 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
               </section>
             )}
 
-            <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
+            {/* CityPlacesList reads useSearchParams(). On a statically rendered
+                (ISR) page that MUST sit inside a Suspense boundary or the whole
+                page throws at render time (500 on every hub, 2026-10-01). */}
+            <Suspense fallback={null}>
+              <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
+            </Suspense>
 
             {/* Server-rendered crawlable index of EVERY place in the city.
                 CityPlacesList paginates client-side (30/page) and its

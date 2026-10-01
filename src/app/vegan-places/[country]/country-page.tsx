@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -492,7 +493,10 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
                 </p>
               </section>
             )}
-            <CityPlacesList places={places} allPlaces={allRawPlaces} />
+            {/* useSearchParams() inside - needs Suspense on an ISR page, see city-page.tsx. */}
+            <Suspense fallback={null}>
+              <CityPlacesList places={places} allPlaces={allRawPlaces} />
+            </Suspense>
           </div>
         )}
 
