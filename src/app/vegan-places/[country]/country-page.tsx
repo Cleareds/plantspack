@@ -421,13 +421,17 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
             <h2 className="text-lg font-semibold text-on-surface mb-4">
               {regionCards.length > 0 ? `Other cities in ${countryName}` : `Cities in ${countryName}`}
             </h2>
-            <CountryCityGrid
-              cities={unassignedCities}
-              cityImages={cityImages}
-              countryName={countryName}
-              countrySlug={country}
-              cityScores={countryScores}
-            />
+            {/* CountryCityGrid reads useSearchParams() - needs Suspense on an
+                ISR page or the whole country hub 500s (2026-10-01). */}
+            <Suspense fallback={null}>
+              <CountryCityGrid
+                cities={unassignedCities}
+                cityImages={cityImages}
+                countryName={countryName}
+                countrySlug={country}
+                cityScores={countryScores}
+              />
+            </Suspense>
           </>
         )}
 
