@@ -81,7 +81,7 @@ export default function EventCard({ event }: { event: EventPost }) {
       {/* Ticket button */}
       {data?.ticket_url && (
         <div className="flex-shrink-0 self-center">
-          <a href={data.ticket_url} target="_blank" rel="noopener noreferrer"
+          <a href={data.ticket_url} target="_blank" rel="nofollow ugc noopener noreferrer"
             className="inline-flex items-center gap-1 px-3 py-1.5 bg-tertiary text-white text-xs font-medium rounded-full hover:opacity-90 transition-opacity">
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>confirmation_number</span>
             Tickets

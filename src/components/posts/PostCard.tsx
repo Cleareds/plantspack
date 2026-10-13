@@ -839,7 +839,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                         <a
                           href={post.event_data.ticket_url}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="nofollow ugc noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                           className="inline-flex items-center gap-1 px-3 py-1 bg-tertiary text-on-primary rounded-full text-xs font-medium hover:opacity-90 transition-opacity"
                         >
@@ -870,7 +870,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
                     <a
                       href={post.product_data.where_to_buy.startsWith('http') ? post.product_data.where_to_buy : `https://${post.product_data.where_to_buy}`}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel="nofollow ugc noopener noreferrer"
                       className="text-primary underline"
                       onClick={e => e.stopPropagation()}
                     >

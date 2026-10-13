@@ -179,7 +179,7 @@ export default function LinkPreview({ url, onRemove, className = '' }: LinkPrevi
           <a
             href={previewData.url}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow ugc noopener noreferrer"
             className="text-xs text-on-surface-variant hover:text-primary transition-colors truncate block"
           >
             {previewData.url}

@@ -50,6 +50,7 @@ export async function GET(
       `)
       .eq('slug', slug)
       .eq('privacy', 'public')
+      .is('deleted_at', null)
       .single()
 
     if (error) {

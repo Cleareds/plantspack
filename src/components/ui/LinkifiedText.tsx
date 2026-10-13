@@ -70,7 +70,7 @@ function renderInline(text: string, lineKey: string): React.ReactNode[] {
           key={`${lineKey}-u-${segIdx++}`}
           href={match[7]}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="nofollow ugc noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
           className="text-blue-600 hover:text-blue-800 hover:underline break-all"
         >

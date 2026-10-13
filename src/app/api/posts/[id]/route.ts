@@ -56,6 +56,9 @@ export async function GET(
         )
       `)
 
+    // Admin client bypasses RLS, so soft-deleted posts must be excluded here
+    query = query.is('deleted_at', null)
+
     // Try UUID first, then slug fallback
     if (isUUID) {
       query = query.eq('id', id)

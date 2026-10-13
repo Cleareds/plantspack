@@ -332,7 +332,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                 <a
                   href={event.ticket_url}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="nofollow ugc noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-tertiary text-on-primary rounded-full font-medium hover:opacity-90 transition-opacity"
                 >
                   <Ticket className="h-4 w-4" />
