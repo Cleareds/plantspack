@@ -40,6 +40,7 @@ Two modes, passed as the skill argument (default `light`):
        "title": "…", "description": "1 sentence", "start_time": "2026-10-03T10:00:00+02:00",
        "end_time": "2026-10-04T18:00:00+02:00", "location": "venue name",
        "city": "Paris", "country": "France", "ticket_url": "https://…",
+       "source_url": "https://… (the organizer page you read that states this date)",
        "is_free": false, "image_url": "https://… (organizer og:image if usable)"
      },
      "images": ["same as image_url, or []"],
@@ -47,7 +48,9 @@ Two modes, passed as the skill argument (default `light`):
      "verified": true
    }
    ```
-   - `verified: true` ONLY when you actually opened the organizer's page and confirmed dates + venue. Otherwise omit it.
+   - `verified: true` ONLY when you actually opened the organizer's page and confirmed dates + venue. Without it the CLI **rejects** the event - unverified events are never published.
+   - **The CLI enforces sourcing in code (since 2026-10-14)** and rejects an event when: `verified` is not true; `source_url` is missing; `source_url` or `ticket_url` does not resolve in DNS, errors, is parked, or redirects to another site; the `source_url` page never mentions the event's year; the start date is in the past; or any text says the date is guessed ("estimated", "annual pattern", "usually held", "expected to return"...). Do not work around a rejection - report it in the digest as `skipped` with the reason.
+   - Never derive a date from a previous year's pattern. No organizer-stated date = no event.
    - Timezones: use the event's local UTC offset in the ISO strings.
    - Titles in English; include the year. City names in English.
    - The CLI dedupes (slug + same-city date overlap) and rejects Russia - but don't rely on it; check `list` output first.
@@ -59,7 +62,8 @@ Two modes, passed as the skill argument (default `light`):
 
 ## Honesty rules (project doctrine)
 
-- Every published date/venue comes from the organizer's own page, not aggregators.
+- Every published date/venue comes from the organizer's own page, not aggregators. Beware circular sourcing: aggregators (and search results) may just echo our own plantspack page back.
+- 2026-10-14: 34 imported events with guessed dates and invented organizer URLs were unpublished (privacy=draft). Never republish one without a fresh organizer source.
 - No invented attendance numbers, exhibitor counts, or "biggest/best" claims unless the organizer states them.
 - Cancelled/ended events stay in the DB (pages self-noindex; sitemap drops them after 21 days) - never delete anything.
 - NEVER update an event's `title` via SQL/CLI - posts has a slug-regen trigger and the URL would break. The update subcommand deliberately has no title flag.

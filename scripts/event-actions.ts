@@ -31,6 +31,7 @@ config({ path: '.env.local', quiet: true })
 
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
+import { promises as dns } from 'dns'
 import { sendEmail } from '@/lib/email'
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
@@ -43,6 +44,53 @@ function arg(name: string): string | undefined {
 }
 function has(name: string): boolean { return process.argv.includes(name) }
 function fail(msg: string): never { console.error(msg); process.exit(1) }
+
+// ── Sourcing guard for `add` ──────────────────────────────────────────────
+// An early import published 36 events whose dates were guessed "from annual
+// pattern" with invented organizer URLs (21 dead domains, one hijacked by a
+// gambling site). All were unpublished 2026-10-14. These checks run in code,
+// so no run can publish such a row again, whatever the prompt says.
+const GUESS_WORDS = /\b(estimat\w*|annual pattern|usually held|typically held|expected to (?:take place|return|be held)|projected|likely date|approximate date)\b/i
+const PARKED = /\/lander\b|parked|domain (?:is )?for sale|buy this domain|sedoparking|hugedomains|dan\.com/i
+
+async function fetchOrganizerPage(url: string): Promise<{ ok: true; text: string; finalUrl: string } | { ok: false; why: string }> {
+  let host: string
+  try { host = new URL(url).hostname } catch { return { ok: false, why: `not a URL: ${url}` } }
+  try { await dns.lookup(host) } catch { return { ok: false, why: `DNS does not resolve: ${host}` } }
+  try {
+    const res = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15', Accept: 'text/html' } })
+    if (!res.ok) return { ok: false, why: `HTTP ${res.status} at ${url}` }
+    const finalUrl = res.url || url
+    const text = (await res.text()).slice(0, 2_000_000)
+    if (PARKED.test(finalUrl) || (PARKED.test(text) && text.length < 20000)) return { ok: false, why: `parked or for-sale domain: ${finalUrl}` }
+    const fromHost = host.replace(/^www\./, ''), toHost = new URL(finalUrl).hostname.replace(/^www\./, '')
+    if (fromHost !== toHost && !toHost.endsWith('.' + fromHost) && !fromHost.endsWith('.' + toHost)) {
+      return { ok: false, why: `redirects off-site: ${host} -> ${toHost} (check it is still the organizer)` }
+    }
+    return { ok: true, text, finalUrl }
+  } catch (e: any) { return { ok: false, why: `fetch failed for ${url}: ${e?.message || e}` } }
+}
+
+/** Returns null when the event may be published, else the reject reason. */
+async function sourcingProblem(ev: any): Promise<string | null> {
+  const ed = ev.event_data || {}
+  if (ev.verified !== true) return 'not verified: set verified:true only after opening the organizer page and confirming date + venue'
+  if (!ed.source_url) return 'missing event_data.source_url (the organizer page that states the date)'
+  const words = [ev.title, ev.content, ed.title, ed.description, ed.update_note].filter(Boolean).join(' ')
+  if (GUESS_WORDS.test(words)) return `text says the date is guessed ("${words.match(GUESS_WORDS)![0]}"); publish only organizer-stated dates`
+  const start = new Date(ed.start_time)
+  if (isNaN(start.getTime())) return `start_time is not a date: ${ed.start_time}`
+  if (start.getTime() < Date.now() - 86400000) return `start_time is in the past: ${ed.start_time}`
+  const page = await fetchOrganizerPage(ed.source_url)
+  if (!page.ok) return `source_url failed: ${page.why}`
+  const year = String(start.getUTCFullYear())
+  if (!page.text.includes(year)) return `source_url never mentions ${year} - stale or wrong page (${page.finalUrl})`
+  if (ed.ticket_url && ed.ticket_url !== ed.source_url) {
+    const t = await fetchOrganizerPage(ed.ticket_url)
+    if (!t.ok) return `ticket_url failed: ${t.why}`
+  }
+  return null
+}
 
 interface EventRow {
   id: string
@@ -168,6 +216,11 @@ async function cmdAdd() {
       results.push({ title: ev.title, outcome: 'rejected', note: 'Russia excluded per policy' })
       continue
     }
+    const problem = await sourcingProblem(ev)
+    if (problem) {
+      results.push({ title: ev.title, outcome: 'rejected', note: problem })
+      continue
+    }
     const slug = generateSlug(ev.title)
     // Dedupe 1: exact slug
     if (existing.some(e => e.slug === slug)) {
@@ -205,9 +258,9 @@ async function cmdAdd() {
       image_url: (ev.images || [])[0] || null,
       event_data: ed,
       secondary_tags: ev.secondary_tags || [],
-      // Only mark verified when the skill explicitly attests it checked the
-      // organizer's own page for dates + venue (per-event `verified` flag).
-      is_verified: ev.verified === true,
+      // sourcingProblem() already required verified:true + a live organizer
+      // source_url that mentions the event year.
+      is_verified: true,
     })
     if (error) {
       results.push({ title: ev.title, outcome: 'failed', note: error.message })
