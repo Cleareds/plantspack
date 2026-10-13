@@ -35,6 +35,7 @@ async function upcomingEventsSchema() {
       .select('slug, id, title, content, images, image_url, event_data, users(username, first_name, last_name)')
       .eq('category', 'event')
       .eq('privacy', 'public')
+      .is('deleted_at', null)
       .gte('event_data->>start_time', nowIso)
       .order('event_data->>start_time', { ascending: true })
       .limit(50)

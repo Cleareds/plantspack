@@ -64,6 +64,8 @@ async function getEventPost(id: string): Promise<EventPost | null> {
       users (id, username, first_name, last_name, avatar_url)
     `)
     .eq('category', 'event')
+    // Admin client bypasses RLS, so soft-deleted events must be excluded here
+    .is('deleted_at', null)
   query = isUuid ? query.eq('id', id) : query.eq('slug', id)
   const { data } = await query.maybeSingle()
   return (data as unknown as EventPost) ?? null

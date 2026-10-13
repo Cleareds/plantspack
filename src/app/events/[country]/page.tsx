@@ -26,6 +26,7 @@ async function loadCountryEvents(countrySlug: string) {
     .select('id, title, slug, content, images, image_url, event_data, users(id, username, first_name, last_name, avatar_url)')
     .eq('category', 'event')
     .eq('privacy', 'public')
+    .is('deleted_at', null)
     .gte('event_data->>start_time', nowIso)
     .order('event_data->>start_time', { ascending: true })
     .limit(500)
