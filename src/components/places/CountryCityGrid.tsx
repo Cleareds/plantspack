@@ -33,8 +33,15 @@ interface Props {
 
 type SortMode = 'places' | 'alpha' | 'score'
 
-export default function CountryCityGrid({ cities, cityImages, countryName, countrySlug, cityScores }: Props) {
+// Same split as CityPlacesList: useSearchParams() bails a static page out to
+// client rendering, which hid every city link from the server HTML. Pages render
+// <CountryCityGridView searchParams={null} /> as the Suspense fallback.
+export default function CountryCityGrid(props: Props) {
   const searchParams = useSearchParams()
+  return <CountryCityGridView {...props} searchParams={searchParams} />
+}
+
+export function CountryCityGridView({ cities, cityImages, countryName, countrySlug, cityScores, searchParams }: Props & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
   const router = useRouter()
   const pathname = usePathname()
   const { isFullyVeganOnly } = useVeganFilter()

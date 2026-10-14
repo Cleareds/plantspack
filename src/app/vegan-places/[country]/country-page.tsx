@@ -23,8 +23,8 @@ import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
-import CityPlacesList from '@/components/places/CityPlacesList'
-import CountryCityGrid from '@/components/places/CountryCityGrid'
+import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
+import CountryCityGrid, { CountryCityGridView } from '@/components/places/CountryCityGrid'
 import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
@@ -423,7 +423,14 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
             </h2>
             {/* CountryCityGrid reads useSearchParams() - needs Suspense on an
                 ISR page or the whole country hub 500s (2026-10-01). */}
-            <Suspense fallback={null}>
+            <Suspense fallback={<CountryCityGridView
+                cities={unassignedCities}
+                cityImages={cityImages}
+                countryName={countryName}
+                countrySlug={country}
+                cityScores={countryScores}
+                searchParams={null}
+              />}>
               <CountryCityGrid
                 cities={unassignedCities}
                 cityImages={cityImages}
@@ -498,7 +505,7 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
               </section>
             )}
             {/* useSearchParams() inside - needs Suspense on an ISR page, see city-page.tsx. */}
-            <Suspense fallback={null}>
+            <Suspense fallback={<CityPlacesListView places={places} allPlaces={allRawPlaces} searchParams={null} />}>
               <CityPlacesList places={places} allPlaces={allRawPlaces} />
             </Suspense>
           </div>

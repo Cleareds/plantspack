@@ -863,7 +863,7 @@ function PostRow({ post }: { post: CompactPost }) {
     ? `/blog/${post.slug}`
     : post.category === 'recipe' && post.slug
     ? `/recipe/${post.slug}`
-    : `/post/${post.id}`
+    : `/post/${post.slug || post.id}`
   const u = post.users as any
   const likes = post.post_reactions?.length || 0
   const comments = post.comments?.length || 0

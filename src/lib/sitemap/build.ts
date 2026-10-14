@@ -234,7 +234,6 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: `${SITE_URL}/library` },
       { url: `${SITE_URL}/glossary` },
       { url: `${SITE_URL}/methodology` },
-      { url: `${SITE_URL}/vegan-score` },
       { url: `${SITE_URL}/roadmap` },
       { url: `${SITE_URL}/tools` },
       { url: `${SITE_URL}/tools/ingredient-scanner` },

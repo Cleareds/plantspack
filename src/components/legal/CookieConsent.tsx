@@ -102,10 +102,11 @@ export default function CookieConsent() {
                 <h3 className="text-lg font-semibold text-on-surface">Cookie Preferences</h3>
               </div>
               <p className="text-sm text-on-surface-variant">
-                We use cookies to enhance your experience, analyze site traffic, and for marketing purposes.
-                You can customize your preferences or accept all cookies.{' '}
+                {/* Kept short on purpose: a long paragraph here becomes the mobile
+                    LCP element for first-time visitors (it paints after hydration). */}
+                Analytics and marketing cookies are optional.{' '}
                 <Link href="/legal/privacy" className="text-primary hover:text-primary underline">
-                  Learn more about our privacy policy
+                  Privacy policy
                 </Link>
               </p>
             </div>

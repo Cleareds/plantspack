@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { Globe } from 'lucide-react'
 import { getRegion, getRegionCityStats, getRegionPlaces } from '@/lib/regions'
 import { getCities } from '@/lib/directory-queries'
-import CityPlacesList from '@/components/places/CityPlacesList'
-import CountryCityGrid from '@/components/places/CountryCityGrid'
+import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
+import CountryCityGrid, { CountryCityGridView } from '@/components/places/CountryCityGrid'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
 import { getCityImage } from '@/lib/city-images'
@@ -160,7 +160,14 @@ export default async function RegionPage({ params }: PageProps) {
             {/* CountryCityGrid + CityPlacesList both use useSearchParams,
                 which Next 16 requires inside a Suspense boundary when the
                 page is pre-rendered via generateStaticParams. */}
-            <Suspense fallback={null}>
+            <Suspense fallback={<CountryCityGridView
+                cities={cityCards}
+                cityImages={cityImages}
+                countryName={countryName}
+                countrySlug={country}
+                cityScores={countryScores}
+                searchParams={null}
+              />}>
               <CountryCityGrid
                 cities={cityCards}
                 cityImages={cityImages}
@@ -175,7 +182,7 @@ export default async function RegionPage({ params }: PageProps) {
         {places.length > 0 && (
           <div>
             <h2 className="text-lg font-semibold text-on-surface mb-4">All places in {r.region_name}</h2>
-            <Suspense fallback={null}>
+            <Suspense fallback={<CityPlacesListView places={places as any} cityName={r.region_name} countryName={countryName} searchParams={null} />}>
               <CityPlacesList places={places as any} cityName={r.region_name} countryName={countryName} />
             </Suspense>
           </div>

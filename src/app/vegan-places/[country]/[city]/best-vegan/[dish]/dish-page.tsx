@@ -426,7 +426,7 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
         <p className="text-xs text-on-surface-variant mt-8 leading-relaxed">
           Every place on this list carries a confidence badge. <Link href="/methodology" className="underline">Read how we verify</Link> to understand the difference between &quot;Admin-checked&quot;, &quot;Community-added&quot;, &quot;Cross-referenced&quot;, and &quot;OSM-sourced&quot; trust levels.
           {' '}If you know of a vegan {dish.label.toLowerCase()} spot in {city} we&apos;ve missed,{' '}
-          <Link href={`/add-place?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`} className="underline">add it here</Link>.
+          <Link href="/map?add=true" className="underline">add it here</Link>.
         </p>
       </article>
     </div>

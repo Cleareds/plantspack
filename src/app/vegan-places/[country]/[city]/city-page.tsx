@@ -60,7 +60,7 @@ import FollowCityButton from '@/components/places/FollowCityButton'
 import { generateCityDescription, generateCityMetaDescription, filterCuisinesForDisplay } from '@/lib/vegan-scene-descriptions'
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
-import CityPlacesList from '@/components/places/CityPlacesList'
+import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
 import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
@@ -777,7 +777,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             {/* CityPlacesList reads useSearchParams(). On a statically rendered
                 (ISR) page that MUST sit inside a Suspense boundary or the whole
                 page throws at render time (500 on every hub, 2026-10-01). */}
-            <Suspense fallback={null}>
+            <Suspense fallback={<CityPlacesListView places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} searchParams={null} />}>
               <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
             </Suspense>
 

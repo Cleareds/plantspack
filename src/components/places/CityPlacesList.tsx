@@ -68,7 +68,20 @@ interface Place {
   tags?: string[] | null
 }
 
-export default function CityPlacesList({ places, allPlaces, cityName, countryName }: { places: Place[]; allPlaces?: Place[]; cityName?: string; countryName?: string }) {
+type CityPlacesListProps = { places: Place[]; allPlaces?: Place[]; cityName?: string; countryName?: string }
+
+// useSearchParams() makes a statically rendered (ISR) page bail out to client
+// rendering for this whole subtree, so the hub HTML shipped with NO place cards:
+// non-JS crawlers (GPTBot, ClaudeBot, PerplexityBot) saw only the name index and
+// the late-mounting list caused the big hub CLS. The hub renders
+// <CityPlacesListView searchParams={null} /> as the Suspense fallback, so the
+// server HTML carries the default view (first page, vegan-first sort).
+export default function CityPlacesList(props: CityPlacesListProps) {
+  const searchParams = useSearchParams()
+  return <CityPlacesListView {...props} searchParams={searchParams} />
+}
+
+export function CityPlacesListView({ places, allPlaces, cityName, countryName, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
   // `places` is the SSR-filtered list (e.g. FV-only on /fully-vegan).
   // `allPlaces` is the unfiltered universe — needed so the pill counts
   // ("Mostly Vegan (3)", "Vegan-Friendly (24)") show the real cross-tier
@@ -76,7 +89,6 @@ export default function CityPlacesList({ places, allPlaces, cityName, countryNam
   // Falls back to `places` for callers that don't pass it.
   const placesForCounts = allPlaces ?? places
   const { isFullyVeganOnly } = useVeganFilter()
-  const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
 
