@@ -1,13 +1,14 @@
-import { APPSTORE_URL, PLAY_URL } from '@/lib/app-links'
+import { appStoreUrl, playUrl } from '@/lib/app-links'
 
 // Self-contained App Store / Google Play badges (no external image / CSP risk).
 // Faithful black-badge style; to use Apple/Google's exact official artwork,
 // drop the PNGs in /public/badges and swap the inner markup for <img>.
-export default function AppBadges({ className = '' }: { className?: string }) {
+// `source` tags the store links so installs show per placement in the consoles.
+export default function AppBadges({ className = '', source }: { className?: string; source: string }) {
   return (
     <div className={`flex flex-wrap gap-3 ${className}`}>
       <a
-        href={APPSTORE_URL}
+        href={appStoreUrl(source)}
         target="_blank"
         rel="noopener"
         aria-label="Download Plants Pack on the App Store"
@@ -22,7 +23,7 @@ export default function AppBadges({ className = '' }: { className?: string }) {
         </span>
       </a>
       <a
-        href={PLAY_URL}
+        href={playUrl(source)}
         target="_blank"
         rel="noopener"
         aria-label="Get Plants Pack on Google Play"

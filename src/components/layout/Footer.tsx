@@ -35,7 +35,7 @@ export default function Footer() {
             </div>
             <div className="mt-5">
               <p className="text-xs font-semibold text-on-surface mb-2">Get the app</p>
-              <AppBadges />
+              <AppBadges source="web-footer" />
             </div>
           </div>
 

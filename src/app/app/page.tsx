@@ -58,7 +58,7 @@ export default function AppPage() {
           </p>
         </header>
 
-        <AppBadges className="mb-12" />
+        <AppBadges className="mb-12" source="web-app-page" />
 
         <section className="grid gap-4 sm:grid-cols-2">
           {FEATURES.map(([title, body]) => (

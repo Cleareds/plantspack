@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
-import { PLAY_URL } from '@/lib/app-links'
+import { playUrl } from '@/lib/app-links'
 import { safeStorage } from '@/lib/safe-storage'
 
 const DISMISS_KEY = 'app_banner_dismissed'
@@ -61,7 +61,7 @@ export default function AppInstallBanner() {
           </p>
         </div>
         <a
-          href={PLAY_URL}
+          href={playUrl('web-banner')}
           target="_blank"
           rel="noopener"
           onClick={dismiss}
