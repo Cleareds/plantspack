@@ -1,7 +1,7 @@
 {
-  "name": "Plants Pack - Social Network for Plant-Based Living",
-  "short_name": "Plants Pack",
-  "description": "Connect with fellow plant-based enthusiasts, discover vegan places, and share your green journey",
+  "name": "PlantsPack - Vegan Places Map and Tools",
+  "short_name": "PlantsPack",
+  "description": "Find vegan and vegan-friendly places, check products with free scanners, and read clear answers to is-it-vegan questions.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
