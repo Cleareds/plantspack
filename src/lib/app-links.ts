@@ -1,12 +1,12 @@
 // Store links for the Plants Pack mobile apps (live iOS + Android).
 // App Store id from eas.json (ascAppId); Android package plantspack.app.
-export const APPSTORE_URL = 'https://apps.apple.com/app/id6779618901'
+export const APPSTORE_URL = 'https://apps.apple.com/app/apple-store/id6779618901'
 export const PLAY_URL = 'https://play.google.com/store/apps/details?id=plantspack.app'
 
 // App Store Connect provider token ("pt"). Apple only attributes a campaign
 // link when both pt and ct are present; without pt the ct is ignored but
 // harmless. Value: App Store Connect -> Analytics -> Acquisition -> Campaigns.
-const APPLE_PROVIDER_TOKEN = ''
+const APPLE_PROVIDER_TOKEN = '129022916'
 
 // Campaign names are free text in our own links but untrusted on /get, so
 // every entry point goes through the same sanitiser.
