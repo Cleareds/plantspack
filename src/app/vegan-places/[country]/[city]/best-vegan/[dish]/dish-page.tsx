@@ -9,11 +9,12 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import { getDishPageData, getNearbyDishCities, dishPageHref, type DishPageData } from '@/lib/dish-page-data'
 import { getArticlesForDish } from '@/lib/vegan-content/dish-article-links'
 import { normaliseDishSlug, DISHES } from '@/lib/dish-keywords'
+import { resolveCity } from '@/lib/city-resolve'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from '@/components/places/VerificationConfidenceBadge'
 import PlaceImage from '@/components/places/PlaceImage'
@@ -144,7 +145,15 @@ export async function buildDishMetadata(routeParams: RouteParams): Promise<Metad
 
 export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
   const data = await load(p)
-  if (!data) notFound()
+  if (!data) {
+    // A real dish in a real city that fell under the density gate (e.g. after
+    // a data correction removed matches) has had search traffic: send it to
+    // the city hub instead of a 404. Unknown dishes/cities still 404.
+    if (normaliseDishSlug(p.dish) && (await resolveCity(p.country, p.city))) {
+      permanentRedirect(`/vegan-places/${p.country}/${p.city}`)
+    }
+    notFound()
+  }
 
   const { dish, city, country, places, total, fullyVeganCount } = data
   const baseHref = dishPageHref(p.country, p.city, dish.slug)
