@@ -193,7 +193,10 @@ export default function RootLayout({
                 {
                   '@type': 'Organization',
                   '@id': 'https://www.plantspack.com/#organization',
-                  name: 'Plants Pack',
+                  // "PlantsPack" matches Wikidata and both app stores; the
+                  // spaced form stays as an alternate so both resolve to one entity.
+                  name: 'PlantsPack',
+                  alternateName: 'Plants Pack',
                   url: 'https://www.plantspack.com',
                   logo: 'https://www.plantspack.com/plantspack-logo-real.svg',
                   description:
@@ -206,6 +209,8 @@ export default function RootLayout({
                     'https://www.wikidata.org/wiki/Q139742042',
                     'https://alternativeto.net/software/plantspack/',
                     'https://github.com/Cleareds/plantspack',
+                    'https://apps.apple.com/app/id6779618901',
+                    'https://play.google.com/store/apps/details?id=plantspack.app',
                   ],
                 },
                 // WebSite ties all pages to the brand identity and lets
@@ -216,7 +221,8 @@ export default function RootLayout({
                   '@type': 'WebSite',
                   '@id': 'https://www.plantspack.com/#website',
                   url: 'https://www.plantspack.com',
-                  name: 'Plants Pack',
+                  name: 'PlantsPack',
+                  alternateName: 'Plants Pack',
                   publisher: { '@id': 'https://www.plantspack.com/#organization' },
                   potentialAction: {
                     '@type': 'SearchAction',
