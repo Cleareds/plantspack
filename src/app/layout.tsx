@@ -161,7 +161,7 @@ export default function RootLayout({
         */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=block"
           media="print"
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...({ id: 'msym-stylesheet' } as any)}
@@ -171,7 +171,7 @@ export default function RootLayout({
           {/* eslint-disable-next-line @next/next/no-css-tags */}
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=block"
             crossOrigin="anonymous"
           />
         </noscript>

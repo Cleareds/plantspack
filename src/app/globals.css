@@ -87,6 +87,19 @@ mark {
   --font-mono: var(--font-geist-mono);
 }
 
+/* Material Symbols render their ligature name as text ("restaurant_menu")
+   until the font arrives. That text made the header taller and shifted the
+   whole page when the font loaded (CLS 0.29 on the city hubs). A fixed 1em
+   box keeps the layout identical before and after the swap; font-display
+   block (see layout.tsx) keeps the ligature text invisible meanwhile. */
+.material-symbols-outlined {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

@@ -53,15 +53,12 @@ export const NAV_PILLARS: NavPillar[] = [
     ],
   },
   {
+    // Feed and Packs left the nav 2026-10-16 (0 comments / likes / new packs
+    // in 30 days). The pages stay reachable by URL. Events is the live part.
     key: 'community',
-    href: '/feed',
-    label: 'Community',
-    icon: 'forum',
-    children: [
-      { href: '/feed', label: 'Feed' },
-      { href: '/packs', label: 'Packs / Trips' },
-      { href: '/events', label: 'Events' },
-    ],
+    href: '/events',
+    label: 'Events',
+    icon: 'event',
   },
 ]
 
