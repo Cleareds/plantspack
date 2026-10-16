@@ -23,12 +23,12 @@ function fromSlug(slug: string): string {
   return slug.replace(/-/g, ' ')
 }
 
-const PLACE_COLS =
+export const PLACE_COLS =
   'id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types, tags, verification_level, verification_method, last_verified_at'
 
 // Same payload slim as the directory route: cards render main_image_url and
 // a ~150-char snippet only, and every place ships in the RSC Flight payload.
-function slimPlace(p: any) {
+export function slimPlace(p: any) {
   return {
     ...p,
     main_image_url: p.main_image_url || (Array.isArray(p.images) ? p.images[0] : null),

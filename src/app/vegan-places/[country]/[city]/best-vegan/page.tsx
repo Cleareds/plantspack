@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
   const { country, city } = await params
   const loc = await loadCity(country, city)
   if (!loc) return { title: 'Page not found', robots: { index: false } }
-  const title = `Best Vegan Food in ${loc.city} - Guides by Dish | Plants Pack`
+  const title = `Best Vegan Food in ${loc.city} - Guides by Dish | PlantsPack`
   // HONESTY (2026-08-10): was "Verified spots for pizza, donuts, ramen...".
   // These lists are built from vegan-first source data, not from per-venue
   // verification, so "verified" was an overclaim. Same correction the country
@@ -101,7 +101,7 @@ export async function generateMetadata({ params }: { params: Promise<RouteParams
       description,
       type: 'article',
       url: `https://www.plantspack.com/vegan-places/${country}/${city}/best-vegan`,
-      siteName: 'Plants Pack',
+      siteName: 'PlantsPack',
       images: OG_DEFAULT_IMAGES,
     },
   }

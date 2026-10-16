@@ -7,7 +7,7 @@ import SupportNudge from '@/components/support/SupportNudge'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'My Contributions — Plants Pack',
+  title: 'My Contributions — PlantsPack',
   description: 'Manage the places, reviews and posts you\u2019ve contributed.',
 }
 

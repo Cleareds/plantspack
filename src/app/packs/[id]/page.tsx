@@ -46,23 +46,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const pack = await fetchPackData(id)
 
   if (!pack) {
-    return { title: 'Pack Not Found — Plants Pack' }
+    return { title: 'Pack Not Found — PlantsPack' }
   }
 
   const title = pack.title
   const description = pack.description
     ? pack.description.slice(0, 160)
-    : `Explore ${title} — a curated vegan pack on Plants Pack`
+    : `Explore ${title} — a curated vegan pack on PlantsPack`
 
   return {
-    title: `${title} — Plants Pack`,
+    title: `${title} — PlantsPack`,
     description,
     alternates: { canonical: `https://www.plantspack.com/packs/${id}` },
     openGraph: {
       title,
       description,
       type: 'website',
-      siteName: 'Plants Pack',
+      siteName: 'PlantsPack',
       ...(pack.banner_url ? { images: [pack.banner_url] } : {}),
     },
   }

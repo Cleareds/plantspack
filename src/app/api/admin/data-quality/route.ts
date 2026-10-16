@@ -95,7 +95,7 @@ async function notifyReporters(
         entityId: r.place_id,
         message:
           resolution === 'dismissed'
-            ? `We reviewed your report on ${name} and kept the current listing for now. Thanks for helping keep Plants Pack accurate.`
+            ? `We reviewed your report on ${name} and kept the current listing for now. Thanks for helping keep PlantsPack accurate.`
             : `Thanks! We reviewed your report on ${name} and updated the listing.`,
       })
     }

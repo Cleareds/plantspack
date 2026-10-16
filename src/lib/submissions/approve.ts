@@ -147,7 +147,7 @@ export async function approveSubmission(
       type: 'submission_approved',
       entityType: 'place',
       entityId: place.id,
-      message: `Your suggestion is live: ${place.name} is now on Plants Pack 🌱`,
+      message: `Your suggestion is live: ${place.name} is now on PlantsPack 🌱`,
     })
   }
   const nearbyNotified = await notifyNearbyUsers({ place, excludeUserId: sub.user_id })

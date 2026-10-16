@@ -10,7 +10,7 @@ const TITLES: Partial<Record<NotificationType, string>> = {
   correction_approved: 'Correction applied',
   correction_received: 'Correction received',
   place_nearby: 'New vegan spot nearby',
-  announcement: 'Plants Pack',
+  announcement: 'PlantsPack',
 }
 
 // Expo's push API accepts at most 100 messages per request.
@@ -161,7 +161,7 @@ export async function sendPushToUser(opts: {
     const toks = tokens.map((t) => (t as { token: string }).token)
     const messages = toks.map((to) => ({
       to,
-      title: TITLES[type] ?? 'Plants Pack',
+      title: TITLES[type] ?? 'PlantsPack',
       body,
       sound: 'default',
       data: data ?? {},

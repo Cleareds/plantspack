@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { Camera, X, Search, Loader2, CheckCircle2, AlertCircle, HelpCircle, PackageX, ShieldAlert, Plus, Clock, ExternalLink, Apple, Sparkle } from 'lucide-react'
 import type { BarcodeResult } from '@/app/api/tools/barcode/route'
 import AllergenSelector from '../_components/AllergenSelector'
+import { track } from '@/lib/analytics'
 import { saveBarcodeScan, getRecentBarcodeScans, type BarcodeHistoryEntry } from './barcode-history'
 
 type Kind = 'food' | 'cosmetics'
@@ -130,6 +131,7 @@ export default function BarcodeClient() {
       const data: BarcodeResult = await r.json()
       setResult(data)
       setStatus('result')
+      track('scan_completed', { tool: 'barcode', verdict: data.verdict })
 
       // Save to local history (skip not_found - keep that for the contribute CTA)
       if (data.verdict !== 'not_found') {

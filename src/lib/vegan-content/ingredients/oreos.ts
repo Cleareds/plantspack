@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const oreosArticle: IngredientArticle = {
   slug: 'oreos',
   title: 'Are Oreos vegan?',
-  metaTitle: 'Are Oreos vegan? Ingredients yes, small print no | Plants Pack',
+  metaTitle: 'Are Oreos vegan? Ingredients yes, small print no | PlantsPack',
   metaDescription: 'Classic Oreos contain no milk, eggs or animal ingredients by recipe. So why does the company itself say they are not suitable for vegans? Cross-contact, sugar processing and the varieties that genuinely contain dairy, explained.',
   category: 'ingredient',
   searchQueries: [

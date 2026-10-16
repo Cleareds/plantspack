@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const worcestershireSauceArticle: IngredientArticle = {
   slug: 'worcestershire-sauce',
   title: 'Is Worcestershire sauce vegan?',
-  metaTitle: 'Is Worcestershire sauce vegan? The anchovy problem and which brands are safe | Plants Pack',
+  metaTitle: 'Is Worcestershire sauce vegan? The anchovy problem and which brands are safe | PlantsPack',
   metaDescription: 'The original recipe is fermented with anchovies, so classic Worcestershire sauce is not vegan or vegetarian. Several brands make a fish-free version. Here is how to tell them apart.',
   category: 'ingredient',
   searchQueries: [

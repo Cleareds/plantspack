@@ -12,7 +12,7 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 // build time on the next request after this expires.
 export const revalidate = 86400
 
-const TITLE = 'Vegan Summer Destinations 2026 — Mediterranean Guide | Plants Pack'
+const TITLE = 'Vegan Summer Destinations 2026 — Mediterranean Guide | PlantsPack'
 const DESCRIPTION = 'Where to eat vegan on your Mediterranean trip across Italy, Spain, Greece, Portugal, Croatia, and Turkey. 29 destinations from Rome and Athens to Santorini, Ibiza, and the Amalfi Coast — thousands of verified vegan and vegan-friendly restaurants, cafes, and stays.'
 const CANONICAL = 'https://www.plantspack.com/vegan-summer-destinations'
 
@@ -22,10 +22,10 @@ export const metadata: Metadata = {
   alternates: { canonical: CANONICAL },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   openGraph: {
-    title: 'Vegan Summer Destinations 2026 | Plants Pack',
+    title: 'Vegan Summer Destinations 2026 | PlantsPack',
     description: DESCRIPTION,
     type: 'article',
-    siteName: 'Plants Pack',
+    siteName: 'PlantsPack',
     url: CANONICAL,
     locale: 'en_US',
     images: OG_DEFAULT_IMAGES,
@@ -264,7 +264,7 @@ export default async function VeganSummerDestinationsPage() {
             )}
           </p>
           <p className="mt-3 text-xs text-on-surface-variant/80">
-            Updated {updated}. Place counts refresh daily from the Plants Pack database.
+            Updated {updated}. Place counts refresh daily from the PlantsPack database.
           </p>
         </div>
       </section>

@@ -6,8 +6,8 @@ export const revalidate = 0
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const { username } = await params
   return {
-    title: `Places · @${username} — Plants Pack`,
-    description: `Places added by @${username} on Plants Pack.`,
+    title: `Places · @${username} — PlantsPack`,
+    description: `Places added by @${username} on PlantsPack.`,
     alternates: { canonical: `https://www.plantspack.com/profile/${username}/places` },
   }
 }

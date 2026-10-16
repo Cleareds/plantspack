@@ -127,7 +127,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
                   Thank you for your support!
                 </p>
                 <p className="text-on-surface-variant text-sm mt-1">
-                  Your supporter badge is now active on your profile. You&apos;re helping keep Plants Pack free for everyone.
+                  Your supporter badge is now active on your profile. You&apos;re helping keep PlantsPack free for everyone.
                 </p>
               </div>
             </div>
@@ -164,7 +164,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
                 <ArrowLeft className="h-5 w-5 text-tertiary" />
               </div>
               <p className="text-on-surface-variant">
-                No worries! Plants Pack is free for everyone. Come back anytime if you&apos;d like to support us.
+                No worries! PlantsPack is free for everyone. Come back anytime if you&apos;d like to support us.
               </p>
             </div>
           </div>
@@ -179,7 +179,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
             </div>
           </div>
           <h1 className="font-headline font-extrabold text-4xl md:text-6xl text-on-surface tracking-tight leading-[1.1] mb-4">
-            Plants Pack is
+            PlantsPack is
             <br />
             <span className="text-primary">free. Forever.</span>
           </h1>
@@ -218,7 +218,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
               Support the Mission
             </h2>
             <p className="text-on-surface-variant text-lg max-w-xl mx-auto">
-              Help keep Plants Pack free for everyone. Your support goes directly toward
+              Help keep PlantsPack free for everyone. Your support goes directly toward
               servers, development, and expanding the vegan community worldwide.
             </p>
           </div>
@@ -329,7 +329,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
                 Reader-funded, not investor-funded
               </h2>
               <p className="text-on-surface-variant leading-relaxed mb-4">
-                Plants Pack runs on about €70 a month — servers, databases and services —
+                PlantsPack runs on about €70 a month — servers, databases and services —
                 with no ads, no trackers, and no investors. It stays free for everyone
                 because people choose to chip in.
               </p>
@@ -356,7 +356,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
                 Our Supporters
               </h2>
               <p className="text-on-surface-variant">
-                These amazing people help keep Plants Pack free for everyone
+                These amazing people help keep PlantsPack free for everyone
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-4">

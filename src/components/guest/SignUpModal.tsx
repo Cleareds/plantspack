@@ -28,15 +28,15 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
   const actionMessages = {
     like: {
       title: 'Like this post?',
-      description: 'Join Plants Pack to like posts and connect with the vegan community!'
+      description: 'Join PlantsPack to like posts and connect with the vegan community!'
     },
     comment: {
       title: 'Want to comment?',
-      description: 'Join Plants Pack to share your thoughts and engage with fellow plant-based enthusiasts!'
+      description: 'Join PlantsPack to share your thoughts and engage with fellow plant-based enthusiasts!'
     },
     share: {
       title: 'Want to share this?',
-      description: 'Join Plants Pack to share amazing content with your friends!'
+      description: 'Join PlantsPack to share amazing content with your friends!'
     }
   }
 
@@ -78,7 +78,7 @@ export default function SignUpModal({ isOpen, onClose, action = 'like' }: SignUp
                 className="block w-full silk-gradient hover:opacity-90 text-on-primary px-6 py-3 rounded-lg font-medium transition-colors"
                 onClick={onClose}
               >
-                Join Plants Pack - Free Forever
+                Join PlantsPack - Free Forever
               </Link>
               
               <Link

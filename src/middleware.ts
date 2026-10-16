@@ -31,7 +31,7 @@ function goneResponse() {
 function notFoundResponse() {
   return new NextResponse(
     '<!doctype html><meta charset="utf-8"><title>404 - Page not found</title>'
-    + '<p>This page does not exist. <a href="/">Go to Plants Pack</a>.</p>',
+    + '<p>This page does not exist. <a href="/">Go to PlantsPack</a>.</p>',
     {
       status: 404,
       headers: {

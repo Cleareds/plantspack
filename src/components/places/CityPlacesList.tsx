@@ -14,6 +14,7 @@ import { Plus } from 'lucide-react'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS, veganLevelOrder } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from './VerificationConfidenceBadge'
+import { CITY_LIST_PAGE_SIZE, type LightPlace } from '@/lib/city-list-light'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -68,7 +69,13 @@ interface Place {
   tags?: string[] | null
 }
 
-type CityPlacesListProps = { places: Place[]; allPlaces?: Place[]; cityName?: string; countryName?: string }
+// A list row is at least a LightPlace (enough to filter, sort, count and map).
+// Hubs pass light rows for the whole city plus `initialFull` cards for the
+// default first page; the rest of the cards load per page from
+// /api/places/cards. Callers that still pass full rows keep working.
+type ListPlace = LightPlace & Partial<Omit<Place, keyof LightPlace>>
+type CityPlacesListProps = { places: ListPlace[]; allPlaces?: ListPlace[]; initialFull?: Place[]; cityName?: string; countryName?: string }
+const isFullRow = (p: ListPlace): p is Place => p.address !== undefined
 
 // useSearchParams() makes a statically rendered (ISR) page bail out to client
 // rendering for this whole subtree, so the hub HTML shipped with NO place cards:
@@ -81,7 +88,15 @@ export default function CityPlacesList(props: CityPlacesListProps) {
   return <CityPlacesListView {...props} searchParams={searchParams} />
 }
 
-export function CityPlacesListView({ places, allPlaces, cityName, countryName, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
+export function CityPlacesListView({ places, allPlaces, initialFull, cityName, countryName, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
+  // Full card data by id: what the server sent for page 1, plus whatever
+  // the client fetched since. Rows passed in full count too.
+  const [fullById, setFullById] = useState<Record<string, Place>>(() => {
+    const m: Record<string, Place> = {}
+    for (const p of initialFull || []) m[p.id] = p
+    for (const p of places) if (isFullRow(p)) m[p.id] = p
+    return m
+  })
   // `places` is the SSR-filtered list (e.g. FV-only on /fully-vegan).
   // `allPlaces` is the unfiltered universe — needed so the pill counts
   // ("Mostly Vegan (3)", "Vegan-Friendly (24)") show the real cross-tier
@@ -164,7 +179,7 @@ export function CityPlacesListView({ places, allPlaces, cityName, countryName, s
   // `also:<category>` tags (hybrid venues — e.g. a shop that is also a
   // restaurant). categoriesOf returns every category a place counts under,
   // so it shows up in each of those category filters.
-  const categoriesOf = (p: Place): string[] => {
+  const categoriesOf = (p: ListPlace): string[] => {
     const extra = (p.tags || [])
       .filter((t): t is string => typeof t === 'string' && t.startsWith('also:'))
       .map(t => t.slice(5))
@@ -181,16 +196,16 @@ export function CityPlacesListView({ places, allPlaces, cityName, countryName, s
   const validCategory = activeCategory && categories.includes(activeCategory) ? activeCategory : null
   const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
 
-  const PAGE_SIZE = 30
+  const PAGE_SIZE = CITY_LIST_PAGE_SIZE
   const currentPage = parseInt(searchParams?.get('page') || '1') || 1
 
   // Faceted-count predicates: each pill's count reflects every OTHER active
   // filter but not its own facet. Lets users see how many places they'd land
   // on if they swapped a value within the same facet.
-  const matchCategory = (p: Place) => !validCategory || categoriesOf(p).includes(validCategory)
-  const matchSubcategory = (p: Place) => !validSubcategory || p.subcategory === validSubcategory
-  const matchPet = (p: Place) => !petOnly || p.is_pet_friendly
-  const matchVeganLevel = (p: Place) => !activeVeganLevel || p.vegan_level === activeVeganLevel
+  const matchCategory = (p: ListPlace) => !validCategory || categoriesOf(p).includes(validCategory)
+  const matchSubcategory = (p: ListPlace) => !validSubcategory || p.subcategory === validSubcategory
+  const matchPet = (p: ListPlace) => !petOnly || p.is_pet_friendly
+  const matchVeganLevel = (p: ListPlace) => !activeVeganLevel || p.vegan_level === activeVeganLevel
 
   // Pill counts use the unfiltered universe (baseForCounts) so the numbers
   // reflect "if you switched to this filter, here's how many you'd see"
@@ -220,6 +235,27 @@ export function CityPlacesListView({ places, allPlaces, cityName, countryName, s
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
   const needsPagination = filtered.length > PAGE_SIZE
+
+  // Load the cards this page shows but the server did not send. Until they
+  // arrive the card renders from the light row (name, badges, rating) with
+  // no image or description, so the page never looks empty.
+  const missingIds = paginated.filter(p => !fullById[p.id]).map(p => p.id).join(',')
+  useEffect(() => {
+    if (!missingIds) return
+    let cancelled = false
+    fetch(`/api/places/cards?ids=${missingIds}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(j => {
+        if (cancelled || !j?.places?.length) return
+        setFullById(prev => {
+          const next = { ...prev }
+          for (const p of j.places as Place[]) next[p.id] = p
+          return next
+        })
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [missingIds])
 
   return (
     <div>
@@ -372,12 +408,14 @@ export function CityPlacesListView({ places, allPlaces, cityName, countryName, s
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Places List */}
         <div className="flex-1 space-y-4 min-w-0">
-          {paginated.map(place => {
+          {paginated.map(row => {
+            const place = (fullById[row.id] ?? row) as Place
+            const address = place.address || ''
             const thumbnail = place.main_image_url || place.images?.[0]
             const googleMapsUrl = place.google_place_id
               ? `https://www.google.com/maps/place/?q=place_id:${place.google_place_id}`
-              : `https://www.google.com/maps/search/${encodeURIComponent(place.name + ' ' + place.address)}`
-            const appleMapsUrl = `http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.address)}&ll=${place.latitude},${place.longitude}`
+              : `https://www.google.com/maps/search/${encodeURIComponent(place.name + ' ' + address)}`
+            const appleMapsUrl = `http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(address)}&ll=${place.latitude},${place.longitude}`
             const osmUrl = `https://www.openstreetmap.org/?mlat=${place.latitude}&mlon=${place.longitude}&zoom=17`
             const cuisines = (place.cuisine_types || []).filter(c => c && c !== 'vegan' && c !== 'regional').slice(0, 3)
 
@@ -480,7 +518,7 @@ export function CityPlacesListView({ places, allPlaces, cityName, countryName, s
                 <div className="flex items-center gap-3 px-4 pb-3 pt-0 text-xs">
                   <span className="flex items-center gap-1 text-on-surface-variant">
                     <MapPin className="h-3 w-3" />
-                    <span className="line-clamp-1">{place.address}</span>
+                    <span className="line-clamp-1">{address}</span>
                   </span>
                   <div className="flex items-center gap-1 ml-auto flex-shrink-0">
                     {place.phone && (
@@ -596,7 +634,7 @@ export function CityPlacesListView({ places, allPlaces, cityName, countryName, s
 // well below the fold, so deferral is a clean LCP win. On desktop the
 // observer fires almost immediately on mount, so user-perceived delay
 // stays sub-100ms while the document paints first.
-function LazyCityMap({ places, className }: { places: Place[]; className?: string }) {
+function LazyCityMap({ places, className }: { places: ListPlace[]; className?: string }) {
   const { ref, inView } = useInView<HTMLDivElement>({ rootMargin: '300px' })
   const mapPlaces = useMemo(
     () =>

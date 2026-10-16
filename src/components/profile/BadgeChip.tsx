@@ -14,7 +14,7 @@ export const BADGE_CONFIG: Record<BadgeCode, BadgeConfig> = {
   early_contributor: {
     emoji: '🌱',
     label: 'Early',
-    tooltip: 'Early Contributor — one of the first 100 people to contribute to Plants Pack.',
+    tooltip: 'Early Contributor — one of the first 100 people to contribute to PlantsPack.',
     bg: 'bg-emerald-100',
     fg: 'text-emerald-800',
   },

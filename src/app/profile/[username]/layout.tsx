@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
       .single()
 
     if (!user) {
-      return { title: 'User Not Found - Plants Pack' }
+      return { title: 'User Not Found - PlantsPack' }
     }
 
     const displayName = user.first_name
@@ -27,22 +27,22 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
       : user.username
 
     return {
-      title: `${displayName} (@${user.username}) - Plants Pack`,
-      description: user.bio || `${displayName}'s profile on Plants Pack, the vegan community platform.`,
+      title: `${displayName} (@${user.username}) - PlantsPack`,
+      description: user.bio || `${displayName}'s profile on PlantsPack, the vegan community platform.`,
       alternates: {
         canonical: `https://www.plantspack.com/profile/${user.username}`,
       },
       openGraph: {
         title: `${displayName} (@${user.username})`,
-        description: user.bio || `${displayName}'s profile on Plants Pack.`,
+        description: user.bio || `${displayName}'s profile on PlantsPack.`,
         type: 'profile',
-        siteName: 'Plants Pack',
+        siteName: 'PlantsPack',
         url: `https://www.plantspack.com/profile/${user.username}`,
         images: OG_DEFAULT_IMAGES,
       },
     }
   } catch {
-    return { title: 'Profile - Plants Pack' }
+    return { title: 'Profile - PlantsPack' }
   }
 }
 

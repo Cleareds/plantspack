@@ -24,6 +24,7 @@ import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
+import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace } from '@/lib/city-list-light'
 import CountryCityGrid, { CountryCityGridView } from '@/components/places/CountryCityGrid'
 import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
@@ -96,10 +97,10 @@ export async function buildCountryMetadata(country: string, isFullyVeganMode: bo
   // totalFv = places classified/listed 100% vegan; genuine admin verification
   // shows as the per-place "Confirmed" badge, not a hub-level count.
   const title = isFullyVeganMode
-    ? `100% Vegan in ${countryName} — ${totalFv} Fully Vegan ${totalFv === 1 ? 'Spot' : 'Spots'} | Plants Pack`
+    ? `100% Vegan in ${countryName} — ${totalFv} Fully Vegan ${totalFv === 1 ? 'Spot' : 'Spots'} | PlantsPack`
     : cities.length > 1
-      ? `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | Plants Pack`
-      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} ${totalPlaces === 1 ? 'Spot' : 'Spots'} | Plants Pack`
+      ? `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} Spots Across ${cities.length} Cities | PlantsPack`
+      : `Vegan ${placeTerm} in ${countryName} — ${totalPlaces} ${totalPlaces === 1 ? 'Spot' : 'Spots'} | PlantsPack`
 
   const fvDesc = `${totalFv} ${totalFv === 1 ? 'venue' : 'venues'} in ${countryName} listed as 100% vegan — fully plant-based restaurants, cafés, bakeries and stores. Admin-confirmed spots carry a verified badge. Free, ad-free, no paid listings.`
 
@@ -127,7 +128,7 @@ export async function buildCountryMetadata(country: string, isFullyVeganMode: bo
       title: isFullyVeganMode ? `100% Vegan in ${countryName}` : `Vegan ${placeTerm} in ${countryName}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
-      siteName: 'Plants Pack',
+      siteName: 'PlantsPack',
       url: canonical,
       images: OG_DEFAULT_IMAGES,
     },
@@ -148,6 +149,10 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
   // FV-mode filters places + drops cities with zero fully_vegan venues
   // from the city list so the page reflects "100% vegan in X" honestly.
   const places = isFullyVeganMode ? allRawPlaces.filter((p: any) => p.vegan_level === 'fully_vegan') : allRawPlaces
+  // Light rows for the client list + full cards for its first page only (see src/lib/city-list-light.ts).
+  const lightPlaces = places.map(toLightPlace)
+  const lightAllPlaces = isFullyVeganMode ? allRawPlaces.map(toLightPlace) : lightPlaces
+  const firstPageCards = defaultCityListOrder(places).slice(0, CITY_LIST_PAGE_SIZE)
   const cities = isFullyVeganMode
     ? allCities.map((c: any) => ({ ...c, count: c.stats?.fullyVegan || 0 })).filter((c: any) => c.count > 0)
     : allCities
@@ -392,7 +397,7 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
                     Vegan Summer Destinations in Europe
                   </h2>
                   <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">
-                    {countryName} is one of six Mediterranean countries in Plants Pack's seasonal vegan-travel hub - 29 destinations curated for plant-based summer trips.
+                    {countryName} is one of six Mediterranean countries in PlantsPack's seasonal vegan-travel hub - 29 destinations curated for plant-based summer trips.
                   </p>
                   <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-primary">
                     Open the hub →
@@ -505,8 +510,8 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
               </section>
             )}
             {/* useSearchParams() inside - needs Suspense on an ISR page, see city-page.tsx. */}
-            <Suspense fallback={<CityPlacesListView places={places} allPlaces={allRawPlaces} searchParams={null} />}>
-              <CityPlacesList places={places} allPlaces={allRawPlaces} />
+            <Suspense fallback={<CityPlacesListView places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} searchParams={null} />}>
+              <CityPlacesList places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} />
             </Suspense>
           </div>
         )}

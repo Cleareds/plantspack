@@ -11,7 +11,7 @@ export default function AppBadges({ className = '', source }: { className?: stri
         href={appStoreUrl(source)}
         target="_blank"
         rel="noopener"
-        aria-label="Download Plants Pack on the App Store"
+        aria-label="Download PlantsPack on the App Store"
         className="inline-flex items-center gap-2 h-11 px-3.5 rounded-xl bg-black text-white hover:opacity-90 transition-opacity"
       >
         <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="currentColor" aria-hidden>
@@ -26,7 +26,7 @@ export default function AppBadges({ className = '', source }: { className?: stri
         href={playUrl(source)}
         target="_blank"
         rel="noopener"
-        aria-label="Get Plants Pack on Google Play"
+        aria-label="Get PlantsPack on Google Play"
         className="inline-flex items-center gap-2 h-11 px-3.5 rounded-xl bg-black text-white hover:opacity-90 transition-opacity"
       >
         <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" aria-hidden>

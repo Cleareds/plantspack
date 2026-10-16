@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import type { ScanResult, ToolName } from '@/lib/tool-quota'
 import { labelAllergen } from '@/lib/allergens'
+import { track } from '@/lib/analytics'
 
 type Status = 'idle' | 'loading' | 'scanning' | 'result' | 'error'
 type Mode = 'photo' | 'text'
@@ -165,6 +166,7 @@ export default function PhotoScanner({
         return
       }
       setResult(data.result)
+      track('scan_completed', { tool, input: 'photo', cached: !!data.cached })
       setTier(data.tier ?? null)
       setCached(!!data.cached)
       setStatus('result')
@@ -198,6 +200,7 @@ export default function PhotoScanner({
         return
       }
       setResult(data.result)
+      track('scan_completed', { tool, input: 'text', cached: !!data.cached })
       setTier(data.tier ?? null)
       setCached(!!data.cached)
       setStatus('result')
@@ -390,7 +393,7 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
       <p className="text-on-surface mb-3 leading-relaxed">{message}</p>
       {isQuota && (
         <p className="text-sm text-on-surface-variant mb-5 leading-relaxed max-w-sm mx-auto">
-          These AI scans cost real money to run. Plants Pack runs on about €70 a month
+          These AI scans cost real money to run. PlantsPack runs on about €70 a month
           with no ads or investors — supporters keep the tools free and get unlimited scans
           (up to $1 of AI cost a month, which is roughly 200 label scans).
         </p>
@@ -403,7 +406,7 @@ function ErrorCard({ message, tier, onReset }: { message: string; tier: string |
         )}
         {isQuota && (
           <Link href="/support" className="px-5 py-3 rounded-xl ghost-border bg-surface text-on-surface font-semibold hover:border-primary/30">
-            Back Plants Pack for unlimited
+            Back PlantsPack for unlimited
           </Link>
         )}
         <button onClick={onReset} className="px-5 py-3 rounded-xl text-on-surface-variant text-sm">

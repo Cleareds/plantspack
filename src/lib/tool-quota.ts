@@ -286,7 +286,7 @@ export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
       return {
         allowed: false,
         tier,
-        reason: `You've used your free scan this month. Sign in for ${USER_MONTHLY_LIMIT} per month, or back Plants Pack for unlimited.`,
+        reason: `You've used your free scan this month. Sign in for ${USER_MONTHLY_LIMIT} per month, or back PlantsPack for unlimited.`,
         remaining: 0,
       }
     }
@@ -309,7 +309,7 @@ export async function checkQuota(ctx: QuotaContext): Promise<QuotaCheck> {
       return {
         allowed: false,
         tier,
-        reason: `You've used your ${USER_MONTHLY_LIMIT} free scans this month. Back Plants Pack for unlimited use.`,
+        reason: `You've used your ${USER_MONTHLY_LIMIT} free scans this month. Back PlantsPack for unlimited use.`,
         remaining: 0,
       }
     }

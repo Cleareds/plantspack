@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { ArrowLeft, Database } from 'lucide-react'
 
 export const metadata = {
-  title: 'Data Attribution & Licensing — OpenStreetMap and Other Sources | Plants Pack',
+  title: 'Data Attribution & Licensing — OpenStreetMap and Other Sources | PlantsPack',
   description:
-    'Most place records on Plants Pack originate from OpenStreetMap and remain available under the Open Database License (ODbL). Full credit, licence terms, and every other data source we use.',
+    'Most place records on PlantsPack originate from OpenStreetMap and remain available under the Open Database License (ODbL). Full credit, licence terms, and every other data source we use.',
   alternates: { canonical: 'https://www.plantspack.com/legal/attribution' },
 }
 
@@ -41,7 +41,7 @@ export default function AttributionPage() {
           <section>
             <h2 className="text-2xl font-semibold text-on-surface mb-4">OpenStreetMap</h2>
             <p className="text-on-surface-variant leading-relaxed mb-4">
-              Plants Pack is built on <strong className="text-on-surface">OpenStreetMap</strong>. The large
+              PlantsPack is built on <strong className="text-on-surface">OpenStreetMap</strong>. The large
               majority of the place records in our directory - about {OSM_SHARE} as of {AS_OF} - originate
               from OpenStreetMap, and so do the map tiles on every map we show.
             </p>
@@ -85,7 +85,7 @@ export default function AttributionPage() {
               <li>Vegan classification (fully vegan, mostly vegan, vegan-friendly, vegan options)</li>
               <li>Our verification level and the date we last checked a venue</li>
               <li>Written descriptions, photos, reviews and ratings</li>
-              <li>Places submitted by Plants Pack community members</li>
+              <li>Places submitted by PlantsPack community members</li>
             </ul>
             <p className="text-on-surface-variant leading-relaxed mt-4">
               How each of those is checked is described on our{' '}

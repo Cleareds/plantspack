@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const peanutButterArticle: IngredientArticle = {
   slug: 'peanut-butter',
   title: 'Is peanut butter vegan?',
-  metaTitle: 'Is peanut butter vegan? Almost always - here are the exceptions | Plants Pack',
+  metaTitle: 'Is peanut butter vegan? Almost always - here are the exceptions | PlantsPack',
   metaDescription: 'Peanuts, oil and salt - nearly all peanut butter is vegan. The exceptions are real though: honey-roasted and honey varieties, omega-3 blends enriched with fish oil, and the bone-char sugar question in the US.',
   category: 'ingredient',
   searchQueries: [

@@ -86,7 +86,7 @@ export async function GET() {
   const posts      = (postsRes.data     || []) as PostRow[]
 
   const md = [
-    `# Plants Pack`,
+    `# PlantsPack`,
     ``,
     // HONESTY (2026-08-10): this block claimed "Each 'fully vegan' listing is
     // manually verified against the venue's own menu" and "Every venue tagged
@@ -101,7 +101,7 @@ export async function GET() {
     ``,
     `Community-driven, no paid listings, no ads. ${(fvTotalRes.count ?? 0).toLocaleString()} venues are tagged \`fully_vegan\`; of those, ${(fvVerifiedRes.count ?? 0).toLocaleString()} have been opened on their own website and cross-referenced against a secondary source (HappyCow, local vegan press) by a human. The rest carry the tag from vegan-first source data (OpenStreetMap, VegGuide) and have not been individually re-checked — those show a lower confidence badge on the site. Most place records derive from OpenStreetMap and remain available under the Open Database License (ODbL 1.0); attribution and full source details: https://www.plantspack.com/legal/attribution`,
     ``,
-    `## About Plants Pack`,
+    `## About PlantsPack`,
     ``,
     `- [About](${BASE}/about): mission, funding model, team`,
     `- [Methodology](${BASE}/methodology): how we verify "fully vegan" listings, scoring system, source policy`,

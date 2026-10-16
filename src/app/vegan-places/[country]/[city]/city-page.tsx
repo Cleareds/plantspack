@@ -61,6 +61,7 @@ import { generateCityDescription, generateCityMetaDescription, filterCuisinesFor
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
+import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace } from '@/lib/city-list-light'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
 import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
@@ -169,9 +170,9 @@ export async function buildCityMetadata(country: string, city: string, isFullyVe
 
   const title = isFullyVeganMode
     ? eatDominant
-      ? `100% Vegan Restaurants in ${locLabel} — ${places.length} Verified | Plants Pack`
-      : `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | Plants Pack`
-    : `Vegan ${placeTerm} in ${locLabel}${countSuffix} | Plants Pack`
+      ? `100% Vegan Restaurants in ${locLabel} — ${places.length} Verified | PlantsPack`
+      : `100% Vegan in ${locLabel} — ${places.length} Verified ${places.length === 1 ? 'Venue' : 'Venues'} | PlantsPack`
+    : `Vegan ${placeTerm} in ${locLabel}${countSuffix} | PlantsPack`
 
   // FV-mode meta description. Honest: "fully vegan" is the vegan_level
   // classification (source-provided for imports), NOT an is_verified flag —
@@ -209,7 +210,7 @@ export async function buildCityMetadata(country: string, city: string, isFullyVe
         : `Vegan ${placeTerm} in ${locLabel}`,
       description: isFullyVeganMode ? fvDesc : metaDesc,
       type: 'website',
-      siteName: 'Plants Pack',
+      siteName: 'PlantsPack',
       url: canonical,
       // Only set images when we actually have a city hero. Otherwise
       // omit so Next.js inherits the file-based default (the brand-mark
@@ -308,7 +309,7 @@ function generateFaqJsonLd(args: {
     name: `How many vegan places are in ${cityName}?`,
     acceptedAnswer: {
       '@type': 'Answer',
-      text: `${total} vegan and vegan-friendly places in ${cityName}, ${countryName} on Plants Pack, including ${fullyVegan} fully vegan${storeCount ? `, ${storeCount} vegan stores` : ''}${hotelCount ? `, ${hotelCount} vegan-friendly stays` : ''}.`,
+      text: `${total} vegan and vegan-friendly places in ${cityName}, ${countryName} on PlantsPack, including ${fullyVegan} fully vegan${storeCount ? `, ${storeCount} vegan stores` : ''}${hotelCount ? `, ${hotelCount} vegan-friendly stays` : ''}.`,
     },
   })
   if (fullyVegan > 0) {
@@ -330,7 +331,7 @@ function generateFaqJsonLd(args: {
         : `What's the most-reviewed vegan-friendly spot in ${cityName}?`,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: `${topPlace.name}${isFv ? ' is fully vegan and' : ''} has the highest community rating (${topPlace.average_rating!.toFixed(1)}/5 from ${topPlace.review_count} ${topPlace.review_count === 1 ? 'review' : 'reviews'}) on Plants Pack.`,
+        text: `${topPlace.name}${isFv ? ' is fully vegan and' : ''} has the highest community rating (${topPlace.average_rating!.toFixed(1)}/5 from ${topPlace.review_count} ${topPlace.review_count === 1 ? 'review' : 'reviews'}) on PlantsPack.`,
       },
     })
   }
@@ -398,7 +399,7 @@ async function fetchCityReviews(cityName: string, countryName: string) {
         rating: r.rating,
         content: r.content.trim(),
         created_at: r.created_at,
-        reviewer: r.users?.first_name || r.users?.username || 'Plants Pack member',
+        reviewer: r.users?.first_name || r.users?.username || 'PlantsPack member',
         placeName: r.place?.name,
         placeSlug: r.place?.slug || null,
       })
@@ -439,6 +440,12 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
   const places = isFullyVeganMode ? allPlaces.filter((p: Place) => p.vegan_level === 'fully_vegan') : allPlaces
   if (allPlaces.length === 0) notFound()
   if (isFullyVeganMode && places.length === 0) redirect(`/vegan-places/${country}/${city}`)
+  // The client list gets light rows for every place (filter / sort / map)
+  // and full cards for the default first page only; it fetches the other
+  // pages from /api/places/cards. Cuts the Berlin hub from 2.7 MB to ~1 MB.
+  const lightPlaces = places.map(toLightPlace)
+  const lightAllPlaces = isFullyVeganMode ? allPlaces.map(toLightPlace) : lightPlaces
+  const firstPageCards = defaultCityListOrder(places).slice(0, CITY_LIST_PAGE_SIZE)
 
   // Region back-link banner. Resolved by canonical city name (e.g. "Brussels",
   // "Saint-Josse-ten-Noode") so spelling variants stay grouped. Null for any
@@ -640,11 +647,11 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
       <div className="max-w-7xl mx-auto px-4 py-5 md:py-8">
         {/* Breadcrumbs — mobile: Country > City, desktop: full path */}
         <nav className="flex items-center gap-2 text-sm text-on-surface-variant mb-4">
-          <Link href="/" className="hidden md:inline hover:text-primary transition-colors">Home</Link>
+          <Link prefetch={false} href="/" className="hidden md:inline hover:text-primary transition-colors">Home</Link>
           <span className="hidden md:inline text-outline">/</span>
-          <Link href="/vegan-places" className="hidden md:inline hover:text-primary transition-colors">Vegan Places</Link>
+          <Link prefetch={false} href="/vegan-places" className="hidden md:inline hover:text-primary transition-colors">Vegan Places</Link>
           <span className="hidden md:inline text-outline">/</span>
-          <Link href={`/vegan-places/${country}`} className="hover:text-primary transition-colors">{countryName}</Link>
+          <Link prefetch={false} href={`/vegan-places/${country}`} className="hover:text-primary transition-colors">{countryName}</Link>
           <span className="text-outline">/</span>
           <span className="text-on-surface font-medium">{cityName}</span>
         </nav>
@@ -680,7 +687,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
           {cityScore && cityScore.countryCityCount >= 5 && (
             <p className="text-xs text-on-surface-variant mb-3">
               Ranked <strong className="text-on-surface">#{cityScore.countryRank}</strong> of {cityScore.countryCityCount} {countryName} cities on the{' '}
-              <Link href="/city-ranks" className="text-primary hover:underline">Plants Pack vegan city score</Link>.
+              <Link prefetch={false} href="/city-ranks" className="text-primary hover:underline">PlantsPack vegan city score</Link>.
             </p>
           )}
           <p className="text-on-surface-variant text-base mb-3">
@@ -702,7 +709,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             }
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link
+            <Link prefetch={false}
               href={`/map?location=${encodeURIComponent(cityName + ', ' + countryName)}`}
               className="inline-flex items-center gap-2 text-sm font-medium silk-gradient text-on-primary-btn px-4 py-2 rounded-lg transition-colors hover:opacity-90"
             >
@@ -741,7 +748,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
                     : `These ${fvSet.length} ${fvSet.length === 1 ? 'venue is' : 'venues are'} listed as 100% vegan based on vegan-first source data (OpenStreetMap, VegGuide, HappyCow and local vegan blogs). None have been individually admin-verified against the venue's own website yet — once checked, a venue carries a "Confirmed" badge on its page.`}
                 </p>
                 <p className="text-xs text-on-surface-variant">
-                  Full audit methodology: <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>. Found a place we have classified wrong, or know of a fully vegan venue in {cityName} that should be here? Use Suggest Correction on any place page or write to <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.
+                  Full audit methodology: <Link prefetch={false} href="/methodology" className="text-primary hover:underline">/methodology</Link>. Found a place we have classified wrong, or know of a fully vegan venue in {cityName} that should be here? Use Suggest Correction on any place page or write to <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a>.
                 </p>
               </section>
             )}
@@ -750,7 +757,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
               <section className="mb-6">
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <h2 className="font-headline font-bold text-base md:text-xl truncate min-w-0">Best vegan dishes in {cityName}</h2>
-                  <Link
+                  <Link prefetch={false}
                     href={`/vegan-places/${country}/${city}/best-vegan`}
                     className="text-sm text-primary hover:underline font-medium shrink-0 whitespace-nowrap"
                   >
@@ -762,7 +769,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
                 <p className="hidden md:block text-sm text-on-surface-variant mb-3">Curated picks by dish, ranked by community + verification confidence.</p>
                 <div className="hidden md:flex flex-wrap gap-2">
                   {dishChips.slice(0, 16).map(d => (
-                    <Link
+                    <Link prefetch={false}
                       key={d.slug}
                       href={`/vegan-places/${country}/${city}/best-vegan/${d.slug}`}
                       className="px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-sm font-medium text-on-surface ghost-border"
@@ -777,8 +784,8 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             {/* CityPlacesList reads useSearchParams(). On a statically rendered
                 (ISR) page that MUST sit inside a Suspense boundary or the whole
                 page throws at render time (500 on every hub, 2026-10-01). */}
-            <Suspense fallback={<CityPlacesListView places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} searchParams={null} />}>
-              <CityPlacesList places={places} allPlaces={allPlaces} cityName={cityName} countryName={countryName} />
+            <Suspense fallback={<CityPlacesListView places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} cityName={cityName} countryName={countryName} searchParams={null} />}>
+              <CityPlacesList places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} cityName={cityName} countryName={countryName} />
             </Suspense>
 
             {/* Server-rendered crawlable index of EVERY place in the city.
@@ -857,7 +864,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
                     <span className="text-amber-500" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
                     {' '}&middot; {r.reviewer} on{' '}
                     {r.placeSlug ? (
-                      <Link href={`/place/${r.placeSlug}`} className="text-primary hover:underline font-medium">{r.placeName}</Link>
+                      <Link prefetch={false} href={`/place/${r.placeSlug}`} className="text-primary hover:underline font-medium">{r.placeName}</Link>
                     ) : (
                       <span className="font-medium">{r.placeName}</span>
                     )}
@@ -873,7 +880,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             seeded country region (today: Belgium). Lets visitors zoom out to
             see all places across the wider region. */}
         {region && (
-          <Link
+          <Link prefetch={false}
             href={`/vegan-places/${country}/region/${region.region_slug}`}
             className="block mt-8 mb-6 bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 hover:bg-primary/10 transition-colors"
           >
@@ -893,14 +900,14 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             page so users get a consistent entry point and Google sees the
             audit referenced from many internal pages. */}
         {auditPost && (
-          <Link
+          <Link prefetch={false}
             href={`/blog/${auditPost.slug}`}
             className="block mt-8 mb-6 group bg-surface-container-lowest hover:bg-surface-container-low ghost-border rounded-2xl overflow-hidden editorial-shadow transition-colors"
           >
             <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
               {auditPost.image_url && (
                 <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
-                  <img src={auditPost.image_url} alt="" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                  <img src={auditPost.image_url} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
                 </div>
               )}
               <div className="flex-1 p-5 md:p-6">
@@ -992,14 +999,14 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             </h2>
             <p className="text-xs text-on-surface-variant mb-4">
               Part of the same region as {cityName}.{' '}
-              <Link href={`/vegan-places/${country}/region/${region.region_slug}`} className="text-primary hover:underline">
+              <Link prefetch={false} href={`/vegan-places/${country}/region/${region.region_slug}`} className="text-primary hover:underline">
                 See the full region →
               </Link>
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {regionCities.slice(0, 9).map((c) => (
                 <li key={c.city_slug}>
-                  <Link
+                  <Link prefetch={false}
                     href={`/vegan-places/${country}/${c.city_slug}`}
                     className="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors"
                   >
@@ -1029,7 +1036,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {nearbyCities.map((c) => (
                 <li key={c.city_slug}>
-                  <Link
+                  <Link prefetch={false}
                     href={`/vegan-places/${country}/${c.city_slug}`}
                     className="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors"
                   >
@@ -1054,7 +1061,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             More vegan places in {countryName}
           </h2>
           <p className="text-sm text-on-surface-variant">
-            <Link href={`/vegan-places/${country}`} className="text-primary hover:underline font-medium">
+            <Link prefetch={false} href={`/vegan-places/${country}`} className="text-primary hover:underline font-medium">
               Browse all cities in {countryName} &rarr;
             </Link>
           </p>

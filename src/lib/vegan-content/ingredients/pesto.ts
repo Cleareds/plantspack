@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const pestoArticle: IngredientArticle = {
   slug: 'pesto',
   title: 'Is pesto vegan?',
-  metaTitle: 'Is pesto vegan? Parmesan, rennet, and how to spot a vegan jar | Plants Pack',
+  metaTitle: 'Is pesto vegan? Parmesan, rennet, and how to spot a vegan jar | PlantsPack',
   metaDescription: 'Traditional pesto contains Parmigiano-Reggiano and Pecorino, both made with animal rennet - so it is not vegan or vegetarian. Vegan pesto is easy to find and easy to make.',
   category: 'ingredient',
   searchQueries: [

@@ -202,7 +202,7 @@ function ReplyCard({
     ? (reply.users.first_name
         ? `${reply.users.first_name} ${reply.users.last_name ?? ''}`.trim()
         : reply.users.username)
-    : (isOwner ? 'Place owner' : 'Plants Pack Team')
+    : (isOwner ? 'Place owner' : 'PlantsPack Team')
 
   return (
     <div className="rounded-lg bg-surface-container-low/60 p-3">
@@ -214,7 +214,7 @@ function ReplyCard({
             : 'bg-primary/15 text-primary'
         }`}>
           {isOwner ? <BadgeCheck className="h-3 w-3" /> : <ShieldCheck className="h-3 w-3" />}
-          {isOwner ? 'Owner reply' : 'Plants Pack Team'}
+          {isOwner ? 'Owner reply' : 'PlantsPack Team'}
         </span>
         <span className="text-xs text-on-surface-variant ml-auto">
           {formatDistanceToNow(new Date(reply.created_at), { addSuffix: true })}

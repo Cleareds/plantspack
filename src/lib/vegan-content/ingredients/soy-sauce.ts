@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const soySauceArticle: IngredientArticle = {
   slug: 'soy-sauce',
   title: 'Is soy sauce vegan?',
-  metaTitle: 'Is soy sauce vegan? Yes - but its neighbours are not | Plants Pack',
+  metaTitle: 'Is soy sauce vegan? Yes - but its neighbours are not | PlantsPack',
   metaDescription: 'Traditional soy sauce is fermented soybeans, wheat, salt and water - vegan. The traps are the sauces next to it: dashi blends with fish, ponzu with bonito, oyster sauce, and fish sauce swaps in restaurant kitchens.',
   category: 'ingredient',
   searchQueries: [

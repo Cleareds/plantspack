@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const naanArticle: IngredientArticle = {
   slug: 'naan',
   title: 'Is naan bread vegan?',
-  metaTitle: 'Is naan vegan? Yoghurt, ghee and milk in Indian breads | Plants Pack',
+  metaTitle: 'Is naan vegan? Yoghurt, ghee and milk in Indian breads | PlantsPack',
   metaDescription: 'Most naan contains yoghurt or milk and is brushed with ghee, so it is usually not vegan. Chapati, roti and most poori are. Here is which Indian bread to order.',
   category: 'ingredient',
   searchQueries: [

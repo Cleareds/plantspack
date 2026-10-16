@@ -125,7 +125,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
         className="w-full"
         onSubmit={(e) => { e.preventDefault(); submitToSearchPage() }}
         role="search"
-        aria-label="Search Plants Pack"
+        aria-label="Search PlantsPack"
       >
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline" />
         <input
@@ -191,7 +191,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
               <p className="text-sm text-outline mb-2">No results for &quot;{query}&quot;</p>
               <Link href="/map?add=true" onClick={() => { setIsOpen(false); setQuery('') }}
                 className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline">
-                <Plus className="h-3 w-3" /> Add this place to Plants Pack
+                <Plus className="h-3 w-3" /> Add this place to PlantsPack
               </Link>
             </div>
           )}

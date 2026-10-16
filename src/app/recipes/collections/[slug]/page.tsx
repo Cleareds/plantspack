@@ -85,7 +85,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: c.metaTitle,
       description: c.metaDescription,
       type: 'website',
-      siteName: 'Plants Pack',
+      siteName: 'PlantsPack',
       url: canonical,
       images: OG_DEFAULT_IMAGES,
     },

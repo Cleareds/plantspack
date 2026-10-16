@@ -1,4 +1,4 @@
-// Sprouts: Plants Pack contribution-rewards ledger + tier helpers.
+// Sprouts: PlantsPack contribution-rewards ledger + tier helpers.
 //
 // Phase 1 (2026-05-22): ADMIN-ONLY. The library is wired everywhere it
 // belongs, but `awardSprouts`/`spendSprouts`/`seedTree` early-return if
@@ -478,7 +478,7 @@ export async function getMyState(userId: string): Promise<SproutsState | null> {
   }
 }
 
-// ---- Plants Pack Play bridge (read-only) ------------------------------------
+// ---- PlantsPack Play bridge (read-only) ------------------------------------
 // Vegan City Score of the user's current city in the game, computed
 // server-side from the cloud save (game_saves.state.city3d.tiles). Weights
 // mirror the game's lib/cityStore.ts SCORE_WEIGHT - keep in sync.

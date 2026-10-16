@@ -46,7 +46,7 @@ export const viewport: Viewport = {
 // with 5+ places, ~160 countries) per the honesty-first copy rule. We say
 // "1,400+ active cities" rather than "10,000+ cities" because most of those
 // 10K "cities" have only 1-2 places each - not a directory people can use.
-const SITE_TITLE = 'Plants Pack: Free Vegan Tools, Places & Travel Guides';
+const SITE_TITLE = 'PlantsPack: Free Vegan Tools, Places & Travel Guides';
 const SITE_DESCRIPTION =
   'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. Ad-free, no tracking, community-built.';
 
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
   // do, with their own hero photo).
   openGraph: {
     type: 'website',
-    siteName: 'Plants Pack',
+    siteName: 'PlantsPack',
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     url: 'https://www.plantspack.com/',
@@ -98,7 +98,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Plants Pack',
+    title: 'PlantsPack',
   },
   // Native iOS Smart App Banner. Safari renders its own OS-level banner at the
   // top of the page from this tag (no custom UI). App Store id 6779618901 — see

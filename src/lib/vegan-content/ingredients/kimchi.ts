@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const kimchiArticle: IngredientArticle = {
   slug: 'kimchi',
   title: 'Is kimchi vegan?',
-  metaTitle: 'Is kimchi vegan? Fish sauce, shrimp paste and how to find a vegan jar | Plants Pack',
+  metaTitle: 'Is kimchi vegan? Fish sauce, shrimp paste and how to find a vegan jar | PlantsPack',
   metaDescription: 'Traditional kimchi is fermented with jeotgal - salted seafood, usually anchovy or shrimp. Vegan kimchi exists and is common in Korea as temple food. Here is what to check.',
   category: 'ingredient',
   searchQueries: [

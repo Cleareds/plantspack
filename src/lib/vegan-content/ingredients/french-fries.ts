@@ -3,7 +3,7 @@ import type { IngredientArticle } from '../types'
 export const frenchFriesArticle: IngredientArticle = {
   slug: 'french-fries',
   title: 'Are french fries vegan?',
-  metaTitle: 'Are french fries vegan? The beef fat problem, country by country | Plants Pack',
+  metaTitle: 'Are french fries vegan? The beef fat problem, country by country | PlantsPack',
   metaDescription: 'Potatoes and oil are vegan, but plenty of fries are not. Beef tallow, beef flavouring, shared fryers and milk-derived coatings all show up. Here is what to check and where it goes wrong.',
   category: 'ingredient',
   searchQueries: [

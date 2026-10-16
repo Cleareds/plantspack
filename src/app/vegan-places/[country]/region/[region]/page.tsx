@@ -6,6 +6,7 @@ import { Globe } from 'lucide-react'
 import { getRegion, getRegionCityStats, getRegionPlaces } from '@/lib/regions'
 import { getCities } from '@/lib/directory-queries'
 import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
+import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace } from '@/lib/city-list-light'
 import CountryCityGrid, { CountryCityGridView } from '@/components/places/CountryCityGrid'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
@@ -33,11 +34,11 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { country, region } = await params
   const r = await getRegion(country, region)
-  if (!r) return { title: 'Region not found | Plants Pack' }
+  if (!r) return { title: 'Region not found | PlantsPack' }
   // Use the directory_countries display name via getCities (deduped through cache())
   const { country: countryName } = await getCities(country)
   return {
-    title: `Vegan Places in ${r.region_name}, ${countryName} | Plants Pack`,
+    title: `Vegan Places in ${r.region_name}, ${countryName} | PlantsPack`,
     description: r.description ?? `Vegan and vegan-friendly places across ${r.region_name}, ${countryName}.`,
     alternates: { canonical: `https://www.plantspack.com/vegan-places/${country}/region/${region}` },
     robots: { index: true, follow: true },
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `Vegan Places in ${r.region_name}`,
       description: r.description ?? '',
       type: 'website',
-      siteName: 'Plants Pack',
+      siteName: 'PlantsPack',
       url: `https://www.plantspack.com/vegan-places/${country}/region/${region}`,
       images: OG_DEFAULT_IMAGES,
     },
@@ -182,8 +183,8 @@ export default async function RegionPage({ params }: PageProps) {
         {places.length > 0 && (
           <div>
             <h2 className="text-lg font-semibold text-on-surface mb-4">All places in {r.region_name}</h2>
-            <Suspense fallback={<CityPlacesListView places={places as any} cityName={r.region_name} countryName={countryName} searchParams={null} />}>
-              <CityPlacesList places={places as any} cityName={r.region_name} countryName={countryName} />
+            <Suspense fallback={<CityPlacesListView places={places.map(toLightPlace)} initialFull={defaultCityListOrder(places as any[]).slice(0, CITY_LIST_PAGE_SIZE)} cityName={r.region_name} countryName={countryName} searchParams={null} />}>
+              <CityPlacesList places={places.map(toLightPlace)} initialFull={defaultCityListOrder(places as any[]).slice(0, CITY_LIST_PAGE_SIZE)} cityName={r.region_name} countryName={countryName} />
             </Suspense>
           </div>
         )}

@@ -98,13 +98,13 @@ export default function SupportNudge({
         </div>
         <div className="min-w-0">
           <h3 className="font-semibold text-on-surface mb-1">
-            {variant === 'contributor' ? 'You already help build this' : 'Keep Plants Pack free'}
+            {variant === 'contributor' ? 'You already help build this' : 'Keep PlantsPack free'}
           </h3>
           <p className="text-sm text-on-surface-variant leading-relaxed mb-4">
             {variant === 'contributor' && (
               <>The places and reviews you add are what make this directory worth using. </>
             )}
-            Plants Pack costs about €{cost} a month to run — no ads, no investors.{' '}
+            PlantsPack costs about €{cost} a month to run — no ads, no investors.{' '}
             {n > 0 && (
               <>Right now {n === 1 ? 'one supporter covers' : `${n} supporters cover`} about {pct}% of that. </>
             )}

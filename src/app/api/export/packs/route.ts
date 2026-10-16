@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
         return `  <wpt lat="${p.latitude}" lon="${p.longitude}">\n    <name>${xmlEscape(p.name)}</name>\n    <desc>${xmlEscape(desc)}</desc>\n  </wpt>`
       })
       .join('\n')
-    const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Plants Pack" xmlns="http://www.topografix.com/GPX/1/1">\n${wpts}\n</gpx>\n`
+    const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="PlantsPack" xmlns="http://www.topografix.com/GPX/1/1">\n${wpts}\n</gpx>\n`
     return new NextResponse(gpx, {
       headers: {
         'Content-Type': 'application/gpx+xml; charset=utf-8',
@@ -94,7 +94,7 @@ export async function GET(req: NextRequest) {
   }
 
   // CSV (default)
-  const header = ['Pack', 'Name', 'Vegan level', 'Address', 'City', 'Country', 'Latitude', 'Longitude', 'Website', 'Plants Pack URL']
+  const header = ['Pack', 'Name', 'Vegan level', 'Address', 'City', 'Country', 'Latitude', 'Longitude', 'Website', 'PlantsPack URL']
   const lines = [header.join(',')]
   for (const r of rows) {
     const p = r.places
