@@ -26,6 +26,8 @@ export interface Notification {
   // Target channels; NULL = all. Subset of {web,ios,android}. Used to scope
   // admin broadcasts to specific surfaces.
   channels?: string[] | null
+  // Optional tap target (admin broadcasts). See src/lib/notifications/link.ts.
+  url?: string | null
   actor?: {
     id: string
     username: string

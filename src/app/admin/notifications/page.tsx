@@ -26,6 +26,14 @@ export default function AdminNotificationsPage() {
   )
 }
 
+const APP_UPDATE_URL = 'plantspack://update'
+const LINK_MODES = [
+  { key: 'none', label: 'Nothing' },
+  { key: 'update', label: 'App update screen' },
+  { key: 'custom', label: 'Custom URL' },
+] as const
+type LinkMode = (typeof LINK_MODES)[number]['key']
+
 const CHANNELS = [
   { key: 'web', label: 'Web', hint: 'in-app bell on plantspack.com' },
   { key: 'ios', label: 'iOS app', hint: 'in-app + OS push (opted-in)' },
@@ -36,6 +44,7 @@ function BroadcastCard() {
   const [title, setTitle] = useState('')
   const [message, setMessage] = useState('')
   const [url, setUrl] = useState('')
+  const [linkMode, setLinkMode] = useState<LinkMode>('none')
   // Default: all channels selected (delivered everywhere).
   const [channels, setChannels] = useState<Record<string, boolean>>({ web: true, ios: true, android: true })
   const [sending, setSending] = useState(false)
@@ -49,6 +58,8 @@ function BroadcastCard() {
     setError(null); setResult(null)
     if (!message.trim()) { setError('Message is required.'); return }
     if (!selected.length) { setError('Select at least one channel.'); return }
+    const link = linkMode === 'update' ? APP_UPDATE_URL : linkMode === 'custom' ? url.trim() : ''
+    if (linkMode === 'custom' && !link) { setError('Enter the custom URL or choose "Nothing".'); return }
     const labels = CHANNELS.filter((c) => channels[c.key]).map((c) => c.label).join(', ')
     const hasPush = channels.ios || channels.android
     if (!confirm(
@@ -61,12 +72,12 @@ function BroadcastCard() {
       const res = await fetch('/api/admin/broadcast', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim() || undefined, message: message.trim(), url: url.trim() || undefined, channels: selected }),
+        body: JSON.stringify({ title: title.trim() || undefined, message: message.trim(), url: link || undefined, channels: selected }),
       })
       const json = await res.json()
       if (!res.ok) { setError(json.error || 'Failed to send'); return }
       setResult(`Delivered to ${json.recipients} bells · ${json.pushed} device pushes (opted-in only) · channels: ${(json.channels ?? selected).join(', ')}.`)
-      setTitle(''); setMessage(''); setUrl('')
+      setTitle(''); setMessage(''); setUrl(''); setLinkMode('none')
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -103,11 +114,26 @@ function BroadcastCard() {
           className="mt-1 w-full rounded-md border border-outline px-3 py-2 text-sm" />
       </label>
 
-      <label className="block">
-        <span className="text-sm font-medium text-on-surface">Link URL (optional)</span>
-        <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://plantspack.com/..."
-          className="mt-1 w-full rounded-md border border-outline px-3 py-2 text-sm" />
-      </label>
+      <div>
+        <span className="text-sm font-medium text-on-surface">Opens on tap (optional)</span>
+        <p className="text-xs text-on-surface-variant mt-0.5 mb-2">
+          Applies to the bell row and the push. &ldquo;App update screen&rdquo; opens the in-app update screen on mobile and /app on web.
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+          {LINK_MODES.map((m) => (
+            <label key={m.key} className="flex items-center gap-2 cursor-pointer text-sm text-on-surface">
+              <input type="radio" name="linkMode" checked={linkMode === m.key}
+                onChange={() => { setLinkMode(m.key); if (m.key !== 'custom') setUrl('') }}
+                className="h-4 w-4 border-outline text-primary" />
+              {m.label}
+            </label>
+          ))}
+        </div>
+        {linkMode === 'custom' && (
+          <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://plantspack.com/... or /path"
+            className="mt-2 w-full rounded-md border border-outline px-3 py-2 text-sm" />
+        )}
+      </div>
 
       <div>
         <span className="text-sm font-medium text-on-surface">Channels</span>

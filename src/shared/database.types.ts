@@ -794,6 +794,7 @@ export type Database = {
           message: string | null
           read: boolean | null
           type: string
+          url: string | null
           user_id: string
         }
         Insert: {
@@ -806,6 +807,7 @@ export type Database = {
           message?: string | null
           read?: boolean | null
           type: string
+          url?: string | null
           user_id: string
         }
         Update: {
@@ -818,6 +820,7 @@ export type Database = {
           message?: string | null
           read?: boolean | null
           type?: string
+          url?: string | null
           user_id?: string
         }
         Relationships: [

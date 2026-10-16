@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { sendAnnouncementPush } from '@/lib/notifications/push'
+import { normalizeNotificationUrl } from '@/lib/notifications/link'
 
 // Verify the caller is a signed-in admin. Returns the user id or null.
 async function requireAdmin(): Promise<string | null> {
@@ -24,7 +25,9 @@ type Channel = (typeof ALL_CHANNELS)[number]
  * Body: { message: string; title?: string; url?: string; channels?: string[] }
  *   - message  : required, the announcement text (rendered verbatim, no actor).
  *   - title    : optional push title.
- *   - url      : optional https link forwarded in push `data` for tap routing.
+ *   - url      : optional tap target, stored on every bell row AND forwarded in
+ *                push `data`. Accepted: plantspack://update (app update screen),
+ *                plantspack://<path> or /<path> (in-app route), https://... link.
  *   - channels : subset of {'web','ios','android'}. Defaults to all (delivered
  *                everywhere). When all three are selected we store NULL so the
  *                row is unfiltered. Each client shows a row when channels IS NULL
@@ -44,7 +47,9 @@ export async function POST(req: Request) {
 
   const message = (payload.message ?? '').trim()
   const title = (payload.title ?? '').trim() || 'Plants Pack'
-  const url = (payload.url ?? '').trim() || null
+  const rawUrl = (payload.url ?? '').trim()
+  const url = normalizeNotificationUrl(rawUrl)
+  if (rawUrl && !url) return NextResponse.json({ error: 'url must be https://..., /path, or plantspack://update' }, { status: 400 })
   if (!message) return NextResponse.json({ error: 'message is required' }, { status: 400 })
   if (message.length > 500) return NextResponse.json({ error: 'message too long (max 500)' }, { status: 400 })
 
@@ -84,6 +89,7 @@ export async function POST(req: Request) {
       entity_type: null,
       entity_id: null,
       message,
+      url,
       channels: channelsValue,
     }))
     const { error } = await admin.from('notifications').insert(rows)

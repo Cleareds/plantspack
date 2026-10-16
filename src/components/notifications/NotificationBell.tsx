@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2, MapPin, CheckCircle } from 'lucide-react'
 import type { Notification } from '@/types/notifications'
+import { webHrefForNotificationUrl } from '@/lib/notifications/link'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
@@ -147,6 +148,9 @@ export default function NotificationBell() {
   }
 
   const getNotificationLink = (notification: Notification) => {
+    // Explicit tap target (admin broadcasts) wins over the entity rules.
+    const explicit = webHrefForNotificationUrl(notification.url)
+    if (explicit) return explicit
     // Place-linked notifications (submissions, corrections, nearby) → the place
     // page resolves a UUID as well as a slug.
     if (notification.entity_type === 'place' && notification.entity_id) {
