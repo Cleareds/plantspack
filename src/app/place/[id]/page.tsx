@@ -25,7 +25,6 @@ import RatingBadge from '@/components/places/RatingBadge'
 import RatingDistribution from '@/components/places/RatingDistribution'
 import PlaceTagBadges from '@/components/places/PlaceTagBadges'
 import PlaceReviews from '@/components/places/PlaceReviews'
-import MyPlaceNote from '@/components/places/MyPlaceNote'
 import { createAdminClient } from '@/lib/supabase-admin'
 import PlaceMap from '@/components/places/PlaceMap'
 import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
@@ -690,7 +689,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 }} />
                 <RequestVerificationButton placeId={place.id} />
               </div>
-              <MyPlaceNote placeId={place.id} />
+              {/* MyPlaceNote (private notes) hidden 2026-10-16: 0 notes ever written. Component kept. */}
             </div>
           </div>
 

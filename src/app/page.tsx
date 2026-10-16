@@ -11,6 +11,7 @@ import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 import { canonicalCityName } from '@/lib/places/city-aliases'
+import { getCityDishChips, dishPageHref } from '@/lib/dish-page-data'
 import { Barcode, UtensilsCrossed, ChefHat } from 'lucide-react'
 
 export interface FollowedCity {
@@ -190,35 +191,6 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
   }
 }
 
-const getRecentPosts = unstable_cache(async () => {
-  const supabase = createAdminClient()
-  const ADMIN_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
-  const { data } = await supabase
-    .from('posts')
-    .select(`
-      id, title, content, category, secondary_tags, recipe_data, event_data, product_data,
-      images, image_url, created_at, slug, is_pinned,
-      users!inner(username, first_name, avatar_url),
-      post_reactions(count),
-      comments(count)
-    `)
-    .eq('privacy', 'public')
-    .is('deleted_at', null)
-    .or(`user_id.neq.${ADMIN_ID},category.not.in.(recipe,event)`)
-    // Pinned posts (admin announcements) float to the top
-    .order('is_pinned', { ascending: false, nullsFirst: false })
-    .order('created_at', { ascending: false })
-    .limit(8)
-  // PostgREST returns aggregates as [{ count: N }]. Re-shape to the
-  // length-N array the client component expects so we can swap the
-  // payload without touching HomeClient.
-  return (data || []).map((p: any) => ({
-    ...p,
-    post_reactions: Array(p.post_reactions?.[0]?.count ?? 0).fill({ id: '' }),
-    comments: Array(p.comments?.[0]?.count ?? 0).fill({ id: '' }),
-  }))
-}, ['home-recent-posts'], { revalidate: 300, tags: ['home'] })
-
 /**
  * Recent place reviews for the homepage sidebar feed. Mixed with recent posts
  * and sorted by created_at so the sidebar reflects all community activity, not
@@ -236,12 +208,56 @@ const getRecentReviews = unstable_cache(async () => {
     `)
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
-    .limit(8)
-  return (data || []).map((r: any) => ({
-    ...r,
-    place_review_reactions: Array(r.place_review_reactions?.[0]?.count ?? 0).fill({ id: '' }),
-  }))
+    .limit(24)
+  // Only reviews a first-time visitor should see: a real account (not the
+  // test or import accounts) and at least 40 characters of text.
+  const HIDDEN_USERNAMES = new Set(['test', 'admin'])
+  return (data || [])
+    .filter((r: any) => {
+      const u = Array.isArray(r.users) ? r.users[0] : r.users
+      return u?.username && !HIDDEN_USERNAMES.has(u.username) && (r.content || '').trim().length >= 40
+    })
+    .slice(0, 8)
+    .map((r: any) => ({
+      ...r,
+      place_review_reactions: Array(r.place_review_reactions?.[0]?.count ?? 0).fill({ id: '' }),
+    }))
 }, ['home-recent-reviews'], { revalidate: 300, tags: ['home'] })
+
+/**
+ * Dish chips for the homepage. Dish pages are 55% of organic clicks and the
+ * homepage linked to none of them (2026-10-16). Signed-in visitors with a
+ * known city get that city's dishes; everyone else gets the top dish of
+ * eight strong cities. Dish counts move slowly: cache for a day.
+ */
+const HOME_DISH_CITIES: Array<[string, string]> = [
+  ['Germany', 'Berlin'], ['United Kingdom', 'London'], ['France', 'Paris'], ['Austria', 'Vienna'],
+  ['Germany', 'Munich'], ['Sweden', 'Stockholm'], ['Denmark', 'Copenhagen'], ['Hungary', 'Budapest'],
+]
+type DishChip = { label: string; city: string; href: string }
+const getHomeDishChips = unstable_cache(async (): Promise<DishChip[]> => {
+  const out: DishChip[] = []
+  const seen = new Set<string>()
+  const perCity = await Promise.all(HOME_DISH_CITIES.map(([country, city]) => getCityDishChips(country, city).catch(() => [])))
+  // Two passes so eight cities give eight different dishes where possible.
+  for (const pass of [0, 1]) {
+    perCity.forEach((chips, i) => {
+      const [country, city] = HOME_DISH_CITIES[i]
+      const pick = chips.find(c => pass === 0 ? !seen.has(c.slug) : true)
+      if (!pick || out.some(o => o.city === city)) return
+      seen.add(pick.slug)
+      out.push({ label: pick.label, city, href: dishPageHref(country, city, pick.slug) })
+    })
+  }
+  return out.slice(0, 8)
+}, ['home-dish-chips'], { revalidate: 86400, tags: ['home'] })
+const getCityDishChipsCached = unstable_cache(
+  async (country: string, city: string): Promise<DishChip[]> =>
+    (await getCityDishChips(country, city).catch(() => []))
+      .slice(0, 8)
+      .map(c => ({ label: c.label, city, href: dishPageHref(country, city, c.slug) })),
+  ['home-city-dish-chips'], { revalidate: 86400 },
+)
 
 function getCityImages(): Record<string, string> {
   try {
@@ -317,13 +333,18 @@ export default async function Home() {
   const { data: { user: sessionUser } } = await supabase.auth.getUser()
   const isSignedIn = !!sessionUser
 
-  const [recentPosts, recentReviews, initialLocation, featuredPlaces, followedCities] = await Promise.all([
-    getRecentPosts(),
+  const [recentReviews, initialLocation, featuredPlaces, followedCities, globalDishChips] = await Promise.all([
     getRecentReviews(),
     getInitialLocationData(isSignedIn),
     getFeaturedPlaces(),
     getFollowedCities(),
+    getHomeDishChips(),
   ])
+  const cityDishChips = initialLocation?.city && initialLocation?.country
+    ? await getCityDishChipsCached(initialLocation.country, initialLocation.city)
+    : []
+  const dishChips = cityDishChips.length >= 3 ? cityDishChips : globalDishChips
+  const dishChipsCity = cityDishChips.length >= 3 ? initialLocation!.city : null
   const topCities = getTopCitiesFromHome(initialLocation)
 
   // Only ship images for cities actually rendered on the homepage.
@@ -344,33 +365,14 @@ export default async function Home() {
   }
 
   // Normalize users from array (Supabase join) to single object
-  const normalizedPosts = recentPosts.map((p: any) => ({
-    ...p,
-    users: Array.isArray(p.users) ? p.users[0] : p.users,
-  }))
   const normalizedReviews = recentReviews.map((r: any) => ({
     ...r,
     users: Array.isArray(r.users) ? r.users[0] : r.users,
     place: Array.isArray(r.place) ? r.place[0] : r.place,
   }))
-
-  // Build a unified activity list: posts + reviews mixed by created_at desc.
-  // Pinned posts always lead so admin announcements stay visible.
-  type ActivityItem =
-    | { type: 'post'; created_at: string; data: any }
-    | { type: 'review'; created_at: string; data: any }
-  const activityItems: ActivityItem[] = [
-    ...normalizedPosts.map((p: any) => ({ type: 'post' as const, created_at: p.created_at, data: p })),
-    ...normalizedReviews.map((r: any) => ({ type: 'review' as const, created_at: r.created_at, data: r })),
-  ]
-  activityItems.sort((a, b) => {
-    // Pinned posts come first
-    const aPinned = a.type === 'post' && a.data.is_pinned ? 1 : 0
-    const bPinned = b.type === 'post' && b.data.is_pinned ? 1 : 0
-    if (aPinned !== bPinned) return bPinned - aPinned
-    return a.created_at < b.created_at ? 1 : -1
-  })
-  const sidebarActivity = activityItems.slice(0, 8)
+  // The sidebar shows reviews only (posts feed retired 2026-10-16: 0 comments,
+  // 0 likes, 1 human post in 30 days; the auto "Just added" posts read as spam).
+  const sidebarActivity = normalizedReviews.map((r: any) => ({ type: 'review' as const, created_at: r.created_at, data: r }))
 
   // Filter out the currently pinned city — it's already in the hero banner.
   // Canonicalize so a "Gent" cookie still matches followed "Ghent" entries.
@@ -388,7 +390,6 @@ export default async function Home() {
           h1 elements per page. */}
       <HomeClient
         topCities={topCities}
-        recentPosts={normalizedPosts}
         recentActivity={sidebarActivity}
         cityImages={cityImages}
         initialLocation={initialLocation}
@@ -422,6 +423,34 @@ export default async function Home() {
           </section>
         )
       })()}
+
+      {/* Dish chips - the only homepage links to dish pages (55% of organic
+          clicks). Server-rendered so crawlers and the first paint both see them. */}
+      {dishChips.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 md:px-8 pt-8">
+          <div className="flex items-baseline justify-between mb-3 gap-3 flex-wrap">
+            <h2 className="text-xl font-semibold text-on-surface">
+              {dishChipsCity ? `Best vegan dishes in ${dishChipsCity}` : 'Best vegan dishes by city'}
+            </h2>
+            <Link href="/vegan-places" prefetch={false} className="text-sm text-primary hover:underline">
+              All cities →
+            </Link>
+          </div>
+          <ul className="flex flex-wrap gap-2">
+            {dishChips.map(c => (
+              <li key={c.href}>
+                <Link
+                  href={c.href}
+                  prefetch={false}
+                  className="inline-block px-3 py-1.5 rounded-full ghost-border bg-surface-container-lowest text-sm text-on-surface hover:border-primary/40 hover:text-primary transition-colors"
+                >
+                  {dishChipsCity ? c.label : `${c.label} in ${c.city}`}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Tools strip — three highest-utility tools as a pinned row. Homepage
           is the most-trafficked entry point; surfacing tools here is the

@@ -10,7 +10,6 @@ import SearchBar from '@/components/search/SearchBar'
 // statically imported and pulled ImageUploader, VideoUploader, LinkPreview,
 // MentionAutocomplete, LocationPicker, AddressSearch, geocodingService into
 // the home bundle whether the user ever clicked "Create Post" / "Add Place" or not.
-const CreatePostModal = dynamic(() => import('@/components/posts/CreatePostModal'), { ssr: false })
 const AddPlaceModal   = dynamic(() => import('@/components/places/AddPlaceModal'),  { ssr: false })
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import RatingBadge from '@/components/places/RatingBadge'
@@ -87,7 +86,7 @@ export interface FollowedCitySummary {
 
 interface Props {
   topCities: CityScoreData[]
-  recentPosts: CompactPost[]
+  recentPosts?: CompactPost[]
   recentActivity?: ActivityItem[]
   cityImages?: Record<string, string>
   initialLocation?: InitialLocation | null
@@ -104,7 +103,6 @@ interface Props {
 
 function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false }: Props) {
   const router = useRouter()
-  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false)
   const { user, profile } = useAuth()
 
@@ -141,17 +139,12 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
   )
   const [cityImageFailed, setCityImageFailed] = useState(false)
 
-  // Read ?create=true via window.location so we avoid useSearchParams(),
-  // which would force the entire component tree behind a Suspense boundary
-  // and stream the top block in after the rest of the page (caused the
-  // "Featured Places paint before the hero" issue for guests on first load).
+  // `/?create=true` used to open the create-post modal. The homepage no
+  // longer has a posts feed (2026-10-16); send the deep link to /feed instead.
   useEffect(() => {
     if (typeof window === 'undefined') return
     const params = new URLSearchParams(window.location.search)
-    if (params.get('create') === 'true' && user) {
-      setIsCreatePostOpen(true)
-      router.replace('/', { scroll: false })
-    }
+    if (params.get('create') === 'true' && user) router.replace('/feed')
   }, [user, router])
 
   // Mirror "is this city pinned?" into state so JSX render doesn't touch
@@ -375,7 +368,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 )}
 
                 <div className="flex flex-wrap gap-2">
-                  {['No ads', 'No chains', 'Community-verified', 'City vegan rankings'].map(t => (
+                  {['No ads', 'No paid listings', 'City vegan rankings'].map(t => (
                     <span key={t} className="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-medium border border-emerald-100/80">
                       ✓ {t}
                     </span>
@@ -391,6 +384,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                     <Link
                       key={s.title}
                       href={s.href}
+                      prefetch={false}
                       className="bg-surface-container-lowest rounded-xl ghost-border p-3 text-center hover:bg-surface-container-low hover:border-primary/30 transition-colors group"
                     >
                       <div className="text-lg mb-1 group-hover:scale-110 transition-transform">{s.icon}</div>
@@ -802,22 +796,17 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
           </div>
 
-          {/* Community Feed — inline on mobile, sidebar on desktop */}
+          {/* Recent reviews - inline on mobile, sidebar on desktop. The posts
+              feed, create-post button and /feed links were removed 2026-10-16:
+              30 days with 0 comments, 0 likes and 1 human post. Reviews are the
+              one social unit people use (see docs/plans/2026-10-16-product-direction.md). */}
           <div className="mt-6 xl:mt-0 xl:w-72 xl:flex-shrink-0 xl:sticky xl:top-24 xl:self-start">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-on-surface text-sm">Community</h2>
-              <Link href="/feed" className="text-xs text-primary font-medium hover:underline">View all</Link>
+              <h2 className="font-semibold text-on-surface text-sm">Recent reviews</h2>
             </div>
             <div className="xl:max-h-[calc(100vh-180px)] xl:overflow-y-auto">
-              <ActivityList items={recentActivity && recentActivity.length > 0 ? recentActivity : recentPosts.map(p => ({ type: 'post' as const, created_at: p.created_at, data: p }))} />
+              <ActivityList items={recentActivity ?? []} />
             </div>
-            {isSignedIn && (
-              <button onClick={() => setIsCreatePostOpen(true)}
-                className="w-full flex items-center justify-center gap-2 silk-gradient text-on-primary-btn px-4 py-2.5 rounded-xl font-medium text-sm hover:opacity-90 transition-all mt-4">
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit_square</span>
-                Create Post
-              </button>
-            )}
             {!isSignedIn && (
               <Link
                 href="/auth"
@@ -826,14 +815,13 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                 data-from="home_sidebar_contribute"
                 className="block w-full text-center bg-primary text-on-primary-btn py-3 rounded-xl font-medium text-sm mt-4"
               >
-                Sign In to Contribute
+                Sign in to review a place
               </Link>
             )}
           </div>
         </div>
       </div>
 
-      <CreatePostModal isOpen={isCreatePostOpen} onClose={() => setIsCreatePostOpen(false)} onPostCreated={() => setIsCreatePostOpen(false)} />
       {isAddPlaceOpen && <AddPlaceModal onClose={() => setIsAddPlaceOpen(false)} defaultCity={userCity} defaultCountry={userCountry} />}
     </div>
   )
@@ -841,14 +829,13 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
 // Mixed activity list — renders SSR posts + reviews without client fetch.
 function ActivityList({ items }: { items: ActivityItem[] }) {
-  if (items.length === 0) return <p className="text-xs text-on-surface-variant text-center py-4">No activity yet</p>
+  if (items.length === 0) return <p className="text-xs text-on-surface-variant text-center py-4">No reviews yet</p>
 
   return (
     <div className="space-y-2">
       {items.map(it => (
         it.type === 'post' ? <PostRow key={`post-${it.data.id}`} post={it.data} /> : <ReviewRow key={`review-${it.data.id}`} review={it.data} />
       ))}
-      <Link href="/feed" className="block text-center text-xs text-primary font-medium hover:underline py-2">View full feed</Link>
     </div>
   )
 }

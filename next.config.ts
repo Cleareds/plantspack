@@ -147,6 +147,12 @@ const nextConfig: NextConfig = {
         headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
       },
       {
+        // Hub card data (ids are stable, content changes rarely): edge-cache an hour.
+        // Must come after the generic /api/places rule - the last matching rule wins.
+        source: '/api/places/cards',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
+      },
+      {
         source: '/api/cities/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
       },
