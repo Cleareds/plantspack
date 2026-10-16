@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Heart } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
+import { useAuthSheet } from '@/components/auth/AuthSheet'
+import { clearPendingAction, peekPendingAction } from '@/lib/pending-action'
+import { track } from '@/lib/analytics'
 
 interface FavoriteButtonProps {
   entityType: 'place' | 'post'
@@ -23,8 +26,10 @@ export default function FavoriteButton({
   className = ''
 }: FavoriteButtonProps) {
   const { user } = useAuth()
+  const { openAuthSheet } = useAuthSheet()
   const [favorites, setFavorites] = useState(initialFavorites)
   const [loading, setLoading] = useState(false)
+  const ranPending = useRef(false)
 
   const isFavorited = favorites.some(fav => fav.user_id === user?.id)
   const favoriteCount = favorites.length
@@ -99,8 +104,35 @@ export default function FavoriteButton({
     }
   }
 
+  // A guest who saved before signing in: complete it once, then forget it.
+  useEffect(() => {
+    if (!user || entityType !== 'place' || ranPending.current) return
+    const p = peekPendingAction()
+    if (p?.type === 'save' && p.placeId === entityId) {
+      ranPending.current = true
+      clearPendingAction()
+      if (!favorites.some(fav => fav.user_id === user.id)) {
+        track('place_saved', { from: 'place_save' })
+        handleToggleFavorite()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, entityType, entityId])
+
   if (!user) {
-    return null
+    // Posts: the feed is dormant, keep the old behaviour. Places: ask to sign in.
+    if (entityType !== 'place') return null
+    return (
+      <button
+        type="button"
+        onClick={() => openAuthSheet({ reason: 'Sign in to save this place', from: 'place_save', pending: { type: 'save', placeId: entityId } })}
+        className={`inline-flex items-center gap-2 transition-colors text-outline hover:text-red-500 ${className}`}
+        title="Save this place"
+      >
+        <Heart className={sizeClasses[size]} />
+        {showCount && favoriteCount > 0 && <span className="text-sm font-medium">{favoriteCount}</span>}
+      </button>
+    )
   }
 
   return (

@@ -8,9 +8,11 @@ import Link from 'next/link'
 
 interface LoginFormProps {
   onToggle: () => void
+  /** Where OAuth returns the user. Defaults to ?redirect= (the /auth page); the sign-in sheet passes the current page. */
+  redirectTo?: string
 }
 
-export default function LoginForm({ onToggle }: LoginFormProps) {
+export default function LoginForm({ onToggle, redirectTo }: LoginFormProps) {
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -19,7 +21,8 @@ export default function LoginForm({ onToggle }: LoginFormProps) {
 
   const { signIn, signInWithGoogle, signInWithFacebook } = useAuth()
   // Preserve where the user came from (e.g. a place page they're claiming).
-  const next = useSearchParams().get('redirect') || undefined
+  const redirectParam = useSearchParams().get('redirect')
+  const next = redirectTo || redirectParam || undefined
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -10,7 +10,10 @@ import { verifyTurnstile } from '@/lib/turnstile'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password, username, firstName, lastName, newsletter_opt_in, captchaToken } = body
+    const { email, password, username, firstName, lastName, newsletter_opt_in, captchaToken, next } = body
+    // Same-site relative path only (no open redirect): the email confirmation
+    // link then returns the user to the page where they signed up.
+    const nextPath = typeof next === 'string' && /^\/(?!\/)/.test(next) ? next : null
     // Coerce to strict boolean — we must never interpret undefined as "yes".
     const newsletterOptIn = newsletter_opt_in === true
 
@@ -103,7 +106,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'}/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.plantspack.com'}/auth/callback${nextPath ? `?next=${encodeURIComponent(nextPath)}` : ''}`,
         data: {
           username,
           first_name: firstName || '',

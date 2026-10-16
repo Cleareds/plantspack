@@ -4,6 +4,8 @@ import { ReactNode, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { AuthProvider, useAuth } from '@/lib/auth'
 import { VeganFilterProvider } from '@/lib/vegan-filter-context'
+import { SavedPlacesProvider } from '@/lib/saved-places-context'
+import { AuthSheetProvider } from '@/components/auth/AuthSheet'
 import ErrorBoundary from '@/components/error/ErrorBoundary'
 import { clearExpiredStates, clearUserStates } from '@/lib/page-state-storage'
 
@@ -65,9 +67,13 @@ export default function ClientProviders({ children }: { children: ReactNode }) {
     <ErrorBoundary>
       <AuthProvider>
         <VeganFilterProvider>
-          <StateCleanup />
-          {children}
-          <DeferredCookieConsent />
+          <SavedPlacesProvider>
+            <AuthSheetProvider>
+              <StateCleanup />
+              {children}
+              <DeferredCookieConsent />
+            </AuthSheetProvider>
+          </SavedPlacesProvider>
         </VeganFilterProvider>
       </AuthProvider>
     </ErrorBoundary>

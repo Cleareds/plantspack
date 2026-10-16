@@ -18,6 +18,8 @@ import { resolveCity } from '@/lib/city-resolve'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from '@/components/places/VerificationConfidenceBadge'
 import PlaceImage from '@/components/places/PlaceImage'
+import SavePlaceButton from '@/components/places/SavePlaceButton'
+import FollowCityButton from '@/components/places/FollowCityButton'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { buildFaqSchema, type FaqItem } from '@/lib/schema/faq'
 import FaqSection from '@/components/seo/FaqSection'
@@ -289,6 +291,9 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
                     : <>Compiled from vegan-first sources (OpenStreetMap, VegGuide, HappyCow) and community reports. None have been individually checked against the venue&apos;s own website yet.</>
                 })()}
               </p>
+              <div className="mb-6">
+                <FollowCityButton cityName={city} countryName={country} from="dish_follow" />
+              </div>
             </>
           )
         })()}
@@ -335,7 +340,10 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
         ) : (
           <ol className="space-y-3 mb-8">
             {filtered.map((pl, i) => (
-              <li key={pl.id}>
+              <li key={pl.id} className="relative">
+                <div className="absolute top-2 right-2 z-10">
+                  <SavePlaceButton placeId={pl.id} placeName={pl.name} from="dish_save" size="sm" className="bg-surface-container-lowest/90" />
+                </div>
                 <Link href={`/place/${pl.slug || pl.id}`} className="flex items-stretch gap-3 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border hover:editorial-shadow transition-shadow">
                   <div className="relative w-28 sm:w-36 flex-shrink-0 aspect-[4/3]">
                     <PlaceImage

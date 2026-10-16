@@ -10,9 +10,11 @@ import Turnstile, { CAPTCHA_ENABLED } from './Turnstile'
 
 interface SignupFormProps {
   onToggle: () => void
+  /** Where to land after sign-up (same-site path). The sign-in sheet passes the current page. */
+  redirectTo?: string
 }
 
-export default function SignupForm({ onToggle }: SignupFormProps) {
+export default function SignupForm({ onToggle, redirectTo }: SignupFormProps) {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -36,7 +38,8 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
   const onCaptchaToken = useCallback((t: string | null) => setCaptchaToken(t), [])
 
   const { signUp, signInWithGoogle, signInWithFacebook} = useAuth()
-  const next = useSearchParams().get('redirect') || undefined
+  const redirectParam = useSearchParams().get('redirect')
+  const next = redirectTo || redirectParam || undefined
 
   useEffect(() => {
     if (success && successRef.current) {
@@ -148,6 +151,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
           lastName,
           newsletter_opt_in: newsletterOptIn,
           captchaToken,
+          next,
         }),
       })
 
@@ -187,7 +191,7 @@ export default function SignupForm({ onToggle }: SignupFormProps) {
 
         // Reload to trigger auth state change and redirect
         setTimeout(() => {
-          window.location.href = '/'
+          window.location.href = next || '/'
         }, 1500)
       }
     } catch (err) {

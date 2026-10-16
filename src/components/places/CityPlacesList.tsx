@@ -11,6 +11,7 @@ import { useInView } from '@/lib/hooks/use-in-view'
 import RatingBadge from './RatingBadge'
 import PlaceImage from './PlaceImage'
 import AddPlaceButton from './AddPlaceButton'
+import SavePlaceButton from './SavePlaceButton'
 import { useVeganFilter } from '@/lib/vegan-filter-context'
 import { Plus } from 'lucide-react'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
@@ -568,6 +569,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
                     <span className="line-clamp-1">{address}</span>
                   </span>
                   <div className="flex items-center gap-1 ml-auto flex-shrink-0">
+                    <SavePlaceButton placeId={place.id} placeName={place.name} from="card_save" size="sm" />
                     {place.phone && (
                       <a
                         href={`tel:${place.phone}`}
