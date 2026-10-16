@@ -61,7 +61,7 @@ import { generateCityDescription, generateCityMetaDescription, filterCuisinesFor
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
-import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace } from '@/lib/city-list-light'
+import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace, summarizeLightPlaces } from '@/lib/city-list-light'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
 import { CityFaq } from '@/components/city/CityFaq'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
@@ -440,11 +440,13 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
   const places = isFullyVeganMode ? allPlaces.filter((p: Place) => p.vegan_level === 'fully_vegan') : allPlaces
   if (allPlaces.length === 0) notFound()
   if (isFullyVeganMode && places.length === 0) redirect(`/vegan-places/${country}/${city}`)
-  // The client list gets light rows for every place (filter / sort / map)
-  // and full cards for the default first page only; it fetches the other
-  // pages from /api/places/cards. Cuts the Berlin hub from 2.7 MB to ~1 MB.
-  const lightPlaces = places.map(toLightPlace)
-  const lightAllPlaces = isFullyVeganMode ? allPlaces.map(toLightPlace) : lightPlaces
+  // The client list gets full cards for the default first page plus facet
+  // counts for the pills. It loads the light rows for every place from
+  // /api/places/light on the first filter / sort / page / map interaction,
+  // and the other pages' cards from /api/places/cards. Berlin went from
+  // 2.7 MB of HTML (every place in full) to ~0.1 MB this way.
+  const listSummary = summarizeLightPlaces(allPlaces.map(toLightPlace))
+  const lightSrc = `/api/places/light?country=${encodeURIComponent(country)}&city=${encodeURIComponent(city)}`
   const firstPageCards = defaultCityListOrder(places).slice(0, CITY_LIST_PAGE_SIZE)
 
   // Region back-link banner. Resolved by canonical city name (e.g. "Brussels",
@@ -784,8 +786,8 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             {/* CityPlacesList reads useSearchParams(). On a statically rendered
                 (ISR) page that MUST sit inside a Suspense boundary or the whole
                 page throws at render time (500 on every hub, 2026-10-01). */}
-            <Suspense fallback={<CityPlacesListView places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} cityName={cityName} countryName={countryName} searchParams={null} />}>
-              <CityPlacesList places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} cityName={cityName} countryName={countryName} />
+            <Suspense fallback={<CityPlacesListView summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} cityName={cityName} countryName={countryName} searchParams={null} />}>
+              <CityPlacesList summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} cityName={cityName} countryName={countryName} />
             </Suspense>
 
             {/* Server-rendered crawlable index of EVERY place in the city.
@@ -798,20 +800,25 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
                 rendered when the list exceeds one page (otherwise redundant). */}
             {allPlaces.length > 30 && (
               <nav aria-label={`All vegan places in ${cityName}`} className="mt-10 pt-6 border-t border-outline-variant/15">
-                <h2 className="font-headline font-bold text-base mb-3 text-on-surface">
-                  All {allPlaces.length} vegan &amp; vegan-friendly places in {cityName}
-                </h2>
-                <ul className="columns-2 md:columns-3 gap-x-6 text-sm [&>li]:mb-1.5 [&>li]:break-inside-avoid">
-                  {[...allPlaces]
-                    .sort((a: Place, b: Place) => (a.name || '').localeCompare(b.name || ''))
-                    .map((p: Place) => (
-                      <li key={p.id}>
-                        <Link href={`/place/${p.slug || p.id}`} prefetch={false} className="text-on-surface-variant hover:text-primary hover:underline">
-                          {p.name}
-                        </Link>
-                      </li>
-                    ))}
-                </ul>
+                {/* Closed <details>: the links stay in the HTML for crawlers,
+                    but 1,800 list items no longer cost layout time on first
+                    paint (Berlin: 5,500 DOM nodes, 0.8 s of style + layout). */}
+                <details>
+                  <summary className="cursor-pointer font-headline font-bold text-base text-on-surface">
+                    All {allPlaces.length} vegan &amp; vegan-friendly places in {cityName} (A-Z)
+                  </summary>
+                  <ul className="mt-3 columns-2 md:columns-3 gap-x-6 text-sm [&>li]:mb-1.5 [&>li]:break-inside-avoid">
+                    {[...allPlaces]
+                      .sort((a: Place, b: Place) => (a.name || '').localeCompare(b.name || ''))
+                      .map((p: Place) => (
+                        <li key={p.id}>
+                          <Link href={`/place/${p.slug || p.id}`} prefetch={false} className="text-on-surface-variant hover:text-primary hover:underline">
+                            {p.name}
+                          </Link>
+                        </li>
+                      ))}
+                  </ul>
+                </details>
               </nav>
             )}
           </>

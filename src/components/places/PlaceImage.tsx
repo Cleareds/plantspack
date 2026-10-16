@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
+import { isOptimizable } from '@/components/ui/SmartImg'
 
 /**
  * Resilient <img> wrapper for place thumbnails.
@@ -29,6 +31,13 @@ interface Props {
   loading?: 'lazy' | 'eager'
   /** Optional inline style */
   style?: React.CSSProperties
+  /**
+   * Opt-in: serve a resized WebP/AVIF through next/image when the host is in
+   * images.remotePatterns (Supabase and a few CDNs). Hub cards were loading
+   * 250-330 KB originals for a 96 px thumbnail (1.2 MB per hub page). Keep
+   * this opt-in: Vercel meters image transformations per source image.
+   */
+  optimize?: { width: number; height: number; sizes?: string; quality?: number }
 }
 
 const CATEGORY_EMOJI: Record<string, string> = {
@@ -62,10 +71,26 @@ function isBrowserUsableUrl(src: string): boolean {
   return /^https?:\/\/[^\s<>"'\\]+$/i.test(src)
 }
 
-export default function PlaceImage({ src, alt, category, className, loading = 'lazy', style }: Props) {
+export default function PlaceImage({ src, alt, category, className, loading = 'lazy', style, optimize }: Props) {
   const [failed, setFailed] = useState(false)
   if (!src || failed || !isBrowserUsableUrl(src)) {
     return <Placeholder category={category} className={className} />
+  }
+  if (optimize && isOptimizable(src)) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={optimize.width}
+        height={optimize.height}
+        sizes={optimize.sizes}
+        quality={optimize.quality ?? 55}
+        className={className}
+        loading={loading}
+        style={style}
+        onError={() => setFailed(true)}
+      />
+    )
   }
   return (
     <img

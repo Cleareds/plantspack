@@ -57,3 +57,46 @@ export function defaultCityListOrder<T extends { vegan_level: string | null; ave
     return a.name.localeCompare(b.name)
   })
 }
+
+/**
+ * Counts the list needs to draw its filter pills before it has any rows.
+ * The hubs ship this (a few hundred bytes) instead of every light row
+ * (Berlin: 1,801 rows, 1.15 MB of RSC payload). Rows load from
+ * /api/places/light the first time the visitor filters, sorts, pages or
+ * scrolls to the map.
+ */
+export interface FacetCounts {
+  total: number
+  /** Per category, counting `also:<category>` tags like the list does. */
+  categories: Record<string, number>
+  /** Per primary category, per subcategory. */
+  subcategories: Record<string, Record<string, number>>
+}
+export interface ListSummary extends FacetCounts {
+  /** The same counts restricted to one vegan level. */
+  byLevel: Record<string, FacetCounts>
+}
+
+export function categoriesOfLight(p: { category: string; tags?: string[] | null }): string[] {
+  const extra = (p.tags || []).filter((t): t is string => typeof t === 'string' && t.startsWith('also:')).map(t => t.slice(5))
+  return [...new Set([p.category, ...extra])]
+}
+
+function countFacets(rows: LightPlace[]): FacetCounts {
+  const out: FacetCounts = { total: rows.length, categories: {}, subcategories: {} }
+  for (const p of rows) {
+    for (const c of categoriesOfLight(p)) out.categories[c] = (out.categories[c] || 0) + 1
+    if (p.subcategory) {
+      const sub = (out.subcategories[p.category] ||= {})
+      sub[p.subcategory] = (sub[p.subcategory] || 0) + 1
+    }
+  }
+  return out
+}
+
+export function summarizeLightPlaces(rows: LightPlace[]): ListSummary {
+  const byLevel: Record<string, FacetCounts> = {}
+  const levels = [...new Set(rows.map(p => p.vegan_level).filter((l): l is string => !!l))]
+  for (const l of levels) byLevel[l] = countFacets(rows.filter(p => p.vegan_level === l))
+  return { ...countFacets(rows), byLevel }
+}

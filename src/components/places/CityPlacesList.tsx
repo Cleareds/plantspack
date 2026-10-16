@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { MapPin, PawPrint, ExternalLink, Phone, Clock, Globe, Navigation, ChevronLeft, ChevronRight, Map } from 'lucide-react'
-import CityMap from './CityMap'
+// Leaflet + markercluster (~40 KB gz) only load when the map mounts.
+const CityMap = dynamic(() => import('./CityMap'), { ssr: false })
 import { useInView } from '@/lib/hooks/use-in-view'
 import RatingBadge from './RatingBadge'
 import PlaceImage from './PlaceImage'
@@ -14,7 +16,7 @@ import { Plus } from 'lucide-react'
 import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS, veganLevelOrder } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from './VerificationConfidenceBadge'
-import { CITY_LIST_PAGE_SIZE, type LightPlace } from '@/lib/city-list-light'
+import { CITY_LIST_PAGE_SIZE, categoriesOfLight, type LightPlace, type ListSummary, type FacetCounts } from '@/lib/city-list-light'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -74,7 +76,19 @@ interface Place {
 // default first page; the rest of the cards load per page from
 // /api/places/cards. Callers that still pass full rows keep working.
 type ListPlace = LightPlace & Partial<Omit<Place, keyof LightPlace>>
-type CityPlacesListProps = { places: ListPlace[]; allPlaces?: ListPlace[]; initialFull?: Place[]; cityName?: string; countryName?: string }
+type CityPlacesListProps = {
+  /** Light rows for every place. Optional: hubs pass `summary` + `lightSrc` instead. */
+  places?: ListPlace[]
+  allPlaces?: ListPlace[]
+  /** Full cards for the default first page (server-rendered). */
+  initialFull?: Place[]
+  /** Facet counts for the pills, so the default view needs no rows. */
+  summary?: ListSummary
+  /** URL of /api/places/light for this city or country; rows load from here on the first interaction. */
+  lightSrc?: string
+  cityName?: string
+  countryName?: string
+}
 const isFullRow = (p: ListPlace): p is Place => p.address !== undefined
 
 // useSearchParams() makes a statically rendered (ISR) page bail out to client
@@ -88,21 +102,29 @@ export default function CityPlacesList(props: CityPlacesListProps) {
   return <CityPlacesListView {...props} searchParams={searchParams} />
 }
 
-export function CityPlacesListView({ places, allPlaces, initialFull, cityName, countryName, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
+export function CityPlacesListView({ places, allPlaces, initialFull, summary, lightSrc, cityName, countryName, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
   // Full card data by id: what the server sent for page 1, plus whatever
   // the client fetched since. Rows passed in full count too.
   const [fullById, setFullById] = useState<Record<string, Place>>(() => {
     const m: Record<string, Place> = {}
     for (const p of initialFull || []) m[p.id] = p
-    for (const p of places) if (isFullRow(p)) m[p.id] = p
+    for (const p of places || []) if (isFullRow(p)) m[p.id] = p
     return m
   })
+  // Light rows for the whole city / country. Hubs do not embed them any more
+  // (Berlin: 1,801 rows = 1.15 MB of RSC payload): the default view renders
+  // from `initialFull` + `summary`, and the rows load from `lightSrc` the
+  // first time the visitor filters, sorts, pages or scrolls to the map.
+  const [loadedRows, setLoadedRows] = useState<ListPlace[] | null>(null)
+  const [rowsLoading, setRowsLoading] = useState(false)
+  const [rowsWanted, setRowsWanted] = useState(false)
   // `places` is the SSR-filtered list (e.g. FV-only on /fully-vegan).
   // `allPlaces` is the unfiltered universe — needed so the pill counts
   // ("Mostly Vegan (3)", "Vegan-Friendly (24)") show the real cross-tier
   // numbers instead of zeros when the page is server-filtered to one tier.
-  // Falls back to `places` for callers that don't pass it.
-  const placesForCounts = allPlaces ?? places
+  const rows: ListPlace[] | null = loadedRows ?? places ?? null
+  const rowsForCounts: ListPlace[] | null = loadedRows ?? allPlaces ?? places ?? null
+  const hasRows = rows !== null
   const { isFullyVeganOnly } = useVeganFilter()
   const router = useRouter()
   const pathname = usePathname()
@@ -139,6 +161,27 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
   // chicken chain that shouldn't be here anyway) at the top. Now vegan-first
   // is the baseline; alphabetical stays available as a toggle.
   const sortBy = (searchParams?.get('sort') as 'name' | 'rating' | 'vegan') || 'vegan'
+  const PAGE_SIZE = CITY_LIST_PAGE_SIZE
+  const currentPage = parseInt(searchParams?.get('page') || '1') || 1
+
+  // The server-rendered default view is page 1, vegan-first, no filters
+  // (the /fully-vegan path counts as default: its `initialFull` is FV-only).
+  // Anything else needs the rows.
+  const isDefaultView = !activeCategory && !activeSubcategory && !petOnly && sortBy === 'vegan' && currentPage <= 1 && !isFullyVeganOnly && (!rawVl || isOnFvPath)
+  const needRows = !hasRows && !!lightSrc && (!isDefaultView || rowsWanted)
+  useEffect(() => {
+    if (!needRows || rowsLoading) return
+    let cancelled = false
+    setRowsLoading(true)
+    fetch(lightSrc!)
+      .then(r => (r.ok ? r.json() : null))
+      .then(j => { if (!cancelled && Array.isArray(j?.places)) setLoadedRows(j.places as ListPlace[]) })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setRowsLoading(false) })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [needRows, lightSrc])
+  const ensureRows = useCallback(() => setRowsWanted(true), [])
 
   // Update URL params — alphabetical order for consistency.
   // Special vl handling so the canonical /<city>/fully-vegan URL is used:
@@ -169,72 +212,74 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
     router.replace(`${targetPath}${qs ? '?' + qs : ''}`, { scroll: false })
   }, [searchParams, router, pathname])
 
-  // Pre-filter by global vegan toggle
-  const basePlaces = isFullyVeganOnly ? places.filter(p => p.vegan_level === 'fully_vegan') : places
-  // Counts pool: use the unfiltered universe (not the SSR-filtered display
-  // set) so vl pills show the real cross-tier numbers when on /fully-vegan.
-  const baseForCounts = isFullyVeganOnly ? placesForCounts.filter(p => p.vegan_level === 'fully_vegan') : placesForCounts
-
   // A place has a primary `category`, and may declare extra roles as
   // `also:<category>` tags (hybrid venues — e.g. a shop that is also a
   // restaurant). categoriesOf returns every category a place counts under,
   // so it shows up in each of those category filters.
-  const categoriesOf = (p: ListPlace): string[] => {
-    const extra = (p.tags || [])
-      .filter((t): t is string => typeof t === 'string' && t.startsWith('also:'))
-      .map(t => t.slice(5))
-    return [...new Set([p.category, ...extra])]
-  }
-  const categories = [...new Set(baseForCounts.flatMap(categoriesOf))].sort()
-
-  // Get available subcategories for active category (primary-category rows only)
-  const subcategories = activeCategory
-    ? [...new Set(baseForCounts.filter(p => p.category === activeCategory).map(p => p.subcategory).filter(Boolean))]
-    : []
-
-  // Safety: reset stale filters when underlying data changes
-  const validCategory = activeCategory && categories.includes(activeCategory) ? activeCategory : null
-  const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
-
-  const PAGE_SIZE = CITY_LIST_PAGE_SIZE
-  const currentPage = parseInt(searchParams?.get('page') || '1') || 1
+  const categoriesOf = categoriesOfLight
 
   // Faceted-count predicates: each pill's count reflects every OTHER active
   // filter but not its own facet. Lets users see how many places they'd land
   // on if they swapped a value within the same facet.
-  const matchCategory = (p: ListPlace) => !validCategory || categoriesOf(p).includes(validCategory)
-  const matchSubcategory = (p: ListPlace) => !validSubcategory || p.subcategory === validSubcategory
+  const matchCategory = (p: ListPlace, cat: string | null) => !cat || categoriesOf(p).includes(cat)
+  const matchSubcategory = (p: ListPlace, sub: string | null) => !sub || p.subcategory === sub
   const matchPet = (p: ListPlace) => !petOnly || p.is_pet_friendly
   const matchVeganLevel = (p: ListPlace) => !activeVeganLevel || p.vegan_level === activeVeganLevel
 
-  // Pill counts use the unfiltered universe (baseForCounts) so the numbers
-  // reflect "if you switched to this filter, here's how many you'd see"
-  // even when the SSR set is already pre-filtered (e.g. on /fully-vegan).
-  const poolForCategoryPills = baseForCounts.filter(p => matchVeganLevel(p) && matchPet(p))
-  const poolForSubPills = baseForCounts.filter(p => matchCategory(p) && matchVeganLevel(p) && matchPet(p))
-  const poolForVeganLevelPills = baseForCounts.filter(p => matchCategory(p) && matchSubcategory(p) && matchPet(p))
+  // Counts. With rows: computed from the unfiltered universe so the numbers
+  // reflect "if you switched to this filter, here's how many you'd see" even
+  // on /fully-vegan. Without rows (default view): read from `summary`, which
+  // is exact because no cross-facet filter is active in the default view.
+  const baseForCounts = rowsForCounts ? (isFullyVeganOnly ? rowsForCounts.filter(p => p.vegan_level === 'fully_vegan') : rowsForCounts) : null
+  const summaryPool: FacetCounts | null = summary ? (activeVeganLevel ? (summary.byLevel[activeVeganLevel] ?? { total: 0, categories: {}, subcategories: {} }) : summary) : null
+  const categories: string[] = baseForCounts
+    ? [...new Set(baseForCounts.flatMap(categoriesOf))].sort()
+    : Object.keys(summaryPool?.categories ?? {}).sort()
+  const validCategory = activeCategory && categories.includes(activeCategory) ? activeCategory : null
+  const subcategories: string[] = validCategory
+    ? (baseForCounts
+      ? [...new Set(baseForCounts.filter(p => p.category === validCategory).map(p => p.subcategory).filter((x): x is string => !!x))]
+      : Object.keys(summaryPool?.subcategories[validCategory] ?? {}))
+    : []
+  const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
+  const poolForCategoryPills = baseForCounts ? baseForCounts.filter(p => matchVeganLevel(p) && matchPet(p)) : null
+  const poolForSubPills = baseForCounts ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchVeganLevel(p) && matchPet(p)) : null
+  const poolForVeganLevelPills = baseForCounts ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchSubcategory(p, validSubcategory) && matchPet(p)) : null
+  const countAll = poolForCategoryPills ? poolForCategoryPills.length : (summaryPool?.total ?? initialFull?.length ?? 0)
+  const countCat = (cat: string) => poolForCategoryPills ? poolForCategoryPills.filter(p => categoriesOf(p).includes(cat)).length : (summaryPool?.categories[cat] ?? 0)
+  const countSub = (sub: string) => poolForSubPills ? poolForSubPills.filter(p => p.subcategory === sub).length : (validCategory ? (summaryPool?.subcategories[validCategory]?.[sub] ?? 0) : 0)
+  const countLevel = (value: string | null) => poolForVeganLevelPills
+    ? (value === null ? poolForVeganLevelPills.length : poolForVeganLevelPills.filter(p => p.vegan_level === value).length)
+    : (value === null ? (summary?.total ?? 0) : (summary?.byLevel[value]?.total ?? 0))
 
-  const filtered = basePlaces.filter(p => {
-    if (validCategory && !categoriesOf(p).includes(validCategory)) return false
-    if (validSubcategory && p.subcategory !== validSubcategory) return false
-    if (petOnly && !p.is_pet_friendly) return false
-    if (activeVeganLevel && p.vegan_level !== activeVeganLevel) return false
-    return true
-  }).sort((a, b) => {
-    if (sortBy === 'rating') return (b.average_rating || 0) - (a.average_rating || 0)
-    if (sortBy === 'vegan') {
-      const levelDiff = veganLevelOrder(b.vegan_level) - veganLevelOrder(a.vegan_level)
-      if (levelDiff !== 0) return levelDiff
-      const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0)
-      if (ratingDiff !== 0) return ratingDiff
+  // The list. With rows: filter + sort + paginate client-side. Without rows:
+  // the server's default first page, with the page count from the summary.
+  const filtered: ListPlace[] = rows
+    ? (isFullyVeganOnly ? rows.filter(p => p.vegan_level === 'fully_vegan') : rows).filter(p => {
+      if (validCategory && !categoriesOf(p).includes(validCategory)) return false
+      if (validSubcategory && p.subcategory !== validSubcategory) return false
+      if (petOnly && !p.is_pet_friendly) return false
+      if (activeVeganLevel && p.vegan_level !== activeVeganLevel) return false
+      return true
+    }).sort((a, b) => {
+      if (sortBy === 'rating') return (b.average_rating || 0) - (a.average_rating || 0)
+      if (sortBy === 'vegan') {
+        const levelDiff = veganLevelOrder(b.vegan_level) - veganLevelOrder(a.vegan_level)
+        if (levelDiff !== 0) return levelDiff
+        const ratingDiff = (b.average_rating || 0) - (a.average_rating || 0)
+        if (ratingDiff !== 0) return ratingDiff
+        return a.name.localeCompare(b.name)
+      }
       return a.name.localeCompare(b.name)
-    }
-    return a.name.localeCompare(b.name)
-  })
-
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-  const needsPagination = filtered.length > PAGE_SIZE
+    })
+    : (isFullyVeganOnly ? (initialFull || []).filter(p => p.vegan_level === 'fully_vegan') : (initialFull || []))
+  const resultTotal = rows ? filtered.length : countAll
+  const totalPages = Math.max(1, Math.ceil(resultTotal / PAGE_SIZE))
+  const paginated = rows ? filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE) : filtered
+  const needsPagination = resultTotal > PAGE_SIZE
+  // A non-default view before the rows arrive: show a short loading state
+  // instead of the wrong cards.
+  const waitingForRows = !rows && !isDefaultView && !!lightSrc
 
   // Load the cards this page shows but the server did not send. Until they
   // arrive the card renders from the light row (name, badges, rating) with
@@ -268,9 +313,9 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
           onChange={e => setFilter({ category: e.target.value || null, sub: null })}
           className="cursor-pointer text-sm font-medium rounded-lg bg-surface-container-low text-on-surface px-3 py-1.5 border border-outline-variant/20 focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          <option value="">All ({poolForCategoryPills.length})</option>
+          <option value="">All ({countAll})</option>
           {categories.map(cat => (
-            <option key={cat} value={cat}>{(CATEGORY_LABELS[cat] || cat)} ({poolForCategoryPills.filter(p => categoriesOf(p).includes(cat)).length})</option>
+            <option key={cat} value={cat}>{(CATEGORY_LABELS[cat] || cat)} ({countCat(cat)})</option>
           ))}
         </select>
         {validCategory && subcategories.length > 1 && (
@@ -282,7 +327,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
           >
             <option value="">All types</option>
             {subcategories.map(sub => sub ? (
-              <option key={sub} value={sub}>{(SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub} ({poolForSubPills.filter(p => p.subcategory === sub).length})</option>
+              <option key={sub} value={sub}>{(SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub} ({countSub(sub)})</option>
             ) : null)}
           </select>
         )}
@@ -295,7 +340,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
           >
             {VEGAN_LEVEL_FILTERS.map(({ value, label }) => (
               <option key={value ?? 'all'} value={value ?? ''}>
-                {label} ({value === null ? poolForVeganLevelPills.length : poolForVeganLevelPills.filter(p => p.vegan_level === value).length})
+                {label} ({countLevel(value)})
               </option>
             ))}
           </select>
@@ -318,7 +363,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
         >
           🐾
         </button>
-        <span className="self-center text-xs text-on-surface-variant ml-auto">{filtered.length} results</span>
+        <span className="self-center text-xs text-on-surface-variant ml-auto">{resultTotal} results</span>
       </div>
 
       {/* Desktop filters: full pill bar */}
@@ -326,10 +371,10 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
         {/* Category pills */}
         <button onClick={() => setFilter({ category: null, sub: null })}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!validCategory ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
-          All ({poolForCategoryPills.length})
+          All ({countAll})
         </button>
         {categories.map(cat => {
-          const count = poolForCategoryPills.filter(p => categoriesOf(p).includes(cat)).length
+          const count = countCat(cat)
           return (
             <button key={cat} onClick={() => setFilter({ category: validCategory === cat ? null : cat, sub: null })}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${validCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
@@ -344,7 +389,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
             <div className="w-px h-8 bg-outline-variant/30 self-center" />
             {subcategories.map(sub => {
               if (!sub) return null
-              const count = poolForSubPills.filter(p => p.subcategory === sub).length
+              const count = countSub(sub)
               const label = (validCategory && SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub
               return (
                 <button key={sub} onClick={() => setFilter({ sub: validSubcategory === sub ? null : sub })}
@@ -361,9 +406,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
           <>
             <div className="w-px h-8 bg-outline-variant/30 self-center" />
             {VEGAN_LEVEL_FILTERS.map(({ value, label }) => {
-              const count = value === null
-                ? poolForVeganLevelPills.length
-                : poolForVeganLevelPills.filter(p => p.vegan_level === value).length
+              const count = countLevel(value)
               return (
                 <button key={value ?? 'all'} onClick={() => setFilter({ vl: value })}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
@@ -401,14 +444,17 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
 
         {/* Result count */}
         <span className="self-center text-xs text-on-surface-variant">
-          {needsPagination ? `${(currentPage-1)*PAGE_SIZE+1}–${Math.min(currentPage*PAGE_SIZE, filtered.length)} of ` : ''}{filtered.length} results
+          {needsPagination ? `${(currentPage-1)*PAGE_SIZE+1}–${Math.min(currentPage*PAGE_SIZE, resultTotal)} of ` : ''}{resultTotal} results
         </span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Places List */}
         <div className="flex-1 space-y-4 min-w-0">
-          {paginated.map(row => {
+          {waitingForRows && (
+            <p className="text-center text-on-surface-variant py-8" aria-live="polite">Loading places…</p>
+          )}
+          {!waitingForRows && paginated.map(row => {
             const place = (fullById[row.id] ?? row) as Place
             const address = place.address || ''
             const thumbnail = place.main_image_url || place.images?.[0]
@@ -432,6 +478,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
                       alt={place.name}
                       category={place.category}
                       className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover"
+                      optimize={{ width: 128, height: 96, sizes: '(min-width: 768px) 128px, 96px' }}
                     />
                     {/* Overlay badges. Use *-700 shades for WCAG AA
                         contrast at 8px white text on coloured bg. */}
@@ -560,7 +607,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
             )
           })}
 
-          {filtered.length === 0 && (
+          {!waitingForRows && resultTotal === 0 && (
             <p className="text-center text-on-surface-variant py-8">No places found in this category.</p>
           )}
 
@@ -569,7 +616,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
               already is (no scroll-back required). Skipped when we don't
               have city/country, and on filtered views to avoid a confusing
               "Add a place in Berlin" offer while inside a category filter. */}
-          {cityName && countryName && filtered.length > 0 && currentPage >= totalPages && !validCategory && !validSubcategory && !petOnly && (
+          {cityName && countryName && resultTotal > 0 && currentPage >= totalPages && !validCategory && !validSubcategory && !petOnly && (
             <div className="bg-primary/5 border border-dashed border-primary/30 rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <p className="font-medium text-on-surface">Not finding a place?</p>
@@ -592,7 +639,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
           {needsPagination && (
             <div className="flex items-center justify-between pt-4 border-t border-outline-variant/10">
               <p className="text-xs text-on-surface-variant">
-                {(currentPage-1)*PAGE_SIZE+1}–{Math.min(currentPage*PAGE_SIZE, filtered.length)} of {filtered.length}
+                {(currentPage-1)*PAGE_SIZE+1}–{Math.min(currentPage*PAGE_SIZE, resultTotal)} of {resultTotal}
               </p>
               <div className="flex items-center gap-2">
                 <button
@@ -619,7 +666,8 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
         <div className="lg:w-[400px] flex-shrink-0">
           <div className="lg:sticky lg:top-20">
             <LazyCityMap
-              places={filtered}
+              places={rows ? filtered : null}
+              onNeedPlaces={ensureRows}
               className="h-[300px] lg:h-[calc(100vh-8rem)]"
             />
           </div>
@@ -634,11 +682,13 @@ export function CityPlacesListView({ places, allPlaces, initialFull, cityName, c
 // well below the fold, so deferral is a clean LCP win. On desktop the
 // observer fires almost immediately on mount, so user-perceived delay
 // stays sub-100ms while the document paints first.
-function LazyCityMap({ places, className }: { places: ListPlace[]; className?: string }) {
+function LazyCityMap({ places, onNeedPlaces, className }: { places: ListPlace[] | null; onNeedPlaces: () => void; className?: string }) {
   const { ref, inView } = useInView<HTMLDivElement>({ rootMargin: '300px' })
+  // The hub does not ship the rows; ask for them when the map nears the viewport.
+  useEffect(() => { if (inView && !places) onNeedPlaces() }, [inView, places, onNeedPlaces])
   const mapPlaces = useMemo(
     () =>
-      places.map(p => ({
+      (places || []).map(p => ({
         id: p.id,
         name: p.name,
         slug: p.slug || undefined,
@@ -653,7 +703,7 @@ function LazyCityMap({ places, className }: { places: ListPlace[]; className?: s
   )
   return (
     <div ref={ref} className={className} style={{ minHeight: '300px' }}>
-      {inView ? (
+      {inView && places ? (
         <CityMap places={mapPlaces} className="h-full" />
       ) : (
         // Reserved-space placeholder, no network/JS work. Same min-height
@@ -661,7 +711,7 @@ function LazyCityMap({ places, className }: { places: ListPlace[]; className?: s
         <div className="h-full w-full rounded-xl bg-gradient-to-br from-emerald-50 via-stone-50 to-emerald-50 flex items-center justify-center">
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-lowest shadow-sm">
             <Map className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-on-surface">Map loads as you scroll</span>
+            <span className="text-sm font-medium text-on-surface">{inView ? 'Loading map…' : 'Map loads as you scroll'}</span>
           </div>
         </div>
       )}

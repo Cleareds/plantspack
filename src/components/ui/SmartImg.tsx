@@ -31,7 +31,7 @@ const ALLOWLISTED_HOSTS = [
   /\.unsplash\.com$/,
 ]
 
-function isOptimizable(src: string): boolean {
+export function isOptimizable(src: string): boolean {
   try {
     const u = new URL(src)
     return ALLOWLISTED_HOSTS.some((re) => re.test(u.hostname))

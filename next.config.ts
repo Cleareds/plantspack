@@ -153,6 +153,11 @@ const nextConfig: NextConfig = {
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
       },
       {
+        // Light rows for a whole city / country, fetched by the hub list on demand.
+        source: '/api/places/light',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
+      },
+      {
         source: '/api/cities/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
       },

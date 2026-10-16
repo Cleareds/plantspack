@@ -24,7 +24,7 @@ import { getCityImage } from '@/lib/city-images'
 import { getGradeColor } from '@/lib/score-utils'
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
-import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace } from '@/lib/city-list-light'
+import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace, summarizeLightPlaces } from '@/lib/city-list-light'
 import CountryCityGrid, { CountryCityGridView } from '@/components/places/CountryCityGrid'
 import CountryRegionsSection, { RegionCard } from '@/components/places/CountryRegionsSection'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
@@ -150,8 +150,9 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
   // from the city list so the page reflects "100% vegan in X" honestly.
   const places = isFullyVeganMode ? allRawPlaces.filter((p: any) => p.vegan_level === 'fully_vegan') : allRawPlaces
   // Light rows for the client list + full cards for its first page only (see src/lib/city-list-light.ts).
-  const lightPlaces = places.map(toLightPlace)
-  const lightAllPlaces = isFullyVeganMode ? allRawPlaces.map(toLightPlace) : lightPlaces
+  // Facet counts + a rows URL instead of every light row (see city-page.tsx).
+  const listSummary = summarizeLightPlaces(allRawPlaces.map(toLightPlace))
+  const lightSrc = `/api/places/light?country=${encodeURIComponent(country)}`
   const firstPageCards = defaultCityListOrder(places).slice(0, CITY_LIST_PAGE_SIZE)
   const cities = isFullyVeganMode
     ? allCities.map((c: any) => ({ ...c, count: c.stats?.fullyVegan || 0 })).filter((c: any) => c.count > 0)
@@ -510,8 +511,8 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
               </section>
             )}
             {/* useSearchParams() inside - needs Suspense on an ISR page, see city-page.tsx. */}
-            <Suspense fallback={<CityPlacesListView places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} searchParams={null} />}>
-              <CityPlacesList places={lightPlaces} allPlaces={lightAllPlaces} initialFull={firstPageCards} />
+            <Suspense fallback={<CityPlacesListView summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} searchParams={null} />}>
+              <CityPlacesList summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} />
             </Suspense>
           </div>
         )}
