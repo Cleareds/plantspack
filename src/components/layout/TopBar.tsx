@@ -89,7 +89,7 @@ export default function TopBar() {
 
             {/* Dropdown menu */}
             {isMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-64 bg-surface-container-lowest glass-float shadow-ambient rounded-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute right-0 top-full mt-2 w-64 max-h-[calc(100dvh-5rem)] bg-surface-container-lowest glass-float shadow-ambient rounded-xl z-50 overflow-y-auto overscroll-contain animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="py-2">
                   {/* Vegan-only toggle lives here on mobile (hidden from the header to save space) */}
                   <div className="px-4 py-2.5 sm:hidden">
@@ -124,12 +124,18 @@ export default function TopBar() {
 
                   <div className="my-1 border-t border-outline-variant/15" />
 
-                  {/* Community: the Feed and Packs links were removed 2026-10-16
-                      (dormant: 0 comments / likes / new packs in 30 days). The
-                      pages stay reachable by URL. */}
+                  {/* Community (not in the bottom nav - lives here) */}
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Community</span>
                   </div>
+                  <Link href="/feed" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>forum</span>
+                    <span className="text-sm text-on-surface">Feed</span>
+                  </Link>
+                  <Link href="/packs" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                    <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>groups</span>
+                    <span className="text-sm text-on-surface">Packs / Trips</span>
+                  </Link>
                   <Link href="/events" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>event</span>
                     <span className="text-sm text-on-surface">Events</span>

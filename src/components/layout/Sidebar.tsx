@@ -36,7 +36,9 @@ export default function Sidebar() {
       </Link>
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-0.5">
+      {/* Scrolls on its own when expanded pillars exceed a short window, so the
+          bottom section stays reachable. */}
+      <nav className="flex flex-col gap-0.5 min-h-0 overflow-y-auto overscroll-contain">
         {NAV_PILLARS.map((pillar) => {
           const parentActive = pathname?.startsWith(pillar.href)
 

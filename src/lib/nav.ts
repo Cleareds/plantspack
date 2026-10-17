@@ -53,12 +53,17 @@ export const NAV_PILLARS: NavPillar[] = [
     ],
   },
   {
-    // Feed and Packs left the nav 2026-10-16 (0 comments / likes / new packs
-    // in 30 days). The pages stay reachable by URL. Events is the live part.
+    // Restored 2026-10-17: the social pages stay in the nav so people can find
+    // them while the social layer is explored (removed one day earlier as dormant).
     key: 'community',
-    href: '/events',
-    label: 'Events',
-    icon: 'event',
+    href: '/feed',
+    label: 'Community',
+    icon: 'forum',
+    children: [
+      { href: '/feed', label: 'Feed' },
+      { href: '/packs', label: 'Packs / Trips' },
+      { href: '/events', label: 'Events' },
+    ],
   },
 ]
 
