@@ -147,17 +147,6 @@ const nextConfig: NextConfig = {
         headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
       },
       {
-        // Hub card data (ids are stable, content changes rarely): edge-cache an hour.
-        // Must come after the generic /api/places rule - the last matching rule wins.
-        source: '/api/places/cards',
-        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
-      },
-      {
-        // Light rows for a whole city / country, fetched by the hub list on demand.
-        source: '/api/places/light',
-        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
-      },
-      {
         source: '/api/cities/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=10, stale-while-revalidate=59' }],
       },
@@ -212,6 +201,40 @@ const nextConfig: NextConfig = {
             value: 'no-store, no-cache, must-revalidate',
           },
         ],
+      },
+      // ---- Public, visitor-independent GET endpoints: edge-cache them. ----
+      // These MUST come after the '/api/:path*' catch-all above: when several
+      // rules match, the LAST one wins, so the catch-all's no-store was
+      // silently overriding every public rule listed earlier (verified live
+      // 2026-10-17: /api/stats, /api/feed/unified, /api/places/cards all
+      // shipped 'private, no-store' and x-vercel-cache: MISS). Each route here
+      // reads only query params with the service/anon client - no session.
+      {
+        // Community feed (posts + reviews). Blocks/mutes are filtered client-side.
+        source: '/api/feed/unified',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' }],
+      },
+      {
+        source: '/api/stats',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' }],
+      },
+      {
+        source: '/api/scores',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' }],
+      },
+      {
+        source: '/api/supporters',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' }],
+      },
+      {
+        // Hub card data (ids are stable, content changes rarely).
+        source: '/api/places/cards',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' }],
+      },
+      {
+        // Light rows for a whole city / country, fetched by the hub list on demand.
+        source: '/api/places/light',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400' }],
       },
       {
         // No cache for admin pages (user-specific)

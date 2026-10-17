@@ -95,7 +95,7 @@ export default function TopBar() {
                   <div className="px-4 py-2.5 sm:hidden">
                     <VeganToggle />
                   </div>
-                  <Link href="/app" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/app" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>smartphone</span>
                     <span className="text-sm text-on-surface font-medium">Get the app</span>
                   </Link>
@@ -105,19 +105,19 @@ export default function TopBar() {
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Company</span>
                   </div>
-                  <Link href="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>info</span>
                     <span className="text-sm text-on-surface">About PlantsPack</span>
                   </Link>
-                  <Link href="/roadmap" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/roadmap" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>map</span>
                     <span className="text-sm text-on-surface">Roadmap</span>
                   </Link>
-                  <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>mail</span>
                     <span className="text-sm text-on-surface">Contact Us</span>
                   </Link>
-                  <Link href="/support" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/support" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <Heart className="h-5 w-5 text-primary" />
                     <span className="text-sm text-on-surface">Support Us</span>
                   </Link>
@@ -128,15 +128,15 @@ export default function TopBar() {
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Community</span>
                   </div>
-                  <Link href="/feed" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/feed" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>forum</span>
                     <span className="text-sm text-on-surface">Feed</span>
                   </Link>
-                  <Link href="/packs" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/packs" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>groups</span>
                     <span className="text-sm text-on-surface">Packs / Trips</span>
                   </Link>
-                  <Link href="/events" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/events" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>event</span>
                     <span className="text-sm text-on-surface">Events</span>
                   </Link>
@@ -147,11 +147,11 @@ export default function TopBar() {
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Help</span>
                   </div>
-                  <Link href="/support" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/support" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>payments</span>
                     <span className="text-sm text-on-surface">Pricing</span>
                   </Link>
-                  <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <HelpCircle className="h-5 w-5 text-on-surface-variant" />
                     <span className="text-sm text-on-surface">Help Center</span>
                   </Link>
@@ -166,15 +166,15 @@ export default function TopBar() {
                   <div className="px-4 py-2">
                     <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide">Legal</span>
                   </div>
-                  <Link href="/legal/privacy" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/legal/privacy" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>shield</span>
                     <span className="text-sm text-on-surface">Privacy Policy</span>
                   </Link>
-                  <Link href="/legal/terms" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/legal/terms" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>description</span>
                     <span className="text-sm text-on-surface">Terms of Service</span>
                   </Link>
-                  <Link href="/legal/cookies" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <Link prefetch={false} href="/legal/cookies" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
                     <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '20px' }}>cookie</span>
                     <span className="text-sm text-on-surface">Cookie Policy</span>
                   </Link>

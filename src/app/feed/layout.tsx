@@ -3,11 +3,11 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const metadata: Metadata = {
   title: 'Vegan Community Feed — Posts, Recipes, Reviews & Events | PlantsPack',
-  description: 'Follow the PlantsPack community feed: reviews of vegan restaurants, plant-based recipes, city ranking updates, events, and conversations with thousands of vegans worldwide.',
+  description: 'The PlantsPack community feed: reviews of vegan places, plant-based recipes, events and posts from vegans using the map.',
   alternates: { canonical: 'https://www.plantspack.com/feed' },
   openGraph: {
     title: 'Vegan Community Feed | PlantsPack',
-    description: 'Vegan community posts — reviews, recipes, events, city ranks, and conversations.',
+    description: 'Vegan community posts - reviews, recipes, events and conversations.',
     type: 'website',
     siteName: 'PlantsPack',
     images: OG_DEFAULT_IMAGES,
