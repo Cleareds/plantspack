@@ -26,8 +26,14 @@ if [ "$COUNT" -eq 0 ]; then
 fi
 
 echo "$COUNT pending — invoking approve-submissions skill"
+# Scoped allowlist, NOT a blanket permission bypass: the headless run may only
+# execute the two submission CLIs, tsc-free reads, and web lookups.
 claude -p "/approve-submissions" \
-  --permission-mode bypassPermissions \
+  --allowedTools "Bash(npx tsx scripts/submission-actions.ts *)" "Bash(npx tsx scripts/place-hero-image.ts *)" "Bash(npx tsx scripts/check-submissions.ts *)" "Read" "Grep" "Glob" "WebSearch" "WebFetch" "Skill" "Write" \
   --max-turns 100
+
+# Location sanity pass over what was just published (and the last week): fixes
+# unambiguous coordinate errors, mirrors the rest into Research Review.
+npx tsx scripts/check-submissions.ts --approved-days 7 --fix 2>&1 | tail -20
 
 echo "=== $(date) done ==="

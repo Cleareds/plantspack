@@ -35,6 +35,15 @@ export interface ApproveResult {
  * submission_approved notification to them, and place_nearby notifications to
  * users in that city.
  */
+// The mobile map opens on Amsterdam; an untouched pin arrives as these coords.
+const MOBILE_DEFAULT_CENTRE = { lat: 52.3676, lng: 4.9041 }
+export function isMobileDefaultCentre(lat: number, lng: number, radiusKm = 0.5): boolean {
+  const dLat = (lat - MOBILE_DEFAULT_CENTRE.lat) * 111.32
+  const dLng = (lng - MOBILE_DEFAULT_CENTRE.lng) * 111.32 * Math.cos(MOBILE_DEFAULT_CENTRE.lat * Math.PI / 180)
+  return Math.sqrt(dLat * dLat + dLng * dLng) <= radiusKm
+}
+const isAmsterdam = (city: string | null | undefined) => /amsterdam/i.test(city || '')
+
 export async function approveSubmission(
   submissionId: string,
   opts: { reviewerId?: string; veganLevel?: string; reviewNote?: string } = {}
@@ -46,9 +55,16 @@ export async function approveSubmission(
   if (loadErr || !sub) return { ok: false, error: 'Submission not found' }
   if (sub.status !== 'pending') return { ok: false, already: sub.status }
 
-  // Geocode when the submission has no coordinates.
+  // Geocode when the submission has no coordinates, or when the coordinates
+  // are the mobile map's default centre (Amsterdam): the app sends the map
+  // centre when the submitter never placed the pin, which published "Edison
+  // nj" and a La Palma bar at 52.3676, 4.9041 (2026-10-12/19). Treat that as
+  // "no coordinates" unless the submission really is in Amsterdam.
   let latitude = sub.latitude as number | null
   let longitude = sub.longitude as number | null
+  if (latitude != null && longitude != null && isMobileDefaultCentre(latitude, longitude) && !isAmsterdam(sub.city)) {
+    latitude = null; longitude = null
+  }
   if (latitude == null || longitude == null) {
     try {
       const q = [sub.address, sub.city, sub.country].filter(Boolean).join(', ')

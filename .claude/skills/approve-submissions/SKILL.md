@@ -24,6 +24,12 @@ The lightweight sibling of `add-place` for community submissions from the mobile
 
    b. **Plausibility check.** Gibberish name, test entry, obviously non-vegan-relevant business (e.g. a butcher), or a Russian place (excluded per policy) → `hold` with a short reason. NEVER reject or delete — hold keeps it pending for the human queue in /admin.
 
+   b2. **Location + existence check.** `npx tsx scripts/check-submissions.ts --submission <subId> --json`. It geocodes the submitted address and compares it with the submitted coordinates (the mobile map sends its default Amsterdam centre when the submitter never moved the pin), reverse-checks the country, and writes every finding to `place_submission_checks`.
+      - No findings → continue.
+      - `default_coords` only, and the submission has a street address → approving is fine: `approveSubmission` now ignores the default centre and geocodes the address itself.
+      - `far_from_address`, `country_mismatch`, `geocode_failed` or `suspicious_name` → WebSearch `"<name>" <city>` to confirm the venue exists where the submitter says. If one source gives the street address with no doubt, `submission-actions.ts fix <subId> --address "<street address>"` (and `--city` / `--country` if they were wrong) and re-run the check. If the place cannot be confirmed, `hold` with the finding as the note.
+      - Do not add anything the submitter did not provide (phone, hours, description, website) unless a primary source makes it certain. Correcting a wrong address, city or coordinates is in scope; enriching is not.
+
    c. **Website fix-up.** If `website` is an Instagram/Facebook URL, WebSearch `"<name>" <city> website` for the real site. Found one → `submission-actions.ts fix <subId> --website <realUrl>`. None exists → leave as-is (a social link is genuinely all some places have).
 
    d. **Vegan-level check** (the same discipline as add-place, abbreviated):
@@ -50,3 +56,4 @@ The lightweight sibling of `add-place` for community submissions from the mobile
 - Never publish `fully_vegan` without corroborating evidence (step 2d).
 - Never call `notifyNearbyUsers` yourself or approve in bulk without the per-item checks — the whole point of this skill vs. the old blind batch is that each place gets vetted.
 - Never chain more than 15 approvals in one run.
+- Never publish a submission whose coordinates or city are unconfirmed after step 2b2; hold it. Published places with doubtful locations show up in Research Review via the same check script (`--approved-days 30 --fix` is run by the cron wrapper after approvals).
