@@ -7,6 +7,7 @@ import { unstable_cache } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import HomeClient from '@/components/home/HomeClient'
+import MapThisWeek, { type MapActivity, type MapActivityPlace } from '@/components/home/MapThisWeek'
 import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
@@ -225,6 +226,58 @@ const getRecentReviews = unstable_cache(async () => {
 }, ['home-recent-reviews'], { revalidate: 300, tags: ['home'] })
 
 /**
+ * "This week on the map": places added by members, plus the month's
+ * bookkeeping (corrections handled, reviews written). Replaces the idea of a
+ * posts feed with the activity that actually happens (2026-10-20: 12 places
+ * added and 24 reports in 30 days vs 5 reviews and 0 posts/likes/comments).
+ *
+ * Quality gate for the rail: live row, has a photo, and either came through
+ * the submission review (community_submission / admin_review) or was
+ * cross-checked (verification_level >= 2). Raw web adds without a check stay
+ * off the homepage; they are still counted in the headline number.
+ */
+const getMapActivity = unstable_cache(async (): Promise<MapActivity> => {
+  const supabase = createAdminClient()
+  const since = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString()
+  const { data: admins } = await supabase.from('users').select('id').eq('role', 'admin')
+  const adminIds = (admins || []).map((a: any) => a.id as string)
+  const notAdmin = adminIds.length ? `(${adminIds.join(',')})` : '(00000000-0000-0000-0000-000000000000)'
+
+  const { data: rows } = await supabase
+    .from('places')
+    .select('slug, name, city, country, vegan_level, category, main_image_url, verification_level, verification_method, created_at, users:created_by(username, first_name)')
+    .gte('created_at', since(30))
+    .not('created_by', 'is', null)
+    .not('created_by', 'in', notAdmin)
+    .is('archived_at', null)
+    .order('created_at', { ascending: false })
+    .limit(60)
+  const all = (rows || []) as any[]
+  const shown: MapActivityPlace[] = all
+    .filter(p => p.main_image_url && p.city && p.country && p.name && p.name.length <= 60)
+    .filter(p => ['community_submission', 'admin_review'].includes(p.verification_method) || (p.verification_level ?? 0) >= 2)
+    .map(p => {
+      const u = Array.isArray(p.users) ? p.users[0] : p.users
+      return {
+        slug: p.slug, name: p.name, city: p.city, country: p.country,
+        vegan_level: p.vegan_level ?? null, category: p.category ?? null,
+        main_image_url: p.main_image_url ?? null, created_at: p.created_at,
+        added_by: (u?.first_name && u.first_name.trim().length >= 3 ? u.first_name.trim() : u?.username) || null,
+      }
+    })
+  const weekAdds = all.filter(p => p.created_at >= since(7)).length
+  const window: MapActivity['window'] = weekAdds >= 3 ? 'week' : 'month'
+  const added = window === 'week' ? weekAdds : all.length
+  const places = (window === 'week' ? shown.filter(p => p.created_at >= since(7)) : shown).slice(0, 6)
+
+  const [{ count: corrections }, { count: reviews }] = await Promise.all([
+    supabase.from('place_reports').select('id', { count: 'exact', head: true }).gte('created_at', since(30)).in('status', ['reviewed', 'dismissed']),
+    supabase.from('place_reviews').select('id', { count: 'exact', head: true }).gte('created_at', since(30)).is('deleted_at', null),
+  ])
+  return { window, added, corrections: corrections ?? 0, reviews: reviews ?? 0, places }
+}, ['home-map-activity'], { revalidate: 300, tags: ['home'] })
+
+/**
  * Dish chips for the homepage. Dish pages are 55% of organic clicks and the
  * homepage linked to none of them (2026-10-16). Signed-in visitors with a
  * known city get that city's dishes; everyone else gets the top dish of
@@ -333,12 +386,13 @@ export default async function Home() {
   const { data: { user: sessionUser } } = await supabase.auth.getUser()
   const isSignedIn = !!sessionUser
 
-  const [recentReviews, initialLocation, featuredPlaces, followedCities, globalDishChips] = await Promise.all([
+  const [recentReviews, initialLocation, featuredPlaces, followedCities, globalDishChips, mapActivity] = await Promise.all([
     getRecentReviews(),
     getInitialLocationData(isSignedIn),
     getFeaturedPlaces(),
     getFollowedCities(),
     getHomeDishChips(),
+    getMapActivity(),
   ])
   const cityDishChips = initialLocation?.city && initialLocation?.country
     ? await getCityDishChipsCached(initialLocation.country, initialLocation.city)
@@ -451,6 +505,8 @@ export default async function Home() {
           </ul>
         </section>
       )}
+
+      <MapThisWeek activity={mapActivity} />
 
       {/* Tools strip — three highest-utility tools as a pinned row. Homepage
           is the most-trafficked entry point; surfacing tools here is the
