@@ -63,7 +63,7 @@ export default function MapThisWeek({ activity }: { activity: MapActivity }) {
               {activity.added}
             </span>
             {activity.added === 1 ? 'place' : 'places'} added {span}
-            <span className="block font-semibold text-on-surface-variant text-lg mt-1">by people who use the map.</span>
+            <span className="block font-semibold text-on-surface-variant text-lg mt-1">by our community.</span>
           </h2>
           <p className="mt-4 text-sm text-on-surface-variant leading-relaxed max-w-[34ch]">
             Each one links to the place and to the member who added it.
