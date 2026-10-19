@@ -23,15 +23,31 @@ export async function POST(
 
     const supabase = createAdminClient()
 
-    // Best-effort: record who is reporting, if signed in. Never blocks the report.
+    // Who is reporting: the cookie session (web) or a Supabase access token in
+    // the Authorization header (mobile app). Problem reports may be anonymous;
+    // a confirmation may not (see below).
     let reporterId: string | null = null
     try {
-      const ssr = await createClient()
-      const { data: { session } } = await ssr.auth.getSession()
-      reporterId = session?.user?.id ?? null
+      const auth = request.headers.get('authorization')
+      if (auth?.startsWith('Bearer ')) {
+        const { data } = await supabase.auth.getUser(auth.slice(7).trim())
+        reporterId = data.user?.id ?? null
+      }
+      if (!reporterId) {
+        const ssr = await createClient()
+        const { data: { session } } = await ssr.auth.getSession()
+        reporterId = session?.user?.id ?? null
+      }
     } catch { /* anonymous report */ }
 
     if (type === 'confirmed') {
+      // "Looks correct" promotes the place to community_verified - a public
+      // trust badge - so it needs an account behind it. Closed / hours / vegan
+      // level reports only queue the place for admin review and stay open to
+      // guests (a traveller at a closed door should not need to sign up).
+      if (!reporterId) {
+        return NextResponse.json({ error: 'Sign in to confirm a place' }, { status: 401 })
+      }
       // User confirms → promote to community_verified so the amber "help
       // verify" banner disappears on next page load.
       await supabase.from('places').update({

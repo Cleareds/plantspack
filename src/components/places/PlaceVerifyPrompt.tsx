@@ -2,6 +2,7 @@
 import { safeStorage } from "@/lib/safe-storage"
 
 import { useState } from 'react'
+import { useAuth } from '@/lib/auth'
 import { CheckCircle, AlertTriangle, Clock, X, Leaf, ShieldAlert, Link2, Store, Copy, PauseCircle } from 'lucide-react'
 
 const REPORT_LABELS: Record<string, string> = {
@@ -46,6 +47,7 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
   // prompt stays compact.
   const [pendingType, setPendingType] = useState<string | null>(null)
   const [note, setNote] = useState('')
+  const { user } = useAuth()
 
   if (dismissed) return null
   // Hide the form if a prior session already submitted, but only when there's
@@ -53,6 +55,13 @@ export default function PlaceVerifyPrompt({ placeId, placeName, needsCommunityVe
   if (previouslySubmitted && !submitted) return null
 
   const handleConfirm = async () => {
+    // "Looks correct" grants the public community-verified badge, so it needs
+    // an account (the API refuses anonymous confirms). Problem reports below
+    // stay open to guests.
+    if (!user) {
+      window.location.href = `/auth?mode=signin&redirect=${encodeURIComponent(window.location.pathname)}`
+      return
+    }
     setSubmitting(true)
     safeStorage.session.set(key, '1')
     // Confirm via API (uses admin client to bypass RLS)
