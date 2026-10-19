@@ -141,7 +141,10 @@ export async function renderBlogContent(markdown: string): Promise<RenderedBlog>
   })
 
   const headings: BlogHeading[] = []
-  const html = await buildMarked(headings).parse(swapped)
+  // Wrap tables so wide ones scroll sideways on phones (CSS: .prose .table-scroll).
+  const html = (await buildMarked(headings).parse(swapped))
+    .replace(/<table>/g, '<div class="table-scroll"><table>')
+    .replace(/<\/table>/g, '</table></div>')
 
   const places: PlaceRef[] = placedSlugs.map((s) => placeBySlug[s]!).filter(Boolean)
   return { html, places, missingPlaceSlugs: missing, headings }
