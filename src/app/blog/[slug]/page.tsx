@@ -6,6 +6,7 @@ import { renderBlogContent } from '@/lib/blog-renderer'
 import { createClient } from '@/lib/supabase-server'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import BlogEngagement from '@/components/blog/BlogEngagement'
+import BlogSectionNav from '@/components/blog/BlogSectionNav'
 
 // Article pages — 1h ISR; article edits are rare and admin-driven (cost cut 2026-07-10).
 export const revalidate = 3600
@@ -292,6 +293,8 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
             </div>
           </div>
         </header>
+
+        <BlogSectionNav headings={rendered.headings} />
 
         <div
           className={[

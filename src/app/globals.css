@@ -232,3 +232,53 @@ body {
 .marker-cluster-large div {
   background: transparent !important;
 }
+
+/* ---------------------------------------------------------------------------
+ * Blog article layout helpers (used from markdown HTML stored in posts.content)
+ * .blog-city   - one destination block; flow-root so the floated figure is
+ *                contained and the next block starts clean.
+ * .blog-figure - photo floated left with the text wrapping on the right and
+ *                continuing below it; full width on small screens.
+ * Headings get scroll-margin so the sticky section nav never covers them.
+ * ------------------------------------------------------------------------- */
+.prose h2[id],
+.prose h3[id] {
+  scroll-margin-top: 8.5rem;
+}
+.prose .blog-city {
+  display: flow-root;
+}
+.prose .blog-figure {
+  margin: 0 0 1rem 0;
+}
+.prose .blog-figure img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(45, 47, 44, 0.08);
+}
+.prose .blog-figure figcaption {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #5a5c58;
+}
+@media (min-width: 768px) {
+  .prose .blog-figure {
+    float: left;
+    width: 44%;
+    margin: 0.35rem 1.75rem 0.75rem 0;
+  }
+  .prose .blog-city > p:first-of-type {
+    margin-top: 0;
+  }
+}
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

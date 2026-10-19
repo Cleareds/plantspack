@@ -5,8 +5,9 @@
  * Use server-side. Returns rendered HTML plus the structured metadata needed
  * for ItemList JSON-LD and any other downstream SEO work.
  */
-import { marked } from 'marked'
+import { Marked, type Tokens } from 'marked'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { toSlug } from '@/lib/slug'
 
 export interface PlaceRef {
   slug: string
@@ -18,10 +19,44 @@ export interface PlaceRef {
   category: string
 }
 
+export interface BlogHeading {
+  id: string      // anchor id written onto the <h2>/<h3>
+  text: string    // plain heading text (inline markdown stripped)
+  depth: number   // 2 or 3
+}
+
 export interface RenderedBlog {
   html: string
   places: PlaceRef[]            // every [[place:slug]] resolved
   missingPlaceSlugs: string[]   // tokens that did not resolve
+  headings: BlogHeading[]       // h2/h3 in document order, for section navigation
+}
+
+/**
+ * Heading ids + a heading list so the page can render a sticky section nav.
+ * marked >= v13 passes token objects to renderer methods; `this.parser` is the
+ * live parser, used to render inline children (links, emphasis) inside the
+ * heading. Ids come from the plain text through the shared toSlug() so they
+ * are ASCII and stable; duplicates get a numeric suffix.
+ */
+function buildMarked(headings: BlogHeading[]) {
+  const seen = new Map<string, number>()
+  const md = new Marked({ breaks: true })
+  md.use({
+    renderer: {
+      heading({ tokens, depth, text }: Tokens.Heading) {
+        const plain = text.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`]/g, '').trim()
+        let id = toSlug(plain) || `section-${headings.length + 1}`
+        const n = seen.get(id) ?? 0
+        seen.set(id, n + 1)
+        if (n > 0) id = `${id}-${n + 1}`
+        if (depth === 2 || depth === 3) headings.push({ id, text: plain, depth })
+        const inner = this.parser.parseInline(tokens)
+        return `<h${depth} id="${id}">${inner}</h${depth}>\n`
+      },
+    },
+  })
+  return md
 }
 
 const PLACE_RE = /\[\[place:([a-z0-9-]+)\]\]/g
@@ -105,9 +140,9 @@ export async function renderBlogContent(markdown: string): Promise<RenderedBlog>
     return `\n\n${placeCardHtml(p)}\n\n`
   })
 
-  marked.setOptions({ breaks: true })
-  const html = await marked(swapped)
+  const headings: BlogHeading[] = []
+  const html = await buildMarked(headings).parse(swapped)
 
   const places: PlaceRef[] = placedSlugs.map((s) => placeBySlug[s]!).filter(Boolean)
-  return { html, places, missingPlaceSlugs: missing }
+  return { html, places, missingPlaceSlugs: missing, headings }
 }
