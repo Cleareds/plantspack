@@ -82,32 +82,43 @@ function getTopCitiesFromHome(initData: any): any[] {
 // path stops re-querying Supabase on every (dynamic) render — cuts TTFB for anon
 // AND signed-in without touching auth/location (those stay per-request below).
 // Content refreshes within 300s; add/edit mutations already call revalidatePath('/').
+// Deterministic shuffle so the twelve change once a day, not on every render,
+// and the order can be reproduced: no editorial hand, nobody pays to be here.
+function seededShuffle<T>(items: T[], seed: string): T[] {
+  let h = 1779033703 ^ seed.length
+  for (let i = 0; i < seed.length; i++) { h = Math.imul(h ^ seed.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19) }
+  let a = h >>> 0
+  const rnd = () => { a += 0x6D2B79F5; let t = Math.imul(a ^ (a >>> 15), 1 | a); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296 }
+  const out = items.slice()
+  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [out[i], out[j]] = [out[j], out[i]] }
+  return out
+}
+
+/**
+ * "Rated 4 stars and up by members": twelve fully vegan places that members
+ * rated 4+ (at least one review), with a photo we host, reshuffled daily with
+ * the date as the seed. Replaces the old "Featured" list, which sorted by
+ * review count and therefore froze on the same twelve places (2026-10-20:
+ * seven of them in Belgium, one of them not even fully vegan).
+ */
 const getFeaturedPlaces = unstable_cache(async () => {
   const supabase = createAdminClient()
   const { data } = await supabase
     .from('places')
-    .select('slug, name, city, country, average_rating, review_count, main_image_url, images, category, vegan_level')
+    .select('slug, name, city, country, average_rating, review_count, main_image_url, category, vegan_level')
     .is('archived_at', null)
     .not('slug', 'is', null)
-    .not('description', 'is', null)
+    .eq('vegan_level', 'fully_vegan')
     .gte('review_count', 1)
     .gte('average_rating', 4.0)
-    .order('review_count', { ascending: false })
-    .order('average_rating', { ascending: false })
-    .limit(24)
-  // Restrict featured cards to places whose main image is already rehosted
-  // to Supabase. External images (restaurant websites etc.) bypass
-  // Next/Image optimization and get flagged in PageSpeed for
-  // "Serve images in modern formats / Increase compression" — they're
-  // typically 100-150 KB unoptimized JPGs. Limiting to Supabase URLs
-  // also lets the existing place-image rehost pipeline graduate places
-  // into the carousel as it processes them.
-  const onSupabase = (data || []).filter((p: any) => {
-    const src = p.main_image_url || p.images?.[0] || ''
-    return typeof src === 'string' && src.includes('supabase.co')
-  })
-  return onSupabase.slice(0, 12)
-}, ['home-featured-places'], { revalidate: 300, tags: ['home'] })
+    // Only photos on our own storage: external images bypass Next/Image and
+    // get flagged in PageSpeed; the rehost pipeline graduates places in.
+    .ilike('main_image_url', '%supabase.co%')
+    .order('slug')
+    .limit(500)
+  const today = new Date().toISOString().slice(0, 10)
+  return { date: today, places: seededShuffle(data || [], today).slice(0, 12) }
+}, ['home-featured-places-v2'], { revalidate: 1800, tags: ['home'] })
 
 /**
  * Fetch the logged-in user's followed cities with live scores + deltas,
@@ -581,55 +592,51 @@ export default async function Home() {
         </ul>
       </section>
 
-      {/* Featured Places — SSR plain-HTML links, visible to Googlebot without JS.
-          Purpose is purely to shorten the click-depth from home → place pages
-          (previously 4 clicks via country → city → list → place). */}
-      {featuredPlaces.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 md:px-8 py-10 border-t border-outline-variant/10">
-          <h2 className="text-xl font-semibold text-on-surface mb-4">Featured vegan places</h2>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {featuredPlaces.map((p: any) => {
-              const image = p.main_image_url || p.images?.[0] || null
+      {/* Rated 4+ by members: twelve fully vegan places, reshuffled daily.
+          Plain server-rendered links so the click-depth home -> place stays 2. */}
+      {featuredPlaces.places.length > 0 && (
+        <section aria-labelledby="rated-by-members" className="max-w-6xl mx-auto px-4 md:px-8 py-10 border-t border-outline-variant/10">
+          <div className="max-w-[60ch]">
+            <h2 id="rated-by-members" className="font-headline text-2xl font-bold text-on-surface tracking-tight">
+              Rated 4 stars and up by members
+            </h2>
+            <p className="mt-1.5 text-sm text-on-surface-variant leading-relaxed">
+              Fully vegan places rated 4 or more by members. A different twelve every day, and nobody can pay to appear here.
+              Today, {new Date(featuredPlaces.date + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' })}.
+            </p>
+          </div>
+          <ul className="mt-6 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-5 sm:gap-x-4">
+            {featuredPlaces.places.map((p: any) => {
+              const alt = `${p.name}${p.city ? `, fully vegan in ${p.city}` : ''}`
+              const reviews = Number(p.review_count || 0)
               return (
-                <li key={p.slug} className="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden hover:border-primary/30 transition-all">
-                  <Link href={`/place/${p.slug}`} prefetch={false} className="block">
-                    {image ? (
+                <li key={p.slug} className="min-w-0">
+                  <Link href={`/place/${p.slug}`} prefetch={false} className="group block focus:outline-none">
+                    <div className="aspect-square overflow-hidden rounded-2xl bg-surface-container-low group-focus-visible:ring-2 group-focus-visible:ring-primary/60">
                       <SmartImg
-                        src={image}
-                        alt={`${p.name}${p.city ? ` — vegan ${(p.category === 'eat' ? 'restaurant' : p.category)} in ${p.city}` : ''}`}
-                        width={300}
-                        height={112}
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
-                        quality={55}
-                        className="w-full h-28 object-cover"
+                        src={p.main_image_url}
+                        alt={alt}
+                        width={320}
+                        height={320}
+                        sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 180px"
+                        quality={60}
+                        className="w-full h-full object-cover"
                       />
-                    ) : (
-                      <PlaceImage
-                        src={null}
-                        alt={`${p.name}${p.city ? ` — vegan ${(p.category === 'eat' ? 'restaurant' : p.category)} in ${p.city}` : ''}`}
-                        category={p.category}
-                        className="w-full h-28 object-cover"
-                      />
-                    )}
-                    <div className="p-3">
-                      <p className="font-medium text-sm text-on-surface truncate">{p.name}</p>
-                      <p className="text-xs text-on-surface-variant truncate mt-0.5">
-                        {p.city}{p.country ? `, ${p.country}` : ''}
-                      </p>
-                      <p className="text-[11px] text-on-surface-variant mt-0.5">
-                        {VEGAN_LEVEL_LABEL[p.vegan_level ?? ''] ?? ''}
-                        {p.average_rating ? ` · ★ ${Number(p.average_rating).toFixed(1)}` : ''}
-                      </p>
                     </div>
+                    <p className="mt-2 text-sm font-medium text-on-surface leading-snug line-clamp-2 group-hover:text-primary transition-colors">{p.name}</p>
+                    <p className="text-xs text-on-surface-variant truncate">{p.city}{p.country ? `, ${p.country}` : ''}</p>
+                    {p.average_rating && (
+                      <p className="text-[11px] text-on-surface-variant/80 mt-0.5 tabular-nums">
+                        {Number(p.average_rating).toFixed(1)} from {reviews} {reviews === 1 ? 'review' : 'reviews'}
+                      </p>
+                    )}
                   </Link>
                 </li>
               )
             })}
           </ul>
-          <p className="text-xs text-on-surface-variant mt-4">
-            <Link href="/vegan-places" className="text-primary hover:underline">
-              Browse all vegan places →
-            </Link>
+          <p className="text-sm text-on-surface-variant mt-6">
+            <Link href="/vegan-places" prefetch={false} className="text-primary hover:underline">All fully vegan places by city</Link>
           </p>
         </section>
       )}
