@@ -14,7 +14,7 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CheckCircle2, X, Minus, Sparkles } from 'lucide-react'
+import { CheckCircle2, X, Minus } from 'lucide-react'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
@@ -186,18 +186,17 @@ export default function ComparePage() {
 
         <div className="rounded-2xl bg-primary/5 ghost-border p-5 mb-10">
           <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="h-5 w-5 text-primary" />
             <h2 className="text-sm font-bold uppercase tracking-wider text-on-surface">The short version</h2>
           </div>
           <ul className="space-y-2 text-on-surface text-sm leading-relaxed">
             <li>
-              <strong>Use HappyCow if</strong> you want the widest coverage, especially in small towns and outside Europe, and you rely on other people&apos;s reviews. They list more than four times as many places as we do and have collected reviews since 1999.
+              <strong>Use HappyCow if</strong>{' '}you want the widest coverage, especially in small towns and outside Europe, and you rely on other people&apos;s reviews. They list more than four times as many places as we do and have collected reviews since 1999.
             </li>
             <li>
-              <strong>Use PlantsPack if</strong> you want a strict &quot;fully vegan&quot; label you can filter on, scanners for barcodes, ingredient labels and menus, recipes only from 100% vegan creators, and a directory with no ads and no paid listings. The apps are free on iOS and Android.
+              <strong>Use PlantsPack if</strong>{' '}you want a strict &quot;fully vegan&quot; label you can filter on, scanners for barcodes, ingredient labels and menus, recipes only from 100% vegan creators, and a directory with no ads and no paid listings. The apps are free on iOS and Android.
             </li>
             <li>
-              <strong>Use both.</strong> Most vegan travellers we know do. We would rather be your second tab than pretend to be the only one.
+              <strong>Use both.</strong>{' '}Most vegan travellers we know do. We would rather be your second tab than pretend to be the only one.
             </li>
           </ul>
         </div>
