@@ -24,7 +24,9 @@ import type { UserOwnedPlace } from '@/types/place-claims'
 
 export default function ProfilePage() {
   const params = useParams()
-  const username = params.username as string
+  // useParams() hands back the raw (percent-encoded) segment: decode it so a
+  // username with an unusual character still matches the database row.
+  const username = decodeURIComponent(params.username as string)
   const { user, profile: currentUserProfile, loading: authLoading } = useAuth()
   useScrollRestoration({ key: `profile_scroll_${username}`, delay: 100 })
 

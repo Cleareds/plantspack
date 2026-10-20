@@ -10,7 +10,9 @@ import type { NotificationPreferences } from '@/types/notifications'
 
 export default function NotificationPreferencesPage() {
   const params = useParams()
-  const username = params.username as string
+  // useParams() hands back the raw (percent-encoded) segment: decode it so a
+  // username with an unusual character still matches the database row.
+  const username = decodeURIComponent(params.username as string)
   const { user, profile, authReady } = useAuth()
   const router = useRouter()
 
