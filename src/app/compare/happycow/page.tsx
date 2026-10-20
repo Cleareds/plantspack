@@ -6,6 +6,11 @@
  * marketing pages. Page is written to be defensible if HappyCow themselves
  * read it - acknowledges their real strengths, points out our differences
  * without snark.
+ *
+ * Every PlantsPack number below is a live query re-checked on LAST_CHECKED
+ * (places, countries, cities, reviews, recipes, articles). HappyCow figures are
+ * their own published numbers; sources are linked in the footer. Keep it that
+ * way: no rounding up, no "verified" where the data says "labelled".
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -15,13 +20,15 @@ import { OG_DEFAULT_IMAGES } from '@/lib/og'
 
 export const revalidate = 86400
 
+const LAST_CHECKED = '20 October 2026'
+
 export const metadata: Metadata = {
   title: 'PlantsPack vs HappyCow - honest comparison for vegan travellers | PlantsPack',
-  description: 'Side-by-side comparison of PlantsPack and HappyCow: coverage, tools, pricing, content depth, mobile apps, data freshness. Honest assessment, including where HappyCow wins.',
+  description: 'Side-by-side comparison of PlantsPack and HappyCow in 2026: coverage, mobile apps, vegan labelling, scanners and tools, pricing, paid listings, data sources. Honest assessment, including where HappyCow wins.',
   alternates: { canonical: 'https://www.plantspack.com/compare/happycow' },
   openGraph: {
-    title: 'PlantsPack vs HappyCow - honest comparison',
-    description: 'Coverage, tools, content depth, mobile apps, pricing. We tell you where HappyCow wins too.',
+    title: 'PlantsPack vs HappyCow - honest comparison (2026)',
+    description: 'Coverage, apps, vegan labels, tools, pricing, paid listings. We tell you where HappyCow wins too.',
     type: 'article',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com/compare/happycow',
@@ -29,106 +36,112 @@ export const metadata: Metadata = {
   },
 }
 
+type Status = 'yes' | 'partial' | 'no'
 interface Row {
   feature: string
-  plantspack: { status: 'yes' | 'partial' | 'no'; note: string }
-  happycow: { status: 'yes' | 'partial' | 'no'; note: string }
+  plantspack: { status: Status; note: string }
+  happycow: { status: Status; note: string }
 }
 
 const ROWS: Row[] = [
   {
-    feature: 'Total places listed',
-    plantspack: { status: 'partial', note: '~52,000 verified places' },
-    happycow: { status: 'yes', note: '~200,000+ places (their core strength)' },
+    feature: 'Places listed',
+    plantspack: { status: 'partial', note: '52,000+ vegan and vegan-friendly places, 24,000+ with a photo' },
+    happycow: { status: 'yes', note: '240,000+ listings by their own count. Their core strength' },
   },
   {
-    feature: 'Country coverage',
-    plantspack: { status: 'partial', note: '160+ countries, 1,400+ cities with 5+ places' },
-    happycow: { status: 'yes', note: '180+ countries, broader smaller-city coverage' },
+    feature: 'Coverage',
+    plantspack: { status: 'partial', note: '167 countries; 1,400+ cities and towns with five or more places. Deepest in Europe, strong in North America, Mexico and Brazil' },
+    happycow: { status: 'yes', note: '185 countries by their own count, with more small-town coverage' },
   },
   {
-    feature: 'User reviews',
-    plantspack: { status: 'partial', note: 'Growing - early-stage user base, modest review volume' },
-    happycow: { status: 'yes', note: '25 years of community reviews, very high density' },
+    feature: 'Community reviews',
+    plantspack: { status: 'no', note: 'About 150 reviews so far. We launched the apps in 2026 and we do not pad this with imported or synthetic reviews' },
+    happycow: { status: 'yes', note: 'Reviews collected since 1999. The deepest review base in vegan dining' },
   },
   {
-    feature: 'Strict vegan classification',
-    plantspack: { status: 'yes', note: 'Four-tier system: fully vegan / mostly vegan / vegan-friendly / vegan options. Each tier defined in our methodology' },
-    happycow: { status: 'partial', note: 'Vegan and vegetarian tags exist but conflated in many search results' },
+    feature: 'Vegan labelling',
+    plantspack: { status: 'yes', note: 'Four tiers on every place: fully vegan, mostly vegan, vegan friendly, vegan options. Fully vegan is the strict tier, flagged on the map and filterable with one tap. Vegetarian-only venues are not listed' },
+    happycow: { status: 'partial', note: 'Vegan, vegetarian and veg-options categories; vegetarian venues sit in the same directory' },
   },
   {
     feature: 'Mobile app',
-    plantspack: { status: 'no', note: 'Web-only for now (PWA-friendly)' },
-    happycow: { status: 'yes', note: 'Native iOS + Android apps with millions of downloads' },
+    plantspack: { status: 'yes', note: 'Free native iOS and Android apps (2026): live map, 100% vegan filter, place pages with hours and directions, saved places synced across devices, dark mode, directions can open in Organic Maps or OsmAnd' },
+    happycow: { status: 'yes', note: 'Mature iOS and Android apps with a large install base. The iOS app has been a one-time paid download in several storefronts; check your store' },
   },
   {
-    feature: 'Ad-free experience',
-    plantspack: { status: 'yes', note: 'Zero ads, ever. Supporter-funded' },
-    happycow: { status: 'no', note: 'Display ads on the free version; premium tier removes them' },
+    feature: 'Scanners inside the app',
+    plantspack: { status: 'yes', note: 'Barcode scanner, ingredient-label scanner and menu scanner work in the apps and on the web' },
+    happycow: { status: 'no', note: 'Not offered' },
   },
   {
-    feature: 'Free to use',
-    plantspack: { status: 'yes', note: 'All features free. Optional $3/mo supporter tier for unlimited AI scans' },
-    happycow: { status: 'partial', note: 'Free web; premium subscription for app features and ad removal' },
+    feature: 'Ads',
+    plantspack: { status: 'yes', note: 'None, on the web or in the apps. Funded by supporters' },
+    happycow: { status: 'partial', note: 'Advertising on the website; the apps have carried a paid tier' },
+  },
+  {
+    feature: 'Paid placement for businesses',
+    plantspack: { status: 'yes', note: 'None. Owners can claim a listing for free; claims do not change ranking or labels' },
+    happycow: { status: 'no', note: 'Paid business subscriptions through their Partner Hub (US$100 per month per location, their published price)' },
+  },
+  {
+    feature: 'Price for you',
+    plantspack: { status: 'yes', note: 'Everything free. AI scans: 1 a month as a guest, 3 a month signed in, unlimited for supporters at 3 euro a month' },
+    happycow: { status: 'partial', note: 'Website free; the iOS app has been a paid download' },
   },
   {
     feature: 'Barcode scanner',
-    plantspack: { status: 'yes', note: 'Free, food and cosmetics modes, no signup needed' },
+    plantspack: { status: 'yes', note: 'Free, food and cosmetics, no sign-up needed' },
     happycow: { status: 'no', note: 'Not offered' },
   },
   {
-    feature: 'Ingredient label scanner (AI)',
-    plantspack: { status: 'yes', note: 'Photo a label, we read it and flag animal-derived items' },
+    feature: 'Ingredient-label scanner (AI)',
+    plantspack: { status: 'yes', note: 'Photograph a label; animal-derived ingredients and E-numbers are flagged' },
     happycow: { status: 'no', note: 'Not offered' },
   },
   {
-    feature: 'Restaurant menu scanner (AI)',
-    plantspack: { status: 'yes', note: 'Photo any menu in any language, we highlight vegan dishes' },
+    feature: 'Menu scanner (AI)',
+    plantspack: { status: 'yes', note: 'Photograph a menu in any language; vegan dishes are highlighted and explained' },
     happycow: { status: 'no', note: 'Not offered' },
   },
   {
-    feature: 'Baking substitute calculator',
-    plantspack: { status: 'yes', note: 'Quantitative ratios per ingredient and recipe type, no AI' },
+    feature: 'Other tools',
+    plantspack: { status: 'yes', note: 'Baking substitute calculator, drinks check, E-numbers guide, impact calculator, printable restaurant cards in 30 languages' },
     happycow: { status: 'no', note: 'Not offered' },
   },
   {
-    feature: 'Drinks vegan lookup',
-    plantspack: { status: 'yes', note: '100+ curated beer/wine/spirit brands with confirmed status' },
-    happycow: { status: 'no', note: 'Not offered' },
+    feature: 'Recipes',
+    plantspack: { status: 'yes', note: '700+ recipes, every one from a creator whose whole catalogue is vegan, credited and linked to the original' },
+    happycow: { status: 'partial', note: 'Some recipes on the blog' },
   },
   {
-    feature: 'Printable restaurant cards (30+ languages)',
-    plantspack: { status: 'yes', note: 'Free, multi-language' },
-    happycow: { status: 'no', note: 'Not offered as a built-in tool' },
+    feature: 'Editorial content',
+    plantspack: { status: 'yes', note: '22 "is X vegan?" ingredient articles with cited sources, city guides for 96 dishes (best vegan pizza in Berlin, and so on), travel guides' },
+    happycow: { status: 'partial', note: 'Blog and city guides, less source citation' },
   },
   {
-    feature: 'Editorial content (is X vegan articles, travel guides)',
-    plantspack: { status: 'yes', note: '14+ ingredient deep-dives, 4+ country travel guides, sources cited' },
-    happycow: { status: 'partial', note: 'Blog content exists but shallower per topic; sources rarely cited' },
+    feature: 'City rankings',
+    plantspack: { status: 'yes', note: 'A vegan-friendliness score per city, recomputed as the data changes' },
+    happycow: { status: 'partial', note: 'Annual top-cities lists; no per-city score you can follow' },
   },
   {
-    feature: 'City rankings (vegan-friendliness score)',
-    plantspack: { status: 'yes', note: 'Algorithmic score per city, deltas tracked over time' },
-    happycow: { status: 'no', note: 'Place ratings only, no city-level ranking' },
+    feature: 'Data sources and freshness',
+    plantspack: { status: 'yes', note: 'Built on OpenStreetMap plus community additions, with attribution. Weekly map sync, daily website checks, community reports handled every week' },
+    happycow: { status: 'yes', note: 'Community-submitted and community-maintained; long track record' },
   },
   {
-    feature: 'Open data / API',
-    plantspack: { status: 'partial', note: 'Read-only API in development' },
+    feature: 'Public methodology',
+    plantspack: { status: 'yes', note: 'Documented in /methodology: how every label is set and what "fully vegan" requires' },
+    happycow: { status: 'no', note: 'We could not find a published methodology' },
+  },
+  {
+    feature: 'Open code / API',
+    plantspack: { status: 'partial', note: 'Source code is public on GitHub. No public API yet' },
     happycow: { status: 'no', note: 'No public API' },
-  },
-  {
-    feature: 'Public methodology / audit transparency',
-    plantspack: { status: 'yes', note: 'Methodology page explains how every classification is made' },
-    happycow: { status: 'no', note: 'No public methodology document' },
-  },
-  {
-    feature: 'Active development pace',
-    plantspack: { status: 'yes', note: 'Multiple shipped features per month' },
-    happycow: { status: 'partial', note: 'Mature product, slower update cadence' },
   },
 ]
 
-const StatusIcon = ({ status }: { status: 'yes' | 'partial' | 'no' }) => {
+const StatusIcon = ({ status }: { status: Status }) => {
   if (status === 'yes') return <CheckCircle2 className="h-5 w-5 text-success" />
   if (status === 'partial') return <Minus className="h-5 w-5 text-warning" />
   return <X className="h-5 w-5 text-error" />
@@ -141,14 +154,14 @@ export default function ComparePage() {
     { name: 'vs HappyCow', url: 'https://www.plantspack.com/compare/happycow' },
   ])
 
-  // JSON-LD: ComparisonPage signal for LLMs and Google rich results
   const compareJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     '@id': 'https://www.plantspack.com/compare/happycow',
     name: 'PlantsPack vs HappyCow comparison',
-    description: 'Side-by-side comparison of PlantsPack and HappyCow vegan directories.',
+    description: 'Side-by-side comparison of PlantsPack and HappyCow vegan directories, checked October 2026.',
     url: 'https://www.plantspack.com/compare/happycow',
+    dateModified: '2026-10-20',
     about: [
       { '@type': 'Organization', name: 'PlantsPack', url: 'https://www.plantspack.com' },
       { '@type': 'Organization', name: 'HappyCow', url: 'https://www.happycow.net' },
@@ -165,34 +178,32 @@ export default function ComparePage() {
           PlantsPack vs HappyCow
         </h1>
         <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl mb-3">
-          An honest, feature-by-feature comparison. We&apos;ll tell you where HappyCow wins, where we win, and where we&apos;re still catching up.
+          A feature-by-feature comparison with the numbers as they stand on {LAST_CHECKED}. We say where HappyCow wins, where we win, and where we are still catching up.
         </p>
         <p className="text-on-surface-variant text-sm leading-relaxed max-w-2xl mb-10">
-          Why publish this? Because most vegan-directory comparisons are marketing pages, and you deserve a straight answer to &quot;which should I use?&quot;
+          Why publish this? Because most directory comparisons are marketing pages, and you deserve a straight answer to &quot;which should I use?&quot;. Every PlantsPack figure here is a live count from our database; HappyCow figures are their own published numbers.
         </p>
 
-        {/* TL;DR card */}
         <div className="rounded-2xl bg-primary/5 ghost-border p-5 mb-10">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="h-5 w-5 text-primary" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-on-surface">TL;DR</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-on-surface">The short version</h2>
           </div>
           <ul className="space-y-2 text-on-surface text-sm leading-relaxed">
             <li>
-              <strong>Use HappyCow if:</strong> you want maximum place coverage (especially in smaller cities), a polished mobile app, and 25 years of community reviews. They have far more places than us.
+              <strong>Use HappyCow if</strong> you want the widest coverage, especially in small towns and outside Europe, and you rely on other people&apos;s reviews. They list more than four times as many places as we do and have collected reviews since 1999.
             </li>
             <li>
-              <strong>Use PlantsPack if:</strong> you want free tools (barcode scanner, baking calculator, menu translator, drinks lookup) that HappyCow doesn&apos;t offer, an ad-free experience, strict vegan classification (we separate &quot;fully vegan&quot; from &quot;vegan-friendly&quot; clearly), and editorial answers to &quot;is X vegan?&quot; questions.
+              <strong>Use PlantsPack if</strong> you want a strict &quot;fully vegan&quot; label you can filter on, scanners for barcodes, ingredient labels and menus, recipes only from 100% vegan creators, and a directory with no ads and no paid listings. The apps are free on iOS and Android.
             </li>
             <li>
-              <strong>Use both:</strong> most vegan travellers we know do. They&apos;re complementary, not substitutes. We&apos;d rather be your second tab than fake being your only one.
+              <strong>Use both.</strong> Most vegan travellers we know do. We would rather be your second tab than pretend to be the only one.
             </li>
           </ul>
         </div>
 
-        {/* Feature table */}
         <section className="mb-10">
-          <h2 className="text-2xl font-bold text-on-surface mb-5">Feature-by-feature</h2>
+          <h2 className="text-2xl font-bold text-on-surface mb-5">Feature by feature</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -230,49 +241,47 @@ export default function ComparePage() {
           </div>
         </section>
 
-        {/* Where HappyCow genuinely wins */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-on-surface mb-4">Where HappyCow genuinely wins</h2>
           <p className="text-on-surface leading-relaxed mb-3">
-            Being honest about this matters - both because it&apos;s true and because hiding it would erode the trust we&apos;re trying to build.
+            Saying this plainly matters, because it is true and because hiding it would cost the trust we are trying to earn.
           </p>
           <ul className="space-y-2 text-on-surface text-sm leading-relaxed list-disc pl-5">
-            <li><strong>Raw place coverage.</strong> HappyCow has roughly 4x more places than us. If you&apos;re in a small city or a country with weak coverage, they&apos;ll have more options listed.</li>
-            <li><strong>Community-review depth.</strong> 25 years of user reviews is a real moat. Our review density is improving but it&apos;ll take time.</li>
-            <li><strong>Mobile app.</strong> Their iOS and Android apps are mature, well-maintained, and have millions of installs. We&apos;re web-only.</li>
-            <li><strong>Brand recognition.</strong> &quot;HappyCow&quot; is the default search for vegans worldwide. If you ask a vegan friend &quot;where do you find vegan restaurants abroad?&quot; HappyCow is what they&apos;ll say.</li>
+            <li><strong>Coverage.</strong> More than four times as many places as we list. In a small town, or in much of Asia and Africa, they will have options we do not.</li>
+            <li><strong>Reviews.</strong> A quarter century of community reviews against our hundred and fifty. If you choose restaurants by what other diners wrote, HappyCow is the richer source today.</li>
+            <li><strong>Maturity.</strong> Their apps have had years of polish and an established community behind them. Ours shipped in 2026 and still get fixes every week.</li>
+            <li><strong>Recognition.</strong> Ask a vegan friend where to find food abroad and HappyCow is the answer you will hear.</li>
           </ul>
         </section>
 
-        {/* Where we win */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-on-surface mb-4">Where we win</h2>
           <ul className="space-y-2 text-on-surface text-sm leading-relaxed list-disc pl-5">
-            <li><strong>Free vegan tools.</strong> Barcode scanner (food + cosmetics modes), AI ingredient-label scanner, AI menu translator, baking substitute calculator, drinks vegan lookup, printable cards in 30+ languages. None of these exist on HappyCow.</li>
-            <li><strong>Strict vegan classification.</strong> Our four-tier system (fully vegan / mostly vegan / vegan-friendly / vegan options) separates the &quot;all-vegan restaurant&quot; case from &quot;steakhouse with a vegan burger&quot; clearly. HappyCow&apos;s tags often conflate these.</li>
-            <li><strong>Ad-free, no tracking, ever.</strong> We don&apos;t serve ads, don&apos;t sell data, and don&apos;t use behavioural tracking. Supporter-funded at $3/month optional.</li>
-            <li><strong>Editorial depth.</strong> Long-form articles on &quot;is X vegan?&quot; questions (sugar, wine, beer, e-codes, cheese, gelatin, honey, etc.) with cited sources.</li>
-            <li><strong>Public methodology.</strong> We document how every place is classified in <Link href="/methodology" className="text-primary hover:underline">/methodology</Link>. HappyCow doesn&apos;t publish theirs.</li>
-            <li><strong>Active development.</strong> We ship multiple features per month. HappyCow updates are slower.</li>
+            <li><strong>A strict fully-vegan label you can filter on.</strong> Four tiers separate &quot;everything on the menu is vegan&quot; from &quot;a steakhouse with one vegan burger&quot;, and the map has a one-tap 100% vegan filter. Vegetarian-only venues are not on our map. The rules are written down in <Link href="/methodology" className="text-primary hover:underline">our methodology</Link>.</li>
+            <li><strong>Scanners.</strong> Barcode (food and cosmetics), ingredient labels and restaurant menus in any language, in the apps and on the web. Nothing like them exists on HappyCow.</li>
+            <li><strong>No ads, no paid listings.</strong> Nobody can pay to appear, rank higher or get a better label. Business owners claim their listing for free. Analytics run only after you accept cookies, and we sell no data.</li>
+            <li><strong>Recipes from vegan-only creators.</strong> 700+ recipes, each from a creator whose entire catalogue is vegan, credited and linked back. We dropped sources that turned out to publish non-vegan recipes.</li>
+            <li><strong>Written answers with sources.</strong> 22 ingredient articles (sugar, wine, E-numbers, honey, and so on) and city pages for 96 dishes, all citing where the facts come from.</li>
+            <li><strong>Transparency.</strong> Public methodology, OpenStreetMap attribution on every imported place, source code public on GitHub, and a homepage that shows what changed on the map this week.</li>
           </ul>
         </section>
 
-        {/* Where we're catching up */}
         <section className="mb-10">
-          <h2 className="text-2xl font-bold text-on-surface mb-4">Where we&apos;re catching up</h2>
+          <h2 className="text-2xl font-bold text-on-surface mb-4">Where we are catching up</h2>
           <ul className="space-y-2 text-on-surface text-sm leading-relaxed list-disc pl-5">
-            <li><strong>Mobile app.</strong> Not yet. The site is mobile-optimised but a native app is on our backlog.</li>
-            <li><strong>Place coverage in some regions.</strong> Strong in Europe, US, Mexico (Mexico City, Tulum, Oaxaca), Brazil. Thinner in South Asia, sub-Saharan Africa, parts of Eastern Europe.</li>
-            <li><strong>User reviews.</strong> Our early-stage user base means modest review volume per place. We don&apos;t fake this with bot reviews - we&apos;d rather have 50 real reviews than 5,000 synthetic ones.</li>
+            <li><strong>Reviews.</strong> About 150 so far. We will not import or generate them; the count grows at the pace real people write.</li>
+            <li><strong>Coverage outside Europe.</strong> Strong in Europe, North America, Mexico and Brazil; thin in South Asia, most of Africa and parts of Eastern Europe.</li>
+            <li><strong>Young apps.</strong> Version 1.0.x. They do the job and get updates most weeks, but HappyCow&apos;s have years of refinement.</li>
+            <li><strong>Data checks are ongoing.</strong> Many places come from open map data. A label can be stale until someone reports it; reports are worked through every week and the fixes are visible on the place page.</li>
           </ul>
         </section>
 
         <section className="mt-12 pt-8 border-t border-on-surface/10">
           <p className="text-sm text-on-surface-variant leading-relaxed">
-            See something wrong in this comparison? Email <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a> - we&apos;ll fact-check and update. We&apos;re also happy to link to a comparable page on HappyCow&apos;s side if they ever publish one.
+            HappyCow figures (listings, countries, Partner Hub pricing, app pricing) come from HappyCow&apos;s own website, press releases and app-store listings as of {LAST_CHECKED}; they change, so check their site for today&apos;s numbers. See something wrong here? Email <a href="mailto:hello@plantspack.com" className="text-primary hover:underline">hello@plantspack.com</a> and we will fact-check and update. We would also happily link to a comparable page on HappyCow&apos;s side.
           </p>
           <p className="text-sm text-on-surface-variant leading-relaxed mt-3">
-            Try PlantsPack: <Link href="/" className="text-primary hover:underline">explore places</Link>, <Link href="/tools" className="text-primary hover:underline">free vegan tools</Link>, <Link href="/vegan" className="text-primary hover:underline">vegan answers</Link>.
+            Try PlantsPack: <Link href="/" className="text-primary hover:underline">explore places</Link>, <Link href="/tools" className="text-primary hover:underline">free vegan tools</Link>, <Link href="/vegan" className="text-primary hover:underline">vegan answers</Link>, or <Link href="/get" className="text-primary hover:underline">get the app</Link>.
           </p>
         </section>
       </article>
