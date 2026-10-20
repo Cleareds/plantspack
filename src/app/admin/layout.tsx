@@ -68,6 +68,7 @@ const NAV: NavNode[] = [
     group: 'Moderation & Inbox', icon: Inbox, collapsible: true, defaultOpen: false,
     children: [
       { name: 'Reports', href: '/admin/reports', icon: Flag },
+      { name: 'Held Posts', href: '/admin/held-posts', icon: Inbox },
       // User corrections live under Data Quality → User Corrections (single
       // implementation); the old standalone /admin/corrections redirects there.
       { name: 'Corrections', href: '/admin/data-quality?tab=corrections', icon: PenLine },

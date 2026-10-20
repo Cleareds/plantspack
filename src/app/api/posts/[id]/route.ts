@@ -55,6 +55,7 @@ export async function GET(
           id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
+      .eq('moderation_status', 'published')
 
     // Admin client bypasses RLS, so soft-deleted posts must be excluded here
     query = query.is('deleted_at', null)

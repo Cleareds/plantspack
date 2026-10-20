@@ -96,6 +96,7 @@ export async function getFeedPosts(options: FeedOptions): Promise<FeedPost[]> {
           id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
+      .eq('moderation_status', 'published')
       .eq('privacy', 'public') // Only public posts for main feed
       .neq('category', 'article') // Articles belong on /blog, not in the social feed
       .eq('users.is_banned', false) // Exclude banned users
@@ -198,6 +199,7 @@ async function getRelevancyRankedPosts(userId: string, limit: number, offset: nu
           id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
+      .eq('moderation_status', 'published')
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
@@ -500,6 +502,7 @@ async function getPopularPosts(limit: number, offset: number, category?: string,
     let query = supabase
       .from('posts')
       .select(POPULAR_SELECT)
+      .eq('moderation_status', 'published')
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)
@@ -542,6 +545,7 @@ async function getMostLikedAllTime(limit: number, offset: number, category?: str
     let query = supabase
       .from('posts')
       .select(POPULAR_SELECT)
+      .eq('moderation_status', 'published')
       .eq('privacy', 'public')
       .eq('users.is_banned', false)
       .is('deleted_at', null)

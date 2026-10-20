@@ -15,6 +15,9 @@ cd /Users/antonkravchuk/sidep/Cleareds/plantspack
 
 echo "=== $(date) submission check ==="
 
+# Held posts (new accounts posting links): email the admin when the queue is not empty.
+npx tsx scripts/held-posts-digest.ts 2>&1 | tail -2
+
 COUNT=$(npx tsx scripts/submission-actions.ts count 2>/dev/null | tail -1)
 if ! [[ "$COUNT" =~ ^[0-9]+$ ]]; then
   echo "count failed (got: $COUNT) — aborting"

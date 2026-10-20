@@ -48,6 +48,7 @@ export async function GET(
           id, name, address, category, images, average_rating, is_pet_friendly, website
         )
       `)
+      .eq('moderation_status', 'published')
       .eq('slug', slug)
       .eq('privacy', 'public')
       .is('deleted_at', null)
