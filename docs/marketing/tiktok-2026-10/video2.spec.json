@@ -1,0 +1,127 @@
+{
+ "face": "/Users/antonkravchuk/sidep/2026-10-16 19-16-13.mov",
+ "out": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video2-final.mp4",
+ "outro": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/outro.mp4",
+ "parts": [
+  [
+   0.6,
+   56.6
+  ],
+  [
+   74.8,
+   101.7
+  ],
+  [
+   110.7,
+   116.1
+  ]
+ ],
+ "cuts": [
+  {
+   "from": 6.7,
+   "to": 15.3,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video1-app-clips/video/mp4/06-map-belgium.mp4",
+   "offset": 0.0,
+   "note": "almost 700 places, 100 fully vegan"
+  },
+  {
+   "from": 15.3,
+   "to": 25.1,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video1-app-clips/video/mp4/07-map-vegan-toggle.mp4",
+   "offset": 0.0,
+   "note": "Brussels most, Ghent surprised me"
+  },
+  {
+   "from": 36.0,
+   "to": 44.8,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video1-app-clips/video/mp4/03-place-pepas-scroll.mp4",
+   "offset": 0.0,
+   "note": "fully vegan frituur Pepas"
+  },
+  {
+   "from": 44.8,
+   "to": 56.6,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video2-app-clips/video/mp4/10-place-frituur-franky.mp4",
+   "offset": 0.0,
+   "note": "frituurs with a labelled vegan range"
+  },
+  {
+   "from": 88.4,
+   "to": 96.0,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video2-app-clips/video/mp4/11-map-wallonia-to-liege.mp4",
+   "offset": 0.0,
+   "note": "Wallonia, about 100 places"
+  },
+  {
+   "from": 96.0,
+   "to": 101.7,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-2026-10/video2-app-clips/video/mp4/12-place-ventre-content.mp4",
+   "offset": 0.0,
+   "note": "four fully vegan, fix the most"
+  }
+ ],
+ "stills": [
+  {
+   "from": 25.1,
+   "to": 36.0,
+   "file": "/Users/antonkravchuk/sidep/Cleareds/plantspack/docs/marketing/tiktok-templates/country-slides/belgium/slides/story/03-be-story.png",
+   "note": "22 of them, veggie day, Antwerp and Leuven"
+  }
+ ],
+ "captions": [
+  {
+   "from": 0.8,
+   "to": 5.8,
+   "text": "Belgium: country #1",
+   "pos": "low"
+  },
+  {
+   "from": 6.8,
+   "to": 14.6,
+   "text": "688 places. 106 fully vegan.",
+   "pos": "top"
+  },
+  {
+   "from": 17.0,
+   "to": 24.4,
+   "text": "Ghent: 22 fully vegan",
+   "pos": "top"
+  },
+  {
+   "from": 26.5,
+   "to": 31.7,
+   "text": "Veggie Thursday since 2009",
+   "pos": "low"
+  },
+  {
+   "from": 37.3,
+   "to": 44.1,
+   "text": "Pepas, Leuven: fully vegan frituur",
+   "pos": "top"
+  },
+  {
+   "from": 49.0,
+   "to": 52.6,
+   "text": "Added this week:\nOstend + Wetteren",
+   "pos": "top"
+  },
+  {
+   "from": 74.9,
+   "to": 86.4,
+   "text": "Some data comes from open maps.\nWe fix what you report.",
+   "pos": "low"
+  },
+  {
+   "from": 88.5,
+   "to": 95.0,
+   "text": "Wallonia: ~100 places",
+   "pos": "top"
+  },
+  {
+   "from": 110.7,
+   "to": 116.0,
+   "text": "Which country next?\nMost liked comment wins.",
+   "pos": "low"
+  }
+ ]
+}
