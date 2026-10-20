@@ -22,7 +22,8 @@ node docs/marketing/tiktok-templates/country-slides/build-data.mjs "Belgium" BE 
 node docs/marketing/tiktok-templates/country-slides/render.cjs belgium   # both formats
 #    -> <country>/slides/story/01-xx-story.png (1080x1920, TikTok/Reels/Shorts)
 #    -> <country>/slides/feed/01-xx-feed.png   (1080x1350, Instagram/LinkedIn carousel)
-#    --format story|feed and --slides 1,3 narrow it down
+#    -> <country>/slides/pin/07-xx-pin.png     (1000x1500, Pinterest pin -> set pin_url in data.json)
+#    --format story|feed|pin and --slides 1,3 narrow it down
 ```
 
 ## Number rules baked into build-data.mjs

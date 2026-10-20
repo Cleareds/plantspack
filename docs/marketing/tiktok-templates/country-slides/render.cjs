@@ -7,7 +7,8 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
-const FORMATS = { story: { width: 1080, height: 1920 }, feed: { width: 1080, height: 1350 } };
+const FORMATS = { story: { width: 1080, height: 1920 }, feed: { width: 1080, height: 1350 }, pin: { width: 1000, height: 1500 } };
+const DEFAULT_SLIDES = { story: '1,2,3,4,5,6', feed: '1,2,3,4,5,6', pin: '7' };
 
 (async () => {
   const args = process.argv.slice(2);
@@ -15,7 +16,7 @@ const FORMATS = { story: { width: 1080, height: 1920 }, feed: { width: 1080, hei
   if (!countryDir) { console.error('usage: render.cjs <country-dir> [--format story|feed|all] [--slides 1,2]'); process.exit(1); }
   const opt = (f, d) => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : d; };
   const formats = opt('--format', 'all') === 'all' ? Object.keys(FORMATS) : [opt('--format', 'all')];
-  const wanted = opt('--slides', '1,2,3,4,5,6').split(',').map(Number);
+  const slidesArg = opt('--slides', null);
   const base = path.resolve(__dirname);
   const dir = path.join(base, countryDir);
   const data = JSON.parse(fs.readFileSync(path.join(dir, 'data.json'), 'utf8'));
@@ -24,6 +25,7 @@ const FORMATS = { story: { width: 1080, height: 1920 }, feed: { width: 1080, hei
   for (const format of formats) {
     const size = FORMATS[format];
     if (!size) { console.error('unknown format', format); continue; }
+    const wanted = (slidesArg || DEFAULT_SLIDES[format]).split(',').map(Number);
     const out = path.join(dir, 'slides', format); fs.mkdirSync(out, { recursive: true });
     const ctx = await browser.newContext({ viewport: size, deviceScaleFactor: 1 });
     const page = await ctx.newPage();

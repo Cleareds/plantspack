@@ -89,6 +89,21 @@
   body[data-format="feed"] .card .c { padding: 10px 16px 12px; }
   body[data-format="feed"] .foot { font-size: 22px; }
   body[data-format="feed"] .stats { margin-top: 26px; }
+  /* Pinterest pin (2:3, 1000x1500): one self-contained image that links to the country hub. */
+  body[data-format="pin"] { width: 1000px; height: 1500px; }
+  body[data-format="pin"] .slide { width: 1000px; height: 1500px; padding: 84px 70px 120px 70px; }
+  body[data-format="pin"] .brand { left: 70px; right: 70px; bottom: 48px; }
+  .pin-num { font-family: "Plus Jakarta Sans", sans-serif; font-size: 150px; font-weight: 800; line-height: .9; letter-spacing: -0.04em; color: var(--primary); }
+  .pin-sub { font-size: 36px; font-weight: 600; color: var(--on-surface); margin-top: 10px; line-height: 1.25; }
+  .pin-rows { margin-top: 40px; display: flex; flex-direction: column; gap: 18px; }
+  .pin-rows .t { display: flex; justify-content: space-between; font-size: 33px; font-weight: 700; }
+  .pin-rows .t small { font-weight: 600; color: var(--on-var); font-size: 26px; }
+  .pin-rows .b { height: 30px; border-radius: 10px; background: var(--container); margin-top: 8px; overflow: hidden; }
+  .pin-rows .b div { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-2)); border-radius: 10px; }
+  .pin-map { margin: 28px auto 0; display: block; }
+  .pin-map path { fill: var(--leaf); stroke: #fff; stroke-width: 2; }
+  .pin-cta { margin-top: auto; background: var(--primary); color: #fff; border-radius: 24px; padding: 28px 32px; font-size: 34px; font-weight: 700; line-height: 1.25; }
+  .pin-cta span { display: block; font-size: 27px; font-weight: 600; opacity: .9; margin-top: 6px; }
 </style>
 <body>
 <!-- 1 cover -->
@@ -144,6 +159,15 @@
   </div>
   <div class="link" id="c6-link"></div>
   <p class="foot">Free on web, iOS and Android. Vegan-focused: if a place has nothing vegan, it is not on the map.</p>
+</section>
+<!-- 7 pin -->
+<section class="slide" id="s7">
+  <p class="kicker">Vegan <span id="c7-country"></span></p>
+  <div class="pin-num" id="c7-num"></div>
+  <p class="pin-sub" id="c7-sub"></p>
+  <div class="pin-rows" id="c7-rows"></div>
+  <svg class="pin-map" id="c7-map" viewBox="0 0 520 420" width="520" height="420"></svg>
+  <div class="pin-cta" id="c7-cta"></div>
 </section>
 <div class="brand"><img src="../../../../public/plantspack.svg" alt="PlantsPack"><span id="brand-handle"></span></div>
 
@@ -212,6 +236,16 @@ window.renderSlide = function (d, n) {
   }
   if (n === 6) {
     document.getElementById('c6-link').textContent = d.link;
+  }
+  if (n === 7) {
+    document.getElementById('c7-country').textContent = d.country;
+    document.getElementById('c7-num').textContent = fmt(d.totals.places);
+    document.getElementById('c7-sub').textContent = `vegan and vegan-friendly places on one honest map. ${fmt(d.levels[FV])} are ${fvLabel}.`;
+    const top = d.topCities.filter(c => c[FV] > 0).slice(0, 4); const max = Math.max(...top.map(c => c[FV]));
+    document.getElementById('c7-rows').innerHTML = `<p class="pin-sub" style="margin:0 0 4px;font-size:28px;color:var(--on-var)">Fully vegan places by city</p>` + top.map(c => `<div><div class="t"><span>${esc(c.city)}</span><span>${c[FV]} <small>of ${c.places}</small></span></div><div class="b"><div style="width:${(c[FV] / max * 100).toFixed(1)}%"></div></div></div>`).join('');
+    const pm = project(regions, 520, 420, 10);
+    document.getElementById('c7-map').innerHTML = regions.map(r => `<path d="${pm.path(r)}"/>`).join('');
+    document.getElementById('c7-cta').innerHTML = `Open the map<span>${esc(d.pin_url || d.link)}</span>`;
   }
   return document.fonts.ready;
 };
