@@ -117,8 +117,8 @@ function NoPlacesYet() {
         <Link href="/business" className="inline-flex px-4 py-2 rounded-xl bg-primary text-on-primary-btn font-medium text-sm">
           Find your place
         </Link>
-        <Link href="/contact" className="inline-flex px-4 py-2 rounded-xl ghost-border text-on-surface text-sm font-medium">
-          Your place is missing? Tell us
+        <Link href="/map?add=true" className="inline-flex px-4 py-2 rounded-xl ghost-border text-on-surface text-sm font-medium">
+          Your place is missing? Add it
         </Link>
       </div>
     </section>

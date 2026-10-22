@@ -72,7 +72,7 @@ export default function BusinessPage() {
             </li>
           </ol>
           <p className="text-sm text-on-surface-variant mt-5">
-            Your place is not on PlantsPack yet? <Link href="/contact" className="text-primary font-medium hover:underline">Tell us</Link> and we add it.
+            Your place is not on PlantsPack yet? <Link href="/auth?mode=signin&redirect=%2Fmap%3Fadd%3Dtrue" className="text-primary font-medium hover:underline">Sign in and add it</Link>, then claim it from its page.
             Already approved? <Link href="/business/dashboard" className="text-primary font-medium hover:underline">Open your dashboard</Link>.
           </p>
         </section>
