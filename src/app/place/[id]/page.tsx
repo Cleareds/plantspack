@@ -50,6 +50,7 @@ const getCachedCityDishChips = unstable_cache(
 )
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import OwnerManageLink from '@/components/business/OwnerManageLink'
+import PlaceMenuSection, { type PublishedMenu } from '@/components/business/PlaceMenuSection'
 import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
@@ -172,6 +173,31 @@ const getPlace = cache(async (id: string): Promise<PlaceData | null> => {
     return null
   }
 })
+
+// Owner-published menu. Any failure renders the page without a menu, never an
+// error: this section must not be able to take a place page down.
+async function getPublishedMenu(placeId: string): Promise<PublishedMenu | null> {
+  try {
+    const sb = createAdminClient() as any
+    const { data: menu, error } = await sb
+      .from('place_menus')
+      .select('status, checked_at')
+      .eq('place_id', placeId)
+      .eq('status', 'published')
+      .maybeSingle()
+    if (error || !menu) return null
+    const { data: items, error: itemsError } = await sb
+      .from('place_menu_items')
+      .select('section, name, description, price, currency, is_vegan')
+      .eq('place_id', placeId)
+      .order('position')
+      .limit(300)
+    if (itemsError || !items?.length) return null
+    return { checked_at: menu.checked_at, items }
+  } catch {
+    return null
+  }
+}
 
 const REVIEWS_PER_PAGE = 20
 
@@ -414,7 +440,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   // Fetch the first page of reviews server-side so it appears on first paint
   // (good for SEO, layout stability, and #reviews anchor scrolling).
-  const { reviews: initialReviews, hasMore: reviewsHasMore } = await getInitialReviews(place.id)
+  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu] = await Promise.all([
+    getInitialReviews(place.id),
+    getPublishedMenu(place.id),
+  ])
 
   // "More places in {city}" — SSR internal links from each place page to
   // 6 siblings in the same city. Densifies the internal-link graph so
@@ -973,6 +1002,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               )}
             </div>
           </div>
+
+          {publishedMenu && (
+            <PlaceMenuSection menu={publishedMenu} fullyVegan={(place as any).vegan_level === 'fully_vegan'} />
+          )}
 
           {/* Map */}
           <div className="p-6 border-b border-outline-variant/15">

@@ -302,3 +302,107 @@ export async function scanText(
     costUsd: estimateCostUsd(SCAN_MODEL, inTok, outTok),
   }
 }
+
+// ---------------------------------------------------------------------------
+// Owner menu import (business tools, 2026-10-22). Not a vegan verdict for a
+// visitor: it turns the owner's own menu into editable rows. The owner checks
+// every row before anything is published, and "vegan" only pre-fills a toggle.
+
+export interface OwnerMenuItem {
+  section: string | null
+  name: string
+  description: string | null
+  price: number | null
+  currency: string | null
+  vegan: 'yes' | 'no' | 'unsure'
+}
+
+const OWNER_MENU_PROMPT = `You turn a restaurant's own menu into structured rows so the owner can publish it.
+
+Respond ONLY with JSON matching this schema:
+{
+  "readable": true | false,
+  "items": [
+    { "section": "menu section heading as written, or null", "name": "dish name as written", "description": "short description as written, or null", "price": number or null, "currency": "ISO 4217 code like EUR, or null", "vegan": "yes" | "no" | "unsure" }
+  ]
+}
+
+Rules:
+- List EVERY dish and drink you can read, in menu order. Keep names, sections and descriptions in the menu's original language; do not translate or invent.
+- "price": the number only (12.50, not "12,50 €"). If a dish has several prices (sizes), use the first. null if no price is shown.
+- "vegan": "yes" only if the menu marks it vegan or it clearly has no animal products; "no" if it clearly contains meat, fish, dairy, egg or honey; otherwise "unsure".
+- "readable": false if this is not a menu or you cannot read it; then return an empty items array.
+- Never add dishes that are not on the menu.`
+
+const MAX_OWNER_MENU_ITEMS = 250
+
+function cleanOwnerMenu(raw: unknown): { readable: boolean; items: OwnerMenuItem[] } {
+  const obj = (raw && typeof raw === 'object' ? raw : {}) as { readable?: unknown; items?: unknown }
+  const list = Array.isArray(obj.items) ? obj.items : []
+  const str = (v: unknown, max: number) => {
+    if (typeof v !== 'string') return null
+    const t = v.trim()
+    return t ? t.slice(0, max) : null
+  }
+  const items: OwnerMenuItem[] = []
+  for (const it of list.slice(0, MAX_OWNER_MENU_ITEMS)) {
+    const r = (it && typeof it === 'object' ? it : {}) as Record<string, unknown>
+    const name = str(r.name, 160)
+    if (!name) continue
+    const priceNum = typeof r.price === 'number' ? r.price : typeof r.price === 'string' ? parseFloat(r.price.replace(',', '.')) : NaN
+    const vegan = r.vegan === 'yes' || r.vegan === 'no' ? r.vegan : 'unsure'
+    items.push({
+      section: str(r.section, 80),
+      name,
+      description: str(r.description, 400),
+      price: Number.isFinite(priceNum) && priceNum >= 0 ? Math.round(priceNum * 100) / 100 : null,
+      currency: str(r.currency, 8)?.toUpperCase() ?? null,
+      vegan,
+    })
+  }
+  return { readable: obj.readable !== false && items.length > 0, items }
+}
+
+export async function scanOwnerMenu(
+  input: { dataUrls: string[] } | { text: string },
+): Promise<{ readable: boolean; items: OwnerMenuItem[]; costUsd: number }> {
+  const isText = 'text' in input
+  const resp = await openai<ChatResp>({
+    model: SCAN_MODEL,
+    // Owner menus carry prices and descriptions, so they need more room than
+    // the visitor scanner's verdict list.
+    ...completionParams(SCAN_MODEL, 8000),
+    response_format: { type: 'json_object' },
+    messages: isText
+      ? [
+          { role: 'system', content: OWNER_MENU_PROMPT },
+          { role: 'user', content: input.text.slice(0, 12000) },
+        ]
+      : [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                text: input.dataUrls.length === 1
+                  ? OWNER_MENU_PROMPT
+                  : `${OWNER_MENU_PROMPT}\n\nThese ${input.dataUrls.length} images are pages of the same menu. Return one combined list in page order.`,
+              },
+              ...input.dataUrls.map((url) => ({
+                type: 'image_url' as const,
+                image_url: { url, detail: 'high' as const },
+              })),
+            ],
+          },
+        ],
+  })
+  let parsed: unknown = {}
+  try {
+    parsed = JSON.parse(resp.choices?.[0]?.message?.content ?? '{}')
+  } catch {
+    parsed = {}
+  }
+  const inTok = resp.usage?.prompt_tokens ?? (isText ? 3000 : 3000 * (input as { dataUrls: string[] }).dataUrls.length)
+  const outTok = resp.usage?.completion_tokens ?? 4000
+  return { ...cleanOwnerMenu(parsed), costUsd: estimateCostUsd(SCAN_MODEL, inTok, outTok) }
+}

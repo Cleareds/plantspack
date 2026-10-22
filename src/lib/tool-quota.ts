@@ -366,3 +366,56 @@ export const LIMITS = {
   GUEST_IP_DAILY_LIMIT,
   REJECT_IP_DAILY_LIMIT,
 } as const
+
+// ---------------------------------------------------------------------------
+// Owner menu imports (business tools, 2026-10-22). Counted per place, not per
+// person, and kept apart from the visitor scanners: tool='owner_menu' never
+// touches anyone's 3-per-month menu scans. Cost lands in tool_scans, so the
+// global daily kill switch above covers it too.
+
+export const OWNER_MENU_IMPORTS_PER_MONTH = 2
+
+export async function checkOwnerMenuQuota(placeId: string, opts: { isAdmin: boolean }): Promise<{ allowed: boolean; remaining: number; reason?: string }> {
+  const sb = adminClient()
+  const dayStart = new Date()
+  dayStart.setUTCHours(0, 0, 0, 0)
+  const spentToday = await sumCostSince(sb, dayStart.toISOString(), { stopAtUsd: GLOBAL_DAILY_BUDGET_USD })
+  if (spentToday >= GLOBAL_DAILY_BUDGET_USD) {
+    return { allowed: false, remaining: 0, reason: 'Menu reading is paused for today. Please try again tomorrow, or add the dishes by hand.' }
+  }
+  const monthStart = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1))
+  const { data: rows } = await sb
+    .from('tool_scans')
+    .select('rejected')
+    .eq('tool', 'owner_menu')
+    .eq('place_id', placeId)
+    .gte('created_at', monthStart.toISOString())
+    .limit(100)
+  // An unreadable upload does not use up an import, but it still costs a
+  // call, so attempts are capped too.
+  const used = (rows || []).filter((r) => !r.rejected).length
+  const attempts = (rows || []).length
+  const remaining = Math.max(0, OWNER_MENU_IMPORTS_PER_MONTH - used)
+  if (!opts.isAdmin && attempts >= OWNER_MENU_IMPORTS_PER_MONTH + 3) {
+    return { allowed: false, remaining, reason: 'Too many menu uploads this month for this place. You can still add dishes by hand.' }
+  }
+  if (!opts.isAdmin && remaining === 0) {
+    return { allowed: false, remaining: 0, reason: `You have used this month's ${OWNER_MENU_IMPORTS_PER_MONTH} menu imports for this place. You can still edit and add dishes by hand.` }
+  }
+  return { allowed: true, remaining }
+}
+
+export async function logOwnerMenuImport(args: { userId: string; placeId: string; costUsd: number; itemCount: number; rejected: boolean }) {
+  const sb = adminClient()
+  await sb.from('tool_scans').insert({
+    user_id: args.userId,
+    tool: 'owner_menu',
+    place_id: args.placeId,
+    cost_usd: args.costUsd,
+    verdict: null,
+    result: { items: args.itemCount },
+    rejected: args.rejected,
+    reject_reason: args.rejected ? 'unreadable' : null,
+    allergens: [],
+  })
+}
