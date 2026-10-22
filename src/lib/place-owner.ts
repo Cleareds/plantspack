@@ -24,7 +24,7 @@ export async function isAdmin(sb: SupabaseClient, userId: string): Promise<boole
   return data?.role === 'admin'
 }
 
-/** Does this user have a verified place_owners row for this place? */
+/** Does this user have an active (not removed) place_owners row for this place? */
 export async function isPlaceOwner(
   sb: SupabaseClient,
   userId: string,
@@ -35,6 +35,7 @@ export async function isPlaceOwner(
     .select('id')
     .eq('place_id', placeId)
     .eq('user_id', userId)
+    .is('removed_at', null)
     .maybeSingle()
   return !!data
 }

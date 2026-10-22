@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, Save, Star, Loader2 } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import { geocodingService } from '@/lib/geocoding'
+import { useAuth } from '@/lib/auth'
 
 // Canonical subcategories per top-level category. Mirrors the list in
 // AddPlaceModal so values stay consistent.
@@ -140,6 +141,9 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
   const [showImageUploader, setShowImageUploader] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
+  const { profile } = useAuth()
+  const isAdminEditor = profile?.role === 'admin'
 
   // Debounced address search
   useEffect(() => {
@@ -237,12 +241,17 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
         })
       })
 
+      const data = await response.json().catch(() => ({}))
       if (!response.ok) {
-        const data = await response.json()
         throw new Error(data.error || 'Failed to update place')
       }
 
       onSaved()
+      if (data.vegan_level_pending) {
+        // Keep the dialog open so the owner sees why the label did not change.
+        setNotice('Your changes are saved. The vegan level change was sent to our team for review; the page keeps the current level until we approve it.')
+        return
+      }
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update place')
@@ -269,6 +278,12 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
             {error && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
+            {notice && (
+              <div className="p-3 bg-primary/10 border border-primary/30 rounded-lg flex items-start justify-between gap-3">
+                <p className="text-sm text-on-surface">{notice}</p>
+                <button type="button" onClick={onClose} className="text-sm font-medium text-primary whitespace-nowrap">Close</button>
               </div>
             )}
 
@@ -360,6 +375,11 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                 <option value="vegan_friendly">Vegan-Friendly - genuine vegan options, also serves non-vegan</option>
                 <option value="vegan_options">Has Vegan Options - mainstream place with some vegan choices</option>
               </select>
+              {!isAdminEditor && (
+                <p className="text-xs text-on-surface-variant mt-1">
+                  A change to the vegan level is checked by our team before it goes live.
+                </p>
+              )}
             </div>
 
             {/* Business status */}

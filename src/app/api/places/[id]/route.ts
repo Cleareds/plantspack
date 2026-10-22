@@ -112,7 +112,7 @@ export async function PUT(
     // Fetch existing place to check ownership
     const { data: existingPlace, error: fetchError } = await supabase
       .from('places')
-      .select('id, created_by, images, address, tags')
+      .select('id, created_by, images, address, tags, vegan_level')
       .eq('id', id)
       .single()
 
@@ -180,6 +180,24 @@ export async function PUT(
       }
     }
     if (updateData.reopen_date === '') updateData.reopen_date = null
+
+    // The vegan level is our public claim, not the editor's. Only an admin
+    // changes it directly; an owner's or creator's change becomes a pending
+    // correction in /admin/data-quality ("User Corrections"), and the rest of
+    // the edit saves as usual.
+    const VEGAN_LEVELS = ['fully_vegan', 'mostly_vegan', 'vegan_friendly', 'vegan_options']
+    let pendingVeganLevel: string | null = null
+    if (updateData.vegan_level !== undefined) {
+      if (!VEGAN_LEVELS.includes(updateData.vegan_level)) {
+        return NextResponse.json({ error: 'Invalid vegan_level' }, { status: 400 })
+      }
+      if (!isAdmin) {
+        if (updateData.vegan_level !== (existingPlace as any).vegan_level) {
+          pendingVeganLevel = updateData.vegan_level
+        }
+        delete updateData.vegan_level
+      }
+    }
 
     // Admin promotion to fully_vegan: also flip verification_method to
     // admin_review and bump the verification ladder to level 3. Without
@@ -256,6 +274,40 @@ export async function PUT(
       return NextResponse.json({ error: `Failed to update place: ${updateError.message}` }, { status: 500 })
     }
 
+    if (pendingVeganLevel) {
+      try {
+        const admin = createAdminClient() as any
+        const note = isOwner ? 'Vegan level change requested by the verified owner' : 'Vegan level change requested by the person who added this place'
+        // One open request per person and place: a second change replaces it.
+        const { data: openReq } = await admin
+          .from('place_corrections')
+          .select('id')
+          .eq('place_id', id)
+          .eq('user_id', session.user.id)
+          .eq('status', 'pending')
+          .not('corrections->>vegan_level', 'is', null)
+          .maybeSingle()
+        const { error: corrError } = openReq
+          ? await admin.from('place_corrections')
+              .update({ corrections: { vegan_level: pendingVeganLevel }, note })
+              .eq('id', openReq.id)
+          : await admin.from('place_corrections').insert({
+              place_id: id,
+              user_id: session.user.id,
+              status: 'pending',
+              corrections: { vegan_level: pendingVeganLevel },
+              note,
+            })
+        if (corrError) {
+          console.error('[Place API] vegan_level review request failed:', corrError)
+          pendingVeganLevel = null
+        }
+      } catch (corrErr) {
+        console.error('[Place API] vegan_level review request failed:', corrErr)
+        pendingVeganLevel = null
+      }
+    }
+
     // Sync images to linked posts (posts with place_id pointing to this place)
     // Use admin client to bypass RLS on posts table
     if (updateData.images) {
@@ -287,7 +339,7 @@ export async function PUT(
       console.error('[Place API] revalidatePath failed:', revalidateErr)
     }
 
-    return NextResponse.json({ place: updatedPlace })
+    return NextResponse.json({ place: updatedPlace, vegan_level_pending: !!pendingVeganLevel })
   } catch (error) {
     console.error('[Place API] Error:', error)
     const detail = error instanceof Error ? error.message : 'unknown'

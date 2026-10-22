@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { sendClaimRequestEmail } from '@/lib/email'
 import type { ClaimFormData } from '@/types/place-claims'
 
@@ -236,29 +237,43 @@ export async function POST(
           { status: 400 }
         )
       }
-      // If rejected, allow resubmission by deleting old claim
-      await supabase
-        .from('place_claim_requests')
-        .delete()
-        .eq('id', existingClaim.id)
     }
 
-    // Create claim request
-    const { data: claim, error: createError } = await supabase
-      .from('place_claim_requests')
-      .insert({
-        place_id: placeId,
-        user_id: userId,
-        first_name: first_name.trim(),
-        last_name: last_name.trim(),
-        email: email.trim(),
-        phone: phone?.trim() || null,
-        business_role: business_role,
-        website_url: website_url?.trim() || null,
-        proof_description: proof_description.trim()
-      })
-      .select()
-      .single()
+    const claimFields = {
+      first_name: first_name.trim(),
+      last_name: last_name.trim(),
+      email: email.trim(),
+      phone: phone?.trim() || null,
+      business_role: business_role,
+      website_url: website_url?.trim() || null,
+      proof_description: proof_description.trim(),
+    }
+
+    // A rejected claim is reopened in place: UNIQUE(place_id, user_id) and the
+    // missing DELETE policy made the old delete-then-insert path fail with a
+    // 500. The service role is used only for this one row, which the check
+    // above has tied to this user and this place.
+    const { data: claim, error: createError } = existingClaim
+      ? await (createAdminClient() as any)
+          .from('place_claim_requests')
+          .update({
+            ...claimFields,
+            status: 'pending',
+            reviewed_by: null,
+            reviewed_at: null,
+            rejection_reason: null,
+            created_at: new Date().toISOString(),
+          })
+          .eq('id', existingClaim.id)
+          .eq('user_id', userId)
+          .eq('status', 'rejected')
+          .select()
+          .single()
+      : await supabase
+          .from('place_claim_requests')
+          .insert({ place_id: placeId, user_id: userId, ...claimFields })
+          .select()
+          .single()
 
     if (createError) {
       console.error('[Claim API] Error creating claim:', createError)

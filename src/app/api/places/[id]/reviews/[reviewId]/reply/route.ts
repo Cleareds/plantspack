@@ -94,7 +94,7 @@ export async function POST(
     // explicit about edit_count bumps and to not over-trust ON CONFLICT.
     const { data: existing } = await admin
       .from('place_review_replies')
-      .select('id, edit_count')
+      .select('id, edit_count, deleted_at')
       .eq('review_id', reviewId)
       .eq('author_role', authority.role)
       .maybeSingle()
@@ -108,7 +108,11 @@ export async function POST(
         .select('user_id')
         .eq('id', existing.id)
         .single()
-      if (ownedCheck?.user_id !== session.user.id) {
+      // A soft-deleted reply no longer belongs to anyone: the current owner
+      // (or admin) may take the slot over. UNIQUE(review_id, author_role)
+      // means the row is reused rather than re-inserted.
+      const wasDeleted = !!existing.deleted_at
+      if (!wasDeleted && ownedCheck?.user_id !== session.user.id) {
         return NextResponse.json(
           { error: 'Another ' + authority.role + ' has already replied to this review' },
           { status: 409 },
@@ -116,11 +120,23 @@ export async function POST(
       }
       const { data, error } = await admin
         .from('place_review_replies')
-        .update({
-          content: rawContent,
-          edited_at: new Date().toISOString(),
-          edit_count: (existing.edit_count ?? 0) + 1,
-        })
+        .update(
+          wasDeleted
+            ? {
+                // Re-post after a delete: a fresh reply, visible again.
+                content: rawContent,
+                user_id: session.user.id,
+                deleted_at: null,
+                edited_at: null,
+                edit_count: 0,
+                created_at: new Date().toISOString(),
+              }
+            : {
+                content: rawContent,
+                edited_at: new Date().toISOString(),
+                edit_count: (existing.edit_count ?? 0) + 1,
+              },
+        )
         .eq('id', existing.id)
         .select(`
           id, review_id, user_id, author_role, content,

@@ -90,6 +90,17 @@ export async function PUT(request: NextRequest) {
       // Apply remaining field corrections
       Object.assign(updateData, corrections)
 
+      // An admin approving a fully_vegan request here IS the human review,
+      // so record it the same way the admin branch of PUT /api/places/[id]
+      // does. Without it the places_fully_vegan_human_only trigger rejects
+      // the update on rows imported as ai_verified.
+      if (corrections.vegan_level === 'fully_vegan') {
+        updateData.verification_method = 'admin_review'
+        updateData.verification_level = 3
+        updateData.verification_status = 'admin_verified'
+        updateData.last_verified_at = new Date().toISOString()
+      }
+
       const { error: updateError } = await admin
         .from('places')
         .update(updateData)
@@ -101,6 +112,7 @@ export async function PUT(request: NextRequest) {
       try {
         const place = correction.places as any
         revalidatePath(`/place/${place?.slug || correction.place_id}`)
+        if (place?.slug) revalidatePath(`/place/${correction.place_id}`)
         if (place?.city && place?.country) {
           revalidatePath(`/vegan-places/${toSlug(place.country)}/${toSlug(place.city)}`)
         }
