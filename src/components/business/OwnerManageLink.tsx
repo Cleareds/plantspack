@@ -37,7 +37,7 @@ export default function OwnerManageLink({ ownerUserId, placeId }: { ownerUserId:
         <span>·</span>
         <Link href={`/business/places/${placeId}/print`} className="underline">Print</Link>
         <span>·</span>
-        <Link href="/business/dashboard" className="underline">Dashboard</Link>
+        <Link href={`/business/places/${placeId}`} className="underline">Dashboard</Link>
       </span>
     )
   }

@@ -200,7 +200,7 @@ export default async function BlogArticle({ params }: { params: Promise<{ slug: 
       '@type': 'Organization',
       name: 'PlantsPack',
       url: 'https://www.plantspack.com',
-      logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/plantspack-logo-real.svg' },
+      logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/brand/plantspack-wordmark-green.png' },
     },
   }
 

@@ -125,7 +125,7 @@ function NoPlacesYet() {
   )
 }
 
-function OwnedPlaceCard({ place, onChanged }: { place: OwnedPlace; onChanged: () => void }) {
+export function OwnedPlaceCard({ place, onChanged }: { place: OwnedPlace; onChanged: () => void }) {
   const [reviews, setReviews] = useState<{ total: number; unanswered: number } | null>(null)
   const [editable, setEditable] = useState<any | null>(null)
   const [opening, setOpening] = useState(false)
@@ -273,7 +273,7 @@ function AdminHint() {
   return (
     <p className="mb-4 p-3 rounded-xl bg-primary/10 text-sm text-on-surface">
       Admin: {BUSINESS_TOOLS_PUBLIC ? 'the tools are live for owners.' : 'the tools are in admin preview; owners and visitors do not see them.'}{' '}
-      You own no place, so open any place page and use the &quot;Owner tools&quot; links there to test the menu and print tools.
+      You own no place, so open any place page and press &quot;Dashboard&quot; in its &quot;Owner tools&quot; links: you see that place exactly as its owner would.
     </p>
   )
 }

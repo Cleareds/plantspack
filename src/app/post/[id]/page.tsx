@@ -148,7 +148,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
     publisher: {
       '@type': 'Organization',
       name: 'PlantsPack',
-      logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/plantspack-logo-real.svg' },
+      logo: { '@type': 'ImageObject', url: 'https://www.plantspack.com/brand/plantspack-wordmark-green.png' },
     },
   }
   const breadcrumbJsonLd = buildBreadcrumbs([

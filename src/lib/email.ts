@@ -60,7 +60,7 @@ export async function sendEmail({ to, subject, html, text, headers }: SendEmailO
 // Shared email header with logo
 const EMAIL_HEADER = `
       <div style="text-align: center; padding: 32px 20px; border-bottom: 1px solid #e5e7eb;">
-        <img src="https://www.plantspack.com/plantspack-logo-real.svg" alt="PlantsPack" height="48" style="height: 48px; width: auto;" />
+        <img src="https://www.plantspack.com/brand/plantspack-wordmark-green.png" alt="PlantsPack" width="220" height="24" style="width: 220px; height: auto; display: inline-block;" />
       </div>`
 
 export interface SubmissionDigestItem {

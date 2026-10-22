@@ -115,7 +115,7 @@ function renderEmail(name: string, monthLabel: string, places: PlaceReport[], un
   <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.5; color: #333; background: #f5f5f5; margin: 0; padding: 0;">
     <div style="max-width: 600px; margin: 32px auto; background: #ffffff; border-radius: 8px; overflow: hidden;">
       <div style="text-align: center; padding: 28px 20px; border-bottom: 1px solid #e5e7eb;">
-        <img src="${SITE}/plantspack-logo-real.svg" alt="PlantsPack" height="40" style="height: 40px; width: auto;" />
+        <img src="${SITE}/brand/plantspack-wordmark-green.png" alt="PlantsPack" width="220" height="24" style="width: 220px; height: auto; display: inline-block;" />
       </div>
       <div style="padding: 28px 30px;">
         <p>Hi ${esc(name)},</p>

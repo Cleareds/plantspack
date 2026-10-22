@@ -128,7 +128,7 @@ function renderEmail(recipient: Recipient) {
     <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background: #f5f5f5;">
       <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <div style="text-align: center; padding: 32px 20px; border-bottom: 1px solid #e5e7eb;">
-          <img src="https://plantspack.com/plantspack-logo-real.svg" alt="Plants Pack" height="48" style="height: 48px; width: auto;" />
+          <img src="https://www.plantspack.com/brand/plantspack-wordmark-green.png" alt="PlantsPack" width="220" height="24" style="width: 220px; height: auto; display: inline-block;" />
         </div>
         <div style="padding: 40px 30px;">
           <p>Hi <strong>${name}</strong>,</p>

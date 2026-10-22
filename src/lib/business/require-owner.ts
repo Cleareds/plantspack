@@ -11,6 +11,8 @@ export interface OwnerPlace {
   city: string | null
   country: string | null
   vegan_level: string | null
+  category?: string
+  main_image_url?: string | null
 }
 
 export type OwnerGate =
@@ -31,7 +33,7 @@ export async function requirePlaceOwner(placeId: string): Promise<OwnerGate> {
   const admin = createAdminClient() as any
   const { data: place } = await admin
     .from('places')
-    .select('id, slug, name, city, country, vegan_level')
+    .select('id, slug, name, city, country, vegan_level, category, main_image_url')
     .eq('id', placeId)
     .maybeSingle()
   if (!place) {

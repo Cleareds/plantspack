@@ -198,7 +198,7 @@ export default function RootLayout({
                   name: 'PlantsPack',
                   alternateName: 'Plants Pack',
                   url: 'https://www.plantspack.com',
-                  logo: 'https://www.plantspack.com/plantspack-logo-real.svg',
+                  logo: 'https://www.plantspack.com/brand/plantspack-wordmark-green.png',
                   description:
                     'Independent, ad-free vegan discovery platform with free barcode scanner, baking calculator, menu translator, drinks lookup, plus 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. No paid placements.',
                   slogan: 'Trusted vegan discovery and free tools, ad-free.',
