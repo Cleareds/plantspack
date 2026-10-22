@@ -66,6 +66,7 @@ export default function BusinessDashboard() {
 
   return (
     <div className="space-y-8">
+      {places && places.length > 0 && <MonthlyReportToggle />}
       {places && places.length > 0 ? (
         places.map((p) => <OwnedPlaceCard key={p.id} place={p} onChanged={load} />)
       ) : (
@@ -228,5 +229,38 @@ function OwnedPlaceCard({ place, onChanged }: { place: OwnedPlace; onChanged: ()
         />
       )}
     </section>
+  )
+}
+
+function MonthlyReportToggle() {
+  const [on, setOn] = useState<boolean | null>(null)
+  const [saving, setSaving] = useState(false)
+  useEffect(() => {
+    fetch('/api/business/report-preference', { credentials: 'include' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setOn(d ? !!d.monthlyReport : null))
+      .catch(() => setOn(null))
+  }, [])
+  if (on === null) return null
+  const toggle = async () => {
+    setSaving(true)
+    const next = !on
+    const r = await fetch('/api/business/report-preference', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ monthlyReport: next }),
+    }).catch(() => null)
+    if (r?.ok) setOn(next)
+    setSaving(false)
+  }
+  return (
+    <label className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-surface-container-lowest ghost-border cursor-pointer">
+      <span>
+        <span className="block font-semibold text-on-surface">Monthly email summary</span>
+        <span className="block text-sm text-on-surface-variant">Views, saves and new reviews for your places, on the 1st of each month.</span>
+      </span>
+      <input type="checkbox" checked={on} disabled={saving} onChange={toggle} className="h-5 w-5 accent-primary" />
+    </label>
   )
 }

@@ -1,0 +1,43 @@
+name: Monthly owner report
+
+# One short email per verified owner on the 1st of each month (business
+# tools, 2026-10-22). Runs here instead of a Vercel cron so it costs no
+# function invocations. Needs repository secrets NEXT_PUBLIC_SUPABASE_URL,
+# SUPABASE_SERVICE_ROLE_KEY and RESEND_API_KEY.
+
+on:
+  schedule:
+    # 1st of every month, 08:00 UTC
+    - cron: '0 8 1 * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'dry (print only) or commit (send to owners)'
+        required: true
+        default: 'dry'
+        type: choice
+        options: [dry, commit]
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Send report
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.mode }}" = "commit" ]; then
+            if [ -z "$RESEND_API_KEY" ]; then echo "RESEND_API_KEY secret is missing"; exit 1; fi
+            npx tsx scripts/owner-monthly-report.ts --commit
+          else
+            npx tsx scripts/owner-monthly-report.ts
+          fi
