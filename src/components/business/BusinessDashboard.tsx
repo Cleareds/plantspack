@@ -17,6 +17,7 @@ import {
   type OwnerClaim,
 } from '@/lib/business/owned-places'
 import { OwnerToolTiles } from './OwnerToolTiles'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 export default function BusinessDashboard() {
   const { user, loading: authLoading } = useAuth()
@@ -104,6 +105,7 @@ export default function BusinessDashboard() {
 function NoPlacesYet() {
   return (
     <section className="bg-surface-container-lowest rounded-2xl ghost-border p-8">
+      <AdminHint />
       <Store className="h-8 w-8 text-primary mb-3" />
       <h2 className="text-xl font-bold text-on-surface mb-2">You don&apos;t manage a place yet</h2>
       <ol className="list-decimal pl-5 space-y-1.5 text-on-surface-variant mb-5">
@@ -262,5 +264,16 @@ function MonthlyReportToggle() {
       </span>
       <input type="checkbox" checked={on} disabled={saving} onChange={toggle} className="h-5 w-5 accent-primary" />
     </label>
+  )
+}
+
+function AdminHint() {
+  const { profile } = useAuth()
+  if (profile?.role !== 'admin') return null
+  return (
+    <p className="mb-4 p-3 rounded-xl bg-primary/10 text-sm text-on-surface">
+      Admin: {BUSINESS_TOOLS_PUBLIC ? 'the tools are live for owners.' : 'the tools are in admin preview; owners and visitors do not see them.'}{' '}
+      You own no place, so open any place page and use the &quot;Owner tools&quot; links there to test the menu and print tools.
+    </p>
   )
 }

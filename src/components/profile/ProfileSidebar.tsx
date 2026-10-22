@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { User, Edit, Crown, Bell, Settings, LogOut, Store } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
+import { useBusinessToolsVisible } from '@/components/business/AdminPreviewGate'
 
 interface ProfileSidebarProps {
   username: string
@@ -16,6 +17,7 @@ export default function ProfileSidebar({ username }: ProfileSidebarProps) {
   const { signOut, user } = useAuth()
   // "My business" only for people who manage at least one place.
   const [ownsPlace, setOwnsPlace] = useState(false)
+  const businessVisible = useBusinessToolsVisible()
   useEffect(() => {
     if (!user) return
     ;(supabase as any)
@@ -58,7 +60,7 @@ export default function ProfileSidebar({ username }: ProfileSidebarProps) {
       label: 'Settings',
       match: (path: string) => path === `/profile/${username}/settings`
     },
-    ...(ownsPlace
+    ...(ownsPlace && businessVisible
       ? [{
           href: '/business/dashboard',
           icon: Store,

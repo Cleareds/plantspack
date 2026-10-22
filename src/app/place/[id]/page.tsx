@@ -50,6 +50,7 @@ const getCachedCityDishChips = unstable_cache(
 )
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import OwnerManageLink from '@/components/business/OwnerManageLink'
+import AdminPreviewGate from '@/components/business/AdminPreviewGate'
 import PlaceMenuSection, { type PublishedMenu } from '@/components/business/PlaceMenuSection'
 import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
@@ -711,7 +712,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   placeName={place.name}
                   isOwner={!!place.owner}
                 />
-                <OwnerManageLink ownerUserId={place.owner?.user_id} />
+                <OwnerManageLink ownerUserId={place.owner?.user_id} placeId={place.id} />
                 <PlaceEditButton place={{
                   ...place,
                   main_image_url: (place as any).main_image_url || null,
@@ -1004,7 +1005,9 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           </div>
 
           {publishedMenu && (
-            <PlaceMenuSection menu={publishedMenu} fullyVegan={(place as any).vegan_level === 'fully_vegan'} />
+            <AdminPreviewGate>
+              <PlaceMenuSection menu={publishedMenu} fullyVegan={(place as any).vegan_level === 'fully_vegan'} />
+            </AdminPreviewGate>
           )}
 
           {/* Map */}

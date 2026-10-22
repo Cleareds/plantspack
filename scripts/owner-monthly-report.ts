@@ -19,6 +19,7 @@ config({ path: '.env.local', quiet: true })
 import crypto from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 import { sendEmail } from '@/lib/email'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 const args = process.argv.slice(2)
 const COMMIT = args.includes('--commit')
@@ -134,6 +135,10 @@ function renderEmail(name: string, monthLabel: string, places: PlaceReport[], un
 }
 
 async function main() {
+  if ((COMMIT || TO_OVERRIDE) && !BUSINESS_TOOLS_PUBLIC && !(TO_OVERRIDE && args.includes('--preview'))) {
+    console.log('Business tools are in admin preview (src/lib/business/launch.ts). Not sending. Use --to <you> --preview for a test email.')
+    return
+  }
   const range = monthRange()
   const campaign = `owner-report-${range.key}`
   console.log(`${COMMIT ? 'SENDING' : TO_OVERRIDE ? `TEST to ${TO_OVERRIDE}` : 'DRY RUN'} · ${campaign}`)

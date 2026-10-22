@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import BusinessDashboard from '@/components/business/BusinessDashboard'
+import AdminPreviewGate from '@/components/business/AdminPreviewGate'
 
 // The shell is static; everything user-specific loads in the browser.
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function BusinessDashboardPage() {
           </div>
           <Link href="/business" className="text-sm font-medium text-primary hover:underline">How it works</Link>
         </div>
-        <BusinessDashboard />
+        <AdminPreviewGate fallback={<p className="text-on-surface-variant">Owner tools are coming soon.</p>}>
+          <BusinessDashboard />
+        </AdminPreviewGate>
       </div>
     </div>
   )

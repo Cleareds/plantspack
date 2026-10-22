@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import AdminPreviewGate from '@/components/business/AdminPreviewGate'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 import { BarChart3, Building2, MessageSquare, Pencil, QrCode, Search, ShieldCheck, UtensilsCrossed } from 'lucide-react'
 
 // Static page: no cookies, no searchParams, so it is served from the CDN.
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
   title: 'PlantsPack for Business: free tools for vegan venues',
   description: 'Claim your place on PlantsPack for free. Keep your hours and photos right, reply to reviews, publish your menu and get a QR sticker. Listing and ranking are never paid.',
   alternates: { canonical: 'https://www.plantspack.com/business' },
+  ...(BUSINESS_TOOLS_PUBLIC ? {} : { robots: { index: false, follow: false } }),
 }
 
 const FREE_TOOLS = [
@@ -23,6 +26,7 @@ const FREE_TOOLS = [
 export default function BusinessPage() {
   return (
     <div className="min-h-screen bg-surface">
+      <AdminPreviewGate fallback={<ComingSoon />}>
       <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-5">
@@ -101,6 +105,17 @@ export default function BusinessPage() {
           </p>
         </section>
       </div>
+      </AdminPreviewGate>
     </div>
   )
 }
+
+function ComingSoon() {
+  return (
+    <div className="max-w-xl mx-auto text-center py-16">
+      <h1 className="font-headline font-extrabold text-3xl text-on-surface mb-3">PlantsPack for Business is coming soon</h1>
+      <p className="text-on-surface-variant">Own a vegan place listed on PlantsPack? You can already claim it from its page.</p>
+    </div>
+  )
+}
+

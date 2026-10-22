@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { getAuthority } from '@/lib/place-owner'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 export interface OwnerPlace {
   id: string
@@ -39,6 +40,9 @@ export async function requirePlaceOwner(placeId: string): Promise<OwnerGate> {
   const authority = await getAuthority(admin, user.id, place.id)
   if (!authority.role) {
     return { ok: false, response: NextResponse.json({ error: 'Only the verified owner of this place can do this' }, { status: 403 }) }
+  }
+  if (!BUSINESS_TOOLS_PUBLIC && !authority.isAdmin) {
+    return { ok: false, response: NextResponse.json({ error: 'Owner tools are coming soon.' }, { status: 403 }) }
   }
   return { ok: true, userId: user.id, isAdmin: authority.isAdmin, place, admin }
 }

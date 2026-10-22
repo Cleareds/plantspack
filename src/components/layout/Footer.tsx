@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Heart } from 'lucide-react'
 import Image from "next/image";
 import AppBadges from '@/components/app/AppBadges'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -51,14 +52,16 @@ export default function Footer() {
                   About PlantsPack
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/business"
-                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
-                >
-                  For businesses
-                </Link>
-              </li>
+              {BUSINESS_TOOLS_PUBLIC && (
+                <li>
+                  <Link
+                    href="/business"
+                    className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                  >
+                    For businesses
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   href="/roadmap"

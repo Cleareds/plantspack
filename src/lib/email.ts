@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || 'https://www.plantspack.com'
 
@@ -453,6 +454,7 @@ export async function sendClaimApprovedEmail(
         </p>
       </div>
 
+${BUSINESS_TOOLS_PUBLIC ? `
       <p>Your place page now shows you as the verified owner. All free owner tools are on your business dashboard.</p>
 
       <div style="text-align: center; margin: 30px 0;">
@@ -474,6 +476,24 @@ export async function sendClaimApprovedEmail(
       </div>
 
       <p style="text-align: center;"><a href="${placeUrl}" style="color: #16a34a;">View your public page</a></p>
+` : `
+      <p>Your business ownership has been verified and your profile now displays an owner badge linking to your place.</p>
+
+      <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h3 style="color: #16a34a; margin-top: 0;">What's Next?</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+          <li>Your verified owner status is now visible on the place page</li>
+          <li>An owner badge appears on your profile</li>
+          <li>Users can see you're the verified owner</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${placeUrl}" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+          View Your Place
+        </a>
+      </div>
+`}
 
       <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 

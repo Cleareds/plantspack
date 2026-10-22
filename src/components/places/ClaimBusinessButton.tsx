@@ -1,5 +1,6 @@
 'use client'
 
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 import { useState, useEffect } from 'react'
 import { Building2, Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
@@ -94,7 +95,7 @@ export default function ClaimBusinessButton({
     return (
       <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low border border-outline-variant/15 rounded-md text-sm font-medium text-primary">
         <CheckCircle className="h-4 w-4" />
-        <span>Claim sent. We check it by hand; once approved, your tools are on your business dashboard.</span>
+        <span>{BUSINESS_TOOLS_PUBLIC ? 'Claim sent. We check it by hand; once approved, your tools are on your business dashboard.' : 'Claim submitted successfully!'}</span>
       </div>
     )
   }

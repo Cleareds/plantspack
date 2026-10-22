@@ -7,6 +7,7 @@
  * resolved cleanly. Plain Route Handlers give full control: we fetch at
  * request time, build XML ourselves, and set explicit cache headers.
  */
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { INGREDIENT_ARTICLES, TRAVEL_GUIDES } from '@/lib/vegan-content'
@@ -225,7 +226,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: `${SITE_URL}/support` },
       { url: `${SITE_URL}/about` },
       { url: `${SITE_URL}/contact` },
-      { url: `${SITE_URL}/business` },
+      ...(BUSINESS_TOOLS_PUBLIC ? [{ url: `${SITE_URL}/business` }] : []),
       // Evergreen reference surfaces. These were absent from every segment
       // until 2026-07-26, so the whole /vegan hub and all the tools were
       // discoverable only via internal links and never advertised to Google —
