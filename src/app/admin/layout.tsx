@@ -73,6 +73,7 @@ const NAV: NavNode[] = [
       // implementation); the old standalone /admin/corrections redirects there.
       { name: 'Corrections', href: '/admin/data-quality?tab=corrections', icon: PenLine },
       { name: 'Business Claims', href: '/admin/claims', icon: Building2 },
+      { name: 'Business Owners', href: '/admin/business', icon: Building2 },
       { name: 'Contact Forms', href: '/admin/contact', icon: Mail },
     ],
   },

@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import AdminPreviewGate from '@/components/business/AdminPreviewGate'
+import { PARTNER_FEATURES, PARTNER_PRICE } from '@/lib/business/plan'
 import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 import { BarChart3, Building2, MessageSquare, Pencil, QrCode, Search, ShieldCheck, UtensilsCrossed } from 'lucide-react'
 
@@ -91,12 +92,25 @@ export default function BusinessPage() {
           </div>
         </section>
 
+        <section className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-6 md:p-8 mb-10">
+          <h2 className="text-xl font-bold text-on-surface mb-1">Want more? The Partner plan</h2>
+          <p className="text-on-surface-variant mb-4">€{PARTNER_PRICE.monthEur} a month or €{PARTNER_PRICE.yearEur} a year, per place. Everything above stays free.</p>
+          <ul className="grid sm:grid-cols-3 gap-4">
+            {PARTNER_FEATURES.map((f) => (
+              <li key={f.key} className="text-sm">
+                <span className="block font-semibold text-on-surface">{f.title}</span>
+                <span className="text-on-surface-variant">{f.text}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section className="bg-surface-container-lowest rounded-2xl ghost-border p-6 md:p-8">
           <div className="flex items-center gap-2 font-semibold text-on-surface mb-3">
             <ShieldCheck className="h-5 w-5 text-primary" /> What owners cannot change
           </div>
           <ul className="list-disc pl-5 space-y-1.5 text-sm text-on-surface-variant">
-            <li>Your position in lists and search. Nobody can pay for a better place.</li>
+            <li>Your position in lists and search. Nobody can pay for a better place, not even with the Partner plan.</li>
             <li>The vegan level. You can ask for a change, and our team checks it before it goes live.</li>
             <li>Reviews. You can reply, but reviews are not removed because an owner disagrees.</li>
           </ul>
