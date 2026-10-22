@@ -49,6 +49,7 @@ const getCachedCityDishChips = unstable_cache(
   { revalidate: 86400 },
 )
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
+import OwnerManageLink from '@/components/business/OwnerManageLink'
 import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
@@ -681,6 +682,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   placeName={place.name}
                   isOwner={!!place.owner}
                 />
+                <OwnerManageLink ownerUserId={place.owner?.user_id} />
                 <PlaceEditButton place={{
                   ...place,
                   main_image_url: (place as any).main_image_url || null,

@@ -94,7 +94,7 @@ export default function ClaimBusinessButton({
     return (
       <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-low border border-outline-variant/15 rounded-md text-sm font-medium text-primary">
         <CheckCircle className="h-4 w-4" />
-        <span>Claim submitted successfully!</span>
+        <span>Claim sent. We check it by hand; once approved, your tools are on your business dashboard.</span>
       </div>
     )
   }

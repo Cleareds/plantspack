@@ -53,6 +53,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/business"
+                  className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  For businesses
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/roadmap"
                   className="text-sm text-on-surface-variant hover:text-primary transition-colors"
                 >

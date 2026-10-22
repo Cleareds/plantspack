@@ -225,6 +225,7 @@ export async function buildSitemap(id: SegmentId): Promise<string> {
       { url: `${SITE_URL}/support` },
       { url: `${SITE_URL}/about` },
       { url: `${SITE_URL}/contact` },
+      { url: `${SITE_URL}/business` },
       // Evergreen reference surfaces. These were absent from every segment
       // until 2026-07-26, so the whole /vegan hub and all the tools were
       // discoverable only via internal links and never advertised to Google —

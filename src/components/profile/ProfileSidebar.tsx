@@ -1,9 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { User, Edit, Crown, Bell, Settings, LogOut } from 'lucide-react'
+import { User, Edit, Crown, Bell, Settings, LogOut, Store } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
+import { supabase } from '@/lib/supabase'
 
 interface ProfileSidebarProps {
   username: string
@@ -11,7 +13,15 @@ interface ProfileSidebarProps {
 
 export default function ProfileSidebar({ username }: ProfileSidebarProps) {
   const pathname = usePathname()
-  const { signOut } = useAuth()
+  const { signOut, user } = useAuth()
+  // "My business" only for people who manage at least one place.
+  const [ownsPlace, setOwnsPlace] = useState(false)
+  useEffect(() => {
+    if (!user) return
+    ;(supabase as any)
+      .rpc('get_user_owned_places', { p_user_id: user.id })
+      .then(({ data }: { data: unknown[] | null }) => setOwnsPlace(!!data?.length))
+  }, [user])
 
   const handleSignOut = async () => {
     await signOut()
@@ -47,7 +57,15 @@ export default function ProfileSidebar({ username }: ProfileSidebarProps) {
       icon: Settings,
       label: 'Settings',
       match: (path: string) => path === `/profile/${username}/settings`
-    }
+    },
+    ...(ownsPlace
+      ? [{
+          href: '/business/dashboard',
+          icon: Store,
+          label: 'My business',
+          match: (path: string) => path.startsWith('/business'),
+        }]
+      : []),
   ]
 
   return (

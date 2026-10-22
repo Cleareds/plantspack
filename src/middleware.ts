@@ -69,8 +69,13 @@ const PUBLIC_READONLY_PREFIXES = [
   '/api/health',
 ]
 
+// Exact matches only: '/business' is the static landing page, while
+// '/business/dashboard' and the tool pages need the session refresh.
+const PUBLIC_READONLY_EXACT = new Set(['/business'])
+
 function isPublicReadOnly(pathname: string): boolean {
   if (pathname === '/') return true
+  if (PUBLIC_READONLY_EXACT.has(pathname)) return true
   for (const p of PUBLIC_READONLY_PREFIXES) {
     if (pathname === p || pathname.startsWith(p)) return true
   }

@@ -374,7 +374,8 @@ export async function sendClaimRequestEmail(claimData: {
 
       <div style="background: #f3f4f6; border-radius: 8px; padding: 20px; margin: 20px 0;">
         <h3 style="margin-top: 0;">Manual Approval Required</h3>
-        <p>To approve this claim, execute the following SQL in Supabase:</p>
+        <p><a href="https://www.plantspack.com/admin/claims" style="background: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">Review in /admin/claims</a></p>
+        <p>Approving there also refreshes the place page and emails the owner their dashboard link. Fallback only, SQL in Supabase:</p>
         <pre style="background: #1f2937; color: #f9fafb; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px;">-- Approve claim and create owner
 BEGIN;
 
@@ -452,22 +453,27 @@ export async function sendClaimApprovedEmail(
         </p>
       </div>
 
-      <p>Your business ownership has been verified and your profile now displays an owner badge linking to your place.</p>
+      <p>Your place page now shows you as the verified owner. All free owner tools are on your business dashboard.</p>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://www.plantspack.com/business/dashboard" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+          Open your business dashboard
+        </a>
+      </div>
 
       <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #16a34a; margin-top: 0;">What's Next?</h3>
+        <h3 style="color: #16a34a; margin-top: 0;">Free tools on your dashboard</h3>
         <ul style="margin: 0; padding-left: 20px;">
-          <li>Your verified owner status is now visible on the place page</li>
-          <li>An owner badge appears on your profile</li>
-          <li>Users can see you're the verified owner</li>
+          <li>Edit hours, address, website, phone and photos</li>
+          <li>Reply to reviews</li>
+          <li>Publish your menu from a photo or PDF</li>
+          <li>See your page views, and get a short monthly summary by email</li>
+          <li>Print a window sticker or table card with a QR code</li>
+          <li>Add a "Find us on PlantsPack" badge to your website</li>
         </ul>
       </div>
 
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${placeUrl}" style="background: #16a34a; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
-          View Your Place
-        </a>
-      </div>
+      <p style="text-align: center;"><a href="${placeUrl}" style="color: #16a34a;">View your public page</a></p>
 
       <p>If you have any questions, feel free to reach out to us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #16a34a;">${SUPPORT_EMAIL}</a></p>
 
