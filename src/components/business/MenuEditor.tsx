@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { FileUp, Loader2, Plus, Sparkles, Trash2, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, FileUp, Loader2, Plus, Sparkles, Trash2, X } from 'lucide-react'
 import { track } from '@/lib/analytics'
 import { menuFileToDataUrls } from '@/lib/business/image-prep'
 
@@ -41,6 +41,7 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null)
   const [remaining, setRemaining] = useState<number | null>(null)
   const [dirty, setDirty] = useState(false)
+  const [pendingImport, setPendingImport] = useState<Row[] | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
 
   const allVegan = place?.vegan_level === 'fully_vegan'
@@ -83,6 +84,31 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
     setDirty(true)
   }
 
+  const move = (key: string, dir: -1 | 1) => {
+    setRows((rs) => {
+      const i = rs.findIndex((r) => r.key === key)
+      const j = i + dir
+      if (i < 0 || j < 0 || j >= rs.length) return rs
+      const next = [...rs]
+      ;[next[i], next[j]] = [next[j], next[i]]
+      return next
+    })
+    setDirty(true)
+  }
+
+  const setAllVegan = (value: boolean) => {
+    setRows((rs) => rs.map((r) => ({ ...r, is_vegan: value })))
+    setDirty(true)
+  }
+
+  const applyImport = (mode: 'replace' | 'append') => {
+    if (!pendingImport) return
+    setRows((rs) => (mode === 'replace' ? pendingImport : [...rs, ...pendingImport]))
+    setMessage({ kind: 'ok', text: `${mode === 'replace' ? 'Replaced your list with' : 'Added'} ${pendingImport.length} dishes. Check every row, then publish.` })
+    setPendingImport(null)
+    setDirty(true)
+  }
+
   async function addFiles(files: FileList | null) {
     if (!files?.length) return
     setMessage(null)
@@ -101,7 +127,6 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
   }
 
   async function readMenu() {
-    if (rows.some((r) => r.name.trim()) && !confirm('Replace the dishes below with what we read from the menu?')) return
     setReading(true)
     setMessage(null)
     try {
@@ -114,7 +139,7 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
       const data = await r.json().catch(() => ({}))
       if (typeof data.remaining === 'number') setRemaining(data.remaining)
       if (!r.ok) throw new Error(data.error || 'Reading the menu failed.')
-      setRows((data.items || []).map((it: any) => ({
+      const imported: Row[] = (data.items || []).map((it: any) => ({
         key: newKey(),
         section: it.section || '',
         name: it.name,
@@ -122,12 +147,19 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
         price: it.price != null ? String(it.price) : '',
         currency: it.currency || '',
         is_vegan: it.vegan === 'yes',
-      })))
+      }))
       setPages([])
       setPasteText('')
-      setDirty(true)
       track('owner_tool_used', { tool: 'menu', action: 'import' })
-      setMessage({ kind: 'ok', text: `We read ${data.items?.length ?? 0} dishes. Check every row, fix anything wrong, then publish.` })
+      if (rows.some((r) => r.name.trim())) {
+        // Keep the owner's current list until they choose what to do.
+        setPendingImport(imported)
+        setMessage(null)
+      } else {
+        setRows(imported)
+        setDirty(true)
+        setMessage({ kind: 'ok', text: `We read ${imported.length} dishes. Check every row, fix anything wrong, then publish.` })
+      }
     } catch (e) {
       setMessage({ kind: 'error', text: e instanceof Error ? e.message : 'Reading the menu failed.' })
     } finally {
@@ -258,24 +290,45 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
         </div>
       </section>
 
+      {pendingImport && (
+        <section className="rounded-2xl border-2 border-primary/40 bg-primary/5 p-5">
+          <p className="font-semibold text-on-surface">We read {pendingImport.length} dishes from your menu.</p>
+          <p className="text-sm text-on-surface-variant mt-1">You already have {named.length} dishes below. What should we do with the new ones?</p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <button type="button" onClick={() => applyImport('replace')} className="px-4 py-2 rounded-xl bg-primary text-on-primary-btn text-sm font-medium">Replace my list</button>
+            <button type="button" onClick={() => applyImport('append')} className="px-4 py-2 rounded-xl ghost-border text-sm font-medium text-on-surface hover:bg-surface-container-low">Add them below my list</button>
+            <button type="button" onClick={() => setPendingImport(null)} className="px-4 py-2 rounded-xl text-sm font-medium text-on-surface-variant hover:underline">Discard them</button>
+          </div>
+        </section>
+      )}
+
       <section className="bg-surface-container-lowest rounded-2xl ghost-border p-5">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
           <h2 className="font-semibold text-on-surface">Dishes ({named.length}{allVegan ? '' : `, ${veganCount} vegan`})</h2>
-          {allVegan && <span className="text-xs text-on-surface-variant">Your place is listed as 100% vegan, so every dish counts as vegan.</span>}
+          {allVegan ? (
+            <span className="text-xs text-on-surface-variant">Your place is listed as 100% vegan, so every dish counts as vegan.</span>
+          ) : named.length > 0 && (
+            <span className="flex gap-3 text-xs">
+              <button type="button" onClick={() => setAllVegan(true)} className="text-primary font-medium hover:underline">Mark all vegan</button>
+              <button type="button" onClick={() => setAllVegan(false)} className="text-on-surface-variant font-medium hover:underline">Clear vegan marks</button>
+            </span>
+          )}
         </div>
 
         {rows.length === 0 && <p className="text-sm text-on-surface-variant mb-4">No dishes yet. Read your menu above, or add dishes by hand.</p>}
 
         <div className="space-y-3">
-          {rows.map((r) => (
+          {rows.map((r, idx) => (
             <div key={r.key} className="grid grid-cols-12 gap-2 items-start p-3 rounded-xl bg-surface-container-low">
               <input aria-label="Section" value={r.section} onChange={(e) => update(r.key, { section: e.target.value })} placeholder="Section" className="col-span-12 sm:col-span-3 px-2.5 py-2 rounded-lg bg-surface text-sm ghost-border" />
               <input aria-label="Dish name" value={r.name} onChange={(e) => update(r.key, { name: e.target.value })} placeholder="Dish name" className="col-span-12 sm:col-span-5 px-2.5 py-2 rounded-lg bg-surface text-sm ghost-border font-medium" />
               <input aria-label="Price" value={r.price} onChange={(e) => update(r.key, { price: e.target.value })} placeholder="Price" inputMode="decimal" className="col-span-5 sm:col-span-2 px-2.5 py-2 rounded-lg bg-surface text-sm ghost-border" />
               <input aria-label="Currency" value={r.currency} onChange={(e) => update(r.key, { currency: e.target.value })} placeholder="EUR" className="col-span-3 sm:col-span-1 px-2 py-2 rounded-lg bg-surface text-sm ghost-border" />
-              <button type="button" aria-label="Remove dish" onClick={() => { setRows((rs) => rs.filter((x) => x.key !== r.key)); setDirty(true) }} className="col-span-4 sm:col-span-1 flex justify-center py-2 text-on-surface-variant hover:text-red-600">
-                <Trash2 className="h-4 w-4" />
-              </button>
+              <div className="col-span-4 sm:col-span-1 flex justify-end sm:justify-center items-center gap-0.5">
+                <button type="button" aria-label="Move dish up" disabled={idx === 0} onClick={() => move(r.key, -1)} className="p-1.5 rounded text-on-surface-variant hover:text-on-surface disabled:opacity-30"><ArrowUp className="h-3.5 w-3.5" /></button>
+                <button type="button" aria-label="Move dish down" disabled={idx === rows.length - 1} onClick={() => move(r.key, 1)} className="p-1.5 rounded text-on-surface-variant hover:text-on-surface disabled:opacity-30"><ArrowDown className="h-3.5 w-3.5" /></button>
+                <button type="button" aria-label="Remove dish" onClick={() => { setRows((rs) => rs.filter((x) => x.key !== r.key)); setDirty(true) }} className="p-1.5 rounded text-on-surface-variant hover:text-red-600"><Trash2 className="h-3.5 w-3.5" /></button>
+              </div>
               <input aria-label="Description" value={r.description} onChange={(e) => update(r.key, { description: e.target.value })} placeholder="Short description (optional)" className="col-span-12 sm:col-span-9 px-2.5 py-2 rounded-lg bg-surface text-sm ghost-border" />
               {!allVegan && (
                 <label className="col-span-12 sm:col-span-3 flex items-center gap-2 text-sm text-on-surface py-2">
@@ -320,6 +373,7 @@ export default function MenuEditor({ placeId }: { placeId: string }) {
           {menu?.status === 'published' ? 'Hide from my page' : 'Save draft'}
         </button>
         <Link href={`/place/${place.slug || place.id}#menu`} className="self-center text-sm font-medium text-primary hover:underline">View my page</Link>
+        {dirty && <span className="self-center text-sm text-on-surface-variant">Unsaved changes</span>}
       </div>
     </div>
   )

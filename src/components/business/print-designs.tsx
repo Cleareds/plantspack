@@ -55,46 +55,46 @@ function WordmarkInSvg({ part, x, y, width, color }: { part: 'plants' | 'pack' |
   )
 }
 
-/**
- * Round window sticker, drawn as one SVG at 0.1 mm per unit (800 = 80 mm).
- * A solid green seal: the venue's name curves along the top edge, the
- * stacked wordmark and a white QR plate sit in the middle.
- */
-/** Shorten at a word boundary so the name stays on the top half of the seal. */
+/** Shorten at a word boundary so the name stays on the top arc of the sticker. */
 function fitArcName(name: string, max: number): string {
   if (name.length <= max) return name
   const cut = name.slice(0, max + 1).replace(/\s+\S*$/, '')
   return (cut.length >= 8 ? cut : name.slice(0, max)).trim()
 }
 
+/**
+ * Round window sticker, drawn as one SVG at 0.1 mm per unit (800 = 80 mm).
+ * Same family as the table card: leaf-paper ground, the venue's name in
+ * forest green along the top edge, a white QR plate, and a green band at the
+ * bottom carrying the wordmark.
+ */
 export function Sticker({ place, qr, uid, fontFamily }: { place: PlaceInfo; qr: { d: string; n: number }; uid: string; fontFamily: string }) {
   const name = fitArcName(place.name, 26)
-  const nameSize = name.length > 20 ? 38 : name.length > 14 ? 44 : 48
+  const nameSize = name.length > 20 ? 40 : name.length > 14 ? 46 : 52
   const plate = 300
-  const qrSize = 262
-  const plateX = 400 - plate / 2
-  const plateY = 314
+  const qrSize = 260
+  const plateY = 150
+  const bandTop = 600
   return (
     <svg className="pk-sticker" viewBox="0 0 800 800" width="80mm" height="80mm" role="img" aria-label={`${place.name} on PlantsPack: scan for the page`}>
       <defs>
-        {/* Top arc reads left to right over the top; bottom arc reads left to right under the bottom. */}
-        <path id={`${uid}-top`} d="M 76 400 A 324 324 0 0 1 724 400" />
-        <path id={`${uid}-bottom`} d="M 70 400 A 330 330 0 0 0 730 400" />
+        <path id={`${uid}-top`} d="M 70 400 A 330 330 0 0 1 730 400" />
+        <clipPath id={`${uid}-disc`}><circle cx="400" cy="400" r="400" /></clipPath>
       </defs>
-      <circle cx="400" cy="400" r="400" fill={C.pack} />
-      <circle cx="400" cy="400" r="376" fill="none" stroke={C.sprout} strokeWidth="5" />
-      <text fill={C.white} fontFamily={fontFamily} fontWeight={800} fontSize={nameSize} letterSpacing="1">
+      <g clipPath={`url(#${uid}-disc)`}>
+        <rect width="800" height="800" fill={C.paper} />
+        <rect y={bandTop} width="800" height={800 - bandTop} fill={C.pack} />
+      </g>
+      <circle cx="400" cy="400" r="393" fill="none" stroke={C.pack} strokeWidth="14" />
+      <text fill={C.forest} fontFamily={fontFamily} fontWeight={800} fontSize={nameSize} letterSpacing="0.5">
         <textPath href={`#${uid}-top`} startOffset="50%" textAnchor="middle">{name}</textPath>
       </text>
-      <WordmarkInSvg part="plants" x={248} y={162} width={304} color={C.white} />
-      <WordmarkInSvg part="pack" x={301.5} y={232} width={197} color={C.white} />
-      <rect x={plateX} y={plateY} width={plate} height={plate} rx="28" fill={C.white} />
+      <rect x={400 - plate / 2} y={plateY} width={plate} height={plate} rx="24" fill={C.white} stroke={C.sprout} strokeWidth="5" />
       <svg x={400 - qrSize / 2} y={plateY + (plate - qrSize) / 2} width={qrSize} height={qrSize} viewBox={`0 0 ${qr.n} ${qr.n}`} shapeRendering="crispEdges">
         <path d={qr.d} fill={C.forest} />
       </svg>
-      <text fill={C.white} fontFamily={fontFamily} fontWeight={600} fontSize="34" letterSpacing="0.5">
-        <textPath href={`#${uid}-bottom`} startOffset="50%" textAnchor="middle" dominantBaseline="hanging">Scan for our menu and reviews</textPath>
-      </text>
+      <text x="400" y="530" textAnchor="middle" fill={C.forest} fontFamily={fontFamily} fontWeight={600} fontSize="33">Scan for our menu and reviews</text>
+      <WordmarkInSvg part="full" x={210} y={634} width={380} color={C.white} />
     </svg>
   )
 }
