@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BarChart3, UtensilsCrossed } from 'lucide-react'
+import { BarChart3, Check, Copy, Globe, QrCode, UtensilsCrossed } from 'lucide-react'
+import { track } from '@/lib/analytics'
 import { supabase } from '@/lib/supabase'
 import type { OwnedPlace } from '@/lib/business/owned-places'
 
@@ -16,6 +17,17 @@ export function OwnerToolTiles({ place }: { place: OwnedPlace }) {
     <>
       <MenuTile place={place} />
       <StatsTile place={place} />
+      <Link
+        href={`/business/places/${place.id}/print`}
+        className="p-4 rounded-xl ghost-border hover:bg-surface-container-low transition-colors"
+      >
+        <div className="flex items-center gap-2 font-semibold text-on-surface">
+          <QrCode className="h-4 w-4 text-primary" />
+          Sticker and table card
+        </div>
+        <p className="text-sm text-on-surface-variant mt-1">Print a window sticker or table card with a QR code to your page, or ask us for printed stickers.</p>
+      </Link>
+      <BadgeTile place={place} />
     </>
   )
 }
@@ -110,6 +122,46 @@ function StatsTile({ place }: { place: OwnedPlace }) {
       ) : (
         <p className="text-sm text-on-surface-variant mt-1">Loading...</p>
       )}
+    </div>
+  )
+}
+
+function BadgeTile({ place }: { place: OwnedPlace }) {
+  const [dark, setDark] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const href = `https://www.plantspack.com/place/${place.slug || place.id}?utm_source=badge&utm_medium=website`
+  const img = `https://www.plantspack.com/badges/find-us-on-plantspack-${dark ? 'dark' : 'light'}.svg`
+  const snippet = `<a href="${href}" target="_blank" rel="noopener"><img src="${img}" alt="Find us on PlantsPack" width="200" height="56"></a>`
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(snippet)
+      setCopied(true)
+      track('owner_tool_used', { tool: 'badge', action: 'copy' })
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      /* clipboard blocked: the snippet stays selectable below */
+    }
+  }
+  return (
+    <div className="p-4 rounded-xl ghost-border sm:col-span-2 lg:col-span-3">
+      <div className="flex items-center gap-2 font-semibold text-on-surface">
+        <Globe className="h-4 w-4 text-primary" />
+        Badge for your website
+      </div>
+      <p className="text-sm text-on-surface-variant mt-1">Paste this code into your website. The badge links to your PlantsPack page.</p>
+      <div className="flex flex-wrap items-center gap-4 mt-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={`/badges/find-us-on-plantspack-${dark ? 'dark' : 'light'}.svg`} alt="Find us on PlantsPack" width={200} height={56} />
+        <label className="flex items-center gap-2 text-sm text-on-surface">
+          <input type="checkbox" checked={dark} onChange={(e) => setDark(e.target.checked)} className="h-4 w-4 accent-primary" />
+          Dark version
+        </label>
+      </div>
+      <textarea readOnly value={snippet} rows={3} onFocus={(e) => e.currentTarget.select()} className="mt-3 w-full p-2.5 rounded-lg bg-surface-container-low ghost-border text-xs font-mono text-on-surface" />
+      <button type="button" onClick={copy} className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg ghost-border text-sm font-medium text-on-surface hover:bg-surface-container-low">
+        {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
+        {copied ? 'Copied' : 'Copy code'}
+      </button>
     </div>
   )
 }
