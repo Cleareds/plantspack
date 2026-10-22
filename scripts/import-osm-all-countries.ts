@@ -329,7 +329,7 @@ async function main() {
   console.log(`Source tag: ${sourceTag}`);
   console.log('='.repeat(60));
 
-  const { data: admin } = await sb.from('users').select('id').eq('role', 'admin').limit(1).single();
+  const { data: admin } = await sb.from('users').select('id').eq('username', 'admin').single();
   if (!admin) { console.error('No admin user'); return; }
 
   // Load all existing places for deduplication (done once, shared across all countries)

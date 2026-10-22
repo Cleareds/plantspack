@@ -119,7 +119,7 @@ async function nominatim(query: string, countryCode = 'gb'): Promise<{ lat: numb
 
 
 async function findAdminId(): Promise<string> {
-  const { data } = await supabase.from('users').select('id').eq('role', 'admin').limit(1).single()
+  const { data } = await supabase.from('users').select('id').eq('username', 'admin').single()
   if (!data) throw new Error('No admin user found')
   return data.id
 }

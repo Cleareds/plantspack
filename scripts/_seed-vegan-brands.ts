@@ -304,7 +304,7 @@ async function main() {
   const sb = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
 
   // Admin user id
-  const { data: admin } = await sb.from('users').select('id').eq('role', 'admin').limit(1).single()
+  const { data: admin } = await sb.from('users').select('id').eq('username', 'admin').single()
   if (!admin) { console.error('no admin user'); process.exit(1) }
 
   // Existing slugs / names for dedup

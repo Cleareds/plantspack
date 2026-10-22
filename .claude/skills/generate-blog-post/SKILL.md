@@ -61,7 +61,7 @@ import { createClient } from '@supabase/supabase-js';
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { autoRefreshToken: false, persistSession: false }});
 
 async function main() {
-  const { data: admin } = await sb.from('users').select('id').eq('role','admin').limit(1).single();
+  const { data: admin } = await sb.from('users').select('id').eq('username','admin').single(); // the 'admin' account, NOT any role=admin user (sonna_moka is also role=admin and RLS hides other users' drafts)
   if (!admin) { console.error('no admin'); return; }
 
   const { data, error } = await sb.from('posts').insert({

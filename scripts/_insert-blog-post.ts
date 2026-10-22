@@ -2,7 +2,7 @@ import { config } from 'dotenv'; config({ path: '.env.local' });
 import { createClient } from '@supabase/supabase-js';
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { autoRefreshToken: false, persistSession: false }});
 async function main() {
-  const { data: admin } = await sb.from('users').select('id').eq('role','admin').limit(1).single();
+  const { data: admin } = await sb.from('users').select('id').eq('username', 'admin').single();
   if (!admin) { console.error('no admin'); return; }
 
   const slug = 'michelin-vegan-restaurants-world-bucket-list';

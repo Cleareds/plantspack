@@ -143,7 +143,7 @@ function extractRecipe(html, url) {
 }
 
 async function main() {
-  const { data: admin } = await sb.from('users').select('id').eq('role', 'admin').limit(1).single();
+  const { data: admin } = await sb.from('users').select('id').eq('username', 'admin').single();
   if (!admin) { console.log('No admin user'); return; }
 
   // Dedupe sets from existing recipe posts.

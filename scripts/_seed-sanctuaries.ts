@@ -192,7 +192,7 @@ async function main() {
   }, {})
   const sb = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
 
-  const { data: admin } = await sb.from('users').select('id').eq('role', 'admin').limit(1).single()
+  const { data: admin } = await sb.from('users').select('id').eq('username', 'admin').single()
   if (!admin) { console.error('no admin'); process.exit(1) }
 
   const { data: existing } = await sb.from('places').select('slug, name').is('archived_at', null)
