@@ -17,6 +17,7 @@ import {
   type OwnerClaim,
 } from '@/lib/business/owned-places'
 import { OwnerToolTiles } from './OwnerToolTiles'
+import { PartnerSection } from './PartnerSection'
 import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 export default function BusinessDashboard() {
@@ -221,6 +222,8 @@ export function OwnedPlaceCard({ place, onChanged }: { place: OwnedPlace; onChan
           <p className="text-sm text-on-surface-variant mt-1">On the feed, press Create and choose Event. It appears in the events calendar.</p>
         </Link>
       </div>
+
+      <PartnerSection place={place} />
 
       {editable && (
         <EditPlace

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 /**
  * Remote feature flags for the PlantsPack MOBILE app.
@@ -19,5 +20,8 @@ export async function GET() {
     // it instantly if Apple ever objects. Default false so a fresh build ships
     // with no iOS support surface; flip true once the build is live.
     iosSupportEnabled: false,
+    // Business-owner features (menus, owner tools, deals) for everyone.
+    // Follows the web launch switch; admins see them in the app regardless.
+    businessTools: BUSINESS_TOOLS_PUBLIC,
   })
 }

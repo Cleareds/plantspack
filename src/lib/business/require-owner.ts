@@ -3,6 +3,7 @@ import { createClient as createServerClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { getAuthority } from '@/lib/place-owner'
 import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
+import { getPlacePlan, type PlacePlan } from '@/lib/business/plan'
 
 export interface OwnerPlace {
   id: string
@@ -47,4 +48,22 @@ export async function requirePlaceOwner(placeId: string): Promise<OwnerGate> {
     return { ok: false, response: NextResponse.json({ error: 'Owner tools are coming soon.' }, { status: 403 }) }
   }
   return { ok: true, userId: user.id, isAdmin: authority.isAdmin, place, admin }
+}
+
+export type PartnerGate =
+  | { ok: true; userId: string; isAdmin: boolean; place: OwnerPlace; admin: any; plan: PlacePlan }
+  | { ok: false; response: NextResponse }
+
+/**
+ * Gate for paid tools: the owner of a place with an active Partner plan, or
+ * an admin (admins can use and test every paid tool on any place).
+ */
+export async function requirePartnerPlace(placeId: string): Promise<PartnerGate> {
+  const gate = await requirePlaceOwner(placeId)
+  if (!gate.ok) return gate
+  const plan = await getPlacePlan(gate.admin, gate.place.id)
+  if (plan.plan !== 'partner' && !gate.isAdmin) {
+    return { ok: false, response: NextResponse.json({ error: 'This tool is part of the Partner plan.', needsPlan: true }, { status: 402 }) }
+  }
+  return { ...gate, plan }
 }

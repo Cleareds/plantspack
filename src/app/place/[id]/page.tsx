@@ -1,3 +1,4 @@
+import PlaceActionTracker from '@/components/analytics/PlaceActionTracker'
 import { cache } from 'react'
 import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
@@ -52,6 +53,7 @@ import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import OwnerManageLink from '@/components/business/OwnerManageLink'
 import AdminPreviewGate from '@/components/business/AdminPreviewGate'
 import PlaceMenuSection, { type PublishedMenu } from '@/components/business/PlaceMenuSection'
+import PlaceDealsSection, { type PublicDeal } from '@/components/business/PlaceDealsSection'
 import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
@@ -197,6 +199,29 @@ async function getPublishedMenu(placeId: string): Promise<PublishedMenu | null> 
     return { checked_at: menu.checked_at, items }
   } catch {
     return null
+  }
+}
+
+// Active deals of a Partner venue. Same rules as the public RLS policy on
+// place_deals (active, within dates, plan active); failure = no deals shown.
+async function getActiveDeals(placeId: string): Promise<PublicDeal[]> {
+  try {
+    const sb = createAdminClient() as any
+    const { data: hasPlan } = await sb.rpc('place_has_partner_plan', { p_place_id: placeId })
+    if (!hasPlan) return []
+    const today = new Date().toISOString().slice(0, 10)
+    const { data } = await sb
+      .from('place_deals')
+      .select('id, title, details, audience, ends_on')
+      .eq('place_id', placeId)
+      .eq('status', 'active')
+      .lte('starts_on', today)
+      .or(`ends_on.is.null,ends_on.gte.${today}`)
+      .order('created_at')
+      .limit(3)
+    return (data as PublicDeal[]) || []
+  } catch {
+    return []
   }
 }
 
@@ -441,9 +466,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   // Fetch the first page of reviews server-side so it appears on first paint
   // (good for SEO, layout stability, and #reviews anchor scrolling).
-  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu] = await Promise.all([
+  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu, activeDeals] = await Promise.all([
     getInitialReviews(place.id),
     getPublishedMenu(place.id),
+    getActiveDeals(place.id),
   ])
 
   // "More places in {city}" — SSR internal links from each place page to
@@ -588,6 +614,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(placeFaqJsonLd) }} />
       )}
       <HashScroller />
+      <PlaceActionTracker placeId={place.id} />
       <ViewTracker entityType="place" entityId={place.id} />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb — full on desktop, short on mobile */}
@@ -819,6 +846,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   <div className="flex gap-2 flex-wrap">
                     <a
                       href={`https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}&destination_place_id=${(place as any).google_place_id || ''}`}
+                      data-place-action="directions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs font-medium text-on-primary-btn silk-gradient px-2.5 py-1 rounded-md"
@@ -831,6 +859,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                         ? `https://www.google.com/maps/place/?q=place_id:${(place as any).google_place_id}`
                         : `https://www.google.com/maps/search/${encodeURIComponent(place.name + ' ' + place.address)}`
                       }
+                      data-place-action="directions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary"
@@ -841,6 +870,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                     <span className="text-outline">•</span>
                     <a
                       href={`http://maps.apple.com/?q=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.address)}&ll=${place.latitude},${place.longitude}`}
+                      data-place-action="directions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary"
@@ -874,6 +904,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                     <div className="text-sm font-medium text-on-surface">Website</div>
                     <a
                       href={place.website}
+                      data-place-action="website"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-primary hover:text-primary flex items-center gap-1"
@@ -891,6 +922,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                     <div className="text-sm font-medium text-on-surface">Phone</div>
                     <a
                       href={`tel:${place.phone}`}
+                      data-place-action="phone"
                       className="text-sm text-primary hover:text-primary"
                     >
                       {place.phone}
@@ -1003,6 +1035,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
               )}
             </div>
           </div>
+
+          {activeDeals.length > 0 && (
+            <AdminPreviewGate>
+              <PlaceDealsSection deals={activeDeals} />
+            </AdminPreviewGate>
+          )}
 
           {publishedMenu && (
             <AdminPreviewGate>

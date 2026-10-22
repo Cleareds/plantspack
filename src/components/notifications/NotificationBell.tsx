@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
-import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2, MapPin, CheckCircle } from 'lucide-react'
+import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2, MapPin, CheckCircle, Store } from 'lucide-react'
 import type { Notification } from '@/types/notifications'
 import { webHrefForNotificationUrl } from '@/lib/notifications/link'
 import Link from 'next/link'
@@ -142,6 +142,8 @@ export default function NotificationBell() {
         return <Check className="h-4 w-4 text-outline" />
       case 'place_nearby':
         return <MapPin className="h-4 w-4 text-teal-500" />
+      case 'venue_update':
+        return <Store className="h-4 w-4 text-primary" />
       default:
         return <Bell className="h-4 w-4 text-outline" />
     }

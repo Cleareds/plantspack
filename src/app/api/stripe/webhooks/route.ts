@@ -1,3 +1,4 @@
+import { handleVenueEvent, isVenueEvent } from '@/lib/business/venue-billing'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -61,6 +62,14 @@ export async function POST(request: NextRequest) {
         { error: 'Invalid signature' },
         { status: 400 }
       )
+    }
+
+    // Partner plan (venue) subscriptions: handled separately and BEFORE the
+    // supporter handlers, which key on metadata.userId and set user tiers.
+    if (isVenueEvent(event)) {
+      await handleVenueEvent(stripe, event)
+      await logWebhookEvent(event)
+      return NextResponse.json({ received: true })
     }
 
     // Handle the event
