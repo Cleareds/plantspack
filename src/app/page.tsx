@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { unstable_cache } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { createClient as createServerClient } from '@/lib/supabase-server'
@@ -12,6 +12,7 @@ import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 import { canonicalCityName } from '@/lib/places/city-aliases'
+import { getUpcomingGeocodedEvents, getCityCentroid, pickNearbyEvents, type NearbyEvents } from '@/lib/nearby-events'
 import { getCityDishChips, dishPageHref } from '@/lib/dish-page-data'
 import { Barcode, UtensilsCrossed, ChefHat } from 'lucide-react'
 
@@ -222,12 +223,12 @@ const getRecentReviews = unstable_cache(async () => {
     .order('created_at', { ascending: false })
     .limit(24)
   // Only reviews a first-time visitor should see: a real account (not the
-  // test or import accounts) and at least 40 characters of text.
+  // test or import accounts) and at least 23 characters of text (short one-liners like "Best vegan snacks in Leuven!" count; "Great!" does not).
   const HIDDEN_USERNAMES = new Set(['test', 'admin'])
   return (data || [])
     .filter((r: any) => {
       const u = Array.isArray(r.users) ? r.users[0] : r.users
-      return u?.username && !HIDDEN_USERNAMES.has(u.username) && (r.content || '').trim().length >= 40
+      return u?.username && !HIDDEN_USERNAMES.has(u.username) && (r.content || '').trim().length >= 23
     })
     .slice(0, 8)
     .map((r: any) => ({
@@ -389,6 +390,42 @@ async function getInitialLocationData(isSignedIn: boolean) {
   }
 }
 
+/**
+ * Upcoming events near the visitor. Location, most specific first:
+ * pinned city, browser-location cookie, first followed city (signed-in),
+ * then Vercel's approximate IP location (x-vercel-ip-* headers; no prompt).
+ * Server-rendered, so it adds no client request and no layout shift.
+ */
+async function getNearbyEventsForRequest(followed: { city: string; country: string }[]): Promise<NearbyEvents | null> {
+  try {
+    const [c, h, events] = await Promise.all([cookies(), headers(), getUpcomingGeocodedEvents()])
+    if (!events.length) return null
+    let lat: number | null = null, lng: number | null = null
+    const pinnedCity = canonicalCityName(c.get('pp_pinned_city')?.value)
+    const pinnedCountry = c.get('pp_pinned_country')?.value
+    if (pinnedCity && pinnedCountry) {
+      const pt = await getCityCentroid(pinnedCity, pinnedCountry)
+      if (pt) { lat = pt.lat; lng = pt.lng }
+    }
+    if (lat == null) {
+      const la = parseFloat(c.get('pp_user_lat')?.value || ''), lo = parseFloat(c.get('pp_user_lng')?.value || '')
+      if (Number.isFinite(la) && Number.isFinite(lo)) { lat = la; lng = lo }
+    }
+    if (lat == null && followed[0]) {
+      const pt = await getCityCentroid(followed[0].city, followed[0].country)
+      if (pt) { lat = pt.lat; lng = pt.lng }
+    }
+    if (lat == null) {
+      const la = parseFloat(h.get('x-vercel-ip-latitude') || ''), lo = parseFloat(h.get('x-vercel-ip-longitude') || '')
+      if (Number.isFinite(la) && Number.isFinite(lo)) { lat = la; lng = lo }
+    }
+    if (lat == null || lng == null) return null
+    return pickNearbyEvents(events, lat, lng)
+  } catch {
+    return null
+  }
+}
+
 export default async function Home() {
   // Resolve auth state once so we can branch the location-aware fetch and
   // pass an explicit isSignedIn flag to the client (avoids hydration drift
@@ -405,6 +442,7 @@ export default async function Home() {
     getHomeDishChips(),
     getMapActivity(),
   ])
+  const nearbyEvents = await getNearbyEventsForRequest(followedCities)
   const cityDishChips = initialLocation?.city && initialLocation?.country
     ? await getCityDishChipsCached(initialLocation.country, initialLocation.city)
     : []
@@ -460,6 +498,7 @@ export default async function Home() {
         initialLocation={initialLocation}
         followedCities={displayedFollowedCities}
         isSignedIn={isSignedIn}
+        nearbyEvents={nearbyEvents}
       />
 
       {/* Seasonal: Summer Destinations hub link. Renders May-September
