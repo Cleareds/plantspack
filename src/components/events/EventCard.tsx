@@ -17,6 +17,8 @@ type EventPost = {
     time_tbd?: boolean
     cancelled?: boolean
   } | null
+  featured?: boolean
+  featured_place?: { id: string; name: string; slug: string | null } | null
   users: {
     id: string
     username: string
@@ -48,6 +50,11 @@ export default function EventCard({ event }: { event: EventPost }) {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
+        {event.featured && (
+          <div className="mb-1 text-[11px] font-semibold text-primary">
+            Sponsored{event.featured_place ? <> · featured by <Link href={`/place/${event.featured_place.slug || event.featured_place.id}`} className="underline">{event.featured_place.name}</Link></> : null}
+          </div>
+        )}
         <Link href={`/event/${event.id}`}>
           <h3 className="font-semibold text-on-surface text-sm line-clamp-1 mb-1 hover:text-primary transition-colors">
             {data?.cancelled && (

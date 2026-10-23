@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase-server'
+import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
 export async function GET(request: NextRequest) {
   try {
@@ -86,6 +87,31 @@ export async function GET(request: NextRequest) {
       const bTime = b.event_data?.start_time || ''
       return upcoming ? aTime.localeCompare(bTime) : bTime.localeCompare(aTime)
     })
+
+    // Featured events (Partner venues, one slot per place per month). Public
+    // read of event_features only returns rows of places with an active plan.
+    // Featured upcoming events go first and are labelled as sponsored; this
+    // only applies once the business tools are public.
+    if (BUSINESS_TOOLS_PUBLIC && filtered.length) {
+      const now2 = new Date()
+      const monthKey = new Date(Date.UTC(now2.getUTCFullYear(), now2.getUTCMonth(), 1)).toISOString().slice(0, 10)
+      const { data: features } = await supabase.from('event_features').select('post_id, place_id').eq('month', monthKey)
+      const featured = new Map((features || []).map((f: any) => [f.post_id, f.place_id]))
+      if (featured.size) {
+        const placeIds = [...new Set([...featured.values()])]
+        const { data: places } = await supabase.from('places').select('id, name, slug').in('id', placeIds)
+        const placeById = new Map((places || []).map((p: any) => [p.id, p]))
+        for (const p of filtered as any[]) {
+          if (featured.has(p.id) && !p.event_data?.cancelled) {
+            p.featured = true
+            p.featured_place = placeById.get(featured.get(p.id)) ?? null
+          }
+        }
+        if (upcoming && !month) {
+          filtered = [...filtered.filter((p: any) => p.featured), ...filtered.filter((p: any) => !p.featured)]
+        }
+      }
+    }
 
     // For calendar mode, return all events in the month
     if (month) {

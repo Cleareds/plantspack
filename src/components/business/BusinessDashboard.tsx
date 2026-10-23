@@ -211,15 +211,15 @@ export function OwnedPlaceCard({ place, onChanged }: { place: OwnedPlace; onChan
         <OwnerToolTiles place={place} />
 
         <Link
-          href="/feed"
+          href={`/business/places/${place.id}/events`}
           onClick={() => track('owner_tool_used', { tool: 'event', action: 'open' })}
           className="p-4 rounded-xl ghost-border hover:bg-surface-container-low transition-colors"
         >
           <div className="flex items-center gap-2 font-semibold text-on-surface">
             <CalendarPlus className="h-4 w-4 text-primary" />
-            Add an event
+            Events
           </div>
-          <p className="text-sm text-on-surface-variant mt-1">On the feed, press Create and choose Event. It appears in the events calendar.</p>
+          <p className="text-sm text-on-surface-variant mt-1">Add events at your place. They appear in the events calendar and on your page.</p>
         </Link>
       </div>
 

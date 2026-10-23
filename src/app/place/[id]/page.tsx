@@ -54,6 +54,7 @@ import OwnerManageLink from '@/components/business/OwnerManageLink'
 import AdminPreviewGate from '@/components/business/AdminPreviewGate'
 import PlaceMenuSection, { type PublishedMenu } from '@/components/business/PlaceMenuSection'
 import PlaceDealsSection, { type PublicDeal } from '@/components/business/PlaceDealsSection'
+import PlaceEventsSection, { type PlaceEvent } from '@/components/business/PlaceEventsSection'
 import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
@@ -221,6 +222,26 @@ async function getActiveDeals(placeId: string): Promise<PublicDeal[]> {
       .order('created_at')
       .limit(10)
     return (data as PublicDeal[]) || []
+  } catch {
+    return []
+  }
+}
+
+// Public events linked to this place (venue events). Failure = no section.
+async function getPlaceEvents(placeId: string): Promise<PlaceEvent[]> {
+  try {
+    const sb = createAdminClient() as any
+    const { data } = await sb
+      .from('posts')
+      .select('id, title, content, event_data')
+      .eq('place_id', placeId)
+      .eq('category', 'event')
+      .eq('privacy', 'public')
+      .is('deleted_at', null)
+      .not('event_data', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(20)
+    return (data as PlaceEvent[]) || []
   } catch {
     return []
   }
@@ -467,10 +488,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   // Fetch the first page of reviews server-side so it appears on first paint
   // (good for SEO, layout stability, and #reviews anchor scrolling).
-  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu, activeDeals] = await Promise.all([
+  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu, activeDeals, placeEvents] = await Promise.all([
     getInitialReviews(place.id),
     getPublishedMenu(place.id),
     getActiveDeals(place.id),
+    getPlaceEvents(place.id),
   ])
 
   // "More places in {city}" — SSR internal links from each place page to
@@ -1040,6 +1062,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           {activeDeals.length > 0 && (
             <AdminPreviewGate>
               <PlaceDealsSection deals={activeDeals} />
+            </AdminPreviewGate>
+          )}
+
+          {placeEvents.length > 0 && (
+            <AdminPreviewGate>
+              <PlaceEventsSection events={placeEvents} />
             </AdminPreviewGate>
           )}
 

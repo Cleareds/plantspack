@@ -9,6 +9,7 @@ export const PARTNER_FEATURES: Array<{ key: string; title: string; text: string 
   { key: 'deals', title: 'Deals', text: 'Up to 3 active deals on your page and in the app, marked as a deal.' },
   { key: 'insights', title: 'Detailed stats', text: '12-week trends, taps on directions, website and phone, and how you compare with your city.' },
   { key: 'message', title: 'Message followers', text: 'One short message a month to people who follow your city or saved your place on PlantsPack.' },
+  { key: 'event', title: 'Featured event', text: 'One event a month at the top of the events calendar, marked as sponsored.' },
 ]
 
 export interface PlacePlan {
