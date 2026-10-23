@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BadgePercent, LineChart, Lock, Megaphone, Sparkles } from 'lucide-react'
+import { BadgePercent, CalendarCheck, LineChart, Lock, Megaphone, Sparkles } from 'lucide-react'
 import { PARTNER_FEATURES, PARTNER_PRICE, type PlacePlan } from '@/lib/business/plan'
 import type { OwnedPlace } from '@/lib/business/owned-places'
 
@@ -64,7 +64,9 @@ export function PartnerSection({ place }: { place: OwnedPlace }) {
         <div className="grid sm:grid-cols-3 gap-3">
           <Tile href={`/business/places/${place.id}/deals`} icon={<BadgePercent className="h-4 w-4 text-primary" />} title="Deals" text="Up to 3 deals on your page and in the app." />
           <Tile href={`/business/places/${place.id}/insights`} icon={<LineChart className="h-4 w-4 text-primary" />} title="Detailed stats" text="12-week trends, taps, and your city comparison." />
-          <Tile href={`/business/places/${place.id}/message`} icon={<Megaphone className="h-4 w-4 text-primary" />} title="Message followers" text="One message a month to people who follow your city." />
+          <Tile href={`/business/places/${place.id}/message`} icon={<Megaphone className="h-4 w-4 text-primary" />} title="Message followers" text="One message a month to people who follow your city or saved your place." />
+          <Tile href={`/business/places/${place.id}/buttons`} icon={<CalendarCheck className="h-4 w-4 text-primary" />} title="Booking and order buttons" text="Link your own booking page or online ordering." />
+          <Tile href={`/business/places/${place.id}/events`} icon={<Sparkles className="h-4 w-4 text-primary" />} title="Featured event" text="Put one event a month at the top of the events calendar." />
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-5">

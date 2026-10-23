@@ -50,6 +50,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
   const taps: Record<string, { last30: number; prev30: number }> = {
     directions: { last30: 0, prev30: 0 }, website: { last30: 0, prev30: 0 }, phone: { last30: 0, prev30: 0 }, menu: { last30: 0, prev30: 0 },
+    booking: { last30: 0, prev30: 0 }, order: { last30: 0, prev30: 0 },
   }
   for (const r of actions.data || []) {
     const bucket = r.day >= iso(d30) ? 'last30' : 'prev30'

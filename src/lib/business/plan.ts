@@ -10,6 +10,7 @@ export const PARTNER_FEATURES: Array<{ key: string; title: string; text: string 
   { key: 'insights', title: 'Detailed stats', text: '12-week trends, taps on directions, website and phone, and how you compare with your city.' },
   { key: 'message', title: 'Message followers', text: 'One short message a month to people who follow your city or saved your place on PlantsPack.' },
   { key: 'event', title: 'Featured event', text: 'One event a month at the top of the events calendar, marked as sponsored.' },
+  { key: 'buttons', title: 'Booking and order buttons', text: '"Book a table" and "Order online" on your page and in the app, linked to your own systems.' },
 ]
 
 export interface PlacePlan {

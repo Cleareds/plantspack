@@ -55,6 +55,7 @@ import AdminPreviewGate from '@/components/business/AdminPreviewGate'
 import PlaceMenuSection, { type PublishedMenu } from '@/components/business/PlaceMenuSection'
 import PlaceDealsSection, { type PublicDeal } from '@/components/business/PlaceDealsSection'
 import PlaceEventsSection, { type PlaceEvent } from '@/components/business/PlaceEventsSection'
+import PlaceBookingButtons from '@/components/business/PlaceBookingButtons'
 import ViewTracker from '@/components/analytics/ViewTracker'
 import PlaceEditButton from '@/components/places/PlaceEditButton'
 import { pickOgImage } from '@/lib/places/og-image'
@@ -488,12 +489,15 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
   // Fetch the first page of reviews server-side so it appears on first paint
   // (good for SEO, layout stability, and #reviews anchor scrolling).
-  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu, activeDeals, placeEvents] = await Promise.all([
+  const [{ reviews: initialReviews, hasMore: reviewsHasMore }, publishedMenu, activeDeals, placeEvents, hasPartnerPlan] = await Promise.all([
     getInitialReviews(place.id),
     getPublishedMenu(place.id),
     getActiveDeals(place.id),
     getPlaceEvents(place.id),
+    (createAdminClient() as any).rpc('place_has_partner_plan', { p_place_id: place.id }).then((r: any) => !!r.data, () => false),
   ])
+  const bookingUrl: string | null = hasPartnerPlan ? ((place as any).booking_url ?? null) : null
+  const orderUrl: string | null = hasPartnerPlan ? ((place as any).order_url ?? null) : null
 
   // "More places in {city}" — SSR internal links from each place page to
   // 6 siblings in the same city. Densifies the internal-link graph so
@@ -818,6 +822,11 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
           {/* Details */}
           <div className="p-6 space-y-4 border-b border-outline-variant/15">
+            {(bookingUrl || orderUrl) && (
+              <AdminPreviewGate>
+                <PlaceBookingButtons bookingUrl={bookingUrl} orderUrl={orderUrl} />
+              </AdminPreviewGate>
+            )}
             {/* Vegan level + category badges */}
             <div className="space-y-1.5">
               <div className="flex flex-wrap gap-2">

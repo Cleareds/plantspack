@@ -14,7 +14,7 @@ export default function PlaceActionTracker({ placeId }: { placeId: string }) {
       const el = (e.target as HTMLElement | null)?.closest?.('[data-place-action]') as HTMLElement | null
       if (!el) return
       const action = el.dataset.placeAction
-      if (!action || !['directions', 'website', 'phone', 'menu'].includes(action)) return
+      if (!action || !['directions', 'website', 'phone', 'menu', 'booking', 'order'].includes(action)) return
       if (typeof navigator !== 'undefined' && navigator.webdriver) return
       const key = `pp_action:${placeId}:${action}`
       try {

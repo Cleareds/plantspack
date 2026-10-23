@@ -9,11 +9,11 @@ interface Data {
   weeks: Array<{ start: string; views: number; saves: number }>
   views30: number
   cityMedian30: number | null
-  taps: Record<'directions' | 'website' | 'phone' | 'menu', { last30: number; prev30: number }>
+  taps: Record<'directions' | 'website' | 'phone' | 'menu' | 'booking' | 'order', { last30: number; prev30: number }>
   reviews: { total: number; average: number | null; last30: number }
 }
 
-const TAP_LABEL = { directions: 'Directions', website: 'Website', phone: 'Phone' } as const
+const TAP_LABEL = { directions: 'Directions', website: 'Website', phone: 'Phone', booking: 'Book a table', order: 'Order online' } as const
 
 function WeekBars({ weeks, field, label }: { weeks: Data['weeks']; field: 'views' | 'saves'; label: string }) {
   const max = Math.max(1, ...weeks.map((w) => w[field]))
