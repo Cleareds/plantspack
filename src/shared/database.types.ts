@@ -86,6 +86,49 @@ export type Database = {
         }
         Relationships: []
       }
+      business_pilots: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          note: string | null
+          place_id: string
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          note?: string | null
+          place_id: string
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          note?: string | null
+          place_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_pilots_added_by_fkey"
+            columns: ["added_by"]
+            isOneToOne: false
+            referencedRelation: "user_contributions_summary"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "business_pilots_added_by_fkey"
+            columns: ["added_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_pilots_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: true
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           color: string | null
@@ -2061,6 +2104,7 @@ export type Database = {
           content: string
           created_at: string
           deleted_at: string | null
+          dishes: string[]
           edit_count: number | null
           edited_at: string | null
           engagement_score: number
@@ -2076,6 +2120,7 @@ export type Database = {
           content: string
           created_at?: string
           deleted_at?: string | null
+          dishes?: string[]
           edit_count?: number | null
           edited_at?: string | null
           engagement_score?: number
@@ -2091,6 +2136,7 @@ export type Database = {
           content?: string
           created_at?: string
           deleted_at?: string | null
+          dishes?: string[]
           edit_count?: number | null
           edited_at?: string | null
           engagement_score?: number
@@ -4727,6 +4773,24 @@ export type Database = {
             }
             Returns: string
           }
+      admin_country_dq_summary: {
+        Args: never
+        Returns: {
+          checked: number
+          cities: number
+          community: number
+          country: string
+          fully_vegan: number
+          fv_checked: number
+          human_verified: number
+          last_verified_at: string
+          mostly_vegan: number
+          no_image: number
+          no_website: number
+          odd_city: number
+          total: number
+        }[]
+      }
       bulk_remove_place_tag: {
         Args: { p_place_ids: string[]; p_tag: string }
         Returns: undefined
@@ -4754,24 +4818,6 @@ export type Database = {
           has_claim: boolean
           rejection_reason: string
           status: string
-        }[]
-      }
-      admin_country_dq_summary: {
-        Args: never
-        Returns: {
-          country: string
-          total: number
-          fully_vegan: number
-          fv_checked: number
-          mostly_vegan: number
-          checked: number
-          human_verified: number
-          no_website: number
-          no_image: number
-          odd_city: number
-          community: number
-          last_verified_at: string | null
-          cities: number
         }[]
       }
       city_place_view_median: {

@@ -1,5 +1,6 @@
 'use client'
 
+import { DISHES } from '@/lib/dish-keywords'
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { track } from '@/lib/analytics'
@@ -19,12 +20,15 @@ import EmojiPickerButton from '../ui/EmojiPickerButton'
 import LinkifiedText from '../ui/LinkifiedText'
 import ReviewReplyThread, { type ReviewReply } from './ReviewReplyThread'
 
+const dishLabel = (slug: string) => DISHES.find((d) => d.slug === slug)?.label ?? slug
+
 type Review = {
   id: string
   place_id: string
   user_id: string
   rating: number
   content: string
+  dishes?: string[] | null
   images: string[]
   video_url: string | null
   deleted_at: string | null
@@ -636,9 +640,14 @@ export default function PlaceReviews({
                         <StarRating rating={review.rating} size="sm" />
                       </div>
 
-                      <p className="text-on-surface-variant text-sm mb-3 whitespace-pre-wrap">
-                        <LinkifiedText text={review.content} />
-                      </p>
+                      {review.dishes && review.dishes.length > 0 && (
+                        <p className="text-xs font-medium text-primary mb-2">Ate: {review.dishes.map(dishLabel).join(', ')}</p>
+                      )}
+                      {review.content && (
+                        <p className="text-on-surface-variant text-sm mb-3 whitespace-pre-wrap">
+                          <LinkifiedText text={review.content} />
+                        </p>
+                      )}
 
                       {/* Review images */}
                       {review.images && review.images.length > 0 && (
