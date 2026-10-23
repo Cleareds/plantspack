@@ -330,7 +330,16 @@ export default function PrivacyPolicy() {
               <li><strong>Expo Application Services (EAS)</strong>: delivers over-the-air JavaScript updates for the app. EAS receives the app version and platform, not personal data.</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Contact Us</h2>
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">15. Business Owners and Venue Features</h2>
+            <ul className="list-disc pl-6 text-on-surface-variant mb-4 space-y-2">
+              <li><strong>Claiming a place:</strong> when you claim a place we collect your name, email, phone number (optional), role, website (optional) and the proof you describe, to check that you are connected to the place (legitimate interest). We keep claim records while you manage the place and as long as needed to handle questions about the claim. You can ask us to delete your claim details at any time by writing to the contact address below.</li>
+              <li><strong>Owner stats:</strong> page views and taps on directions, website, phone, booking and ordering are counted as daily totals per place. We store no user, IP address or cookie with these counts, and owners never see who visited.</li>
+              <li><strong>Partner plan payments:</strong> handled by Stripe, including the billing address and VAT number you enter at checkout. We store the Stripe customer and subscription IDs and the plan status, not card details.</li>
+              <li><strong>Messages from places:</strong> if you follow a city or save a place, a Partner venue there may send you one short in-app message a month. We choose the recipients; venues never see who you are. You can switch these off at any time under notification settings (&quot;Updates from places&quot;).</li>
+              <li><strong>Supporter card:</strong> shows your name and username so a venue can confirm a supporter deal. It is only shown when you open it yourself.</li>
+            </ul>
+
+            <h2 className="text-2xl font-semibold text-on-surface mt-8 mb-4">16. Contact Us</h2>
             <p className="text-on-surface-variant mb-4">
               If you have questions about this Privacy Policy or how we handle your data, please contact us.
               PlantsPack is operated by Cleareds, a company registered in Belgium.
