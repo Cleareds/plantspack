@@ -12,7 +12,7 @@ export default async function OwnerPrintPage({ params }: { params: Promise<{ id:
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 py-10">
-        <Link href="/business/dashboard" className="no-print text-sm font-medium text-primary hover:underline">&larr; Business dashboard</Link>
+        <Link href={`/business/places/${id}`} className="no-print text-sm font-medium text-primary hover:underline">&larr; Back to the dashboard</Link>
         <PrintKit placeId={id} />
       </div>
     </div>

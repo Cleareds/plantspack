@@ -12,7 +12,7 @@ export default async function OwnerMenuPage({ params }: { params: Promise<{ id: 
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 py-10">
-        <Link href="/business/dashboard" className="text-sm font-medium text-primary hover:underline">&larr; Business dashboard</Link>
+        <Link href={`/business/places/${id}`} className="text-sm font-medium text-primary hover:underline">&larr; Back to the dashboard</Link>
         <MenuEditor placeId={id} />
       </div>
     </div>
