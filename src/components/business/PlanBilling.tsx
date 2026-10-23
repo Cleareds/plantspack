@@ -120,7 +120,7 @@ export default function PlanBilling({ placeId }: { placeId: string }) {
 
       <p className="flex items-start gap-2 text-sm text-on-surface-variant">
         <ShieldCheck className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-        The Partner plan buys tools. It never changes your position in lists, your vegan level, your verification or your reviews. You can cancel at any time from Manage billing; the plan runs to the end of the paid period and the free tools stay. See the <Link href="/business/terms" className="text-primary font-medium hover:underline">business terms</Link>.
+        The Partner plan buys tools. It never changes your position in lists, your vegan level, your verification or your reviews. Cancel any time from Manage billing; the free tools stay. Changed your mind? Cancel within 14 days of your first payment for a full refund, and a yearly plan cancelled later is refunded for the full unused months: write to hello@plantspack.com. See the <Link href="/business/terms" className="text-primary font-medium hover:underline">business terms</Link>.
       </p>
 
       {message && <div className={`p-3 rounded-xl text-sm ${message.kind === 'ok' ? 'bg-primary/10 text-on-surface' : 'bg-red-50 text-red-800'}`}>{message.text}</div>}

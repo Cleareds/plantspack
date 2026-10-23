@@ -49,7 +49,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       // Only when Stripe Tax is set up on the account (STRIPE_AUTOMATIC_TAX=true).
       ...(process.env.STRIPE_AUTOMATIC_TAX === 'true' ? { automatic_tax: { enabled: true } } : {}),
       custom_text: {
-        submit: { message: `PlantsPack Partner plan for ${gate.place.name}. By subscribing you agree to the business terms at plantspack.com/business/terms. Cancel any time from your dashboard.` },
+        submit: { message: `PlantsPack Partner plan for ${gate.place.name}. Full refund if you cancel within 14 days. By subscribing you agree to the business terms at plantspack.com/business/terms.` },
       },
       success_url: `${origin}/business/places/${gate.place.id}?plan=started`,
       cancel_url: `${origin}/business/places/${gate.place.id}/plan`,

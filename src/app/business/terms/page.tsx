@@ -44,19 +44,29 @@ export default function BusinessTermsPage() {
         <ul>
           {PARTNER_FEATURES.map((f) => <li key={f.key}><strong>{f.title}.</strong> {f.text}</li>)}
         </ul>
-        <p>Payment is handled by Stripe. The plan renews automatically at the end of each month or year until you cancel. You can cancel at any time from your business dashboard (Plan and billing, Manage billing); the plan stays active until the end of the period you paid for. We do not refund part-periods, except where the law requires it. If a payment fails, the paid tools may stop after a short grace period; the free tools stay.</p>
+        <p>Payment is handled by Stripe. The plan renews automatically at the end of each month or year until you cancel. You can cancel at any time from your business dashboard (Plan and billing, Manage billing). If a payment fails, the paid tools may stop after a short grace period; the free tools stay.</p>
+
+        <h2>6. Refunds</h2>
+        <ul>
+          <li><strong>14-day money-back.</strong> If you cancel within 14 days of your first payment, monthly or yearly, we refund the whole amount. No questions asked.</li>
+          <li><strong>Yearly plan.</strong> If you cancel a yearly plan later, we refund the full months you have not used yet.</li>
+          <li><strong>Monthly plan.</strong> After the first 14 days, cancelling stops the next renewal and the current month runs to its end.</li>
+          <li><strong>When it is our fault.</strong> If the paid tools do not work for a meaningful time, or we end your plan without a breach on your side, we refund the unused part.</li>
+          <li><strong>How to ask.</strong> Write to <a href="mailto:hello@plantspack.com">hello@plantspack.com</a> from the email address on your account. Refunds go back to the card that paid, through Stripe, usually within 5 to 10 days. When we refund, the plan ends at that moment.</li>
+        </ul>
+        <p>These promises add to any rights you have under the law; they never reduce them.</p>
         <p>We may change the price or the contents of the plan with at least 30 days&apos; notice by email. A price change applies from your next billing period, and you can cancel before it does.</p>
 
-        <h2>6. Free tools</h2>
+        <h2>7. Free tools</h2>
         <p>Editing your details, replying to reviews, publishing your menu, your stats, the monthly summary email, the sticker and table card, the website badge and events stay free. We may change or end free tools at any time.</p>
 
-        <h2>7. Ending</h2>
-        <p>You can stop using the business tools at any time. We may suspend or end your access if you break these terms; for a paid plan ended by us without a breach on your side, we refund the unused part.</p>
+        <h2>8. Ending</h2>
+        <p>You can stop using the business tools at any time. We may suspend or end your access if you break these terms. If we end a paid plan without a breach on your side, we refund the unused part (see Refunds).</p>
 
-        <h2>8. Liability</h2>
+        <h2>9. Liability</h2>
         <p>We provide the business tools as they are. We do not promise a number of visitors, bookings or sales. To the extent the law allows, our liability is limited to the amount you paid us in the 12 months before the claim.</p>
 
-        <h2>9. Contact</h2>
+        <h2>10. Contact</h2>
         <p>Questions about these terms or your plan: <a href="mailto:hello@plantspack.com">hello@plantspack.com</a>.</p>
       </article>
     </div>
