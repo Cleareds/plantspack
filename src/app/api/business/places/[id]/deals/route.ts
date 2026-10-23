@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { requirePartnerPlace } from '@/lib/business/require-owner'
 import { log } from '@/lib/logger'
+import { toSlug } from '@/lib/slug'
 
 const MAX_ACTIVE_DEALS = 3
 
@@ -30,10 +31,12 @@ async function liveCount(admin: any, placeId: string): Promise<number> {
   return count ?? 0
 }
 
-async function revalidate(place: { id: string; slug: string | null }) {
+async function revalidate(place: { id: string; slug: string | null; city: string | null; country: string | null }) {
   try {
     revalidatePath(`/place/${place.id}`)
     if (place.slug) revalidatePath(`/place/${place.slug}`)
+    // The city hub shows a deal strip too.
+    if (place.city && place.country) revalidatePath(`/vegan-places/${toSlug(place.country)}/${toSlug(place.city)}`)
   } catch (e) {
     log.error('[deals] revalidate failed', e)
   }

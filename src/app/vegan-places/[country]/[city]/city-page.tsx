@@ -72,6 +72,9 @@ import { getCityIntro } from '@/lib/city-intros'
 import { getRegionForCity, getRegionCityStats } from '@/lib/regions'
 import { getCountryAuditPost } from '@/lib/country-audit-post'
 import { createAdminClient } from '@/lib/supabase-admin'
+import { fetchCityDeals } from '@/lib/business/city-deals'
+import CityDealsStrip from '@/components/business/CityDealsStrip'
+import AdminPreviewGate from '@/components/business/AdminPreviewGate'
 import { getCityPlacesDirect, getScoresDirect, getCityExperiencesDirect } from '@/lib/directory-data'
 
 // Shared implementation for /vegan-places/<country>/<city> and its
@@ -434,7 +437,10 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
   ])
   // Depends on the canonical cityName/countryName from fetchCityPlaces, so
   // it can't join the Promise.all above.
-  const cityReviews = await fetchCityReviews(cityName, countryName)
+  const [cityReviews, cityDeals] = await Promise.all([
+    fetchCityReviews(cityName, countryName),
+    fetchCityDeals(cityName, countryName),
+  ])
 
   // FV-mode filters the place list at SSR. Empty filter -> redirect back
   // to the regular city page rather than serving "0 fully vegan in X".
@@ -782,6 +788,12 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
                   ))}
                 </div>
               </section>
+            )}
+
+            {cityDeals.length > 0 && (
+              <AdminPreviewGate>
+                <CityDealsStrip deals={cityDeals} cityName={cityName} />
+              </AdminPreviewGate>
             )}
 
             {/* CityPlacesList reads useSearchParams(). On a statically rendered
