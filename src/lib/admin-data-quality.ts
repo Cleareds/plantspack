@@ -1,29 +1,76 @@
 import { createAdminClient } from './supabase-admin'
+import { toSlug } from './slug'
 
 /**
  * Server-side stats helpers behind /api/admin/data-quality/coverage[/<country>].
  *
  * Not exposed publicly — the API routes that import this module enforce
- * admin auth before responding. The country list mirrors the cards on
- * /admin/data-quality so the admin page and API stay in sync.
+ * admin auth before responding. Countries come from the live DB (any
+ * country with a place), not a hard-coded list.
  */
 
-export const COVERED_COUNTRIES = [
-  'Belgium',
-  'Croatia',
-  'Portugal',
-  'Spain',
-  'Italy',
-  'Greece',
-  'Turkey',
-  'Germany',
-  'Brazil',
-] as const
+export type CountrySummary = {
+  country: string
+  total: number
+  fully_vegan: number
+  fv_checked: number
+  mostly_vegan: number
+  checked: number
+  human_verified: number
+  no_website: number
+  no_image: number
+  odd_city: number
+  community: number
+  last_verified_at: string | null
+  cities: number
+}
 
-export type CoveredCountry = (typeof COVERED_COUNTRIES)[number]
+/**
+ * Every country with at least one live place, with its data-quality
+ * rollup. One aggregate RPC (admin_country_dq_summary, service role only)
+ * instead of paging 52K rows. Cached for 60 s per server instance so the
+ * admin page and the per-country resolver do not re-run it on every hit.
+ */
+let summaryCache: { at: number; rows: CountrySummary[] } | null = null
+export async function getCountrySummaries(force = false): Promise<CountrySummary[]> {
+  if (!force && summaryCache && Date.now() - summaryCache.at < 60_000) return summaryCache.rows
+  const sb = createAdminClient()
+  const { data, error } = await sb.rpc('admin_country_dq_summary')
+  if (error) {
+    console.error('[admin-data-quality] summary', error.message)
+    return summaryCache?.rows ?? []
+  }
+  const rows = ((data ?? []) as any[]).map(r => ({
+    country: r.country,
+    total: Number(r.total),
+    fully_vegan: Number(r.fully_vegan),
+    fv_checked: Number(r.fv_checked),
+    mostly_vegan: Number(r.mostly_vegan),
+    checked: Number(r.checked),
+    human_verified: Number(r.human_verified),
+    no_website: Number(r.no_website),
+    no_image: Number(r.no_image),
+    odd_city: Number(r.odd_city),
+    community: Number(r.community),
+    last_verified_at: r.last_verified_at ?? null,
+    cities: Number(r.cities),
+  }))
+  summaryCache = { at: Date.now(), rows }
+  return rows
+}
 
-export function matchCountry(input: string): CoveredCountry | null {
-  return COVERED_COUNTRIES.find(c => c.toLowerCase() === input.toLowerCase()) ?? null
+/**
+ * Resolve a URL slug ("ukraine", "bosnia-and-herzegovina", "Ukraine") to
+ * the exact country value stored in places.country. Title-casing the slug
+ * breaks on "and", "of", "d'Ivoire" and similar, so match against the
+ * live country list instead.
+ */
+export async function matchCountry(input: string): Promise<string | null> {
+  const want = toSlug(decodeURIComponent(input))
+  const rows = await getCountrySummaries()
+  const hit = rows.find(r => toSlug(r.country) === want)
+    ?? rows.find(r => r.country.toLowerCase() === input.toLowerCase())
+  return hit?.country ?? null
 }
 
 type Row = {
@@ -93,7 +140,7 @@ function summarize(rows: Row[]) {
   }
 }
 
-export async function getCountryCoverage(country: CoveredCountry) {
+export async function getCountryCoverage(country: string) {
   const rows = await fetchCountry(country)
   if (!rows.length) return null
   const summary = summarize(rows)
@@ -146,7 +193,9 @@ export async function getAllCoverages() {
     last_verified_at: string | null
     sample_cities: { city: string; fully_vegan: number }[]
   }> = []
-  for (const c of COVERED_COUNTRIES) {
+  const summaries = await getCountrySummaries()
+  const audited = summaries.filter(s => s.checked > 0 || s.total >= 200).map(s => s.country)
+  for (const c of audited) {
     const rows = await fetchCountry(c)
     if (!rows.length) continue
     const summary = summarize(rows)

@@ -28,9 +28,9 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ cou
     return NextResponse.json({ error: 'forbidden' }, { status: 403 })
   }
   const { country: raw } = await params
-  const matched = matchCountry(decodeURIComponent(raw))
+  const matched = await matchCountry(raw)
   if (!matched) {
-    return NextResponse.json({ error: 'country not covered' }, { status: 404 })
+    return NextResponse.json({ error: 'country not found' }, { status: 404 })
   }
   const data = await getCountryCoverage(matched)
   if (!data) return NextResponse.json({ error: 'no data' }, { status: 404 })

@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase-server'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { slugToDisplay } from '@/lib/places/slugify'
+import { matchCountry } from '@/lib/admin-data-quality'
+import { isOddCity, suggestCity } from '@/lib/places/odd-city'
+import { toSlug } from '@/lib/slug'
 import { veganLevelOrder } from '@/lib/vegan-level'
 import DataQualityRow from '@/components/admin/DataQualityRow'
 import DataQualityFilters from '@/components/admin/DataQualityFilters'
@@ -51,6 +54,8 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
   const filterVl = (typeof sp.vl === 'string' ? sp.vl : '') || ''
   const filterVerif = (typeof sp.verif === 'string' ? sp.verif : '') || ''
   const filterFlag = (typeof sp.flag === 'string' ? sp.flag : '') || ''
+  const filterCity = (typeof sp.city === 'string' ? sp.city : '') || ''
+  const showAllCities = sp.all === '1'
 
   // Auth
   const supabase = await createClient()
@@ -60,26 +65,34 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
   if (profile?.role !== 'admin') redirect('/')
 
   const admin = createServiceClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
-  const countryName = slugToDisplay(countrySlug)
+  // Resolve against the live country list: title-casing the slug breaks
+  // on "Bosnia and Herzegovina", "Côte d'Ivoire" and similar.
+  const countryName = (await matchCountry(countrySlug)) ?? slugToDisplay(countrySlug)
 
-  // Try fetching with admin_notes; gracefully fall back if migration not applied.
+  // PostgREST caps every read at 1000 rows, so page by id. Germany has
+  // 12K live rows; the old single .limit(3000) read silently showed 1000.
   let places: PlaceRow[] = []
   let migrationMissing = false
   const cols = 'id, slug, name, city, country, vegan_level, category, subcategory, website, phone, address, description, main_image_url, images, opening_hours, review_count, average_rating, latitude, longitude, verification_level, verification_method, verification_status, last_verified_at, source'
-  const initial: any = await admin
-    .from('places')
-    .select(`${cols}, admin_notes`)
-    .eq('country', countryName)
-    .is('archived_at', null)
-    .limit(3000)
+  const fetchAll = async (select: string) => {
+    const out: any[] = []
+    let lastId: string | null = null
+    for (let i = 0; i < 40; i++) {
+      let q = admin.from('places').select(select).eq('country', countryName).is('archived_at', null).order('id').limit(1000)
+      if (lastId) q = q.gt('id', lastId)
+      const res: any = await q
+      if (res.error) return { error: res.error, data: out }
+      const rows = res.data || []
+      out.push(...rows)
+      if (rows.length < 1000) break
+      lastId = rows[rows.length - 1].id
+    }
+    return { error: null, data: out }
+  }
+  const initial: any = await fetchAll(`${cols}, admin_notes`)
   if (initial.error?.code === '42703' || /admin_notes/.test(initial.error?.message || '')) {
     migrationMissing = true
-    const fallback: any = await admin
-      .from('places')
-      .select(cols)
-      .eq('country', countryName)
-      .is('archived_at', null)
-      .limit(3000)
+    const fallback: any = await fetchAll(cols)
     if (fallback.error) return <div className="p-8 text-red-600">Error: {fallback.error.message}</div>
     places = (fallback.data || []).map((r: any) => ({ ...r, admin_notes: null }))
   } else if (initial.error) {
@@ -88,11 +101,23 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
     places = (initial.data || []) as PlaceRow[]
   }
 
+  if (places.length === 0) {
+    return (
+      <div className="p-8 max-w-3xl mx-auto">
+        <Link href="/admin/data-quality" className="text-sm text-primary hover:underline">← Data Quality</Link>
+        <h1 className="text-2xl font-bold mt-3 mb-2">No live places for “{countryName}”</h1>
+        <p className="text-sm text-on-surface-variant">The URL slug did not match any value in places.country. Pick the country from the Country audits table instead.</p>
+      </div>
+    )
+  }
+
   // Apply filters
   const filtered = places.filter(p => {
     if (filterVl && p.vegan_level !== filterVl) return false
     if (filterVerif === 'unverified' && (p.verification_level ?? 0) >= 3) return false
     if (filterVerif === 'verified' && (p.verification_level ?? 0) < 3) return false
+    if (filterCity && (p.city || '(no city)') !== filterCity) return false
+    if (filterFlag === 'odd_city' && !isOddCity(p.city)) return false
     if (filterFlag === 'no_website' && p.website) return false
     if (filterFlag === 'no_image' && (p.main_image_url || (p.images && p.images.length > 0))) return false
     if (filterFlag === 'thin_desc' && (p.description || '').length > 120) return false
@@ -130,6 +155,34 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
   const fvVerified = places.filter(r => r.vegan_level === 'fully_vegan' && (r.verification_level ?? 0) >= 3).length
   const noWebsite = places.filter(r => !r.website).length
   const noImage = places.filter(r => !r.main_image_url && !(r.images && r.images.length > 0)).length
+  const oddCities = places.filter(r => isOddCity(r.city)).length
+  const humanVerified = places.filter(r => r.verification_method === 'admin_review').length
+  const checkedPct = all ? Math.round((verified / all) * 100) : 0
+  const fvOpen = fv - fvVerified
+
+  // City index over ALL rows (not the filtered view) so the jump list stays stable.
+  const cityIndex = new Map<string, { n: number; fvOpen: number; odd: boolean }>()
+  for (const r of places) {
+    const c = r.city || '(no city)'
+    const e = cityIndex.get(c) ?? { n: 0, fvOpen: 0, odd: isOddCity(r.city) }
+    e.n++
+    if (r.vegan_level === 'fully_vegan' && (r.verification_level ?? 0) < 3) e.fvOpen++
+    cityIndex.set(c, e)
+  }
+  const cityChips = [...cityIndex.entries()].sort((a, b) => b[1].n - a[1].n)
+
+  // Big countries: render the top cities only unless a city is picked or
+  // "all" is asked for, so a 12K-row page does not freeze the browser.
+  const CITY_LIMIT = 12
+  const bigView = !filterCity && !showAllCities && filtered.length > 1500
+  const visibleCities = bigView ? cities.slice(0, CITY_LIMIT) : cities
+  const qsWith = (patch: Record<string, string | null>) => {
+    const p = new URLSearchParams()
+    for (const [k, v] of Object.entries(sp)) if (typeof v === 'string' && v) p.set(k, v)
+    for (const [k, v] of Object.entries(patch)) { if (v == null) p.delete(k); else p.set(k, v) }
+    const q = p.toString()
+    return `/admin/data-quality/${countrySlug}${q ? '?' + q : ''}`
+  }
 
   return (
     <div className="p-6 max-w-[120rem] mx-auto">
@@ -149,24 +202,53 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-3">
         <Stat label="Total" value={all} />
         <Stat label="Showing" value={filtered.length} valueClass="text-primary" />
-        <Stat label="Fully vegan" value={fv} />
-        <Stat label="✓ Verified" value={verified} valueClass="text-emerald-600" />
-        <Stat label="FV verified" value={`${fvVerified}/${fv}`} />
+        <Stat label="Checked (L3+)" value={`${verified} · ${checkedPct}%`} valueClass="text-emerald-600" />
+        <Stat label="Human ✓ (admin_review)" value={humanVerified} valueClass="text-emerald-700" />
+        <Stat label="FV checked" value={`${fvVerified}/${fv}`} />
+        <Stat label="FV open" value={fvOpen} valueClass={fvOpen ? 'text-amber-600' : 'text-on-surface'} />
         <Stat label="No web · No img" value={`${noWebsite} · ${noImage}`} valueClass="text-amber-600" />
+        <Stat label="Odd city labels" value={oddCities} valueClass={oddCities ? 'text-amber-600' : 'text-on-surface'} />
       </div>
+
+      <div className="mb-4 flex flex-wrap gap-2 text-xs">
+        <span className="text-on-surface-variant font-medium self-center">Start with:</span>
+        <Link href={qsWith({ vl: 'fully_vegan', verif: 'unverified', flag: null })} className="px-2 py-1 rounded bg-amber-100 text-amber-900 hover:bg-amber-200">{fvOpen} unchecked fully vegan</Link>
+        {oddCities > 0 && <Link href={qsWith({ flag: 'odd_city', vl: null, verif: null })} className="px-2 py-1 rounded bg-amber-100 text-amber-900 hover:bg-amber-200">{oddCities} odd city labels</Link>}
+        <Link href={qsWith({ vl: 'mostly_vegan', verif: 'unverified', flag: null })} className="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high">unchecked mostly vegan</Link>
+        <Link href={`/vegan-places/${toSlug(countryName)}`} target="_blank" className="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high">public country hub ↗</Link>
+        {(filterCity || filterFlag || filterVl || filterVerif) && <Link href={`/admin/data-quality/${countrySlug}`} className="px-2 py-1 rounded text-primary hover:underline">clear all filters</Link>}
+      </div>
+
+      <details className="mb-4" open={cityChips.length <= 30}>
+        <summary className="text-xs text-on-surface-variant cursor-pointer mb-2">Cities ({cityChips.length}) · amber = unchecked fully vegan · dashed = odd label</summary>
+        <div className="flex flex-wrap gap-1.5">
+          {cityChips.map(([c, e]) => (
+            <Link key={c} href={qsWith({ city: filterCity === c ? null : c })}
+              className={`px-2 py-0.5 rounded text-[11px] ${filterCity === c ? 'bg-primary text-on-primary-btn' : 'bg-surface-container hover:bg-surface-container-high'} ${e.odd ? 'border border-dashed border-amber-500' : ''}`}>
+              {c} <span className="opacity-60">{e.n}</span>{e.fvOpen > 0 && <span className="ml-1 text-amber-700">·{e.fvOpen}</span>}
+            </Link>
+          ))}
+        </div>
+      </details>
 
       <Suspense fallback={null}>
         <DataQualityFilters />
       </Suspense>
 
       <p className="text-xs text-on-surface-variant mb-6 max-w-3xl">
-        Use the quick-links per row to verify a place exists: <strong>Maps</strong> opens Google Maps at the geocoded coords (or a fallback search), <strong>Google</strong> searches the place name + city, <strong>HC</strong> opens HappyCow's search. Type notes into the textarea (auto-saves on blur). Click <strong>Confirm</strong> when you've done what you can to verify the place exists and the data looks good. Click <strong>Closed</strong> if the place is permanently closed (soft-archives the row).
+        Use the quick-links per row to verify a place exists: <strong>Maps</strong> opens Google Maps at the geocoded coords (or a fallback search), <strong>Google</strong> searches the place name + city, <strong>HC</strong> opens HappyCow's search. Type notes into the textarea (auto-saves on blur). Click <strong>Confirm</strong> when you've done what you can to verify the place exists and the data looks good. Click <strong>Closed</strong> if the place is permanently closed (soft-archives the row). Odd city labels (amber) have a one-click fix to the suggested town name; the place then shows up on that town's public hub.
       </p>
 
-      {cities.map(({ city, list }) => {
+      {bigView && (
+        <p className="mb-4 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded p-2">
+          Showing the {CITY_LIMIT} largest of {cities.length} cities to keep the page fast. Pick a city above or a filter, or <Link href={qsWith({ all: '1' })} className="underline">show every city</Link>.
+        </p>
+      )}
+
+      {visibleCities.map(({ city, list }) => {
         const cityFv = list.filter(r => r.vegan_level === 'fully_vegan').length
         const cityVer = list.filter(r => (r.verification_level ?? 0) >= 3).length
         return (
@@ -187,7 +269,7 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
                 </thead>
                 <tbody>
                   {list.map(p => (
-                    <DataQualityRow key={p.id} place={p as any} />
+                    <DataQualityRow key={p.id} place={p as any} citySuggestion={isOddCity(p.city) ? (suggestCity(p.city!) ?? '') : null} />
                   ))}
                 </tbody>
               </table>

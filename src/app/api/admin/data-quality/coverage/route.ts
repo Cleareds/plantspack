@@ -18,10 +18,9 @@ async function checkAdmin() {
 /**
  * GET /api/admin/data-quality/coverage
  *
- * Admin-only. Returns per-country summary stats for every country that
- * has a card on /admin/data-quality (Belgium + the six countries from
- * the May 2026 coverage push + Germany). Used by the admin Country
- * audits panel and for ad-hoc internal reporting.
+ * Admin-only. Returns fully-vegan coverage stats for every country that
+ * has audit work (any checked row) or 200+ places. For the light
+ * all-country rollup use /api/admin/data-quality/countries.
  */
 export async function GET() {
   if (!(await checkAdmin())) {

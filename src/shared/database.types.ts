@@ -4756,6 +4756,24 @@ export type Database = {
           status: string
         }[]
       }
+      admin_country_dq_summary: {
+        Args: never
+        Returns: {
+          country: string
+          total: number
+          fully_vegan: number
+          fv_checked: number
+          mostly_vegan: number
+          checked: number
+          human_verified: number
+          no_website: number
+          no_image: number
+          odd_city: number
+          community: number
+          last_verified_at: string | null
+          cities: number
+        }[]
+      }
       city_place_view_median: {
         Args: { p_city: string; p_country: string; p_days?: number }
         Returns: number

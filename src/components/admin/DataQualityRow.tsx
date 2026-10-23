@@ -32,6 +32,12 @@ export interface DataQualityRowProps {
     source: string | null
     admin_notes: string | null
   }
+  /**
+   * Set when the city label is an admin unit. A name = one-click rename
+   * ("Lviv Urban Hromada" -> "Lviv"); '' = odd label but no safe guess
+   * ("Orange County"). null/undefined = label is fine.
+   */
+  citySuggestion?: string | null
 }
 
 const VL_CLASS: Record<string, string> = {
@@ -85,7 +91,11 @@ function YesNo({ ok, label }: { ok: boolean; label: string }) {
   )
 }
 
-export default function DataQualityRow({ place }: DataQualityRowProps) {
+export default function DataQualityRow({ place, citySuggestion }: DataQualityRowProps) {
+  const [city, setCity] = useState(place.city || '')
+  const [editingCity, setEditingCity] = useState(false)
+  const [cityDraft, setCityDraft] = useState(citySuggestion || place.city || '')
+  const cityOdd = citySuggestion != null && city === (place.city || '')
   const [verified, setVerified] = useState((place.verification_level ?? 0) >= 3)
   const [notes, setNotes] = useState(place.admin_notes || '')
   const [savedNotes, setSavedNotes] = useState(place.admin_notes || '')
@@ -183,6 +193,15 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
       if (notes !== savedNotes) setSavedNotes(notes)
     } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
   }
+  const onSaveCity = async (next: string) => {
+    const v = next.trim()
+    if (!v || v === city) { setEditingCity(false); return }
+    setBusy('city')
+    try {
+      await postJson(`/api/admin/places/${place.id}/city`, { city: v })
+      setCity(v); setEditingCity(false)
+    } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
+  }
   const onDelete = async () => {
     // Hard-deletes are forbidden by project policy ("never delete data
     // silently"). This soft-archives with a distinct reason so the row
@@ -223,6 +242,28 @@ export default function DataQualityRow({ place }: DataQualityRowProps) {
           <div className="min-w-0">
             <Link href={`/place/${place.slug || place.id}`} target="_blank" className="font-medium text-on-surface hover:text-primary text-sm">{place.name}</Link>
             {place.address && <div className="text-[11px] text-on-surface-variant truncate max-w-xs">{place.address}</div>}
+            <div className="text-[11px] mt-0.5 flex items-center gap-1.5 flex-wrap">
+              {editingCity ? (
+                <>
+                  <input value={cityDraft} onChange={e => setCityDraft(e.target.value)} autoFocus
+                    onKeyDown={e => { if (e.key === 'Enter') onSaveCity(cityDraft); if (e.key === 'Escape') setEditingCity(false) }}
+                    className="px-1 py-0.5 rounded border border-outline-variant/40 bg-surface-container-lowest text-[11px] w-36" />
+                  <button onClick={() => onSaveCity(cityDraft)} disabled={busy === 'city'} className="text-primary hover:underline">{busy === 'city' ? 'saving…' : 'save'}</button>
+                  <button onClick={() => setEditingCity(false)} className="text-stone-500 hover:underline">cancel</button>
+                </>
+              ) : (
+                <>
+                  <span className={cityOdd ? 'text-amber-700' : 'text-on-surface-variant'} title="city label">{city || '(no city)'}</span>
+                  {cityOdd && citySuggestion && citySuggestion !== city && (
+                    <button onClick={() => onSaveCity(citySuggestion)} disabled={busy === 'city'}
+                      className="px-1.5 rounded bg-amber-100 text-amber-900 hover:bg-amber-200" title="Rename the city label">
+                      {busy === 'city' ? 'saving…' : `→ ${citySuggestion}`}
+                    </button>
+                  )}
+                  <button onClick={() => { setCityDraft(citySuggestion || city); setEditingCity(true) }} className="text-stone-400 hover:text-primary" title="Edit city">edit</button>
+                </>
+              )}
+            </div>
             <div className="flex items-center gap-2 mt-1 text-[11px] text-on-surface-variant">
               {place.review_count != null && place.review_count > 0 && (
                 <span title="reviews on PlantsPack">★ {(place.average_rating || 0).toFixed(1)} · {place.review_count}</span>
