@@ -23,8 +23,16 @@ export function isSocialUrl(url: string): boolean {
   try { return SOCIAL_HOSTS.test(new URL(url).hostname) } catch { return false }
 }
 
+/** Third-party listing sites whose photos we have no license to use
+ *  (2026-10-24: 1,568 hotlinked images.happycow.net heroes removed). */
+const UNLICENSED_IMAGE_HOSTS = /(^|\.)(happycow\.net|happycow\.com|tripadvisor\.[a-z.]+|yelp\.[a-z.]+|yelpcdn\.com)$/i
+
+export function isUnlicensedImageUrl(url: string): boolean {
+  try { return UNLICENSED_IMAGE_HOSTS.test(new URL(url).hostname) } catch { return false }
+}
+
 export async function scrapeHeroImage(url: string): Promise<string | null> {
-  if (isSocialUrl(url)) return null
+  if (isSocialUrl(url) || isUnlicensedImageUrl(url)) return null
   try {
   // Multi-pass: try the homepage + common hero/gallery paths with multiple
   // user agents (some sites gate on Googlebot, others on real browsers).
@@ -131,6 +139,7 @@ export async function rehostImage(
   placeId: string,
   imageUrl: string,
 ): Promise<{ publicUrl: string } | { error: string }> {
+  if (isUnlicensedImageUrl(imageUrl)) return { error: 'unlicensed image host' }
   const res = await fetch(imageUrl, {
     headers: { 'User-Agent': DESKTOP_UA, Accept: 'image/*' },
     signal: AbortSignal.timeout(20000),
