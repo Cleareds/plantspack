@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PlantsPack about slide v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #0b3517;
+    --forest-2: #134a22;
+    --paper: #eef3e6;
+    --sage: #a9c7a3;
+    --amber: #e9a944;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; background: var(--forest); }
+  body { font-family: "Manrope", sans-serif; color: var(--paper); -webkit-font-smoothing: antialiased; }
+
+  .slide { width: 1080px; overflow: hidden; background: var(--forest); display: flex; flex-direction: column; }
+  body[data-format="feed"] .slide { height: 1350px; padding: 70px 80px 72px; }
+  body[data-format="story"] .slide { height: 1920px; padding: 300px 80px 490px; }
+
+  .wordmark {
+    width: 380px; aspect-ratio: 2117 / 233; background: var(--paper);
+    -webkit-mask: url(../../../../public/plantspack.svg) no-repeat center / contain;
+            mask: url(../../../../public/plantspack.svg) no-repeat center / contain;
+  }
+  h1 {
+    font-family: "Plus Jakarta Sans", sans-serif; font-weight: 800;
+    font-size: 76px; line-height: 1.04; letter-spacing: -0.025em;
+    margin-top: 40px; max-width: 880px;
+  }
+
+  .lead { font-size: 31px; line-height: 1.42; font-weight: 500; color: var(--paper); margin-top: 22px; max-width: 900px; opacity: .92; }
+
+  /* The one bold element: an index of what is on PlantsPack, counts set large in amber. */
+  .index { list-style: none; margin-top: 34px; border-top: 2px solid rgba(169,199,163,.28); }
+  .index li { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding: 17px 0; border-bottom: 2px solid rgba(169,199,163,.28); }
+  .index .label { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; font-size: 32px; }
+  .index .n { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 800; font-size: 40px; color: var(--amber); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .index .note { font-family: "Manrope", sans-serif; font-weight: 600; font-size: 24px; color: var(--sage); line-height: 50px; }
+
+  .foot { margin-top: auto; }
+  .who { font-size: 23px; font-weight: 600; color: var(--sage); margin-bottom: 20px; }
+  .get { background: var(--paper); color: var(--forest); border-radius: 28px; padding: 22px 30px 22px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .get .left { display: flex; gap: 20px; align-items: center; }
+  .get img { width: 78px; height: 78px; border-radius: 18px; background: #fff; }
+  .get .l1 { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 800; font-size: 33px; line-height: 1.1; }
+  .get .l2 { font-size: 22px; font-weight: 600; margin-top: 4px; color: #3d5a42; }
+  .get .url { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; font-size: 29px; text-align: right; line-height: 1.25; }
+  .get .url span { display: block; font-family: "Manrope", sans-serif; font-weight: 600; font-size: 22px; color: #3d5a42; }
+
+  body[data-format="story"] h1 { font-size: 76px; margin-top: 34px; }
+  body[data-format="story"] .index li { padding: 12px 0; }
+  body[data-format="story"] .index { margin-top: 28px; }
+  body[data-format="story"] .who { margin-top: 30px; }
+</style>
+</head>
+<body data-format="feed">
+<div class="slide">
+  <div class="wordmark" role="img" aria-label="PlantsPack"></div>
+  <h1>Your guide to vegan life, wherever you are.</h1>
+  <p class="lead" id="lead"></p>
+  <ul class="index" id="index"></ul>
+  <div class="foot">
+    <p class="who">Made by Oleksandra and Anton, an independent team of two.</p>
+    <div class="get">
+      <div class="left">
+        <img src="../../../../public/icon-512.png" alt="">
+        <div>
+          <div class="l1">Get the free app</div>
+          <div class="l2">App Store and Google Play</div>
+        </div>
+      </div>
+      <div class="url">plantspack.com<span>Link in bio</span></div>
+    </div>
+  </div>
+</div>
+<script src="data.js"></script>
+<script>
+  // Round down so the "+" is always true.
+  const down = (n, to) => (Math.floor(n / to) * to).toLocaleString('en-US') + '+';
+  window.render = function (format) {
+    document.body.dataset.format = format;
+    const D = window.DATA;
+    document.getElementById('lead').textContent =
+      `PlantsPack is a free app and website for finding vegan places, recipes and events in ${D.countries} countries.`;
+    const rows = [
+      ['Places to eat', down(D.eat, 100)],
+      ['Shops and markets', down(D.store, 100)],
+      ['Animal sanctuaries and rescues', down(D.sanctuary, 100)],
+      ['Hotels, guesthouses and retreats', down(D.hotel, 50)],
+      ['Vegan recipes', down(D.recipe, 100)],
+      ['Upcoming vegan events', down(D.events_upcoming, 10)],
+    ];
+    document.getElementById('index').innerHTML =
+      rows.map(([l, n]) => `<li><span class="label">${l}</span><span class="n">${n}</span></li>`).join('') +
+      `<li><span class="label">Barcode, label and menu scanners</span><span class="note">On the website</span></li>`;
+  };
+</script>
+</body>
+</html>
