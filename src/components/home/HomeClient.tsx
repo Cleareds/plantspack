@@ -20,6 +20,7 @@ import Image from 'next/image'
 import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
+import type { NearbyEvents } from '@/lib/nearby-events'
 import { slugifyCityOrCountry } from '@/lib/places/slugify'
 import { getCityImage } from '@/lib/city-images'
 // Raw localStorage access throws SecurityError (DOMException 18) on Mobile
@@ -99,9 +100,11 @@ interface Props {
    * still get the personalised payload.
    */
   isSignedIn?: boolean
+  /** Upcoming events near the visitor, resolved on the server (null = hide the block). */
+  nearbyEvents?: NearbyEvents | null
 }
 
-function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false }: Props) {
+function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false, nearbyEvents = null }: Props) {
   const router = useRouter()
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false)
   const { user, profile } = useAuth()
@@ -801,6 +804,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
               30 days with 0 comments, 0 likes and 1 human post. Reviews are the
               one social unit people use (see docs/plans/2026-10-16-product-direction.md). */}
           <div className="mt-6 xl:mt-0 xl:w-72 xl:flex-shrink-0 xl:sticky xl:top-24 xl:self-start">
+            {nearbyEvents && nearbyEvents.items.length > 0 && <NearbyEventsList events={nearbyEvents} />}
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-semibold text-on-surface text-sm">Recent reviews</h2>
             </div>
@@ -824,6 +828,46 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
 
       {isAddPlaceOpen && <AddPlaceModal onClose={() => setIsAddPlaceOpen(false)} defaultCity={userCity} defaultCountry={userCountry} />}
     </div>
+  )
+}
+
+// Dates come as YYYY-MM-DD in the event's own timezone; format them in UTC
+// so server and client render the same string (no hydration drift).
+function formatEventDay(d: string) {
+  return new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+}
+function formatEventRange(start: string, end: string | null) {
+  if (!end || end === start) return formatEventDay(start)
+  const fmt = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })
+  return `${fmt(start)} - ${fmt(end)}`
+}
+
+function NearbyEventsList({ events }: { events: NearbyEvents }) {
+  return (
+    <section className="mb-6" aria-labelledby="nearby-events-heading">
+      <div className="flex items-center justify-between mb-3">
+        <h2 id="nearby-events-heading" className="font-semibold text-on-surface text-sm">Vegan events within {events.radiusKm} km</h2>
+        <Link href="/events" prefetch={false} className="text-xs text-primary font-medium hover:underline">All events</Link>
+      </div>
+      <ul className="space-y-2">
+        {events.items.map(e => (
+          <li key={e.slug}>
+            <Link
+              href={`/event/${e.slug}`}
+              prefetch={false}
+              data-event="home_nearby_event_click"
+              className="block bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all p-3"
+            >
+              <div className="text-[11px] font-semibold text-primary">{formatEventRange(e.startDate, e.endDate)}</div>
+              <div className="text-sm font-medium text-on-surface leading-snug mt-0.5">{e.title}</div>
+              <div className="text-xs text-on-surface-variant mt-0.5">
+                {e.city || e.country}{e.distanceKm > 0 ? `, ${e.distanceKm} km away` : ''}{e.isFree ? ', free' : ''}
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
