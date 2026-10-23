@@ -442,10 +442,12 @@ export default async function Home() {
     getHomeDishChips(),
     getMapActivity(),
   ])
-  const nearbyEvents = await getNearbyEventsForRequest(followedCities)
-  const cityDishChips = initialLocation?.city && initialLocation?.country
-    ? await getCityDishChipsCached(initialLocation.country, initialLocation.city)
-    : []
+  const [nearbyEvents, cityDishChips] = await Promise.all([
+    getNearbyEventsForRequest(followedCities),
+    initialLocation?.city && initialLocation?.country
+      ? getCityDishChipsCached(initialLocation.country, initialLocation.city)
+      : Promise.resolve([]),
+  ])
   const dishChips = cityDishChips.length >= 3 ? cityDishChips : globalDishChips
   const dishChipsCity = cityDishChips.length >= 3 ? initialLocation!.city : null
   const topCities = getTopCitiesFromHome(initialLocation)

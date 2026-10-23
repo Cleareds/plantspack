@@ -50,6 +50,13 @@ const SITE_TITLE = 'PlantsPack: Free Vegan Tools, Places & Travel Guides';
 const SITE_DESCRIPTION =
   'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. Ad-free, no tracking, community-built.';
 
+// Material Symbols, subset to the icons the site renders (icon_names): ~9 KB
+// instead of the full ~320 KB font. Names must stay alphabetical. When you use
+// a NEW icon name anywhere (JSX text, an `icon:` config value, src/lib/nav.ts,
+// or categories.icon_name in the DB), add it here or it renders as a blank box.
+const MATERIAL_SYMBOLS_ICONS = 'apps,arrow_back,arrow_forward,article,calendar_month,campaign,category,check_circle,chevron_left,chevron_right,comment,confirmation_number,cookie,corporate_fare,description,edit_square,event,event_busy,expand_less,expand_more,explore,festival,flight,forum,grocery,group,groups,handyman,help,hotel,http,image,info,kitchen,list,local_library,location_on,login,mail,map,mode,mood,more_horiz,payments,person,pets,place,post,privacy,public,push_pin,radio,restaurant,restaurant_menu,reviews,schedule,search,self_improvement,share,shield,shopping_bag,smartphone,sort,sports,star,store,storefront,tag,timer,upcoming,view_list,volunteer_activism'
+const MATERIAL_SYMBOLS_CSS = `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=${MATERIAL_SYMBOLS_ICONS}&display=block`
+
 export const metadata: Metadata = {
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
@@ -161,7 +168,7 @@ export default function RootLayout({
         */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=block"
+          href={MATERIAL_SYMBOLS_CSS}
           media="print"
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {...({ id: 'msym-stylesheet' } as any)}
@@ -171,7 +178,7 @@ export default function RootLayout({
           {/* eslint-disable-next-line @next/next/no-css-tags */}
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=block"
+            href={MATERIAL_SYMBOLS_CSS}
             crossOrigin="anonymous"
           />
         </noscript>
