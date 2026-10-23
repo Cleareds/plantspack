@@ -2,6 +2,7 @@
  * Generates static brand files from the current wordmark (public/plantspack.svg):
  *   public/badges/find-us-on-plantspack-{light,dark}.svg  (website badge, 200x56)
  *   public/brand/plantspack-wordmark-green.png            (emails + structured data; Gmail does not show SVG)
+ *   public/brand/plantspack-wordmark-white.png            (app supporter card)
  * Run: npx tsx scripts/generate-brand-assets.tsx
  */
 import React from 'react'
@@ -46,6 +47,8 @@ async function main() {
   }
   const wm = renderToStaticMarkup(<WordmarkFile color={GREEN} />)
   await sharp(Buffer.from(wm)).resize(1200).png().toFile('public/brand/plantspack-wordmark-green.png')
+  const wmWhite = renderToStaticMarkup(<WordmarkFile color="#FFFFFF" />)
+  await sharp(Buffer.from(wmWhite)).resize(1200).png().toFile('public/brand/plantspack-wordmark-white.png')
   console.log('written')
 }
 main()

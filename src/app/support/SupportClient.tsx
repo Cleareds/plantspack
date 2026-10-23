@@ -106,6 +106,8 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
             <span className="text-on-surface font-medium">Support</span>
           </nav>
           {isSupporter && (
+            <span className="inline-flex items-center gap-4">
+            <a href="/supporter-card" className="text-sm font-medium text-primary hover:underline">Your supporter card</a>
             <button
               onClick={handleManageSubscription}
               disabled={managingSubscription}
@@ -113,6 +115,7 @@ function SupportContent({ initialStats }: { initialStats: Stats }) {
             >
               {managingSubscription ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>Manage subscription</span>}
             </button>
+            </span>
           )}
         </div>
         {/* Success/Cancel/Error Messages */}

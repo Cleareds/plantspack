@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { User, Edit, Crown, Bell, Settings, LogOut, Store } from 'lucide-react'
+import { User, Edit, Crown, Bell, Settings, LogOut, Store, IdCard } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { useBusinessToolsVisible } from '@/components/business/AdminPreviewGate'
+import { isActiveSupporter } from '@/lib/supporter'
 
 interface ProfileSidebarProps {
   username: string
@@ -14,7 +15,7 @@ interface ProfileSidebarProps {
 
 export default function ProfileSidebar({ username }: ProfileSidebarProps) {
   const pathname = usePathname()
-  const { signOut, user } = useAuth()
+  const { signOut, user, profile } = useAuth()
   // "My business" only for people who manage at least one place.
   const [ownsPlace, setOwnsPlace] = useState(false)
   const businessVisible = useBusinessToolsVisible()
@@ -60,6 +61,14 @@ export default function ProfileSidebar({ username }: ProfileSidebarProps) {
       label: 'Settings',
       match: (path: string) => path === `/profile/${username}/settings`
     },
+    ...(isActiveSupporter(profile as any)
+      ? [{
+          href: '/supporter-card',
+          icon: IdCard,
+          label: 'Supporter card',
+          match: (path: string) => path === '/supporter-card',
+        }]
+      : []),
     ...(ownsPlace && businessVisible
       ? [{
           href: '/business/dashboard',
