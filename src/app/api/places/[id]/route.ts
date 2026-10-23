@@ -112,7 +112,7 @@ export async function PUT(
     // Fetch existing place to check ownership
     const { data: existingPlace, error: fetchError } = await supabase
       .from('places')
-      .select('id, created_by, images, address, tags, vegan_level')
+      .select('id, created_by, images, address, tags, vegan_level, verification_level')
       .eq('id', id)
       .single()
 
@@ -208,8 +208,12 @@ export async function PUT(
     // record that fact on the row.
     if (isAdmin && body.vegan_level === 'fully_vegan') {
       updateData.verification_method = 'admin_review'
-      updateData.verification_level = 3
+      // Never lower a place that already sits higher on the ladder (L4/L5).
+      updateData.verification_level = Math.max((existingPlace as any).verification_level ?? 0, 3)
       updateData.verification_status = 'admin_verified'
+      // Invariant: is_verified=true <=> verification_method='admin_review'.
+      // This IS the human admin click, so the UI-only flag belongs here.
+      updateData.is_verified = true
       updateData.last_verified_at = new Date().toISOString()
     }
 
