@@ -22,6 +22,14 @@ function invalid(d: ReturnType<typeof clean>): string | null {
   return null
 }
 
+/** Active deals that still count towards the limit: not ended yet. */
+async function liveCount(admin: any, placeId: string): Promise<number> {
+  const today = new Date().toISOString().slice(0, 10)
+  const { count } = await admin.from('place_deals').select('id', { count: 'exact', head: true })
+    .eq('place_id', placeId).eq('status', 'active').or(`ends_on.is.null,ends_on.gte.${today}`)
+  return count ?? 0
+}
+
 async function revalidate(place: { id: string; slug: string | null }) {
   try {
     revalidatePath(`/place/${place.id}`)
@@ -48,8 +56,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const d = clean(await req.json().catch(() => ({})))
   const err = invalid(d)
   if (err) return NextResponse.json({ error: err }, { status: 400 })
-  const { count } = await gate.admin.from('place_deals').select('id', { count: 'exact', head: true }).eq('place_id', gate.place.id).eq('status', 'active')
-  if ((count ?? 0) >= MAX_ACTIVE_DEALS) {
+  if ((await liveCount(gate.admin, gate.place.id)) >= MAX_ACTIVE_DEALS) {
     return NextResponse.json({ error: `You can have ${MAX_ACTIVE_DEALS} active deals. Pause one first.` }, { status: 400 })
   }
   const { data, error } = await gate.admin.from('place_deals').insert({ ...d, place_id: gate.place.id, created_by: gate.userId }).select('*').single()
@@ -75,8 +82,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   let update: Record<string, unknown>
   if (body.status === 'active' || body.status === 'paused') {
     if (body.status === 'active' && existing.status !== 'active') {
-      const { count } = await gate.admin.from('place_deals').select('id', { count: 'exact', head: true }).eq('place_id', gate.place.id).eq('status', 'active')
-      if ((count ?? 0) >= MAX_ACTIVE_DEALS) return NextResponse.json({ error: `You can have ${MAX_ACTIVE_DEALS} active deals. Pause one first.` }, { status: 400 })
+      if ((await liveCount(gate.admin, gate.place.id)) >= MAX_ACTIVE_DEALS) return NextResponse.json({ error: `You can have ${MAX_ACTIVE_DEALS} active deals. Pause one first.` }, { status: 400 })
     }
     update = { status: body.status }
   } else {

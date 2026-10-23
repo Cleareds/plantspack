@@ -209,16 +209,17 @@ async function getActiveDeals(placeId: string): Promise<PublicDeal[]> {
     const sb = createAdminClient() as any
     const { data: hasPlan } = await sb.rpc('place_has_partner_plan', { p_place_id: placeId })
     if (!hasPlan) return []
+    // Dates are checked again in the browser (PlaceDealsSection), because this
+    // page is cached for up to a day.
     const today = new Date().toISOString().slice(0, 10)
     const { data } = await sb
       .from('place_deals')
-      .select('id, title, details, audience, ends_on')
+      .select('id, title, details, audience, starts_on, ends_on')
       .eq('place_id', placeId)
       .eq('status', 'active')
-      .lte('starts_on', today)
       .or(`ends_on.is.null,ends_on.gte.${today}`)
       .order('created_at')
-      .limit(3)
+      .limit(10)
     return (data as PublicDeal[]) || []
   } catch {
     return []

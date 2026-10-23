@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ProfileSidebar from '@/components/profile/ProfileSidebar'
 import { Bell, Save, Loader2 } from 'lucide-react'
+import VenueUpdatesToggle from '@/components/settings/VenueUpdatesToggle'
 import { supabase } from '@/lib/supabase'
 import type { NotificationPreferences } from '@/types/notifications'
 
@@ -201,6 +202,8 @@ export default function NotificationPreferencesPage() {
                 </div>
               </div>
             </div>
+
+            <VenueUpdatesToggle />
 
             {/* Save Button */}
             <div className="flex justify-end">

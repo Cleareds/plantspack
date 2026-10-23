@@ -62,7 +62,8 @@ export default function DealsManager({ placeId }: { placeId: string }) {
     )
   }
 
-  const activeCount = deals.filter((d) => d.status === 'active').length
+  // Ended deals no longer count towards the limit.
+  const activeCount = deals.filter((d) => d.status === 'active' && (!d.ends_on || d.ends_on >= today())).length
 
   const save = async () => {
     if (!draft) return

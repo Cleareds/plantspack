@@ -66,9 +66,10 @@ export default function FollowerMessage({ placeId }: { placeId: string }) {
     <div className="space-y-6">
       <div>
         <h1 className="font-headline font-extrabold text-3xl text-on-surface">Message followers</h1>
+        {info.followers === 0 && <p className="mt-2 text-sm text-on-surface-variant">Nobody follows your city or has saved your place yet, so there is nobody to message. Your window sticker and website badge help people find and save you.</p>}
         <p className="text-on-surface-variant mt-1">
-          {info.followers.toLocaleString()} {info.followers === 1 ? 'person follows' : 'people follow'} {info.city || 'your city'} on PlantsPack.
-          One message a month goes to their PlantsPack notifications, with a link to your page. No email, no push.
+          {info.followers.toLocaleString()} {info.followers === 1 ? 'person' : 'people'} will get your message: those who follow {info.city || 'your city'} or saved your place on PlantsPack, minus anyone who turned these updates off.
+          One message a month goes to their PlantsPack notifications, with a link to your page. No email, no push, no other links.
         </p>
       </div>
 
@@ -87,7 +88,7 @@ export default function FollowerMessage({ placeId }: { placeId: string }) {
             {sending === 'test' && <Loader2 className="h-4 w-4 animate-spin" />} Send a test to me
           </button>
           <button type="button" onClick={() => send(false)} disabled={!!sending || text.trim().length < 10 || !info.canSend} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary-btn text-sm font-medium disabled:opacity-50">
-            {sending === 'real' && <Loader2 className="h-4 w-4 animate-spin" />} Send to {info.followers.toLocaleString()} followers
+            {sending === 'real' && <Loader2 className="h-4 w-4 animate-spin" />} Send to {info.followers.toLocaleString()} people
           </button>
         </div>
         {info.sentThisMonth && <p className="text-sm text-on-surface-variant">You already sent this month&apos;s message. The next one can go out on the 1st.</p>}
