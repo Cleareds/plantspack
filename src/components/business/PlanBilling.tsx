@@ -20,6 +20,7 @@ export default function PlanBilling({ placeId }: { placeId: string }) {
   const [busy, setBusy] = useState<string | null>(null)
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null)
   const [note, setNote] = useState('')
+  const [agreed, setAgreed] = useState(false)
 
   if (error) return <p className="text-on-surface">{error}</p>
   if (!place || !plan) return <div className="flex items-center gap-2 text-on-surface-variant py-16"><Loader2 className="h-5 w-5 animate-spin" /> Loading...</div>
@@ -36,6 +37,16 @@ export default function PlanBilling({ placeId }: { placeId: string }) {
     const d = r ? await r.json().catch(() => ({})) : {}
     if (r?.ok && d.url) { window.location.href = d.url; return }
     setMessage({ kind: 'error', text: d.error || 'Checkout could not start.' })
+    setBusy(null)
+  }
+
+  const manageBilling = async () => {
+    setBusy('billing')
+    setMessage(null)
+    const r = await fetch(`/api/business/places/${placeId}/billing`, { method: 'POST', credentials: 'include' }).catch(() => null)
+    const d = r ? await r.json().catch(() => ({})) : {}
+    if (r?.ok && d.url) { window.location.href = d.url; return }
+    setMessage({ kind: 'error', text: d.error || 'The billing page could not open.' })
     setBusy(null)
   }
 
@@ -77,17 +88,31 @@ export default function PlanBilling({ placeId }: { placeId: string }) {
             ))}
           </ul>
           {isPartner ? (
-            <p className="mt-4 text-sm font-medium text-primary">
-              Your current plan{plan.source === 'admin' ? ', granted by PlantsPack' : plan.periodEnd ? `, renews ${new Date(plan.periodEnd).toLocaleDateString()}` : ''}.
-            </p>
+            <div className="mt-4 space-y-2">
+              <p className="text-sm font-medium text-primary">
+                Your current plan{plan.source === 'admin' ? ', granted by PlantsPack' : plan.periodEnd ? `, renews ${new Date(plan.periodEnd).toLocaleDateString()}` : ''}.
+              </p>
+              {plan.source === 'stripe' && (
+                <button type="button" onClick={manageBilling} disabled={!!busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl ghost-border text-sm font-medium text-on-surface hover:bg-surface-container-low disabled:opacity-50">
+                  {busy === 'billing' && <Loader2 className="h-4 w-4 animate-spin" />} Manage billing: cancel, change card, invoices
+                </button>
+              )}
+            </div>
           ) : (
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button type="button" onClick={() => checkout('month')} disabled={!!busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary-btn text-sm font-medium disabled:opacity-50">
+            <div className="mt-4 space-y-3">
+            <label className="flex items-start gap-2 text-sm text-on-surface">
+              <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-0.5 h-4 w-4 accent-primary" />
+              <span>I agree to the <Link href="/business/terms" target="_blank" className="text-primary font-medium hover:underline">business terms</Link>. The plan renews until I cancel.</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => checkout('month')} disabled={!!busy || !agreed} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary-btn text-sm font-medium disabled:opacity-50">
                 {busy === 'month' && <Loader2 className="h-4 w-4 animate-spin" />} €{PARTNER_PRICE.monthEur} a month
               </button>
-              <button type="button" onClick={() => checkout('year')} disabled={!!busy} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl ghost-border text-sm font-medium text-on-surface hover:bg-surface-container-low disabled:opacity-50">
+              <button type="button" onClick={() => checkout('year')} disabled={!!busy || !agreed} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl ghost-border text-sm font-medium text-on-surface hover:bg-surface-container-low disabled:opacity-50">
                 {busy === 'year' && <Loader2 className="h-4 w-4 animate-spin" />} €{PARTNER_PRICE.yearEur} a year
               </button>
+            </div>
+            <p className="text-xs text-on-surface-variant">Prices exclude VAT where it applies. You enter your billing address and, for EU businesses, your VAT number at checkout.</p>
             </div>
           )}
         </section>
@@ -95,7 +120,7 @@ export default function PlanBilling({ placeId }: { placeId: string }) {
 
       <p className="flex items-start gap-2 text-sm text-on-surface-variant">
         <ShieldCheck className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-        The Partner plan buys tools. It never changes your position in lists, your vegan level, your verification or your reviews. You can cancel at any time; the free tools stay.
+        The Partner plan buys tools. It never changes your position in lists, your vegan level, your verification or your reviews. You can cancel at any time from Manage billing; the plan runs to the end of the paid period and the free tools stay. See the <Link href="/business/terms" className="text-primary font-medium hover:underline">business terms</Link>.
       </p>
 
       {message && <div className={`p-3 rounded-xl text-sm ${message.kind === 'ok' ? 'bg-primary/10 text-on-surface' : 'bg-red-50 text-red-800'}`}>{message.text}</div>}

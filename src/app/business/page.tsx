@@ -115,7 +115,7 @@ export default function BusinessPage() {
             <li>Reviews. You can reply, but reviews are not removed because an owner disagrees.</li>
           </ul>
           <p className="text-sm text-on-surface-variant mt-4">
-            Questions? Write to <a href="mailto:hello@plantspack.com" className="text-primary font-medium hover:underline">hello@plantspack.com</a>.
+            Questions? Write to <a href="mailto:hello@plantspack.com" className="text-primary font-medium hover:underline">hello@plantspack.com</a>. Read the <Link href="/business/terms" className="text-primary font-medium hover:underline">business terms</Link>.
           </p>
         </section>
       </div>

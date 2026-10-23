@@ -43,6 +43,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       line_items: [{ price, quantity: 1 }],
       customer_email: user?.email || undefined,
       allow_promotion_codes: true,
+      // Businesses: invoices need an address, EU businesses can add a VAT number.
+      billing_address_collection: 'required',
+      tax_id_collection: { enabled: true },
+      // Only when Stripe Tax is set up on the account (STRIPE_AUTOMATIC_TAX=true).
+      ...(process.env.STRIPE_AUTOMATIC_TAX === 'true' ? { automatic_tax: { enabled: true } } : {}),
+      custom_text: {
+        submit: { message: `PlantsPack Partner plan for ${gate.place.name}. By subscribing you agree to the business terms at plantspack.com/business/terms. Cancel any time from your dashboard.` },
+      },
       success_url: `${origin}/business/places/${gate.place.id}?plan=started`,
       cancel_url: `${origin}/business/places/${gate.place.id}/plan`,
       metadata,
