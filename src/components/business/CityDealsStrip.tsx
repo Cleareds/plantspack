@@ -4,13 +4,17 @@ import Link from 'next/link'
 import { BadgePercent } from 'lucide-react'
 import type { CityDeal } from '@/lib/business/city-deals'
 import { liveDeals } from './PlaceDealsSection'
+import { useAuth } from '@/lib/auth'
 
 /**
  * Deals from Partner places in this city. Labelled as deals from the venues;
  * the strip never changes the order of the place list below it.
  */
 export default function CityDealsStrip({ deals, cityName }: { deals: CityDeal[]; cityName: string }) {
-  const live = liveDeals(deals)
+  const { profile } = useAuth()
+  const isAdmin = profile?.role === 'admin'
+  // Non-live deals (not launched, not a pilot place) are an admin preview only.
+  const live = liveDeals(deals).filter((d) => d.live || isAdmin)
   if (!live.length) return null
   return (
     <section className="mb-8" aria-labelledby="city-deals-heading">

@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase-admin'
 import { getAuthority } from '@/lib/place-owner'
 import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 import { getPlacePlan, type PlacePlan } from '@/lib/business/plan'
+import { isPlaceLive } from '@/lib/business/live'
 
 export interface OwnerPlace {
   id: string
@@ -44,7 +45,7 @@ export async function requirePlaceOwner(placeId: string): Promise<OwnerGate> {
   if (!authority.role) {
     return { ok: false, response: NextResponse.json({ error: 'Only the verified owner of this place can do this' }, { status: 403 }) }
   }
-  if (!BUSINESS_TOOLS_PUBLIC && !authority.isAdmin) {
+  if (!BUSINESS_TOOLS_PUBLIC && !authority.isAdmin && !(await isPlaceLive(admin, place.id))) {
     return { ok: false, response: NextResponse.json({ error: 'Owner tools are coming soon.' }, { status: 403 }) }
   }
   return { ok: true, userId: user.id, isAdmin: authority.isAdmin, place, admin }

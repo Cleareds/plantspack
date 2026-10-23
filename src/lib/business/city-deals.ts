@@ -1,4 +1,6 @@
 import { createAdminClient } from '@/lib/supabase-admin'
+import { pilotPlaceIds } from './live'
+import { BUSINESS_TOOLS_PUBLIC } from './launch'
 
 export interface CityDeal {
   id: string
@@ -7,6 +9,8 @@ export interface CityDeal {
   audience: 'everyone' | 'supporters'
   starts_on: string
   ends_on: string | null
+  /** Shown to everyone (public launch or pilot place); otherwise admins only. */
+  live: boolean
   place: { id: string; slug: string | null; name: string; main_image_url: string | null }
 }
 
@@ -37,10 +41,12 @@ export async function fetchCityDeals(city: string, country: string): Promise<Cit
         .filter((p: any) => (p.status === 'active' || p.status === 'past_due') && (!p.current_period_end || new Date(p.current_period_end).getTime() > Date.now() - 3 * 864e5))
         .map((p: any) => p.place_id),
     )
+    const pilots = BUSINESS_TOOLS_PUBLIC ? null : await pilotPlaceIds(sb, placeIds)
     return rows
       .filter((r) => ok.has(r.places.id))
       .map((r) => ({
         id: r.id, title: r.title, details: r.details, audience: r.audience, starts_on: r.starts_on, ends_on: r.ends_on,
+        live: BUSINESS_TOOLS_PUBLIC || !!pilots?.has(r.places.id),
         place: { id: r.places.id, slug: r.places.slug, name: r.places.name, main_image_url: r.places.main_image_url },
       }))
   } catch {

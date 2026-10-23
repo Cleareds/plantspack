@@ -791,7 +791,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             )}
 
             {cityDeals.length > 0 && (
-              <AdminPreviewGate>
+              <AdminPreviewGate open={cityDeals.some((d) => d.live)}>
                 <CityDealsStrip deals={cityDeals} cityName={cityName} />
               </AdminPreviewGate>
             )}

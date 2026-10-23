@@ -11,16 +11,16 @@ import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
  * can be tested on any place. The check runs in the browser so the page stays
  * ISR.
  */
-export default function OwnerManageLink({ ownerUserId, placeId }: { ownerUserId: string | null | undefined; placeId: string }) {
+export default function OwnerManageLink({ ownerUserId, placeId, live = false }: { ownerUserId: string | null | undefined; placeId: string; live?: boolean }) {
   const { user, profile } = useAuth()
   if (!user) return null
   const isOwner = !!ownerUserId && user.id === ownerUserId
   const isAdmin = profile?.role === 'admin'
 
-  if (isOwner && BUSINESS_TOOLS_PUBLIC) {
+  if (isOwner && (BUSINESS_TOOLS_PUBLIC || live)) {
     return (
       <Link
-        href="/business/dashboard"
+        href={`/business/places/${placeId}`}
         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-on-primary-btn rounded-xl hover:opacity-90 transition-opacity"
       >
         <Store className="h-4 w-4" />

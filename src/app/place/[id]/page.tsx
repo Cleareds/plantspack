@@ -52,6 +52,7 @@ const getCachedCityDishChips = unstable_cache(
 import ClaimBusinessButton from '@/components/places/ClaimBusinessButton'
 import OwnerManageLink from '@/components/business/OwnerManageLink'
 import AdminPreviewGate from '@/components/business/AdminPreviewGate'
+import { isPlaceLive } from '@/lib/business/live'
 import PlaceMenuSection, { type PublishedMenu } from '@/components/business/PlaceMenuSection'
 import PlaceDealsSection, { type PublicDeal } from '@/components/business/PlaceDealsSection'
 import PlaceEventsSection, { type PlaceEvent } from '@/components/business/PlaceEventsSection'
@@ -496,6 +497,8 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     getPlaceEvents(place.id),
     (createAdminClient() as any).rpc('place_has_partner_plan', { p_place_id: place.id }).then((r: any) => !!r.data, () => false),
   ])
+  // Pilot places (or the public launch) show their owner content to everyone.
+  const placeLive = await isPlaceLive(createAdminClient() as any, place.id).catch(() => false)
   const bookingUrl: string | null = hasPartnerPlan ? ((place as any).booking_url ?? null) : null
   const orderUrl: string | null = hasPartnerPlan ? ((place as any).order_url ?? null) : null
 
@@ -766,7 +769,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   placeName={place.name}
                   isOwner={!!place.owner}
                 />
-                <OwnerManageLink ownerUserId={place.owner?.user_id} placeId={place.id} />
+                <OwnerManageLink ownerUserId={place.owner?.user_id} placeId={place.id} live={placeLive} />
                 <PlaceEditButton place={{
                   ...place,
                   main_image_url: (place as any).main_image_url || null,
@@ -823,7 +826,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           {/* Details */}
           <div className="p-6 space-y-4 border-b border-outline-variant/15">
             {(bookingUrl || orderUrl) && (
-              <AdminPreviewGate>
+              <AdminPreviewGate open={placeLive}>
                 <PlaceBookingButtons bookingUrl={bookingUrl} orderUrl={orderUrl} />
               </AdminPreviewGate>
             )}
@@ -1069,19 +1072,19 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
           </div>
 
           {activeDeals.length > 0 && (
-            <AdminPreviewGate>
+            <AdminPreviewGate open={placeLive}>
               <PlaceDealsSection deals={activeDeals} />
             </AdminPreviewGate>
           )}
 
           {placeEvents.length > 0 && (
-            <AdminPreviewGate>
+            <AdminPreviewGate open={placeLive}>
               <PlaceEventsSection events={placeEvents} />
             </AdminPreviewGate>
           )}
 
           {publishedMenu && (
-            <AdminPreviewGate>
+            <AdminPreviewGate open={placeLive}>
               <PlaceMenuSection menu={publishedMenu} fullyVegan={(place as any).vegan_level === 'fully_vegan'} />
             </AdminPreviewGate>
           )}

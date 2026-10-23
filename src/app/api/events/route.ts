@@ -92,11 +92,18 @@ export async function GET(request: NextRequest) {
     // read of event_features only returns rows of places with an active plan.
     // Featured upcoming events go first and are labelled as sponsored; this
     // only applies once the business tools are public.
-    if (BUSINESS_TOOLS_PUBLIC && filtered.length) {
+    if (filtered.length) {
       const now2 = new Date()
       const monthKey = new Date(Date.UTC(now2.getUTCFullYear(), now2.getUTCMonth(), 1)).toISOString().slice(0, 10)
       const { data: features } = await supabase.from('event_features').select('post_id, place_id').eq('month', monthKey)
-      const featured = new Map((features || []).map((f: any) => [f.post_id, f.place_id]))
+      let featuredRows = (features || []) as any[]
+      if (!BUSINESS_TOOLS_PUBLIC && featuredRows.length) {
+        // Before the public launch only pilot places can feature events.
+        const { data: pilots } = await supabase.from('business_pilots').select('place_id').in('place_id', featuredRows.map((f) => f.place_id))
+        const pilotSet = new Set((pilots || []).map((r: any) => r.place_id))
+        featuredRows = featuredRows.filter((f) => pilotSet.has(f.place_id))
+      }
+      const featured = new Map(featuredRows.map((f: any) => [f.post_id, f.place_id]))
       if (featured.size) {
         const placeIds = [...new Set([...featured.values()])]
         const { data: places } = await supabase.from('places').select('id, name, slug').in('id', placeIds)

@@ -20,7 +20,7 @@ export default function BusinessDashboardPage() {
           </div>
           <Link href="/business" className="text-sm font-medium text-primary hover:underline">How it works</Link>
         </div>
-        <AdminPreviewGate fallback={<p className="text-on-surface-variant">Owner tools are coming soon.</p>}>
+        <AdminPreviewGate allowPilotOwners fallback={<p className="text-on-surface-variant">Owner tools are coming soon.</p>}>
           <BusinessDashboard />
         </AdminPreviewGate>
       </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { requirePlaceOwner } from '@/lib/business/require-owner'
 import { getPlacePlan } from '@/lib/business/plan'
-import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
+import { isPlaceLive } from '@/lib/business/live'
 import { log } from '@/lib/logger'
 
 /**
@@ -37,17 +37,18 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params
   const gate = await requirePlaceOwner(id)
   if (!gate.ok) return gate.response
-  const [{ data: events }, { data: feature }, plan] = await Promise.all([
+  const [{ data: events }, { data: feature }, plan, live] = await Promise.all([
     gate.admin.from('posts').select('id, slug, title, content, privacy, event_data, created_at').eq('place_id', gate.place.id).eq('category', 'event').is('deleted_at', null).order('created_at', { ascending: false }).limit(50),
     gate.admin.from('event_features').select('post_id, month').eq('place_id', gate.place.id).eq('month', monthKey()).maybeSingle(),
     getPlacePlan(gate.admin, gate.place.id),
+    isPlaceLive(gate.admin, gate.place.id),
   ])
   return NextResponse.json({
     events: events ?? [],
     featuredThisMonth: feature?.post_id ?? null,
     canFeature: plan.plan === 'partner' || gate.isAdmin,
     isPartner: plan.plan === 'partner',
-    preview: !BUSINESS_TOOLS_PUBLIC,
+    preview: !live,
   })
 }
 
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     title,
     content: f.description || title,
     category: 'event',
-    privacy: BUSINESS_TOOLS_PUBLIC ? 'public' : 'draft',
+    privacy: (await isPlaceLive(gate.admin, gate.place.id)) ? 'public' : 'draft',
     place_id: gate.place.id,
     event_data: { start_time: f.start, end_time: f.end ?? undefined, location, ticket_url: f.ticket ?? undefined, is_recurring: false },
   }).select('id, slug').single()

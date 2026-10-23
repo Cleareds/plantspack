@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { requirePlaceOwner } from '@/lib/business/require-owner'
 import { getPlacePlan } from '@/lib/business/plan'
-import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
+import { isPlaceLive } from '@/lib/business/live'
 import { log } from '@/lib/logger'
 
 export const runtime = 'nodejs'
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const body = await req.json().catch(() => ({}))
   const interval: 'month' | 'year' = body.interval === 'year' ? 'year' : 'month'
   const price = PRICES[interval]
-  if (!stripe || !price || !BUSINESS_TOOLS_PUBLIC) {
+  if (!stripe || !price || !(await isPlaceLive(gate.admin, gate.place.id))) {
     return NextResponse.json({ error: 'Online payment for the Partner plan opens soon. Write to hello@plantspack.com if you want to start now.' }, { status: 503 })
   }
   const plan = await getPlacePlan(gate.admin, gate.place.id)

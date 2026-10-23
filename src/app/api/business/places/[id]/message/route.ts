@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requirePartnerPlace } from '@/lib/business/require-owner'
-import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
+import { isPlaceLive } from '@/lib/business/live'
 import { log } from '@/lib/logger'
 
 /**
@@ -60,11 +60,12 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     gate.admin.from('place_follower_messages').select('message, recipients, test_only, created_at').eq('place_id', gate.place.id).order('created_at', { ascending: false }).limit(10),
   ])
   const sentThisMonth = (sent.data || []).some((m: any) => !m.test_only && m.created_at >= monthStart())
+  const live = await isPlaceLive(gate.admin, gate.place.id)
   return NextResponse.json({
     followers: followers.length,
     history: sent.data ?? [],
-    canSend: !sentThisMonth && BUSINESS_TOOLS_PUBLIC && gate.plan.plan === 'partner',
-    previewOnly: !BUSINESS_TOOLS_PUBLIC || gate.plan.plan !== 'partner',
+    canSend: !sentThisMonth && live && gate.plan.plan === 'partner',
+    previewOnly: !live || gate.plan.plan !== 'partner',
     sentThisMonth,
     city: gate.place.city,
   })
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ ok: true, test: true, recipients: 1 })
   }
 
-  if (!BUSINESS_TOOLS_PUBLIC || gate.plan.plan !== 'partner') {
+  if (!(await isPlaceLive(admin, place.id)) || gate.plan.plan !== 'partner') {
     return NextResponse.json({ error: 'Only test messages can be sent until the Partner plan is active for this place.' }, { status: 403 })
   }
   const { data: already } = await admin.from('place_follower_messages').select('id').eq('place_id', place.id).eq('test_only', false).gte('created_at', monthStart()).limit(1)

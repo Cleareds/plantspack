@@ -27,7 +27,7 @@ const FREE_TOOLS = [
 export default function BusinessPage() {
   return (
     <div className="min-h-screen bg-surface">
-      <AdminPreviewGate fallback={<ComingSoon />}>
+      <AdminPreviewGate allowPilotOwners fallback={<ComingSoon />}>
       <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-widest mb-5">
