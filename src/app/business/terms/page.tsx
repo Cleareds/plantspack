@@ -64,9 +64,21 @@ export default function BusinessTermsPage() {
         <p>You can stop using the business tools at any time. We may suspend or end your access if you break these terms. If we end a paid plan without a breach on your side, we refund the unused part (see Refunds).</p>
 
         <h2>9. Liability</h2>
-        <p>We provide the business tools as they are. We do not promise a number of visitors, bookings or sales. To the extent the law allows, our liability is limited to the amount you paid us in the 12 months before the claim.</p>
+        <p>We provide the business tools as they are and work to keep them running, but we do not promise they are always available or free of errors. We do not promise a number of visitors, bookings or sales. To the extent the law allows, our total liability is limited to the amount you paid us in the 12 months before the claim. This limit does not apply to intent, fraud or gross negligence, or to anything else the law does not allow us to limit.</p>
 
-        <h2>10. Contact</h2>
+        <h2>10. Your data and your visitors&apos; data</h2>
+        <p>We process your account and venue details as described in the <Link href="/legal/privacy">Privacy Policy</Link>. Your stats are totals (views, taps, saves); they never show which person visited or tapped. For messages to followers we choose the recipients; you never see who they are, and they can switch these messages off. Payment details are handled by Stripe; we do not see your full card number.</p>
+
+        <h2>11. Changes to these terms</h2>
+        <p>We may update these terms. For changes that matter to you, we email you at least 30 days before they apply. If you do not agree, you can cancel before then; for a yearly plan we refund the full unused months.</p>
+
+        <h2>12. Things outside our control</h2>
+        <p>We are not responsible for delays or outages caused by events we cannot reasonably control, such as failures of hosting, payment or internet providers.</p>
+
+        <h2>13. Law and disputes</h2>
+        <p>These terms are governed by Belgian law. Please contact us first; most issues are solved by email. Disputes go to the competent courts of Belgium, unless the law gives you the right to use another court. If one part of these terms is found invalid, the rest still applies.</p>
+
+        <h2>14. Contact</h2>
         <p>Questions about these terms or your plan: <a href="mailto:hello@plantspack.com">hello@plantspack.com</a>.</p>
       </article>
     </div>
