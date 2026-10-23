@@ -501,6 +501,8 @@ export default async function Home() {
         followedCities={displayedFollowedCities}
         isSignedIn={isSignedIn}
         nearbyEvents={nearbyEvents}
+        dishChips={dishChips}
+        dishChipsCity={dishChipsCity}
       />
 
       {/* Seasonal: Summer Destinations hub link. Renders May-September
@@ -529,34 +531,6 @@ export default async function Home() {
           </section>
         )
       })()}
-
-      {/* Dish chips - the only homepage links to dish pages (55% of organic
-          clicks). Server-rendered so crawlers and the first paint both see them. */}
-      {dishChips.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 md:px-8 pt-8">
-          <div className="flex items-baseline justify-between mb-3 gap-3 flex-wrap">
-            <h2 className="text-xl font-semibold text-on-surface">
-              {dishChipsCity ? `Best vegan dishes in ${dishChipsCity}` : 'Best vegan dishes by city'}
-            </h2>
-            <Link href="/vegan-places" prefetch={false} className="text-sm text-primary hover:underline">
-              All cities →
-            </Link>
-          </div>
-          <ul className="flex flex-wrap gap-2">
-            {dishChips.map(c => (
-              <li key={c.href}>
-                <Link
-                  href={c.href}
-                  prefetch={false}
-                  className="inline-block px-3 py-1.5 rounded-full ghost-border bg-surface-container-lowest text-sm text-on-surface hover:border-primary/40 hover:text-primary transition-colors"
-                >
-                  {dishChipsCity ? c.label : `${c.label} in ${c.city}`}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
 
       <MapThisWeek activity={mapActivity} />
 

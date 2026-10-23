@@ -102,9 +102,12 @@ interface Props {
   isSignedIn?: boolean
   /** Upcoming events near the visitor, resolved on the server (null = hide the block). */
   nearbyEvents?: NearbyEvents | null
+  /** Dish-page links, resolved on the server (city-specific when the visitor's city has 3+). */
+  dishChips?: { label: string; city: string; href: string }[]
+  dishChipsCity?: string | null
 }
 
-function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false, nearbyEvents = null }: Props) {
+function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serverCityImages = {}, initialLocation, followedCities = [], isSignedIn = false, nearbyEvents = null, dishChips = [], dishChipsCity = null }: Props) {
   const router = useRouter()
   const [isAddPlaceOpen, setIsAddPlaceOpen] = useState(false)
   const { user, profile } = useAuth()
@@ -795,6 +798,36 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                   <Star className="h-3.5 w-3.5" /> Find & Rate
                 </Link>
               </div>
+            )}
+
+            {/* Dish chips - the only homepage links to dish pages (55% of organic
+                clicks). Server-rendered so crawlers and the first paint both see
+                them. Sits in the main column so it fills the space beside the
+                taller reviews sidebar on desktop. */}
+            {dishChips.length > 0 && (
+              <section aria-labelledby="home-dish-chips-heading">
+                <div className="flex items-baseline justify-between mb-3 gap-3 flex-wrap">
+                  <h2 id="home-dish-chips-heading" className="font-semibold text-on-surface">
+                    {dishChipsCity ? `Best vegan dishes in ${dishChipsCity}` : 'Best vegan dishes by city'}
+                  </h2>
+                  <Link href="/vegan-places" prefetch={false} className="text-xs text-primary font-medium hover:underline">
+                    All cities
+                  </Link>
+                </div>
+                <ul className="flex flex-wrap gap-2">
+                  {dishChips.map(c => (
+                    <li key={c.href}>
+                      <Link
+                        href={c.href}
+                        prefetch={false}
+                        className="inline-block px-3 py-1.5 rounded-full ghost-border bg-surface-container-lowest text-sm text-on-surface hover:border-primary/40 hover:text-primary transition-colors"
+                      >
+                        {dishChipsCity ? c.label : `${c.label} in ${c.city}`}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             )}
 
           </div>
