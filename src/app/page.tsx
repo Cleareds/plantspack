@@ -616,7 +616,8 @@ export default async function Home() {
               Rated 4 stars and up by members
             </h2>
             <p className="mt-1.5 text-sm text-on-surface-variant leading-relaxed">
-              Fully vegan places rated 4 or more by members. A different twelve every day, and nobody can pay to appear here.
+              Fully vegan places a member rated 4 or more. Most have one review so far, so read them as tips, not a ranking.
+              A different twelve every day, and nobody can pay to appear here.
               Today, {new Date(featuredPlaces.date + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', timeZone: 'UTC' })}.
             </p>
           </div>

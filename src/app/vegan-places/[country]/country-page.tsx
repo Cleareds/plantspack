@@ -234,12 +234,16 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
   // /vegan-places/<country>/fully-vegan carries the same verification copy
   // and ItemList JSON-LD that AI search systems can quote.
   const fvSet: any[] = isFullyVeganMode ? places : []
-  const fvLastVerified = fvSet
+  // "Admin-verified" = is_verified (set only by the Admin button in the UI).
+  // verification_level 3 is also reached by CLI cross-reference sweeps
+  // (e.g. 211 US rows from one 2026-05-25 script), so it can't back that claim.
+  const fvAdminSet = fvSet.filter((p: any) => p.is_verified === true)
+  const fvAdminReviewed = fvAdminSet.length
+  const fvLastVerified = fvAdminSet
     .map((p: any) => p.last_verified_at)
     .filter((d: any): d is string => !!d)
     .sort()
     .reverse()[0] || null
-  const fvAdminReviewed = fvSet.filter((p: any) => (p.verification_level ?? 0) >= 3).length
   const formatVerifiedDate = (d: string) =>
     new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 
@@ -502,7 +506,7 @@ export async function renderCountryPage(country: string, isFullyVeganMode: boole
                 <h3 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is compiled</h3>
                 <p className="mb-2">
                   {fvAdminReviewed > 0
-                    ? `${fvAdminReviewed} of ${fvSet.length} ${fvSet.length === 1 ? 'venue' : 'venues'} here are at our highest verification tier — opened on their own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs) and confirmed currently open before being tagged 100% vegan${fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}. The rest are listed as 100% vegan from vegan-first source data and haven't been individually re-checked yet.`
+                    ? `${fvAdminReviewed} of ${fvSet.length} ${fvSet.length === 1 ? 'venue' : 'venues'} here ${fvAdminReviewed === 1 ? 'was' : 'were'} checked by a PlantsPack admin: website opened, menu checked for animal products, cross-referenced against secondary sources (HappyCow, local vegan blogs) and confirmed open${fvLastVerified ? `. The newest of these checks was on ${formatVerifiedDate(fvLastVerified)}; each listing shows its own check date` : ''}.${fvAdminReviewed < fvSet.length ? ' The rest are listed as 100% vegan from vegan-first source data or automated cross-referencing, and no admin has checked them yet.' : ''}`
                     : `These ${fvSet.length} ${fvSet.length === 1 ? 'venue is' : 'venues are'} listed as 100% vegan based on vegan-first source data (OpenStreetMap, VegGuide, HappyCow and local vegan blogs). None have been individually admin-verified against the venue's own website yet — once checked, a venue carries a "Confirmed" badge on its page.`}
                 </p>
                 <p className="text-xs text-on-surface-variant">

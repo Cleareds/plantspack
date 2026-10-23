@@ -109,6 +109,7 @@ interface Place {
   verification_level?: number | null
   verification_method?: string | null
   last_verified_at?: string | null
+  is_verified?: boolean | null
 }
 
 // Map our { Mon: "10:00-18:00", ... } shape to schema.org openingHoursSpecification.
@@ -507,9 +508,12 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
     : Promise.resolve([] as Awaited<ReturnType<typeof getRegionCityStats>>)
   const [nearbyCities, regionCities] = await Promise.all([nearbyCitiesPromise, regionCitiesPromise])
 
-  // Build stats from fetched places for data-driven description
+  // Build stats from fetched places for data-driven description. The counts
+  // are city-wide (allPlaces) on /fully-vegan too: this text describes the
+  // whole city, and counting only the filtered list printed "10 places with
+  // vegan options, 10 of them fully vegan" on Brussels /fully-vegan.
   const cityStats: any = {
-    total: places.length,
+    total: allPlaces.length,
     categories: {} as Record<string, number>,
     fullyVegan: 0,
     mostlyVegan: 0,
@@ -535,7 +539,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
     .slice(0, 5)
     .map((p: any) => p.name)
     .filter((n: string) => n && n.length > 2 && n.length < 40)
-  for (const p of places) {
+  for (const p of allPlaces) {
     cityStats.categories[p.category] = (cityStats.categories[p.category] || 0) + 1
     if ((p as any).vegan_level === 'fully_vegan') cityStats.fullyVegan++
     if ((p as any).vegan_level === 'mostly_vegan') cityStats.mostlyVegan++
@@ -559,16 +563,19 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
   const categories = [...new Set(places.map((p: Place) => p.category))] as string[]
   categories.sort()
 
-  // Freshness signal computed once: most recent last_verified_at across
-  // the FV set, plus admin-reviewed count. Used both in the verification
-  // paragraph and when rendering per-tile badges.
+  // Freshness signal computed once: admin-checked count plus the newest
+  // last_verified_at among those. Used in the verification paragraph.
   const fvSet: Place[] = isFullyVeganMode ? places : []
-  const fvLastVerified = fvSet
+  // "Admin-verified" = is_verified (set only by the Admin button in the UI).
+  // verification_level 3 is also reached by CLI cross-reference sweeps
+  // (e.g. 211 US rows from one 2026-05-25 script), so it can't back that claim.
+  const fvAdminSet = fvSet.filter((p: Place) => p.is_verified === true)
+  const fvAdminReviewed = fvAdminSet.length
+  const fvLastVerified = fvAdminSet
     .map((p: Place) => p.last_verified_at)
     .filter((d): d is string => !!d)
     .sort()
     .reverse()[0] || null
-  const fvAdminReviewed = fvSet.filter((p: Place) => (p.verification_level ?? 0) >= 3).length
   const formatVerifiedDate = (d: string) =>
     new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 
@@ -607,9 +614,9 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
         />
       )}
       {(() => {
-        const eatList = places.filter((p: Place) => p.category === 'eat')
-        const storeCount = places.filter((p: Place) => p.category === 'store').length
-        const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
+        const eatList = allPlaces.filter((p: Place) => p.category === 'eat')
+        const storeCount = allPlaces.filter((p: Place) => p.category === 'store').length
+        const hotelCount = allPlaces.filter((p: Place) => p.category === 'hotel').length
         // Same picker as the visible FAQ - reviews>=1 minimum bar, prefer
         // fully_vegan, fall back to any reviewed. Avoids 0-review tiebreak
         // picking arbitrary places as the "top".
@@ -619,15 +626,15 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
         const topFv = reviewed.filter((p: Place) => p.vegan_level === 'fully_vegan').sort(cmpRR)[0]
         const topPlace: Place | undefined = topFv || [...reviewed].sort(cmpRR)[0]
         const cuisineCounts: Record<string, number> = {}
-        for (const p of places) for (const c of (p.cuisine_types || [])) {
+        for (const p of allPlaces) for (const c of (p.cuisine_types || [])) {
           if (c) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
         }
         const rankedJsonLdCuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).map(([k]) => k)
         const cuisineSample = filterCuisinesForDisplay(rankedJsonLdCuisines).slice(0, 6)
         const faq = generateFaqJsonLd({
           cityName, countryName,
-          total: places.length,
-          fullyVegan: places.filter((p: Place) => p.vegan_level === 'fully_vegan').length,
+          total: allPlaces.length,
+          fullyVegan: allPlaces.filter((p: Place) => p.vegan_level === 'fully_vegan').length,
           topPlace,
           cuisineSample,
           storeCount, hotelCount,
@@ -753,7 +760,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
                 <h2 className="font-headline font-bold text-base mb-2 text-emerald-900">How this list is compiled</h2>
                 <p className="mb-2">
                   {fvAdminReviewed > 0
-                    ? `${fvAdminReviewed} of ${fvSet.length} ${fvSet.length === 1 ? 'venue' : 'venues'} here are at our highest verification tier — opened on their own website, checked for animal products on the menu, cross-referenced against secondary sources (HappyCow, local vegan blogs) and confirmed currently open before being tagged 100% vegan${fvLastVerified ? `; the most recent review was ${formatVerifiedDate(fvLastVerified)}` : ''}. The rest are listed as 100% vegan from vegan-first source data and haven't been individually re-checked yet.`
+                    ? `${fvAdminReviewed} of ${fvSet.length} ${fvSet.length === 1 ? 'venue' : 'venues'} here ${fvAdminReviewed === 1 ? 'was' : 'were'} checked by a PlantsPack admin: website opened, menu checked for animal products, cross-referenced against secondary sources (HappyCow, local vegan blogs) and confirmed open${fvLastVerified ? `. The newest of these checks was on ${formatVerifiedDate(fvLastVerified)}; each listing shows its own check date` : ''}.${fvAdminReviewed < fvSet.length ? ' The rest are listed as 100% vegan from vegan-first source data or automated cross-referencing, and no admin has checked them yet.' : ''}`
                     : `These ${fvSet.length} ${fvSet.length === 1 ? 'venue is' : 'venues are'} listed as 100% vegan based on vegan-first source data (OpenStreetMap, VegGuide, HappyCow and local vegan blogs). None have been individually admin-verified against the venue's own website yet — once checked, a venue carries a "Confirmed" badge on its page.`}
                 </p>
                 <p className="text-xs text-on-surface-variant">
@@ -965,7 +972,7 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             (Google rewards FAQ schema more when the questions are visible
             on the page). All answers are grounded in real DB data. */}
         {(() => {
-          const eatList = places.filter((p: Place) => p.category === 'eat')
+          const eatList = allPlaces.filter((p: Place) => p.category === 'eat')
           // Pick top place: only places with at least one review qualify
           // (otherwise "highest-rated" becomes a sort-tiebreak coin flip).
           // Prefer fully_vegan, fall back to any with reviews. Sort by
@@ -976,10 +983,10 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
           const topFullyVegan = reviewed.filter((p: Place) => p.vegan_level === 'fully_vegan').sort(sortByReviewsRating)[0]
           const topReviewed = [...reviewed].sort(sortByReviewsRating)[0]
           const topPlace = topFullyVegan || topReviewed
-          const storeCount = places.filter((p: Place) => p.category === 'store').length
-          const hotelCount = places.filter((p: Place) => p.category === 'hotel').length
+          const storeCount = allPlaces.filter((p: Place) => p.category === 'store').length
+          const hotelCount = allPlaces.filter((p: Place) => p.category === 'hotel').length
           const cuisineCounts: Record<string, number> = {}
-          for (const p of places) for (const c of (p.cuisine_types || [])) {
+          for (const p of allPlaces) for (const c of (p.cuisine_types || [])) {
             if (c) cuisineCounts[c] = (cuisineCounts[c] || 0) + 1
           }
           const rankedFaqCuisines = Object.entries(cuisineCounts).sort((a, b) => b[1] - a[1]).map(([k]) => k)
@@ -988,8 +995,8 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             <CityFaq
               cityName={cityName}
               countryName={countryName}
-              total={places.length}
-              fullyVegan={places.filter((p: Place) => p.vegan_level === 'fully_vegan').length}
+              total={allPlaces.length}
+              fullyVegan={allPlaces.filter((p: Place) => p.vegan_level === 'fully_vegan').length}
               topPlaceName={topPlace?.name}
               topPlaceSlug={topPlace?.slug}
               topPlaceRating={topPlace?.average_rating || undefined}

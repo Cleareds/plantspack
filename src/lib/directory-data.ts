@@ -24,7 +24,7 @@ function fromSlug(slug: string): string {
 }
 
 export const PLACE_COLS =
-  'id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types, tags, verification_level, verification_method, last_verified_at'
+  'id, slug, name, category, subcategory, address, description, images, main_image_url, average_rating, review_count, is_pet_friendly, vegan_level, website, phone, opening_hours, latitude, longitude, city, country, cuisine_types, tags, verification_level, verification_method, last_verified_at, is_verified'
 
 // Same payload slim as the directory route: cards render main_image_url and
 // a ~150-char snippet only, and every place ships in the RSC Flight payload.

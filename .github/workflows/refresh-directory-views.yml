@@ -1,0 +1,26 @@
+name: Daily Directory Views Refresh
+
+# directory_cities / directory_countries are materialized views. The weekly
+# data-quality audit was their only refresh, so region and country pages showed
+# counts up to 7 days older than the live "Nearby cities" block on the same
+# page (Ixelles 29 places / 2 fully vegan vs 30 / 3, 2026-10-24).
+
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Refresh materialized views
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          curl -sf -X POST "$SUPABASE_URL/rest/v1/rpc/refresh_directory_views" \
+            -H "apikey: $SERVICE_KEY" -H "Authorization: Bearer $SERVICE_KEY" \
+            -H "Content-Type: application/json" -d '{}'
+          echo "Materialized views refreshed."

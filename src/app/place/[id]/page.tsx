@@ -742,14 +742,26 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   showEmpty
                   href="#reviews"
                 />
+                {/* "Verified" only for an admin check in the UI (is_verified).
+                    Level 2 is also set by CLI cross-reference scripts, so
+                    those rows get a neutral "Last checked" date instead. */}
                 {(place as any).last_verified_at && ((place as any).verification_level ?? 0) >= 2 && (
-                  <span
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-                    title={`Manually verified by PlantsPack ${(place as any).verification_method === 'admin_review' ? 'admin' : 'community'}`}
-                  >
-                    <CheckCircle className="h-3 w-3" aria-hidden />
-                    Verified {new Date((place as any).last_verified_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </span>
+                  (place as any).is_verified === true ? (
+                    <span
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                      title="Checked by a PlantsPack admin against the venue's own website"
+                    >
+                      <CheckCircle className="h-3 w-3" aria-hidden />
+                      Verified {new Date((place as any).last_verified_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                  ) : (
+                    <span
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant"
+                      title="Date of the last data check (source cross-reference). Not yet checked by an admin."
+                    >
+                      Last checked {new Date((place as any).last_verified_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                  )
                 )}
               </div>
               {place.tags && place.tags.length > 0 && (
