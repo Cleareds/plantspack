@@ -95,9 +95,14 @@ export async function PUT(request: NextRequest) {
       // does. Without it the places_fully_vegan_human_only trigger rejects
       // the update on rows imported as ai_verified.
       if (corrections.vegan_level === 'fully_vegan') {
+        const { data: ladder } = await admin.from('places').select('verification_level').eq('id', correction.place_id).single()
         updateData.verification_method = 'admin_review'
-        updateData.verification_level = 3
+        // Never lower a place that already sits higher on the ladder (L4/L5).
+        updateData.verification_level = Math.max(ladder?.verification_level ?? 0, 3)
         updateData.verification_status = 'admin_verified'
+        // Invariant: is_verified=true <=> verification_method='admin_review'.
+        // An admin approving here IS the human review.
+        updateData.is_verified = true
         updateData.last_verified_at = new Date().toISOString()
       }
 

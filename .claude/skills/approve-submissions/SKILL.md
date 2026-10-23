@@ -19,7 +19,7 @@ The lightweight sibling of `add-place` for community submissions from the mobile
 2. **Per submission, in order** (cap: 15 per run; leave the rest for the next run):
 
    a. **Duplicate check.** Inspect `dupeCandidates`. If one is clearly the same venue (same name modulo punctuation/diacritics, same city or within a block):
-      `submission-actions.ts duplicate <subId> --place-id <existingId>` — credits the submitter as co_submitter and notifies them. Move on.
+      `submission-actions.ts duplicate <subId> --place-id <existingId>` — if the existing row is a bulk import (owned by `admin`) the submitter becomes its creator, otherwise co_submitter; raises verification_level by one (cap 4); if the submitter claims a stronger vegan_level it queues a Research Review item (a CLI run cannot promote to fully_vegan). Pass your evidence in `--note` (e.g. "HappyCow lists it as vegan"). Notifies the submitter. Move on.
       If unsure whether it's the same venue, prefer `hold` over guessing.
 
    b. **Plausibility check.** Gibberish name, test entry, obviously non-vegan-relevant business (e.g. a butcher), or a Russian place (excluded per policy) → `hold` with a short reason. NEVER reject or delete — hold keeps it pending for the human queue in /admin.

@@ -17,9 +17,13 @@
  *                                place insert → creator credit → feed post → notify
  *                                submitter + nearby users).
  *   duplicate <id> --place-id P [--note "…"]
- *                                The place already exists: credit the submitter as
- *                                co_submitter on it, link + close the submission,
- *                                notify the submitter. Nothing is deleted.
+ *                                The place already exists. If it is a bulk import
+ *                                (owned by the admin account) the submitter becomes
+ *                                its creator ("Added by <user>"); otherwise they are
+ *                                credited as co_submitter. verification_level +1
+ *                                (cap 4, never lowered). A stronger vegan_level claim
+ *                                is queued in Research Review. Links + closes the
+ *                                submission, notifies the submitter. Nothing is deleted.
  *   hold <id> --note "…"         Keep pending for human review; prefixes the note with
  *                                'auto-hold:' so the skill skips it on later runs. It
  *                                stays visible in the /admin submissions queue.
@@ -40,6 +44,8 @@ import { sendSubmissionsDigestEmail, type SubmissionDigestItem } from '@/lib/ema
 
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 const ADMIN_DIGEST_TO = 'anton.kravchuk@cleareds.com'
+// The `admin` account that owns bulk imports (same id as src/lib/verification-badge.ts).
+const ADMIN_USER_ID = 'd27f7c5e-2053-4c0c-8fd1-27ee3269ad1c'
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(name)
@@ -145,33 +151,99 @@ async function main() {
     const { data: s } = await sb.from('place_submissions').select('*').eq('id', id).single()
     if (!s) fail('submission not found')
     if (s.status !== 'pending') fail(`already ${s.status}`)
-    const { data: place } = await sb.from('places').select('id, slug, name').eq('id', placeId).single()
+    const { data: place } = await sb.from('places')
+      .select('id, slug, name, created_by, vegan_level, verification_level, tags')
+      .eq('id', placeId).single()
     if (!place) fail('target place not found')
 
-    if (s.user_id) {
-      const { error: credErr } = await sb.from('place_contributors').insert({
-        place_id: place.id, user_id: s.user_id, role: 'co_submitter',
-        note: 'independently suggested via mobile',
-      })
-      if (credErr && !credErr.message.includes('duplicate')) console.warn('credit failed:', credErr.message)
+    // Bulk imports (OSM, VegGuide, CLI) are owned by the admin account. When a
+    // real user independently submits such a place, THEY become its creator:
+    // the page then says "Added by <user>", their contribution count includes
+    // it, and the confidence badge reads "Community-added". A place that a
+    // human already added keeps its creator; the submitter is co_submitter.
+    const takeOver = !!s.user_id && place.created_by === ADMIN_USER_ID
+    const role = takeOver ? 'creator' : 'co_submitter'
+
+    // An independent human submission is one more signal on top of whatever
+    // cross-referencing the row already had: +1 on the ladder, capped at 4
+    // (5 stays reserved for multi-source audits), never lowered. Never touches
+    // is_verified / verification_method (UI-only, per CLAUDE.md).
+    const oldLevel = place.verification_level ?? 0
+    const newLevel = s.user_id ? Math.max(oldLevel, Math.min(oldLevel + 1, 4)) : oldLevel
+    const placeUpdate: Record<string, unknown> = {}
+    if (takeOver) placeUpdate.created_by = s.user_id
+    if (newLevel !== oldLevel) placeUpdate.verification_level = newLevel
+    if (s.user_id) placeUpdate.tags = Array.from(new Set([...(place.tags || []), 'community_submitted']))
+    if (Object.keys(placeUpdate).length) {
+      const { error: upErr } = await sb.from('places').update(placeUpdate).eq('id', place.id)
+      if (upErr) fail(`place update failed: ${upErr.message}`)
     }
+
+    if (s.user_id) {
+      // Upgrade an existing co_submitter row instead of adding a second one.
+      const { data: prev } = await sb.from('place_contributors').select('id, role')
+        .eq('place_id', place.id).eq('user_id', s.user_id)
+      if (takeOver && prev?.some(r => r.role === 'co_submitter')) {
+        await sb.from('place_contributors').update({ role: 'creator', note: 'submitted via mobile; credited as creator of an imported row' })
+          .eq('place_id', place.id).eq('user_id', s.user_id).eq('role', 'co_submitter')
+      } else if (!prev?.some(r => r.role === role)) {
+        const { error: credErr } = await sb.from('place_contributors').insert({
+          place_id: place.id, user_id: s.user_id, role,
+          note: takeOver ? 'submitted via mobile; credited as creator of an imported row' : 'independently suggested via mobile',
+        })
+        if (credErr) console.warn('credit failed:', credErr.message)
+      }
+    }
+
+    // The submitter claims a stronger vegan level than the row has. A CLI run
+    // cannot promote to fully_vegan (places_fully_vegan_human_only trigger), so
+    // queue it in /admin/data-quality -> Research Review for a human click.
+    const LEVELS = ['vegan_options', 'vegan_friendly', 'mostly_vegan', 'fully_vegan']
+    const claimed = LEVELS.indexOf(s.vegan_level), current = LEVELS.indexOf(place.vegan_level)
+    const upgradeQueued = claimed > current && current >= 0
+    if (upgradeQueued) {
+      const { error: qErr } = await sb.from('place_corrections').insert({
+        place_id: place.id,
+        user_id: ADMIN_USER_ID,
+        note: `CLI-REVIEW approve-submissions: submitter says ${s.vegan_level}, place is ${place.vegan_level}. Check evidence, then promote from the place page.`,
+        corrections: {
+          proposed_action: 'review_vegan_level_upgrade',
+          from: place.vegan_level, to: s.vegan_level,
+          reason: `mobile submission ${s.id}${s.notes ? `: "${String(s.notes).slice(0, 300)}"` : ''}${arg('--note') ? ` | ${arg('--note')}` : ''}`,
+        },
+        status: 'pending',
+      })
+      if (qErr) console.warn('upgrade review item failed:', qErr.message)
+    }
+
     const { error } = await sb.from('place_submissions').update({
       status: 'approved',
       imported_place_id: place.id,
       reviewed_at: new Date().toISOString(),
-      review_note: arg('--note') || `duplicate of existing place ${place.slug}; submitter credited as co_submitter`,
+      review_note: arg('--note') || `duplicate of existing place ${place.slug}; submitter credited as ${role}; level ${oldLevel} -> ${newLevel}${upgradeQueued ? `; ${s.vegan_level} claim queued for review` : ''}`,
     }).eq('id', id)
     if (error) fail(error.message)
+
+    try {
+      await fetch('https://www.plantspack.com/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.REVALIDATE_SECRET || process.env.CRON_SECRET}` },
+        body: JSON.stringify({ place_id: place.id }),
+      })
+    } catch { /* page refreshes on its own ISR timer */ }
+
     if (s.user_id) {
       await createNotification({
         userId: s.user_id,
         type: 'submission_approved',
         entityType: 'place',
         entityId: place.id,
-        message: `Good eye — ${place.name} is already on Plants Pack. We credited you as a co-submitter 🌱`,
+        message: takeOver
+          ? `${place.name} is on Plants Pack, and it is now credited to you as the person who added it. Thank you 🌱`
+          : `Good eye — ${place.name} is already on Plants Pack. We credited you as a co-submitter 🌱`,
       })
     }
-    console.log(JSON.stringify({ ok: true, duplicateOf: place.slug }))
+    console.log(JSON.stringify({ ok: true, duplicateOf: place.slug, credited: role, level: `${oldLevel}->${newLevel}`, upgradeQueued }))
     return
   }
 
