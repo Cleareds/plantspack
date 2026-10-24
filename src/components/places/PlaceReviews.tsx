@@ -1,6 +1,7 @@
 'use client'
 
 import { DISHES } from '@/lib/dish-keywords'
+import { DISH_CHIPS, MAX_REVIEW_DISHES } from '@/lib/dish-chips'
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { track } from '@/lib/analytics'
@@ -66,6 +67,8 @@ export default function PlaceReviews({
   const [page, setPage] = useState(0)
   const [newRating, setNewRating] = useState(0)
   const [newContent, setNewContent] = useState('')
+  // Review in three taps: stars, dish chips, optional words (same as the app).
+  const [newDishes, setNewDishes] = useState<string[]>([])
   const reviewTextareaRef = useRef<HTMLTextAreaElement>(null)
   const [submitting, setSubmitting] = useState(false)
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
@@ -206,10 +209,6 @@ export default function PlaceReviews({
       setValidationError('Please select a star rating')
       return
     }
-    if (!newContent.trim()) {
-      setValidationError('Please write a review')
-      return
-    }
     if (submitting) return
 
     if (profile?.is_banned) {
@@ -219,10 +218,12 @@ export default function PlaceReviews({
 
     const reviewContent = newContent.trim()
     const reviewRating = newRating
+    const reviewDishes = [...newDishes]
     const reviewImages = [...imageUrls]
     const reviewVideo = videoUrl
     setNewContent('')
     setNewRating(0)
+    setNewDishes([])
     setImageUrls([])
     setVideoUrl(null)
     setShowImageUploader(false)
@@ -243,6 +244,7 @@ export default function PlaceReviews({
       } else if (rateLimitData && !rateLimitData.allowed) {
         setNewContent(reviewContent)
         setNewRating(reviewRating)
+        setNewDishes(reviewDishes)
         setImageUrls(reviewImages)
         setVideoUrl(reviewVideo)
         throw new Error('Rate limit exceeded. Please wait before reviewing again.')
@@ -256,6 +258,7 @@ export default function PlaceReviews({
         body: JSON.stringify({
           rating: reviewRating,
           content: reviewContent,
+          dishes: reviewDishes,
           images: reviewImages,
           video_url: reviewVideo,
         })
@@ -276,13 +279,14 @@ export default function PlaceReviews({
         // Add new review at the beginning
         setReviews(prev => [review, ...prev])
         setUserReview(review)
-        track('review_submitted', { rating: review.rating })
+        track('review_submitted', { rating: review.rating, dishes: reviewDishes.length, has_text: reviewContent.length > 0 })
       }
 
       setEditingReviewId(null)
     } catch (error) {
       setNewContent(reviewContent)
       setNewRating(reviewRating)
+      setNewDishes(reviewDishes)
       setImageUrls(reviewImages)
       setVideoUrl(reviewVideo)
       alert(error instanceof Error ? error.message : 'Failed to submit review. Please try again.')
@@ -294,7 +298,8 @@ export default function PlaceReviews({
   const handleEditReview = (review: Review) => {
     setEditingReviewId(review.id)
     setNewRating(review.rating)
-    setNewContent(review.content)
+    setNewContent(review.content || '')
+    setNewDishes(review.dishes || [])
     setImageUrls(review.images || [])
     setVideoUrl(review.video_url || null)
     setShowImageUploader((review.images || []).length > 0)
@@ -305,6 +310,7 @@ export default function PlaceReviews({
     setEditingReviewId(null)
     setNewRating(0)
     setNewContent('')
+    setNewDishes([])
     setImageUrls([])
     setVideoUrl(null)
     setShowImageUploader(false)
@@ -383,13 +389,31 @@ export default function PlaceReviews({
             </div>
             <div>
               <label className="block text-sm font-medium text-on-surface-variant mb-2">
-                Review
+                What did you eat? <span className="font-normal text-outline">(optional)</span>
+              </label>
+              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Dishes">
+                {DISH_CHIPS.map(d => {
+                  const on = newDishes.includes(d.slug)
+                  const full = !on && newDishes.length >= MAX_REVIEW_DISHES
+                  return (
+                    <button key={d.slug} type="button" aria-pressed={on} disabled={full}
+                      onClick={() => setNewDishes(prev => on ? prev.filter(x => x !== d.slug) : [...prev, d.slug])}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors disabled:opacity-40 ${on ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
+                      {d.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-2">
+                A few words <span className="font-normal text-outline">(optional)</span>
               </label>
               <textarea
                 ref={reviewTextareaRef}
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
-                placeholder="Share your experience..."
+                placeholder="Anything worth knowing? Stars alone are fine."
                 className="w-full px-3 py-2 ghost-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-y"
                 rows={4}
                 maxLength={500}
@@ -506,7 +530,7 @@ export default function PlaceReviews({
                   )}
                   <button
                     type="submit"
-                    disabled={!newContent.trim() || newRating === 0 || submitting}
+                    disabled={newRating === 0 || submitting}
                     className="flex items-center space-x-1 silk-gradient hover:opacity-90 disabled:bg-outline text-on-primary px-4 py-2 rounded-md text-sm font-medium transition-colors"
                   >
                     <Send className="h-4 w-4" />

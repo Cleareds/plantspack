@@ -61,6 +61,7 @@ import { generateCityDescription, generateCityMetaDescription, filterCuisinesFor
 import { FilteredTotal, FilteredLabel, FullyVeganNote } from '@/components/ui/FilteredCount'
 import { getGradeColor, getScoreBarColor } from '@/lib/score-utils'
 import CityPlacesList, { CityPlacesListView } from '@/components/places/CityPlacesList'
+import { timeZoneFor } from '@/lib/time-zone'
 import SmartImg from '@/components/ui/SmartImg'
 import { CITY_LIST_PAGE_SIZE, defaultCityListOrder, toLightPlace, summarizeLightPlaces } from '@/lib/city-list-light'
 import CityExperiencesSection from '@/components/city/CityExperiencesSection'
@@ -487,6 +488,8 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
       cityCentroidLng = sumLng / n
     }
   }
+  // The city's zone for the "Open now" filter (viewers are often elsewhere).
+  const cityTimeZone = timeZoneFor(cityCentroidLat, cityCentroidLng)
 
   // Nearby cities (same country, sorted by distance, min 5 places to
   // match the country-page threshold) + other cities in the region
@@ -806,8 +809,8 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             {/* CityPlacesList reads useSearchParams(). On a statically rendered
                 (ISR) page that MUST sit inside a Suspense boundary or the whole
                 page throws at render time (500 on every hub, 2026-10-01). */}
-            <Suspense fallback={<CityPlacesListView summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} cityName={cityName} countryName={countryName} searchParams={null} />}>
-              <CityPlacesList summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} cityName={cityName} countryName={countryName} />
+            <Suspense fallback={<CityPlacesListView summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} cityName={cityName} countryName={countryName} timeZone={cityTimeZone} searchParams={null} />}>
+              <CityPlacesList summary={listSummary} lightSrc={lightSrc} initialFull={firstPageCards} cityName={cityName} countryName={countryName} timeZone={cityTimeZone} />
             </Suspense>
 
             {/* Server-rendered crawlable index of EVERY place in the city.

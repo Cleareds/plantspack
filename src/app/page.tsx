@@ -26,6 +26,8 @@ export interface FollowedCity {
   pointsToNext: number | null
   placeCount: number
   fvCount: number
+  /** Places added to the city since the person last opened it (web or app). */
+  newPlaces: number
 }
 
 // Top cities + posts cache for 60s. The per-user location-aware content
@@ -139,7 +141,7 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
 
     const { data: followedRaw } = await supabase
       .from('user_followed_cities')
-      .select('city, country, last_seen_score')
+      .select('city, country, last_seen_score, last_visited_at, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
@@ -162,6 +164,22 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
 
     const scoreMap: Record<string, any> = {}
     for (const s of (scores || [])) scoreMap[`${s.city}|||${s.country}`] = s
+
+    // "Since your last visit": places added after the last open of the city
+    // (or after the follow). One count query per city, capped so a long
+    // follow list cannot fan out.
+    const newCounts: Record<string, number> = {}
+    await Promise.all(followed.slice(0, 12).map(async (f: any) => {
+      const since = f.last_visited_at ?? f.created_at
+      if (!since) return
+      const { count } = await admin
+        .from('places')
+        .select('id', { count: 'exact', head: true })
+        .eq('city', f.city).eq('country', f.country)
+        .is('archived_at', null)
+        .gt('created_at', since)
+      newCounts[`${f.city}|||${f.country}`] = count ?? 0
+    }))
 
     // Keep in sync with GRADE_THRESHOLDS in src/lib/score-utils.ts + the
     // CASE in supabase/migrations/20260423210000_subgrades.sql.
@@ -196,6 +214,7 @@ async function getFollowedCities(): Promise<FollowedCity[]> {
         pointsToNext,
         placeCount: s?.place_count ?? 0,
         fvCount: s?.fv_count ?? 0,
+        newPlaces: newCounts[`${f.city}|||${f.country}`] ?? 0,
       }
     })
   } catch (err) {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { DISH_CHIP_SLUGS, MAX_REVIEW_DISHES } from '@/lib/dish-chips'
 import { createClient } from '@supabase/supabase-js'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
@@ -149,19 +150,25 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { rating, content, images, video_url } = body
+    const { rating, images, video_url } = body
+    // Review in three taps: stars, dish chips, optional words. Text is no
+    // longer required (the app dropped it 2026-10-24; the column allows '').
+    const content: string = typeof body.content === 'string' ? body.content.trim() : ''
+    const dishes: string[] = Array.isArray(body.dishes)
+      ? [...new Set<string>((body.dishes as unknown[]).filter((d): d is string => typeof d === 'string' && DISH_CHIP_SLUGS.has(d)))].slice(0, MAX_REVIEW_DISHES)
+      : []
 
     // Validation
-    if (!rating || !content) {
-      return NextResponse.json({ error: 'Rating and content are required' }, { status: 400 })
+    if (!rating) {
+      return NextResponse.json({ error: 'Rating is required' }, { status: 400 })
     }
 
     if (rating < 1 || rating > 5) {
       return NextResponse.json({ error: 'Rating must be between 1 and 5' }, { status: 400 })
     }
 
-    if (content.length < 1 || content.length > 500) {
-      return NextResponse.json({ error: 'Content must be between 1 and 500 characters' }, { status: 400 })
+    if (content.length > 500) {
+      return NextResponse.json({ error: 'Content must be 500 characters or fewer' }, { status: 400 })
     }
 
     // Validate images array and video
@@ -185,6 +192,7 @@ export async function POST(
         .update({
           rating,
           content,
+          dishes,
           images: reviewImages,
           video_url: reviewVideo,
           edited_at: new Date().toISOString(),
@@ -206,6 +214,7 @@ export async function POST(
           user_id: session.user.id,
           rating,
           content,
+          dishes,
           images: reviewImages,
           video_url: reviewVideo,
         })

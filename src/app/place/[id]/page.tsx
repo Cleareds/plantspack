@@ -1,4 +1,7 @@
 import PlaceActionTracker from '@/components/analytics/PlaceActionTracker'
+import OpenNowBadge from '@/components/places/OpenNowBadge'
+import { timeZoneFor } from '@/lib/time-zone'
+import { hoursStringOf } from '@/lib/open-now'
 import { cache } from 'react'
 import { notFound, redirect } from 'next/navigation'
 import { Metadata } from 'next'
@@ -982,7 +985,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                 <div className="flex items-start gap-3">
                   <Calendar className="h-5 w-5 text-outline flex-shrink-0 mt-0.5" />
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-on-surface mb-2">Opening Hours</div>
+                    <div className="text-sm font-medium text-on-surface mb-2 flex items-center gap-2 flex-wrap">
+                      Opening Hours
+                      <OpenNowBadge hours={hoursStringOf(place.opening_hours)} timeZone={timeZoneFor(place.latitude, place.longitude)} />
+                    </div>
                     <div className="text-sm space-y-1">
                       {typeof place.opening_hours === 'string' ? (
                         // Split on ; or newline. Each segment renders on its

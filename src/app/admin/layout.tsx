@@ -32,6 +32,7 @@ import {
   ChevronDown,
   ChevronRight,
   type LucideIcon,
+  ShieldCheck,
 } from 'lucide-react'
 
 type NavLeaf = { name: string; href: string; icon: LucideIcon }
@@ -62,6 +63,7 @@ const NAV: NavNode[] = [
       { name: 'Mobile Submissions', href: '/admin/submissions', icon: Smartphone },
       { name: 'Tree Orders', href: '/admin/tree-orders', icon: TreeDeciduous },
       { name: 'Data Quality', href: '/admin/data-quality', icon: BarChart3 },
+      { name: 'Fast verify', href: '/admin/verify', icon: ShieldCheck },
     ],
   },
   {

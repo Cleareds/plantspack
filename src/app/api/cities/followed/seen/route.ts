@@ -42,11 +42,8 @@ export async function POST(request: NextRequest) {
     const score = scoreRes.data
     if (!score) return NextResponse.json({ ok: false, reason: 'no_score' })
 
-    // No-op if nothing actually changed.
-    if (followedRes.data.last_seen_score === score.score && followedRes.data.last_seen_grade === score.grade) {
-      return NextResponse.json({ ok: true })
-    }
-
+    // last_visited_at always moves: "Since your last visit" counts places
+    // added after it, so a visit must reset it even when the score is flat.
     const { error } = await admin
       .from('user_followed_cities')
       .update({

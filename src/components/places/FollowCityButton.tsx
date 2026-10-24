@@ -56,6 +56,20 @@ export default function FollowCityButton({ cityName, countryName, currentScore, 
     }
   }
 
+  // Opening a followed city marks it seen, so "Since your last visit" on the
+  // homepage counts only what arrives after this visit (the app does the same
+  // through markCityVisited). Once per mount; the endpoint is a no-op for
+  // cities the person does not follow.
+  useEffect(() => {
+    if (!user || !checked || !following) return
+    fetch('/api/cities/followed/seen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ city: cityName, country: countryName }),
+    }).catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, checked])
+
   // A guest who clicked Follow before signing in: complete it once.
   useEffect(() => {
     if (!user || !checked) return

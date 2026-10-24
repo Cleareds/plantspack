@@ -10,6 +10,7 @@
 // Plain module (no 'use client') so both the server hub and the client list
 // can import it.
 import { veganLevelOrder } from '@/lib/vegan-level'
+import { parseOpeningHours } from '@/shared/opening-hours'
 
 export const CITY_LIST_PAGE_SIZE = 30
 
@@ -27,6 +28,8 @@ export interface LightPlace {
   review_count: number
   /** Only the `also:<category>` tags - the list uses nothing else from tags. */
   tags?: string[] | null
+  /** OSM opening_hours, only when the shared parser understands it (the "Open now" filter). */
+  hours?: string
 }
 
 export function toLightPlace(p: any): LightPlace {
@@ -44,6 +47,7 @@ export function toLightPlace(p: any): LightPlace {
     average_rating: p.average_rating ?? 0,
     review_count: p.review_count ?? 0,
     ...(also.length ? { tags: also } : {}),
+    ...(typeof p.opening_hours === 'string' && parseOpeningHours(p.opening_hours) ? { hours: p.opening_hours } : {}),
   }
 }
 

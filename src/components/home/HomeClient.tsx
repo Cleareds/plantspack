@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { MapPin, Plus, TrendingUp, TrendingDown, Star, Heart, MessageCircle, Share2, Pin, BookOpen } from 'lucide-react'
+import { MapPin, Plus, TrendingUp, TrendingDown, Star, Heart, MessageCircle, Share2, Pin, BookOpen, Sparkles } from 'lucide-react'
 import SearchBar from '@/components/search/SearchBar'
 // Heavy modals — only loaded when the user opens them. Previously these were
 // statically imported and pulled ImageUploader, VideoUploader, LinkPreview,
@@ -83,6 +83,7 @@ export interface FollowedCitySummary {
   pointsToNext: number | null
   placeCount: number
   fvCount: number
+  newPlaces?: number
 }
 
 interface Props {
@@ -586,6 +587,12 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                             <p className="text-[11px] text-on-surface-variant">
                               {c.country} · {c.placeCount} places
                             </p>
+                            {(c.newPlaces ?? 0) > 0 && (
+                              <p className="text-[11px] font-medium text-primary mt-0.5">
+                                <Sparkles className="inline h-3 w-3 mr-0.5 -mt-0.5" aria-hidden />
+                                {c.newPlaces} new since your last visit
+                              </p>
+                            )}
                           </div>
                           <div className="flex items-center gap-1.5 flex-shrink-0">
                             <span className={`text-lg font-black ${getGradeColor(c.currentGrade)}`}>

@@ -18,6 +18,8 @@ import { sanitizeDescription } from '@/lib/places/sanitize-description'
 import { VEGAN_LEVEL_LABEL, VEGAN_LEVEL_INLINE_CLASS, veganLevelOrder } from '@/lib/vegan-level'
 import VerificationConfidenceBadge from './VerificationConfidenceBadge'
 import { CITY_LIST_PAGE_SIZE, categoriesOfLight, type LightPlace, type ListSummary, type FacetCounts } from '@/lib/city-list-light'
+import { openStatus, openLabel } from '@/shared/opening-hours'
+import { nowIn, hoursStringOf } from '@/lib/open-now'
 
 const CATEGORY_LABELS: Record<string, string> = {
   eat: 'Eat',
@@ -89,6 +91,8 @@ type CityPlacesListProps = {
   lightSrc?: string
   cityName?: string
   countryName?: string
+  /** IANA zone of the city. Enables the "Open now" filter and card labels; absent on country pages. */
+  timeZone?: string | null
 }
 const isFullRow = (p: ListPlace): p is Place => p.address !== undefined
 
@@ -103,7 +107,7 @@ export default function CityPlacesList(props: CityPlacesListProps) {
   return <CityPlacesListView {...props} searchParams={searchParams} />
 }
 
-export function CityPlacesListView({ places, allPlaces, initialFull, summary, lightSrc, cityName, countryName, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
+export function CityPlacesListView({ places, allPlaces, initialFull, summary, lightSrc, cityName, countryName, timeZone, searchParams }: CityPlacesListProps & { searchParams: { get(name: string): string | null; toString(): string } | null }) {
   // Full card data by id: what the server sent for page 1, plus whatever
   // the client fetched since. Rows passed in full count too.
   const [fullById, setFullById] = useState<Record<string, Place>>(() => {
@@ -134,6 +138,20 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
   const activeCategory = searchParams?.get('category') || null
   const activeSubcategory = searchParams?.get('sub') || null
   const petOnly = searchParams?.get('pet') === '1'
+  // "Open now" needs the city's zone (the viewer may be elsewhere) and the
+  // current minute, which only exists on the client: null until mounted.
+  const openNowEnabled = !!timeZone
+  const openOnly = openNowEnabled && searchParams?.get('open') === '1'
+  const [now, setNow] = useState<Date | null>(null)
+  useEffect(() => {
+    if (!openNowEnabled) return
+    const tick = () => setNow(nowIn(timeZone))
+    const first = setTimeout(tick, 0)
+    const id = setInterval(tick, 60_000)
+    return () => { clearTimeout(first); clearInterval(id) }
+  }, [openNowEnabled, timeZone])
+  const hoursOf = (p: ListPlace): string | null => p.hours ?? hoursStringOf(p.opening_hours)
+  const isOpenNow = (p: ListPlace): boolean => !!now && openStatus(hoursOf(p), now).state === 'open'
   // /<city>/fully-vegan and ?vl=fully_vegan are equivalent. The path-based
   // form is the canonical URL (a real route segment that server-filters to
   // fully_vegan). Detect both so the UI shows the same active pill regardless.
@@ -168,7 +186,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
   // The server-rendered default view is page 1, vegan-first, no filters
   // (the /fully-vegan path counts as default: its `initialFull` is FV-only).
   // Anything else needs the rows.
-  const isDefaultView = !activeCategory && !activeSubcategory && !petOnly && sortBy === 'vegan' && currentPage <= 1 && !isFullyVeganOnly && (!rawVl || isOnFvPath)
+  const isDefaultView = !activeCategory && !activeSubcategory && !petOnly && !openOnly && sortBy === 'vegan' && currentPage <= 1 && !isFullyVeganOnly && (!rawVl || isOnFvPath)
   const needRows = !hasRows && !!lightSrc && (!isDefaultView || rowsWanted)
   useEffect(() => {
     if (!needRows || rowsLoading) return
@@ -226,6 +244,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
   const matchSubcategory = (p: ListPlace, sub: string | null) => !sub || p.subcategory === sub
   const matchPet = (p: ListPlace) => !petOnly || p.is_pet_friendly
   const matchVeganLevel = (p: ListPlace) => !activeVeganLevel || p.vegan_level === activeVeganLevel
+  const matchOpen = (p: ListPlace) => !openOnly || isOpenNow(p)
 
   // Counts. With rows: computed from the unfiltered universe so the numbers
   // reflect "if you switched to this filter, here's how many you'd see" even
@@ -243,9 +262,11 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
       : Object.keys(summaryPool?.subcategories[validCategory] ?? {}))
     : []
   const validSubcategory = activeSubcategory && subcategories.includes(activeSubcategory) ? activeSubcategory : null
-  const poolForCategoryPills = baseForCounts ? baseForCounts.filter(p => matchVeganLevel(p) && matchPet(p)) : null
-  const poolForSubPills = baseForCounts ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchVeganLevel(p) && matchPet(p)) : null
-  const poolForVeganLevelPills = baseForCounts ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchSubcategory(p, validSubcategory) && matchPet(p)) : null
+  const poolForCategoryPills = baseForCounts ? baseForCounts.filter(p => matchVeganLevel(p) && matchPet(p) && matchOpen(p)) : null
+  const poolForSubPills = baseForCounts ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchVeganLevel(p) && matchPet(p) && matchOpen(p)) : null
+  const poolForVeganLevelPills = baseForCounts ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchSubcategory(p, validSubcategory) && matchPet(p) && matchOpen(p)) : null
+  // Count for the "Open now" pill: every other filter applied, then open. Needs rows + the clock.
+  const countOpen = baseForCounts && now ? baseForCounts.filter(p => matchCategory(p, validCategory) && matchSubcategory(p, validSubcategory) && matchVeganLevel(p) && matchPet(p) && isOpenNow(p)).length : null
   const countAll = poolForCategoryPills ? poolForCategoryPills.length : (summaryPool?.total ?? initialFull?.length ?? 0)
   const countCat = (cat: string) => poolForCategoryPills ? poolForCategoryPills.filter(p => categoriesOf(p).includes(cat)).length : (summaryPool?.categories[cat] ?? 0)
   const countSub = (sub: string) => poolForSubPills ? poolForSubPills.filter(p => p.subcategory === sub).length : (validCategory ? (summaryPool?.subcategories[validCategory]?.[sub] ?? 0) : 0)
@@ -261,6 +282,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
       if (validSubcategory && p.subcategory !== validSubcategory) return false
       if (petOnly && !p.is_pet_friendly) return false
       if (activeVeganLevel && p.vegan_level !== activeVeganLevel) return false
+      if (openOnly && !isOpenNow(p)) return false
       return true
     }).sort((a, b) => {
       if (sortBy === 'rating') return (b.average_rating || 0) - (a.average_rating || 0)
@@ -431,6 +453,17 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
           🐾 Pet-Friendly
         </button>
 
+        {/* Open now - hours parsed from OSM text in the city's own time zone.
+            Places with hours we cannot parse are never shown as closed; they
+            simply drop out of this filter. */}
+        {openNowEnabled && (
+          <button onClick={() => { ensureRows(); setFilter({ open: openOnly ? null : '1' }) }}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${openOnly ? 'bg-emerald-600 text-white' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}
+            title="Only places open right now (local time)">
+            <Clock className="h-3.5 w-3.5" aria-hidden /> Open now{countOpen !== null ? ` (${countOpen})` : ''}
+          </button>
+        )}
+
         {/* Sort */}
         <div className="w-px h-8 bg-outline-variant/30 self-center" />
         {(['vegan', 'rating', 'name'] as const).map(mode => (
@@ -515,6 +548,16 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
                           vegan-level chip so users see "what is it" + "how
                           confident are we" together. */}
                       <VerificationConfidenceBadge place={place} variant="compact" />
+                      {now && (() => {
+                        const label = openLabel(openStatus(hoursOf(row), now))
+                        if (!label) return null
+                        const open = label.startsWith('Open')
+                        return (
+                          <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${open ? 'bg-emerald-50 text-emerald-700' : 'bg-surface-container text-on-surface-variant'}`}>
+                            {label}
+                          </span>
+                        )
+                      })()}
 
                       {/* Hand-verified freshness badge - shown on /fully-vegan
                           tiles only. Surfaces last_verified_at as visible

@@ -1,0 +1,107 @@
+[
+ {
+  "place": {
+   "id": "2cd5645e-c3c1-45c8-a0b7-9a077c2727f3",
+   "slug": "denns-bistro-wurzburg",
+   "vegan_level": "mostly_vegan",
+   "verification_level": 1,
+   "verification_method": "trust-deinflate-2026-07-27",
+   "opening_hours": "Mo-Sa 08:00-20:00; Su,PH off",
+   "archived_at": null,
+   "archived_reason": null,
+   "tags": [
+    "websearch_confirmed_vegan",
+    "hc-image-removed-2026-10-24"
+   ]
+  },
+  "report": "b52eaaa2-08a8-4a81-96b3-a8c054c312cb"
+ },
+ {
+  "place": {
+   "id": "a78a3191-ed7b-4663-b3ee-ba5e874ae94f",
+   "slug": "asia-dragon-wurzburg",
+   "vegan_level": "mostly_vegan",
+   "verification_level": 1,
+   "verification_method": "trust-deinflate-2026-07-27",
+   "opening_hours": "Mo-Fr 12:00-20:00; Sa,Su 12:00-20:00",
+   "archived_at": null,
+   "archived_reason": null,
+   "tags": [
+    "google_checked_clean",
+    "websearch_confirmed_vegan",
+    "vegan-claim-corrected-2026-08-10",
+    "hc-image-removed-2026-10-24"
+   ]
+  },
+  "report": "7e8e8710-db37-400c-8cdb-052275f4076e"
+ },
+ {
+  "place": {
+   "id": "9722b96e-be73-4b26-bd9e-4cbe9bc08874",
+   "slug": "steamy-windows-ghent",
+   "vegan_level": "vegan_friendly",
+   "verification_level": 3,
+   "verification_method": "admin_review",
+   "opening_hours": "Wednesday-Friday: 12-2pm;\nSaturday: open all day long!;\n\nDINER: reservations & walk-in;\n\nevery evening: 5:30-9:30pm;",
+   "archived_at": null,
+   "archived_reason": null,
+   "tags": [
+    "websearch_confirmed_vegan",
+    "website_unreachable"
+   ]
+  },
+  "report": "98992349-2ea3-43d7-a07b-273682b0541c"
+ },
+ {
+  "place": {
+   "id": "070e5304-e7d8-4cd8-9675-3e964ef27441",
+   "slug": "peace-cafe-honolulu",
+   "vegan_level": "fully_vegan",
+   "verification_level": 1,
+   "verification_method": "imported",
+   "opening_hours": null,
+   "archived_at": null,
+   "archived_reason": null,
+   "tags": [
+    "image-scraped"
+   ]
+  },
+  "report": "b4b53de8-40d3-48f3-9ef0-549467d990e7"
+ },
+ {
+  "place": {
+   "id": "b4bf3905-8567-4f59-8d73-8ac54784d3d3",
+   "slug": "luciole-restaurant-la-chaux-de-fonds",
+   "vegan_level": "fully_vegan",
+   "verification_level": 3,
+   "verification_method": "imported",
+   "opening_hours": "Wed-Sat 18:00-22:00",
+   "archived_at": null,
+   "archived_reason": null,
+   "tags": [
+    "user_recommended",
+    "fine_dining",
+    "tasting_menu",
+    "seasonal_menu",
+    "organic"
+   ]
+  },
+  "report": "4edf3381-ae89-4f6a-ae7d-12f5451f9306"
+ },
+ {
+  "place": {
+   "id": "c6847c05-6638-42b0-8865-d0c9e0899672",
+   "slug": "amore-and-fantasia-auderghem",
+   "vegan_level": "mostly_vegan",
+   "verification_level": 1,
+   "verification_method": "imported",
+   "opening_hours": "Mo-Fr 11:30-14:00; Tu-Sa 18:00-21:00",
+   "archived_at": null,
+   "archived_reason": null,
+   "tags": [
+    "community_report:no_vegan_options"
+   ]
+  },
+  "report": "d1030b43-bd9a-40ee-86d2-4c15300f8465"
+ }
+]
