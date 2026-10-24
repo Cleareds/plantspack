@@ -7,7 +7,7 @@
 set -eo pipefail
 
 # Cron's PATH excludes nvm. Pin the active node version explicitly so npx works.
-export PATH="/Users/antonkravchuk/.nvm/versions/node/v21.5.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+export PATH="/Users/antonkravchuk/.nvm/versions/node/v24.22.1/bin:/Users/antonkravchuk/.nvm/versions/node/v21.5.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 
 cd /Users/antonkravchuk/sidep/Cleareds/plantspack
 

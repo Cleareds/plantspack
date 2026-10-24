@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.23.4'  # >= 22.23.4: CVE-2026-111497 (Brotli decoder)
       - run: npm ci --ignore-scripts
       - name: Run OSM audit (dry run, no DB writes)
         run: node scripts/_osm-audit-dryrun.mjs

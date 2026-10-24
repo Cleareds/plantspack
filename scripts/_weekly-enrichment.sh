@@ -17,7 +17,7 @@
 
 set -eo pipefail
 
-export PATH="/Users/antonkravchuk/.nvm/versions/node/v21.5.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+export PATH="/Users/antonkravchuk/.nvm/versions/node/v24.22.1/bin:/Users/antonkravchuk/.nvm/versions/node/v21.5.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 
 LOG=/tmp/weekly-enrichment.log
 trap 'echo "[$(date)] FAIL line $LINENO (exit $?)" >> $LOG' ERR
