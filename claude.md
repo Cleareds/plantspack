@@ -56,8 +56,9 @@ When writing copy about the platform:
 ### Recipe Sources
 - **ONLY source recipes from 100% vegan creators/websites**
 - **NEVER source from non-vegan or "plant-based leaning" sites** that also publish non-vegan recipes
-- **Banned sources:** Minimalist Baker (minimalistbaker.com); Bianca Zapatka (biancazapatka.com — site footer states "mainly plant-based" and a Vegetarian category exists, verified 2026-06-21); and any site that publishes recipes containing animal products
-- **Approved sources:** Nora Cooks, Vegan Richa, Rainbow Plant Life, and any creator whose entire catalog is 100% vegan
+- **Banned sources:** Minimalist Baker (minimalistbaker.com); Bianca Zapatka (biancazapatka.com — site footer states "mainly plant-based" and a Vegetarian category exists, verified 2026-06-21); **The Banana Diaries (thebananadiaries.com — tagline "Vegan Desserts & More!"; publishes non-vegan recipes, e.g. "Traditional Challah French Toast" with real eggs, verified 2026-06-25)**; and any site that publishes recipes containing animal products
+- **Former-vegan / flipped sources — DO NOT use (verify current site state, not reputation):** Avant-Garde Vegan / Gaz Oakley (left veganism May 2026; gazoakleychef.com now uses honey/eggs); Okonomi Kitchen (author reintroduced fish/eggs/poultry; now "plant-forward"); Earth of Maria (domain now redirects to ohmyveggies.com, a *vegetarian* site); The Plant Based School (self-describes as *vegetarian* — includes eggs/dairy). Cook With Manali & Hurry The Food Up are vegetarian, not vegan.
+- **Approved sources:** Nora Cooks, Vegan Richa, Rainbow Plant Life, Loving It Vegan, Ela Vegan, Connoisseurus Veg, Sweet Simple Vegan, From My Bowl, Vegan Huggs, It Doesn't Taste Like Chicken, The Korean Vegan, Simple Vegan Blog, **Full of Plants, Addicted to Dates, The Curious Chickpea, Woon Heng, The Foodie Takes Flight (all verified 100% vegan + scrapable via sitemap+JSON-LD, 2026-06-25)**, and any creator whose entire catalog is 100% vegan. Scrape-blocked by Cloudflare (need a real browser, not node fetch): Holy Cow Vegan, Plant Based on a Budget, This Savory Vegan, Rabbit and Wolves.
 - **Before importing recipes from a new source:** verify that the source is exclusively vegan by checking their about page and recipe catalog. If in doubt, ask the user.
 - All imported recipes MUST include `source_url` and `source_attribution` crediting the original creator
 
@@ -115,7 +116,6 @@ All the following CLI tools are installed and authenticated on this machine:
 ### 1. Vercel CLI
 - **Status**: ✅ Authenticated
 - **User**: antonkravchuk-4102
-- **Version**: 33.5.1
 - **Deployment Method**: Automatic via GitHub integration
 - **Capabilities**:
   - Check deployment logs: `vercel logs`
@@ -137,7 +137,6 @@ All the following CLI tools are installed and authenticated on this machine:
 
 ### 3. Stripe CLI
 - **Status**: ✅ Authenticated
-- **Version**: 1.31.0
 - **Account**: Cleareds (acct_1S1rUPAqP7U8Au3x)
 - **Mode**: Both test and live mode keys configured
 - **Capabilities**:
@@ -149,7 +148,6 @@ All the following CLI tools are installed and authenticated on this machine:
 
 ### 4. Supabase CLI & Admin Access
 - **Status**: ✅ Authenticated
-- **Version**: 2.67.1
 - **Organization**: ptaoqgevccjhnasapenf
 - **Project**: plantspack (mfeelaqjbtnypoojhfjp)
 - **Database Access**: ✅ Full admin access via service role key
@@ -188,11 +186,19 @@ const supabase = createClient(url, serviceRoleKey)
 - Project ref: `mfeelaqjbtnypoojhfjp`
 - Migrations are in `supabase/migrations/`
 
-## Project Information
-
-- **Repository**: plantspack
-- **Current Branch**: main
-- **Working Directory**: /Users/antonkravchuk/sidep/Cleareds/plantspack
+**Grants in every migration that creates a table (Supabase change of 2026-10-30):**
+Supabase no longer auto-grants Data API access to new `public` tables. Without an
+explicit grant, supabase-js / PostgREST return "permission denied". Add this to the
+same migration as the `create table`, and give `anon` SELECT only when the table is
+public data (server-only tables get the `service_role` line alone). RLS stays the gate.
+```sql
+grant select on public.<table> to anon;
+grant select, insert, update, delete on public.<table> to authenticated;
+grant select, insert, update, delete on public.<table> to service_role;
+```
+Before/after any grants or RLS migration: `node scripts/schema-snapshot.mjs <label>`
+saves the full ACL/policy snapshot to `backups/`. The Supabase CLI hangs at
+"Initialising login role" when a VPN (Urban VPN) blocks ports 5432/6543; disconnect it.
 
 ## Permissions & Authorization
 
@@ -269,27 +275,6 @@ Current plan: **Vercel Pro at $20/month** (NOT free tier). Supabase paid tier at
 - The user will explicitly say if they want to review before deployment
 - Logs can be checked across all services for debugging
 - This configuration file (claude.md) persists across all sessions in this directory
-
-## Token Usage Guidelines
-
-**Be concise and efficient:**
-- Keep responses brief and to the point
-- Don't repeat code unnecessarily - reference by file path and line numbers
-- Summarize large outputs instead of showing everything
-- Use Grep with `head_limit` when searching (e.g., `head_limit: 20`)
-- Only read files when necessary for the task
-- When exploring, use Task tool with Explore agent instead of multiple reads
-
-**Parallel operations:**
-- Only use parallel tool calls when operations are truly independent
-- Prefer sequential operations when one depends on another
-- Don't speculatively read files "just in case"
-
-**Communication:**
-- Use bullet points and short paragraphs
-- Reference code by file:line instead of showing full blocks
-- Assume user can check files themselves when needed
-- Skip excessive confirmations and explanations
 
 ## Session Handoff Notes (2026-04-26)
 

@@ -67,14 +67,15 @@ acquisition.**
 
 ## Baselines as of 2026-07-26 (compare, don't restate)
 
-- **Organic: 559 clicks/wk**, up ~5x in 8 weeks (114 → 559 since 2026-05-25), avg pos 12.4
+- **Organic: ~132 clicks/wk (2026-08-10 week), bot-excluded.** ⚠️ METHODOLOGY CHANGE 2026-08-10: seo-monitor.ts now excludes automated/bot queries via excludingRegex. The old "559 clicks/wk" baseline INCLUDED bots - never compare across the change. Honest series: ~96-114/wk through July, 132 in the 2026-08-10 week (+17% WoW, best in the series)
 - **GA4 undercounts organic ~4x vs GSC clicks. Always quote GSC.**
 - Cohorts: dish pages **+61%**, city hubs +105% impressions, events +52%,
   place pages -22% clicks / -47% impressions (**intentional** thin-page pruning,
   not a penalty - never panic-revert it), tools **0 clicks**, recipes ~0
 - **241 users, 160 signed up in the last 30 days** (app-store driven), 37% activated
 - **Mobile: Android 100+ downloads; iOS live 2026-07-25 (1.0.6), 4 ratings all 5★**
-- **Supporters: 1 real paid subscriber (a personal acquaintance) + 1 one-time BMC donation**
+- **Supporters (updated 2026-08-23): 2 active €3/mo subs - kathi_flowerista (acquaintance, since March) + superlallarn/Elliot (FIRST ORGANIC supporter, since 2026-08-11).** Plus 1 historical one-time BMC donation. Elliot sent product feedback - see memory `project_supporter_feedback_elliot`.
+- **Stripe CLI trap: ALWAYS pass `--live`.** Without it the CLI queries test mode and silently shows stale dev data that looks like "no subscribers" (burned 2026-08-23).
 
 ### The supporter reality - do not misdiagnose this
 
@@ -88,9 +89,9 @@ substantive ones actually implemented (Packs CSV/GPX export, prioritised
 verification requests, supporter-gated roadmap voting, Supporters wall),
 `/support` linked from Footer + Sidebar + TopBar.
 
-The one real signal in the data: **the single organic money event was a one-time
-donation, not a subscription.** One-time giving beats recurring at this stage.
-If asked to improve conversion, lead with that, not with new perks.
+Update 2026-08-23: the strongest signal is now Elliot's organic €3/mo subscription
+(2026-08-11) - the earlier "one-time beats recurring" read is outdated. Engaged
+contributors DO convert; the constraint is still reach, not the offer.
 
 Target worth aiming at: **~15 supporters ≈ €45/mo ≈ costs covered.** Concrete,
 honest, motivating. Not "grow supporters".
@@ -198,8 +199,9 @@ Still open:
 5. `mobileapp/google-play-key.json` is **0 bytes** - breaks `eas submit -p android`.
 6. Product Hunt - one-shot credibility play, gate on retention data.
 7. LinkedIn build-story post - brand, explicitly **not** growth. His audience isn't vegan.
-8. Next content batch: Oreos, soy sauce, peanut butter, margarine, glycerin,
-   carmine/E120, shellac/E904 - all real volume and real ambiguity, all route to the scanners.
+8. Next content batch: ~~Oreos, soy sauce, peanut butter~~ (shipped 2026-08-23,
+   commit c011ec8, + dish-page internal links); REMAINING: margarine, glycerin,
+   carmine/E120, shellac/E904 - real volume, real ambiguity, route to the scanners.
 
 ## Reference docs
 
