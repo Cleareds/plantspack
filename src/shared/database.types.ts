@@ -4887,6 +4887,14 @@ export type Database = {
           status: string
         }[]
       }
+      city_center: {
+        Args: { p_city: string; p_country: string }
+        Returns: {
+          lat: number
+          lng: number
+          span_km: number
+        }[]
+      }
       city_place_view_median: {
         Args: { p_city: string; p_country: string; p_days?: number }
         Returns: number
