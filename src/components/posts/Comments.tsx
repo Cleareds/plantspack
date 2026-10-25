@@ -193,23 +193,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
     setSubmitting(true)
 
     try {
-      // Check rate limit before creating comment (max 30 comments per 5 minutes)
-      const { data: rateLimitData, error: rateLimitError } = await supabase
-        .rpc('check_rate_limit', {
-          p_user_id: user.id,
-          p_action_type: 'comment',
-          p_max_actions: 30,
-          p_window_minutes: 5
-        })
-
-      if (rateLimitError) {
-        console.error('Rate limit check error:', rateLimitError)
-        // Continue anyway if rate limit check fails
-      } else if (rateLimitData === false) {
-        setNewComment(commentContent) // Restore comment
-        throw new Error('Rate limit exceeded. Please wait before commenting again.')
-      }
-
+      // Rate limit (30 / hour) is enforced by the DB trigger rate_limit_comments.
       const insertData: Record<string, unknown> = {
         post_id: postId,
         user_id: user.id,
@@ -244,32 +228,7 @@ function Comments({ postId, isOpen, onClose, embedded = false }: CommentsProps) 
       if (data) {
         setComments(prevComments => [data, ...prevComments])
         setReplyingToComment(null)
-
-        // Create notification for post author
-        try {
-          // Fetch post to get author's user_id
-          const { data: postData } = await supabase
-            .from('posts')
-            .select('user_id')
-            .eq('id', postId)
-            .single()
-
-          if (postData && postData.user_id !== user.id) {
-            await fetch('/api/notifications/create', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: postData.user_id,
-                type: 'comment',
-                entityType: 'post',
-                entityId: postId,
-              }),
-            })
-          }
-        } catch (notifError) {
-          // Don't fail the comment if notification fails
-          console.error('Failed to create notification:', notifError)
-        }
+        // Comment / reply / mention notifications come from the DB trigger notify_comment.
       }
     } catch (error) {
       console.error('Error submitting comment:', error)

@@ -20,7 +20,6 @@ import {
 } from '@/lib/post-analytics'
 import {getUserSubscription, SUBSCRIPTION_TIERS, type UserSubscription} from '@/lib/stripe'
 import {
-    extractHashtags,
     extractMentions,
     resolveUsernames,
 } from '@/lib/hashtags'
@@ -330,23 +329,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
         setError(null)
 
         try {
-            // Check rate limit before creating post (optional - skip if function doesn't exist)
-            const {data: rateLimitData, error: rateLimitError} = await supabase
-                .rpc('check_rate_limit_posts', {p_user_id: user.id})
-
-            if (rateLimitError) {
-                // Silently skip rate limiting if function doesn't exist (404 error)
-                if (rateLimitError.code !== '42883' && !rateLimitError.message?.includes('does not exist')) {
-                    console.warn('Rate limit check unavailable:', rateLimitError.message)
-                }
-                // Continue anyway if rate limit check fails
-            } else if (rateLimitData && typeof rateLimitData === 'object' && 'allowed' in rateLimitData) {
-                if (!rateLimitData.allowed) {
-                    throw new Error('Rate limit exceeded. Please wait before posting again.')
-                }
-            } else if (rateLimitData === false) {
-                throw new Error('Rate limit exceeded. Please wait a few minutes before posting again.')
-            }
+            // Rate limit (10 posts / hour) is enforced by the DB trigger rate_limit_posts.
 
             // Content is already checked by GPT analysis in real-time
             // No need for additional moderation check here
@@ -451,8 +434,7 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
                     postData.video_urls = videoUrls
                 }
 
-                // Extract hashtags and mentions before creating post
-                const hashtags = extractHashtags(content)
+                // Resolve mentions before creating the post (stored in mentioned_users)
                 const mentions = extractMentions(content)
 
                 // Resolve mentions to user IDs
@@ -472,61 +454,15 @@ export default function CreatePost({onPostCreated}: CreatePostProps) {
 
                 if (dbError) {
                     console.error('Database error:', dbError)
-                    throw new Error(dbError.message || 'Failed to create post')
+                    throw new Error((dbError.message || 'Failed to create post').replace(/^RATE_LIMIT: /, ''))
                 }
 
                 if (!createdPost) {
                     throw new Error('Post created but ID not returned')
                 }
 
-                // Process hashtags via API endpoint (uses service role)
-                if (hashtags.length > 0) {
-                    try {
-                        const response = await fetch('/api/posts/hashtags', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                postId: createdPost.id,
-                                hashtags: hashtags
-                            })
-                        })
-
-                        if (!response.ok) {
-                            const errorData = await response.json()
-                            console.error('[Hashtags] API error:', errorData)
-                        } else {
-                            const result = await response.json()
-                            console.log('[Hashtags] Successfully processed:', result)
-                        }
-                    } catch (hashtagError) {
-                        console.error('[Hashtags] Error processing hashtags:', hashtagError)
-                        // Don't fail the post creation if hashtag processing fails
-                    }
-                }
-
-                // Send notifications to mentioned users
-                if (mentionedUserIds.length > 0) {
-                    try {
-                        for (const mentionedUserId of mentionedUserIds) {
-                            // Don't notify if user mentioned themselves
-                            if (mentionedUserId !== user.id) {
-                                await fetch('/api/notifications/create', {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify({
-                                        userId: mentionedUserId,
-                                        type: 'mention',
-                                        entityType: 'post',
-                                        entityId: createdPost.id,
-                                    }),
-                                })
-                            }
-                        }
-                    } catch (notifError) {
-                        console.error('Error sending mention notifications:', notifError)
-                        // Don't fail the post creation if notification fails
-                    }
-                }
+                // Hashtags (sync_post_hashtags) and mention notifications
+                // (notify_post_mentions) come from DB triggers, so the app gets them too.
             }
 
             // Reset form only on success

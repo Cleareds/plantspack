@@ -1,8 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createServerClient } from '@/lib/supabase-server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { NotificationType, NotificationEntityType } from '@/types/notifications'
-import { sendNotificationEmail } from '@/lib/email'
+
+// Tap target stored on the row (see src/lib/notifications/link.ts).
+async function notificationUrl(
+  admin: SupabaseClient,
+  entityType: string | undefined,
+  entityId: string | undefined,
+): Promise<string | null> {
+  if (!entityId) return null
+  if (entityType === 'post') return `/post/${entityId}`
+  if (entityType === 'place_review') {
+    const { data } = await admin
+      .from('place_reviews')
+      .select('places(slug)')
+      .eq('id', entityId)
+      .maybeSingle()
+    const slug = (data as { places?: { slug?: string } | null } | null)?.places?.slug
+    return slug ? `/place/${slug}` : null
+  }
+  return null
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,27 +46,8 @@ export async function POST(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
-    // Check user's notification preferences
-    const { data: prefs } = await adminClient
-      .from('notification_preferences')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle() // Use maybeSingle() for new users who may not have preferences yet
-
-    // Skip if user has disabled this type of notification
-    // Map notification type to preference field name
-    const typeToFieldMap: Record<string, string> = {
-      'like': 'push_likes',
-      'comment': 'push_comments',
-      'reply': 'push_comments', // replies use comment preference
-      'follow': 'push_follows',
-      'mention': 'push_mentions',
-    }
-
-    const prefKey = typeToFieldMap[type]
-    if (prefs && prefKey && (prefs as any)[prefKey] === false) {
-      return NextResponse.json({ success: true, skipped: true })
-    }
+    // push_* / email_* preferences are applied by /api/notifications/dispatch
+    // (the bell always gets the row, matching the DB function social_notify).
 
     // Create notification
     const { data, error } = await adminClient
@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
         entity_type: entityType as NotificationEntityType,
         entity_id: entityId,
         message,
+        url: await notificationUrl(adminClient, entityType, entityId),
       })
       .select()
       .single()
@@ -68,58 +69,8 @@ export async function POST(request: NextRequest) {
       throw error
     }
 
-    // Send email notification if enabled
-    // Map notification type to email preference field name
-    const emailPrefMap: Record<string, string> = {
-      'like': 'email_likes',
-      'comment': 'email_comments',
-      'reply': 'email_comments',
-      'follow': 'email_follows',
-      'mention': 'email_mentions',
-    }
-
-    const emailPrefKey = emailPrefMap[type]
-    const shouldSendEmail = !prefs || (prefs as any)[emailPrefKey] !== false
-
-    if (shouldSendEmail) {
-      // Get user and actor details for the email
-      const [userResult, actorResult] = await Promise.all([
-        adminClient.from('users').select('email, username').eq('id', userId).single(),
-        adminClient.from('users').select('username').eq('id', session.user.id).single()
-      ])
-
-      if (userResult.data?.email && actorResult.data?.username) {
-        // Build entity URL
-        let entityUrl: string | undefined
-        if (entityType === 'post' && entityId) {
-          entityUrl = `https://www.plantspack.com/post/${entityId}`
-        } else if (entityType === 'user' && actorResult.data.username) {
-          entityUrl = `https://www.plantspack.com/profile/${actorResult.data.username}`
-        } else if (entityType === 'place_review' && entityId) {
-          // Fetch place_review to get place_id
-          const { data: review } = await adminClient
-            .from('place_reviews')
-            .select('place_id')
-            .eq('id', entityId)
-            .single()
-
-          if (review?.place_id) {
-            entityUrl = `https://www.plantspack.com/place/${review.place_id}`
-          }
-        }
-
-        // Send email in background (don't await)
-        sendNotificationEmail(
-          userResult.data.email,
-          userResult.data.username,
-          type as 'like' | 'comment' | 'reply' | 'follow' | 'mention',
-          actorResult.data.username,
-          entityUrl
-        ).catch((err) => {
-          console.error('[Notification] Failed to send email:', err)
-        })
-      }
-    }
+    // Push + email are sent by /api/notifications/dispatch, which the DB
+    // trigger dispatch_notification calls for every social row.
 
     return NextResponse.json({ success: true, notification: data })
   } catch (error) {

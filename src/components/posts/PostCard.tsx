@@ -167,25 +167,7 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
           .insert({ post_id: post.id, user_id: user.id })
 
         if (error) throw error
-
-        // Create notification for post author (if not liking own post)
-        if (post.user_id !== user.id) {
-          try {
-            await fetch('/api/notifications/create', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: post.user_id,
-                type: 'like',
-                entityType: 'post',
-                entityId: post.id,
-              }),
-            })
-          } catch (notifError) {
-            // Don't fail the like if notification fails
-            console.error('Failed to create notification:', notifError)
-          }
-        }
+        // The post author's notification comes from the DB trigger notify_post_like.
       }
     } catch (error) {
       // Rollback on error

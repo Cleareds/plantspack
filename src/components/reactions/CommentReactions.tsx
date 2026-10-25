@@ -170,29 +170,7 @@ export default function CommentReactions({
 
         if (error) throw error
 
-        // Create notification for comment author (only for new reactions)
-        try {
-          const { data: comment } = await supabase
-            .from('comments')
-            .select('user_id')
-            .eq('id', commentId)
-            .single()
-
-          if (comment && comment.user_id !== user.id) {
-            await fetch('/api/notifications/create', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: comment.user_id,
-                type: reactionType, // Use reaction type as notification type
-                entityType: 'comment',
-                entityId: commentId,
-              }),
-            })
-          }
-        } catch (notifError) {
-          console.error('Failed to create notification:', notifError)
-        }
+        // The comment author's notification comes from the DB trigger notify_comment_reaction.
       }
 
       onReactionChange?.()

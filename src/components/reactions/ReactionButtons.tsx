@@ -205,53 +205,7 @@ export default function ReactionButtons({
 
         if (error) throw error
 
-        // Create notification for post author (only for new reactions)
-        try {
-          const { data: post } = await supabase
-            .from('posts')
-            .select('user_id')
-            .eq('id', postId)
-            .single()
-
-          if (post && post.user_id !== user.id) {
-            // Map reaction types to custom messages
-            const reactionMessages: Record<ReactionType, string> = {
-              like: 'liked your post',
-              helpful: 'found your post helpful',
-              inspiring: 'found your post inspiring',
-              thoughtful: 'found your post thoughtful'
-            }
-
-            console.log('[ReactionButtons] Creating notification:', {
-              postAuthor: post.user_id,
-              reactionType,
-              postId
-            })
-
-            const response = await fetch('/api/notifications/create', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: post.user_id,
-                type: 'like', // All reactions use 'like' type for now
-                entityType: 'post',
-                entityId: postId,
-                message: reactionMessages[reactionType]
-              }),
-            })
-
-            if (!response.ok) {
-              const errorText = await response.text()
-              console.error('[Notification] Failed to create notification:', errorText)
-            } else {
-              const result = await response.json()
-              console.log('[ReactionButtons] Notification result:', result)
-            }
-          }
-        } catch (notifError) {
-          console.error('[Notification] Error creating notification:', notifError)
-          // Don't fail the reaction - notification is not critical
-        }
+        // The post author's notification comes from the DB trigger notify_post_reaction.
       }
 
       onReactionChange?.()

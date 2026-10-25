@@ -7,13 +7,15 @@ export type NotificationType =
   // Community vegan/closure report lifecycle: reviewed = we acted on it,
   // dismissed = we checked and kept the listing as-is (rare).
   | 'report_reviewed' | 'report_dismissed'
+  // New community report, sent to the admin account (DB trigger notify_report).
+  | 'report_received'
   | 'place_nearby'
   // Admin broadcast to all users (in-app bell for everyone; OS push only to
   // users who opted in via user_preferences.push_announcements).
   | 'announcement'
   // A Partner venue's monthly message to the people who follow its city.
   | 'venue_update'
-export type NotificationEntityType = 'post' | 'comment' | 'place'
+export type NotificationEntityType = 'post' | 'comment' | 'place' | 'user' | 'place_review' | 'report'
 
 export interface Notification {
   id: string

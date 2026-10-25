@@ -73,6 +73,7 @@ async function fetchPosts(opts: {
     .from('posts')
     .select(POST_FIELDS)
     .eq('privacy', 'public')
+    .eq('moderation_status', 'published') // held / rejected posts never reach the feed
     .is('deleted_at', null)
     .eq('users.is_banned', false)
     // Same admin filter as homepage getRecentPosts: hide imported recipes/events.
