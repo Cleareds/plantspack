@@ -771,6 +771,69 @@ export type Database = {
         }
         Relationships: []
       }
+      image_sources: {
+        Row: {
+          author: string | null
+          author_url: string | null
+          confidence: string
+          created_at: string
+          license: string | null
+          license_url: string | null
+          note: string | null
+          original_url: string | null
+          source_type: string
+          source_url: string | null
+          updated_at: string
+          uploaded_by: string | null
+          url_key: string
+        }
+        Insert: {
+          author?: string | null
+          author_url?: string | null
+          confidence?: string
+          created_at?: string
+          license?: string | null
+          license_url?: string | null
+          note?: string | null
+          original_url?: string | null
+          source_type: string
+          source_url?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+          url_key: string
+        }
+        Update: {
+          author?: string | null
+          author_url?: string | null
+          confidence?: string
+          created_at?: string
+          license?: string | null
+          license_url?: string | null
+          note?: string | null
+          original_url?: string | null
+          source_type?: string
+          source_url?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+          url_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "image_sources_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "user_contributions_summary"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "image_sources_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_sends: {
         Row: {
           bounced_at: string | null
@@ -4370,6 +4433,7 @@ export type Database = {
           subscription_period_start: string | null
           subscription_status: string | null
           subscription_tier: string | null
+          terms_accepted_at: string | null
           transition_story: string | null
           trust_score: number
           updated_at: string
@@ -4417,6 +4481,7 @@ export type Database = {
           subscription_period_start?: string | null
           subscription_status?: string | null
           subscription_tier?: string | null
+          terms_accepted_at?: string | null
           transition_story?: string | null
           trust_score?: number
           updated_at?: string
@@ -4464,6 +4529,7 @@ export type Database = {
           subscription_period_start?: string | null
           subscription_status?: string | null
           subscription_tier?: string | null
+          terms_accepted_at?: string | null
           transition_story?: string | null
           trust_score?: number
           updated_at?: string
@@ -4735,6 +4801,7 @@ export type Database = {
         Returns: unknown
       }
       _st_within: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      accept_terms: { Args: never; Returns: string }
       addauth: { Args: { "": string }; Returns: boolean }
       addgeometrycolumn:
         | {
@@ -4834,6 +4901,38 @@ export type Database = {
         }[]
       }
       delete_post: { Args: { post_id: string }; Returns: Json }
+      directory_city_counts: {
+        Args: {
+          p_category?: string
+          p_country: string
+          p_cuisine?: string
+          p_min_places?: number
+          p_pet?: boolean
+          p_subcategory?: string
+          p_vegan_only?: boolean
+        }
+        Returns: {
+          city: string
+          country: string
+          fully_vegan_count: number
+          place_count: number
+        }[]
+      }
+      directory_country_counts: {
+        Args: {
+          p_category?: string
+          p_cuisine?: string
+          p_pet?: boolean
+          p_subcategory?: string
+          p_vegan_only?: boolean
+        }
+        Returns: {
+          city_count: number
+          country: string
+          fully_vegan_count: number
+          place_count: number
+        }[]
+      }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
         | {
@@ -4867,6 +4966,7 @@ export type Database = {
         | { Args: { table_name: string }; Returns: string }
       enablelongtransactions: { Args: never; Returns: string }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
+      extract_mentions: { Args: { p_text: string }; Returns: string[] }
       generate_pack_slug: {
         Args: { pack_id: string; title: string }
         Returns: string
@@ -4979,6 +5079,18 @@ export type Database = {
           count: number
           reaction_type: string
         }[]
+      }
+      get_feed: {
+        Args: {
+          p_before?: string
+          p_before_id?: string
+          p_category?: string
+          p_limit?: number
+          p_mode?: string
+          p_offset?: number
+          p_sort?: string
+        }
+        Returns: Json
       }
       get_place_average_rating: {
         Args: { p_place_id: string }
@@ -5129,6 +5241,8 @@ export type Database = {
         Returns: undefined
       }
       longtransactionsenabled: { Args: never; Returns: boolean }
+      my_hidden_user_ids: { Args: never; Returns: string[] }
+      my_terms_accepted_at: { Args: never; Returns: string }
       nearby_cities: {
         Args: {
           exclude_city?: string
@@ -5238,6 +5352,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      notify_mentions: {
+        Args: { p_actor: string; p_post_id: string; p_text: string }
+        Returns: undefined
+      }
       place_has_partner_plan: { Args: { p_place_id: string }; Returns: boolean }
       place_view_totals: {
         Args: { p_place_ids: string[] }
@@ -5313,6 +5431,7 @@ export type Database = {
           table_name: string
         }[]
       }
+      schema_routines: { Args: never; Returns: Json }
       schema_snapshot: { Args: never; Returns: Json }
       search_cities: {
         Args: { q: string; result_limit?: number; vl?: string }
@@ -5374,6 +5493,17 @@ export type Database = {
       }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      social_notify: {
+        Args: {
+          p_actor: string
+          p_entity_id: string
+          p_entity_type: string
+          p_recipient: string
+          p_type: string
+          p_url: string
+        }
+        Returns: undefined
+      }
       st_3dclosestpoint: {
         Args: { geom1: unknown; geom2: unknown }
         Returns: unknown
