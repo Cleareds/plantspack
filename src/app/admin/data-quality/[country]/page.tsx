@@ -10,6 +10,7 @@ import { toSlug } from '@/lib/slug'
 import { veganLevelOrder } from '@/lib/vegan-level'
 import DataQualityRow from '@/components/admin/DataQualityRow'
 import DataQualityFilters from '@/components/admin/DataQualityFilters'
+import DraftPlaceRow, { type DraftRow } from '@/components/admin/DraftPlaceRow'
 
 export const dynamic = 'force-dynamic'
 
@@ -101,7 +102,24 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
     places = (initial.data || []) as PlaceRow[]
   }
 
-  if (places.length === 0) {
+  // Research drafts (place_staging rows with raw.draft) wait here for a
+  // human: fully vegan first, then by whether the place looks open.
+  const { data: draftData } = await admin
+    .from('place_staging')
+    .select('id, name, city, country, address, website, latitude, longitude, vegan_level, vegan_evidence, decision_reason, raw')
+    .eq('country', countryName)
+    .eq('raw->>draft', 'true')
+    .is('imported_place_id', null)
+    .is('operator_action', null)
+    .limit(1000)
+  const statusRank: Record<string, number> = { open: 0, likely_open: 1 }
+  const drafts = ((draftData || []) as DraftRow[]).sort((a, b) =>
+    veganOrderDesc(a.vegan_level, b.vegan_level)
+    || (statusRank[a.raw?.status || ''] ?? 2) - (statusRank[b.raw?.status || ''] ?? 2)
+    || (a.city || '').localeCompare(b.city || '')
+    || a.name.localeCompare(b.name))
+
+  if (places.length === 0 && drafts.length === 0) {
     return (
       <div className="p-8 max-w-3xl mx-auto">
         <Link href="/admin/data-quality" className="text-sm text-primary hover:underline">← Data Quality</Link>
@@ -218,6 +236,7 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
         <Link href={qsWith({ vl: 'fully_vegan', verif: 'unverified', flag: null })} className="px-2 py-1 rounded bg-amber-100 text-amber-900 hover:bg-amber-200">{fvOpen} unchecked fully vegan</Link>
         {oddCities > 0 && <Link href={qsWith({ flag: 'odd_city', vl: null, verif: null })} className="px-2 py-1 rounded bg-amber-100 text-amber-900 hover:bg-amber-200">{oddCities} odd city labels</Link>}
         <Link href={qsWith({ vl: 'mostly_vegan', verif: 'unverified', flag: null })} className="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high">unchecked mostly vegan</Link>
+        {drafts.length > 0 && <a href="#drafts" className="px-2 py-1 rounded bg-amber-100 text-amber-900 hover:bg-amber-200">{drafts.length} drafts to publish or delete</a>}
         <Link href={`/vegan-places/${toSlug(countryName)}`} target="_blank" className="px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high">public country hub ↗</Link>
         {(filterCity || filterFlag || filterVl || filterVerif) && <Link href={`/admin/data-quality/${countrySlug}`} className="px-2 py-1 rounded text-primary hover:underline">clear all filters</Link>}
       </div>
@@ -277,6 +296,32 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
           </section>
         )
       })}
+
+      {drafts.length > 0 && (
+        <section id="drafts" className="mb-8 scroll-mt-4">
+          <h2 className="text-lg font-semibold mb-1">
+            Drafts <span className="text-sm font-normal text-on-surface-variant">— {drafts.length} not live · fully vegan first</span>
+          </h2>
+          <p className="text-xs text-on-surface-variant mb-2 max-w-3xl">
+            Research leads that are not on the site. Check each one, pick the vegan level, then <strong>Publish</strong> (goes live as admin-reviewed) or <strong>Delete</strong> (removed for good). Rows marked <em>pin = city centre</em> need real coordinates: paste &quot;lat, lng&quot; from Google Maps.
+          </p>
+          <div className="overflow-x-auto ghost-border rounded-lg">
+            <table className="min-w-full text-sm">
+              <thead className="bg-surface-container-low text-xs uppercase text-on-surface-variant">
+                <tr>
+                  <th className="px-3 py-2 text-left">Draft</th>
+                  <th className="px-3 py-2 text-left">Evidence</th>
+                  <th className="px-3 py-2 text-left">Check</th>
+                  <th className="px-3 py-2 text-left">Publish</th>
+                </tr>
+              </thead>
+              <tbody>
+                {drafts.map(d => <DraftPlaceRow key={d.id} draft={d} />)}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </div>
   )
 }
