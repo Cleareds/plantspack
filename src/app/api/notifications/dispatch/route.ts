@@ -88,9 +88,13 @@ export async function POST(request: NextRequest) {
     })
   }
 
+  // Email keeps the pre-2026-10-25 behaviour: the old web route sent no
+  // email when push_* was off, so an email needs BOTH switches. Without this,
+  // push_likes=false / email_likes=true (every account's default) would start
+  // emailing every like.
   const emailKey = EMAIL_PREF[n.type]
   if (emailKey && recipient?.email && actor?.username) {
-    if (on(emailKey)) {
+    if (on(emailKey) && on(PUSH_PREF[n.type])) {
       const entityUrl = n.url ? (n.url.startsWith('/') ? `${SITE}${n.url}` : n.url) : undefined
       await sendNotificationEmail(
         recipient.email,
