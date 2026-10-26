@@ -4,7 +4,7 @@ import { buildCityMetadata, renderCityPage } from './city-page'
 // SEO: city pages must be cacheable so Google spends crawl budget on them.
 // Mutation paths (place add/edit/delete) call revalidatePath() so new places
 // appear immediately. No searchParams here on purpose - see city-page.tsx.
-export const revalidate = 21600 // 6h; place mutations revalidatePath on-demand (cost cut 2026-07-10)
+export const revalidate = 86400 // 24h; place mutations revalidatePath on-demand (6h -> 24h cost cut 2026-10-26: ISR writes)
 
 // ISR actually requires this. A dynamic segment WITHOUT generateStaticParams is
 // rendered on every request and `revalidate` is ignored - the build table lists

@@ -1,0 +1,44 @@
+name: Daily Production Deploy
+
+# Pushes to main do not deploy (vercel.json git.deploymentEnabled.main=false).
+# Each production deploy empties the ISR cache for all ~45K sitemap pages, and
+# 43 deploys in 13 days (2026-10-13..25) doubled the ISR-write bill. This job
+# deploys main once a day, after the 03:30 materialized-view refresh, and only
+# when main moved since the last production deploy.
+#
+# Urgent fix: gh workflow run daily-deploy.yml -f force=true
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Deploy even if main has not changed'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  deployments: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger the Vercel deploy hook when main changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_MAIN }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          head=$(gh api "repos/${{ github.repository }}/commits/main" --jq .sha)
+          last=$(gh api "repos/${{ github.repository }}/deployments?environment=Production&per_page=1" --jq '.[0].sha // ""')
+          echo "main=$head last production deploy=$last"
+          if [ "$head" = "$last" ] && [ "$FORCE" != "true" ]; then
+            echo "main has not changed since the last deploy. Nothing to do."
+            exit 0
+          fi
+          curl -sf -X POST "$HOOK" > /dev/null
+          echo "Deploy hook triggered for $head."

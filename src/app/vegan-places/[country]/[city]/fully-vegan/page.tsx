@@ -4,7 +4,7 @@ import { buildCityMetadata, renderCityPage } from '../city-page'
 // /vegan-places/<country>/<city>/fully-vegan - the same city page filtered to
 // vegan_level = fully_vegan. A real route segment (not a rewrite to
 // ?level=fully-vegan) so both URLs are statically cacheable.
-export const revalidate = 21600
+export const revalidate = 86400 // 24h, same as the unfiltered city page
 
 // ISR actually requires this. A dynamic segment WITHOUT generateStaticParams is
 // rendered on every request and `revalidate` is ignored - the build table lists

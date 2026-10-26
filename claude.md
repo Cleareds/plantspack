@@ -81,7 +81,7 @@ When writing copy about the platform:
 - GitHub (push, pull, PR creation, etc.)
 
 **You have FULL AUTHORIZATION to:**
-- Push code to GitHub via `git push` (Vercel auto-deploys from GitHub)
+- Push code to GitHub via `git push` (production deploys once a day from main, see "Daily deploy" below)
 - Run database migrations and queries
 - Check and modify Stripe subscriptions
 - Create pull requests and manage issues
@@ -122,7 +122,8 @@ All the following CLI tools are installed and authenticated on this machine:
   - View project info: `vercel project ls`
   - Manage environment variables
   - Check build status
-- **IMPORTANT**: Do NOT use `vercel deploy --prod`. Just push to GitHub and Vercel will automatically deploy.
+- **IMPORTANT**: Do NOT use `vercel deploy --prod`. Push to GitHub; the daily deploy job ships main.
+- **Daily deploy (since 2026-10-26):** pushes to `main` do NOT deploy (`vercel.json` `git.deploymentEnabled.main=false`). `.github/workflows/daily-deploy.yml` runs at 04:00 UTC and calls the Vercel deploy hook `daily-main` (secret `VERCEL_DEPLOY_HOOK_MAIN`) only if main moved since the last production deploy. Urgent fix: `gh workflow run daily-deploy.yml -f force=true`. Why: every deploy empties the ISR cache for ~45K pages; 43 deploys in 13 days doubled the ISR-write bill. CLI data edits (no revalidatePath) show within 24h because place and city pages keep a 24h TTL.
 
 ### 2. GitHub CLI (gh)
 - **Status**: ✅ Authenticated
@@ -203,7 +204,7 @@ saves the full ACL/policy snapshot to `backups/`. The Supabase CLI hangs at
 ## Permissions & Authorization
 
 Claude Code has FULL AUTONOMOUS ACCESS to:
-- ✅ Push code to GitHub (Vercel auto-deploys, no confirmation needed)
+- ✅ Push code to GitHub (ships with the next daily deploy, no confirmation needed)
 - ✅ Create PRs via GitHub (no confirmation needed)
 - ✅ Check and debug Stripe webhooks and payments (no confirmation needed)
 - ✅ Manage Supabase database, migrations, and queries (no confirmation needed)
@@ -216,14 +217,14 @@ Claude Code has FULL AUTONOMOUS ACCESS to:
 
 **DO:**
 - Execute commands immediately when they're needed for the task
-- Push commits to GitHub after making changes (Vercel auto-deploys)
+- Push commits to GitHub after making changes (the daily deploy ships them)
 - Run database migrations when schema changes are needed
 - Check and modify Stripe data when debugging subscription issues
 - Create PRs and push branches autonomously
 
 **DO NOT:**
 - Use `vercel deploy --prod` (causes duplicate deployments)
-- Ask "Should I deploy this to production?" (auto-deploys from GitHub)
+- Ask "Should I deploy this to production?" (the daily deploy ships main)
 - Ask "Can I push these changes?"
 - Ask "Do you want me to run this migration?"
 - Wait for confirmation before using any of the CLI tools listed above
