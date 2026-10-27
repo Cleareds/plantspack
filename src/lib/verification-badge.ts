@@ -113,7 +113,7 @@ export function getConfidenceBadge(place: PlaceLike): ConfidenceBadge {
       icon: 'Search',
       chipClass: 'bg-sky-50 text-sky-800 border-sky-300',
       iconClass: 'text-sky-600',
-      description: 'Matched across multiple vegan-first sources (HappyCow, venue\'s own website, OSM tags, press articles). Not yet checked by an admin or confirmed by a community member.',
+      description: 'Matched across multiple sources (the venue\'s own website, OpenStreetMap tags, VegGuide, press articles). Not yet checked by an admin or confirmed by a community member.',
       subKind: 'cross_referenced',
     }
   }

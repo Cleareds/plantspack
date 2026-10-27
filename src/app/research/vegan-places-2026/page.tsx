@@ -334,7 +334,7 @@ Retrieved from https://www.plantspack.com/research/vegan-places-2026`}
               <strong className="text-on-surface">&quot;Fully vegan&quot; means verified.</strong> A place tagged <code className="text-xs bg-surface-variant/30 px-1 rounded">vegan_level=fully_vegan</code> but <code className="text-xs bg-surface-variant/30 px-1 rounded">is_verified=false</code> is not counted in the fully-vegan share - that&apos;s our honesty discipline. The true share would be higher if we counted unverified entries.
             </li>
             <li>
-              <strong className="text-on-surface">Total counts include imports.</strong> Most entries originate from OpenStreetMap, HappyCow cross-references, and other vegan-first sources, then verified against the venue&apos;s own website. We do not pad with synthetic entries.
+              <strong className="text-on-surface">Total counts include imports.</strong> Most entries originate from OpenStreetMap, VegGuide and community submissions, then verified against the venue&apos;s own website. We do not pad with synthetic entries.
             </li>
             <li>
               <strong className="text-on-surface">Numbers will change.</strong> We re-extract and update this report every 6-12 months. Snapshot date is always at the top.

@@ -287,8 +287,8 @@ export async function renderDishPage(p: RouteParams, fvOnly: boolean) {
                 {(() => {
                   const adminReviewed = places.filter(pl => (pl.verification_level ?? 0) >= 3).length
                   return adminReviewed > 0
-                    ? <>{adminReviewed} of {total} checked against the venue&apos;s own website; the rest come from vegan-first sources (OpenStreetMap, VegGuide, HappyCow) and haven&apos;t been individually re-checked.</>
-                    : <>Compiled from vegan-first sources (OpenStreetMap, VegGuide, HappyCow) and community reports. None have been individually checked against the venue&apos;s own website yet.</>
+                    ? <>{adminReviewed} of {total} checked against the venue&apos;s own website; the rest come from OpenStreetMap, VegGuide and community submissions and haven&apos;t been individually re-checked.</>
+                    : <>Compiled from OpenStreetMap, VegGuide and community submissions. None have been individually checked against the venue&apos;s own website yet.</>
                 })()}
               </p>
               <div className="mb-6">

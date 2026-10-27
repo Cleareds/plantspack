@@ -271,7 +271,7 @@ const ENTRIES: Entry[] = [
     term: 'Fully vegan (PlantsPack tier)',
     category: 'cuisine',
     definition:
-      'On PlantsPack, "fully vegan" places have a 100% vegan menu with zero animal products served. Verified against the venue\'s own website and (where possible) a third-party source (HappyCow, vegan blog).',
+      'On PlantsPack, "fully vegan" places have a 100% vegan menu with zero animal products served. Verified against the venue\'s own website and (where possible) a second source (OpenStreetMap, press or a local vegan blog).',
     link: { href: '/methodology', label: 'See full classification methodology' },
   },
   {

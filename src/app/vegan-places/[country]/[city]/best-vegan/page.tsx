@@ -148,7 +148,7 @@ export default async function BestVeganHub({ params }: { params: Promise<RoutePa
           Best Vegan Food in {loc.city}
         </h1>
         <p className="text-on-surface-variant text-base mb-8 leading-relaxed max-w-3xl">
-          {chips.length} dish-specific guides for vegans in {loc.city}, {loc.country}. Each one is cross-referenced across HappyCow, venue websites and OpenStreetMap, then ranked by community trust and admin verification - not just popularity.
+          {chips.length} dish-specific guides for vegans in {loc.city}, {loc.country}. Each one draws on venue websites, OpenStreetMap and community submissions, then ranked by community trust and admin verification - not just popularity.
         </p>
 
         {/* Dish card grid */}

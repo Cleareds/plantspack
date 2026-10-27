@@ -33,6 +33,17 @@ function load(): Record<string, CityIntroRecord> {
   }
 }
 
+// The JSON is a snapshot, so its counts drift from the live ones the page
+// shows above it (Ghent 2026-10-27: intro "88 venues, 19 verified" under a
+// live "89 places, 26 fully vegan"). Sentences with a number, and the
+// "editorial team" claim (one person checks), are dropped at read time.
+function stripStaleClaims(intro: string): string | null {
+  const kept = intro
+    .split(/(?<=[.!?])\s+/)
+    .filter(s => !/\d/.test(s) && !/editorial team/i.test(s))
+  return kept.length ? kept.join(' ') : null
+}
+
 /**
  * Returns the pre-generated intro paragraph for a city, or null if we
  * haven't generated one for this city (only cities with >=10 places are
@@ -41,6 +52,6 @@ function load(): Record<string, CityIntroRecord> {
 export function getCityIntro(city: string, country: string): string | null {
   const data = load()
   const direct = data[`${city}|||${country}`]
-  if (direct) return direct.intro
+  if (direct) return stripStaleClaims(direct.intro)
   return null
 }

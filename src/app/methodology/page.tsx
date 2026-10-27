@@ -60,7 +60,7 @@ export default function MethodologyPage() {
           The entire menu is plant-based. No meat, dairy, eggs, honey, or hidden animal ingredients. The kitchen handles no animal products. This is a strict bar and we apply it strictly. A restaurant that serves one non-vegan dish, even seasonally, is not 100% vegan and gets demoted.
         </p>
         <p className="text-base leading-relaxed mb-3">
-          For a place to be marked Admin-checked (the highest tier), a PlantsPack admin opens the venue&apos;s own website, reads the menu, cross-references at least one secondary source (HappyCow, local vegan blogs, vegan-business directories), and confirms the venue is currently open. The full verification process is documented in our <Link href="/blog/belgium-100-percent-vegan-audit" className="text-primary hover:underline">country audit posts</Link>.
+          For a place to be marked Admin-checked (the highest tier), a PlantsPack admin opens the venue&apos;s own website, reads the menu, cross-references at least one secondary source (OpenStreetMap, local vegan blogs, press coverage), and confirms the venue is currently open. The full verification process is documented in our <Link href="/blog/belgium-100-percent-vegan-audit" className="text-primary hover:underline">country audit posts</Link>.
         </p>
         <p className="text-sm text-on-surface-variant italic">
           Browse all 100% vegan places in <Link href="/vegan-places/belgium/fully-vegan" className="text-primary hover:underline">Belgium</Link> · <Link href="/vegan-places/united-kingdom/fully-vegan" className="text-primary hover:underline">United Kingdom</Link> · or by country at <Link href="/vegan-places" className="text-primary hover:underline">/vegan-places</Link>.
@@ -102,7 +102,7 @@ export default function MethodologyPage() {
 
         <h3 className="font-semibold text-lg mt-5 mb-2">Mid confidence</h3>
         <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
-          <li><strong>Cross-referenced</strong> - We matched this venue across multiple vegan-first sources (HappyCow, the venue&apos;s own website, OSM tags, press coverage). No admin has personally clicked through yet, but the data passed our automated cross-check.</li>
+          <li><strong>Cross-referenced</strong> - We matched this venue across multiple sources (the venue&apos;s own website, OpenStreetMap tags, VegGuide, press coverage). No admin has personally clicked through yet, but the data passed our automated cross-check.</li>
         </ul>
 
         <h3 className="font-semibold text-lg mt-5 mb-2">Low confidence (unchecked)</h3>
@@ -141,7 +141,7 @@ export default function MethodologyPage() {
 
         <h2 className="text-xl md:text-2xl font-headline font-bold mt-8 mb-3">How we run country audits</h2>
         <p className="text-base leading-relaxed mb-3">
-          A country audit means going through every listing tagged 100% vegan in that country, opening the venue&apos;s own website, cross-checking against secondary sources (HappyCow, local vegan blogs, vegan-business directories like Bevegan.be, The Bruges Vegan, Greenplace), and either confirming, demoting, or archiving. The audit usually catches three things:
+          A country audit means going through every listing tagged 100% vegan in that country, opening the venue&apos;s own website, cross-checking against secondary sources (OpenStreetMap, press coverage and local vegan blogs such as Bevegan.be and The Bruges Vegan), and either confirming, demoting, or archiving. The audit usually catches three things:
         </p>
         <ul className="list-disc pl-6 mb-3 space-y-1.5 text-base">
           <li><strong>Misclassified rows.</strong> Places tagged 100% vegan that turn out to be vegetarian-with-dairy or have a small non-vegan section. Demoted.</li>
