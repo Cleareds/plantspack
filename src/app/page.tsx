@@ -41,11 +41,11 @@ export const revalidate = 1800
 
 export const metadata: Metadata = {
   title: 'PlantsPack: Free Vegan Tools, Places & Travel Guides',
-  description: 'Free vegan barcode scanner, baking calculator, menu translator and drinks lookup, plus 52,000+ vegan and vegan-friendly places in 160+ countries - 100% vegan spots clearly flagged. Ad-free, no tracking, community-built.',
+  description: 'Free vegan barcode scanner, baking calculator, menu translator and drinks lookup, plus 52,000+ vegan and vegan-friendly places in 160+ countries - 100% vegan spots clearly flagged. Ad-free, community-built.',
   alternates: { canonical: 'https://www.plantspack.com' },
   openGraph: {
     title: 'PlantsPack: Free Vegan Tools, Places & Travel Guides',
-    description: 'Free vegan barcode scanner, baking calculator, menu translator, and 52,000+ vegan and vegan-friendly places worldwide - 100% vegan spots flagged. Ad-free, no tracking.',
+    description: 'Free vegan barcode scanner, baking calculator, menu translator, and 52,000+ vegan and vegan-friendly places worldwide - 100% vegan spots flagged. Free and ad-free.',
     type: 'website',
     siteName: 'PlantsPack',
     url: 'https://www.plantspack.com',

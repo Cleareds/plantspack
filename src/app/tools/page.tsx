@@ -8,7 +8,7 @@ import {
 
 export const metadata: Metadata = {
   title: 'Vegan Tools — Barcode, Ingredient, Menu, Drinks & Baking | PlantsPack',
-  description: 'Free vegan tools that work the way real life does: scan barcodes, check ingredient labels, translate menus, calculate baking substitutes, look up beer/wine vegan status. No ads, no tracking.',
+  description: 'Free vegan tools that work the way real life does: scan barcodes, check ingredient labels, translate menus, calculate baking substitutes, look up beer/wine vegan status. Free and ad-free.',
   alternates: { canonical: 'https://www.plantspack.com/tools' },
 }
 
@@ -132,7 +132,7 @@ export default function ToolsHubPage() {
             Vegan tools that fit real life
           </h1>
           <p className="text-on-surface-variant text-lg leading-relaxed max-w-2xl mx-auto">
-            Free to use. No ads. No tracking. Supporter-funded so we never have to monetise your scans.
+            Free to use, no ads. Supporter-funded so we never have to monetise your scans.
           </p>
         </div>
 

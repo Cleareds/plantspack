@@ -48,7 +48,7 @@ export const viewport: Viewport = {
 // 10K "cities" have only 1-2 places each - not a directory people can use.
 const SITE_TITLE = 'PlantsPack: Free Vegan Tools, Places & Travel Guides';
 const SITE_DESCRIPTION =
-  'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. Ad-free, no tracking, community-built.';
+  'Free vegan barcode scanner, baking calculator, menu translator, drinks lookup, and 52,000+ vegan and vegan-friendly places across 1,400+ cities in 160+ countries - 100% vegan spots clearly flagged. Ad-free, community-built.';
 
 // Material Symbols, subset to the icons the site renders (icon_names): ~9 KB
 // instead of the full ~320 KB font. Names must stay alphabetical. When you use
@@ -298,19 +298,6 @@ export default function RootLayout({
         )}
       </head>
       <body className={`${jakarta.variable} ${manrope.variable} font-body antialiased bg-surface text-on-surface min-h-screen`}>
-        {/*
-          GTM noscript fallback — only renders + executes for visitors with
-          JS disabled (every other browser ignores <noscript>). Zero perf
-          cost in the JS path: the iframe is never instantiated.
-        */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-MJG3ZGS6"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
         <GoogleAnalytics />
         <GoogleTagManager />
         <NavigationProgress />
