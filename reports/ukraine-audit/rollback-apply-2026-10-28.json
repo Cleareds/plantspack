@@ -1,0 +1,2447 @@
+{
+ "live": [
+  {
+   "id": "1cdc206e-df9f-400f-ad95-70ebdbd88ed1",
+   "before": {
+    "id": "1cdc206e-df9f-400f-ad95-70ebdbd88ed1",
+    "name": "50.47",
+    "city": "Kyiv",
+    "address": "50.47, 61, Kostiantynivska Street, Плоське, Podil, Podilskyi district, Kyiv, 03080, Ukraine",
+    "phone": null,
+    "website": null,
+    "opening_hours": null,
+    "description": "Vegan-friendly cafe.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 50.47161,
+    "longitude": 30.5041129,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "206d0364-7dc8-48e0-a8f7-0f4d3b5582c1",
+   "before": {
+    "id": "206d0364-7dc8-48e0-a8f7-0f4d3b5582c1",
+    "name": "Animal Rescue Kharkiv",
+    "city": "Kharkiv",
+    "address": "вул. О. Олеся, 7 (Little Prince cat rehabilitation centre)",
+    "phone": null,
+    "website": "https://animalrescuekharkiv.org/",
+    "opening_hours": null,
+    "description": "Kharkiv animal rescue founded in 2016 that evacuates animals from front-line areas and runs a vet clinic, the Little Prince cat centre and the Peace Sanctuary for dogs. PETA reports it also cares for rescued farm animals.",
+    "vegan_level": null,
+    "category": "other",
+    "subcategory": "companion-rescue",
+    "latitude": 50.0289937,
+    "longitude": 36.2251219,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "0e81c68a-473c-4463-9c47-d69836d3a7ea",
+   "before": {
+    "id": "0e81c68a-473c-4463-9c47-d69836d3a7ea",
+    "name": "Bear Sanctuary Domazhyr",
+    "city": "Zhornyska",
+    "address": "вул. Ведмежий Край, с. Жорниска, Яворівський р-н, 81083",
+    "phone": null,
+    "website": "https://www.four-paws.org/campaigns-topics/sanctuaries/bear-sanctuary-domazhyr",
+    "opening_hours": null,
+    "description": "Four Paws sanctuary for rescued brown bears in the Roztochia biosphere reserve, about 40 minutes by car from Lviv. Open to visitors since 2017.",
+    "vegan_level": null,
+    "category": "organisation",
+    "subcategory": "wildlife-rescue",
+    "latitude": 49.908,
+    "longitude": 23.803,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "f04652ff-998e-4546-8f59-a090a24a697b",
+   "before": {
+    "id": "f04652ff-998e-4546-8f59-a090a24a697b",
+    "name": "Beirut Hall",
+    "city": "Lviv Urban Hromada",
+    "address": "",
+    "phone": "+380 97 060 5545",
+    "website": null,
+    "opening_hours": null,
+    "description": "Vegan-friendly restaurant in Lviv Urban Hromada, Ukraine. Imported from OpenStreetMap; details not yet community-verified.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 49.8380293,
+    "longitude": 24.0373185,
+    "admin_notes": "2026-06-15 dead-site-sweep: cleared. Category=DNS_FAIL, status=0. Original URL preserved: http://beirut-hall.com.ua\n[desc-safe-copy 2026-06-30 ai-filler: This vibrant café specializes in authentic Middle Eastern cuisine, showcasing a diverse menu packed with flavorful vegan options made from fresh, locally sourced ingredients. With ]",
+    "archived_at": null
+   }
+  },
+  {
+   "id": "7a5454a9-080e-4615-9d89-0d29c05bf6de",
+   "before": {
+    "id": "7a5454a9-080e-4615-9d89-0d29c05bf6de",
+    "name": "Chocho Vegan",
+    "city": "Kyiv",
+    "address": "Bulvarno-Kudriavska Street, 01001, Kyiv",
+    "phone": null,
+    "website": null,
+    "opening_hours": null,
+    "description": "Vegan-friendly fast food spot in Kyiv, Ukraine.",
+    "vegan_level": "fully_vegan",
+    "category": "eat",
+    "subcategory": "fast-food",
+    "latitude": 50.4510439,
+    "longitude": 30.4973116,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "c1c68cd7-1475-4699-9727-4db34308486e",
+   "before": {
+    "id": "c1c68cd7-1475-4699-9727-4db34308486e",
+    "name": "Contrabanda",
+    "city": "Chernivtsi",
+    "address": "30, Virmenska Street, 58002, Chernivtsi",
+    "phone": "099 560 5008",
+    "website": "https://contrabanda.bar",
+    "opening_hours": "Mo-Su 18:00-04:00",
+    "description": "Vegan-friendly bar in Chernivtsi, Ukraine.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "bar",
+    "latitude": 48.2890756,
+    "longitude": 25.9401608,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "430311e1-4a3e-4e94-9658-3f49c63bee17",
+   "before": {
+    "id": "430311e1-4a3e-4e94-9658-3f49c63bee17",
+    "name": "DRaw Cakes & Food",
+    "city": "Kyiv",
+    "address": "",
+    "phone": "+380 73 101 2124",
+    "website": "https://drawcakes.com",
+    "opening_hours": "Mo-Su 10:00-20:00",
+    "description": "Vegan-friendly restaurant in Kyiv, Ukraine. Imported from OpenStreetMap; details not yet community-verified.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 50.4369781,
+    "longitude": 30.5139701,
+    "admin_notes": "[desc-safe-copy 2026-06-30 ai-filler: This vibrant café specializes in creative vegan dishes and exquisite raw cakes, making it a haven for plant-based food lovers. With a cozy atmosphere filled with greenery and an ar]",
+    "archived_at": null
+   }
+  },
+  {
+   "id": "d49452fd-65c2-4950-9794-61934268f435",
+   "before": {
+    "id": "d49452fd-65c2-4950-9794-61934268f435",
+    "name": "Fruit+Veg",
+    "city": "Kyiv",
+    "address": "Symona Petliury Street, 01032, Kyiv",
+    "phone": "+380 98 906 2480",
+    "website": null,
+    "opening_hours": "Mo-Su 10:00-22:00",
+    "description": "Vegan-friendly cafe in Kyiv, Ukraine.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 50.4442502,
+    "longitude": 30.4976154,
+    "admin_notes": "2026-06-15 dead-site-sweep: cleared. Category=CERT_ERROR, status=0. Original URL preserved: https://orangutanbar.com/",
+    "archived_at": null
+   }
+  },
+  {
+   "id": "a8fb0459-98d8-4584-bd2f-983cd95add3b",
+   "before": {
+    "id": "a8fb0459-98d8-4584-bd2f-983cd95add3b",
+    "name": "Ho Chu Bo",
+    "city": "Vinnytsia",
+    "address": "Hrushevskoho St 70",
+    "phone": null,
+    "website": "https://hochubo.com/",
+    "opening_hours": null,
+    "description": "Small Asian bistro (wok noodles, Thai curries, pho, gyoza) with labelled vegan dishes such as a tofu pho. Delivery and takeaway.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 49.236091,
+    "longitude": 28.463343,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "32d3e836-869e-42a6-8ce3-aba3e20e1db4",
+   "before": {
+    "id": "32d3e836-869e-42a6-8ce3-aba3e20e1db4",
+    "name": "Hum:Hum",
+    "city": "Kyiv",
+    "address": "Mezhyhirska St 13/34",
+    "phone": null,
+    "website": "https://www.instagram.com/humhum.kyiv/",
+    "opening_hours": null,
+    "description": "Hummus bar in Podil with hummus plates, falafel and burgers, with vegan items marked on the menu. Also serves meat.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 50.467231,
+    "longitude": 30.514743,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "924c3fcb-4512-4de5-a8f6-4aba6b5299f6",
+   "before": {
+    "id": "924c3fcb-4512-4de5-a8f6-4aba6b5299f6",
+    "name": "Indigo Shanti-cafe",
+    "city": "Uzhhorod",
+    "address": "Indigo Shanti-Café, Sándor Petőfi Square, Verbnyk, Uzhhorod, Uzhhorod Urban Hromada, Uzhhorod Raion, Zakarpattia Oblast, 88004, Ukraine",
+    "phone": null,
+    "website": null,
+    "opening_hours": "",
+    "description": "Вегетаріанська кухня, чайний простір в Ужгороді. Shanti yoga.",
+    "vegan_level": "mostly_vegan",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 48.6190513,
+    "longitude": 22.2968829,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "71e5b923-120b-42eb-9852-95090d72c40c",
+   "before": {
+    "id": "71e5b923-120b-42eb-9852-95090d72c40c",
+    "name": "Kyiv Food Market",
+    "city": "Kyiv",
+    "address": "8 к5/3 вулиця Князів Острозьких",
+    "phone": "+380 67 121 1319",
+    "website": "http://kyivfood.market/",
+    "opening_hours": "Mo-Su 11:00-23:00",
+    "description": "Vegan-friendly Chicken restaurant in Kyiv. See kyivfood.market for the current menu and opening hours.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 50.4423252,
+    "longitude": 30.5444627,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "8a8ccba6-5471-49ce-b562-7031f18c8d0a",
+   "before": {
+    "id": "8a8ccba6-5471-49ce-b562-7031f18c8d0a",
+    "name": "Nitai Family",
+    "city": "Uzhhorod Urban Hromada",
+    "address": "",
+    "phone": "+380958193730",
+    "website": null,
+    "opening_hours": "Mo-Su 11:00-20:00",
+    "description": "Vegan-friendly restaurant in Uzhhorod Urban Hromada, Ukraine. Imported from OpenStreetMap; details not yet community-verified.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 48.6181954,
+    "longitude": 22.2656594,
+    "admin_notes": "[desc-safe-copy 2026-06-30 ai-filler: This vibrant café specializes in vegan-friendly Thai and ramen dishes, making it a haven for plant-based food lovers in Ukraine. With a cozy atmosphere and standout offerings like ]",
+    "archived_at": null
+   }
+  },
+  {
+   "id": "7fa47f7a-2ef9-4d1f-9cc0-262089cf254b",
+   "before": {
+    "id": "7fa47f7a-2ef9-4d1f-9cc0-262089cf254b",
+    "name": "Ola Healthy Cafe",
+    "city": "Khmelnytskyi",
+    "address": "Ola, 6, Pekarskyi Lane, Старе місто історична місцевість, Центр, Khmelnytskyi, Khmelnytskyi Urban Hromada, Khmelnytskyi Raion, Khmelnytskyi Oblast, 29000, Ukraine",
+    "phone": null,
+    "website": "https://ola-helthy-cafe.choiceqr.com/",
+    "opening_hours": "Monday: 09:00 - 21:00; Tuesday: 09:00 - 21:00; Wednesday: 09:00 - 21:00; Thursday: 09:00 - 21:00; Friday: 09:00 - 20:00; Saturday: 09:00 - 18:00; Sunday: closed",
+    "description": "Comfy cafe with vegan and vegetarian dishes.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 49.4274549,
+    "longitude": 26.9824192,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "a996cea3-7c03-495e-ad0c-b56abcd5125c",
+   "before": {
+    "id": "a996cea3-7c03-495e-ad0c-b56abcd5125c",
+    "name": "Organiсa || Органіка - ресторан живої кухні",
+    "city": "Lviv",
+    "address": "Shevchenka 73A, Lviv 79000, Ukraine",
+    "phone": null,
+    "website": "https://organica.ua/",
+    "opening_hours": "Mon-Sun 9:00am-10:00pm",
+    "description": "Organica is a 100% plant-based restaurant of living cuisine in Lviv. Menu lists ingredients and calorie count for each dish - vegan burgers, avocado toast, salads, fermented drinks, healthy desserts. Open daily 09:00-22:00.",
+    "vegan_level": "fully_vegan",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 49.847742,
+    "longitude": 24.0006573,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "3919542d-76d6-4e3f-9c33-c38e4ef2d9a7",
+   "before": {
+    "id": "3919542d-76d6-4e3f-9c33-c38e4ef2d9a7",
+    "name": "respublika.sadu - Республіка Саду",
+    "city": "Lviv",
+    "address": "Volodymyra Vynnychenka 20a, Lviv 79008, Ukraine",
+    "phone": null,
+    "website": "https://www.instagram.com/respublika.sadu/",
+    "opening_hours": "Mon-Sun 10:00 AM to 10:00 PM",
+    "description": "Respublika Sadu (Республіка Саду) is a fusion café in Lviv with clearly marked vegan choices: tabbouleh, roasted pepper soup, hummus, vegan ferrero, plant-milk drinks. Serves meat with vegan options available.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 48.2707291,
+    "longitude": 25.9539819,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "aff247bd-fb4d-460c-81c9-bd3be8b6ab63",
+   "before": {
+    "id": "aff247bd-fb4d-460c-81c9-bd3be8b6ab63",
+    "name": "Roslynka",
+    "city": "Lutsk",
+    "address": "Danyla Halytskoho St 33 (entrance through the Dynamo sports complex)",
+    "phone": null,
+    "website": "https://www.instagram.com/roslynka.cafe/",
+    "opening_hours": null,
+    "description": "Plant-based cafe at the Dynamo sports complex in Lutsk with green bowls, raw desserts, hummus and jackfruit dishes. Listed hours Mon-Fri only.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 50.73554,
+    "longitude": 25.318907,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "afc2b2c9-ccf5-403c-a1cb-34fcce836f30",
+   "before": {
+    "id": "afc2b2c9-ccf5-403c-a1cb-34fcce836f30",
+    "name": "Sereda Vegan Point",
+    "city": "Kyiv",
+    "address": "Nyzhnii Val 39, Kyiv",
+    "phone": "+380 63 957 2017",
+    "website": "https://sereda.today/",
+    "opening_hours": "Mo 11:00 - 20:00; Tu 11:00 - 20:00; We 11:00 - 20:00; Th 11:00 - 20:00; Fr 11:00 - 20:00; Sa 11:00 - 20:00; Su 11:00 - 20:00",
+    "description": "100% vegan coffee shop and bakery in the heart of Kyiv. Cakes, desserts, quiche, waffles, smoothies, and coffee with hemp, almond, or coconut milk. Custom cakes made to order. All plant-based, every day.",
+    "vegan_level": "fully_vegan",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 50.468416,
+    "longitude": 30.5150912,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "2aef3a6b-7405-4ed7-a473-aed6022631e3",
+   "before": {
+    "id": "2aef3a6b-7405-4ed7-a473-aed6022631e3",
+    "name": "Sirius Animal Shelter",
+    "city": "Fedorivka",
+    "address": "с. Федорівка, Вишгородський р-н",
+    "phone": null,
+    "website": null,
+    "opening_hours": null,
+    "description": "Large private shelter for dogs and cats about 60 km north of Kyiv, founded by Alexandra Mezinova; many residents were rescued from front-line areas.",
+    "vegan_level": null,
+    "category": "other",
+    "subcategory": "companion-rescue",
+    "latitude": 50.8818595,
+    "longitude": 30.2702108,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "15a7e343-bb83-45eb-8f1f-f7a48468088f",
+   "before": {
+    "id": "15a7e343-bb83-45eb-8f1f-f7a48468088f",
+    "name": "Slon",
+    "city": "Lviv",
+    "address": "вул. Братів Рогатинців 27",
+    "phone": null,
+    "website": "https://slonlviv.com/",
+    "opening_hours": null,
+    "description": "Indian restaurant near Rynok Square with a vegan-marked section of about 18 dishes, including dals, curries, samosas and breads. Also serves chicken and lamb.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 49.8405136,
+    "longitude": 24.0331147,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "340ccc2b-b18a-469f-86ce-f82bc56bac2d",
+   "before": {
+    "id": "340ccc2b-b18a-469f-86ce-f82bc56bac2d",
+    "name": "Station Pizza",
+    "city": "Kyiv",
+    "address": "Station Pizza, 35, Nyzhnii Val Street, Плоське, Podil, Podilskyi district, Kyiv, 04071, Ukraine",
+    "phone": "+380682530000",
+    "website": "https://stationpizza.com.ua/",
+    "opening_hours": "Mo-Su 10:00-22:00",
+    "description": "Vegan-friendly pizza & italian restaurant in Kyiv, Ukraine.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "restaurant",
+    "latitude": 50.4675292,
+    "longitude": 30.5139349,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "707456da-4fc1-4893-80c8-ba86c07e3126",
+   "before": {
+    "id": "707456da-4fc1-4893-80c8-ba86c07e3126",
+    "name": "Tovarystvo - Товариство",
+    "city": "Lviv",
+    "address": "11 Pekarska St, Lviv, Ukraine",
+    "phone": "+380 98 171 2150",
+    "website": "https://www.instagram.com/tovarystvo_rpm/",
+    "opening_hours": "Mon-Sun 9:00 AM to 10:00 PM",
+    "description": "Tovarystvo (Товариство) is a vegetarian café-gallery in Lviv with vegan dishes and desserts. Open daily 09:00-21:00.",
+    "vegan_level": "vegan_friendly",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 49.8381011,
+    "longitude": 24.0384616,
+    "admin_notes": "[2026-10-27 public description no longer cites HappyCow; was: Tovarystvo (Товариство) is a vegetarian café-gallery in Lviv with vegan dishes and desserts. HappyCow notes: vegetarian items can be made vegan on request. Open daily 09:00-21:00.]",
+    "archived_at": null
+   }
+  },
+  {
+   "id": "f820a164-ecb9-4746-82fc-d749c1b189e1",
+   "before": {
+    "id": "f820a164-ecb9-4746-82fc-d749c1b189e1",
+    "name": "VegAmrita",
+    "city": "Kharkiv",
+    "address": "Nauky Ave 52",
+    "phone": null,
+    "website": "http://vegamrita.com.ua",
+    "opening_hours": null,
+    "description": "Vegetarian cafe and shop near Botanichnyi Sad metro with a mostly plant-based menu: wraps, soups, burgers, shawarma, noodles and vegan desserts. Cow milk and a few dairy desserts are also sold.",
+    "vegan_level": "mostly_vegan",
+    "category": "eat",
+    "subcategory": "cafe",
+    "latitude": 50.036995,
+    "longitude": 36.219864,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "cc881624-5b81-46af-9b88-6aa7d0071c04",
+   "before": {
+    "id": "cc881624-5b81-46af-9b88-6aa7d0071c04",
+    "name": "Vegano hooligan",
+    "city": "Odesa",
+    "address": "Mala Arnautska Street, 65012, Odesa",
+    "phone": null,
+    "website": null,
+    "opening_hours": null,
+    "description": "Vegan-friendly fast food spot in Odesa, Ukraine.",
+    "vegan_level": "fully_vegan",
+    "category": "eat",
+    "subcategory": "fast-food",
+    "latitude": 46.4708608,
+    "longitude": 30.7419386,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "fba453c2-9f58-4016-9cee-c577d38853fc",
+   "before": {
+    "id": "fba453c2-9f58-4016-9cee-c577d38853fc",
+    "name": "YaGoDa",
+    "city": "Zaporizhzhia",
+    "address": "Sobornyi Ave 216",
+    "phone": null,
+    "website": "https://yagoda.zp.ua",
+    "opening_hours": null,
+    "description": "Health-food shop with a range of plant-based meat, dairy alternatives and vegan cheeses; also sells online.",
+    "vegan_level": "vegan_friendly",
+    "category": "store",
+    "subcategory": "health-food",
+    "latitude": 47.8572,
+    "longitude": 35.1065,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "7dfa70fe-274e-43b6-8c4b-8935920e96e7",
+   "before": {
+    "id": "7dfa70fe-274e-43b6-8c4b-8935920e96e7",
+    "name": "Зелений кит. Буфет здорової їжі",
+    "city": "Kyiv",
+    "address": "Klovs'kyi descent, 4",
+    "phone": "+380972268826",
+    "website": "https://www.greenwhale.com.ua/en/",
+    "opening_hours": null,
+    "description": "Mostly vegan restaurant in Kyiv. See greenwhale.com.ua for the current menu and opening hours.",
+    "vegan_level": "mostly_vegan",
+    "category": "eat",
+    "subcategory": null,
+    "latitude": 50.4442799563387,
+    "longitude": 30.5377436469757,
+    "admin_notes": null,
+    "archived_at": null
+   }
+  },
+  {
+   "id": "44ce283a-97f5-4379-854f-261f491c7862",
+   "before": {
+    "id": "44ce283a-97f5-4379-854f-261f491c7862",
+    "name": "Gorod",
+    "city": "Ivano-Frankivsk Urban Hromada"
+   }
+  },
+  {
+   "id": "8ed09b6a-8708-4c0a-9c10-ba14ac4abc78",
+   "before": {
+    "id": "8ed09b6a-8708-4c0a-9c10-ba14ac4abc78",
+    "name": "Pizza Letta",
+    "city": "Lviv Urban Hromada"
+   }
+  },
+  {
+   "id": "10e333ce-05be-44fe-aa78-9755cdc55488",
+   "before": {
+    "id": "10e333ce-05be-44fe-aa78-9755cdc55488",
+    "name": "Express Buffet",
+    "city": "Lviv Urban Hromada"
+   }
+  },
+  {
+   "id": "9e1c9f6b-ac04-40f7-bc28-3ef3725c8a94",
+   "before": {
+    "id": "9e1c9f6b-ac04-40f7-bc28-3ef3725c8a94",
+    "name": "ОЙ ШО",
+    "city": "Lviv Urban Hromada"
+   }
+  },
+  {
+   "id": "e0cb0fef-b8df-4fa3-abdb-f4b07796f770",
+   "before": {
+    "id": "e0cb0fef-b8df-4fa3-abdb-f4b07796f770",
+    "name": "Бінс енд Грінс",
+    "city": "Lviv Urban Hromada"
+   }
+  },
+  {
+   "id": "d2ef2ec5-556c-45e1-ae37-324de0809d04",
+   "before": {
+    "id": "d2ef2ec5-556c-45e1-ae37-324de0809d04",
+    "name": "Soho Terrace",
+    "city": "Truskavets Urban Hromada"
+   }
+  },
+  {
+   "id": "6a0f7148-ba70-4129-b58b-8dc14650656e",
+   "before": {
+    "id": "6a0f7148-ba70-4129-b58b-8dc14650656e",
+    "name": "Мандрівник",
+    "city": "Vinnytsia Urban Hromada"
+   }
+  }
+ ],
+ "drafts": [
+  {
+   "id": "74bdf5bd-2160-44d4-a334-ed3d5daacf01",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "8dfc1bb3-9d6c-4664-8638-07193468dc16",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "89926b4e-7404-42d9-bd66-28f49b663b47",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: seen on HappyCow Odesa city page, not pulled yet"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: new lead: names only"
+  },
+  {
+   "id": "1bd371f5-dd86-4348-a7b0-0496a82b5b48",
+   "raw": {
+    "draft": true,
+    "notes": "Could be vegan_friendly; upgrade after a menu check. osm_ref node:14013791179.",
+    "status": "open",
+    "sources": [
+     "https://www.openstreetmap.org/node/14013791179",
+     "https://www.instagram.com/avocado.uzh/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/avocado.uzh/",
+    "confidence": "medium",
+    "name_local": "Кавʼярня-крамниця \"Авокадо\"",
+    "description": "Cafe and healthy-food shop in Uzhhorod with vegan, dairy-free and sugar-free items.",
+    "subcategory": "cafe",
+    "geo_precision": "source",
+    "status_evidence": "OSM node created 2026-07-14 with full survey-style tags (hours Mo-Su 08:00-19:00, payment, capacity)."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "4066ce1b-28dc-46c8-bf0c-f2e10ce8f77f",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): list.in.ua"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "5259cc52-6f94-418b-93f4-69e5b9baf80e",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "ac284213-e537-4289-bbab-113402219eb9",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "5a5be01e-8f24-4208-8f29-fcea75acab80",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: seen on HappyCow Odesa city page, not pulled yet"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: new lead: names only"
+  },
+  {
+   "id": "998b23a4-293c-4d57-a0da-9224a4444101",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: seen on HappyCow Odesa city page, not pulled yet"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: new lead: names only"
+  },
+  {
+   "id": "99b62ef0-03e3-44dd-a8d0-ea669decdc82",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "152126db-42a7-4a67-aa78-929782568388",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): list.in.ua: vegan dishes and desserts; Entuziastiv Lane 12"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "b8b3ab92-5099-4faf-ad2d-bf7b7312123f",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: seen on HappyCow Odesa city page, not pulled yet"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: new lead: names only"
+  },
+  {
+   "id": "dd754ec2-2dc7-447a-bee3-a8b5ccacfd15",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user top20.ua check 2026-10-25: pre-2022 top20 Dnipro vegetarian article"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "8dc2d1ff-09fe-41fa-baa4-5d80215f48cd",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "store",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit; review dates not seen"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "7b65bd30-6cfc-46e1-a7f3-657d7ee07062",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "081c25fc-c418-4799-8f66-f6f4781fec1c",
+   "raw": {
+    "draft": true,
+    "notes": "Weak: single third-party snippet; product range unknown. Keep in staging only.",
+    "status": "unknown",
+    "sources": [
+     "https://www.happycow.net/widget/europe/ukraine/vinnytsia/"
+    ],
+    "category": "store",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Shop in Vinnytsia listed on HappyCow as a vegan shop.",
+    "subcategory": "specialty",
+    "geo_precision": "address",
+    "status_evidence": "No dated evidence."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "64968db7-bd64-4fe8-922d-1bb710ea8540",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "ac40abd7-b0ed-4a08-ad54-b661793ec59f",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "f9f7623f-f14c-4fca-8bb8-5aba79ab52c2",
+   "raw": {
+    "draft": true,
+    "notes": "Third parties say fully vegan, but the own site only says 'vegetarian'; kept at vegan_friendly. Spinach says it relocated recently.",
+    "status": "likely_open",
+    "sources": [
+     "https://ecofood.net.ua/",
+     "https://spinach.guide/venues/ecofood-225560/"
+    ],
+    "category": "store",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "medium",
+    "name_local": "Eco Food",
+    "description": "Health-food shop and raw-food kitchen in Uzhhorod selling raw sweets, raw crackers and sugar-free products.",
+    "subcategory": "health-food",
+    "geo_precision": "source",
+    "status_evidence": "Own web shop live on 2026-10-25 with the same address and phones; no dated content seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "4b413ac9-5a84-4663-9601-3e40ff060528",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "2761e214-a8cb-4cb7-9e1a-2094ba942253",
+   "raw": {
+    "draft": true,
+    "notes": "HappyCow page blocks fetching; address and vegan status taken from a search snippet only. Verify on Google Maps/Instagram before import; fully_vegan rests on a third-party label, so consider importing as vegan_friendly until confirmed.",
+    "status": "likely_open",
+    "sources": [
+     "https://happycow.net/reviews/fireflys-lviv-255568",
+     "https://top20.ua/lviv/magazini-supermarketi/supermarketi-produktovi-magazini/fireflys.html"
+    ],
+    "category": "store",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Small vegan grocery in central Lviv selling seitan, tofu, plant milks, meat alternatives, sweets and eco cleaning products.",
+    "subcategory": "specialty",
+    "geo_precision": "address",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: HappyCow flags CLOSED but has a 27 May 2025 review; top20 reviews to 19 Jul 2025"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: closure flag conflicts with 2025 reviews: confirm on Google Maps/Instagram"
+  },
+  {
+   "id": "4078aa37-f1b4-4703-a1f9-945c9c004bb9",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "d1e56236-0d95-426b-b8c9-c2b25418b4d1",
+   "raw": {
+    "draft": true,
+    "notes": "Lacto-vegetarian; drop if vegan section cannot be confirmed.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/govinda-s-225511/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Говінда",
+    "description": "Hare Krishna vegetarian cafe with Indian food and some marked vegan dishes.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "7002fd81-333c-4cb9-b89f-23bfd41180a1",
+   "raw": {
+    "draft": true,
+    "notes": "No address found. Do not import without an address and activity check.",
+    "status": "unknown",
+    "sources": [
+     "https://www.happycow.net/reviews/green-life-ternopil-169725"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Vegetarian canteen in Ternopil with Indian dishes and many vegan options, weekdays only.",
+    "subcategory": "cafe",
+    "geo_precision": "city",
+    "status_evidence": "No dated evidence; HappyCow page not readable."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "83ce6719-8ba3-496f-b16e-b4104c605b0f",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "d228e5cd-b088-4940-bbb3-5de3f9b93b51",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit, 0 reviews"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "8654b910-3062-40d0-b7af-8e0ba8b37b16",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/hevron-225512/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Хеврон",
+    "description": "Kosher Ukrainian and Jewish restaurant that also serves marked vegan dishes such as falafel and vegan varenyky.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "b2f26c57-2919-447f-91fa-0045d53c17cd",
+   "raw": {
+    "draft": true,
+    "notes": "No evidence either way. Needs a Google Maps / menu check on site.",
+    "status": "unknown",
+    "sources": [
+     "https://www.openstreetmap.org/node/13587233803"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": null,
+    "subcategory": "cafe",
+    "geo_precision": "address",
+    "status_evidence": "No own channel or menu found. The OSM node is recent (likely added after the Dec 2025 market reopening), but this is not confirmed."
+   },
+   "decision": "needs_review",
+   "decision_reason": "OSM diet:vegan=yes only, nothing from the venue"
+  },
+  {
+   "id": "1aa63600-3fc3-468b-8d48-0de6dee917d0",
+   "raw": {
+    "draft": true,
+    "notes": "Only a search snippet seen. Exact village, operator and website unknown. Needs verification before import.",
+    "status": "unknown",
+    "sources": [
+     "https://loda.gov.ua/news/61098"
+    ],
+    "category": "organisation",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Домівка врятованих тварин",
+    "description": "Rescue centre for farm and exotic animals in the Chervonohrad (Sheptytskyi) district of Lviv Oblast, with a vet clinic and quarantine buildings.",
+    "subcategory": "wildlife-rescue",
+    "geo_precision": "city",
+    "status_evidence": "Lviv Oblast administration news item (loda.gov.ua/news/61098) says the centre already accepts animals; article date not visible (page returned 403)."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "5325a204-ea5c-46fa-a227-3a5b28cfcdb9",
+   "raw": {
+    "draft": true,
+    "notes": "Borderline vegan_options. Verify vegan count from own menu.",
+    "status": "likely_open",
+    "sources": [
+     "https://spinach.guide/venues/honey-cafe-confectionary-225534/",
+     "https://www.happycow.net/reviews/honey-cafe-and-bakery-kiev-120400"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Honey",
+    "description": "Cafe and bakery in Podil with pastries, bread, salads and a few vegan-labelled breakfast dishes.",
+    "subcategory": "cafe",
+    "geo_precision": "source",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: newest HappyCow review 29 Apr 2024"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: last review 2024; reviewers say only some items vegan"
+  },
+  {
+   "id": "1d684d95-5c0b-4d7c-b7cb-b02cc6526d57",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "9b9a47e6-ca14-4b01-ad07-89cf757ef255",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "639319dc-0747-42f7-a06f-63867d8dc8fb",
+   "raw": {
+    "draft": true,
+    "notes": "Needs activity check before import.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/johnny-raw-225576/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Casual restaurant with American, Italian and Asian dishes, including a vegan burger, tofu ramen and falafel.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "Website jr.vn.ua did not respond on 2026-10-25. No dated evidence found."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "b48c29ff-73f5-4579-bd7d-845dec3a93b7",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "27ba04f9-36ce-4945-b1c6-6a6fb887b5b7",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow; maybe = live row karma-kyiv (Baseina 5-B)"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "e766fe4a-cc08-401d-9b99-acea6a40c3f0",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/karma-kava-225562/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/karmakava",
+    "confidence": "low",
+    "name_local": null,
+    "description": "Coffee shop in central Ternopil with several plant milks and vegan cakes and sandwiches.",
+    "subcategory": "cafe",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence found."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "1f4669d2-ee72-46df-b3c1-a7423fe9ea64",
+   "raw": {
+    "draft": true,
+    "notes": "Verify vegan labels from own menu before import.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/kitaika-225565/",
+     "https://kitaikazolotoustivska.choiceqr.com/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Kitaika на Правому березі",
+    "description": "Casual Asian street food cafe serving wok noodles, spring rolls and bubble tea, with vegan dishes labelled per a third-party guide. Phone +380 67 656 16 16.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "Own ordering page live (choiceqr) with no dates; Spinach lists 2,008 Google reviews, no closure."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "b9402e10-954e-4827-8c59-43d42c59f493",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "853ee90e-2287-4bc2-ae19-9424c253f960",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit, 0 reviews"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "443cbf1e-8468-42dd-8261-46f2bf907d97",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit, 82 reviews; review dates not seen"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "497ad6e9-112e-4cb6-bdb7-99bc8a6bcd92",
+   "raw": {
+    "draft": true,
+    "notes": "Address conflict between Spinach and top20.ua.",
+    "status": "open",
+    "sources": [
+     "https://spinach.guide/venues/live-love-avocado-225611/",
+     "https://top20.ua/kh/restorani-kafe-bari/restorani/livelove-avocado-restoran.html"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Avocado-themed cafe with bowls, burgers and smoothies, including several vegan dishes.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 4.5/377, reviews to 11 Aug 2026"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: open 2026; count marked vegan dishes on the menu before import"
+  },
+  {
+   "id": "5dc18e3a-8734-4d14-919b-c3fa03528b06",
+   "raw": {
+    "draft": true,
+    "notes": "Chain site says 'Vegan Cafe' but not '100% vegan' verbatim; Loving Hut is a vegan-only chain. Check Instagram for 2025-2026 posts before publishing.",
+    "status": "unknown",
+    "sources": [
+     "https://lovinghut.com/UA",
+     "https://spinach.guide/venues/loving-hut-kyiv-225632/",
+     "https://lovinghut.com/ua/",
+     "https://www.happycow.net/europe/ukraine/kyiv/print"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": "https://www.facebook.com/loving.hut.kyiv.ukraine",
+    "instagram": "https://www.instagram.com/loving_hut_kyiv",
+    "confidence": "medium",
+    "name_local": null,
+    "description": "Vegan cafe of the Loving Hut chain serving Asian-style dishes such as curry with rice noodles, falafel and spring rolls. Phone +380 50 500 77 18.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "Still listed on the chain's own directory lovinghut.com/ua (no closure note), but the newest dated item there is the menu PDF of 2023-06-04. HappyCow snippet: opened Feb 2023 after a move from Tarasa Shevchenka Blvd 31. No 2025-2026 dated review or post found."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "ed7e3911-d76f-41a4-83ce-09d2cc2644ba",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "d5ab8ca2-fc7c-4ae7-969e-edeb97ab8353",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "110aac13-fbdd-4dfe-b451-9bd6ca667613",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user top20.ua check 2026-10-25: pre-2022 top20 Kharkiv vegetarian article; omnivore?"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "5a8b72aa-8edd-4f38-b7ed-b4db1a06d234",
+   "raw": {
+    "draft": true,
+    "notes": "Address left empty because sources disagree.",
+    "status": "open",
+    "sources": [
+     "https://spinach.guide/venues/momincube-healthy-bar-225518/",
+     "https://top20.ua/od/restoranyi-kafe-baryi/kafe-baryi-pitstserii/mom-in-cube-vegetarianskoe-kafe.html"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": "http://www.facebook.com/Momincube.project",
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "МамінКуб",
+    "description": "Small healthy-food bar with raw sweets, smoothies and coffee with plant milk.",
+    "subcategory": "cafe",
+    "geo_precision": "source",
+    "status_evidence": "user top20.ua check 2026-10-25: newest top20 review 07 Feb 2025, then a gap to 2021"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: open 2025 but vegan range thin; check menu"
+  },
+  {
+   "id": "01647e75-7397-49f3-8e67-ddc6418c459b",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "open",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 tag \"веганське меню\", 4.7/210, reviews to 10 Aug 2026; review summary: dishes not always vegan; desserts use honey (2022 article)"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "424b4efe-b15b-4852-baed-930700f8f25d",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "9aa03b4c-e49e-4e75-9222-df65c4555ea4",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "63dbf071-3325-4399-85e6-30cbd02a7b17",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "6ff759c4-e022-4799-9f0a-963fcca59232",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): list.in.ua"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "961290d0-8fda-4772-90a1-68e587b9b9d3",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/225614/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/rabbit___coffee",
+    "confidence": "low",
+    "name_local": null,
+    "description": "Coffee shop with plant milks, vegan pastries and dairy-free ice cream.",
+    "subcategory": "cafe",
+    "geo_precision": "source",
+    "status_evidence": "301 Google reviews per Spinach; no dated evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "31e57533-e96d-4ced-a5d9-50cae73da775",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): list.in.ua blurb says \"веганське меню\"; 2022 top20 article mentions cream-cheese toast; Belvederska 4/4"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "a7f92d00-bd82-41a6-befa-2d39a482a790",
+   "raw": {
+    "draft": true,
+    "notes": "Address is shared with Karma Kava - probably a pickup point in that cafe.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/ruki-kruki-cake-225604/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/rukykrukycake",
+    "confidence": "low",
+    "name_local": null,
+    "description": "Pre-order cake maker in Ternopil listed as a vegan bakery; pickup in the centre (same address as Karma Kava) or on Kryvonosa St.",
+    "subcategory": "bakery",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence. Pre-order only via Instagram."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "b349bd7b-b2cb-4267-8d6d-fd350a31d973",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/shuk-236446/",
+     "https://www.happycow.net/europe/ukraine/kharkiv/print"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "medium",
+    "name_local": null,
+    "description": "Middle Eastern pita and hummus cafe with falafel and other vegan dishes next to meat options.",
+    "subcategory": "fast-food",
+    "geo_precision": "source",
+    "status_evidence": "Spinach shows daily 12:00-20:00 and 81 Google reviews; no dated evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "3d9c115a-ff72-44a2-a4f4-139c280f5920",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): list.in.ua: Stefanyka 14"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "c157e325-c19c-416a-9a6b-8ed5bd76af90",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit, 154 reviews; review dates not seen"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "03700e57-d154-4fa4-96ea-3ea3c2103623",
+   "raw": {
+    "draft": true,
+    "notes": "No street address seen. Low priority.",
+    "status": "unknown",
+    "sources": [
+     "https://www.patreon.com/SOSShelter",
+     "https://www.change.org/p/give-animal-shelter-sos-police-protection-from-cat-and-dog-hunters"
+    ],
+    "category": "other",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Притулок SOS у Пирогові",
+    "description": "Shelter for dogs and cats in the Pyrohiv area of Kyiv, founded by Tamara Tarnavska.",
+    "subcategory": "companion-rescue",
+    "geo_precision": "city",
+    "status_evidence": "Patreon page shows about 1,000 dogs and 300 cats but no dated post; no 2024-2026 evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "70265fac-309b-4153-ab9a-d20ce04533a6",
+   "raw": {
+    "draft": true,
+    "notes": "Phone +380 63 996 7695 per spinach.guide. Brief requires venue's own statement for fully_vegan; if the importer is strict, hold at review until the Instagram bio is checked.",
+    "status": "likely_open",
+    "sources": [
+     "https://spinach.guide/venues/spot-225638/",
+     "https://www.instagram.com/spot.lviv/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/spot.lviv/",
+    "confidence": "medium",
+    "name_local": null,
+    "description": "Neapolitan-style pizzeria in Lviv with an all-vegan menu. Closed Monday and Tuesday.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "Instagram @spot.lviv exists (369 followers, 19 posts), but no post date was visible. spinach.guide shows no closure note and hours Wed-Sun 12:00-22:00 (page refreshed 2026-10-25, aggregator). No dated 2025-2026 post or review found."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "95813dad-4888-4f95-8c3d-9799f056868e",
+   "raw": {
+    "draft": true,
+    "notes": "Single independent venue, not a chain. Pizza/sushi core - check against the chain rule only if it turns out to be a chain.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/stone-street-cafe-225633/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Multi-cuisine cafe in central Ternopil with a separate vegan selection of pizzas, sushi rolls, soups and mains.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence found."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "1ccb915a-178b-40d0-99f7-555be647a456",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user top20.ua check 2026-10-25: pre-2022 top20 Dnipro vegetarian article"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "ed7c9210-1d56-4080-b159-b15daf49febe",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "245c0030-4f65-4a3c-b620-3ab5e714acec",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/225610/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Restaurant and bar in Arcadia with a separate vegan menu next to its regular international menu.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence seen; site blocked fetch."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "4265cb0d-1e0d-4058-b07d-c9f92acef09d",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "73b5e5be-61c0-44fc-8f1a-ffd0ebaec339",
+   "raw": {
+    "draft": true,
+    "notes": "No public office address found. GlobalGiving lists a registered address (Heroiv Stalinhradu St 25, fl. 57, Kyiv) that looks like a flat; do not publish it. City-level pin only. Org rows in PlantsPack usually carry NULL vegan_level.",
+    "status": "open",
+    "sources": [
+     "https://uanimals.org/en/",
+     "https://uanimals.org/?s=%D1%84%D0%B5%D1%80%D0%BC"
+    ],
+    "category": "organisation",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "medium",
+    "name_local": "ЮЕнімалс",
+    "description": "Ukrainian animal-protection charity that campaigns against fur and circuses with animals and evacuates and feeds animals in front-line regions.",
+    "subcategory": "advocacy",
+    "geo_precision": "city",
+    "status_evidence": "uanimals.org news search shows posts dated 2026-04-30, 2026-08-20 and 2026-09-26; footer 'UAnimals @ 2026'."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "1433f02e-1c09-489b-82cc-f407a34092b1",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "e6a1ca95-ae31-431e-981d-741cd3715c88",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "6b872347-0840-4bef-9316-92c08919cdf5",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 2.8/18; Spinach marks a Dnipro \"Vegan Cafe\" closed - same venue? check newest review"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "f278347b-646f-47e5-b633-66f3a199f066",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 4.6/13; review dates not seen; front-line city"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "55c5d9c5-1e60-4776-822f-21b6adda3304",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit, 275 reviews; review dates not seen"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "6732d445-32ac-4669-9966-4f1df39ba00d",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow; 2022 temporary-closure note"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "ea11d718-f367-487f-9bd6-df678b8e484c",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit, 0 reviews"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "bb5a98da-3894-4316-8f69-0546056e9395",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "store",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 search hit; review dates not seen"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "b5d0d9d4-4400-4906-b861-c7f485b0b34a",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://top20.ua/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user top20.ua check 2026-10-25: top20 hit; Vegetus own store list (Sep 2026) shows Skovorody 20 only - probably an old address"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user top20.ua check 2026-10-25: new lead: needs newest review date + vegan check"
+  },
+  {
+   "id": "93793144-d1e3-4f3a-82e5-93fad894b708",
+   "raw": {
+    "draft": true,
+    "notes": "Order-based business; address may be a pickup point. Same brand also listed in Rivne (Gagarina 1) - west region, other agent.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/vulva-las-vegan-225601/",
+     "https://www.instagram.com/vulvalasvegan/",
+     "https://stats.happycow.net/best-vegan-friendly-bakeries/ukraine"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/vulvalasvegan/",
+    "confidence": "low",
+    "name_local": null,
+    "description": "Vegan cake maker selling whole cakes to order and some pieces for takeaway in central Odesa. Orders through Instagram, no walk-in seating.",
+    "subcategory": "bakery",
+    "geo_precision": "source",
+    "status_evidence": "Instagram @vulvalasvegan exists (2,819 followers, 391 posts; current display name 'cakes'), but no post date was visible. No search result links it to Rivne or Haharina 1. Only HappyCow (undated) links it to Odesa, with orders at least 2 days ahead."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "2b085365-7c72-42f6-83d4-49309ff43d70",
+   "raw": {
+    "draft": true,
+    "notes": "Single venue, not a chain, but pizza-led; drop if chain/pizza policy applies.",
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/white-spoon-225591/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": null,
+    "description": "Small Italian dark kitchen for delivery and takeaway with marked vegan dishes such as vegan pizza and seitan steak.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "75b6c38b-a7f4-4eb3-a402-c388a01d3c9c",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": "https://www.instagram.com/wokday_",
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": "restaurant",
+    "geo_precision": "address",
+    "status_evidence": null
+   },
+   "decision": "needs_review",
+   "decision_reason": "OSM diet:vegan=yes lead, not checked (wok chain-like; check vegan menu)"
+  },
+  {
+   "id": "db36e822-f3ba-4fcf-833f-3b9ba1fb5bd7",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "c0999b2d-7d37-44f2-b316-54e0da090b06",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [
+     "https://spinach.guide/venues/yord-225615/"
+    ],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": "low",
+    "name_local": "Йорд",
+    "description": "International restaurant with a separate vegan menu.",
+    "subcategory": "restaurant",
+    "geo_precision": "source",
+    "status_evidence": "No dated evidence seen."
+   },
+   "decision": "needs_review",
+   "decision_reason": "no dated 2025-2026 evidence, or vegan claim from a third party only"
+  },
+  {
+   "id": "03cf9d16-7b00-406b-9592-95647468ea93",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "c06878bd-bcee-4df9-bc48-c7e1b0f2d70a",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  },
+  {
+   "id": "65d81427-3b80-46ce-af43-122889da8a9d",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "address",
+    "status_evidence": "user batch 5 HappyCow dates 2026-10-25: HappyCow open; newest review 15 Nov 2023"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 5 HappyCow dates 2026-10-25: no evidence after 2023"
+  },
+  {
+   "id": "5f0d582d-bb21-476a-ac42-d84d726021c1",
+   "raw": {
+    "draft": true,
+    "notes": null,
+    "status": "unknown",
+    "sources": [],
+    "category": "eat",
+    "db_match": null,
+    "facebook": null,
+    "instagram": null,
+    "confidence": null,
+    "name_local": null,
+    "description": null,
+    "subcategory": null,
+    "geo_precision": "city",
+    "status_evidence": "user batch 3/4 2026-10-25 (names only): HappyCow"
+   },
+   "decision": "needs_review",
+   "decision_reason": "user batch 3/4 2026-10-25 (names only): new lead: needs HappyCow/top20 page with newest review date + vegan check"
+  }
+ ],
+ "published": [
+  {
+   "id": "33ac1dbd-682d-4a6a-b514-4d7c629d5b96",
+   "slug": "domivka-vriatovanykh-tvaryn-lviv"
+  },
+  {
+   "id": "97977a7c-d7b2-469d-9009-f4b871473058",
+   "slug": "honey-kyiv"
+  },
+  {
+   "id": "6ff5c726-8a4f-4af8-b973-194d3694fc40",
+   "slug": "kitaika-kyiv"
+  },
+  {
+   "id": "3cd2541b-01fe-4654-a776-908f35b538da",
+   "slug": "mondays-cafe-store-ivano-frankivsk"
+  },
+  {
+   "id": "f76d4dda-8d47-4503-9e12-8a110872ad76",
+   "slug": "uanimals-kyiv"
+  }
+ ]
+}

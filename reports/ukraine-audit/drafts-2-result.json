@@ -1,0 +1,871 @@
+[
+ {
+  "staging_id": "b2f26c57-2919-447f-91fa-0045d53c17cd",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Himalaya",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": "Bessarabska Square 2 (Bessarabsky market)",
+  "latitude": 50.4424448,
+  "longitude": 30.5215972,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "restaurant",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Bessarabsky market reopened as a food market (Dec 2025 report); a festival review names Himalaya Indian food corners in the market. No dated venue page.",
+  "vegan_evidence": "None. Long-running Kyiv Indian brand (Velyka Vasylkivska) has a vegetarian section with paneer; no vegan marking found.",
+  "sources": [
+   {
+    "url": "https://www.openstreetmap.org/node/13587233803",
+    "finding": "OSM node, coords",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://www.eurofest.org.ua/?p=14929",
+    "finding": "Mentions Himalaya Indian corners at the market food hall",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://news.telegraf.com.ua/ukr/ukraina/2025-12-11/5927738-bessarabku-v-kievi-vidkrili-pislya-guchnoi-rekonstruktsii-yak-zminivsya-rinok-u-tsentra-stolitsi-foto",
+    "finding": "Market reopened Dec 2025 as food market",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Needs menu check on site for vegan-marked dishes. Likely vegan_options at most."
+ },
+ {
+  "staging_id": "1aa63600-3fc3-468b-8d48-0de6dee917d0",
+  "verdict": "publish",
+  "confidence": "medium",
+  "name": "Domivka Vriatovanykh Tvaryn",
+  "name_local": "Домівка врятованих тварин",
+  "city": "Lviv",
+  "address": "вул. Олекси Довбуша, 24, Львів",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://www.domivka.org.ua/",
+  "phone": null,
+  "opening_hours": null,
+  "category": "organisation",
+  "subcategory": "animal_rescue",
+  "vegan_level": null,
+  "description": "Animal shelter in Lviv that cares for rescued animals and runs adoptions, sterilisation campaigns and donation drives.",
+  "duplicate_of": null,
+  "operation_evidence": "Lviv Oblast ecology department notice dated 10 Sep 2026: Domivka collecting donations for a 3-4 Oct 2026 charity bazaar at Dovbusha 24.",
+  "vegan_evidence": "Not applicable (organisation).",
+  "sources": [
+   {
+    "url": "https://deplv.gov.ua/2026/09/10/dobri-rechi-dobra-sprava-domivka-vryatovanyh-tvaryn-rozpochala-zbir-dlya-osinnogo-bazaru-dobra/",
+    "finding": "Dated 2026-09-10 notice, address Dovbusha 24",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://www.domivka.org.ua/",
+    "finding": "Own site, 1,467 animals in shelter, dog home project",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://loda.gov.ua/news/79677",
+    "finding": "Free sterilisation of cats and dogs at Domivka",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Draft city Sheptytskyi and draft coords are wrong; geocode Dovbusha 24, Lviv. Phone 073-000-00-75 on the notice is a donation-shipping contact, not confirmed as general number. Draft description about farm/exotic animals not confirmed; replaced."
+ },
+ {
+  "staging_id": "5325a204-ea5c-46fa-a227-3a5b28cfcdb9",
+  "verdict": "publish",
+  "confidence": "medium",
+  "name": "Honey",
+  "name_local": "Honey на Подолі",
+  "city": "Kyiv",
+  "address": "вул. Нижній Вал, 19-21, Київ",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://honeykyiv.com/",
+  "phone": "+380673526185",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": "vegan_options",
+  "description": "Pastry shop and cafe on Podil, part of the Kyiv Honey chain. Most cakes and pastries are not vegan; the online shop marks several ice creams as vegan.",
+  "duplicate_of": null,
+  "operation_evidence": "Own site lists Honey na Podoli (since 2014) with phone; current catalogue (Wedding cakes S'26), fetched 2026-10-28.",
+  "vegan_evidence": "Site search 'веган' returns 6 vegan-labelled ice cream products (e.g. Kokos-yuzu-bergamot vegan, Matcha vegan). No other vegan items found.",
+  "sources": [
+   {
+    "url": "https://honeykyiv.com/locations",
+    "finding": "Podil branch Nyzhnii Val 19-21, +380673526185",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://honeykyiv.com/?s=веган&post_type=product",
+    "finding": "6 vegan-labelled ice creams",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Audit's vegan category URL now 404s. Vegan items are online-shop ice cream; in-store availability not confirmed."
+ },
+ {
+  "staging_id": "1d684d95-5c0b-4d7c-b7cb-b02cc6526d57",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Idealist Coffee",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": "https://idealistcoffee.com/",
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Kyiv coffee chain, ~10 locations as of 2024; no branch given in draft.",
+  "vegan_evidence": "A review mentions a vegan brunch option at Yaroslaviv Val 15; not verified.",
+  "sources": [
+   {
+    "url": "https://en.wikipedia.org/wiki/Sergii_Koretskyi",
+    "finding": "Chain founded 2019, 10 Kyiv locations 2024",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://spinach.guide/venues/idealist-coffee-225626/",
+    "finding": "Lead only",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Draft has city-centroid coords and no branch. Pick a specific branch and check menu before any publish."
+ },
+ {
+  "staging_id": "9b9a47e6-ca14-4b01-ad07-89cf757ef255",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Inside Coffee Stand",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": "вул. Січових Стрільців, 32, Київ",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "None dated. Only a third-party guide listing.",
+  "vegan_evidence": "Guide lead says 2-3 vegan snacks; 2 reviews.",
+  "sources": [
+   {
+    "url": "https://spinach.guide/venues/inside-coffee-stand-225528/",
+    "finding": "Lead: Sichovykh Striltsiv 32, few vegan items",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Thin evidence. Needs on-site/menu check."
+ },
+ {
+  "staging_id": "639319dc-0747-42f7-a06f-63867d8dc8fb",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Johnny Raw",
+  "name_local": null,
+  "city": "Vinnytsia",
+  "address": "Zodchykh St 2",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": "+380730540414",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "restaurant",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "No dated evidence. Own site jr.vn.ua does not resolve (DNS fail 2026-10-28).",
+  "vegan_evidence": "Leads: vegan burger, tofu ramen, wok noodles, falafel on third-party listings.",
+  "sources": [
+   {
+    "url": "http://jr.vn.ua",
+    "finding": "Domain does not resolve",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://spinach.guide/venues/johnny-raw-225576/",
+    "finding": "Lead only",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://happycow.net/reviews/johnny-raw-vinnytsia-187694",
+    "finding": "Lead only, 1 review",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Dead website is a weak closure signal. Check Google Maps/Instagram for 2026 activity."
+ },
+ {
+  "staging_id": "b48c29ff-73f5-4579-bd7d-845dec3a93b7",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Kafe Yam Yam",
+  "name_local": null,
+  "city": "Rivne",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "No source, no address. Search returned no match in Rivne."
+ },
+ {
+  "staging_id": "27ba04f9-36ce-4945-b1c6-6a6fb887b5b7",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Karma Bar",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found under this name.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "PlantsPack already lists 'Karma', Kyiv, Baseina 5-B (id 7868af87-bb01-474d-84c4-73c49c4b6de8, vegan_friendly). Possibly the same venue; check before any action."
+ },
+ {
+  "staging_id": "e766fe4a-cc08-401d-9b99-acea6a40c3f0",
+  "verdict": "keep_draft",
+  "confidence": "medium",
+  "name": "Karma Kava",
+  "name_local": null,
+  "city": "Ternopil",
+  "address": "вул. Гетьмана Сагайдачного, 13, Тернопіль",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": "Mo-Fr 08:00-21:00; Sa-Su 10:00-21:00",
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Coffee directory lists it at Sahaidachnoho 13 with hours; undated. Trip.com gives a different address (Valova 5).",
+  "vegan_evidence": "Only aggregator leads: four plant milks, vegan cakes and sandwiches.",
+  "sources": [
+   {
+    "url": "https://www.caffeatlas.com/karma-kava-ternopil",
+    "finding": "Address, hours, Instagram link; no vegan info",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://spinach.guide/venues/karma-kava-225562/",
+    "finding": "Lead only: plant milks, vegan cakes",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Instagram (blocked) is the best check for 2026 posts and vegan items."
+ },
+ {
+  "staging_id": "1f4669d2-ee72-46df-b3c1-a7423fe9ea64",
+  "verdict": "publish",
+  "confidence": "medium",
+  "name": "Kitaika",
+  "name_local": "Kitaika на Правому березі",
+  "city": "Kyiv",
+  "address": "вул. Золотоустівська, 16, Київ",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://kitaikazolotoustivska.choiceqr.com/",
+  "phone": "+380676561616",
+  "opening_hours": "Mo-Su 12:00-22:00",
+  "category": "eat",
+  "subcategory": "restaurant",
+  "vegan_level": "vegan_friendly",
+  "description": "Asian street-food restaurant near Zoloti Vorota serving Chinese, Korean, Thai and Vietnamese dishes. The menu marks about nine dishes as vegan, including tofu tomato soup, vegetable spring rolls and tofu salad.",
+  "duplicate_of": null,
+  "operation_evidence": "Own choiceqr ordering menu active with address, phone and hours, fetched 2026-10-28.",
+  "vegan_evidence": "Own menu tags 9 distinct dishes 'Веганське' (shiitake, muer mushrooms, wakame, tofu tomato soup, veg spring roll, tofu salad, steamed rice, ferment daikon); 2 wok dishes tagged vegetarian only.",
+  "sources": [
+   {
+    "url": "https://kitaikazolotoustivska.choiceqr.com/online-menu",
+    "finding": "Active menu, 9 vegan-tagged dishes, hours 12-22",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://tomato.ua/en/kiev/restaurants/kitaika",
+    "finding": "Address Zolotoustivska 16, phone",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Coordinates not taken from a reliable source; geocode address."
+ },
+ {
+  "staging_id": "b9402e10-954e-4827-8c59-43d42c59f493",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Koshyk Zdorovia",
+  "name_local": null,
+  "city": "Ivano-Frankivsk",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "No address or source. Search found no venue by this name."
+ },
+ {
+  "staging_id": "853ee90e-2287-4bc2-ae19-9424c253f960",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Kuzen",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": "Rustaveli St 4a",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found for Rustaveli 4a.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "Only source is top20.ua root URL."
+ },
+ {
+  "staging_id": "443cbf1e-8468-42dd-8261-46f2bf907d97",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Little Green",
+  "name_local": null,
+  "city": "Lviv",
+  "address": "Pechenizka St 4/2",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Lviv tourism page is marked 'archived publication'; a review mentions a month-long closure. No 2025-2026 evidence.",
+  "vegan_evidence": "Older listings: vegetarian art cafe with vegan dishes and raw sweets.",
+  "sources": [
+   {
+    "url": "https://lviv.travel/en/places/public-places/little-green-novii-vegetarianskii-zaklad",
+    "finding": "Archived publication",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://top20.ua/ru/lviv/restorani-kafe-bari/kafe-bari/little-green-vegetarianskoe-art-kafe-1.html",
+    "finding": "Vegetarian/vegan dishes, undated",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Likely closed or stale. Address Pechenizka 4/2 not confirmed."
+ },
+ {
+  "staging_id": "497ad6e9-112e-4cb6-bdb7-99bc8a6bcd92",
+  "verdict": "keep_draft",
+  "confidence": "medium",
+  "name": "Live. Love. Avocado",
+  "name_local": null,
+  "city": "Kharkiv",
+  "address": "Sumska St 59",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": "+380994338911",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "restaurant",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "No dated evidence. Linked citywaiter page does not resolve. Address conflict: Sumska 59 vs Teatralnyi prov. 27/2.",
+  "vegan_evidence": "Leads: green bowl, tofu cheesecake, plant milk (3-5 vegan items).",
+  "sources": [
+   {
+    "url": "https://spinach.guide/venues/live-love-avocado-225611/",
+    "finding": "Lead: Sumska 59, 1,097 Google reviews",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://top20.ua/kh/restorani-kafe-bari/restorani/livelove-avocado-restoran.html",
+    "finding": "Teatralnyi prov. 27/2, healthy-food menu",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Resolve which address is current; check Facebook avocado.kh for 2026 posts."
+ },
+ {
+  "staging_id": "5dc18e3a-8734-4d14-919b-c3fa03528b06",
+  "verdict": "keep_draft",
+  "confidence": "medium",
+  "name": "Loving Hut Kyiv",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": "вул. Миколи Пимоненка, 4, Київ",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://lovinghut.com/ua/",
+  "phone": "+380505007718",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "restaurant",
+  "vegan_level": "fully_vegan",
+  "description": "Vegan cafe of the Loving Hut chain serving Asian-style dishes such as curry with rice noodles, falafel and spring rolls.",
+  "duplicate_of": null,
+  "operation_evidence": "Chain site lists the Kyiv cafe at Pymonenka 4 with a menu PDF dated 4 Jun 2023; no evidence from the last 12 months found.",
+  "vegan_evidence": "Chain site calls it a vegan cafe; Loving Hut is a vegan-only chain.",
+  "sources": [
+   {
+    "url": "https://lovinghut.com/ua/",
+    "finding": "Kyiv vegan cafe, address, phone, menu PDF dated 2023-06-04",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://www.happycow.net/reviews/loving-hut-kyiv-335270",
+    "finding": "Lead only: opened Feb 2023, hours conflict",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Vegan level solid; operation unconfirmed. Hours conflict (Tu-Sa vs Mo-Fr 11:00-16:00). Check Instagram/Facebook for 2026 posts, then publish as fully_vegan."
+ },
+ {
+  "staging_id": "ed7e3911-d76f-41a4-83ce-09d2cc2644ba",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "LvivSmartFood",
+  "name_local": null,
+  "city": "Lviv",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "No address or source; name returns no venue."
+ },
+ {
+  "staging_id": "d5ab8ca2-fc7c-4ae7-969e-edeb97ab8353",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Mazurek",
+  "name_local": null,
+  "city": "Lviv",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "No address or source; no vegan cafe by this name in Lviv found."
+ },
+ {
+  "staging_id": "110aac13-fbdd-4dfe-b451-9bd6ca667613",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Gorodskoe kafe 16/54",
+  "name_local": "Міське кафе 16/54",
+  "city": "Kharkiv",
+  "address": "пл. Конституції, 2/2, Харків",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "No dated evidence.",
+  "vegan_evidence": "None. Breakfast cafe; listed dishes include poached eggs with salmon and yoghurt granola.",
+  "sources": [
+   {
+    "url": "https://theculturetrip.com/europe/ukraine/articles/the-10-best-breakfast-and-brunch-spots-in-kharkov-ukraine",
+    "finding": "Conventional brunch menu",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://top20.ua/kh/restorani-kafe-bari/kafe-bari/gorodskoe-kafe-1654.html",
+    "finding": "Address Konstytutsii sq 2/2",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Leaning reject_not_vegan: no vegan offer found in any source."
+ },
+ {
+  "staging_id": "5a8b72aa-8edd-4f38-b7ed-b4db1a06d234",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Mom in Cube",
+  "name_local": "МамінКуб",
+  "city": "Odesa",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "No dated evidence. Addresses conflict: Kolomiivskyi prov. 2, Bielinskoho 17, Rishelievska 9a.",
+  "vegan_evidence": "Old travel post: dishes from nuts and dried fruit, no eggs or flour; almond-milk coffee. Not confirmed as vegan.",
+  "sources": [
+   {
+    "url": "https://travelstoke.matadornetwork.com/experiences/xwRAoM60/momincube-healthy-bar",
+    "finding": "No eggs/flour/sugar; undated",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://top20.ua/od/restoranyi-kafe-baryi/kafe-baryi-pitstserii/mom-in-cube-vegetarianskoe-kafe.html",
+    "finding": "Kolomiivskyi 2, listed as vegetarian",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Check Facebook Momincube.project for 2026 activity and current address."
+ },
+ {
+  "staging_id": "01647e75-7397-49f3-8e67-ddc6418c459b",
+  "verdict": "publish",
+  "confidence": "medium",
+  "name": "Mondays cafe & store",
+  "name_local": null,
+  "city": "Ivano-Frankivsk",
+  "address": "вул. Івана Франка, 11, Івано-Франківськ",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://mondayscafe.choiceqr.com/",
+  "phone": "+380937740640",
+  "opening_hours": "Mo-Su 09:00-21:00",
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": "mostly_vegan",
+  "description": "Plant-based cafe and shop serving breakfasts, bowls, falafel rolls, a plant-based burger and desserts, with about 50 menu items tagged vegan. Some drinks and sweets contain cow milk or honey.",
+  "duplicate_of": null,
+  "operation_evidence": "Own choiceqr ordering menu active with address, phone and hours 09:00-21:00, fetched 2026-10-28.",
+  "vegan_evidence": "Menu states 'всі страви - повністю рослинного походження' (breakfasts), uses Violife and Eat Me At plant products; 53 items tagged 'Веганське'. Non-vegan: honey in several sweets/drinks, regular and lactose-free cow milk options for coffee and kids' cocoa.",
+  "sources": [
+   {
+    "url": "https://mondayscafe.choiceqr.com/online-menu",
+    "finding": "Plant-based statement, 53 vegan-tagged items, honey and cow-milk options",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://www.karpatium.com.ua/blog/de-smachno-pojisty-w-iwano-frankiwsku-gastronomichna-mandriwka",
+    "finding": "Local guide mention",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Not fully_vegan: cow milk and honey on menu. Two untagged dishes (meatball lunch with Eat Me At meatballs, cutlets with aioli) likely plant-based but unconfirmed. Geocode address."
+ },
+ {
+  "staging_id": "424b4efe-b15b-4852-baed-930700f8f25d",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Natur Boutique",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": "https://natur-boutique.ua/",
+  "phone": null,
+  "opening_hours": null,
+  "category": "store",
+  "subcategory": "health_food",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Organic/health-food retailer with online shop and ~3 stores; no branch address in draft.",
+  "vegan_evidence": "Not vegan-focused; sells honey, pollen and other bee products alongside teas.",
+  "sources": [
+   {
+    "url": "https://natur-boutique.ua/en/catalog/forest-honey-natur-boutique-250-g",
+    "finding": "Sells honey",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://natur-boutique.ua/en/catalog/tea-ginger-organic-natur-boutique",
+    "finding": "Kyiv health-food store",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "If kept, a specific store address and a vegan-product check are needed; likely vegan_options at most."
+ },
+ {
+  "staging_id": "9aa03b4c-e49e-4e75-9222-df65c4555ea4",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Natura",
+  "name_local": null,
+  "city": "Ternopil",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "No address or source; no venue by this name found in Ternopil."
+ },
+ {
+  "staging_id": "63dbf071-3325-4399-85e6-30cbd02a7b17",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "naturalcaregopods",
+  "name_local": null,
+  "city": "Kyiv",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": null,
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Nothing found.",
+  "vegan_evidence": "Nothing found.",
+  "sources": [],
+  "notes": "Looks like a social handle; no venue found."
+ },
+ {
+  "staging_id": "6ff759c4-e022-4799-9f0a-963fcca59232",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Pekarnia (Belvederska 32a)",
+  "name_local": null,
+  "city": "Ivano-Frankivsk",
+  "address": "вул. Бельведерська, 32а, Івано-Франківськ",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "bakery",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Directory listing only, undated.",
+  "vegan_evidence": "Directory tag 'vegetarian menu' only.",
+  "sources": [
+   {
+    "url": "https://list.in.ua/%D0%86%D0%B2%D0%B0%D0%BD%D0%BE%2D%D0%A4%D1%80%D0%B0%D0%BD%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA/%D0%9A%D1%83%D1%82%D0%BE%D0%BA%2D%D0%B2%2D%D0%BA%D1%83%D1%85%D0%BD%D1%8E/district/2",
+    "finding": "Belvederska 32a, vegetarian menu tag; venue name unclear",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Venue name unknown. No vegan evidence."
+ },
+ {
+  "staging_id": "961290d0-8fda-4772-90a1-68e587b9b9d3",
+  "verdict": "keep_draft",
+  "confidence": "medium",
+  "name": "Rabbit Coffee",
+  "name_local": null,
+  "city": "Kharkiv",
+  "address": "Вірменський пров., 2, Харків",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://rabbitroasters.com/",
+  "phone": "+380737077750",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Work.ua job posting for Rabbit Coffee at Virmenskyi prov. 2; search snippet of a directory review dated Jul 2026. Website rabbitroasters.com returns 403.",
+  "vegan_evidence": "Only aggregator lead (plant milk, vegan pastries, dairy-free ice cream). No own menu seen.",
+  "sources": [
+   {
+    "url": "https://work.ua/jobs/5450868/",
+    "finding": "Job post, Virmenskyi 2, own cafes and pastry workshop",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://top20.ua/kh/restorani-kafe-bari/kavyarni-ta-konditerski/rabbit-coffee-place.html",
+    "finding": "Search snippet: Jul 2026 review; page gives Virmenskyi 45",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://spinach.guide/venues/225614/",
+    "finding": "Lead only: vegan items",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Operation likely. Need own menu/Instagram for vegan-marked items; else vegan_options."
+ },
+ {
+  "staging_id": "31e57533-e96d-4ced-a5d9-50cae73da775",
+  "verdict": "keep_draft",
+  "confidence": "low",
+  "name": "Resto&shop SYSTEMA",
+  "name_local": "Resto&shop СИСТЕМА",
+  "city": "Ivano-Frankivsk",
+  "address": "вул. Бельведерська, 4/4, Івано-Франківськ",
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": null,
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "restaurant",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Undated directory listing only (Belvederska 4/4, weekdays 10-21).",
+  "vegan_evidence": "None found; appears in a top20 vegetarian/vegan roundup title search only.",
+  "sources": [
+   {
+    "url": "https://top20.ua/if/blog/vegetarianskiveganski-kafe-frankivska-323.html",
+    "finding": "Roundup of vegetarian/vegan cafes in Ivano-Frankivsk (page blocked)",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Need menu."
+ },
+ {
+  "staging_id": "a7f92d00-bd82-41a6-befa-2d39a482a790",
+  "verdict": "keep_draft",
+  "confidence": "medium",
+  "name": "Ruki Kruki Cake",
+  "name_local": null,
+  "city": "Ternopil",
+  "address": null,
+  "latitude": null,
+  "longitude": null,
+  "website": null,
+  "phone": "+380680344431",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "bakery",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "No dated evidence; pre-order via Instagram (blocked).",
+  "vegan_evidence": "Aggregator leads describe vegan sponge cakes with coconut cream; no own statement seen.",
+  "sources": [
+   {
+    "url": "https://spinach.guide/venues/ruki-kruki-cake-225604/",
+    "finding": "Lead: vegan cakes, pre-order, pickup Sahaidachnoho 13 or Kryvonosa",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://www.happycow.net/reviews/ruki-kruki-cake-ternopil-242140",
+    "finding": "Lead only",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Pre-order/delivery only, no storefront; pickup point shared with Karma Kava. Check Instagram for 2026 posts and '100% vegan' statement."
+ },
+ {
+  "staging_id": "b349bd7b-b2cb-4267-8d6d-fd350a31d973",
+  "verdict": "keep_draft",
+  "confidence": "medium",
+  "name": "SHUK pitas & hummus",
+  "name_local": null,
+  "city": "Kharkiv",
+  "address": "вул. Скрипника, 7, Харків",
+  "latitude": null,
+  "longitude": null,
+  "website": "https://shuk.choiceqr.com/",
+  "phone": "+380988032647",
+  "opening_hours": null,
+  "category": "eat",
+  "subcategory": "cafe",
+  "vegan_level": null,
+  "description": null,
+  "duplicate_of": null,
+  "operation_evidence": "Own choiceqr portal shows 'no active menus' (2026-10-28). No dated activity found.",
+  "vegan_evidence": "Leads: falafel and hummus; also serves meat. No own menu visible.",
+  "sources": [
+   {
+    "url": "https://shuk.choiceqr.com/menu/online-menu",
+    "finding": "No active menus",
+    "date_seen": "2026-10-28"
+   },
+   {
+    "url": "https://spinach.guide/venues/shuk-pitas-hummus-236446/",
+    "finding": "Lead only",
+    "date_seen": "2026-10-28"
+   }
+  ],
+  "notes": "Inactive ordering portal is a weak closure signal."
+ }
+]

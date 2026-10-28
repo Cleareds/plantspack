@@ -1,0 +1,911 @@
+[
+  {
+    "place_id": "1cdc206e-df9f-400f-ad95-70ebdbd88ed1",
+    "name": "50.47",
+    "city": "Kyiv",
+    "operation": "closed",
+    "operation_evidence": "FoodMap Kyiv lists '50.47 кафе - заклад зачинено', closure date 2025-10. Tykyiv article of 2026-01-02 says 50.47 operated at Kostiantynivska 61 until September 2025 and the same owners relaunched it as 'Coffee Shop'.",
+    "accepted_changes": {},
+    "rejected_changes": {},
+    "archive": true,
+    "archive_reason": "permanently_closed",
+    "sources": [
+      {
+        "url": "https://www.foodmap.kyiv.ua/venue/Cafe_50_47",
+        "finding": "Marked closed, closure date 2025-10, Kostiantynivska 61",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://tykyiv.com/food/u-grudni-v-kiievi-vidkrilisia-12-novikh-zakladiv/",
+        "finding": "Article 2026-01-02: 50.47 operated until Sept 2025; relaunched by same owners as 'Coffee Shop' at same address",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Do not rename into 'Coffee Shop': new concept needs its own vegan menu check before any new listing."
+  },
+  {
+    "place_id": "206d0364-7dc8-48e0-a8f7-0f4d3b5582c1",
+    "name": "Animal Rescue Kharkiv",
+    "city": "Kharkiv",
+    "operation": "operating",
+    "operation_evidence": "Official site live with current adoption and rescue contacts, hotline listed.",
+    "accepted_changes": {
+      "phone": "+380 95 478 8878",
+      "website": "https://www.animalrescuekharkiv.org/",
+      "category": "organisation",
+      "description": "Kharkiv animal rescue that evacuates animals from front-line areas and runs a veterinary clinic, the Little Prince cat rehabilitation centre and the ARK Peace Sanctuary for dogs."
+    },
+    "rejected_changes": {
+      "description": "Audit text claims a farm-animal programme; the official site names no farm-animal programme (only 'farm animals and fish' in help totals). Replaced with verified wording."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://www.animalrescuekharkiv.org/",
+        "finding": "Footer: 'Hotline +380 95 478 8878', info@animalrescuekharkiv.org; Little Prince cat centre at O. Olesia 7; ARK clinic; ARK Peace Sanctuary for dogs; no farm-animal programme described",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Email (info@animalrescuekharkiv.org) seen on site but email is not an allowed column. vegan_level stays null. Current description also mentioned 'founded 2016' and a PETA farm-animal claim that were not re-verified; they are dropped in the new text."
+  },
+  {
+    "place_id": "0e81c68a-473c-4463-9c47-d69836d3a7ea",
+    "name": "Bear Sanctuary Domazhyr",
+    "city": "Zhornyska",
+    "operation": "operating",
+    "operation_evidence": "Official sanctuary site lists current visiting schedule and booking requirement.",
+    "accepted_changes": {
+      "website": "https://www.bearsanctuary-domazhyr.org/",
+      "opening_hours": "We-Sa 09:00-17:15",
+      "phone": "+380 67 509 3058",
+      "description": "FOUR PAWS sanctuary for rescued brown bears in Zhornyska, Yavoriv district, Lviv region. Visits only with pre-registration and a guide."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://www.bearsanctuary-domazhyr.org/",
+        "finding": "'Sanctuary works from Wednesday to Saturday, 09:00-17:15'; 'Visiting ... only by pre-registration and with a tour guide'; phone +380 675093058; 1 Vedmezhy Krai St, Zhornyska",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Hours apply to guided visits with advance registration (stated in description). vegan_level stays null."
+  },
+  {
+    "place_id": "f04652ff-998e-4546-8f59-a090a24a697b",
+    "name": "Beirut Hall",
+    "city": "Lviv Urban Hromada",
+    "operation": "unknown",
+    "operation_evidence": "Directory listings only (tomato.ua no status; lviv.travel halal guide dated 2021). No dated 2025-2026 evidence.",
+    "accepted_changes": {
+      "address": "Pekarska St 5, Lviv"
+    },
+    "rejected_changes": {
+      "opening_hours": "tomato.ua shows an hours heading with no times; only source with times (10:00-23:00) is a lviv.travel article dated 2021-07-30, too old."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://tomato.ua/lviv/restaurants/beiruthall",
+        "finding": "Address 'Львов, ул. Пекарская 5', phone +38 097 060 5545 (matches current), no hours, no vegan dishes named",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://lviv.travel/ua/news/halal-food",
+        "finding": "2021 article: Pekarska 5, 10:00-23:00, Lebanese grill of meat and vegetables",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "No source names any vegan dish. vegan_friendly is unsupported (Lebanese grill restaurant, halal meat). Recommend menu check and possible demotion to vegan_options."
+  },
+  {
+    "place_id": "7a5454a9-080e-4615-9d89-0d29c05bf6de",
+    "name": "Chocho Vegan",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "Tykyiv vegan guide of 2025-11-01 lists ШОШО Vegan at Bulvarno-Kudriavska 24; top20 reviews dated Dec 2025.",
+    "accepted_changes": {
+      "address": "Bulvarno-Kudriavska St 24, Kyiv",
+      "description": "Vegan street-food cafe in Kyiv with burgers, noodles and pita wraps filled with falafel, rice-lentil cutlets or meat alternatives, plus vegan soups, dumplings and pancakes."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://tykyiv.com/news/veganski-zakladi-kiieva/",
+        "finding": "2025-11-01: 'ШОШО Vegan', Verkhnii Val 16 and Bulvarno-Kudriavska 24; vegan street food menu",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "'Chocho Vegan' is almost certainly the same business as 'Шошо Vegan' [f7f06abd-1b24-4e8a-82b9-04e9a8fc3131] (coords <8 m). Merge manually. Current description said 'Vegan-friendly' although level is fully_vegan; fixed. Second branch at Verkhnii Val 16 exists."
+  },
+  {
+    "place_id": "c1c68cd7-1475-4699-9727-4db34308486e",
+    "name": "Contrabanda",
+    "city": "Chernivtsi",
+    "operation": "operating",
+    "operation_evidence": "Official site live with current address and schedule.",
+    "accepted_changes": {
+      "address": "Ukrainska St 33, Chernivtsi",
+      "opening_hours": "Mo-Th 17:00-00:00; Fr-Sa 17:00-01:00",
+      "website": "https://contrabanda.bar/"
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://contrabanda.bar/",
+        "finding": "'33 UKRAINSKA STR, CHERNIVTSI'; 'MON-THU 17:00 - 00:00', 'FRI-SAT 17:00 - 01:00'; no menu on page (/food returns 404)",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Official site shows no Sunday hours (Sunday treated as closed). No menu found; vegan_friendly is unverified (Culture Trip: 'vegetarian options included'). Probable duplicate of Контрабанда [901b7482-0b04-47a4-898b-1a3ce9ba4b48]; choose canonical record manually. Coordinates may need re-geocode to Ukrainska 33."
+  },
+  {
+    "place_id": "430311e1-4a3e-4e94-9658-3f49c63bee17",
+    "name": "DRaw Cakes & Food",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "Online shop live with products and phone; a physical cafe is not confirmed.",
+    "accepted_changes": {
+      "description": "Kyiv maker of cakes, raw desserts, cashew cheeses and gluten-free bakes, sold through an online shop with delivery. A walk-in cafe is not confirmed."
+    },
+    "rejected_changes": {
+      "website": "Same as current (only trailing slash).",
+      "phone": "Same number as current (format only)."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://drawcakes.com/",
+        "finding": "Online shop: cakes, bars, RAW dairy, cashew cheese, gluten-free bakes; phone +38 073 101 2124; no address or hours; word 'vegan' not used",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Operating refers to the online business. Address is empty; a non-citable directory gives Antonovycha 19/21, not accepted. The shop does not label products vegan; vegan_friendly needs product-level check. Consider re-categorising as store/online."
+  },
+  {
+    "place_id": "e28e9b28-c179-4665-9978-5a915fdd9697",
+    "name": "Every Animal",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "Official NGO site live; Vegan MRE page reports 3000+ vegan parcels sent.",
+    "accepted_changes": {},
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://www.everyanimal.org/en/vegan-mre",
+        "finding": "'3000+ vegan parcels have already been sent to the defenders'; footer © 2024; no project dates or city count",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "No changes proposed. Current description claims '12 Ukrainian cities'; not confirmed on the Vegan MRE page."
+  },
+  {
+    "place_id": "d49452fd-65c2-4950-9794-61934268f435",
+    "name": "Fruit+Veg",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "Visit Kyiv listing with current contacts; live choiceqr ordering page.",
+    "accepted_changes": {
+      "address": "Symona Petliury St 16, 01601, Kyiv",
+      "website": "https://fruitandveg.choiceqr.com/",
+      "phone": "+380 67 990 6910",
+      "opening_hours": "Mo-Su 10:00-21:45",
+      "description": "Vegetarian and vegan cafe in central Kyiv with sandwiches, falafel, shawarma, soups, salads and burgers with seitan or Beyond Meat patties. Pets allowed."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://visitkyiv.com/food-and-drinks/fruit-veg/",
+        "finding": "16 Simon Petliura St, 01601; +38067 990 6910; Mon-Sun 10:00-21:45; website fruitandveg.choiceqr.com; pet-friendly; 'for vegetarians, vegans'",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://www.foodmap.kyiv.ua/venue/Fruit_Veg",
+        "finding": "Symona Petliury 16; 10:00-22:00; opened Sept 2023; cuisine 'Веган'",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://fruitandveg.choiceqr.com/",
+        "finding": "Live ordering page 'FRUIT+VEG sandwich takeaway'",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Hours differ slightly between listings (21:45 vs 22:00); Visit Kyiv value used. Menu items could not be read, so no level change; venue may be fully vegan, worth a menu check. is_pet_friendly is not an allowed column here."
+  },
+  {
+    "place_id": "a8fb0459-98d8-4584-bd2f-983cd95add3b",
+    "name": "Ho Chu Bo",
+    "city": "Vinnytsia",
+    "operation": "operating",
+    "operation_evidence": "Official site lists current daily hours and phone.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 11:00-21:00",
+      "phone": "+380 97 118 1852",
+      "description": "Asian bistro in Vinnytsia with several vegan dishes, such as tofu and shiitake noodles and dubu jorim. Kimchi dishes contain fish sauce; ask for the Thai curry and cashew rice without fish or oyster sauce."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://hochubo.com/",
+        "finding": "Hrushevskoho 70; +380 97 118 1852; 'працюємо щодня з 11:00 до 21:00'",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://veganvidpovidi.com/ho-chu-bo/",
+        "finding": "2025-06-25: list of vegan dishes; kimchi made with fish sauce; curry and cashew rice need no fish/oyster sauce",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "vegan_level vegan_friendly confirmed (10+ vegan dishes). Near-identical coords with Green Shop Cafe [c2f17eaa-...]; check separately."
+  },
+  {
+    "place_id": "32d3e836-869e-42a6-8ce3-aba3e20e1db4",
+    "name": "Hum:Hum",
+    "city": "Kyiv",
+    "operation": "unknown",
+    "operation_evidence": "Only a FoodMap listing with hours, no dated activity; not marked closed there.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 10:00-22:00"
+    },
+    "rejected_changes": {
+      "description": "Proposed text adds nothing verified over the current description; menu page could not be read."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://www.foodmap.kyiv.ua/venue/Hum_Hum",
+        "finding": "Mezhyhirska 13/34; 10:00-22:00; menu https://hum-hum.choiceqr.com/",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://hum-hum.choiceqr.com/",
+        "finding": "Page loads (title only), menu items not readable",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "menu_url is not an allowed column (https://hum-hum.choiceqr.com/)."
+  },
+  {
+    "place_id": "924c3fcb-4512-4de5-a8f6-4aba6b5299f6",
+    "name": "Indigo Shanti-cafe",
+    "city": "Uzhhorod",
+    "operation": "unknown",
+    "operation_evidence": "Directory listings only; no dated 2026 evidence.",
+    "accepted_changes": {
+      "address": "Sándor Petőfi Square 34, Uzhhorod"
+    },
+    "rejected_changes": {
+      "phone": "Audit +380505330015 conflicts with another listing (+380-505530015); could not confirm either from a primary source."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://spinach.guide/venues/indigo-shanti-cafe-225575/",
+        "finding": "Search result: Petefi Square 34, Mon-Sat 09:00-20:00, vegan ramen",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "varoshuzh.com.ua and Tripadvisor could not be fetched (timeout/403). One listing describes it as vegetarian and serving eggs; current mostly_vegan is not confirmed and may need demotion after a menu check. Hours not applied (sources disagree)."
+  },
+  {
+    "place_id": "8141e287-4ba9-4dd8-8b9d-4a9db278b956",
+    "name": "It's Falafel Baby! - Це фалафель, крихітко!",
+    "city": "Lviv",
+    "operation": "operating",
+    "operation_evidence": "Owner's live choiceqr menu with item labels.",
+    "accepted_changes": {},
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://itsfalafelbaby.choiceqr.com/menu/online-menu",
+        "finding": "Vegan-labelled: Falafel Classic, Falafel Veggi, Fresh Falafel Bowl, Just Falafel Bowl, Hummus Classic, tahini and harissa sauces. Dairy: Falafel Green (feta), Falafel Fresh, tahini-yogurt and mint-yogurt sauces. Hours '11:00 - 20:45'",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "No allowed-column changes proposed. Owner menu shows hours 11:00-20:45, current listing says 11:00-22:00 and uses long weekday format; consider updating to 'Mo-Su 11:00-20:45' after confirming. Several dishes contain dairy, so mostly_vegan is borderline. Probable duplicate of Це Фалафель, Крихітко [ce3ee769-...]."
+  },
+  {
+    "place_id": "a0395398-e285-4a15-98a2-24764e4a4fde",
+    "name": "Klanyca Sanctuary",
+    "city": "Kyiv",
+    "operation": "unknown",
+    "operation_evidence": "No independent source found; klanyca.org does not resolve (DNS ENOTFOUND on 2026-10-28).",
+    "accepted_changes": {},
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://klanyca.org",
+        "finding": "Domain does not resolve",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Existence unverified. Only web hit is the PlantsPack listing itself. Website appears dead. Needs manual check; consider hiding until a source is found (no deletion)."
+  },
+  {
+    "place_id": "71e5b923-120b-42eb-9852-95090d72c40c",
+    "name": "Kyiv Food Market",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "FoodMap notes second floor updated December 2025; Visit Kyiv lists current schedule.",
+    "accepted_changes": {
+      "website": "https://kyivfoodmarket.com/",
+      "opening_hours": "Mo-Th 11:00-22:00; Fr-Sa 11:00-23:00; Su 11:00-22:00",
+      "description": "Food hall on Kniaziv Ostrozkykh Street in Kyiv with about 19 independent vendors. Not a vegan venue; check individual stalls for vegan dishes."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://visitkyiv.com/food-and-drinks/kyiv-food-market/",
+        "finding": "Kniaziv Ostrozkykh 8; Mon-Thu 11-22, Fri-Sat 11-23, Sun 11-22; kyivfoodmarket.com; 19 eateries",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://www.foodmap.kyiv.ua/venue/Kyiv_Food_Market",
+        "finding": "11:00-22:00; menu link kyivfoodmarket.com; second floor updated Dec 2025; vendors named, no vegan stall",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "No vegan vendor identified in any source. Current vegan_friendly is unsupported; recommend review for demotion to vegan_options. Old description wrongly said 'Chicken restaurant'."
+  },
+  {
+    "place_id": "8a8ccba6-5471-49ce-b562-7031f18c8d0a",
+    "name": "Nitai Family",
+    "city": "Uzhhorod Urban Hromada",
+    "operation": "operating",
+    "operation_evidence": "findme.in.ua shows 'Відчинено'; top20 review dated March 2026.",
+    "accepted_changes": {
+      "address": "Slovianska Embankment 31, Uzhhorod"
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://findme.in.ua/ua/uzhhorod/companies/keyword__zaklad-shvidkogo-harchuvannya/",
+        "finding": "Nitai Family, Слов'янська набережна 31, +38 (095) 819-37-30 (matches current), Thai and vegetarian quick food, delivery",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Menu not found; vegan_friendly unverified (described as vegetarian/Thai)."
+  },
+  {
+    "place_id": "7fa47f7a-2ef9-4d1f-9cc0-262089cf254b",
+    "name": "Ola Healthy Cafe",
+    "city": "Khmelnytskyi",
+    "operation": "operating",
+    "operation_evidence": "Owner's live choiceqr menu.",
+    "accepted_changes": {
+      "phone": "+380 67 380 9112"
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://ola-helthy-cafe.choiceqr.com/online-menu",
+        "finding": "Pekarskyi Lane 6; phone 067 380 9112; 09:00-21:00; dishes tagged 'Веганське' (vegan burger, lentil soup, dal, vegan deruny...) plus vegetarian dishes with eggs and dairy; no meat",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "vegan_friendly confirmed. Email not shown on the page (and not an allowed column)."
+  },
+  {
+    "place_id": "a996cea3-7c03-495e-ad0c-b56abcd5125c",
+    "name": "Organiсa || Органіка - ресторан живої кухні",
+    "city": "Lviv",
+    "operation": "operating",
+    "operation_evidence": "Official contacts page live; lviv.travel March 2026 guide lists it.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 10:00-22:00",
+      "phone": "+380 63 787 17 77",
+      "description": "Plant-based 'living cuisine' restaurant on Shevchenka Street in Lviv. Offers dine-in, takeaway and delivery."
+    },
+    "rejected_changes": {
+      "description": "Audit claims (tofu/seitan dishes, vegan Ukrainian food) not visible on fetched pages; replaced with verified wording. Current text had outdated hours 09:00-22:00."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://organica.ua/contacts",
+        "finding": "Shevchenka 73A; booking +380 63 787 17 77; feedback +380 95 549 53 44; 'Пн-Нд: 10:00-22:00'",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://menu.organica.ua/",
+        "finding": "Title: delivery, takeaway, reservations",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://lviv.travel/ua/news/veganski-ta-vegetarianski-zakladi-u-lvovi",
+        "finding": "2026-03-01: 'ресторан живої кухні' with plant-based dishes, 09:00-22:00",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Official site (10:00) preferred over lviv.travel (09:00). fully_vegan unchanged; no '100%' claim found on fetched pages, but no animal products seen either."
+  },
+  {
+    "place_id": "3919542d-76d6-4e3f-9c33-c38e4ef2d9a7",
+    "name": "respublika.sadu - Республіка Саду",
+    "city": "Lviv",
+    "operation": "operating",
+    "operation_evidence": "lviv.travel guide dated 2026-03-01 lists it at Vynnychenka 20a.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 10:00-21:00",
+      "latitude": 49.842105,
+      "longitude": 24.0370422
+    },
+    "rejected_changes": {
+      "address": "Current English address already correct (Volodymyra Vynnychenka 20a); no change needed."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://lviv.travel/ua/news/veganski-ta-vegetarianski-zakladi-u-lvovi",
+        "finding": "2026-03-01: вул. Володимира Винниченка, 20а; 10:00-21:00",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://nominatim.openstreetmap.org/search?format=json&q=вулиця Володимира Винниченка 20, Львів",
+        "finding": "OSM POI 'Республіка саду', 20-А Vynnychenka, Lviv: lat 49.8421050, lon 24.0370422",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Coordinates from OSM POI named 'Республіка саду' at house 20-А. Fixes the ~223 km error."
+  },
+  {
+    "place_id": "aff247bd-fb4d-460c-81c9-bd3be8b6ab63",
+    "name": "Roslynka",
+    "city": "Lutsk",
+    "operation": "unknown",
+    "operation_evidence": "Conflicting: Restaurant Guru (updated 2026-06-23) marks 'Temporarily closed'; owner reply ~Oct 2025 says 'робота закладу тимчасово нестабільна', Mon-Fri 10:00-20:00; list.in.ua shows a 'Roslynka vegan cafe' at Kovelska 1. No 2026 activity found.",
+    "accepted_changes": {
+      "phone": "+380 99 366 6990"
+    },
+    "rejected_changes": {
+      "vegan_level": "Promotion to fully_vegan rejected for now: only evidence is a Dec 2024 local article calling it 'веганський заклад' (no explicit 100% vegan statement), and the venue may not be operating.",
+      "description": "Not changed while operating status and address (Danyla Halytskoho 33 vs Kovelska 1) are unresolved."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://misto.media/articles/lokatsiyi/1103-25-zakladiv-shcho-vidkrylys-u-lutsku-u-2024",
+        "finding": "2024-12-31: 'веганський заклад' at Danyla Halytskoho 33; bowls, salads, desserts without refined sugar; temporarily closed until 21 Jan",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://restaurantguru.com/Roslynka-Lutsk",
+        "finding": "Marked 'Temporarily closed'; phone +380 99 366 6990; owner reply 12 months ago: Mon-Fri 10-20, operations 'тимчасово нестабільна'",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Needs Instagram/phone check. If confirmed open and all-vegan, fully_vegan is plausible (name and press call it a vegan cafe). Possible move to Kovelska 1."
+  },
+  {
+    "place_id": "afc2b2c9-ccf5-403c-a1cb-34fcce836f30",
+    "name": "Sereda Vegan Point",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "Spinach listing (data refreshed 2026-10-28) with current hours; audit cites owner page with same hours.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Fr 10:00-20:00; Sa-Su 11:00-21:00",
+      "description": "Vegan coffee shop and bakery on Nyzhnii Val in Kyiv. Sells cakes, desserts and other baked goods with coffee and plant milks; custom cakes to order."
+    },
+    "rejected_changes": {
+      "description": "'Family-run' and 'retail corner' claims could not be verified (sereda.today and animalism.shop unreachable); dropped."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://spinach.guide/venues/sereda-225522/",
+        "finding": "Nyzhnii Val 39; Mon-Fri 10:00-20:00, Sat-Sun 11:00-21:00; 'Everything on the menu is vegan'; phone +380 63 957 2017",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "sereda.today returned ECONNRESET, animalism.shop 403. Hours rely on one listing plus the audit's reading of the owner page. fully_vegan unchanged."
+  },
+  {
+    "place_id": "5469e359-6489-4ee1-8ca7-071a9338fe52",
+    "name": "Shelter Ugolyok",
+    "city": "Dnipro",
+    "operation": "unknown",
+    "operation_evidence": "Only undated fundraising pages (GoFundMe, Patreon, UAnimals); no dated 2026 activity, no official site.",
+    "accepted_changes": {},
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://gofundme.com/help-shelter-ugolyok",
+        "finding": "Undated: smaller animal counts, mentions Lviv; other sources mention sites in Mykolaiv, Dnipro and Kherson regions",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Location and animal counts conflict between sources; current description's exact counts are unverified. Address is only 'Dnipro'. Recommend trimming counts from description after manual review."
+  },
+  {
+    "place_id": "2aef3a6b-7405-4ed7-a473-aed6022631e3",
+    "name": "Sirius Animal Shelter",
+    "city": "Fedorivka",
+    "operation": "operating",
+    "operation_evidence": "Official shelter site with contacts and visiting rules.",
+    "accepted_changes": {
+      "website": "https://dogcat.com.ua/",
+      "phone": "+380 93 193 4069",
+      "opening_hours": "Sa-Su 11:00-16:00",
+      "category": "organisation",
+      "description": "Shelter for dogs and cats in Fedorivka, Vyshhorod district, Kyiv region. Open to visitors on Saturdays and Sundays 11:00-16:00; read the shelter rules before visiting."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://dogcat.com.ua/contacts",
+        "finding": "Shelter 'Сіріус', Fedorivka, Vyshhorod district; call centre +38 093 193 40 69; adoption +38 096 935 59 15; visits 'суботи та неділі з 11.00 до 16.00'; Mon-Fri sanitary days",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Adoption phone +380 96 935 5915 not stored (no column). vegan_level stays null. Founder/front-line claims in current description not re-verified and dropped."
+  },
+  {
+    "place_id": "15a7e343-bb83-45eb-8f1f-f7a48468088f",
+    "name": "Slon",
+    "city": "Lviv",
+    "operation": "operating",
+    "operation_evidence": "Official site live (© 2026); lviv.travel guide 2026-03-01 lists it.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 12:00-22:00",
+      "phone": "+380 67 757 5428"
+    },
+    "rejected_changes": {
+      "description": "Proposed text is less specific than the current one and adds nothing verified."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://slonlviv.com/",
+        "finding": "Footer: 'Slon/Слон вул. Братів Рогатинців 27 +380 67 757 5428'",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://lviv.travel/ua/news/veganski-ta-vegetarianski-zakladi-u-lvovi",
+        "finding": "2026-03-01: Слон Бар, Brativ Rohatyntsiv 27, 12:00-22:00",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": ""
+  },
+  {
+    "place_id": "ec65f0f1-4cd5-43ab-b2b0-69e7ce2e143b",
+    "name": "Smak Zhyttya (Смак життя)",
+    "city": "Lviv",
+    "operation": "unknown",
+    "operation_evidence": "Official site blocked (429 / bot-protection page); a top20 review dated 2026-04-17 mentions 'Зелена, 19' but under an Uzhhorod listing.",
+    "accepted_changes": {},
+    "rejected_changes": {
+      "opening_hours": "Could not read official contact page (HTTP 429 / protection page).",
+      "phone": "Could not verify.",
+      "website": "Same as current (trailing slash only).",
+      "description": "Honey/milk chocolate/ghee and tofu/vegan cheese claims could not be verified."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://smakzhyttya.com.ua/contact/",
+        "finding": "HTTP 429 / 'Захищена сторінка' protection page, not readable",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://top20.ua/uzh/restorani-kafe-bari/pravilne-harchuvannya/vkus-zhizni.html",
+        "finding": "Search snippet: 'Смак Життя' health-food online platform, review 2026-04-17 mentions Zelena 19; listed under Uzhhorod",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Check whether the Zelena 19 shop is in Lviv or Uzhhorod (both cities appear). Re-run when the site is reachable."
+  },
+  {
+    "place_id": "340ccc2b-b18a-469f-86ce-f82bc56bac2d",
+    "name": "Station Pizza",
+    "city": "Kyiv",
+    "operation": "unknown",
+    "operation_evidence": "Conflicting: FoodMap marks Nyzhnii Val 35 closed (2026-01); tomato.ua still lists the address without status; owner site has no addresses visible.",
+    "accepted_changes": {
+      "website": "https://stationpizza.ua/"
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://www.foodmap.kyiv.ua/venue/Station_Pizza",
+        "finding": "'Station Pizza - заклад зачинено', closure date 2026-01, Nyzhnii Val 35",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://stationpizza.ua/",
+        "finding": "Live owner site: Vegan section (Pepperoni, Cheese, BBQ, Margo, Cheeseburger vegan pizzas), phone (068) 253 00 00, Mon-Sun 10:00-22:00; no branch addresses in fetched text",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://tomato.ua/ua/kiev/restaurants/station-pizzanyzhniival",
+        "finding": "Nyzhnii Val 35, no status, no hours",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Do not archive on FoodMap alone; call to confirm the Nyzhnii Val branch. A Station Pizza branch at Petra Hryhorenka 5A is listed elsewhere. vegan_friendly supported by 5+ vegan pizzas."
+  },
+  {
+    "place_id": "707456da-4fc1-4893-80c8-ba86c07e3126",
+    "name": "Tovarystvo - Товариство",
+    "city": "Lviv",
+    "operation": "operating",
+    "operation_evidence": "lviv.travel guide 2026-03-01 lists it with hours.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 09:00-21:00"
+    },
+    "rejected_changes": {
+      "phone": "+380 68 265 9104 comes from list.in.ua (403, unreadable); not confirmed."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://lviv.travel/ua/news/veganski-ta-vegetarianski-zakladi-u-lvovi",
+        "finding": "2026-03-01: Товариство розвитку і прикрашання міста, Pekarska 11, 09:00-21:00, modern vegan and plant-based food, natural wine, coffee",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Hours fix the internal discrepancy (description already says 09:00-21:00)."
+  },
+  {
+    "place_id": "f820a164-ecb9-4746-82fc-d749c1b189e1",
+    "name": "VegAmrita",
+    "city": "Kharkiv",
+    "operation": "operating",
+    "operation_evidence": "Spinach listing with current hours; owner site loads (delivery/takeaway).",
+    "accepted_changes": {
+      "website": "https://vegamrita.com.ua/",
+      "phone": "+380 95 810 2010",
+      "opening_hours": "Mo-Fr 09:00-20:00; Sa-Su 10:00-20:00"
+    },
+    "rejected_changes": {
+      "description": "Vegan lasagne and other audit claims not visible on fetched pages; current description kept."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://spinach.guide/venues/vegamrita-225671/",
+        "finding": "Nauki Ave 52; Mon-Fri 09:00-20:00, Sat-Sun 10:00-20:00; +380-958102010; 'about 80% of the menu plant-based'",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://vegamrita.com.ua/",
+        "finding": "Live page titled 'VegAmrita - Доставка, З собою'",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "mostly_vegan consistent with '80% plant-based'."
+  },
+  {
+    "place_id": "cc881624-5b81-46af-9b88-6aa7d0071c04",
+    "name": "Vegano hooligan",
+    "city": "Odesa",
+    "operation": "unknown",
+    "operation_evidence": "Directory listings give Mala Arnautska 59 but no dated 2025-2026 activity.",
+    "accepted_changes": {
+      "address": "Mala Arnautska St 59, Odesa",
+      "description": "Vegan fast-food cafe in Odesa with burgers, falafel, wraps and soups."
+    },
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://tomato.ua/en/odessa/cuisine/vegan",
+        "finding": "Vegano Hooligano, Malaia Arnautskaia 59, mon-sun 09:00-21:00; also Rishelievska 9a branch",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://destinations.ua/fine-dining/street-food-in-odesa",
+        "finding": "Search snippet: Vegano Hooligano, 59 Mala Arnautska; Falafel Tower, cream soups",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Current description said 'Vegan-friendly' though level is fully_vegan; fixed. Operating status needs a phone/Instagram check."
+  },
+  {
+    "place_id": "e8a33f62-6618-4234-aef5-320ec3942b82",
+    "name": "Vegetus",
+    "city": "Odesa",
+    "operation": "unknown",
+    "operation_evidence": "Official sites (vegetus.ua, opt.vegetus.ua) returned 403; could not confirm the Hretska branch.",
+    "accepted_changes": {},
+    "rejected_changes": {
+      "phone": "Could not read either Vegetus store locator (403)."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://vegetus.ua/info/de-kupiti-vegetus-4",
+        "finding": "HTTP 403",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://opt.vegetus.ua/info/magazini-vegetus-4",
+        "finding": "HTTP 403",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Audit reports the main locator omits Hretska; possible closure or co-tenancy with Eco Planeta. Manual check needed."
+  },
+  {
+    "place_id": "6be3932b-94b5-4cd6-b5c2-9cfcd0881d93",
+    "name": "Vegetus",
+    "city": "Lviv",
+    "operation": "unknown",
+    "operation_evidence": "Official Vegetus store locator returned 403; no other source with this branch's address found.",
+    "accepted_changes": {},
+    "rejected_changes": {
+      "phone": "Store locator unreadable (403); not verified.",
+      "opening_hours": "Store locator unreadable (403); not verified."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://vegetus.ua/info/de-kupiti-vegetus-4",
+        "finding": "HTTP 403",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Re-check from a browser. One WebSearch found no independent listing for this address."
+  },
+  {
+    "place_id": "f29d133c-0bf1-4902-8b65-c1ac7418a809",
+    "name": "Vegetus",
+    "city": "Kharkiv",
+    "operation": "unknown",
+    "operation_evidence": "Official Vegetus store locator returned 403; no other source with this branch's address found.",
+    "accepted_changes": {},
+    "rejected_changes": {
+      "phone": "Store locator unreadable (403); not verified.",
+      "opening_hours": "Store locator unreadable (403); not verified."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://vegetus.ua/info/de-kupiti-vegetus-4",
+        "finding": "HTTP 403",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Re-check from a browser. One WebSearch found no independent listing for this address."
+  },
+  {
+    "place_id": "4115f3f7-7321-4a99-95c3-9ca745dcfa5a",
+    "name": "Vegetus",
+    "city": "Kyiv",
+    "operation": "unknown",
+    "operation_evidence": "Official Vegetus store locator returned 403; no other source with this branch's address found.",
+    "accepted_changes": {},
+    "rejected_changes": {
+      "phone": "Store locator unreadable (403); not verified.",
+      "opening_hours": "Store locator unreadable (403); not verified."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://vegetus.ua/info/de-kupiti-vegetus-4",
+        "finding": "HTTP 403",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Re-check from a browser. One WebSearch found no independent listing for this address."
+  },
+  {
+    "place_id": "9c3e2c78-83bc-47d3-bd5d-a76313aa7f3e",
+    "name": "Wild Sandwich",
+    "city": "Odesa",
+    "operation": "unknown",
+    "operation_evidence": "Directory listings only (Intravel, Spinach give Troitska 56); tomato.ua lists Oleksandrivskyi 27 with the same phone. No dated activity.",
+    "accepted_changes": {},
+    "rejected_changes": {},
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://tomato.ua/ua/odessa/restaurants/wild-sandwicholeksandrivskyi",
+        "finding": "Oleksandrivskyi Ave 27, +38 063 986 9655 (same phone), cuisine vegan/vegetarian, no hours or status",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "No allowed-column changes proposed. Spinach describes seitan-based vegan wraps and burgers; venue may be fully vegan (honey in lemonade reported earlier). Confirm which address is current."
+  },
+  {
+    "place_id": "fba453c2-9f58-4016-9cee-c577d38853fc",
+    "name": "YaGoDa",
+    "city": "Zaporizhzhia",
+    "operation": "operating",
+    "operation_evidence": "Official contacts page with address, phones and daily hours.",
+    "accepted_changes": {
+      "opening_hours": "Mo-Su 09:00-19:00",
+      "phone": "+380 95 052 8699"
+    },
+    "rejected_changes": {
+      "website": "Current https://yagoda.zp.ua works; /ua/ suffix not needed.",
+      "description": "Honey and tofu claims not verified (product page not fetched)."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://yagoda.zp.ua/contacts",
+        "finding": "Sobornyi Ave 216; +380 (95) 052-86-99, +380 (98) 312-14-22; yagoda7zp@gmail.com; Mon-Sun 09:00-19:00",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": ""
+  },
+  {
+    "place_id": "7dfa70fe-274e-43b6-8c4b-8935920e96e7",
+    "name": "Зелений кит. Буфет здорової їжі",
+    "city": "Kyiv",
+    "operation": "operating",
+    "operation_evidence": "Spinach listing (refreshed 2026) with hours; official site exists (403 to fetch).",
+    "accepted_changes": {
+      "vegan_level": "vegan_friendly",
+      "description": "Healthy-food buffet in Kyiv with marked vegan dishes such as tofu bowls, Tom Yum soup and a Beyond Meat burger, alongside meat and fish dishes."
+    },
+    "rejected_changes": {
+      "website": "Official site returned 403; current URL kept.",
+      "phone": "Same number as current (format only)."
+    },
+    "archive": false,
+    "archive_reason": null,
+    "sources": [
+      {
+        "url": "https://spinach.guide/venues/green-whale-225567/",
+        "finding": "Klovsky Uzviz 4; Mon-Sat 08:00-21:00, Sun closed; 'offers both vegan and non-vegan dishes'; vegan 'Some 3-5 dishes', clearly marked",
+        "date_seen": "2026-10-28"
+      },
+      {
+        "url": "https://archive.kyivpost.com/lifestyle/enjoy-healthy-vegetarian-food-at-these-kyiv-venues.html",
+        "finding": "2020: baked chicken or beef, baked salmon, salmon salads, hummus with eggs",
+        "date_seen": "2026-10-28"
+      }
+    ],
+    "notes": "Demotion mostly_vegan -> vegan_friendly accepted: menu serves meat, fish and eggs. Hours Mo-Sa 08:00-21:00 seen on Spinach only; not applied."
+  }
+]
