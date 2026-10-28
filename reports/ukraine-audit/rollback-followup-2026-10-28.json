@@ -1,0 +1,112 @@
+[
+ {
+  "id": "e50bdf6f-d79b-4f10-8bbf-0dcdb727de4a",
+  "name": "Челентано",
+  "city": "Nikopol",
+  "vegan_level": "vegan_options",
+  "website": "http://egoisty.com",
+  "latitude": 47.5738996,
+  "longitude": 34.3691399,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "8ed09b6a-8708-4c0a-9c10-ba14ac4abc78",
+  "name": "Pizza Letta",
+  "city": "Lviv",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 49.7969015,
+  "longitude": 24.0584855,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "98e62265-9c2f-4d0a-a17a-180910f43df1",
+  "name": "Венеция",
+  "city": "Hurzuf",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 44.5368908,
+  "longitude": 34.2740855,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "ca0ad6a6-562e-4c75-94ee-261121b3cc28",
+  "name": "23 cafe La Brasserie",
+  "city": "Sevastopol",
+  "vegan_level": "vegan_friendly",
+  "website": "https://www.23cafe.ru",
+  "latitude": 44.6132452,
+  "longitude": 33.5212183,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "aad620ba-de28-4563-9e62-4ebf19eedc53",
+  "name": "ПОРТО Бар",
+  "city": "Sevastopol",
+  "vegan_level": "vegan_friendly",
+  "website": "http://porto-bar.ru",
+  "latitude": 44.6174232,
+  "longitude": 33.5264007,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "f0c3c659-4947-4486-adbe-0b3eb63e3727",
+  "name": "Shen",
+  "city": "Simferopol",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 44.9315124,
+  "longitude": 34.0733626,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "d6078627-2f63-45df-8ed0-0b607984ee6c",
+  "name": "Чао в парке",
+  "city": "Simferopol",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 44.9478,
+  "longitude": 34.0943,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "cd3e611c-2149-49db-8893-59dbf2c03aec",
+  "name": "Вкусно",
+  "city": "Simferopol",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 44.956947,
+  "longitude": 34.0928498,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "db1a4e3a-70d2-4130-9301-68f4b68e83b9",
+  "name": "Камал",
+  "city": "Simferopol",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 44.9572688,
+  "longitude": 34.0896869,
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "5ecb8c83-ed89-4d22-aa0a-41bce8ecf370",
+  "name": "Прасад",
+  "city": "Yalta",
+  "vegan_level": "vegan_friendly",
+  "website": null,
+  "latitude": 44.4957049,
+  "longitude": 34.1725695,
+  "archived_at": null,
+  "archived_reason": null
+ }
+]
