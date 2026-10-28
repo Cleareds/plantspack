@@ -199,6 +199,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ places: data || [], total: count || 0 })
   }
 
+  if (tab === 'approx_location') {
+    // Coordinates are a city/country centre (scripts/flag-approximate-locations.mjs).
+    // Apps keep these out of "Near you". Setting real coordinates drops the tag
+    // (DB trigger places_clear_approximate_location).
+    const { data, count } = await supabase
+      .from('places')
+      .select('id, name, slug, city, country, tags, website, address, category, latitude, longitude, updated_at', { count: 'exact' })
+      .contains('tags', ['approximate_location'])
+      .is('archived_at', null)
+      .order('category')
+      .order('name')
+      .range(offset, offset + limit - 1)
+    return NextResponse.json({ places: data || [], total: count || 0 })
+  }
+
   if (tab === 'unverified_fv') {
     // 100% vegan places with no websearch verification tag yet. The long tail
     // after today's bulk verification - mostly small/local places where web
@@ -298,6 +313,7 @@ export async function GET(request: NextRequest) {
       { count: googleReviewFlags },
       { count: unverifiedFullyVegan },
       { count: duplicateCandidates },
+      { count: approximateLocation },
     ] = await Promise.all([
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null),
       supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['google_confirmed_closed']),
@@ -319,6 +335,7 @@ export async function GET(request: NextRequest) {
         .not('tags', 'cs', '{websearch_review_flag}')
         .not('tags', 'cs', '{websearch_confirmed_closed}'),
       supabase.from('place_reports').select('id', { count: 'exact', head: true }).eq('type', 'duplicate').eq('status', 'pending'),
+      supabase.from('places').select('id', { count: 'exact', head: true }).is('archived_at', null).contains('tags', ['approximate_location']),
     ])
 
     return NextResponse.json({
@@ -337,6 +354,7 @@ export async function GET(request: NextRequest) {
         googleReviewFlags: googleReviewFlags || 0,
         unverifiedFullyVegan: unverifiedFullyVegan || 0,
         duplicateCandidates: duplicateCandidates || 0,
+        approximateLocation: approximateLocation || 0,
       }
     })
   }
@@ -508,6 +526,18 @@ export async function PATCH(request: NextRequest) {
   const update: Record<string, any> = { tags, updated_at: new Date().toISOString() }
   if (setVeganLevel) update.vegan_level = setVeganLevel
 
+  // Approximate Location tab: real coordinates pasted by an admin.
+  const loc = body.setLocation
+  if (loc) {
+    const lat = Number(loc.latitude)
+    const lng = Number(loc.longitude)
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180)
+      return NextResponse.json({ error: 'Invalid coordinates' }, { status: 400 })
+    update.latitude = lat
+    update.longitude = lng
+    update.tags = tags.filter((t: string) => t !== 'approximate_location')
+  }
+
   const { error } = await supabase.from('places').update(update).eq('id', placeId)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
@@ -517,7 +547,7 @@ export async function PATCH(request: NextRequest) {
     await notifyReporters(supabase, [placeId], setVeganLevel ? 'reviewed' : 'dismissed')
   }
 
-  if (setVeganLevel || clearVeganReportTags) {
+  if (setVeganLevel || clearVeganReportTags || loc) {
     const { revalidatePath } = await import('next/cache')
     if (place.slug) revalidatePath(`/place/${place.slug}`)
     if (place.country && place.city) {

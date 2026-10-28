@@ -9,7 +9,7 @@ import {
   Loader2, ExternalLink, Trash2, XCircle, AlertTriangle,
   Clock, Globe, WifiOff, Users, CheckCircle, BarChart3, Leaf,
   ArrowUpCircle, ArrowDownCircle, RefreshCw, Square, CheckSquare,
-  PenLine, FlaskConical, Bot, ScanSearch, Copy, GitMerge
+  PenLine, FlaskConical, Bot, ScanSearch, Copy, GitMerge, MapPin
 } from 'lucide-react'
 
 interface FlaggedPlace {
@@ -22,6 +22,10 @@ interface FlaggedPlace {
   website: string | null
   vegan_level?: string | null
   opening_hours?: Record<string, string> | null
+  address?: string | null
+  category?: string | null
+  latitude?: number | null
+  longitude?: number | null
   updated_at: string
   // Attached by the API for report-driven tabs: who flagged it + their note.
   reports?: { type: string; note: string | null; created_at: string; users?: { username: string | null; first_name: string | null } | null }[]
@@ -53,6 +57,7 @@ interface Stats {
   googleReviewFlags: number
   unverifiedFullyVegan: number
   duplicateCandidates: number
+  approximateLocation: number
 }
 
 interface PlaceSummary {
@@ -117,6 +122,7 @@ const TABS = [
   { id: 'google_flag', label: 'Google Vegan Flags', icon: ScanSearch, color: 'text-sky-400', statKey: 'googleReviewFlags', source: 'auto' },
   // Our research backlog
   { id: 'unverified_fv', label: 'Unverified 100% Vegan', icon: Leaf, color: 'text-teal-400', statKey: 'unverifiedFullyVegan', source: 'research' },
+  { id: 'approx_location', label: 'Approximate Location', icon: MapPin, color: 'text-rose-400', statKey: 'approximateLocation', source: 'research' },
   { id: 'research_queue', label: 'Research Review', icon: FlaskConical, color: 'text-purple-400', statKey: 'researchQueue', source: 'research' },
 ] as const
 
@@ -284,6 +290,22 @@ function DataQualityInner() {
     setProcessing(null)
   }, [tab, removePlace])
 
+  // Approximate Location tab: save pasted "lat, lng" (from OSM or a map app).
+  const [locInput, setLocInput] = useState<Record<string, string>>({})
+  const handleSetLocation = useCallback(async (placeId: string) => {
+    const m = (locInput[placeId] || '').match(/(-?\d+(?:\.\d+)?)\s*[,;\s]\s*(-?\d+(?:\.\d+)?)/)
+    if (!m) { alert('Paste coordinates as "lat, lng", e.g. 50.8466, 4.3528'); return }
+    setProcessing(placeId)
+    const res = await fetch('/api/admin/data-quality', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ placeId, setLocation: { latitude: Number(m[1]), longitude: Number(m[2]) } }),
+    })
+    if (res.ok) removePlace(placeId)
+    else alert((await res.json().catch(() => ({}))).error || 'Could not save')
+    setProcessing(null)
+  }, [locInput, removePlace])
+
   // Confirm a vegan-status action — optimistic: remove from list immediately, fire request in background
   const handleVeganConfirm = useCallback(async (
     placeId: string,
@@ -344,6 +366,7 @@ function DataQualityInner() {
       case 'reported_hours': return 'community_report:hours_wrong'
       case 'unreachable': return 'website_unreachable'
       case 'google_flag': return 'google_review_flag'
+      case 'approx_location': return 'approximate_location'
       default: return ''
     }
   }
@@ -488,7 +511,7 @@ function DataQualityInner() {
     ? stats.unreachable + stats.googleTempClosed + stats.googleClosed + stats.googleReviewFlags
     : 0
   const researchCount = stats
-    ? stats.unverifiedFullyVegan + stats.researchQueue
+    ? stats.unverifiedFullyVegan + stats.researchQueue + stats.approximateLocation
     : 0
   const groupCount = (source: Source): number =>
     source === 'user' ? communityCount : source === 'auto' ? automatedCount : researchCount
@@ -565,7 +588,7 @@ function DataQualityInner() {
               <span className="ml-auto text-2xl font-bold text-white">{researchCount}</span>
             </div>
             <p className="text-[11px] text-gray-400">
-              {stats.unverifiedFullyVegan} unverified 100% vegan · {stats.researchQueue} to review
+              {stats.unverifiedFullyVegan} unverified 100% vegan · {stats.researchQueue} to review · {stats.approximateLocation} approximate locations
             </p>
           </div>
         </div>
@@ -846,7 +869,7 @@ function DataQualityInner() {
               const isClosedTab = tab === 'closed' || tab === 'temp_closed' || tab === 'reported_closed'
               const archiveLabel = isClosedTab ? 'Confirm Closed' : 'Archive'
               const archiveReason = isClosedTab ? 'confirmed_closed' : 'admin_removed'
-              const dismissLabel = isClosedTab ? 'Still Open' : tab === 'reported_hours' ? 'Acknowledged' : 'Dismiss'
+              const dismissLabel = isClosedTab ? 'Still Open' : tab === 'reported_hours' ? 'Acknowledged' : tab === 'approx_location' ? 'Location is right' : 'Dismiss'
 
               return (
                 <div key={p.id} className={`bg-gray-800 rounded-xl p-4 ${selectedIds.has(p.id) ? 'ring-1 ring-emerald-600/50' : ''}`}>
@@ -905,6 +928,31 @@ function DataQualityInner() {
                           )}
                         </div>
                       )}
+                      {/* Approximate location: what we have + where to look */}
+                      {tab === 'approx_location' && (
+                        <div className="mt-1.5 space-y-1.5">
+                          <p className="text-[11px] text-gray-400">
+                            <span className="text-gray-500">{p.category}</span> · {p.address || 'no address'} · now at {Number(p.latitude).toFixed(4)}, {Number(p.longitude).toFixed(4)}
+                          </p>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <a href={`https://www.openstreetmap.org/search?query=${encodeURIComponent(`${p.name} ${p.city ?? ''}`)}`} target="_blank" rel="noopener noreferrer"
+                              className="text-[11px] text-blue-400 hover:underline">Find on OpenStreetMap</a>
+                            <a href={`https://duckduckgo.com/?q=${encodeURIComponent(`${p.name} ${p.city ?? ''} ${p.country ?? ''} address`)}`} target="_blank" rel="noopener noreferrer"
+                              className="text-[11px] text-blue-400 hover:underline">Web search</a>
+                            <input
+                              value={locInput[p.id] || ''}
+                              onChange={(e) => setLocInput(prev => ({ ...prev, [p.id]: e.target.value }))}
+                              onKeyDown={(e) => { if (e.key === 'Enter') handleSetLocation(p.id) }}
+                              placeholder="lat, lng"
+                              className="w-40 bg-gray-900 border border-gray-700 rounded px-2 py-1 text-[11px] text-gray-200"
+                            />
+                            <button onClick={() => handleSetLocation(p.id)} disabled={processing === p.id || !locInput[p.id]}
+                              className="px-2 py-1 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 rounded text-[11px] font-medium disabled:opacity-40">
+                              Save location
+                            </button>
+                          </div>
+                        </div>
+                      )}
                       {/* Hours preview for wrong-hours tab */}
                       {tab === 'reported_hours' && p.opening_hours && (
                         <div className="mt-1.5 text-[11px] text-gray-500 font-mono">
@@ -953,7 +1001,7 @@ function DataQualityInner() {
                         </Link>
                       )}
                       {/* Confirm Closed / Archive */}
-                      {!isVeganTab && (
+                      {!isVeganTab && tab !== 'approx_location' && (
                         <button onClick={() => handleArchive(p.id, archiveReason)}
                           disabled={processing === p.id}
                           className="flex items-center gap-1 px-2.5 py-1.5 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-xs font-medium disabled:opacity-50">

@@ -263,6 +263,9 @@ async function main() {
   // Geocode if coords missing.
   let latitude = input.latitude
   let longitude = input.longitude
+  // City-centre fallback: tagged so apps keep it out of "Near you" and it shows
+  // on /admin/data-quality → Approximate Location until real coordinates are set.
+  let approximateLocation = false
   let address = input.address
   if ((latitude == null || longitude == null) && (input.geocode_query || address || input.city)) {
     const q = input.geocode_query || address || `${input.name}, ${input.city}, ${input.country}`
@@ -277,9 +280,10 @@ async function main() {
       // Second attempt: city-only fallback.
       const cityGeo = await nominatim(`${input.city}, ${input.country}`, cc)
       if (cityGeo) {
-        console.log(`  ⚠ exact geocode missed — using city centroid for ${input.city}`)
+        console.log(`  ⚠ exact geocode missed — using city centroid for ${input.city} (tagged approximate_location)`)
         latitude = latitude ?? cityGeo.lat
         longitude = longitude ?? cityGeo.lng
+        approximateLocation = true
       } else {
         console.log(`  ✗ geocode failed for "${q}" and "${input.city}"`)
       }
@@ -328,7 +332,7 @@ async function main() {
   }
 
   const images = input.images && input.images.length ? input.images : (main_image_url ? [main_image_url] : [])
-  const tags = Array.from(new Set([...(input.tags || []), 'user_recommended']))
+  const tags = Array.from(new Set([...(input.tags || []), 'user_recommended', ...(approximateLocation ? ['approximate_location'] : [])]))
 
   const payload = {
     name: input.name,
