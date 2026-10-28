@@ -512,7 +512,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
                       alt={place.name}
                       category={place.category}
                       className="w-24 h-24 md:w-32 md:h-24 rounded-lg object-cover"
-                      optimize={{ width: 128, height: 96, sizes: '(min-width: 768px) 128px, 96px' }}
+                      sizes="(min-width: 768px) 128px, 96px"
                     />
                     {/* Overlay badges. Use *-700 shades for WCAG AA
                         contrast at 8px white text on coloured bg. */}

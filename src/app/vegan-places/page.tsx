@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import { MapPin, Globe, ArrowRight, TrendingUp } from 'lucide-react'
 import { getCountries } from '@/lib/directory-queries'
 import { createAdminClient } from '@/lib/supabase-admin'
@@ -169,12 +169,11 @@ export default async function VeganPlacesPage() {
                     className="group rounded-xl overflow-hidden ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5 bg-surface-container-lowest">
                     {img ? (
                       <div className="relative h-24 overflow-hidden">
-                        <Image
+                        <SmartImg
                           src={img}
                           alt={country.name}
                           fill
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
-                          quality={55}
                           className="object-cover group-hover:scale-105 transition-transform"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -226,13 +225,12 @@ export default async function VeganPlacesPage() {
                       <Link key={country.slug} href={`/vegan-places/${country.slug}`} prefetch={false}
                         className="group flex items-center gap-3 p-3 bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all hover:-translate-y-0.5">
                         {img ? (
-                          <Image
+                          <SmartImg
                             src={img}
                             alt={country.name}
                             width={56}
                             height={56}
                             sizes="56px"
-                            quality={55}
                             className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
                           />
                         ) : (

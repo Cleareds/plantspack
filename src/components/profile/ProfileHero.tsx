@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import Link from 'next/link'
 import { Ban, MapPin, Star, MessageSquare, Package, Users, UserPlus, Sparkles } from 'lucide-react'
 import TierBadge from '@/components/ui/TierBadge'
@@ -90,7 +90,7 @@ export default function ProfileHero({ user, mode, actions, callout, onStatClick 
         <div className="flex items-center space-x-4 min-w-0 flex-1">
           <div className="flex-shrink-0">
             {user.avatar_url ? (
-              <Image
+              <SmartImg
                 src={user.avatar_url}
                 alt={`${user.username}'s avatar`}
                 width={80}

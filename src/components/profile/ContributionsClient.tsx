@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import { supabase } from '@/lib/supabase'
 import { Loader2, ExternalLink, MapPin, Archive, RotateCcw, Star, MessageSquare, Package, AlertCircle, Wrench, Sparkles } from 'lucide-react'
 import BadgeChip, { BadgeCode } from './BadgeChip'
@@ -435,7 +435,7 @@ function ContribCard({ thumb, title, subtitle, meta, openHref, actions, dim, sta
     <div className={`bg-white rounded-lg border border-surface-container-high p-3 sm:p-4 flex gap-3 ${dim ? 'opacity-60' : ''}`}>
       <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-md overflow-hidden bg-surface-container-high flex items-center justify-center">
         {thumb ? (
-          <Image src={thumb} alt="" width={80} height={80} className="w-full h-full object-cover" />
+          <SmartImg src={thumb} alt="" width={80} height={80} className="w-full h-full object-cover" />
         ) : (
           <MapPin className="w-6 h-6 text-on-surface-variant" />
         )}

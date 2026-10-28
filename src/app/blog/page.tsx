@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import { createAdminClient } from '@/lib/supabase-admin'
 import { buildBreadcrumbs, HOME_CRUMB } from '@/lib/schema/breadcrumbs'
 import { loadCityImages } from '@/lib/city-images-server'
@@ -153,10 +153,8 @@ export default async function BlogIndex() {
                   </p>
                 </div>
                 {/* 2x2 collage of Mediterranean summer cities. Pulls from the
-                    1600x900 city heroes on Supabase. Routed through /_next/image
-                    so each tile downloads at retina-sharp size for the actual
-                    rendered footprint (~200-260px on desktop, doubled for 2x
-                    displays). Falls back to silk-gradient if any city image is
+                    1600x900 city heroes on Supabase; the srcSet picks a small
+                    pre-made WebP variant for the ~200-260px tiles. Falls back to silk-gradient if any city image is
                     missing. */}
                 {collage.length === 4 ? (
                   <div className="md:col-span-2 hidden md:grid grid-cols-2 gap-1 p-3">
@@ -165,12 +163,11 @@ export default async function BlogIndex() {
                         key={`${city}-${country}`}
                         className="relative aspect-square overflow-hidden rounded-lg"
                       >
-                        <Image
+                        <SmartImg
                           src={src!}
                           alt={`${city}, ${country}`}
                           fill
                           sizes="(min-width: 1024px) 260px, 200px"
-                          quality={82}
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>

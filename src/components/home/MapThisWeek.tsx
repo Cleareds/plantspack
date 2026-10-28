@@ -112,7 +112,7 @@ export default function MapThisWeek({ activity }: { activity: MapActivity }) {
                       alt={p.name}
                       category={p.category}
                       className="absolute inset-0 w-full h-full object-cover"
-                      optimize={{ width: 416, height: 520, sizes: "(min-width: 1024px) 18vw, 208px" }}
+                      sizes="(min-width: 1024px) 18vw, 208px"
                     />
                     {overlay && (
                       <span className={`absolute left-2.5 top-2.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ${overlay}`}>

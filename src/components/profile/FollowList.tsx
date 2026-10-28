@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import { Loader2, Users } from 'lucide-react'
 import FollowButton from '@/components/social/FollowButton'
 import TierBadge from '@/components/ui/TierBadge'
@@ -118,7 +118,7 @@ export default function FollowList({ username, direction }: FollowListProps) {
               <li key={u.id} className="flex items-center gap-3 p-4">
                 <Link href={`/profile/${u.username}`} className="flex-shrink-0">
                   {u.avatar_url ? (
-                    <Image
+                    <SmartImg
                       src={u.avatar_url}
                       alt={name}
                       width={44}

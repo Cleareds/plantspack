@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { Heart } from 'lucide-react'
-import Image from "next/image";
 import AppBadges from '@/components/app/AppBadges'
 import { BUSINESS_TOOLS_PUBLIC } from '@/lib/business/launch'
 
@@ -16,7 +15,7 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
                 <Link href="/" className="flex items-center">
-                    <Image
+                    <img
                         src="/plantspack.svg"
                         alt="PlantsPack"
                         width={2117}

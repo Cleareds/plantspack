@@ -16,7 +16,6 @@ import RatingBadge from '@/components/places/RatingBadge'
 import { useAuth } from "@/lib/auth"
 import { supabase } from '@/lib/supabase'
 // getGradeColor + getScoreBarColor are defined locally below.
-import Image from 'next/image'
 import PlaceImage from '@/components/places/PlaceImage'
 import SmartImg from '@/components/ui/SmartImg'
 import { syncLocationCookiesFromLocalStorage, clearPinnedLocationCookies } from '@/lib/location-cookies'
@@ -474,7 +473,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                   heroHref ? (
                     <Link href={heroHref} className="block relative h-32 overflow-hidden group" aria-label={`Explore vegan places in ${heroCity}`}>
                       {/* LCP element on home — must be discoverable + high priority. */}
-                      <Image
+                      <SmartImg
                         src={cityImageUrl}
                         alt={heroCity}
                         fill
@@ -487,7 +486,7 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                     </Link>
                   ) : (
                     <div className="relative h-32 overflow-hidden">
-                      <Image
+                      <SmartImg
                         src={cityImageUrl}
                         alt={heroCity}
                         fill
@@ -769,12 +768,11 @@ function HomeContent({ topCities, recentPosts, recentActivity, cityImages: serve
                         className="bg-surface-container-lowest rounded-xl ghost-border hover:border-primary/20 transition-all overflow-hidden">
                         {img && (
                           <div className="relative h-20 overflow-hidden">
-                            <Image
+                            <SmartImg
                               src={img}
                               alt={city.city}
                               fill
                               sizes="(max-width: 640px) 50vw, 200px"
-                              quality={50}
                               className="object-cover"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                             />
@@ -943,7 +941,7 @@ function PostRow({ post }: { post: CompactPost }) {
   return (
     <Link href={postUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
-        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} quality={55} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1 flex-wrap">
             {post.is_pinned && (
@@ -957,7 +955,7 @@ function PostRow({ post }: { post: CompactPost }) {
               </span>
             )}
             {u?.avatar_url ? (
-              <SmartImg src={u.avatar_url} alt="" width={16} height={16} quality={55} className="w-4 h-4 rounded-full object-cover" />
+              <SmartImg src={u.avatar_url} alt="" width={16} height={16} className="w-4 h-4 rounded-full object-cover" />
             ) : (
               <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
                 {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
@@ -995,14 +993,14 @@ function ReviewRow({ review }: { review: CompactReview }) {
   return (
     <Link href={placeUrl} prefetch={false} className="block p-2.5 bg-surface-container-lowest rounded-lg ghost-border border-l-2 border-l-amber-300/70 hover:border-primary/15 transition-all">
       <div className="flex gap-2.5">
-        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} quality={55} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
+        {thumb && <SmartImg src={thumb} alt="" width={56} height={56} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1 flex-wrap">
             <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-100 text-amber-700">
               <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" /> Review
             </span>
             {u?.avatar_url ? (
-              <SmartImg src={u.avatar_url} alt="" width={16} height={16} quality={55} className="w-4 h-4 rounded-full object-cover" />
+              <SmartImg src={u.avatar_url} alt="" width={16} height={16} className="w-4 h-4 rounded-full object-cover" />
             ) : (
               <div className="w-4 h-4 rounded-full bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-primary">
                 {(u?.first_name?.[0] || u?.username?.[0] || '?').toUpperCase()}
@@ -1073,24 +1071,15 @@ function GuestSignInBanner({ cityImages, topCities }: { cityImages: Record<strin
     >
       <div className="relative h-48 md:h-56 w-full">
         {heroImg ? (
-          // Reverted from plain <img> to next/image. The plain-img variant
-          // (intended to force fetchpriority=high on the LCP element) was
-          // shipping the full 1600px / ~700KB source image to displays as
-          // narrow as 701px. Next/image with `priority` emits the
-          // <link rel="preload"> in <head> which is what modern browsers
-          // actually use for LCP prioritisation - the missing img-level
-          // fetchpriority attribute matters only on legacy browsers that
-          // don't support preload. The win on byte-count (~700KB ->
-          // ~80-150KB via responsive srcset + WebP/AVIF negotiation) is
-          // worth the trade.
-          <Image
+          // LCP image: eager + fetchpriority=high, and sizes lets the
+          // browser take the 960 px WebP variant instead of the 1600 px
+          // original (~700 KB) on narrow screens.
+          <SmartImg
             src={heroImg}
             alt={`Vegan places in ${pick.city}, ${pick.country}`}
             fill
             priority
-            fetchPriority="high"
             sizes="(max-width: 768px) 100vw, 960px"
-            quality={60}
             className="object-cover"
           />
         ) : (

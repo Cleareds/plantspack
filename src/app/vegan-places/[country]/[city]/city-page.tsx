@@ -937,8 +937,8 @@ export async function renderCityPage(country: string, city: string, isFullyVegan
             <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
               {auditPost.image_url && (
                 <div className="md:w-1/3 aspect-[16/9] md:aspect-auto overflow-hidden bg-surface-container-low">
-                  {/* Through next/image: the raw collage was 322 KB for a 1/3-width box. */}
-                  <SmartImg src={auditPost.image_url} alt="" width={640} height={360} sizes="(min-width: 768px) 33vw, 100vw" quality={60} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
+                  {/* The raw collage was 322 KB for a 1/3-width box; sizes picks a small variant. */}
+                  <SmartImg src={auditPost.image_url} alt="" width={640} height={360} sizes="(min-width: 768px) 33vw, 100vw" className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform" />
                 </div>
               )}
               <div className="flex-1 p-5 md:p-6">

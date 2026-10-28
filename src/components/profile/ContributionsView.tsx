@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import { supabase } from '@/lib/supabase'
 import { Loader2, ExternalLink, MapPin, AlertCircle, TrendingUp } from 'lucide-react'
 
@@ -176,7 +176,7 @@ export default function ContributionsView({ username, type }: Props) {
             <div key={r.key} className="bg-white rounded-lg border border-surface-container-high p-3 sm:p-4 flex gap-3">
               <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-md overflow-hidden bg-surface-container-high flex items-center justify-center">
                 {r.thumb ? (
-                  <Image src={r.thumb} alt="" width={80} height={80} className="w-full h-full object-cover" />
+                  <SmartImg src={r.thumb} alt="" width={80} height={80} className="w-full h-full object-cover" />
                 ) : (
                   <MapPin className="w-6 h-6 text-on-surface-variant" />
                 )}

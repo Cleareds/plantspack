@@ -654,7 +654,6 @@ export default async function Home() {
                         width={320}
                         height={320}
                         sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 180px"
-                        quality={60}
                         className="w-full h-full object-cover"
                       />
                     </div>

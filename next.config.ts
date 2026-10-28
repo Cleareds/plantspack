@@ -22,77 +22,12 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
 
-  // Configure remote image domains for Next.js Image component
+  // Vercel image optimisation is OFF: it billed per transformation and per
+  // cache write (+664% in Oct 2026) for images we can resize once for free.
+  // Use SmartImg / PlaceImage (plain <img> + srcSet of pre-made WebP variants,
+  // see src/lib/image-variants.ts). Never import next/image.
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '*.supabase.co',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.googleusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.googleapis.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'commons.wikimedia.org',
-      },
-      {
-        protocol: 'https',
-        hostname: 'upload.wikimedia.org',
-      },
-      {
-        protocol: 'https',
-        hostname: 'graph.facebook.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'platform-lookaside.fbsbx.com',
-      },
-      // Common CDNs hosting place imagery scraped from restaurant/hotel websites.
-      // Without these entries Next/Image can't optimize → we serve raw bytes
-      // (no WebP, no resize, no lazy-hints) which hurts place-page LCP.
-      { protocol: 'https', hostname: '**.wp.com' },
-      { protocol: 'https', hostname: '**.cloudfront.net' },
-      { protocol: 'https', hostname: '**.wixstatic.com' },
-      { protocol: 'https', hostname: '**.squarespace-cdn.com' },
-      { protocol: 'https', hostname: '**.shopifycdn.com' },
-      { protocol: 'https', hostname: '**.unsplash.com' },
-      // Audit 2026-05-13 of remaining external place images: ~170
-      // place rows still hosted on these CDNs (Facebook/Instagram
-      // user-content + Cloudinary). Adding them to remotePatterns
-      // lets Next/Image optimise + WebP/AVIF the responses instead
-      // of falling back to raw <img>.
-      { protocol: 'https', hostname: '**.fbcdn.net' },
-      { protocol: 'https', hostname: '**.cdninstagram.com' },
-      { protocol: 'https', hostname: '**.cloudinary.com' },
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
-    ],
-    // Use AVIF + WebP where the browser supports it. Roughly halves image
-    // bytes vs raw JPEG for typical restaurant hero photos.
-    formats: ['image/avif', 'image/webp'],
-    // Cache optimized variants in Vercel's image CDN for 1 year. The
-    // source URLs already include cache-busting `?v=<id>` tokens whenever
-    // we rotate an image, so immutable + 1y is safe.
-    minimumCacheTTL: 31536000,
-    // Narrow the breakpoints Next/Image generates for srcset. Default
-    // emits 8 device sizes × 8 image sizes = a lot of variants. Our LCP
-    // hero (city banner) and below-fold tiles only need a handful.
-    deviceSizes: [360, 640, 750, 1080, 1280, 1920],
-    imageSizes: [32, 48, 64, 96, 128, 168, 256, 384],
-    // Next 16 requires non-default quality values to be allow-listed,
-    // otherwise <Image quality={n}/> silently falls back to 75. Listing
-    // the lower tiers we use for tiles/heroes so the Lighthouse
-    // "Increase compression" audits actually take effect.
-    qualities: [50, 55, 60, 65, 75],
+    unoptimized: true,
   },
 
   // Exclude mobileapp folder from Next.js compilation

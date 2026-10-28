@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useAuth } from '@/lib/auth'
@@ -26,7 +25,7 @@ export default function Sidebar() {
     <aside className="hidden lg:flex flex-col p-6 gap-4 h-screen w-64 bg-surface fixed left-0 top-0 z-40 font-body">
       {/* Logo */}
       <Link href="/" className="flex items-center mb-3">
-        <Image
+        <img
           src="/plantspack.svg"
           alt="PlantsPack"
           width={2117}

@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useAuth } from '@/lib/auth'
 import SearchBar from '@/components/search/SearchBar'
 import VeganToggle from '@/components/ui/VeganToggle'
@@ -36,7 +35,7 @@ export default function TopBar() {
       <div className="flex justify-between items-center px-4 md:px-8 h-16">
         {/* Mobile logo (shown only on mobile where sidebar is hidden) */}
         <Link href="/" className="flex items-center shrink-0 lg:hidden">
-          <Image
+          <img
             src="/plantspack.svg"
             alt="PlantsPack"
             width={2117}

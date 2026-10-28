@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import Image from 'next/image'
+import SmartImg from '@/components/ui/SmartImg'
 import {
   Search,
   Trash2,
@@ -205,7 +205,7 @@ export default function CommentsManagement() {
                 {/* User Avatar */}
                 <div className="flex-shrink-0">
                   {comment.users?.avatar_url ? (
-                    <Image
+                    <SmartImg
                       src={comment.users.avatar_url}
                       alt={comment.users.username}
                       width={40}

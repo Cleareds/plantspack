@@ -1,84 +1,46 @@
 'use client'
 
-import Image from 'next/image'
+import { useState } from 'react'
+import { variantSrcSet } from '@/lib/image-variants'
 
 interface SmartImgProps {
   src: string
   alt: string
-  width: number
-  height: number
+  width?: number
+  height?: number
   className?: string
+  style?: React.CSSProperties
+  /** LCP image: eager + fetchpriority=high. */
   priority?: boolean
+  /** Rendered width, so the browser picks the smallest variant from srcSet. */
   sizes?: string
-  quality?: number
-  unoptimizedHosts?: string[]
+  /** Absolutely fill the (relative) parent, like next/image `fill`. */
+  fill?: boolean
+  /** Called once the original also failed to load. */
+  onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void
 }
 
-// Allowlisted hosts mirror next.config.ts -> images.remotePatterns. If the URL
-// is on one of these, render with next/image so Vercel produces resized +
-// AVIF/WebP variants. Otherwise fall back to a raw <img> so we don't trigger
-// the Next/Image error for missing remotePatterns (and don't pay to optimize
-// a one-off CDN we don't control).
-const ALLOWLISTED_HOSTS = [
-  /\.supabase\.co$/,
-  /^(.+\.)?googleusercontent\.com$/,
-  /^(.+\.)?wikimedia\.org$/,
-  /\.wp\.com$/,
-  /\.cloudfront\.net$/,
-  /\.wixstatic\.com$/,
-  /\.squarespace-cdn\.com$/,
-  /\.shopifycdn\.com$/,
-  /\.unsplash\.com$/,
-]
-
-export function isOptimizable(src: string): boolean {
-  try {
-    const u = new URL(src)
-    return ALLOWLISTED_HOSTS.some((re) => re.test(u.hostname))
-  } catch {
-    return false
-  }
-}
-
-// Use only on the homepage. We don't want a global rollout of next/image
-// because (a) Vercel image-optimization billing tracks source images, and
-// (b) below-the-fold place page images are already lazy + small in practice.
-export default function SmartImg({
-  src,
-  alt,
-  width,
-  height,
-  className,
-  priority,
-  sizes,
-  quality,
-}: SmartImgProps) {
-  if (isOptimizable(src)) {
-    return (
-      <Image
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className={className}
-        priority={priority}
-        sizes={sizes}
-        quality={quality}
-        loading={priority ? 'eager' : 'lazy'}
-      />
-    )
-  }
-  // Raw fallback for external CDNs that aren't in remotePatterns.
-  // eslint-disable-next-line @next/next/no-img-element
+// Plain <img>, never next/image: Vercel image optimisation is off (it billed
+// per transformation). Our own Storage images get a srcSet of pre-made WebP
+// variants; if a variant is missing the browser falls back to the original.
+export default function SmartImg({ src, alt, width, height, className, style, priority, sizes, fill, onError }: SmartImgProps) {
+  const [variantsFailed, setVariantsFailed] = useState(false)
+  const srcSet = variantsFailed ? null : variantSrcSet(src)
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
+      srcSet={srcSet ?? undefined}
+      sizes={srcSet ? (sizes ?? (width ? `${width}px` : undefined)) : undefined}
       alt={alt}
       width={width}
       height={height}
-      className={className}
+      className={fill ? `absolute inset-0 w-full h-full ${className || ''}` : className}
+      style={style}
       loading={priority ? 'eager' : 'lazy'}
+      fetchPriority={priority ? 'high' : undefined}
       decoding="async"
+      onError={(e) => (srcSet ? setVariantsFailed(true) : onError?.(e))}
     />
   )
 }
