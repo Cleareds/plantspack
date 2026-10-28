@@ -29,6 +29,11 @@ function fromSlugDisplay(slug: string): string {
  *   avoid runaway dumps for the very largest countries (US, India).
  * - 5-minute s-maxage / 1-hour SWR is appropriate since this is a
  *   read-mostly snapshot of public data.
+ *
+ * Admin extras (not public): ?include=archived,drafts adds archived places
+ * (`archived_places`) and research drafts from place_staging with
+ * raw.draft=true (`drafts`). Needs `Authorization: Bearer <CRON_SECRET>` or
+ * `?key=<CRON_SECRET>`; the response is then never cached.
  */
 
 const CACHE_HEADERS = {
@@ -50,14 +55,56 @@ const PLACE_COLUMNS = [
   'created_at', 'updated_at',
 ].join(', ')
 
+const ARCHIVED_EXTRA_COLUMNS = ', archived_at, archived_reason, verification_method, source'
+
+const DRAFT_COLUMNS = [
+  'id', 'source', 'source_id', 'name',
+  'latitude', 'longitude', 'city', 'country', 'address',
+  'website', 'categories', 'vegan_level', 'vegan_evidence',
+  'decision', 'decision_reason', 'raw', 'created_at',
+].join(', ')
+
+const HARD_CAP = 5000
+
+// Pages through Supabase's 1000-row cap up to HARD_CAP rows.
+async function fetchAll(
+  query: (from: number, to: number) => PromiseLike<{ data: any[] | null; error: unknown }>,
+): Promise<any[]> {
+  const rows: any[] = []
+  let from = 0
+  while (rows.length < HARD_CAP) {
+    const pageSize = Math.min(1000, HARD_CAP - rows.length)
+    const { data, error } = await query(from, from + pageSize - 1)
+    if (error) throw error
+    if (!data || data.length === 0) break
+    rows.push(...data)
+    if (data.length < pageSize) break
+    from += pageSize
+  }
+  return rows
+}
+
 interface RouteParams {
   params: Promise<{ country: string }>
 }
 
-export async function GET(_req: NextRequest, { params }: RouteParams) {
+export async function GET(req: NextRequest, { params }: RouteParams) {
   const { country } = await params
   if (!country) {
     return NextResponse.json({ error: 'Missing country slug' }, { status: 400 })
+  }
+
+  const include = new Set(
+    (req.nextUrl.searchParams.get('include') || '').split(',').map(s => s.trim()).filter(Boolean),
+  )
+  const isAdminExport = include.size > 0
+  if (isAdminExport) {
+    const secret = process.env.CRON_SECRET
+    const key = req.nextUrl.searchParams.get('key')
+      || req.headers.get('authorization')?.replace(/^Bearer /, '')
+    if (!secret || key !== secret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
   }
 
   try {
@@ -69,27 +116,35 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
       getRegionsForCountry(country),
     ])
 
-    // Country-level place list. Same loop used by /api/places/directory
+    // Country-level place list. Same paging as /api/places/directory
     // so behaviour stays identical (1000-row Supabase cap, 5k hard cap).
-    const HARD_CAP = 5000
-    const places: any[] = []
-    let from = 0
-    while (places.length < HARD_CAP) {
-      const remaining = HARD_CAP - places.length
-      const pageSize = Math.min(1000, remaining)
-      const { data, error } = await supabase
+    const places = await fetchAll((from, to) => supabase
+      .from('places')
+      .select(PLACE_COLUMNS)
+      .is('archived_at', null)
+      .ilike('country', fromSlug(country))
+      .order('name', { ascending: true })
+      .range(from, to))
+
+    const archivedPlaces = include.has('archived')
+      ? await fetchAll((from, to) => supabase
         .from('places')
-        .select(PLACE_COLUMNS)
-        .is('archived_at', null)
+        .select(PLACE_COLUMNS + ARCHIVED_EXTRA_COLUMNS)
+        .not('archived_at', 'is', null)
         .ilike('country', fromSlug(country))
         .order('name', { ascending: true })
-        .range(from, from + pageSize - 1)
-      if (error) throw error
-      if (!data || data.length === 0) break
-      places.push(...data)
-      if (data.length < pageSize) break
-      from += pageSize
-    }
+        .range(from, to))
+      : null
+
+    const drafts = include.has('drafts')
+      ? await fetchAll((from, to) => supabase
+        .from('place_staging')
+        .select(DRAFT_COLUMNS)
+        .eq('raw->>draft', 'true')
+        .ilike('country', fromSlug(country))
+        .order('name', { ascending: true })
+        .range(from, to))
+      : null
 
     const dbCountry = places[0]?.country || countryName || fromSlugDisplay(country)
 
@@ -108,13 +163,20 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
         places: places.length,
         cities: cities.length,
         regions: regions.length,
+        ...(archivedPlaces && { archived_places: archivedPlaces.length }),
+        ...(drafts && { drafts: drafts.length }),
       },
       cities,
       regions,
       places,
+      ...(archivedPlaces && { archived_places: archivedPlaces }),
+      ...(drafts && { drafts }),
     }
 
-    return new NextResponse(JSON.stringify(body), { headers: CACHE_HEADERS })
+    const headers = isAdminExport
+      ? { ...CACHE_HEADERS, 'Cache-Control': 'private, no-store' }
+      : CACHE_HEADERS
+    return new NextResponse(JSON.stringify(body), { headers })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Export failed'
     return NextResponse.json({ error: message }, { status: 500 })
