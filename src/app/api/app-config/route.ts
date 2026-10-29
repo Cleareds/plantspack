@@ -23,5 +23,9 @@ export async function GET() {
     // Business-owner features (menus, owner tools, deals) for everyone.
     // Follows the web launch switch; admins see them in the app regardless.
     businessTools: BUSINESS_TOOLS_PUBLIC,
+    // Offline map-tile downloads for saved cities. OpenFreeMap allows offline
+    // downloads of at most 3,000 tiles / 50 MB with 4 parallel requests;
+    // MapLibre's downloader uses 20. Keep false until OpenFreeMap agrees.
+    offlineMapTiles: false,
   })
 }

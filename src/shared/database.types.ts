@@ -5278,6 +5278,35 @@ export type Database = {
         Returns: undefined
       }
       longtransactionsenabled: { Args: never; Returns: boolean }
+      map_places: {
+        Args: {
+          p_category?: string
+          p_cuisine?: string
+          p_limit?: number
+          p_max_lat: number
+          p_max_lng: number
+          p_min_lat: number
+          p_min_lng: number
+          p_pet_friendly?: boolean
+          p_subcategory?: string
+          p_vegan_only?: boolean
+        }
+        Returns: {
+          average_rating: number
+          category: string
+          city: string
+          country: string
+          id: string
+          latitude: number
+          longitude: number
+          main_image_url: string
+          name: string
+          opening_hours: Json
+          slug: string
+          tags: string[]
+          vegan_level: string
+        }[]
+      }
       my_hidden_user_ids: { Args: never; Returns: string[] }
       my_terms_accepted_at: { Args: never; Returns: string }
       nearby_cities: {
