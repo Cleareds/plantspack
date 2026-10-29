@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Suspense } from 'react'
-import { CheckCircle, ExternalLink, Loader2, Search, SkipForward, XOctagon, Leaf, FlaskConical, Flag, Globe, Clock, AlertTriangle, RefreshCw } from 'lucide-react'
+import { CheckCircle, PauseCircle, ExternalLink, Loader2, Search, SkipForward, XOctagon, Leaf, FlaskConical, Flag, Globe, Clock, AlertTriangle, RefreshCw } from 'lucide-react'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
 /**
@@ -13,6 +13,7 @@ import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
  *   1  Confirm 100% vegan   (verification_level 3, admin_review, is_verified)
  *   2  Mostly vegan         3  Vegan-friendly        (vegan_level changes)
  *   4  Closed               (archive, reason confirmed_closed)
+ *   5  Temporarily closed   (business_status, public banner; optional reopen date)
  *   S  Skip                 N  Fetch the website evidence again
  * Any decision resolves the place's open research rows. is_verified is set
  * only here, by a human click: nothing in this page runs unattended.
@@ -37,7 +38,7 @@ interface Evidence {
 }
 
 type Mode = 'fv' | 'research'
-type Decision = 'confirm' | 'mostly_vegan' | 'vegan_friendly' | 'closed' | 'skip'
+type Decision = 'confirm' | 'mostly_vegan' | 'vegan_friendly' | 'closed' | 'temp_closed' | 'skip'
 
 const LEVEL_CLASS: Record<string, string> = {
   fully_vegan: 'bg-emerald-900/50 text-emerald-300',
@@ -130,11 +131,17 @@ function VerifyPageInner() {
         const res = await fetch(`/api/admin/places/${p.id}/verify`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
         if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `verify ${res.status}`)
       } else if (decision === 'mostly_vegan' || decision === 'vegan_friendly') {
-        const res = await fetch(`/api/places/${p.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vegan_level: decision }) })
+        // The route only exports PUT; PATCH answered 405.
+        const res = await fetch(`/api/places/${p.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vegan_level: decision }) })
         if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `update ${res.status}`)
       } else if (decision === 'closed') {
         const res = await fetch('/api/admin/data-quality', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ placeId: p.id, reason: 'confirmed_closed' }) })
         if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `archive ${res.status}`)
+      } else if (decision === 'temp_closed') {
+        const reopen = prompt('Expected reopen date (YYYY-MM-DD), or leave empty if unknown:', '')
+        if (reopen === null) return
+        const res = await fetch(`/api/places/${p.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ business_status: 'temporarily_closed', reopen_date: reopen.trim() || null }) })
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `update ${res.status}`)
       }
       if (decision !== 'skip' && p.research.length) await resolveResearch(p)
       if (decision === 'skip') skipped.current.push(p.id)
@@ -159,6 +166,7 @@ function VerifyPageInner() {
       else if (k === '2') decide('mostly_vegan')
       else if (k === '3') decide('vegan_friendly')
       else if (k === '4') decide('closed')
+      else if (k === '5') decide('temp_closed')
       else if (k === 's') decide('skip')
       else if (k === 'n' && current) fetchEvidence(current.id, true)
       else return
@@ -322,9 +330,10 @@ function VerifyPageInner() {
               <button onClick={() => decide('mostly_vegan')} disabled={busy} className="px-3 py-2 bg-teal-700/60 hover:bg-teal-700 text-white rounded-lg text-sm font-medium disabled:opacity-50">2 · Mostly vegan</button>
               <button onClick={() => decide('vegan_friendly')} disabled={busy} className="px-3 py-2 bg-stone-600 hover:bg-stone-500 text-white rounded-lg text-sm font-medium disabled:opacity-50">3 · Vegan-friendly</button>
               <button onClick={() => decide('closed')} disabled={busy} className="flex items-center gap-1.5 px-3 py-2 bg-red-600/30 hover:bg-red-600/50 text-red-200 rounded-lg text-sm font-medium disabled:opacity-50"><XOctagon className="h-4 w-4" /> 4 · Closed</button>
+              <button onClick={() => decide('temp_closed')} disabled={busy} className="flex items-center gap-1.5 px-3 py-2 bg-amber-600/30 hover:bg-amber-600/50 text-amber-200 rounded-lg text-sm font-medium disabled:opacity-50"><PauseCircle className="h-4 w-4" /> 5 · Temp closed</button>
               <button onClick={() => decide('skip')} disabled={busy} className="flex items-center gap-1.5 px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg text-sm font-medium disabled:opacity-50 ml-auto"><SkipForward className="h-4 w-4" /> S · Skip</button>
             </div>
-            <p className="text-[11px] text-gray-500">Confirm = you checked the venue&apos;s own site or a vegan-first source. 2 and 3 change the public label at once. Closed archives the row (never deletes). Every decision closes the open research rows for this place.</p>
+            <p className="text-[11px] text-gray-500">Confirm = you checked the venue&apos;s own site or a vegan-first source. 2 and 3 change the public label at once. Closed archives the row (never deletes). Temp closed keeps it live with a public &quot;Temporarily closed&quot; banner. Every decision closes the open research rows for this place.</p>
           </div>
         </div>
       )}

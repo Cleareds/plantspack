@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, X, RotateCcw, Loader2, MapPin, Search, ExternalLink, Trash2, XOctagon } from 'lucide-react'
+import { Check, X, RotateCcw, Loader2, MapPin, Search, ExternalLink, Trash2, XOctagon, PauseCircle, PlayCircle } from 'lucide-react'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
 
 export interface DataQualityRowProps {
@@ -31,6 +31,8 @@ export interface DataQualityRowProps {
     last_verified_at: string | null
     source: string | null
     admin_notes: string | null
+    business_status?: string | null
+    reopen_date?: string | null
   }
   /**
    * Set when the city label is an admin unit. A name = one-click rename
@@ -104,6 +106,8 @@ export default function DataQualityRow({ place, citySuggestion }: DataQualityRow
   const [subcategory, setSubcategory] = useState(place.subcategory || '')
   const [busy, setBusy] = useState<string | null>(null)
   const [archived, setArchived] = useState(false)
+  const [tempClosed, setTempClosed] = useState(place.business_status === 'temporarily_closed')
+  const [reopenDate, setReopenDate] = useState(place.reopen_date || null)
   const [err, setErr] = useState<string | null>(null)
 
   const hasImage = !!(place.main_image_url || (place.images && place.images.length > 0))
@@ -149,6 +153,25 @@ export default function DataQualityRow({ place, citySuggestion }: DataQualityRow
     setBusy('notes')
     try { await postJson(`/api/admin/places/${place.id}/notes`, { admin_notes: notes }); setSavedNotes(notes) }
     catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
+  }
+  // Temporarily closed keeps the place live with a public banner (war damage,
+  // moving, renovation). Goes through the normal place PUT, which revalidates.
+  const setBusinessStatus = async (status: 'temporarily_closed' | 'open') => {
+    let reopen: string | null = null
+    if (status === 'temporarily_closed') {
+      const answer = prompt('Expected reopen date (YYYY-MM-DD), or leave empty if unknown:', '')
+      if (answer === null) return
+      reopen = answer.trim() || null
+    }
+    setBusy('status'); setErr(null)
+    try {
+      const res = await fetch(`/api/places/${place.id}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ business_status: status, reopen_date: reopen }),
+      })
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || `${res.status}`)
+      setTempClosed(status === 'temporarily_closed'); setReopenDate(reopen)
+    } catch (e: any) { setErr(e?.message || 'failed') } finally { setBusy(null) }
   }
   const onArchive = async () => {
     if (!confirm(`Archive "${place.name}" as permanently closed?`)) return
@@ -383,6 +406,20 @@ export default function DataQualityRow({ place, citySuggestion }: DataQualityRow
           ) : (
             <button onClick={onConfirm} disabled={busy === 'verify'} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary text-on-primary-btn text-[11px] font-medium hover:opacity-90 disabled:opacity-50">
               {busy === 'verify' ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />} Confirm
+            </button>
+          )}
+          {tempClosed ? (
+            <div className="flex items-center gap-1">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-100 text-amber-800 text-[11px] font-medium" title={reopenDate ? `reopens ${reopenDate}` : 'reopen date unknown'}>
+                <PauseCircle className="h-3 w-3" /> Temp closed
+              </span>
+              <button onClick={() => setBusinessStatus('open')} disabled={busy === 'status'} title="Reopened" className="text-stone-500 hover:text-emerald-700 px-1">
+                {busy === 'status' ? <Loader2 className="h-3 w-3 animate-spin" /> : <PlayCircle className="h-3 w-3" />}
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => setBusinessStatus('temporarily_closed')} disabled={busy === 'status'} title="Still listed, with a public 'Temporarily closed' banner" className="inline-flex items-center gap-1 px-2 py-1 rounded text-amber-800 hover:bg-amber-50 text-[11px]">
+              {busy === 'status' ? <Loader2 className="h-3 w-3 animate-spin" /> : <PauseCircle className="h-3 w-3" />} Temp closed
             </button>
           )}
           <button onClick={onArchive} disabled={busy === 'archive'} title="Mark as permanently closed" className="inline-flex items-center gap-1 px-2 py-1 rounded text-red-700 hover:bg-red-50 text-[11px]">

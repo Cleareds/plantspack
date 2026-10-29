@@ -45,6 +45,8 @@ interface PlaceRow {
   last_verified_at: string | null
   source: string | null
   admin_notes: string | null
+  business_status: string | null
+  reopen_date: string | null
 }
 
 const veganOrderDesc = (a: string | null, b: string | null) => veganLevelOrder(b) - veganLevelOrder(a)
@@ -74,7 +76,7 @@ export default async function CountryDataQuality({ params, searchParams }: PageP
   // 12K live rows; the old single .limit(3000) read silently showed 1000.
   let places: PlaceRow[] = []
   let migrationMissing = false
-  const cols = 'id, slug, name, city, country, vegan_level, category, subcategory, website, phone, address, description, main_image_url, images, opening_hours, review_count, average_rating, latitude, longitude, verification_level, verification_method, verification_status, last_verified_at, source'
+  const cols = 'id, slug, name, city, country, vegan_level, category, subcategory, website, phone, address, description, main_image_url, images, opening_hours, review_count, average_rating, latitude, longitude, verification_level, verification_method, verification_status, last_verified_at, source, business_status, reopen_date'
   const fetchAll = async (select: string) => {
     const out: any[] = []
     let lastId: string | null = null
