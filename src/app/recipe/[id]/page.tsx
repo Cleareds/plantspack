@@ -230,7 +230,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
             {/* Save, Add to Pack, Share */}
             <div className="mb-4">
-              <RecipeActions postId={post.id} />
+              <RecipeActions postId={post.id} sharePath={`/recipe/${post.slug || post.id}`} shareTitle={post.title} />
             </div>
 
             {recipe && (

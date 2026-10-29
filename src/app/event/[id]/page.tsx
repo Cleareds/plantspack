@@ -2,6 +2,9 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Ticket, ExternalLink } from 'lucide-react'
+import ShareMenu from '@/components/social/ShareMenu'
+
+const EVENT_SHARE_CLASS = 'inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors'
 import ImageSlider from '@/components/ui/ImageSlider'
 import InlineComments from '@/components/posts/InlineComments'
 import EventResponseButtons from '@/components/events/EventResponseButtons'
@@ -330,9 +333,9 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
               </div>
             )}
 
-            {/* Ticket CTA */}
-            {event?.ticket_url && (
-              <div className="mb-6">
+            {/* Ticket CTA + Share */}
+            {event?.ticket_url ? (
+              <div className="mb-6 flex flex-wrap items-center gap-3">
                 <a
                   href={event.ticket_url}
                   target="_blank"
@@ -342,6 +345,11 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                   <Ticket className="h-4 w-4" />
                   Get Tickets
                 </a>
+                <ShareMenu path={`/event/${post.id}`} text={post.title || 'Vegan event'} kind="event" placement="down" labelClassName="" className={EVENT_SHARE_CLASS} />
+              </div>
+            ) : (
+              <div className="mb-6">
+                <ShareMenu path={`/event/${post.id}`} text={post.title || 'Vegan event'} kind="event" placement="down" labelClassName="" className={EVENT_SHARE_CLASS} />
               </div>
             )}
 

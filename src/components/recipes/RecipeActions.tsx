@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Heart, FolderPlus, Share2, Check } from 'lucide-react'
+import { Heart, FolderPlus, Check } from 'lucide-react'
+import ShareMenu from '@/components/social/ShareMenu'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
@@ -12,7 +13,7 @@ interface Pack {
   already_added: boolean
 }
 
-export default function RecipeActions({ postId }: { postId: string }) {
+export default function RecipeActions({ postId, sharePath, shareTitle }: { postId: string; sharePath: string; shareTitle?: string | null }) {
   const { user } = useAuth()
   const [isSaved, setIsSaved] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
@@ -20,7 +21,6 @@ export default function RecipeActions({ postId }: { postId: string }) {
   const [packs, setPacks] = useState<Pack[]>([])
   const [packsLoading, setPacksLoading] = useState(false)
   const [addingTo, setAddingTo] = useState<string | null>(null)
-  const [copied, setCopied] = useState(false)
 
   // Check if user has saved this recipe
   useEffect(() => {
@@ -99,12 +99,6 @@ export default function RecipeActions({ postId }: { postId: string }) {
     setAddingTo(null)
   }
 
-  const shareRecipe = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
   return (
     <div className="flex items-center gap-2">
       {/* Save / Favorite */}
@@ -133,14 +127,15 @@ export default function RecipeActions({ postId }: { postId: string }) {
         </button>
       )}
 
-      {/* Share */}
-      <button
-        onClick={shareRecipe}
+      {/* Share: same menu as posts, places and events */}
+      <ShareMenu
+        path={sharePath}
+        text={shareTitle || 'Vegan recipe'}
+        kind="recipe"
+        placement="down"
+        labelClassName=""
         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors"
-      >
-        {copied ? <Check className="h-4 w-4 text-primary" /> : <Share2 className="h-4 w-4" />}
-        {copied ? 'Copied!' : 'Share'}
-      </button>
+      />
 
       {/* Pack Modal */}
       {showPackModal && (

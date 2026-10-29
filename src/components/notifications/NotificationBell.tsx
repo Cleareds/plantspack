@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
-import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2, MapPin, CheckCircle, Store } from 'lucide-react'
+import { Bell, Check, Heart, MessageCircle, UserPlus, AtSign, Loader2, MapPin, CheckCircle, Store, Repeat2 } from 'lucide-react'
 import type { Notification } from '@/types/notifications'
 import { webHrefForNotificationUrl } from '@/lib/notifications/link'
 import Link from 'next/link'
@@ -130,6 +130,8 @@ export default function NotificationBell() {
         return <UserPlus className="h-4 w-4 text-primary" />
       case 'mention':
         return <AtSign className="h-4 w-4 text-purple-500" />
+      case 'repost':
+        return <Repeat2 className="h-4 w-4 text-primary" />
       case 'submission_approved':
       case 'correction_approved':
       case 'report_reviewed':
@@ -264,6 +266,7 @@ export default function NotificationBell() {
                              notification.type === 'comment' ? 'commented on your post' :
                              notification.type === 'follow' ? 'started following you' :
                              notification.type === 'mention' ? 'mentioned you' :
+                             notification.type === 'repost' ? 'reposted your post' :
                              notification.type === 'reply' ? 'replied to your comment' : '')}
                         </p>
                         <p className="text-xs text-outline mt-1">

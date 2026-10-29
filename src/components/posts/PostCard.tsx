@@ -3,12 +3,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
-import { MessageCircle, Share, MoreHorizontal, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin, Star, Clock, ChefHat, Users, Ticket, Calendar } from 'lucide-react'
+import { MessageCircle, MoreHorizontal, Repeat2, Edit, Trash2, ExternalLink, Package, MapPin, Star, Clock, ChefHat, Users, Ticket, Calendar } from 'lucide-react'
 import { Tables } from '@/lib/supabase'
 import { formatDistanceToNow } from 'date-fns'
 import FollowButton from '../social/FollowButton'
 import Comments from './Comments'
-import SharePost from './SharePost'
+import RepostButton from '../social/RepostButton'
+import ShareMenu from '../social/ShareMenu'
+import { shareText } from '@/lib/share'
 import EditPost from './EditPost'
 import ImageSlider from '../ui/ImageSlider'
 import VideoPlayer from '../ui/VideoPlayer'
@@ -31,6 +33,14 @@ function getPostUrl(post: { id: string; slug?: string | null }) {
   return `/post/${post.slug || post.id}`
 }
 
+// The page a shared link opens: same mapping as the apps' postWebUrl.
+function sharePath(post: { id: string; slug?: string | null; category?: string | null }) {
+  if (post.category === 'recipe') return `/recipe/${post.slug || post.id}`
+  if (post.category === 'event') return `/event/${post.id}`
+  if (post.category === 'article' && post.slug) return `/blog/${post.slug}`
+  return getPostUrl(post)
+}
+
 const CATEGORY_CONFIG: Record<string, { icon: string; label: string; color: string }> = {
   recipe: { icon: 'restaurant_menu', label: 'Recipe', color: 'bg-primary/10 text-primary' },
   place: { icon: 'location_on', label: 'Place', color: 'bg-secondary/10 text-secondary' },
@@ -50,6 +60,9 @@ type Post = Tables<'posts'> & {
   }
   post_likes: { id: string; user_id: string }[]
   comments: { id: string }[]
+  post_reposts?: { user_id: string }[]
+  // Set by /api/feed/unified when the row is in the feed because of a repost.
+  _reposted_by?: { username: string; first_name: string | null; last_name: string | null } | null
   parent_post?: (Tables<'posts'> & {
     users: Tables<'users'> & {
       subscription_tier?: 'free' | 'medium' | 'premium'
@@ -92,7 +105,6 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
   const commentCount = post.comments?.length || 0
   const [loading, setLoading] = useState(false)
   const [showComments, setShowComments] = useState(false)
-  const [showShare, setShowShare] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -188,15 +200,6 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
     setShowComments(true)
   }
 
-  const handleShare = () => {
-    if (!user) {
-      setSignUpAction('share')
-      setShowSignUpModal(true)
-      return
-    }
-    setShowShare(true)
-  }
-
   const handleDelete = async () => {
     const success = await deletePost(post.id)
     if (success) {
@@ -265,7 +268,24 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
 
   return (
     <div className="bg-surface-container-lowest rounded-2xl editorial-shadow p-4">
-      {/* Repost indicator */}
+      {/* Reposted into the feed (post_reposts) */}
+      {post._reposted_by && (
+        <div className="flex items-center space-x-2 text-outline text-sm mb-3">
+          <Repeat2 className="h-4 w-4" />
+          <span>
+            <Link href={`/profile/${post._reposted_by.username}`} className="hover:text-primary transition-colors">
+              {post._reposted_by.username === profile?.username
+                ? 'You'
+                : post._reposted_by.first_name
+                  ? `${post._reposted_by.first_name} ${post._reposted_by.last_name || ''}`.trim()
+                  : post._reposted_by.username}
+            </Link>
+            {' '}reposted
+          </span>
+        </div>
+      )}
+
+      {/* Legacy repost row (posts.post_type='share', none exist) */}
       {isRepost && (
         <div className="flex items-center space-x-2 text-outline text-sm mb-3">
           <Repeat2 className="h-4 w-4" />
@@ -937,13 +957,17 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
             <span className="text-sm">{commentCount}</span>
           </button>
 
-          <button
-            onClick={handleShare}
-            className="flex items-center space-x-1 px-2 py-1 rounded-md text-on-surface-variant hover:text-primary transition-colors"
-          >
-            <Share className="h-5 w-5" />
-            <span className="text-sm hidden sm:inline">Share</span>
-          </button>
+          <RepostButton
+            postId={post.id}
+            isOwnPost={isOwnPost}
+            initial={post.post_reposts ?? null}
+            onNeedSignIn={() => { setSignUpAction('share'); setShowSignUpModal(true) }}
+          />
+
+          <ShareMenu
+            path={sharePath(post)}
+            text={shareText((post as { title?: string | null }).title, post.content)}
+          />
         </div>
 
         {!isOwnPost && (
@@ -963,14 +987,6 @@ function PostCard({ post: initialPost, onUpdate, reactions, isFollowing, packCon
           onClose={() => setShowComments(false)}
         />
       )}
-
-      {/* Share Modal */}
-      <SharePost
-        post={post}
-        isOpen={showShare}
-        onClose={() => setShowShare(false)}
-        onShared={() => onUpdate?.()}
-      />
 
       {/* Sign Up Modal for guests */}
       <SignUpModal

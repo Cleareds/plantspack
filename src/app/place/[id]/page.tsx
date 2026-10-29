@@ -35,6 +35,7 @@ import PlaceVerifyPrompt from '@/components/places/PlaceVerifyPrompt'
 import VerificationFooter from '@/components/places/VerificationFooter'
 import ReportButton from '@/components/reports/ReportButton'
 import FavoriteButton from '@/components/social/FavoriteButton'
+import ShareMenu from '@/components/social/ShareMenu'
 import ImageSlider from '@/components/ui/ImageSlider'
 import HashScroller from '@/components/ui/HashScroller'
 import AddToPackButton from '@/components/places/AddToPackButton'
@@ -779,6 +780,14 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
                   initialFavorites={place.favorite_places}
                 />
                 <AddToPackButton placeId={place.id} placeName={place.name} />
+                <ShareMenu
+                  path={`/place/${place.slug || place.id}`}
+                  text={[place.name, [place.city, place.country].filter(Boolean).join(', ')].filter(Boolean).join(', ')}
+                  kind="place"
+                  placement="down"
+                  labelClassName=""
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ghost-border text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                />
                 <ClaimBusinessButton
                   placeId={place.id}
                   placeName={place.name}

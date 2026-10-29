@@ -49,6 +49,7 @@ const POST_FIELDS = `
   engagement_score, deleted_at,
   users!inner(id, username, first_name, last_name, avatar_url, subscription_tier, is_banned),
   post_likes(id, user_id),
+  post_reposts(user_id),
   post_reactions(id, reaction_type, user_id),
   comments(id),
   place:place_id(id, name, address, category, images, average_rating, is_pet_friendly, website, slug)
@@ -131,6 +132,52 @@ async function fetchReviews(opts: {
   return data || []
 }
 
+// Reposts (post_reposts), Newest only: the original post at the repost time,
+// with data._reposted_by. Same rules as get_feed in the apps.
+async function fetchReposts(opts: {
+  limit: number
+  cursor: { ts: string; id: string } | null
+  category?: string
+}) {
+  const { limit, cursor, category } = opts
+  const supabase = createAdminClient()
+  let q = supabase
+    .from('post_reposts')
+    .select(`created_at, post_id,
+      reposter:users!post_reposts_user_id_fkey!inner(username, first_name, last_name, is_banned),
+      post:posts!inner(${POST_FIELDS})`)
+    .eq('reposter.is_banned', false)
+    .eq('post.privacy', 'public')
+    .eq('post.moderation_status', 'published')
+    .is('post.deleted_at', null)
+    .is('post.parent_post_id', null)
+    .eq('post.users.is_banned', false)
+    .order('created_at', { ascending: false })
+    .order('post_id', { ascending: false })
+    .limit(limit)
+  if (category && POST_CATEGORIES.has(category)) q = q.eq('post.category', category)
+  if (cursor) q = q.or(`created_at.lt.${cursor.ts},and(created_at.eq.${cursor.ts},post_id.lt.${cursor.id})`)
+  const { data, error } = await q
+  if (error) throw error
+  return (data || []).map((r: any) => ({
+    type: 'post' as const,
+    id: r.post.id,
+    created_at: r.created_at,
+    data: { ...r.post, _reposted_by: { username: r.reposter.username, first_name: r.reposter.first_name, last_name: r.reposter.last_name } },
+  }))
+}
+
+// A post shows once: its newest row (a fresh repost lifts it).
+function dedupeNewest(items: UnifiedItem[]): UnifiedItem[] {
+  const seen = new Set<string>()
+  return items.filter((it) => {
+    const k = `${it.type}:${it.id}`
+    if (seen.has(k)) return false
+    seen.add(k)
+    return true
+  })
+}
+
 function postReactionSum(p: any): number {
   return (p.post_likes?.length || 0) + (p.post_reactions?.length || 0)
 }
@@ -157,18 +204,27 @@ export async function GET(req: NextRequest) {
       hasMore = reviews.length === limit
       items = reviews.map((r: any) => ({ type: 'review', id: r.id, created_at: r.created_at, data: r } as UnifiedReviewItem))
     } else if (POST_CATEGORIES.has(mode)) {
-      const posts = await fetchPosts({ limit, cursor, sort, category: mode })
-      hasMore = posts.length === limit
-      items = posts.map((p: any) => ({ type: 'post', id: p.id, created_at: p.created_at, data: p } as UnifiedPostItem))
+      const [posts, reposts] = await Promise.all([
+        fetchPosts({ limit, cursor, sort, category: mode }),
+        sort === 'recent' ? fetchReposts({ limit, cursor, category: mode }) : Promise.resolve([]),
+      ])
+      hasMore = posts.length === limit || reposts.length === limit
+      const postItems: UnifiedItem[] = posts.map((p: any) => ({ type: 'post', id: p.id, created_at: p.created_at, data: p } as UnifiedPostItem))
+      const merged = [...postItems, ...reposts].sort((a, b) => {
+        if (a.created_at === b.created_at) return a.id < b.id ? 1 : -1
+        return a.created_at < b.created_at ? 1 : -1
+      })
+      items = dedupeNewest(merged).slice(0, limit)
     } else {
-      // 'all' — mixed posts + reviews
-      const [posts, reviews] = await Promise.all([
+      // 'all' — mixed posts + reviews (+ reposts on Newest)
+      const [posts, reviews, reposts] = await Promise.all([
         fetchPosts({ limit, cursor, sort }),
         fetchReviews({ limit, cursor, sort }),
+        sort === 'recent' ? fetchReposts({ limit, cursor }) : Promise.resolve([]),
       ])
       const postItems: UnifiedItem[] = posts.map((p: any) => ({ type: 'post', id: p.id, created_at: p.created_at, data: p }))
       const reviewItems: UnifiedItem[] = reviews.map((r: any) => ({ type: 'review', id: r.id, created_at: r.created_at, data: r }))
-      const merged: UnifiedItem[] = [...postItems, ...reviewItems]
+      const merged: UnifiedItem[] = [...postItems, ...reviewItems, ...reposts]
 
       if (sort === 'liked_week' || sort === 'liked_all_time') {
         merged.sort((a, b) => {
@@ -182,11 +238,11 @@ export async function GET(req: NextRequest) {
           return a.created_at < b.created_at ? 1 : -1
         })
       }
-      items = merged.slice(0, limit)
-      // Backend is exhausted only when *both* sources returned less than a full
-      // page — otherwise either side may have more rows available beyond this
+      items = dedupeNewest(merged).slice(0, limit)
+      // Backend is exhausted only when *every* source returned less than a full
+      // page — otherwise a source may have more rows available beyond this
       // page's discarded tail.
-      hasMore = posts.length === limit || reviews.length === limit
+      hasMore = posts.length === limit || reviews.length === limit || reposts.length === limit
     }
 
     const nextCursor = hasMore && items.length > 0 ? makeCursor(items[items.length - 1]) : null
