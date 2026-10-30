@@ -31,7 +31,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 }
 
 const SUBCATEGORY_LABELS: Record<string, Record<string, string>> = {
-  eat: { restaurant: 'Restaurant', cafe: 'Cafe', fast_food: 'Fast Food', bar: 'Bar/Pub', bakery: 'Bakery', ice_cream: 'Ice Cream' },
+  eat: { restaurant: 'Restaurant', cafe: 'Cafe', fast_food: 'Fast Food', bar: 'Bar/Pub', bakery: 'Bakery', ice_cream: 'Ice Cream', 'online-delivery': 'Online / Delivery' },
   store: { grocery: 'Grocery', bakery: 'Bakery', health_food: 'Health Food', specialty: 'Specialty', other_shop: 'Other' },
   hotel: { hotel: 'Hotel', hostel: 'Hostel', bnb: 'B&B', retreat: 'Retreat', other_stay: 'Other' },
 }

@@ -12,7 +12,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
 }
 const SUBCATEGORY_LABELS: Record<string, string> = {
   restaurant: 'Restaurant', cafe: 'Cafe', fast_food: 'Fast Food', bar: 'Bar/Pub',
-  bakery: 'Bakery', ice_cream: 'Ice Cream', grocery: 'Grocery', health_food: 'Health Food',
+  bakery: 'Bakery', ice_cream: 'Ice Cream', 'online-delivery': 'Online / Delivery', grocery: 'Grocery', health_food: 'Health Food',
   hotel: 'Hotel', hostel: 'Hostel', bnb: 'B&B', animal_sanctuary: 'Animal Sanctuary',
 }
 

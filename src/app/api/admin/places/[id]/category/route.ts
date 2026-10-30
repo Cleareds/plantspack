@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 
 const VALID_CATEGORIES = new Set(['eat', 'hotel', 'store', 'organisation', 'event', 'community', 'other'])
 const VALID_SUBCATEGORIES: Record<string, Set<string>> = {
-  eat: new Set(['restaurant', 'cafe', 'fast_food', 'bar', 'bakery', 'ice_cream']),
+  eat: new Set(['restaurant', 'cafe', 'fast_food', 'bar', 'bakery', 'ice_cream', 'online-delivery']),
   store: new Set(['grocery', 'bakery', 'health_food', 'specialty', 'other_shop']),
   hotel: new Set(['hotel', 'hostel', 'bnb', 'retreat', 'other_stay']),
 }

@@ -45,6 +45,7 @@ const EDIT_SUBCATEGORIES: Record<string, Array<{ value: string; label: string }>
     { value: 'ice-cream',    label: 'Ice cream / Dessert' },
     { value: 'chocolatier',  label: 'Chocolatier' },
     { value: 'food-truck',   label: 'Food truck' },
+    { value: 'online-delivery', label: 'Online / Delivery' },
     { value: 'caterer',      label: 'Caterer' },
     { value: 'catering',     label: 'Catering (legacy)' },
   ],

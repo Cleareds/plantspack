@@ -67,6 +67,7 @@ const SUBCATEGORY_OPTIONS: Record<string, Array<{ value: string; label: string }
     { value: 'bar', label: 'Bar/Pub' },
     { value: 'bakery', label: 'Bakery' },
     { value: 'ice_cream', label: 'Ice Cream' },
+    { value: 'online-delivery', label: 'Online / Delivery' },
   ],
   store: [
     { value: 'grocery', label: 'Grocery' },
