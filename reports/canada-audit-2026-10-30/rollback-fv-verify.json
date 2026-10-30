@@ -1,0 +1,402 @@
+[
+ {
+  "id": "f499e201-24c2-411f-a531-562015b73de8",
+  "slug": "alina-s-green-smoothies-calgary",
+  "name": "Alina's Green Smoothies",
+  "address": "Sacramento Drive SW Calgary",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "795d2ef4-3a4a-41ea-a514-d6fbaa604322",
+  "slug": "archway-montreal",
+  "name": "Archway",
+  "address": "3683 Rue Wellington, Montréal",
+  "vegan_level": "fully_vegan",
+  "verification_method": "ai_verified",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "bb30230d-49d8-4412-bb94-b05e8cd18774",
+  "slug": "aux-vivres-montreal",
+  "name": "Aux Vivres",
+  "address": "4631 Boulevard Saint-Laurent, H2T 1R2",
+  "vegan_level": "fully_vegan",
+  "verification_method": "ai_verified",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "69e9ad06-4ef1-49b8-85e9-d332fd29d33d",
+  "slug": "aux-vivres-westmount",
+  "name": "Aux Vivres",
+  "address": "4898 Rue Sherbrooke Ouest, Westmount",
+  "vegan_level": "fully_vegan",
+  "verification_method": "us-audit-wrong-country-2026-05-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "dad79853-5968-45e3-aa18-aa55b2c286d1",
+  "slug": "big-mountain-foods-burnaby",
+  "name": "Big Mountain Foods",
+  "address": "Burnaby, BC, Canada",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "cc160bfc-3ecf-400b-9298-ccf78f045ec6",
+  "slug": "bloom-sushi-montreal",
+  "name": "Bloom Sushi",
+  "address": "288, Saint Catherine Ouest, H2X",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "c2765473-6f4e-4685-80c7-f7b24115831d",
+  "slug": "bonus-bakery-vancouver",
+  "name": "Bonus Bakery",
+  "address": "407 Industrial Avenue",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "dc12eb4f-3c5d-42c0-b3e4-36306a576919",
+  "slug": "bunners-toronto",
+  "name": "Bunners",
+  "address": "3054 Dundas Street West, Toronto",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c03",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "5e7b70be-1adf-4ecd-8609-a4934b57ca65",
+  "slug": "burger-fiance-montreal",
+  "name": "Burger Fiancé",
+  "address": "417 R. Notre Dame O",
+  "vegan_level": "fully_vegan",
+  "verification_method": "websearch-audit-2026-07",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "d5017076-edbf-43aa-8aa1-869755665c94",
+  "slug": "chez-philippe-montreal",
+  "name": "Chez Philippe",
+  "address": "2457 rue Sainte-Catherine Est",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "d81227fb-04eb-4832-8a42-712ec0d48b76",
+  "slug": "crudessence-juice-bar-montreal",
+  "name": "Crudessence Juice Bar",
+  "address": "1584 Laurier East",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "4762142a-246c-4636-bacc-40c7602baeee",
+  "slug": "crudessence-montreal",
+  "name": "Crudessence",
+  "address": "2157 Mackay Street",
+  "vegan_level": "fully_vegan",
+  "verification_method": "canada-fv-l3-upgrade-2026-05-25",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "c1248110-683e-4dc6-a755-bbe1fa66ddae",
+  "slug": "g-bar-a-houmous-montreal",
+  "name": "G. Bar à Houmous",
+  "address": "160 Rue Saint-Viateur Est",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "4a16e49f-ccbc-4e05-9e89-ebffae1277c9",
+  "slug": "glow-juicery",
+  "name": "The Glow Effect (formerly Glow Juicery)",
+  "address": "5380 Trans-Canada Highway",
+  "vegan_level": "fully_vegan",
+  "verification_method": "dead-site-sweep-2026-06-15",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "061b6a8e-6d98-4abf-a1f0-e24970c3ada6",
+  "slug": "hearth-to-home-vegan-cuisine-toronto",
+  "name": "Hearth to Home Vegan Cuisine",
+  "address": "Bloor Street West 1, M5T 1G1 Toronto",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "d1e8bb7c-90ce-476d-9881-2e0965e463ae",
+  "slug": "hot-yam-toronto",
+  "name": "Hot Yam!",
+  "address": "33 St. George Street",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "04852275-04bc-4e0e-aee4-f50f4e2ac2ef",
+  "slug": "kale-eatery-toronto",
+  "name": "Kale Eatery",
+  "address": "322 Bloor Street West, Noah's Natural Foods",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "8e81a36d-2c3d-4f86-be67-74edadff6539",
+  "slug": "kale-eatery-toronto-2",
+  "name": "Kale Eatery",
+  "address": "2366 Yonge Street",
+  "vegan_level": "fully_vegan",
+  "verification_method": "canada-fv-l3-upgrade-2026-05-25",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "1843dff0-c044-4250-9501-f525cc39263b",
+  "slug": "kupfert-and-kim-toronto",
+  "name": "Kupfert and Kim",
+  "address": "100 King Street West",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "73067bfd-b4a5-49b4-b7fe-8f0b6652fdff",
+  "slug": "kupfert-kim-toronto",
+  "name": "Kupfert & Kim",
+  "address": "",
+  "vegan_level": "fully_vegan",
+  "verification_method": "canada-fv-l3-upgrade-2026-05-25",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "fed1aeb1-6265-49cc-94ee-33ab70de5835",
+  "slug": "la-panthere-verte-montreal-2",
+  "name": "La Panthere Verte",
+  "address": "160 St-Viateur Street East",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "445385fe-813e-4a26-a2fe-5a6b58d6efa6",
+  "slug": "misella-delite-organic-cafe-stony-plain",
+  "name": "Misella Delite Organic Cafe",
+  "address": "4922-50 Street",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "cf729aef-cc6c-4784-9bca-7b3a6c5eb2cf",
+  "slug": "po-kong-vancouver",
+  "name": "Po Kong",
+  "address": "1334 Kingsway",
+  "vegan_level": "fully_vegan",
+  "verification_method": "ai_verified",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "fe658360-fbb9-40a8-a7ca-eaaa406939e0",
+  "slug": "power-house-living-foods-nanaimo-2",
+  "name": "Power House Living Foods",
+  "address": "6560 Metral Drive",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "c5f5490f-929f-4261-8032-a17d4df460df",
+  "slug": "raw-aura-mississauga",
+  "name": "Raw Aura",
+  "address": "94 Lakeshore Road East",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "def336c2-057a-482f-91bc-e9977643cd1e",
+  "slug": "rawsome-living-food-salspring-island",
+  "name": "Rawsome Living Food",
+  "address": "#106 149 Fulford-Ganges Rd",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "f254ac1c-1575-4d0a-a321-ae01798ce79b",
+  "slug": "suzy-homemaker-montreal",
+  "name": "Suzy Homemaker",
+  "address": "Montreal",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "47fbf1ce-7a73-4d1e-9907-738067f079e2",
+  "slug": "swirl-montreal",
+  "name": "Swirl",
+  "address": "230 Rue Rachel Est",
+  "vegan_level": "fully_vegan",
+  "verification_method": "ai_verified",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "ccfaa78f-afc3-41ad-b489-5bf4d27b8631",
+  "slug": "the-cake-mama-west-kelowna",
+  "name": "The Cake Mama",
+  "address": "2468 Thacker Drive",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "47a90511-519d-45c5-8c20-54eda2bc5f22",
+  "slug": "the-messy-kitchen-montreal",
+  "name": "The Messy Kitchen",
+  "address": "Montreal",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "fea3726e-852e-47b0-9ce5-c07298f95d69",
+  "slug": "them-beans-chilliwack",
+  "name": "Them Beans",
+  "address": "Chilliwack",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "53ba429f-31ab-4795-98a0-399906af7fa2",
+  "slug": "truly-organic-foods",
+  "name": "Truly Organic Foods",
+  "address": "Canada",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "4f299e61-1c54-4b6c-9b62-e75fadc53a3e",
+  "slug": "vancouver-vegan-brunch-vancouver",
+  "name": "Vancouver Vegan Brunch",
+  "address": "Vancouver",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "c9c26025-57e0-4542-a249-3d302a751162",
+  "slug": "vegan-pizza-house-vancouver-89395",
+  "name": "Vegan Pizza House",
+  "address": "2119, Kingsway, V5N 2T4, Vancouver",
+  "vegan_level": "fully_vegan",
+  "verification_method": "web-check-2026-10-14",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "d6194850-4f26-49e1-8196-1583a759965d",
+  "slug": "vegan-pizza-house-white-rock",
+  "name": "Vegan Pizza House",
+  "address": "15565 Marine Drive",
+  "vegan_level": "fully_vegan",
+  "verification_method": "canada-fv-l3-upgrade-2026-05-25",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "e45c122e-da6c-45dc-b4aa-5b2f37d569f3",
+  "slug": "vegan-street-calgary",
+  "name": "Vegan Street",
+  "address": "1413 9 Avenue SE",
+  "vegan_level": "fully_vegan",
+  "verification_method": "label-check-auto-c02",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "c46d20e6-4dcf-4178-9e0d-a757fbbfb096",
+  "slug": "veganize-me-north-bay",
+  "name": "Veganize Me",
+  "address": "North Bay",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "28b5d12d-cee7-4e49-8921-9301ccc5fbe5",
+  "slug": "virtuous-pie-vancouver",
+  "name": "Virtuous Pie",
+  "address": "583 Main Street",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "4f68141e-861b-495d-b217-08a03bb9a4cb",
+  "slug": "yves-veggie-cuisine-vancouver",
+  "name": "Yves Veggie Cuisine",
+  "address": "Vancouver, BC, Canada",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ },
+ {
+  "id": "ef135af8-c5d7-43a2-9302-4672926e00fb",
+  "slug": "zebulon-montreal",
+  "name": "Zébulon",
+  "address": "4001 Rue Saint-Denis",
+  "vegan_level": "fully_vegan",
+  "verification_method": "trust-deinflate-2026-07-27",
+  "archived_at": null,
+  "archived_reason": null
+ }
+]

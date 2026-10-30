@@ -1,0 +1,645 @@
+{
+ "websearch_calls_used": 36,
+ "places": [
+  {
+   "id": "04852275-04bc-4e0e-aee4-f50f4e2ac2ef",
+   "slug": "kale-eatery-toronto",
+   "status": "closed",
+   "status_evidence": "Yogi Times review page is titled \"closed as of august 2014\" after 21 years.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Was an all-vegan macrobiotic eatery (historic).",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "archive_closed",
+   "reason": "Closed August 2014. The sister row kale-eatery-toronto-2 (2366 Yonge St) is the same business and is also gone.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.yogitimes.com/review/kale-eatery-vegan-vegetarian-restaurant-healthy-organic-macrobiotic-toronto",
+    "https://streetsoftoronto.com/food/vegan-eatery-offers-tempting-lunch-buffet/"
+   ]
+  },
+  {
+   "id": "061b6a8e-6d98-4abf-a1f0-e24970c3ada6",
+   "slug": "hearth-to-home-vegan-cuisine-toronto",
+   "status": "unknown",
+   "status_evidence": "Only source is a 2007 Animal Voices radio page; it was a weekly meal-delivery service, not a venue. No trace after 2007.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "2007 page: organic vegan meals delivered to homes.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No evidence after 2007 and no physical venue; archive candidate. Address \"Bloor Street West 1\" looks invented.",
+   "duplicate_of": null,
+   "sources": [
+    "https://animalvoices.ca/2007/07/24/hearth-to-home-elegant-and-hearty-cuisine-with-raisa-jari-mitchell-cutler/"
+   ]
+  },
+  {
+   "id": "1843dff0-c044-4250-9501-f525cc39263b",
+   "slug": "kupfert-and-kim-toronto",
+   "status": "likely_open",
+   "status_evidence": "Own site Locations page lists First Canadian Place, 100 King St W, with hours; no date on page.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: \"Everything we serve is made from plants\".",
+   "address": "100 King Street West (First Canadian Place, Concourse Level), Toronto, ON M5X 1C7",
+   "website": "https://kupfertandkim.com/",
+   "phone": "416-504-1233",
+   "recommendation": "keep_fv",
+   "reason": "Own site confirms the branch and plant-only menu. Check duplicate kupfert-kim-toronto (no address) - may be this branch.",
+   "duplicate_of": null,
+   "sources": [
+    "https://kupfertandkim.com/locations2",
+    "https://kupfertandkim.com/",
+    "https://spinach.guide/venues/kupfert-kim-202745/"
+   ]
+  },
+  {
+   "id": "28b5d12d-cee7-4e49-8921-9301ccc5fbe5",
+   "slug": "virtuous-pie-vancouver",
+   "status": "open",
+   "status_evidence": "Own site (footer 2026) says Matt and Portia Phelps became owners in 2025; Chinatown is the location. Daily Hive UBC-closure piece says Chinatown 583 Main stays open.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: \"100% PLANT-BASED\", house-made cheeses.",
+   "address": null,
+   "website": "https://virtuouspie.com/",
+   "phone": null,
+   "recommendation": "keep_fv",
+   "reason": "Venue site live with 2025 ownership news and 100% plant-based claim.",
+   "duplicate_of": null,
+   "sources": [
+    "https://virtuouspie.com/",
+    "https://dailyhive.com/vancouver/virtuous-pie-ubc-closure"
+   ]
+  },
+  {
+   "id": "445385fe-813e-4a26-a2fe-5a6b58d6efa6",
+   "slug": "misella-delite-organic-cafe-stony-plain",
+   "status": "unknown",
+   "status_evidence": "Only an undated HappyCow listing with reviews; no own site, no dated source.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "HappyCow reviewers: entirely vegan, no dairy or eggs (not the venue itself).",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Cannot confirm it still trades; nothing dated after 2023 found.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.happycow.net/reviews/misella-delite-organic-cafe-stony-plain-15277"
+   ]
+  },
+  {
+   "id": "47a90511-519d-45c5-8c20-54eda2bc5f22",
+   "slug": "the-messy-kitchen-montreal",
+   "status": "unknown",
+   "status_evidence": "No vegan venue of this name found in Montreal. The only match is a Messy Kitchen cafe in Kahnawake (River Road) whose reviews mention chicken and moose dishes; Sept 2026 review says catering only.",
+   "vegan_level": "vegan_options",
+   "vegan_evidence": "The only matching business serves meat; no link to a vegan Messy Kitchen.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Likely defunct VegGuide entry; archive candidate. Do not confuse with the Kahnawake cafe (not vegan).",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.restomontreal.ca/resto/messy-kitchen-kahnawake/16451/en/"
+   ]
+  },
+  {
+   "id": "47fbf1ce-7a73-4d1e-9907-738067f079e2",
+   "slug": "swirl-montreal",
+   "status": "likely_open",
+   "status_evidence": "Own shop site live (footer 2026) with 230 Rachel E; products marked sold out. Tastet (updated July 2022) shows \"Closed temporarily\" - seasonal walk-up window.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Tastet: ice cream is \"not only lactose-free, but also vegan\"; coconut-milk soft serve.",
+   "address": "230 Rue Rachel Est, Montreal, QC H2W 1E3",
+   "website": "https://swirlmtl.com/",
+   "phone": null,
+   "recommendation": "keep_fv",
+   "reason": "Seasonal vegan soft-serve window; keep, and fix \"United States\" in the address.",
+   "duplicate_of": null,
+   "sources": [
+    "https://swirlmtl.com/",
+    "https://tastet.ca/en/reviews/swirl-lovely-vegan-ice-cream-shop-on-the-plateau/"
+   ]
+  },
+  {
+   "id": "4a16e49f-ccbc-4e05-9e89-ebffae1277c9",
+   "slug": "glow-juicery",
+   "status": "unknown",
+   "status_evidence": "Own site glowjuicery.ca fails (SSL error). Spinach listing shows hours and phone but no dated evidence; 2022 Cowichan Valley Voice listed Glow Juicery here.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Spinach lists it fully vegan but flags inconsistent vegan claims on the menu; venue itself not checked.",
+   "address": "5380 Trans-Canada Hwy #5, Duncan, BC V9L 6W4",
+   "website": null,
+   "phone": "+1-250-597-2595",
+   "recommendation": "unsure",
+   "reason": "Cannot reach the venue site; no dated 2024-2026 evidence.",
+   "duplicate_of": null,
+   "sources": [
+    "https://spinach.guide/venues/the-glow-effect-203147",
+    "https://issuu.com/cowichanvalleyvoice/docs/january_2022_issue_158_web/33"
+   ]
+  },
+  {
+   "id": "4f299e61-1c54-4b6c-9b62-e75fadc53a3e",
+   "slug": "vancouver-vegan-brunch-vancouver",
+   "status": "unknown",
+   "status_evidence": "No venue or group called Vancouver Vegan Brunch found; address is only \"Vancouver\".",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "No evidence at all.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Probably an old meetup/event from VegGuide, not a venue; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.nsnews.com/living/vancouver-is-getting-a-brand-new-plant-based-brunch-option-photos-3279132"
+   ]
+  },
+  {
+   "id": "4f68141e-861b-495d-b217-08a03bb9a4cb",
+   "slug": "yves-veggie-cuisine-vancouver",
+   "status": "closed",
+   "status_evidence": "Hain Celestial discontinued the brand in Sept 2025; Maple Leaf Foods bought the trademark (Dec 2025) and relaunched 6 products in 2026, made in its US plants. No Vancouver site.",
+   "vegan_level": "unsure",
+   "vegan_evidence": "Brand/manufacturer, not a restaurant or shop. Sources call products plant-based; none confirm every product was vegan.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "archive_closed",
+   "reason": "Not a venue; the Vancouver operation ended in 2025 and the revived brand is made in the US by Maple Leaf Foods.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.cp24.com/news/money/2025/09/03/plant-based-food-brand-yves-veggie-cuisine-to-be-discontinued/",
+    "https://retail-insider.com/retail-insider/2026/09/maple-leaf-foods-revives-yves-veggie-cuisine-after-brand-was-discontinued/"
+   ]
+  },
+  {
+   "id": "53ba429f-31ab-4795-98a0-399906af7fa2",
+   "slug": "truly-organic-foods",
+   "status": "unknown",
+   "status_evidence": "Nothing found for a Canadian Truly Organic Foods; only an unrelated US cosmetics firm (FTC case). Address is just \"Canada\".",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "No evidence.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No trace; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.ftc.gov/node/47939"
+   ]
+  },
+  {
+   "id": "5e7b70be-1adf-4ecd-8609-a4934b57ca65",
+   "slug": "burger-fiance-montreal",
+   "status": "likely_open",
+   "status_evidence": "Own site live with online ordering and OpenTable link; Locations page lists 417 Notre-Dame O. No dated item seen.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: \"this is a vegan restaraunt after all\" / \"c'est un restaurant à base de plantes après tout\".",
+   "address": "417 Notre-Dame O, Montreal, QC H2Y 1V2",
+   "website": "https://burgerfiance.com/",
+   "phone": "514-840-3614",
+   "recommendation": "keep_fv",
+   "reason": "Venue itself says it is a vegan restaurant.",
+   "duplicate_of": null,
+   "sources": [
+    "https://burgerfiance.com/",
+    "https://burgerfiance.com/A-Propos",
+    "https://burgerfiance.com/Locations-French"
+   ]
+  },
+  {
+   "id": "69e9ad06-4ef1-49b8-85e9-d332fd29d33d",
+   "slug": "aux-vivres-westmount",
+   "status": "likely_open",
+   "status_evidence": "Own site lists Westmount hours (Sun-Thu 11-21, Fri-Sat 11-22); no date.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: \"Le premier restaurant végane à Montréal\", \"Resto Végane Est. 1997\".",
+   "address": null,
+   "website": "https://www.auxvivres.com/",
+   "phone": null,
+   "recommendation": "keep_fv",
+   "reason": "Venue confirms the Westmount branch and vegan status; fix \"United States\" in address.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.auxvivres.com/",
+    "https://tastet.ca/critiques/aux-vivres-vegane-mile-end/?region=qc"
+   ]
+  },
+  {
+   "id": "795d2ef4-3a4a-41ea-a514-d6fbaa604322",
+   "slug": "archway-montreal",
+   "status": "likely_open",
+   "status_evidence": "Own site lists hours (Mon-Fri 11-22, Sat-Sun 10-22) and no closure notice; no date.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: \"Restaurant & buvette 100% vegan\", \"Tous les plats sont végétaliens\".",
+   "address": "3683 rue Wellington, Verdun, QC H4G 1V1",
+   "website": "https://www.archwaymtl.com/",
+   "phone": "(514) 766-3609",
+   "recommendation": "keep_fv",
+   "reason": "Venue states 100% vegan; fix \"United States\" in address.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.archwaymtl.com/"
+   ]
+  },
+  {
+   "id": "bb30230d-49d8-4412-bb94-b05e8cd18774",
+   "slug": "aux-vivres-montreal",
+   "status": "likely_open",
+   "status_evidence": "Own site lists Plateau address, phone and daily hours; no closure notice.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: first vegan restaurant in Montreal, \"Resto Végane Est. 1997\".",
+   "address": "4631 Boulevard Saint-Laurent, Montreal, QC H2T 1R2",
+   "website": "https://www.auxvivres.com/",
+   "phone": "514-842-3479",
+   "recommendation": "keep_fv",
+   "reason": "Venue confirms; fix \"United States\" in address.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.auxvivres.com/"
+   ]
+  },
+  {
+   "id": "c1248110-683e-4dc6-a755-bbe1fa66ddae",
+   "slug": "g-bar-a-houmous-montreal",
+   "status": "likely_open",
+   "status_evidence": "La Panthère Verte at this address closed end Feb 2024; owner said a new operator would continue the vegan concept under a new brand. Directories now list \"Garbanzo - Bar à Houmous\" at 160 St-Viateur E #101 and HappyCow has a recent listing (id 427216).",
+   "vegan_level": "unsure",
+   "vegan_evidence": "No venue statement seen. Successor of a vegan restaurant, but its own menu/claim not verified.",
+   "address": "160 Rue Saint-Viateur Est #101, Montreal, QC",
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Probably the vegan successor of La Panthère Verte, real name \"Garbanzo - Bar à Houmous\"; vegan status not confirmed by the venue. Fix \"United States\" in address.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.noovomoi.ca/sortir/restos-bars/restaurant-panthere-verte-fermeture.html",
+    "https://logs.happycow.net/reviews/garbanzo-bar-a-houmous-montreal-427216",
+    "https://restoenligne.com/en/restaurants/home/restaurant-boustan-longueuil-3"
+   ]
+  },
+  {
+   "id": "c2765473-6f4e-4685-80c7-f7b24115831d",
+   "slug": "bonus-bakery-vancouver",
+   "status": "likely_open",
+   "status_evidence": "Spinach shows current hours/menu at 1428 Vernon Dr with the same phone; a Restaurantji reviewer says the bakery is not at 407 Industrial Ave. Other sources say it sells via a downtown Freshii. No dated venue evidence.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "BC Buy directory: \"100% plant-based bakery\"; Spinach: everything vegan.",
+   "address": "1428 Vernon Dr, Vancouver, BC V6C 3R2 (per Spinach, unconfirmed)",
+   "website": null,
+   "phone": "+1-604-620-5811",
+   "recommendation": "keep_fv",
+   "reason": "Plant-based bakery still listed; address 407 Industrial Ave looks wrong, Spinach gives 1428 Vernon Dr (same phone) - verify before changing.",
+   "duplicate_of": null,
+   "sources": [
+    "https://spinach.guide/venues/bonus-bakery-204273/",
+    "https://www.restaurantji.com/bc/vancouver/bonus-bakery-/comments/",
+    "https://buybc.gov.bc.ca/product/cinnamon-buns/",
+    "https://dailyhive.com/vancouver/bonus-bakery-vegan-vancouver"
+   ]
+  },
+  {
+   "id": "c46d20e6-4dcf-4178-9e0d-a757fbbfb096",
+   "slug": "veganize-me-north-bay",
+   "status": "unknown",
+   "status_evidence": "No trace of Veganize Me in North Bay; address is just \"North Bay\".",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "No evidence.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No trace; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://northernontario.travel/north-bay/delicious-vegan-plant-based-food-restaurants-north-bay"
+   ]
+  },
+  {
+   "id": "c5f5490f-929f-4261-8032-a17d4df460df",
+   "slug": "raw-aura-mississauga",
+   "status": "likely_open",
+   "status_evidence": "Port Credit BIA page for the April 19, 2025 #INThePort event lists Raw Aura Organic Cuisine at 94 Lakeshore Rd E. But its own domain raw-aura.com now returns a Wix \"ConnectYourDomain\" error.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Long-running raw vegan restaurant; Spinach: everything vegan. Venue site unavailable to confirm.",
+   "address": "94 Lakeshore Rd E, Mississauga, ON L5G 4S2",
+   "website": null,
+   "phone": "905-891-2872",
+   "recommendation": "keep_fv",
+   "reason": "Active in 2025; recheck soon because the website has lapsed.",
+   "duplicate_of": null,
+   "sources": [
+    "https://portcredit.com/upcoming-events/winterintheport-fire-ice-sweets-on-the-street/",
+    "https://spinach.guide/venues/raw-aura-202570/",
+    "https://raw-aura.com/"
+   ]
+  },
+  {
+   "id": "c9c26025-57e0-4542-a249-3d302a751162",
+   "slug": "vegan-pizza-house-vancouver-89395",
+   "status": "closed",
+   "status_evidence": "Own site: \"We've relocated!\" - now at 5680 198 St, Langley BC; Kingsway no longer listed.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: specialty vegan pizza, plant-based meats, house-made vegan cheese (no explicit 100% wording).",
+   "address": "5680 198 St, Langley, BC V3A 7C7 (new location)",
+   "website": "https://veganpizzahouse.ca",
+   "phone": "(604) 248-5336",
+   "recommendation": "archive_closed",
+   "reason": "Kingsway branch moved to Langley. Also check row vegan-pizza-house-white-rock (15565 Marine Dr), probably outdated too; the Langley shop may need a new row.",
+   "duplicate_of": null,
+   "sources": [
+    "https://veganpizzahouse.ca"
+   ]
+  },
+  {
+   "id": "cc160bfc-3ecf-400b-9298-ccf78f045ec6",
+   "slug": "bloom-sushi-montreal",
+   "status": "open",
+   "status_evidence": "Own site (cache stamp 2026-10-30) promotes \"Bloom Sushi QDS s'invite à MTLàTABLE\" Oct 29 - Nov 15.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site meta: \"restaurant végane au centre du Vieux-Montréal et Quartier des Spectacles\"; \"sushi botanique\".",
+   "address": "288 Rue Sainte-Catherine Ouest, Montreal, QC H2X 2A1",
+   "website": "https://bloomsushi.com",
+   "phone": "+1-514-370-1261",
+   "recommendation": "keep_fv",
+   "reason": "Venue states végane and is active now.",
+   "duplicate_of": null,
+   "sources": [
+    "https://bloomsushi.com/fr/",
+    "https://spinach.guide/venues/bloom-sushi-quartier-des-spectacles-206590/",
+    "https://mtlatable.mtl.org/en/restaurants/fiche-bloom-sushi-quartier-des-spectacles"
+   ]
+  },
+  {
+   "id": "ccfaa78f-afc3-41ad-b489-5bf4d27b8631",
+   "slug": "the-cake-mama-west-kelowna",
+   "status": "unknown",
+   "status_evidence": "No West Kelowna Cake Mama found; the only \"The Cake Mama\" found is an at-home business in Langley BC.",
+   "vegan_level": "unsure",
+   "vegan_evidence": "No source says it is vegan.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Unverifiable; vegan status unsupported. Archive candidate or downgrade if found.",
+   "duplicate_of": null,
+   "sources": [
+    "https://aquarteryoung.com/tag/the-cake-mama/"
+   ]
+  },
+  {
+   "id": "cf729aef-cc6c-4784-9bca-7b3a6c5eb2cf",
+   "slug": "po-kong-vancouver",
+   "status": "likely_open",
+   "status_evidence": "Own site: \"Open Every Day for Dine-in & Takeout\", hours 11-20 Mon-Thu, 11-20:30 Fri-Sun; no date.",
+   "vegan_level": "vegan_friendly",
+   "vegan_evidence": "Own site only says \"vegetarian\". HappyCow reviewers: most dishes vegan but mango pudding has dairy; egg use unclear.",
+   "address": "1334 Kingsway, Vancouver, BC V5V 3E4",
+   "website": "https://www.pokongvegetarian.ca/",
+   "phone": "604-876-3088",
+   "recommendation": "downgrade",
+   "reason": "Venue calls itself vegetarian, not vegan; dairy reported. Downgrade to vegan_friendly (mostly_vegan if staff confirm no egg).",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.pokongvegetarian.ca/",
+    "https://www.happycow.net/reviews/po-kong-vegetarian-restaurant-vancouver-25720",
+    "https://stats.happycow.net/reviews/po-kong-vegetarian-restaurant-vancouver-25720?page=2"
+   ]
+  },
+  {
+   "id": "d1e8bb7c-90ce-476d-9881-2e0965e463ae",
+   "slug": "hot-yam-toronto",
+   "status": "unknown",
+   "status_evidence": "Student-run vegan lunch (Wednesdays) at the International Student Centre; newest sources 2013-2016; hotyam.ca does not resolve.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Older Varsity/NOW pieces: student-run vegan co-op.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No evidence after 2016 and website dead; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://thevarsity.ca/2013/08/30/healthy-eating-around-campus/",
+    "https://nowtoronto.com/food-and-drink/top-20-student-friendly-restos/"
+   ]
+  },
+  {
+   "id": "d5017076-edbf-43aa-8aa1-869755665c94",
+   "slug": "chez-philippe-montreal",
+   "status": "unknown",
+   "status_evidence": "Only a 2005 Maisonneuve profile: vegan bed-and-breakfast run by chef Philippe Nicolitch at 2457 Ste-Catherine E.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "2005 article: no animal products used.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Nothing after 2005; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://maisonneuve.org/article/2005/09/22/under-apron-chez-philippe"
+   ]
+  },
+  {
+   "id": "d81227fb-04eb-4832-8a42-712ec0d48b76",
+   "slug": "crudessence-juice-bar-montreal",
+   "status": "closed",
+   "status_evidence": "A directory lists a different business (YAM - Plaisirs Nomade) at 1584 Laurier E; Crudessence Rachel St is listed \"PERMANENTLY CLOSED\"; crudessence.com returns 403.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Historic raw vegan brand.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "archive_closed",
+   "reason": "The Laurier juice bar address is now another business. Also check crudessence-montreal (2157 Mackay) - brand appears wound down.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.restomontreal.ca/resto/crudessence-montreal/2475/en/",
+    "https://restoenligne.com/en/restaurants/home/oh-mami"
+   ]
+  },
+  {
+   "id": "dad79853-5968-45e3-aa18-aa55b2c286d1",
+   "slug": "big-mountain-foods-burnaby",
+   "status": "open",
+   "status_evidence": "Manufacturer with live brand site and retail distribution; BC Food Directory gives 904 Cliveden Ave, New Westminster (not Burnaby). BC export page (Aug 2021) says Vancouver, 70,000 sq ft facility.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Brand site: \"CERTIFIED VEGAN\"; brand-wide plant-based claim.",
+   "address": "904 Cliveden Avenue, New Westminster, BC V3M 5R5 (BC Food Directory)",
+   "website": "https://bigmountainfoods.com/",
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "Brand is vegan, but this is a factory/office, not retail; city Burnaby is unsupported. Fix to New Westminster or archive as non-venue per brand-HQ policy.",
+   "duplicate_of": null,
+   "sources": [
+    "https://bigmountainfoods.com/",
+    "https://www2.gov.bc.ca/gov/content/export-catalogue/bc-agrifood-seafood-export-catalogue/packaged-food-seasoning-dressing-companies/big-mountain-foods",
+    "https://bcfooddirectory.gov.bc.ca/?p=8135"
+   ]
+  },
+  {
+   "id": "dc12eb4f-3c5d-42c0-b3e4-36306a576919",
+   "slug": "bunners-toronto",
+   "status": "likely_open",
+   "status_evidence": "Own site lists only one location, 244 Augusta Ave; the Junction shop (3054 Dundas W) is no longer listed. Site advertises a Halloween menu.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: \"ALL PRODUCTS ARE VEGAN & GLUTEN-FREE\".",
+   "address": "244 Augusta Ave, Toronto, ON M5T 2L7",
+   "website": "https://bunners.ca/",
+   "phone": "647-350-2975",
+   "recommendation": "keep_fv",
+   "reason": "Business is open but the Dundas W branch is gone; update the row to 244 Augusta Ave (no other Bunners row exists).",
+   "duplicate_of": null,
+   "sources": [
+    "https://bunners.ca/"
+   ]
+  },
+  {
+   "id": "def336c2-057a-482f-91bc-e9977643cd1e",
+   "slug": "rawsome-living-food-salspring-island",
+   "status": "unknown",
+   "status_evidence": "Only an undated Frommer's mention; rawsomelivingfoods.ca does not resolve.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Frommer's: raw vegan food business.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No evidence after 2023 and website dead; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.frommers.com/slideshows/821255-farm-to-table-on-salt-spring-island-british-columbia"
+   ]
+  },
+  {
+   "id": "e45c122e-da6c-45dc-b4aa-5b2f37d569f3",
+   "slug": "vegan-street-calgary",
+   "status": "open",
+   "status_evidence": "Own site: runner-up Best Vegan/Vegetarian Restaurant in Avenue Magazine Best Restaurants 2025; lists 1413 9 Ave SE and current hours.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Own site: plant-based mission \"spare an animal's life\", vegan comfort food.",
+   "address": "1413 9 Avenue SE, Calgary, AB T2G 0T4",
+   "website": "https://www.veganstreet.ca/",
+   "phone": "403-454-3287",
+   "recommendation": "keep_fv",
+   "reason": "Venue active in 2025 with vegan concept; phone on site differs from ours.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.veganstreet.ca/",
+    "https://visitcalgary.com/things-to-do/eat-drink/vegan-street"
+   ]
+  },
+  {
+   "id": "ef135af8-c5d7-43a2-9302-4672926e00fb",
+   "slug": "zebulon-montreal",
+   "status": "open",
+   "status_evidence": "Tastet review updated 28 May 2025 describes the new space at 4001 Saint-Denis.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Tastet: \"une offre 100% végétale\", \"tout est encore végétalien\".",
+   "address": "4001 Rue Saint-Denis, Montreal, QC H2W 2M4",
+   "website": null,
+   "phone": null,
+   "recommendation": "keep_fv",
+   "reason": "Vegan pastry shop at this address in 2025; fix \"United States\" in address.",
+   "duplicate_of": null,
+   "sources": [
+    "https://tastet.ca/critiques/patisserie-zebulon-nouvel-espace-toujours-vegane/"
+   ]
+  },
+  {
+   "id": "f254ac1c-1575-4d0a-a321-ae01798ce79b",
+   "slug": "suzy-homemaker-montreal",
+   "status": "unknown",
+   "status_evidence": "No trace of a Montreal business called Suzy Homemaker; address is just \"Montreal\".",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "No evidence.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No trace; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.mtlblog.com/montreal/best-vegan-restaurants-montreal-from-brunch-to-dessert"
+   ]
+  },
+  {
+   "id": "f499e201-24c2-411f-a531-562015b73de8",
+   "slug": "alina-s-green-smoothies-calgary",
+   "status": "unknown",
+   "status_evidence": "No trace of Alina's Green Smoothies in Calgary.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "No evidence.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No trace; archive candidate.",
+   "duplicate_of": null,
+   "sources": [
+    "https://savourcalgary.ca/?p=37388"
+   ]
+  },
+  {
+   "id": "fe658360-fbb9-40a8-a7ca-eaaa406939e0",
+   "slug": "power-house-living-foods-nanaimo-2",
+   "status": "unknown",
+   "status_evidence": "Only old listings (2011 blog, directories at 200 Commercial St); nothing ties Power House to Metral Drive; the brand domains do not resolve.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Older reviews: raw vegan restaurant.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "unsure",
+   "reason": "No dated evidence and no Metral Dr link; archive candidate. Related archived rows: power-house-living-foods-nanaimo (200 Commercial St), power-house-living-foods-co.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.happycow.net/reviews/power-house-living-foods-nanaimo-32271/101254",
+    "https://hob-bl.blogspot.com/2011/12/go-raw-or-go-home.html"
+   ]
+  },
+  {
+   "id": "fea3726e-852e-47b0-9ce5-c07298f95d69",
+   "slug": "them-beans-chilliwack",
+   "status": "closed",
+   "status_evidence": "HappyCow listing: reported closed July 2014; Cultivate Cafe now listed at 10015 Young Rd.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Was a plant-based whole-food grocer.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "archive_closed",
+   "reason": "Closed since 2014.",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.happycow.net/reviews/them-beans-chilliwack-29447",
+    "https://spinach.guide/venues/cultivate-cafe-204839/"
+   ]
+  },
+  {
+   "id": "fed1aeb1-6265-49cc-94ee-33ab70de5835",
+   "slug": "la-panthere-verte-montreal-2",
+   "status": "closed",
+   "status_evidence": "Noovo Moi, 9 Feb 2024: the St-Viateur location closes end of February 2024; a new operator continues under a new brand.",
+   "vegan_level": "fully_vegan",
+   "vegan_evidence": "Was a vegan restaurant.",
+   "address": null,
+   "website": null,
+   "phone": null,
+   "recommendation": "archive_closed",
+   "reason": "Closed Feb 2024; successor at the same address is g-bar-a-houmous-montreal (Garbanzo).",
+   "duplicate_of": null,
+   "sources": [
+    "https://www.noovomoi.ca/sortir/restos-bars/restaurant-panthere-verte-fermeture.html"
+   ]
+  }
+ ]
+}
