@@ -108,16 +108,23 @@ const PROBE_TILE = { z: 3, x: 4, y: 3 }
 /** sessionStorage key holding the verdict, so it is one probe per session. */
 const PROBE_CACHE_KEY = 'pp:tile-provider'
 
+// An 'ok' verdict expires; 'bad' lasts the session. 2026-10-30 the quota ran
+// out mid-day and sessions that had probed 'ok' earlier kept drawing Stadia's
+// 429 error-PNGs until the tab was closed.
+const OK_TTL_MS = 10 * 60 * 1000
+
 export type TileHealth = 'ok' | 'bad' | 'unknown'
 
 let memoized: TileHealth = 'unknown'
 let inFlight: Promise<TileHealth> | null = null
 
 function readCachedHealth(): TileHealth {
-  if (memoized !== 'unknown') return memoized
+  if (memoized === 'bad') return memoized
   try {
     const v = sessionStorage.getItem(PROBE_CACHE_KEY)
-    if (v === 'ok' || v === 'bad') return (memoized = v)
+    if (v === 'bad') return (memoized = v)
+    if (v?.startsWith('ok:') && Date.now() - Number(v.slice(3)) < OK_TTL_MS) return (memoized = 'ok')
+    memoized = 'unknown'
   } catch {
     // Private mode / blocked site data. Fall through and just re-probe.
   }
@@ -127,7 +134,7 @@ function readCachedHealth(): TileHealth {
 function cacheHealth(v: TileHealth) {
   memoized = v
   try {
-    if (v !== 'unknown') sessionStorage.setItem(PROBE_CACHE_KEY, v)
+    if (v !== 'unknown') sessionStorage.setItem(PROBE_CACHE_KEY, v === 'ok' ? `ok:${Date.now()}` : v)
   } catch {
     // Non-fatal: we keep the module-level memo either way.
   }
@@ -163,6 +170,9 @@ export function probeTileProvider(): Promise<TileHealth> {
   const { z, x, y } = PROBE_TILE
   inFlight = fetch(staticTileUrl(z, x, y), {
     method: 'GET',
+    // Bypass the HTTP cache: Stadia serves good tiles with a long max-age, so
+    // a cached 200 for this fixed tile hid the live 429 on 2026-10-30.
+    cache: 'no-store',
     // Same referrer the tile layers send, so the probe authenticates exactly
     // the way the real tiles do rather than testing a different code path.
     referrerPolicy: MAP_TILE_REFERRER_POLICY,
