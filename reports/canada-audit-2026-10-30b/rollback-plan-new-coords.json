@@ -1,0 +1,56 @@
+[
+ {
+  "id": "1dad6df8-550f-4956-9585-0359058d8520",
+  "slug": "cinnaholic-london-london",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "latitude": 42.9836747,
+  "longitude": -81.2496068
+ },
+ {
+  "id": "5e3c060f-ef19-4a07-8f3e-2a2117012526",
+  "slug": "padmanadi-vegan-eatery-southside-edmonton",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "latitude": 53.5462055,
+  "longitude": -113.491241
+ },
+ {
+  "id": "60bb4b31-7297-4a85-9a11-c12dbbbb6145",
+  "slug": "homey-food-cafe-calgary",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "latitude": 51.0456064,
+  "longitude": -114.057541
+ },
+ {
+  "id": "8b12ac98-11d7-4e8e-9e8b-8dd168a32fea",
+  "slug": "padmanadi-vegan-eatery-calgary-calgary",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "latitude": 51.0456064,
+  "longitude": -114.057541
+ },
+ {
+  "id": "a5cfcfb6-629e-483c-bc05-5c3a563b4311",
+  "slug": "cinnaholic-waterloo-waterloo",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "latitude": 43.4652699,
+  "longitude": -80.5222961
+ },
+ {
+  "id": "f70049fc-bb28-4954-a5e0-3b78b62c6423",
+  "slug": "chickpeas-ottawa",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "latitude": 45.4208777,
+  "longitude": -75.6901106
+ }
+]

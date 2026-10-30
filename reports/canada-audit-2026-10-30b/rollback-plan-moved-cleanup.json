@@ -1,0 +1,170 @@
+[
+ {
+  "id": "0777abee-921a-4f62-9697-d48886d25b85",
+  "slug": "odd-burger-whitby",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "3072d111-0035-4cf7-b881-cd118e6c1aa9",
+  "slug": "freshslice-pizza",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "[desc-safe-copy 2026-06-30 ai-filler: This vibrant pizzeria specializes in vegan-friendly options, featuring a diverse menu of plant-based pizzas that cater to all taste preferences. With a cozy atmosphere and innovati]",
+  "verification_level": 1
+ },
+ {
+  "id": "4e7957e9-837c-474f-b28d-3807c5dec399",
+  "slug": "alk",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 1
+ },
+ {
+  "id": "5fbbb5f4-c145-46e0-9b75-c6590b294195",
+  "slug": "swagruhas-dosa-home",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 1
+ },
+ {
+  "id": "63ec0c37-0f03-4427-ad57-e9705d2b0810",
+  "slug": "odd-burger-united-states",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 1
+ },
+ {
+  "id": "6565ce18-63eb-493c-8c98-3f39c03f1b47",
+  "slug": "fluide-mont-tremblant",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "[desc-safe-copy 2026-06-30 ai-filler: Fluide offers a refreshing selection of cold-pressed juices and smoothies crafted from locally sourced organic fruits and vegetables, making it a perfect pit stop for health-consci]",
+  "verification_level": 1
+ },
+ {
+  "id": "7028d07d-de23-41bb-9df3-ee4a863cf9ed",
+  "slug": "copper-branch-clarington",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "97e3d159-809a-4949-aa6c-9d8b7c3f9fb1",
+  "slug": "odd-burger-brampton",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "a3620f23-ead1-4ada-b205-d1302dd1ea49",
+  "slug": "copper-branch-vaughan",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "a5d3e94a-c23a-4c9d-a763-7156b2b387f2",
+  "slug": "copper-branch-laval",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "[desc-safe-copy 2026-06-30 ai-filler: Copper Branch in Laval offers a cozy atmosphere where health meets indulgence, serving an array of hearty, plant-based dishes inspired by global cuisines. Signature items include t]",
+  "verification_level": 1
+ },
+ {
+  "id": "b7382281-fe10-4627-87bd-294e72952dcb",
+  "slug": "copper-branch",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "b8bf74b1-abd8-447a-871d-4f015802c118",
+  "slug": "odd-burger-london",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "b9a11d49-8c38-475c-afec-63e55bef2ccc",
+  "slug": "odd-burger-oakville",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "c22495db-2bff-4d7c-8c3d-22be0b58d4d6",
+  "slug": "odd-burger-united-states-wjnn",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 1
+ },
+ {
+  "id": "c540e954-3b56-40ca-b57c-bd688c9bd4af",
+  "slug": "copper-branch-united-states-tzby",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 1
+ },
+ {
+  "id": "c8457508-878f-46df-ac36-7d8cd175bb27",
+  "slug": "copper-branch-london",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "cbfbea41-aac0-476e-8d1c-b846580ff90a",
+  "slug": "nuba",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "[desc-safe-copy 2026-06-30 ai-filler: Nuba brings the vibrant flavors of Lebanese cuisine to the vegan table, offering dishes like hearty Mujadara made with lentils and caramelized onions, along with fresh tabbouleh bu]",
+  "verification_level": 1
+ },
+ {
+  "id": "da66b1df-e704-4f10-8234-d93b1784c373",
+  "slug": "copper-branch-mont-royal",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 3
+ },
+ {
+  "id": "e783ee6b-c85c-4039-ae93-88cc8d5bb371",
+  "slug": "odd-burger-waterloo",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "2026-06-15 dead-site-sweep: cleared. Category=4XX_HARD, status=429. Original URL preserved: https://oddburger.com/\n[label-check-auto-c19] site check: fully_vegan (high) - \"HappyCow: 'fully vegan fast food restaurant', 75 King St S; franchising.com: 'New Vegan Fast Food Location in Waterloo, Ontario'. Note: country should be Canada\"",
+  "verification_level": 2
+ },
+ {
+  "id": "ef50197e-3154-4655-8500-455ee252de92",
+  "slug": "aandw-st-catharines",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "verification_level": 1
+ },
+ {
+  "id": "f2262a6a-9309-45f0-b66d-6a30cfa74c63",
+  "slug": "odd-burger-hamilton",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "2026-06-15 dead-site-sweep: cleared. Category=4XX_HARD, status=429. Original URL preserved: https://oddburger.com/\n[label-check-auto-c16] site check: fully_vegan (medium) - \"Odd Burger press 2021: fully plant-based, 920 Upper Wentworth St, Hamilton ONTARIO. Our row says United States - country is wrong (Canada).\"",
+  "verification_level": 2
+ }
+]

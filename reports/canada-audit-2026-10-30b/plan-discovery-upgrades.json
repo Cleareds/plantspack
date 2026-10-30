@@ -1,0 +1,90 @@
+[
+ {
+  "id": "38f5bc85-2572-4ee8-b97f-4cdf115b9442",
+  "slug": "good-grains-toronto",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_options -> fully_vegan | vegan: all of our dishes contain nothing of animal origin (https://www.goodgrainscanada.com) | open: Own site footer only (c) 2017; Spinach listing refreshed 2026-10-30 shows current hours Tu-Sa (https://spinach.guide/venues/good-grains-203332/)"
+  }
+ },
+ {
+  "id": "14f84dff-ebf2-49c2-ac0c-8672a65fd1ca",
+  "slug": "the-hearty-hooligan-hamilton",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_options -> fully_vegan | vegan: Hamilton's All Vegan Restaurant & Bakery (https://www.theheartyhooligan.com/contact) | open: Own Squarespace site content modified Oct 2026, current menu, catering and hours pages (https://www.theheartyhooligan.com/hours)"
+  }
+ },
+ {
+  "id": "21931c25-62ee-4994-93de-93b0b3c40e47",
+  "slug": "real-fake-meats-halifax",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_options -> fully_vegan | vegan: HALIFAX'S FIRST VEGAN BUTCHER SHOP (https://www.realfakemeats.com/) | open: Own Squarespace site active (2026 campaign flags, Thanksgiving preorder, new merch) (https://www.realfakemeats.com/contact)"
+  }
+ },
+ {
+  "id": "efb823bc-546d-4d90-a6ab-66ad44270307",
+  "slug": "viet-family-restaurant-vancouver",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_options -> fully_vegan | vegan: 100% Authentic Vegan Vietnamese ... re-imagined fully vegan (https://vietfamilyvegan.ca) | open: Own site lists current weekly hours; Vancouver with Love guide updated Dec 2025 lists it as 100% vegan. No dated post on own site. (https://vietfamilyvegan.ca)"
+  }
+ },
+ {
+  "id": "4b2db59b-1b71-4523-a291-b7bd4eabbe12",
+  "slug": "hearts-choice-cafe-market-calgary",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_options -> fully_vegan | vegan: All our dishes are made by hand with lots of care, attention, and contain only plant-based ingredients. (https://heartschoices.com/) | open: Own site lists current hours for the cafe market and two Calgary Farmers' Market stalls; no dated post. (https://heartschoices.com/)"
+  }
+ },
+ {
+  "id": "d8a087b9-1333-4861-9984-65a133b73e71",
+  "slug": "seitans-edmonton",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_friendly -> fully_vegan | vegan: Seitans offers delicious, plant-based seitan options ... Our catering is 100% plant-based. (https://seitans.com/about) | open: Daily Hive reported the opening in Sept 2025 with a 100% vegan menu; diepie.ca now redirects to seitans.com (Die Pie merged in). (https://dailyhive.com/edmonton/seitans-edmonton)"
+  }
+ },
+ {
+  "id": "145046e0-02de-4bab-96f7-5460cafbfbbd",
+  "slug": "the-buckingham-edmonton",
+  "update": {
+   "vegan_level": "mostly_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_friendly -> mostly_vegan | vegan: Edmonton's Favourite Vegan Dance/Dive ... house made vegan eats (https://thebuckingham.ca/) | open: Own site lists current daily hours; no dated post found. (https://thebuckingham.ca/)"
+  }
+ },
+ {
+  "id": "392bcb84-eb3b-4b99-888c-7c97132ad57e",
+  "slug": "fern-cafe-and-bakery-victoria",
+  "update": {
+   "vegan_level": "fully_vegan",
+   "verification_method": "canada-discovery-upgrade-2026-10-30",
+   "verification_level": 2,
+   "last_verified_at": "2026-10-30T20:30:00Z",
+   "admin_notes": "2026-10-30 CLI discovery upgrade vegan_options -> fully_vegan | vegan: Everything on our menu is vegan and made in house with love and care. This means we do not order in animal products. (https://www.ferncafeandbakery.ca/menu) | open: Own site: 'OPEN DAILY 9-5', kitchen closes 4:30; no dated post. (https://www.ferncafeandbakery.ca)"
+  }
+ }
+]

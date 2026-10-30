@@ -1,0 +1,52 @@
+[
+ {
+  "slug": "nooch-windsor",
+  "proposed_action": "canada_fix_address",
+  "note": "Own site gives the address 888 Erie St E, Windsor, ON (ours: Erie Street, N9A 1X9, Windsor); geocoder found no match, so the row was not moved."
+ },
+ {
+  "slug": "odd-burger-ottawa",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger chain site is dead (HTTP 402) and the chain closed Toronto, Vancouver, Victoria, Calgary and Edmonton branches in 2025-2026. No report found for 1050 Bank St. Check Google Maps / phone; archive if closed."
+ },
+ {
+  "slug": "caked-coffee-toronto",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Own site says 100% vegan but content was last edited 2022 and says \"check Google for new store hours\". No 2025-2026 proof that 1651 Bloor St W is open."
+ },
+ {
+  "slug": "hindusthali-montreal",
+  "proposed_action": "canada_verify_vegan_level",
+  "note": "Set to mostly_vegan: own site says \"approche 100% v\u00e9g\u00e9talienne\" but also \"repas v\u00e9g\u00e9taliens et v\u00e9g\u00e9tariens\"; menu is image-only. Check for paneer/ghee/dairy; restore fully_vegan if all vegan."
+ },
+ {
+  "slug": "spirit-of-the-earth-a-the-living-centrea-london",
+  "proposed_action": "canada_verify_vegan_level",
+  "note": "Set to vegan_friendly: this is a retreat centre (events mostly in Costa Rica), not a restaurant; own site has no food or vegan evidence. Name has mojibake. Decide: fix name/category, or archive."
+ },
+ {
+  "slug": "new-moon-kitchen-toronto",
+  "proposed_action": "canada_fix_address",
+  "note": "Online/wholesale vegan cookie brand. Address \"Bloor Street West 1\" is a placeholder (map pin is wrong). Find a real address or archive."
+ },
+ {
+  "slug": "swirl-montreal",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Own shop lists every product as sold out (\"\u00c9puis\u00e9\"); possible closure. Check status."
+ },
+ {
+  "slug": "the-juice-truck-vancouver",
+  "proposed_action": "canada_fix_address",
+  "note": "Set to mostly_vegan (honey). Row has no street address; the 4236 Main St shop reportedly closed Jan 2026; brand site lists pick-up at W 5th Ave. Fix address or archive."
+ },
+ {
+  "slug": "tula-les-repas-vegetaliens-equilibres-montreal",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Kept at fully_vegan L2: own site renders empty; restomontreal shows Oct 2026 Google reviews but The Main lists it as closed. Confirm status."
+ },
+ {
+  "slug": "taqueria-vegana-toronto",
+  "proposed_action": "canada_verify_vegan_level",
+  "note": "975 Bloor St W branch is vegan_friendly, but Taqueria Vegana is an all-vegan brand (the Dupont branch is fully_vegan, re-verified 2026-10-30). Own site blocked our fetch. Upgrade to fully_vegan if the site confirms."
+ }
+]

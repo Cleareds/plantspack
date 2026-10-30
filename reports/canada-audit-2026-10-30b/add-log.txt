@@ -1,0 +1,101 @@
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_00.json
+  ❌ HTTP 502 for OSM lookup near 43.6492,-79.4245
+    hero image: https://stefanosdiner.com/wp-content/uploads/2024/11/toronto-restaurants-stefanos-diner-vegan-plant-
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/stefano-s-diner-toronto
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_01.json
+    hero image: https://honeysicecream.ca/cdn/shop/files/119_c463b91e-f585-46b2-8c82-7488981f2a60_345x345@2x.png?v=1
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/honey-s-ice-cream-dundas-west-toronto
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_02.json
+    hero image: https://honeysicecream.ca/cdn/shop/files/119_c463b91e-f585-46b2-8c82-7488981f2a60_345x345@2x.png?v=1
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/honey-s-ice-cream-leslieville-toronto
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_03.json
+    hero image: https://www.freshkitchens.ca/content/dam/cara/en/fresh-image-library/icons/og-image.jpg
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/fresh-kitchen-juice-bar-front-st-toronto
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_04.json
+    hero image: https://cdn.prod.website-files.com/692eab55d55153a076f96c80/692eab55d55153a076f96e8e_1.webp
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/the-organic-press-toronto
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_05.json
+    hero image: https://img1.wsimg.com/isteam/ip/04028c11-f858-4ecf-aab1-bcc8e9a09204/sushi%20vegan%20Hum.JPG
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/hum-sushi-ramen-dumpling-montreal
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_06.json
+  ⚠ no hero image found on https://veganarie.com
+    hero image: (none)
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/veganarie-montreal
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_07.json
+  ⚠ no hero image found on https://kvbakery.ca
+    hero image: (none)
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/keepin-it-vegan-ottawa
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_08.json
+  ⚠ exact geocode missed — using city centroid for Ottawa
+    hero image: https://www.chickpeasottawa.ca/cdn/shop/files/15e88672-514a-40b0-8cf3-aa078ecc36dc.jpg?v=1683043166&
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/chickpeas-ottawa
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_09.json
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_10.json
+  ⚠ no hero image found on https://bramblehfx.square.site/
+    hero image: (none)
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/bramble-cafe-halifax
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_11.json
+  ⚠ exact geocode missed — using city centroid for Waterloo
+  ❌ HTTP 502 for OSM lookup near 43.4653,-80.5223
+    hero image: https://irp.cdn-website.com/23d48f5c/dms3rep/multi/opt/OldSkool-2B-1920w.jpg
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/cinnaholic-waterloo-waterloo
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_12.json
+  ⚠ exact geocode missed — using city centroid for London
+  ❌ HTTP 502 for OSM lookup near 42.9837,-81.2496
+    hero image: https://irp.cdn-website.com/23d48f5c/dms3rep/multi/opt/OldSkool-2B-1920w.jpg
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/cinnaholic-london-london
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_13.json
+  ⚠ exact geocode missed — using city centroid for Calgary
+    hero image: https://static.wixstatic.com/media/eb8052_8494ffabcb624402b576a4fd32b6bdeb~mv2_d_2344_1565_s_2.jpg/v
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/padmanadi-vegan-eatery-calgary-calgary
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_14.json
+  ⚠ exact geocode missed — using city centroid for Edmonton
+    hero image: https://static.wixstatic.com/media/eb8052_8494ffabcb624402b576a4fd32b6bdeb~mv2_d_2344_1565_s_2.jpg/v
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/padmanadi-vegan-eatery-southside-edmonton
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_15.json
+  ⚠ exact geocode missed — using city centroid for Calgary
+    hero image: https://homeyfood.ca/wp-content/uploads/2025/01/20250105_141835_InPixio-scaled.jpg
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/homey-food-cafe-calgary
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_16.json
+    hero image: https://www.canelayyc.com/uploads/b/56b7cc90-e819-11ea-98e7-858d766a5a90/PNG%20Green%20Logo.png
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/canela-vegan-bakery-cafe-bridgeland-calgary
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_17.json
+⚠ vegan_level guard — 'Magpie' is tagged mostly_vegan but the description does not satisfy the strict definition.
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_18.json
+  ❌ HTTP 502 for OSM lookup near 49.8801,-97.1231
+  ⚠ no hero image found on https://www.thymecafe.ca
+    hero image: (none)
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/thyme-cafe-and-books-winnipeg
+== /private/tmp/claude-501/-Users-antonkravchuk-sidep-Cleareds-plantspack/109dec33-02e4-44c0-93f8-04228dcfb226/scratchpad/add_19.json
+    hero image: https://static.wixstatic.com/media/5bbf74_0b5a68c39611437c9751d0ed401452bc%7Emv2.jpg/v1/fit/w_2500,h
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/be-love-victoria
+⚠ vegan_level guard — 'Democracy' is tagged mostly_vegan but the description does not satisfy the strict definition.
+  Pass --force-vegan-level to override this guard, otherwise downgrade to vegan_friendly.
+Aborting. Either fix the description to include explicit vegan-with-named-exceptions language, or set vegan_level to "vegan_friendly", or pass --force-vegan-level if you are sure.
+  Phrases that triggered the guard: \ball[- ]vegan\b
+  geocoded (ca) → 51.0456, -114.0575
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/magpie-calgary
+✗ description contradicts vegan_level — 'Democracy' is tagged mostly_vegan but the description claims it is fully vegan.
+✗ description contradicts vegan_level — 'Democracy' is tagged mostly_vegan but the description claims it is fully vegan.
+  geocoded (ca) → 43.2548, -79.8862
+✓ Inserted.
+  Public URL: https://www.plantspack.com/place/democracy-hamilton

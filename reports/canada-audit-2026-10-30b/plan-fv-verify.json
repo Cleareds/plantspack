@@ -1,0 +1,1184 @@
+[
+ {
+  "id": "2231677e-c849-48e7-aae4-c6407ce009b4",
+  "slug": "odd-burger-ottawa",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): unsure | vegan: Odd Burger is a known 100% vegan chain, but own site is down so not re-confirmed. | open: oddburger.com returns 402 'Store unavailable'. Chain closed Calgary, Victoria, Vancouver (Jul 2026) and Toronto sites; Vancouver owners cite head office discontinuing in-house products. No Ottawa-specific closure report found. | sources: https://oddburger.com/ https://www.castanetkamloops.net/news/Metro-Vancouver/623318/-We-can-no-longer-sustain-the-business-Last-BC-outpost-of-Canadian-vegan-burger-chain-to-close https://obj.ca/odd-burger-vegan-fast-food-to-old-ottawa-south-this-summer"
+  }
+ },
+ {
+  "id": "f7acb9fb-e979-4d11-9378-9b2374416484",
+  "slug": "vital-life-vegan-rastarant-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo off; Tu off; We 11:00-20:00; Th 11:00-20:00; Fr 11:00-20:00; Sa 11:00-20:00; Su 11:00-20:00",
+   "address": "360 Broadview Ave, Toronto, ON M4M 2G9",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Ital, organic, plant-based/vegan cuisine\"; name 'Vital Life Vegan Rastarant'. | open: Own site live with current hours (Wed-Sun 11am-8pm); copyright 2024, pre-scan max year 2025. | sources: https://vitallifevegan.ca/ https://vitallifevegan.ca/our-menu/"
+  }
+ },
+ {
+  "id": "457b294f-5dd8-4769-8ec6-aaecb66ec986",
+  "slug": "vegan-i-thali-toronto",
+  "update": {
+   "vegan_level": "mostly_vegan",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "address": "2768 Danforth Ave, Toronto, ON M4C 1L7",
+   "latitude": 43.68945,
+   "longitude": -79.29713,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Described as Afro-Caribbean vegan food; shares space with Shola food mart which 'stock honey' (reported 2020, reviewer 2024 says honey is the mart's, not the restaurant's). One directory flags it vegetarian; another notes vegan options not always available. | open: Directory review dated 29 Jul 2025; EatOkra lists daily 9am-9pm (undated). | sources: https://happycow.net/reviews/vegan-i-thali-shola-food-mart-toronto-140858 https://www.eatokra.com/businesses/vegan-i-thali https://www.blogto.com/restaurants/vegan-i-thali-toronto"
+  }
+ },
+ {
+  "id": "6427a271-c449-40c7-a26d-14eb34d81ff1",
+  "slug": "buddha-s-vegan-restaurant-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 11:00-20:00; Tu off; We 11:00-21:00; Th 11:00-21:00; Fr 11:00-21:00; Sa 11:00-21:00; Su 11:00-20:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"one of Toronto's earliest Asian Vegan Restaurants\"; meat dishes are mock ('Soya Chicken', 'Veggie Beef', 'Veggie Fish'); no egg/dairy items on menu. | open: Own site live with current hours, pre-scan max year 2026; closed Tuesdays only. | sources: https://www.buddharestaurant.ca/"
+  }
+ },
+ {
+  "id": "7f221da2-7318-430c-ae9f-89346a8dad59",
+  "slug": "strawberry-blonde-bakery-ottawa-2",
+  "update": {
+   "business_status": "temporarily_closed",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): unsure | vegan: \"Absolutely everything we do is vegan, gluten-free, nut free, and kosher!\" | open: Own contact page lists Kanata (767 Silver Seven Rd Unit 17) as 'Temporarily closed', no reopening date. Westboro (111 Richmond Rd) is open. | sources: https://store.strawberryblondebakery.com/ https://store.strawberryblondebakery.com/contact-us"
+  }
+ },
+ {
+  "id": "f0697442-09a8-407d-8229-1567835e8543",
+  "slug": "bloomer-s-queen-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "phone": "+1-416-214-2832",
+   "opening_hours": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00; Sa 09:00-20:00; Su 09:00-20:00",
+   "address": "715 Queen St W, Toronto, ON M6J 1E6",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Site title 'bloomer's | vegan bakery & coffee'; \"handcrafted vegan donuts\", \"homemade vegan pastries\". | open: Own site lists Queen West location with current hours; pre-scan max year 2026. | sources: https://www.bloomersto.com/"
+  }
+ },
+ {
+  "id": "f3d05883-4478-486d-b984-3a03bdf26cd0",
+  "slug": "mix-it-up-toronto",
+  "archive": "no-trace-2025-2026: No website; search for name + 399 Bathurst St found no listing."
+ },
+ {
+  "id": "490c7b64-e96a-41fa-a048-f9abdb6fe612",
+  "slug": "the-raw-shop-at-body-slimmer-hamilton",
+  "archive": "no-trace-2025-2026: No website; search found no listing for 'Raw Shop' / 'Body Slimmer' on Dundurn St S."
+ },
+ {
+  "id": "7a81b594-7b7c-4961-bf7d-549527a4cee7",
+  "slug": "rise-above-st-catherines",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://www.riseaboverestaurant.com",
+   "opening_hours": "Mo off; Tu 11:30-21:00; We 11:30-21:00; Th 11:30-21:00; Fr 11:30-22:00; Sa 11:30-22:00; Su off",
+   "address": "120 St Paul St, St. Catharines, ON L2R 3M2",
+   "latitude": 43.1571703,
+   "longitude": -79.2449262,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"Niagara's First Vegan Restaurant\"; reviewers: \"fully vegan\". | open: Own site live with hours; directory review dated 20 Oct 2026. | sources: http://www.riseaboverestaurant.com https://www.happycow.net/reviews/rise-above-st-catharines-26245"
+  }
+ },
+ {
+  "id": "f12d78c6-e229-4edf-969b-bb62fcd4eefd",
+  "slug": "fairly-frosted-vegan-cupcakery-guelph",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo 12:00-18:00; Tu off; We off; Th 12:00-19:00; Fr 12:00-19:00; Sa 12:00-19:00; Su 12:00-18:00",
+   "address": "78 Ottawa Street North, Hamilton, ON",
+   "latitude": 43.2447464,
+   "longitude": -79.8186583,
+   "city": "Hamilton",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Everything we make is vegan, gluten free, and nut free.\" | open: Own site live with weekly hours for a Hamilton shop; no 2025-2026 date seen (latest dated item July 2020; pre-scan max year 2023). Weak. | sources: https://www.fairlyfrosted.com/"
+  }
+ },
+ {
+  "id": "ae1e83a7-4a33-4121-837e-d4b6df0843e8",
+  "slug": "spirit-of-the-earth-a-the-living-centrea-london",
+  "update": {
+   "vegan_level": "vegan_friendly",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://thelivingcentre.com/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): unsure | vegan: Own site says nothing about food; it is an 'eco-spiritual educational sanctuary' offering retreats and workshops, not an eatery. | open: Own site live, footer 2025, events listed into 2027 (mostly in Costa Rica). | sources: https://thelivingcentre.com/"
+  }
+ },
+ {
+  "id": "b3108636-2390-4f4e-a827-7c46aa11f50c",
+  "slug": "veg-out-london",
+  "archive": "closed: Domain vegoutrestaurant.com ENOTFOUND; directory listing marked 'CLOSED: VegOut', 'REPORTED SHUT' Apr 2016, last review Feb 2016."
+ },
+ {
+  "id": "165ec3d2-8e22-49f5-8e26-5be2b7beda71",
+  "slug": "vegan-danish-bakery-thornhill",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "address": "7718 Yonge St, Thornhill, ON L4J 1W2",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"100% vegan bakery and caf\u00e9\". | open: Own site live (lists Thornhill phone 905-882-1331); directory review 2 Jul 2026; Destination Ontario guide updated Mar 2025 lists Thornhill. | sources: https://vegandanishbakery.wordpress.com/ https://www.happycow.net/reviews/vegan-danish-bakery-thornhill-21376 https://www.destinationontario.com/es-mx/articles/gluten-free-and-vegan-bakeries-and-cafes-ontario"
+  }
+ },
+ {
+  "id": "bd96406a-89b5-4641-af46-b8f70f12cd40",
+  "slug": "soy-boys-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "address": "1056 Queen St E, Toronto, ON M4M 1K5",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"100% PLANT-BASED\"; directory: \"Fully vegan fast food restaurant\". | open: Second Soy Boys branch opened at 1056 Queen St E (Leslieville) in 2025 (blogTO Aug 2025); directory review 28 Sep 2026; venue events May-Jun 2026. Own site lists only Church St. | sources: https://www.soyboysburgers.ca/ https://www.blogto.com/eat_drink/2025/08/soy-boys-toronto-location https://www.happycow.net/reviews/soy-boys-toronto-485702 https://ma.to/venue/soyboys_leslieville"
+  }
+ },
+ {
+  "id": "1e659a7a-e6f9-4c93-b366-845bae4069af",
+  "slug": "la-vegan-toronto",
+  "archive": "no-trace-2025-2026: Row has no address, website or phone; nothing to check without a search (budget spent)."
+ },
+ {
+  "id": "35318f45-2cd7-4ef3-806f-02eacc7ee805",
+  "slug": "new-moon-kitchen-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Our products are completely free of animal products.\" \"All of our products are free of dairy and eggs.\" | open: Own Shopify store live, product image updated Feb 2025, pre-scan max year 2026. Online/wholesale cookie brand ('New Moon Cookies'), no shop address seen. | sources: https://www.newmoonkitchen.com/ https://www.newmoonkitchen.com/pages/whats-so-special-about-our-cookies"
+  }
+ },
+ {
+  "id": "552042af-9e71-4a00-8bbd-b2256f841c39",
+  "slug": "boardwalk-chocolates-toronto",
+  "archive": "closed: boardwalkchocolates.com is now an unrelated 'Boardwalk Fitness' blog (DMAA pre-workout posts); only press found is 2010-2017; absent from newer vegan chocolate roundups."
+ },
+ {
+  "id": "1640e430-a51c-407f-991b-3af1b8bba230",
+  "slug": "nooch-windsor",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://noochwindsor.com/",
+   "opening_hours": "Mo off; Tu off; We 15:00-20:00; Th 15:00-20:00; Fr 15:00-21:00; Sa 15:00-21:00; Su 15:00-20:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"our 100% vegan menu\"; \"Windsor's only fully plant-based comfort food restaurant\". | open: Own site menu labelled 'Spring-26', page dated 2026-05-09, current hours. | sources: https://noochwindsor.com/"
+  }
+ },
+ {
+  "id": "222bd275-9308-408c-8070-92964f34eff9",
+  "slug": "sweets-from-the-earth-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://sweetsfromtheearth.com/",
+   "opening_hours": "Mo 09:00-17:30; Tu 09:00-17:30; We 09:00-17:30; Th 09:00-17:30; Fr 09:00-17:30; Su 10:00-17:30",
+   "address": "101 Canarctic Dr, Toronto, ON M3J 2N7",
+   "latitude": 43.7753931,
+   "longitude": -79.4904331,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"handmade in small batches using only the finest 100% plant based ingredients\"; \"egg free, dairy free, vegan baked goods\". | open: Own site and online shop live, but no 2024-2026 date seen (copyright 2016, pre-scan max year 2023). Weak. | sources: https://sweetsfromtheearth.com/ https://sweetsfromtheearth.com/bakery-outlet/"
+  }
+ },
+ {
+  "id": "2bbe9a8a-bd4e-4cdd-86b2-d13ec9a58bdc",
+  "slug": "bloomer-s-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://www.bloomersto.com/",
+   "opening_hours": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00; Sa 09:00-20:00; Su 09:00-20:00",
+   "address": "873 Bloor St W, Toronto, ON M6G 1M4",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Site title 'bloomer's | vegan bakery & coffee'; \"handcrafted vegan donuts\". | open: Own site lists Bloor West location with current hours; pre-scan max year 2026. | sources: https://www.bloomersto.com/"
+  }
+ },
+ {
+  "id": "70d44606-3cba-4b4c-9424-2c2830e3110c",
+  "slug": "lettuce-love-cafe-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo 11:00-20:00; Tu 11:00-20:00; We 11:00-20:00; Th 11:00-20:00; Fr 11:00-20:00; Sa 10:00-20:00; Su 10:00-20:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Brand name 'Lettuce Love Plant Based Cafe'; menu uses tofu scramble, tempeh, jackfruit, vegan cheese; no animal products seen. No explicit '100% vegan' sentence. | open: Own site live with (c) 2026 footer; Locations page lists current Bloor West hours; 3 locations (Toronto, Hamilton Westdale, Burlington) | sources: https://www.lettucelovecafe.com/ https://www.lettucelovecafe.com/menu https://www.lettucelovecafe.com/locations"
+  }
+ },
+ {
+  "id": "719e806b-a386-487f-86d4-6abc80a0a8ab",
+  "slug": "good-rebel-vegan-provisions-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 11:00-18:00; Tu 11:00-18:00; We 11:00-18:00; Th 11:00-18:00; Fr 11:00-18:00; Sa 11:00-18:00; Su 11:00-18:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: 'Toronto's beloved plant-based grocery store'; catalog categories Vegan Cheese / Vegan Meat / Vegan Dairy; pre-scan keyword 'all vegan' | open: Own Shopify store live, (c) 2026, seasonal Halloween/advent items, 'Open 7 days a week, 11am to 6pm' | sources: https://goodrebelvegan.com/"
+  }
+ },
+ {
+  "id": "9d1c769c-acc0-4943-b679-b1fdf2876070",
+  "slug": "tenon-vegan-sushi-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://tenonvegansushi.com/486-bloor/",
+   "opening_hours": "Mo 11:00-22:00; Tu 11:00-22:00; We 11:00-22:00; Th 11:00-22:00; Fr 11:00-22:00; Sa 11:00-22:00; Su 11:00-22:00",
+   "address": "486 Bloor St W, Toronto, ON M5S 1X8",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Brand 'Tenon Vegan Sushi'; 'one of the GTA's favourite vegan destinations'; 'fresh, flavorful plant-based dishes'. Menu is a flipbook, items not readable. | open: Own site (renamed Tenon Vegan Sushi) has 2026/01 and 2026/04 uploads, (c) 2026, 486 Bloor page lists current hours | sources: https://tenonvegansushi.com/ https://tenonvegansushi.com/486-bloor/"
+  }
+ },
+ {
+  "id": "9dea1176-e02b-47e9-bb4a-2a3d7b18770b",
+  "slug": "the-hogtown-vegan-toronto-2",
+  "archive": "closed: blogTO (Sep 2026) quotes Hogtown's Instagram: 'We regret to announce that Hogtown will be closing at the end of September', last day of service 27 Sep 2026; insauga 21 Sep 2026 reports the final remaining location (382 College St) closing; own domain thehogtownvegan.com now redirects to a parked '/lander' page"
+ },
+ {
+  "id": "a3cf6ea8-43d8-4844-9eb7-860029e92317",
+  "slug": "vegan-danish-bakery-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://vegandanishbakery.wordpress.com/",
+   "opening_hours": "Mo 12:00-18:00; Tu 12:00-18:00; We 12:00-18:00; Th 12:00-18:00; Fr 12:00-18:00; Sa 12:00-18:00; Su 12:00-18:00",
+   "address": "1312 Queen Street West, Toronto, ON M6K 1L4",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: '100% vegan bakery and cafe'; tagline 'We are vegan, we are Danish, and we Bake!' | open: WordPress API: Locations page modified 2026-10-17, About page modified 2026-10-24; lists current hours for 3 shops | sources: https://vegandanishbakery.wordpress.com/ https://vegandanishbakery.wordpress.com/location/ https://public-api.wordpress.com/rest/v1.1/sites/vegandanishbakery.wordpress.com/posts?type=page&number=5&order_by=modified"
+  }
+ },
+ {
+  "id": "acc0e535-fcab-405a-815e-c6bea09179db",
+  "slug": "alk-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "phone": "+1 416-475-6945",
+   "opening_hours": "Mo off; Tu off; We off; Th off; Fr 09:30-14:00; Sa 09:30-14:00; Su 09:30-14:00",
+   "address": "202-100 Broadview Ave, Toronto, ON M4M 3H3",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Homepage: 'Plant-Based Innovation. Unbelievably Delicious. 100% Vegan.' (Animal Liberation Kitchen) | open: Own site (c) 2026 ALK Catering Inc.; Grab & Go page: 'Simply drop by our cafe', Fri-Sun 9:30-14:00 | sources: https://thealk.com/ https://thealk.com/dining/grab-and-go-vegan-food/ https://thealk.com/contact-us/"
+  }
+ },
+ {
+  "id": "b01cf232-b1ac-4ad3-b262-d00b102cc10e",
+  "slug": "odd-burger-toronto",
+  "archive": "closed: spinach.guide listing for 229 Church St Unit #3 shows 'Permanently closed' (data refreshed 30 Oct 2026, Google-derived); oddburger.com returns HTTP 402 'Store unavailable' (Shopify store suspended); chain closed Vancouver (Jul 2026), Victoria, Calgary, one Edmonton (Jun 2026) and 492 College St (Sep 2025). No news article on the Church St closure found."
+ },
+ {
+  "id": "da8533e1-8001-42fc-a4a2-bf6fdd658552",
+  "slug": "kupfert-kim-spadina-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://www.kupfertandkim.com/",
+   "phone": "+1 416-504-2206",
+   "opening_hours": "Mo 08:30-20:00; Tu 08:30-20:00; We 08:30-20:00; Th 08:30-20:00; Fr 08:30-20:00; Sa 10:00-20:00; Su 10:00-16:30",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: 'a plant-based, quick-service restaurant'; 'Everything we serve is made from plants.' | open: Own Locations page lists 140 Spadina with current hours and phone (no dated text; Yorkville marked 'WE'VE MOVED!', so the page is maintained) | sources: https://www.kupfertandkim.com/ https://www.kupfertandkim.com/locations"
+  }
+ },
+ {
+  "id": "f90cc3c7-29d0-4308-a932-379a8801552a",
+  "slug": "taqueria-vegana-toronto-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Toronto Life: vegan plant-based tacos; HappyCow: 'Fully vegan takeaway and delivery concept serving Mexican food'; blogTO calls it the city's first vegan taqueria | open: Own site blocked by Cloudflare (403). HappyCow listing for 1543 Dupont has reviews dated 08 Oct 2026, 06 Sep 2026, 10 Aug 2026 (internal evidence only) | sources: https://happycow.net/reviews/taqueria-vegana-toronto-412478 https://www.happycow.net/reviews/taqueria-vegana-toronto-497272 https://torontolife.com/food/sort-of-secret-taqueria-vegana-vegan-plant-based-tacos/"
+  }
+ },
+ {
+  "id": "4df77d86-f4c8-45e8-b7a4-a4a1da82a54d",
+  "slug": "caked-coffee-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): unsure | vegan: Own site: '100% Vegan Bakery', 'Family Owned, 100% Vegan.' | open: Own site live but content last edited Oct 2022 (only privacy/terms pages touched Feb 2026); says 'Please check Google for new store hours' and 'We've just opened our new location'. No 2025-2026 dated activity found; search budget used up. | sources: https://cakedcoffee.ca/ https://cakedcoffee.ca/wp-json/wp/v2/pages?per_page=5&orderby=modified"
+  }
+ },
+ {
+  "id": "5054e851-cada-4f18-8fd7-b3f46bcd1b42",
+  "slug": "odd-burger-toronto-3",
+  "archive": "closed: Daily Hive (3 Jul 2025) and blogTO (Jul 2025): company rep said 492 College St lease 'we are not renewing it due to a number of factors related to the building', service until end of Sep 2025. HappyCow page title 'CLOSED: Odd Burger', 'Reported closed October 2025'. oddburger.com returns 402 'Store unavailable'."
+ },
+ {
+  "id": "36b02033-a4f9-4a61-b012-66203e8a8696",
+  "slug": "rise-above-pizza-wings-hamilton",
+  "archive": "closed: Own domain riseabovepizzeria.com now serves a parked JS redirect to '/lander'. HappyCow (internal evidence only): title 'CLOSED', 'Reported closed June 2026'; last review 30 May 2026 says 'One last night' before closing."
+ },
+ {
+  "id": "975a643e-4066-4e23-891b-4f4157c07877",
+  "slug": "soy-boys-toronto-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "address": "471 Church Street, Toronto, ON M4Y 2C5",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: '100% PLANT-BASED', 'BEATS THE MEAT!' | open: Own site live (pre-scan saw 2026), lists 471 Church St with current late-night hours | sources: https://www.soyboysburgers.ca/"
+  }
+ },
+ {
+  "id": "4273641e-7b61-4d88-ab64-9e107e4252f2",
+  "slug": "the-hogtown-vegan-toronto",
+  "archive": "closed: blogTO (Sep 2026): Hogtown Vegan first opened Jul 2011 at 834 Bloor St W and vacated it in 2014; the remaining College St location closed 27 Sep 2026. Own domain parked."
+ },
+ {
+  "id": "f8cd1b94-43dd-4444-9b8c-90d633280231",
+  "slug": "eat-what-s-good-chatham",
+  "archive": "closed: Own domain eatwhatsgood.com redirects (307) to GoDaddy 'forsale' parked page. One WebSearch found no trace of the business anywhere except our own PlantsPack listing (no reviews, no social, no news, no hours)."
+ },
+ {
+  "id": "c6228e12-f1b2-41dc-adbe-2aeffef9c89e",
+  "slug": "strawberry-blonde-bakery-ottawa",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://store.strawberryblondebakery.com/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: 'Absolutely everything we do is vegan, gluten-free, nut free, and kosher!' | open: Own store site (c) 2026, current seasonal drinks 'available until October 31'; only the Kanata location is 'temporarily closed' (the 'closed' keyword in pre-scan refers to Kanata, not 111 Richmond Rd) | sources: https://store.strawberryblondebakery.com/"
+  }
+ },
+ {
+  "id": "67211d0a-83f6-4da6-9124-d5cf04e5a398",
+  "slug": "avelo-toronto",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu off; We 17:00-23:00; Th 17:00-23:00; Fr 17:00-23:00; Sa 17:00-23:00; Su 17:00-23:00",
+   "address": "51 St Nicholas Street, Toronto, ON M4Y 1W6",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: 'Everything is plant-based. We do not use any dairy, eggs, meat, or other animal products.' | open: WordPress API: Bar Avelo food page and Special Events page modified 2026-10-12, cocktail menu 2026-01-13, private events 2025-10-29 | sources: https://www.avelorestaurant.com/ https://www.avelorestaurant.com/wp-json/wp/v2/pages?per_page=5&orderby=modified"
+  }
+ },
+ {
+  "id": "5d37d86d-212c-4f01-b327-98eef34abaa6",
+  "slug": "bake-it-healthy-toronto",
+  "archive": "no-trace-2025-2026: No website; one WebSearch for '\"Bake It Healthy\" Toronto vegan bakery' returned no result naming this business. Address 'Bloor Street West 1' looks like a placeholder; phone 905 area code is outside Toronto."
+ },
+ {
+  "id": "1843dff0-c044-4250-9501-f525cc39263b",
+  "slug": "kupfert-and-kim-toronto",
+  "update": {
+   "website": "https://www.kupfertandkim.com/",
+   "phone": "+1 416-504-1233",
+   "opening_hours": "Mo 08:00-17:00; Tu 07:30-17:00; We 07:30-17:00; Th 07:30-17:00; Fr 08:00-14:30; Sa off; Su off",
+   "address": "100 King Street West (First Canadian Place), Toronto, ON M5X 1C7",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: Own site: 'Everything we serve is made from plants.' | open: Listed on own Locations page as First Canadian Place with hours and phone | sources: https://www.kupfertandkim.com/locations"
+  }
+ },
+ {
+  "id": "4143a364-9628-4b4a-aa4f-0fb0b98782bb",
+  "slug": "completo-toronto",
+  "update": {
+   "website": "https://www.completo.club/",
+   "opening_hours": "Mo off; Tu 11:30-20:00; We 11:30-20:00; Th 11:30-20:00; Fr 11:30-21:00; Sa 11:30-21:00; Su 12:00-18:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | open: Own site lists 5 Coady Ave with hours; no dated content (newest image 2024) | sources: https://www.completo.club/"
+  }
+ },
+ {
+  "id": "a0fe0f8a-4993-4f3e-9018-dae90a611bb3",
+  "slug": "chai-yo-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu 11:30-15:30; We 11:30-15:30; Th 11:30-16:00,17:00-21:00; Fr 11:30-16:00,17:00-21:00; Sa 11:30-16:00,17:00-21:00; Su 11:30-15:30",
+   "address": "3603 Rue Saint-Denis, Montr\u00e9al, QC H2X 3L6",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"Our vegan Thai and Chinese creations\"; title \"Thai Vegan Restaurant\"; aggregators: \"entirely vegan menu\" | open: Own site shows current weekly hours; restomontreal/aggregators show spring 2026 Google reviews (4.9, 200+). Footer (c)2024 only. | sources: https://www.chai-yo.ca/ https://www.restomontreal.ca/resto/chai-yo-montreal/17532/en/"
+  }
+ },
+ {
+  "id": "e059058e-b267-4431-9473-70370f8c80de",
+  "slug": "iconoglace-montreal-2",
+  "update": {
+   "vegan_level": "vegan_options",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Own site meta: \"Cr\u00e8me glac\u00e9e artisanale, options v\u00e9ganes\"; menu \"Molle Coaticook + V\u00e9gane Maison\" (Coaticook = dairy soft serve) | open: Own site menu \"Menu 2026\", page dated 2026-07-01. | sources: https://iconoglace.ca/"
+  }
+ },
+ {
+  "id": "eadc2ae0-b0e3-47d3-a247-51b1e00a42c1",
+  "slug": "don-vegan-quebec",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 11:00-21:00; Tu 11:00-21:00; We 11:00-21:00; Th 11:00-21:00; Fr 11:00-22:00; Sa 09:00-14:00,17:00-22:00; Su 09:00-14:00,17:00-21:00",
+   "address": "97 Rue du Sault-au-Matelot, Qu\u00e9bec, QC G1K 3X7",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"premier restaurant enti\u00e8rement v\u00e9gane de la ville de Qu\u00e9bec\" | open: Own site menus uploaded June/Aug/Oct 2026; current hours listed. | sources: https://donresto.com/"
+  }
+ },
+ {
+  "id": "c63b69d5-dd17-4bc4-b7bf-064f9ab45449",
+  "slug": "cafe-venosa-montra-al",
+  "archive": "closed: HappyCow listing \"CLOSED: Venosa Cafe\" - \"Confirmed closed April 2017\". No website."
+ },
+ {
+  "id": "6a313954-177b-44e1-9314-1edbb358d933",
+  "slug": "rawesome-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://rawesome.ca/",
+   "address": "151 Rue Gounod, Montr\u00e9al, QC H2R 1A8",
+   "latitude": 45.5393494,
+   "longitude": -73.6277229,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"raw vegan organic cakes\"; product list is raw vegan cakes, cashew cheeses, nice creams; no animal products seen | open: Own online shop active, footer (c)2026, products in stock; counter page lists pick-up hours. | sources: https://rawesome.ca/ https://www.rawesome.ca/pages/montreal-counter https://rawesome.ca/collections/all"
+  }
+ },
+ {
+  "id": "3be47819-ff95-4d74-9f92-f4a8710b719a",
+  "slug": "umami-montreal-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Spinach: \"Everything on the menu is vegan\"; Tastet: \"specializes in vegan ramen\" | open: Own site blocked by Cloudflare (403); Spinach guide data refreshed 30 Oct 2026, menu checked 7 Jun 2026, lists current hours. The Main \"last checked Oct 15 2026\", no closure. | sources: https://spinach.guide/venues/umami-ramen-izakaya-204619/ https://tastet.ca/en/reviews/umami-delicious-vegan-ramen-in-the-mile-ex/?region=mtl https://www.themain.com/montreal/restaurant/umami-ramen-izakaya"
+  }
+ },
+ {
+  "id": "b94cabbb-ae5a-4e7c-859f-dbec5926679a",
+  "slug": "lu-i-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu 10:00-18:00; We 10:00-18:00; Th 10:00-18:00; Fr 10:00-18:00; Sa 10:00-17:00; Su 10:00-17:00",
+   "address": "5147 Avenue du Parc, Montr\u00e9al, QC H2V 4G3",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"100% vegan gluten-free treats, goodies, snacks and bites\" | open: Own site with current weekly hours, (c)2026 squarespace site. | sources: https://www.patisserieluandi.com/ https://www.patisserieluandi.com/contact"
+  }
+ },
+ {
+  "id": "bb03bb58-0ad5-4fb4-b69b-9c360565e5b6",
+  "slug": "shushu-haru-montreal",
+  "update": {
+   "vegan_level": "vegan_friendly",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: HappyCow review 16 Feb 2026: \"still an all-vegan kitchen, but the dining room has been merged with the larger non-vegan Shushuto... request the vegan menu\" | open: Own domain ENOTFOUND; HappyCow review 06 Jun 2026; Uber Eats listing. | sources: https://happycow.net/reviews/shushu-haru-montreal-326801"
+  }
+ },
+ {
+  "id": "128e35db-89bf-47ac-9f21-762d1248cf98",
+  "slug": "chuchai-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo off; Tu 17:00-21:00; We 17:00-21:00; Th 17:00-21:00; Fr 17:00-22:00; Sa 17:00-22:00; Su off",
+   "address": "4088 Rue Saint-Denis, Montr\u00e9al, QC H2W 2M5",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"Vegan restaurant using plant-based products to recreate traditional Thai dishes\" | open: Own site live with current hours; no closure notice; no dated 2025-2026 content seen (pre-scan maxYear 2025). | sources: https://www.chuchai.ca/"
+  }
+ },
+ {
+  "id": "3e4a3dd4-06d0-4ecf-bf33-9f754edca2b3",
+  "slug": "la-beignerie-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 10:00-22:00; Tu 10:00-22:00; We 10:00-22:00; Th 10:00-22:00; Fr 10:00-22:00; Sa 10:00-22:00; Su 10:00-22:00",
+   "address": "3979 Rue Saint-Denis, Montr\u00e9al, QC H2W 2M4",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"100% v\u00e9gane\", veganism is \"notre vision, pas une 'option'\" | open: Own site (c)2026, October seasonal menu. | sources: https://labeignerie.com/"
+  }
+ },
+ {
+  "id": "4295cc29-9c80-45cb-b0b1-2f2ebb830498",
+  "slug": "leaves-house-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: only plant-based milks (almond, oat, soy...), \"Plant-Based Cookies\"; listings: \"fully vegan caf\u00e9\", reviewer complaint \"only vegan milk options\" | open: Own shop site (c)2026; aggregator listings 2026 show open, no closure news. | sources: https://leaveshouse.com/ https://leaveshouse.com/pages/contact https://www.restomontreal.ca/resto/leaves-house-montreal/13346/en/",
+   "address": "1800 Avenue McGill College, Montr\u00e9al, QC H3A 3J6",
+   "latitude": 45.5022325,
+   "longitude": -73.5726556
+  }
+ },
+ {
+  "id": "4ecff953-aea1-4e2a-afc3-2238b5c104ff",
+  "slug": "resto-vego-montreal",
+  "archive": "closed: CTV News 20 Apr 2026: Resto V\u00e9go \"will close its doors in July\" after 50 years (rising costs); restomontreal news 14 Apr 2026 \"Resto V\u00e9go to Close Its Saint-Denis Location\"; restomontreal lists it permanently closed; own site now \"under construction\"."
+ },
+ {
+  "id": "5a97012b-98d2-4bcd-973c-dabec105e7fa",
+  "slug": "sham-montreal-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"First Syrian Plant-Based Restaurant\"; domain shamvegan.com; listings tag \"Vegan/100% Plant-Based\" | open: restomontreal shows Google reviews 25 Oct 2026 and owner reply 26 Oct 2026. | sources: https://www.shamvegan.com/ https://www.restomontreal.ca/resto/sham-mont-royal-montreal/18037/en/"
+  }
+ },
+ {
+  "id": "67c2634d-db1f-47a7-ad45-457c61e0b4e1",
+  "slug": "sushi-momo-vegetalien-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://www.sushimomo.ca/montreal",
+   "opening_hours": "Mo 17:00-22:00; Tu 17:00-22:00; We 17:00-22:00; Th 17:00-22:00; Fr 17:00-23:00; Sa 16:00-23:00; Su 16:00-22:00",
+   "address": "3609 Rue Saint-Denis, Montr\u00e9al, QC H2X 3L6",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own menu PDF: \"Ce menu est 100% \u00e0 base de plantes\" | open: Own site menu PDF \"food-sept26\" (Sept 2026), catering menu Dec 2025, current hours. | sources: https://www.sushimomo.ca/montreal https://www.sushimomo.ca/s/food-sept26-print01.pdf"
+  }
+ },
+ {
+  "id": "76a14174-262a-4a33-9ae2-26cf5b0b407f",
+  "slug": "atelier-tonic-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 10:00-18:00; Tu 10:00-18:00; We 10:00-18:00; Th 10:00-19:00; Fr 10:00-19:00; Sa 10:00-17:00; Su 10:00-17:00",
+   "address": "7100 Boulevard Saint-Laurent, Montr\u00e9al, QC H2S 3E2",
+   "latitude": 45.5338747,
+   "longitude": -73.6169773,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site title: \"Produits naturels v\u00e9ganes faits au Qu\u00e9bec\" | open: Own shop (c)2026 with current boutique hours. | sources: https://ateliertonic.com/"
+  }
+ },
+ {
+  "id": "8ac4b0b9-6822-4e27-9ff1-70bd0bdb69f2",
+  "slug": "lola-rosa-montreal-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://lola-rosa.ca/milton-restaurant/",
+   "opening_hours": "Mo 11:30-21:00; Tu 11:30-21:00; We 11:30-21:00; Th 11:30-21:30; Fr 11:30-21:30; Sa 11:30-21:30; Su 11:30-21:00",
+   "address": "545 Rue Milton, Montr\u00e9al, QC H2X 1W5",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"une cuisine 100% v\u00e9g\u00e9talienne\" | open: Own site menu uploads Sept/Oct 2025, \"Nouveau menu chez Lola Rosa Milton\", (c)2026. | sources: https://lola-rosa.ca/ https://lola-rosa.ca/milton-restaurant/"
+  }
+ },
+ {
+  "id": "c158b9b8-fd50-4513-855f-3cf3fe890090",
+  "slug": "tula-les-repas-vegetaliens-equilibres-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Tastet: \"Tula: 100% vegan Indian restaurant on the Plateau\"; restomontreal: \"ingr\u00e9dients 100% v\u00e9g\u00e9taux\" | open: Own site renders empty; restomontreal shows Google reviews 19-25 Oct 2026 and regular hours; The Main shows \"Ferm\u00e9\" status (July 2026) - conflict, but Oct 2026 reviews favour open. | sources: https://www.restomontreal.ca/resto/tula-montreal/16366/fr/ https://tastet.ca/en/reviews/tula-100-vegan-indian-restaurant-on-the-plateau/?region=to"
+  }
+ },
+ {
+  "id": "d34a69be-cbb4-4a78-9c64-a646854894d2",
+  "slug": "hindusthali-montreal",
+  "update": {
+   "vegan_level": "mostly_vegan",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo off; Tu 11:45-14:00,17:30-21:00; We 11:45-14:00,17:30-21:00; Th 11:45-14:00,17:30-21:00; Fr 11:45-14:00,17:30-21:30; Sa 11:45-14:00,17:30-21:30; Su off",
+   "address": "770 Boulevard Rosemont, Montr\u00e9al, QC H2S 0B7",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): unsure | vegan: Own site: \"une approche 100% v\u00e9g\u00e9talienne\" BUT heading \"Repas Indiens v\u00e9g\u00e9taliens et v\u00e9g\u00e9tariens\" | open: Own site live with current hours; no dated content (images Nov-Dec 2024). | sources: https://hindusthali.com/ https://hindusthali.com/menu/"
+  }
+ },
+ {
+  "id": "fb739638-b29f-47a4-bca9-4fb0e2e0387d",
+  "slug": "lola-rosa-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://lola-rosa.ca/place-des-arts/",
+   "address": "276 Rue Sainte-Catherine Ouest, Montr\u00e9al, QC H2X 2A1",
+   "latitude": 45.5068603,
+   "longitude": -73.5661921,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"une cuisine 100% v\u00e9g\u00e9talienne\" | open: Own site, current location page; menu uploads 2025, (c)2026. | sources: https://lola-rosa.ca/place-des-arts/ https://lola-rosa.ca/contact/"
+  }
+ },
+ {
+  "id": "4ad97609-449b-4ab1-8614-be5ac20b9336",
+  "slug": "vegateau-montreal",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://www.vegateau.com/",
+   "address": "5610 Boulevard Saint-Laurent, Montr\u00e9al, QC H2T 1S8",
+   "latitude": 45.5260892,
+   "longitude": -73.599902,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"a complete selection of 100% vegan baked goods\" | open: Own site live (pre-scan maxYear 2028 = footer), contact page current; no dated posts; no hours on site. | sources: https://www.vegateau.com/ https://www.vegateau.com/contact"
+  }
+ },
+ {
+  "id": "ac4a7efc-e45a-4c37-8f9c-041d178a18f9",
+  "slug": "matt-nat-concept-store-montreal-montreal",
+  "archive": "no-current-store: Matt & Nat brand is online only; no current Montreal concept store address found (checked 2026-10-30)"
+ },
+ {
+  "id": "ef135af8-c5d7-43a2-9302-4672926e00fb",
+  "slug": "zebulon-montreal",
+  "update": {
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: n/a | open: Not researched (budget)."
+  }
+ },
+ {
+  "id": "14b37d75-e066-4123-89ff-e54f877137bb",
+  "slug": "ohana-sushi-montreal",
+  "update": {
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: n/a | open: Own site blocked (403)."
+  }
+ },
+ {
+  "id": "5e7b70be-1adf-4ecd-8609-a4934b57ca65",
+  "slug": "burger-fiance-montreal",
+  "update": {
+   "phone": "+1 514-840-3614",
+   "address": "417 Rue Notre-Dame Ouest, Montr\u00e9al, QC H2Y 1V2",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: Own site: \"this is a vegan restaraunt after all\" | open: Own site locations page lists Vieux-Montr\u00e9al location with OpenTable reservations. | sources: https://burgerfiance.com/Locations-French"
+  }
+ },
+ {
+  "id": "47fbf1ce-7a73-4d1e-9907-738067f079e2",
+  "slug": "swirl-montreal",
+  "update": {
+   "address": "230 Rue Rachel Est, Montr\u00e9al, QC H2W 1E3",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: n/a | open: Own shop site lists all products \"\u00c9puis\u00e9\" (sold out). | sources: https://swirlmtl.com/"
+  }
+ },
+ {
+  "id": "cc160bfc-3ecf-400b-9298-ccf78f045ec6",
+  "slug": "bloom-sushi-montreal",
+  "update": {
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: n/a | open: Not researched (budget)."
+  }
+ },
+ {
+  "id": "8532be01-b63a-462a-9598-b4f23b2c2b37",
+  "slug": "mighty-vegan-supermarket-vancouver",
+  "archive": "no-trace-2025-2026: mightyvegan.ca ENOTFOUND; WebSearch for 'Mighty Vegan supermarket Vancouver' found no trace of the business (no listing, no news); no street address in our row"
+ },
+ {
+  "id": "846edd94-5a8c-4efc-94b3-1b3df5b4f42b",
+  "slug": "vogue-cakes-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo 11:00-18:00; Tu 11:00-18:00; We 11:00-18:00; Th 11:00-18:00; Fr 11:00-18:00; Sa 11:00-18:00; Su 11:00-16:00",
+   "address": "3278 West Broadway, Vancouver, BC",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"We are a 100% vegan bakery.\" \"Our facility is peanut free, dairy free & egg free.\" | open: Own site live with online ordering (24h notice) and current hours; only dated item is (c)2019 footer | sources: https://www.voguecakes.com/"
+  }
+ },
+ {
+  "id": "2e836eb0-d642-4031-b7b9-38dc57d23c95",
+  "slug": "feast-fallow-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 08:00-16:00; Tu 08:00-16:00; We 08:00-16:00; Th 08:00-16:00; Fr 08:00-16:00; Sa 08:00-15:00; Su off",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"We are a plant-based/vegan cafe serving local coffee, baked good and pastries\"; menu uses Violife, Daiya, Just Egg, tofu bacon, oat milk default | open: Own site live with current menu (seasonal 2026 drinks, Violife/Daiya/Just Egg items) and hours | sources: https://feastandfallow.com/ https://feastandfallow.com/menu"
+  }
+ },
+ {
+  "id": "33584638-2609-45ea-9462-a27a8378b584",
+  "slug": "kokomo-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "address": "3435 Commercial Street, Vancouver, BC V5N 4E8",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"fresh, nourishing, plant-based bowls\"; co-founder in Georgia Straight: food is \"gluten-free, vegan and largely nut-free\" | open: Own site lists East Van location 3435 Commercial St as current (site footer 2026) | sources: https://heykokomo.ca/ https://www.straight.com/food/945581/kokomo-vegan-gluten-free-and-nut-free-spot-caters-health-conscious-vancouverites-go"
+  }
+ },
+ {
+  "id": "43da041a-569f-40f2-9914-e1e5398f7c87",
+  "slug": "meet-on-main-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://eatmeet.ca/meet-on-main/",
+   "opening_hours": "Mo 11:00-23:00; Tu 11:00-23:00; We 11:00-23:00; Th 11:00-23:00; Fr 11:00-23:00; Sa 10:00-23:00; Su 10:00-23:00",
+   "address": "4288 Main Street, Vancouver, BC V5V 3P9",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Location page FAQ: \"our menu is egg and dairy free\"; page meta keywords \"MeeT,Vegan,Plant-Based\" | open: Own site Main St page with current hours; homepage notice of early closing 28 Oct for staff party (2026) | sources: https://eatmeet.ca/ https://eatmeet.ca/meet-on-main/"
+  }
+ },
+ {
+  "id": "47605aab-0cae-4a84-8e54-cd6d5c9a6a85",
+  "slug": "vegan-supply-surrey",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://vegansupply.ca/",
+   "opening_hours": "Mo off; Tu off; We 11:00-19:00; Th 11:00-19:00; Fr 11:00-19:00; Sa 11:00-18:00; Su 11:00-18:00",
+   "address": "202-14016 32 Avenue, Surrey, BC V4P 2J2",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"100% Vegan\" \"Over 2,000 vetted products\"; \"Vegan owned and operated\" | open: Own retail-locations page lists Surrey store with current hours | sources: https://vegansupply.ca/pages/contact-us https://vegansupply.ca/pages/retail-locations"
+  }
+ },
+ {
+  "id": "650964e1-d3ca-490f-9004-b9f802ac67a2",
+  "slug": "am-cafe-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://amcafe.ca/",
+   "opening_hours": "Mo off; Tu off; We 08:30-15:30; Th 08:30-15:30; Fr 08:30-15:30; Sa 08:30-15:30; Su 08:30-15:30",
+   "address": "2528 Guelph Street, Vancouver, BC V5T 3P5",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Site description: \"a 100% plant-based caf\u00e9 in Mount Pleasant\"; 'fish'/'chicken' only in 'Faux-Let O' Fish' and a 'This isn't chicken?' quote | open: Own site live with current hours | sources: https://amcafe.ca/"
+  }
+ },
+ {
+  "id": "acad45e8-4964-42b4-8344-01acd5db9d42",
+  "slug": "to-live-for-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 07:00-17:00; Tu 07:00-17:00; We 07:00-17:00; Th 07:00-17:00; Fr 07:00-17:00; Sa 07:00-17:00; Su 07:00-17:00",
+   "address": "1508 Nanaimo Street, Vancouver, BC",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Unbelievably Vegan Baked Goods\"; \"The future of baking is plant-based.\" | open: Own site live with order form, hours, (c)2026 | sources: https://tolivefor.ca/"
+  }
+ },
+ {
+  "id": "d410e5c6-4e3a-4e20-8d3b-e1c1b4d05a99",
+  "slug": "cofu-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu off; We 17:00-22:00; Th 17:00-22:00; Fr 17:00-22:00; Sa 17:00-22:00; Su 17:00-22:00",
+   "address": "488 Gore Avenue, Vancouver, BC V6A 2Z6",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Title \"COFU | Vegan Sushi Restaurant\"; Autumn Omakase \"Entirely plant-based\"; 'fish' only in a review comparison | open: Own site live with current Autumn Omakase and hours ('closed' = Mon/Tue) | sources: https://www.cofu.ca/"
+  }
+ },
+ {
+  "id": "5a841c32-2079-48c4-aaa7-f0e399f013c9",
+  "slug": "tuba-cafe-squamish",
+  "update": {
+   "vegan_level": "mostly_vegan",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": null,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): unsure | vegan: Third-party reviews: 'Back to fully vegan as of July 2026' (14 Jul 2026), 'Fully vegan now' (18 Aug 2026); but listing says meat added Mar 2025 and a 27 Jul 2025 review noted three non-vegan sandwiches | open: Reviews dated Jul-Aug 2026 on a third-party directory (internal evidence only); own domain tubacafe.ca shows only an 'Index of /' directory listing | sources: https://tubacafe.ca/ https://www.happycow.net/reviews/tuba-cafe-squamish-355750"
+  }
+ },
+ {
+  "id": "d9fa4e7d-58b3-4e28-af51-7e476fce4cf0",
+  "slug": "the-bunny-cafe-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "address": "1696 Venables Street, Vancouver, BC",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site has no vegan statement; third-party listing: 'Fully vegan cafe and therapeutic space'; Daily Hive: treats from local vegan bakeries | open: Own site live (address, phone); third-party reviews dated 7 Sep 2026 and 16 Sep 2026 | sources: https://www.bunnycafe.ca/ https://happycow.net/reviews/the-bunny-cafe-vancouver-376309 https://dailyhive.com/vancouver/vancouver-bunny-cafe-opening"
+  }
+ },
+ {
+  "id": "02f61236-ba85-4112-bd2b-b77c42017741",
+  "slug": "vegan-supply-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 10:00-19:00; Tu 10:00-19:00; We 10:00-19:00; Th 10:00-19:00; Fr 10:00-19:00; Sa 10:00-18:00; Su 10:00-18:00",
+   "address": "250 East Pender Street, Vancouver, BC V6A 1T7",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Canada's Largest & Original Vegan Shop\"; \"100% Vegan\" | open: Own retail-locations page lists Chinatown store with current hours | sources: https://vegansupply.ca/ https://vegansupply.ca/pages/retail-locations"
+  }
+ },
+ {
+  "id": "d6a01001-2b77-4663-96d5-f2b48deed297",
+  "slug": "edible-flours-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://ediblefloursbakery.com/",
+   "opening_hours": "Mo off; Tu 09:30-17:00; We 09:30-17:00; Th 09:30-17:00; Fr 09:30-17:00; Sa 09:30-17:00; Su 10:30-17:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"We are a Vegan Bakery\"; \"Every cake is entirely vegan\"; site kw 'entirely vegan', '100% plant-based' | open: Own site (c)2026, Halloween 2026 and April 2026 cake content, current hours | sources: https://ediblefloursbakery.com/"
+  }
+ },
+ {
+  "id": "b58079ed-200b-4d91-8f92-c0a8fceff101",
+  "slug": "vegan-shoku-japanese-restaurant-vancouver",
+  "archive": "closed: Daily Hive 2 Sep 2026: closing the Kerrisdale location (2260 W 41st Ave), final day 8 Oct 2026, plans to relocate but no new location announced; third-party listing marked CLOSED (updated 5 Oct 2026)"
+ },
+ {
+  "id": "7b61cb15-a6b1-4386-a24a-03fe80eafa16",
+  "slug": "happy-veggie-world-richmond",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://happyveggieworld.com/",
+   "address": "13988 Cambie Road #378, Richmond, BC V6V 2K4",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Every Happy Veggie World product is 100% vegan, with no animal products of any kind.\" ('chicken' = Chick'n) | open: Own site live (c)2026 with June 2026 uploads, address and phone | sources: https://happyveggieworld.com/"
+  }
+ },
+ {
+  "id": "96b6e15a-0edd-401c-ad03-ac283e6ef4ff",
+  "slug": "secret-supper-vancouver",
+  "archive": "no-trace-2025-2026: Site live but shows no dated events; Vancouver city page 404; search found only 2011-2013 coverage and the chef moved the club to Brooklyn/Montreal; no 2025-2026 Vancouver event found"
+ },
+ {
+  "id": "2edf6152-acac-458e-8068-b8332042c0fa",
+  "slug": "native-shoes-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Brand motto 'Beast Free'; PETA-Approved Vegan; Foot Locker CA: all Native shoes 100% vegan, free of animal by-products | open: Brand active, products sold by current retailers (Foot Locker CA, evo); own site Cloudflare-blocked | sources: https://www.footlocker.ca/category/brands/native.html https://www.sustainablejungle.com/brand-ratings/native-shoes/"
+  }
+ },
+ {
+  "id": "795dd765-c0a9-4af2-9d10-8a3d4e8a577a",
+  "slug": "soylent-green-bowen-island",
+  "archive": "no-trace-2025-2026: Only a Facebook page as website; WebSearch found no trace; not in the Bowen Island vegan-directory list of 9 places"
+ },
+ {
+  "id": "14d5834e-15f8-41ac-9d33-5cb673366620",
+  "slug": "the-juice-truck-vancouver",
+  "update": {
+   "vegan_level": "mostly_vegan",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://www.thejuicetruck.ca/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Own site: 'Made with plants', 'Vegan Collagen Booster'; third-party listing: 'All vegan apart from bee products' + Honey tag; another listing says reported fully vegan Nov 2024 (conflicting) | open: Brand site live (online shop, pick-up at W 5th Ave); third-party listing reports the 4236 Main St shop closed January 2026 | sources: https://www.thejuicetruck.ca/ https://happycow.net/reviews/the-juice-truck-vancouver-149963"
+  }
+ },
+ {
+  "id": "240ec49f-3d0b-40aa-b0b1-48a4932da90c",
+  "slug": "little-vegan-treats-maple-ridge",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Always vegan\"; 'eggs'/'honey' only in vegan product names (Chickee Eggs, vegan honeycomb bar) | open: Own online shop live with Fall/Halloween 2026 products, (c)2026 | sources: https://littlevegantreats.com/"
+  }
+ },
+ {
+  "id": "f0481d2e-09e0-4035-b4e1-a3de088ff133",
+  "slug": "folke-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu off; We off; Th 17:00-22:00; Fr 17:00-22:00; Sa 10:00-14:00,17:00-22:00; Su 10:00-14:00,17:00-21:30",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: About page: 'Folke is a plant-based restaurant in Vancouver, offering a refined yet welcoming approach to vegan fine dining.' | open: Own site lists current hours (Th-Su dinner, Sa-Su brunch) and MICHELIN Guide 2025 award; footer year 2026 | sources: https://www.folkerestaurant.com/ https://www.folkerestaurant.com/about"
+  }
+ },
+ {
+  "id": "393aba2e-bac3-40e0-898d-1c631b3a1ec8",
+  "slug": "vegan-fried-chick-un-vancouver",
+  "update": {
+   "vegan_level": "vegan_friendly",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo-Su 11:00-03:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Spinach.guide: 'Vegetarian', 'Limited vegan options', menu 'includes dairy cheese and other non-vegan items'; HappyCow reviewers: dairy ice cream and cheesecakes, 'vegan' refers to the chick'un. Own site: 'Fudgy Brownie Ala Mode (Vanilla Ice Cream Included)', no dairy-free claim. | open: Own site lists daily hours 11:00-03:00 and live ChatChef ordering; no dated item. Directory data refreshed Oct 2026. | sources: https://www.veganfriedchickun.com/ https://spinach.guide/venues/vegan-fried-chick-un-206074/ https://www.happycow.net/reviews/vegan-fried-chickun-vancouver-274214"
+  }
+ },
+ {
+  "id": "2cfce196-0e8d-469e-a75b-5d21042e6985",
+  "slug": "nuttea-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Spinach.guide: 'Everything on the menu is vegan.' Own site: 'The Nut Mylk is made fresh daily from real nuts'. Curiocity 2022: 'famous vegan milk tea'. | open: Own site (nuttea.net/location) still lists Vancouver 1958 W 4th Ave in 2026; Spinach.guide data refreshed 30 Oct 2026 with Google 4.8 from 345 reviews. No dated own post. | sources: https://nuttea.net/location https://spinach.guide/venues/nuttea-206442/ https://curiocity.com/nuttea-canada-vegan-milk-tea-now-open-in-vancouver/"
+  }
+ },
+ {
+  "id": "4393c27f-9850-4db9-82dd-afd6d02bfcc0",
+  "slug": "eternal-abundance-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo 10:00-18:00; Tu 10:00-19:00; We 10:00-19:00; Th 10:00-19:00; Fr 10:00-19:00; Sa 10:00-19:00; Su 10:00-19:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: '100% organic, 100% plant-based'; 'made with love, compassion and zero animal products.' | open: Own site shows current hours and footer (c) 2026; no dated post. | sources: https://eternalabundance.ca/"
+  }
+ },
+ {
+  "id": "c1129a12-57cc-43aa-bb7b-25a15086935e",
+  "slug": "sai-plant-deli-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "address": "#101-422 Richards Street",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Spinach.guide: 'Fully vegan', everything on the menu is vegan; HappyCow reviewers: 100% vegan; Noms: plant-based fillings + vegan custards. | open: Noms Magazine 12 Jul 2025: Vegan Pudding & Co rebranded as Sai Plant Deli (oyaki), soft-opened June 2025 at #101-422 Richards St. Spinach.guide data refreshed Oct 2026. No own website (Instagram @sai_plant_deli only). | sources: https://nomsmagazine.com/?p=61745 https://spinach.guide/venues/sai-plant-deli-by-vegan-pudding-co-202947/"
+  }
+ },
+ {
+  "id": "ab86d942-3c29-4150-98a1-7b5c338d220c",
+  "slug": "level-v-bakery-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo-Su 09:00-18:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: '100% Vegan Plant Based Desserts and More', '100% dairy free and 100% egg free!' | open: Own site footer (c) 2026, product images updated 2025-2026, inventory updated daily, current hours. | sources: https://levelvbakery.com/"
+  }
+ },
+ {
+  "id": "0d8483a4-f07b-4613-a408-60f1c6c34ee5",
+  "slug": "nam-vegan-express-burnaby",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo off; Tu off; We 12:00-15:00,17:00-20:30; Th 12:00-15:00,17:00-20:30; Fr 12:00-15:00,17:00-20:30; Sa 12:00-15:00,17:00-20:30; Su off",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: 'All menu items are 100% VEGAN.' 'All Vegan Ham, V-Chicken, etc. are imitation meats.' | open: Own site menu PDF 'NAMMENU2025.pdf' uploaded Feb 2025; current hours listed; no closure notice. | sources: https://namvegan.com/"
+  }
+ },
+ {
+  "id": "42016ed4-7533-42d9-82b9-fb661d7a765b",
+  "slug": "vega-foods-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://myvega.ca/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: myvega.ca: 'Always Clean, Plant-based, & Gluten Free'; myvega.com: 'vegan plant-based protein powder'. | open: Brand site active (2026 product images). | sources: https://myvega.com/ https://www.myvega.ca/"
+  }
+ },
+ {
+  "id": "29487e5f-d546-405f-b0a3-d9f3d6dd530e",
+  "slug": "buddha-full-northwoods-village-district-of-north-vancouver",
+  "update": {
+   "vegan_level": "mostly_vegan",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://www.buddha-full.ca/northwoods-village",
+   "opening_hours": "Mo-Su 09:30-18:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Own site: 'Fresh Organic, Vegan, Gluten-Free Food' but no 100% claim. Georgia Straight: caf\u00e9 'isn't fully vegan because it offers customers the option of having cow's milk and honey with their coffee and tea' (older). HappyCow Northwoods listing tags 'Honey'. | open: Own Northwoods page: 'open daily 9:30am - 6pm, 102-2120 Dollarton Hwy'; live UberEats/Toast ordering links; no dated 2025-2026 item. | sources: https://www.buddha-full.ca/ https://www.buddha-full.ca/northwoods-village https://www.straight.com/food/vegan-eats-suburbs-buddha-full-juice-smoothies-freshens-north-vancouver"
+  }
+ },
+ {
+  "id": "d5edf9e3-c9a0-419b-bdfd-0454a6b353b4",
+  "slug": "green-cuisine-victoria",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo-Fr 10:00-20:00; Sa-Su 11:00-20:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: 'a charming brick-lined vegan restaurant in Victoria'; 'serve only sustainable plant-based foods'; gelato made 'with plant based milks'. | open: Current hours on own site; site updated Aug 2025; HappyCow review dated 21 Sep 2026. | sources: https://www.greencuisine.com/ https://www.greencuisine.com/green-cuisine-restaurant/ https://www.happycow.net/reviews/green-cuisine-victoria-1279"
+  }
+ },
+ {
+  "id": "2d00a7cf-bd2e-41f1-8bdf-609909447516",
+  "slug": "kokomo-vancouver-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://heykokomo.ca/pages/kitsilano",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Edgemont menu (own site) is all plant analogues: 'just Egg, daiya cheese', 'tofu feta', 'nora's vanilla ice cream', soy curls; no honey/dairy found. Site: 'fresh, nourishing, plant-based bowls'. | open: Own site nav (c) 2026 still lists a Kitsilano location; location page rate-limited (HTTP 429), so address 2028 Vine St and hours not re-checked. | sources: https://heykokomo.ca/ https://heykokomo.ca/pages/edgemont-village"
+  }
+ },
+ {
+  "id": "85af0876-cc7e-4986-ac8b-c1cf933036ca",
+  "slug": "vegan-bay-b-b-tofino",
+  "archive": "no-trace-2025-2026: veganbaybb.com does not resolve (ENOTFOUND) and has no Wayback Machine captures at all; a web search for 'Vegan Bay B&B Tofino' finds no listing anywhere (Tourism Tofino, Booking, HappyCow)."
+ },
+ {
+  "id": "65950097-a109-4c3a-8f1a-078f03436c9b",
+  "slug": "jaide-joel-s-baking-company-kelowna",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu 09:00-16:00; We 09:00-16:00; Th 09:00-16:00; Fr 09:00-16:00; Sa 10:00-16:00; Su 10:00-15:00",
+   "address": "101-555 Montgomery Road",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: '100% Vegan and Gluten-free'; 'our entire store is dedicated vegan and gluten-free'. | open: Own site: 'Best Cake or Designer, 2025' award, footer (c) 2026, current hours, DoorDash delivery. | sources: https://www.jaideandjoelsbakingco.com/"
+  }
+ },
+ {
+  "id": "b5f1d895-4409-4af0-b7d9-8d59d27d8e89",
+  "slug": "chickpea-restaurant-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo-Th 10:00-22:00; Fr-Su 09:00-23:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own menu page: 'Our entire menu is vegan, and most of our dishes are gluten free.' | open: Own site lists current hours and 2025 awards (Golden Plates 2025 runner-up). | sources: https://www.ilovechickpea.ca/ https://www.ilovechickpea.ca/restaurant-menu"
+  }
+ },
+ {
+  "id": "31042261-925d-410d-a779-0ecd51a941c5",
+  "slug": "sprout-nelson",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://www.welovesprout.com/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: 'Sprout Plant Based Eatery', 'delicious plant based food'; Nelson Kootenay Lake tourism: 'an entirely vegan restaurant'. | open: Own site menu image 'MENU SUMMER 2026'; Thanksgiving hours notice; phone matches. | sources: https://www.welovesprout.com/ https://www.welovesprout.com/menu https://www.nelsonkootenaylake.com/listing/sprout-plant-based-eatery"
+  }
+ },
+ {
+  "id": "3dab4b86-e7ff-4d5b-9fb0-6cf76430ded9",
+  "slug": "angry-vegan-organic-juice-bar-dispensary-penticton",
+  "archive": "closed: Press history: Angry Vegan opened at Barefoot Beach Resort 2017, moved to Skaha Lake Road, then 248 Westminster Ave W, then 536 Main Street (2021). The Skaha Lake Rd location no longer operates; business is now at 536 Main St."
+ },
+ {
+  "id": "3fac5c78-a0a2-4535-a435-9b6f12edaefc",
+  "slug": "chickpea-burnaby",
+  "archive": "no-fixed-venue: Chickpea own site lists only 4298 Main St (Vancouver) and a roaming food truck; no Burnaby location (checked 2026-10-30)"
+ },
+ {
+  "id": "cb263e78-e365-4183-8203-6d4a5724d457",
+  "slug": "kokomo-district-of-north-vancouver",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://heykokomo.ca/pages/edgemont-village",
+   "opening_hours": "Mo-Su 10:30-19:30",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Edgemont menu (own site) is all plant analogues: 'just Egg, daiya cheese', 'tofu feta', 'nora's vanilla ice cream', soy curls; no honey/dairy found. Site: 'fresh, nourishing, plant-based bowls'. | open: Own Edgemont page lists current hours and menu; footer (c) 2026. | sources: https://heykokomo.ca/pages/edgemont-village"
+  }
+ },
+ {
+  "id": "db799311-25b0-4360-ad8a-4a28abbf44a1",
+  "slug": "angry-vegan-penticton",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Listed as a vegan restaurant + juice bar; local press calls it Penticton's oldest vegan eatery. | open: HappyCow listing at 536 Main St has a review dated 18 May 2026; listed hours Tu-Sa 11-18 (not official, so not copied). Own domain angryveganorganic.ca does not resolve (ENOTFOUND); angryvegan.ca rate-limited. | sources: https://www.happycow.net/reviews/angry-vegan-penticton-128233 https://www.castanet.net/news/Penticton/262691/Vegan-eats-move-downtown"
+  }
+ },
+ {
+  "id": "c2765473-6f4e-4685-80c7-f7b24115831d",
+  "slug": "bonus-bakery-vancouver",
+  "update": {
+   "website": "https://bonusbakery.com/",
+   "address": "1428 Vernon Drive",
+   "latitude": 49.2682388,
+   "longitude": -123.0788826,
+   "city": "Vancouver",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | open: Own site lists current hours for two sites: 'Home' 1428 Vernon Dr and 'Outpost' 401 Burrard St (inside Freshii). Our 407 Industrial Ave address is not listed. | sources: https://bonusbakery.com/"
+  }
+ },
+ {
+  "id": "28b5d12d-cee7-4e49-8921-9301ccc5fbe5",
+  "slug": "virtuous-pie-vancouver",
+  "update": {
+   "website": "https://www.virtuouspie.com/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: Own site: '100% PLANT-BASED', 'Virtuous Pie remains fully plant-based'. | open: Own site banner: 'We're turning 10! Join us Saturday, September 19' (2026); new owners from 2025; site: original Chinatown location. | sources: https://www.virtuouspie.com/"
+  }
+ },
+ {
+  "id": "b3576863-d89b-4d81-b67f-80fc0d9db3d6",
+  "slug": "canela-vegan-bakery-cafe-calgary",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-19:00; Sa 08:30-19:00; Su 09:00-18:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Meet Western Canada's first all-vegan bakery & cafe\"; \"Affordable, memorable, and 100% vegan\" | open: Own site lists current hours; site images uploaded 2026-01-07; Square catalog cache 2026-03-25 | sources: https://www.canelayyc.com/"
+  }
+ },
+ {
+  "id": "0333fade-b2e9-4939-87d9-cef0c7731c4f",
+  "slug": "padmanadi-vegetarian-restaurant-edmonton",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo off; Tu 11:00-14:00,16:00-21:00; We 11:00-14:00,16:00-21:00; Th 11:00-14:00,16:00-21:00; Fr 11:00-21:00; Sa 11:00-21:00; Su 11:00-21:00",
+   "address": "10740 101 St NW, Edmonton, AB",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"We're a family-owned, award-winning vegan eatery\"; site title \"Vegan Restaurant & Eatery\" | open: Own site announces Edmonton buffet on 21 Nov 2026 and lists current hours | sources: https://www.padmanadi.com/"
+  }
+ },
+ {
+  "id": "a15f1461-5ae6-4e02-bb20-8561665f3571",
+  "slug": "raw-soul-calgary",
+  "archive": "closed: rawsoulchef.com does not resolve (ENOTFOUND); two web searches found no trace of a 'Raw Soul' business in Calgary or on Samis Road at any date"
+ },
+ {
+  "id": "c43168eb-4cce-4cd3-a022-c5322f360d3e",
+  "slug": "churned-dartmouth",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 3,
+   "website": "https://www.churned.ca/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Own site: \"We're proud to make our vegan ice cream in small batches\", \"plant based ice cream\"; Spinach guide: \"Everything on the menu is vegan\" | open: Own site live with current hours, advent calendar pre-order, image upload dated 2026-10-27 | sources: https://www.churned.ca/ https://spinach.guide/venues/churned-209401/"
+  }
+ },
+ {
+  "id": "acd9992d-4045-4f1a-9702-839449256b68",
+  "slug": "backstairs-secret-vegan-cafe-edmonton",
+  "archive": "closed: Own blog, last post 27 Sep 2010: \"Backstairs is on hiatus for a while due to the loss of a venue\"; no posts since"
+ },
+ {
+  "id": "896c5c81-078c-445f-996a-918062e81a0c",
+  "slug": "wild-leek-food-juice-bar-halifax",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "website": "https://www.wildleek.ca/",
+   "opening_hours": "Mo 11:00-16:00; Tu 11:00-19:00; We 11:00-19:00; Th 11:00-20:00; Fr 11:00-20:00; Sa 11:00-20:00; Su off",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"100% vegan!\" | open: Own site lists current weekly hours, footer (c) 2025, no closure notice | sources: https://www.wildleek.ca/"
+  }
+ },
+ {
+  "id": "c0fbb839-a2b1-401b-bf92-d2e36192b159",
+  "slug": "way-of-life-mode-de-vie-edmonton",
+  "archive": "no-trace-2025-2026: Only web trace is a 2008 blog note (Edmonton Journal review, opened end of 2007); no site, no listing, no mention since. Two searches found no closure report either."
+ },
+ {
+  "id": "f441d5e5-133e-4add-9cf7-58eadc9f465f",
+  "slug": "odd-burger-edmonton-2",
+  "archive": "closed: onlyhereforthefood.ca 29 Jun 2026: \"On the heels of the Mayfair location closing Odd Burger has also announced the closure of the only other Edmonton location, in Ellerslie.\" Mayfield Common closed 28 Jun 2026 (Daily Hive, 22 Jun 2026). oddburger.com returns HTTP 402."
+ },
+ {
+  "id": "69e9ad06-4ef1-49b8-85e9-d332fd29d33d",
+  "slug": "aux-vivres-westmount",
+  "update": {
+   "opening_hours": "Mo 11:00-21:00; Tu 11:00-21:00; We 11:00-21:00; Th 11:00-21:00; Fr 11:00-22:00; Sa 11:00-22:00; Su 11:00-21:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | open: Own site lists Westmount hours | sources: https://www.auxvivres.com"
+  }
+ },
+ {
+  "id": "3b9fffb1-d710-4c45-87e4-56c5e39a15f3",
+  "slug": "lazy-tulip-cafe-barrie",
+  "update": {
+   "vegan_level": "vegan_options",
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T20:00:00Z",
+   "verification_level": 2,
+   "opening_hours": "Mo 09:00-15:00; Tu 09:00-15:00; We 09:00-15:00; Th 09:00-15:00; Fr 09:00-15:00; Sa 09:00-15:00; Su 09:00-15:00",
+   "address": "190 Cundles Rd E, Barrie, ON",
+   "latitude": 44.4122939,
+   "longitude": -79.6887333,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Own menu: \"Enjoy your choice of Hayters farm turkey bacon or classic bacon, with sliced apples, cheddar\"; describes itself as \"Vegan & GF friendly\" | open: Own site live, footer (c) 2026, recent social posts embedded | sources: http://www.lazytulipcafe.com"
+  }
+ },
+ {
+  "id": "e45c122e-da6c-45dc-b4aa-5b2f37d569f3",
+  "slug": "vegan-street-calgary",
+  "update": {
+   "website": "https://www.veganstreet.ca/",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): enrich_done | vegan: Site describes itself as plant-based vegan cuisine | open: Own site lists 2026 holiday roast pre-orders, Avenue Best Restaurants 2025 award | sources: https://www.veganstreet.ca/"
+  }
+ }
+]

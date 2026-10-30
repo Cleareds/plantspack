@@ -1,0 +1,26 @@
+[
+ {
+  "id": "1b05c97c-13ac-4c65-8b00-12317c81b32a",
+  "slug": "meet-on-blanshard-victoria",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "2026-06-15 dead-site-sweep: cleared. Category=4XX_HARD, status=404. Original URL preserved: https://eatmeet.ca/meet-restaurants-blanshard-location/",
+  "website": null
+ },
+ {
+  "id": "5b8824e6-c858-47fb-8fd9-638b8547ccef",
+  "slug": "virtuous-pie-victoria",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": "2026-06-15 dead-site-sweep: cleared. Category=4XX_HARD, status=404. Original URL preserved: https://virtuouspie.com/locations/canada/virtuous-pie-victoria-2/",
+  "website": null
+ },
+ {
+  "id": "a2fb045a-ebeb-4053-9781-a384e7cef1b2",
+  "slug": "peace-garden-ottawa",
+  "archived_at": null,
+  "archived_reason": null,
+  "admin_notes": null,
+  "website": "http://www.peacegarden.com"
+ }
+]

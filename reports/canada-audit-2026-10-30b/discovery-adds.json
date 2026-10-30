@@ -1,0 +1,489 @@
+[
+ {
+  "payload": {
+   "name": "Stefano's Diner",
+   "city": "Toronto",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "1265 Dundas St W, Toronto, ON",
+   "website": "https://www.stefanosdiner.com/",
+   "phone": "+1 437-318-8697",
+   "description": "Italian-American style diner on Dundas West with an all plant-based menu.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "stefano-s-diner-toronto"
+  },
+  "evidence": {
+   "vegan": "All items are plant-based.",
+   "vegan_url": "https://www.stefanosdiner.com/",
+   "open": "Site lists current weekly hours (Wed closed, brunch Sat-Sun); press links to Foodism best-of 2026 list; Foodism vegan list dated 2026-05-25 ranks it #1.",
+   "open_url": "https://foodism.ca/eat-drink/bars-restaurants/vegan-restaurants-toronto",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Honey's Ice Cream",
+   "city": "Toronto",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "ice_cream",
+   "vegan_level": "fully_vegan",
+   "address": "1448 Dundas St W, Toronto, ON",
+   "website": "https://honeysicecream.ca",
+   "phone": "+1 416-672-0479",
+   "opening_hours": "Mo-Fr 14:00-21:00; Sa 12:00-21:00; Su 12:00-20:00",
+   "description": "Ice cream shop selling only plant-based ice cream, pints and pies.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "honey-s-ice-cream-dundas-west-toronto"
+  },
+  "evidence": {
+   "vegan": "Honey's Ice Cream ... premium plant based ice creams",
+   "vegan_url": "https://honeysicecream.ca/",
+   "open": "Site shows (c) 2026, current flavours of the month and per-shop hours page",
+   "open_url": "https://honeysicecream.ca/pages/locations",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Honey's Ice Cream",
+   "city": "Toronto",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "ice_cream",
+   "vegan_level": "fully_vegan",
+   "address": "1026 Queen St E, Toronto, ON M4M 1K4",
+   "website": "https://honeysicecream.ca",
+   "phone": "+1 416-672-0116",
+   "opening_hours": "Mo-Fr 14:00-21:00; Sa 12:00-21:00; Su 12:00-20:00",
+   "description": "Ice cream shop selling only plant-based ice cream, pints and pies.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "honey-s-ice-cream-leslieville-toronto"
+  },
+  "evidence": {
+   "vegan": "Honey's Ice Cream ... premium plant based ice creams",
+   "vegan_url": "https://honeysicecream.ca/",
+   "open": "Location page lists current hours; site (c) 2026",
+   "open_url": "https://honeysicecream.ca/pages/leslieville",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Fresh Kitchen + Juice Bar",
+   "city": "Toronto",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "47 Front St E, Toronto, ON M5E 1B3",
+   "website": "https://www.freshkitchens.ca/",
+   "description": "Toronto plant-based restaurant and juice bar on Front Street serving bowls, burgers, wraps and fresh juice.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "fresh-kitchen-juice-bar-front-st-toronto"
+  },
+  "evidence": {
+   "vegan": "Toronto's Original Plant-Based Restaurant",
+   "vegan_url": "https://www.freshkitchens.ca/",
+   "open": "Own site live with Toronto, Etobicoke, Oakville locations; Foodism 2026-05-25 list; Spinach menu check 2026-09-05",
+   "open_url": "https://spinach.guide/venues/fresh-kitchen-juice-bar-203967/",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "The Organic Press",
+   "city": "Toronto",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "cafe",
+   "vegan_level": "fully_vegan",
+   "address": "257 Augusta Ave, Toronto, ON M5T 2M1",
+   "website": "https://organicpress.ca",
+   "phone": "+1 416-593-6666",
+   "description": "Kensington Market juice bar with cold-pressed juices and smoothie bowls, all plant-based.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "the-organic-press-toronto"
+  },
+  "evidence": {
+   "vegan": "Plant Based badge on site; cold-pressed organic juice",
+   "vegan_url": "https://organicpress.ca",
+   "open": "Site (c) 2026; Spinach lists open daily 09:00-20:00",
+   "open_url": "https://spinach.guide/venues/the-organic-press-204156/",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Hum",
+   "city": "Montreal",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "430 Avenue Duluth E, Montr\u00e9al, QC H2L 1A3",
+   "website": "https://humresto.ca",
+   "phone": "+1 438-792-0087",
+   "description": "Plateau restaurant serving vegan sushi, ramen and dumplings.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "hum-sushi-ramen-dumpling-montreal"
+  },
+  "evidence": {
+   "vegan": "D\u00e9couvrez les meilleurs plats \u00e0 base de plantes gastronomiques (own site); RestoMontreal: menu ax\u00e9 exclusivement sur les traditions culinaires asiatiques v\u00e9g\u00e9taliennes",
+   "vegan_url": "https://www.restomontreal.ca/resto/hum-sushi-ramen-dumpling-montreal/13420/fr/",
+   "open": "RestoMontreal reviews dated Sep-Oct 2026; own site shows Open today",
+   "open_url": "https://www.restomontreal.ca/resto/hum-sushi-ramen-dumpling-montreal/13420/fr/",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Veganarie",
+   "city": "Montreal",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "19H Rue du Centre Commercial, Pierrefonds-Roxboro, QC H8Y 2N9",
+   "website": "https://veganarie.com",
+   "phone": "+1 514-685-6850",
+   "opening_hours": "Mo-We off; Th 11:30-20:30; Fr 11:30-21:00; Sa 12:30-21:00; Su 12:30-20:30",
+   "description": "West Island restaurant with Greek, American and Canadian dishes such as gyros, poutine and burgers, all plant-based. Own site returned 403, evidence is from RestoMontreal.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "veganarie-montreal"
+  },
+  "evidence": {
+   "vegan": "plats 100 % v\u00e9g\u00e9taliens \u00e0 base de plantes; menu enti\u00e8rement \u00e0 base de plantes",
+   "vegan_url": "https://www.restomontreal.ca/resto/veganarie-resto-veganarie/16212/fr/",
+   "open": "RestoMontreal reviews dated 12-24 Oct 2026 and current hours (Th-Su)",
+   "open_url": "https://www.restomontreal.ca/resto/veganarie-resto-veganarie/16212/fr/",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Keepin' it Vegan",
+   "city": "Ottawa",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "bakery",
+   "vegan_level": "fully_vegan",
+   "address": "1-3 Chartwell Ave, Nepean, Ottawa, ON K2G 5W3",
+   "website": "https://kvbakery.ca",
+   "phone": "+1 613-291-3300",
+   "description": "Vegan bakery and cafe in Nepean with croissants, pastries and cakes.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "keepin-it-vegan-ottawa"
+  },
+  "evidence": {
+   "vegan": "Business name Keepin' it Vegan (vegan bakery); Spinach: Everything on the menu is vegan",
+   "vegan_url": "https://spinach.guide/venues/keepin-it-vegan-205994/",
+   "open": "Own site (Square) shows kosher certificate Ottawa Vaad Hakashrut 2026 and a catalog updated 2026-03-25",
+   "open_url": "https://kvbakery.ca",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Chickpeas",
+   "city": "Ottawa",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "500 Terminal Ave, Unit A-05, Ottawa, ON K1G 0Z3",
+   "website": "https://chickpeasottawa.ca/",
+   "phone": "+1 613-789-8999",
+   "description": "Falafel and hummus eatery with an all-vegan menu.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "chickpeas-ottawa"
+  },
+  "evidence": {
+   "vegan": "Ottawa's first and only Falafel and Hummus Eatery ... 100% Vegan",
+   "vegan_url": "https://chickpeasottawa.ca/",
+   "open": "Own site footer (c) 2026; Spinach listing refreshed 2026-10-30 with current hours",
+   "open_url": "https://spinach.guide/venues/chickpeas-203252/",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Democracy",
+   "city": "Hamilton",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "cafe",
+   "vegan_level": "mostly_vegan",
+   "address": "202 Locke St S, Hamilton, ON L8M 1B1",
+   "website": "https://www.democracyonlocke.com/",
+   "phone": "+1 289-389-2466",
+   "description": "Locke Street cafe with a mostly vegan menu of breakfast plates, cauliflower wings and baked treats.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "democracy-hamilton"
+  },
+  "evidence": {
+   "vegan": "Proudly VEGAN ... Everyday Vegan for Everyone (own site); a 2025 guide notes dairy is offered for coffee",
+   "vegan_url": "https://www.democracyonlocke.com/",
+   "open": "Own Square site with menu categories updated 2025-08-06 and catalog version 2026-03-25",
+   "open_url": "https://www.democracyonlocke.com/",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Bramble Cafe",
+   "city": "Halifax",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "bakery",
+   "vegan_level": "fully_vegan",
+   "address": "2851 Agricola St, Halifax, NS B3K 4E6",
+   "website": "https://bramblehfx.square.site/",
+   "phone": "+1 902-333-8388",
+   "description": "North End coffee shop and bakery with doughnuts, cinnamon rolls, bagels and breakfast sandwiches, all plant-based.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "bramble-cafe-halifax"
+  },
+  "evidence": {
+   "vegan": "Everything we make is plant-based which, to us, means made without any animal products.",
+   "vegan_url": "https://bramblehfx.square.site/",
+   "open": "Own Square site with current menu (catalog 2026-03-25); PETA named it a top-ten vegan doughnut shop for National Doughnut Day 2026",
+   "open_url": "https://www.peta.org/media/news-releases/dough-lightful-halifaxs-bramble-cafe-wins-top-ten-best-vegan-doughnut-shop-award/",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Cinnaholic",
+   "city": "Waterloo",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "bakery",
+   "vegan_level": "fully_vegan",
+   "address": "130 King St S, Unit 101, Waterloo, ON N2J 1K9",
+   "website": "https://www.cinnaholic.com/",
+   "phone": "+1 548-889-5756",
+   "description": "Cinnamon roll bakery chain branch; all rolls and desserts are vegan.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "cinnaholic-waterloo-waterloo"
+  },
+  "evidence": {
+   "vegan": "Our handcrafted cinnamon rolls and desserts are 100% vegan, plant-based, and dairy-free.",
+   "vegan_url": "https://locations.cinnaholic.com/ll/ca/on/waterloo/145/",
+   "open": "Official location page lists the branch with 2026 holiday hours (closed 2026-12-25)",
+   "open_url": "https://locations.cinnaholic.com/ll/ca/on/waterloo/145/",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Cinnaholic",
+   "city": "London",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "bakery",
+   "vegan_level": "fully_vegan",
+   "address": "114 Dundas St, Unit 102, London, ON N6A 1G1",
+   "website": "https://www.cinnaholic.com/",
+   "phone": "+1 226-663-6670",
+   "description": "Cinnamon roll bakery chain branch; all rolls and desserts are vegan.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "cinnaholic-london-london"
+  },
+  "evidence": {
+   "vegan": "Our handcrafted cinnamon rolls and desserts are 100% vegan, plant-based, and dairy-free.",
+   "vegan_url": "https://locations.cinnaholic.com/ll/ca/on/waterloo/145/",
+   "open": "Official location locator lists the branch with 2026 holiday hours (closed 2026-12-25)",
+   "open_url": "https://locations.cinnaholic.com/ll/ca/on/london/67/",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Padmanadi Vegan Eatery",
+   "city": "Calgary",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "#110 8835 Macleod Trail SW, Calgary, AB",
+   "website": "https://www.padmanadi.com",
+   "phone": "+1 403-300-2270",
+   "opening_hours": "Mo-Su 11:30-21:00",
+   "description": "Indonesian vegan restaurant, the Calgary branch of Padmanadi, with a fully vegan menu.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "padmanadi-vegan-eatery-calgary-calgary"
+  },
+  "evidence": {
+   "vegan": "We're a family-owned, award-winning vegan eatery, proudly serving authentic Indonesian flavours in both Edmonton and Calgary.",
+   "vegan_url": "https://www.padmanadi.com",
+   "open": "Own site lists Calgary location with current hours and a Calgary buffet event on Nov 22, 2026.",
+   "open_url": "https://www.padmanadi.com",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Padmanadi Vegan Eatery",
+   "city": "Edmonton",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "106, 6925 Gateway Blvd NW, Edmonton, AB",
+   "website": "https://www.padmanadi.com",
+   "phone": "+1 780-428-8899",
+   "opening_hours": "Mo-Su 11:00-20:30",
+   "description": "Indonesian vegan restaurant, the south Edmonton branch of Padmanadi, with a fully vegan menu.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "padmanadi-vegan-eatery-southside-edmonton"
+  },
+  "evidence": {
+   "vegan": "We're a family-owned, award-winning vegan eatery, proudly serving authentic Indonesian flavours in both Edmonton and Calgary.",
+   "vegan_url": "https://www.padmanadi.com",
+   "open": "Own site lists Southside location with current hours and an Edmonton buffet event on Nov 21, 2026. DB has only the downtown branch (10740 101 St).",
+   "open_url": "https://www.padmanadi.com",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Homey Food & Cafe",
+   "city": "Calgary",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "cafe",
+   "vegan_level": "fully_vegan",
+   "address": "19-1410 40th Ave NE, Calgary, AB T2E 6L1",
+   "website": "http://www.homeyfood.ca",
+   "phone": "+1 587-899-5110",
+   "opening_hours": "Mo off; Tu off; We-Th 10:00-19:00; Fr-Sa 10:00-21:00; Su 10:00-19:00",
+   "description": "Asian vegan cafe with dim sum and hot pot plus a small grocery of plant-based products; the menu is fully vegan.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "homey-food-cafe-calgary"
+  },
+  "evidence": {
+   "vegan": "Our menu is 100% vegan, offering a variety of delicious options.",
+   "vegan_url": "http://www.homeyfood.ca",
+   "open": "Own site posts current hours and a forward closure notice for Chinese New Year, Feb 1st 2027 to Feb 15th 2027.",
+   "open_url": "http://www.homeyfood.ca",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Canela Vegan Bakery & Cafe",
+   "city": "Calgary",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "bakery",
+   "vegan_level": "fully_vegan",
+   "address": "208 4 Street NE, Calgary, AB T2E 3S2",
+   "website": "https://www.canelayyc.com/",
+   "phone": "+1 403-226-2650",
+   "description": "Vegan bakery and cafe, the second Canela branch, in Bridgeland; everything is vegan.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "canela-vegan-bakery-cafe-bridgeland-calgary"
+  },
+  "evidence": {
+   "vegan": "Calgary, Meet Your Local Vegan Bakery & Caf\u00e9 ... Affordable, memorable, and 100% vegan",
+   "vegan_url": "https://www.canelayyc.com/",
+   "open": "Own site has a 'Bridgeland Location & Hours' block for 208 4 Street NE; Daily Hive Oct 2025 new-openings list names it.",
+   "open_url": "https://dailyhive.com/calgary/calgary-new-restaurants-october-2025",
+   "confidence": "high"
+  }
+ },
+ {
+  "payload": {
+   "name": "Magpie",
+   "city": "Calgary",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "bar",
+   "vegan_level": "mostly_vegan",
+   "address": "107-535 8 Ave SE, Calgary, AB T2G 5S9",
+   "website": "https://www.magpieyyc.com",
+   "opening_hours": "Tu-Th 17:00-24:00; Fr-Sa 17:00-01:00; Su 17:00-24:00",
+   "description": "Cocktail bar in East Village with an Asian-fusion vegan food menu.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "magpie-calgary"
+  },
+  "evidence": {
+   "vegan": "Our menu is all vegan friendly. (menu page; dishes use vegan substitutes such as 'Mozznorella' and 'house made vegan caviar')",
+   "vegan_url": "https://www.magpieyyc.com/menu",
+   "open": "Own site posts current hours and a weekly events listing (Wed 10.28 vinyl night, matches 2026 calendar).",
+   "open_url": "https://www.magpieyyc.com",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Thyme Cafe and Books",
+   "city": "Winnipeg",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "cafe",
+   "vegan_level": "fully_vegan",
+   "address": "268 Tache Ave, Winnipeg, MB R2H 1Z9",
+   "website": "https://www.thymecafe.ca",
+   "phone": "+1 204-233-0441",
+   "opening_hours": "Mo off; Tu-Sa 11:00-17:30; Su off",
+   "description": "Plant-based cafe and reading nook in St. Boniface serving sandwiches and light meals.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "thyme-cafe-and-books-winnipeg"
+  },
+  "evidence": {
+   "vegan": "a new plant-based restaurant and cozy reading nook ... Family-run Plant-based cafe (owners previously ran vegan restaurant Mondragon)",
+   "vegan_url": "https://www.thymecafe.ca",
+   "open": "Own site lists current hours; no dated post found.",
+   "open_url": "https://www.thymecafe.ca",
+   "confidence": "medium"
+  }
+ },
+ {
+  "payload": {
+   "name": "Be Love",
+   "city": "Victoria",
+   "country": "Canada",
+   "country_code": "ca",
+   "category": "eat",
+   "subcategory": "restaurant",
+   "vegan_level": "fully_vegan",
+   "address": "1019 Blanshard St, Victoria, BC",
+   "website": "https://www.beloverestaurant.ca",
+   "phone": "+1 778-433-7181",
+   "opening_hours": "Mo-Th 11:30-21:00; Fr-Sa 11:30-21:30; Su 11:30-21:00",
+   "description": "Plant-based, gluten-free restaurant downtown serving bowls and seasonal plates.",
+   "source": "canada-discovery-2026-10-30",
+   "source_id": "be-love-victoria"
+  },
+  "evidence": {
+   "vegan": "We use plant-based ingredients, mindfully sourced ... Everything we serve is wheat, gluten, dairy and processed sugar free.",
+   "vegan_url": "https://www.beloverestaurant.ca",
+   "open": "Own site lists current weekly hours; footer copyright is 2020, no dated post. Needs a recency check.",
+   "open_url": "https://www.beloverestaurant.ca",
+   "confidence": "medium"
+  }
+ }
+]

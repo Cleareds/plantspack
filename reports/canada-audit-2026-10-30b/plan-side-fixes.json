@@ -1,0 +1,20 @@
+[
+ {
+  "id": "5b8824e6-c858-47fb-8fd9-638b8547ccef",
+  "slug": "virtuous-pie-victoria",
+  "archive": "closed: not listed on virtuouspie.com (checked 2026-10-30; site names only the Vancouver Chinatown location)"
+ },
+ {
+  "id": "1b05c97c-13ac-4c65-8b00-12317c81b32a",
+  "slug": "meet-on-blanshard-victoria",
+  "archive": "closed: not listed on eatmeet.ca (checked 2026-10-30; site lists only MeeT on Main); Aug 2025 review mentions closing"
+ },
+ {
+  "id": "a2fb045a-ebeb-4053-9781-a384e7cef1b2",
+  "slug": "peace-garden-ottawa",
+  "update": {
+   "website": null,
+   "admin_notes": "2026-10-30 CLI: cleared website http://www.peacegarden.com - it is the International Peace Garden (ND/MB), not this venue."
+  }
+ }
+]

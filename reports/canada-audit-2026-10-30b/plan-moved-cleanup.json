@@ -1,0 +1,131 @@
+[
+ {
+  "id": "4e7957e9-837c-474f-b28d-3807c5dec399",
+  "slug": "alk",
+  "archive": "canada-audit-2026-10-30b: duplicate of alk-toronto"
+ },
+ {
+  "id": "5fbbb5f4-c145-46e0-9b75-c6590b294195",
+  "slug": "swagruhas-dosa-home",
+  "archive": "canada-audit-2026-10-30b: duplicate of swagruhas-dosa-home-mississauga"
+ },
+ {
+  "id": "6565ce18-63eb-493c-8c98-3f39c03f1b47",
+  "slug": "fluide-mont-tremblant",
+  "archive": "canada-audit-2026-10-30b: duplicate of fluide-juice-bar-mont-tremblant"
+ },
+ {
+  "id": "cbfbea41-aac0-476e-8d1c-b846580ff90a",
+  "slug": "nuba",
+  "archive": "canada-audit-2026-10-30b: duplicate of nuba-vancouver-4"
+ },
+ {
+  "id": "3072d111-0035-4cf7-b881-cd118e6c1aa9",
+  "slug": "freshslice-pizza",
+  "archive": "chain-restaurant-policy"
+ },
+ {
+  "id": "ef50197e-3154-4655-8500-455ee252de92",
+  "slug": "aandw-st-catharines",
+  "archive": "chain-restaurant-policy"
+ },
+ {
+  "id": "7028d07d-de23-41bb-9df3-ee4a863cf9ed",
+  "slug": "copper-branch-clarington",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "a3620f23-ead1-4ada-b205-d1302dd1ea49",
+  "slug": "copper-branch-vaughan",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "a5d3e94a-c23a-4c9d-a763-7156b2b387f2",
+  "slug": "copper-branch-laval",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "b7382281-fe10-4627-87bd-294e72952dcb",
+  "slug": "copper-branch",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "c8457508-878f-46df-ac36-7d8cd175bb27",
+  "slug": "copper-branch-london",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "da66b1df-e704-4f10-8234-d93b1784c373",
+  "slug": "copper-branch-mont-royal",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "c540e954-3b56-40ca-b57c-bd688c9bd4af",
+  "slug": "copper-branch-united-states-tzby",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "0777abee-921a-4f62-9697-d48886d25b85",
+  "slug": "odd-burger-whitby",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "97e3d159-809a-4949-aa6c-9d8b7c3f9fb1",
+  "slug": "odd-burger-brampton",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "b8bf74b1-abd8-447a-871d-4f015802c118",
+  "slug": "odd-burger-london",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "b9a11d49-8c38-475c-afec-63e55bef2ccc",
+  "slug": "odd-burger-oakville",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "e783ee6b-c85c-4039-ae93-88cc8d5bb371",
+  "slug": "odd-burger-waterloo",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "f2262a6a-9309-45f0-b66d-6a30cfa74c63",
+  "slug": "odd-burger-hamilton",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "63ec0c37-0f03-4427-ad57-e9705d2b0810",
+  "slug": "odd-burger-united-states",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ },
+ {
+  "id": "c22495db-2bff-4d7c-8c3d-22be0b58d4d6",
+  "slug": "odd-burger-united-states-wjnn",
+  "update": {
+   "verification_level": 1,
+   "admin_notes": "2026-10-30 CLI: Odd Burger chain site oddburger.com returns HTTP 402 (store suspended); chain closed Toronto, Vancouver, Victoria, Calgary, Edmonton branches 2025-2026. Branch status unconfirmed."
+  }
+ }
+]

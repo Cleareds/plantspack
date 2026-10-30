@@ -1,0 +1,17 @@
+[
+ {
+  "slug": "the-clever-rabbit-edmonton",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Own domain no longer resolves (2026-10-30). Check if still open; archive if closed."
+ },
+ {
+  "slug": "hearts-choices-calgary",
+  "proposed_action": "canada_merge_duplicate",
+  "note": "Likely duplicate of hearts-choice-cafe-market-calgary (4127 6 Street NE, upgraded to fully_vegan 2026-10-30). This row has no website and a Greenbriar Drive NW address (maybe a farmers market stall). Merge or archive."
+ },
+ {
+  "slug": "springhouse-market-halifax",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Appears to be delivery-only (meal subscription) now, not a venue (discovery pass 2026-10-30). Archive if no storefront."
+ }
+]

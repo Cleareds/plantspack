@@ -1,0 +1,50 @@
+[
+ {
+  "id": "f70049fc-bb28-4954-a5e0-3b78b62c6423",
+  "slug": "chickpeas-ottawa",
+  "update": {
+   "latitude": 45.4144904,
+   "longitude": -75.647239
+  }
+ },
+ {
+  "id": "1dad6df8-550f-4956-9585-0359058d8520",
+  "slug": "cinnaholic-london-london",
+  "update": {
+   "latitude": 42.9832907,
+   "longitude": -81.2516541
+  }
+ },
+ {
+  "id": "a5cfcfb6-629e-483c-bc05-5c3a563b4311",
+  "slug": "cinnaholic-waterloo-waterloo",
+  "update": {
+   "latitude": 43.4623325,
+   "longitude": -80.5212943
+  }
+ },
+ {
+  "id": "60bb4b31-7297-4a85-9a11-c12dbbbb6145",
+  "slug": "homey-food-cafe-calgary",
+  "update": {
+   "latitude": 51.0895629,
+   "longitude": -114.0297336
+  }
+ },
+ {
+  "id": "8b12ac98-11d7-4e8e-9e8b-8dd168a32fea",
+  "slug": "padmanadi-vegan-eatery-calgary-calgary",
+  "update": {
+   "latitude": 50.9749184,
+   "longitude": -114.0735992
+  }
+ },
+ {
+  "id": "5e3c060f-ef19-4a07-8f3e-2a2117012526",
+  "slug": "padmanadi-vegan-eatery-southside-edmonton",
+  "update": {
+   "latitude": 53.5061681,
+   "longitude": -113.4942103
+  }
+ }
+]

@@ -1,0 +1,202 @@
+[
+ {
+  "id": "38bee261-b816-4015-8762-a6da7e7e0c1f",
+  "slug": "hibiscus-vegan-cafe",
+  "archive": "closed: BlogTO Jan 2020 and NOW Toronto: Hibiscus closed in Kensington Market around New Year 2020 after 12 years on Augusta; last location (Assembly Chef's Hall branch closed Aug 2019)."
+ },
+ {
+  "id": "47b3ca20-1df7-4991-a0b5-23dad1fbc8ea",
+  "slug": "beechwood-doughnuts-st-catharines",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 3,
+   "address": "165 St Paul St, St. Catharines, ON L2R 3M5",
+   "latitude": 43.1577351,
+   "longitude": -79.2446744,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Niagara's first and only 100% vegan doughnut shop\" | open: Own site shows current seasonal specials 'Available until October 31st' (Pumpkin Pie) and 'October 2nd to 15th'; hours table live; no closure notice. Pre-scan max year 2029 (copyright/script). | sources: https://www.beechwooddoughnuts.com/"
+  }
+ },
+ {
+  "id": "ee0ef7d5-9be6-48bc-b1c6-9bf01045efcd",
+  "slug": "green-goddess-fromagerie-guelph",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 2,
+   "phone": "+1 519-878-3387",
+   "address": "563 Woolwich St, Guelph, ON N1H 3Y3",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"Artisan Vegan Cheese Purveyor\"; \"time honoured cheese-making techniques, but 100% from plants\" | open: Own site live; logo asset uploaded Sep 2025 (Squarespace timestamp 1758301803); store-finder lists current Ontario stockists. No hours published; no closure notice. | sources: https://www.greengoddessfromagerie.com/about https://www.greengoddessfromagerie.com/contact https://www.greengoddessfromagerie.com/store-finder"
+  }
+ },
+ {
+  "id": "fbe4c9d7-68cd-4c3c-ba4f-5919af2665d3",
+  "slug": "royal-dosa-hut-niagara-falls",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "vegan_level": "vegan_options",
+   "verification_level": 2,
+   "opening_hours": "Mo 11:00-23:00; Tu 11:00-23:00; We 11:00-23:00; Th 11:00-23:00; Fr 11:00-23:00; Sa 11:00-23:00; Su 11:00-23:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Menu items 'Ghee Podi Idly', 'Corn, Onion and Cheese Utthapam', 'Ras Malai' (dairy). No vegan or vegetarian claim on site. | open: Own site (c) 2026, sitemap lastmod 2026-10-13, hours 'SUN - SAT: 11:00am - 11:00pm'. | sources: https://royaldosahut.com/ https://royaldosahut.com/indian-food-about-us/"
+  }
+ },
+ {
+  "id": "bbdd28b7-e126-4cd3-a2f7-2fe010b36ec7",
+  "slug": "the-v-spot-vegan-cafe-and-eatery-hamilton",
+  "archive": "no-trace-2025-2026: No website, no address. Only a Silhouette (McMaster student paper) review, undated in results, and a Wanderlog page; not listed in justinpluslauren Hamilton vegan guide (updated 2025-03-20)."
+ },
+ {
+  "id": "37666d13-1e81-4f4b-8aff-b9f7589aeafb",
+  "slug": "cafe-pyrus-kitchener",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "vegan_level": "mostly_vegan",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: \"Our entire Vegan as a Base, unless you choose Organic Dairy or Cheese\"; meta: \"Kitchener's favourite vegan cafe\" | open: Own ordering site live with 2025/2026 content; no closure notice. Hours not on site. | sources: https://www.cafepyrus.com/"
+  }
+ },
+ {
+  "id": "05b8ff73-9e86-4a0f-990e-30f2b7ee9cdb",
+  "slug": "cafe-frida-trois-rivieres",
+  "archive": "closed: Own site returns HTTP 403. Spinach.guide marks Cafe Frida, 15 rue des Forges, 'Permanently closed'; restaurant listing says the site became 'Lewis Caf\u00e9 TR, formerly Caf\u00e9 Frida', and Spinach marks Lewis Cafe TR also 'Permanently closed'."
+ },
+ {
+  "id": "105b0486-8207-4896-93ff-66b135cd2b9f",
+  "slug": "cinnaholic",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 2,
+   "website": "https://locations.cinnaholic.com/ll/ca/bc/victoria/73/",
+   "phone": "+1 778-265-2564",
+   "opening_hours": "Mo 13:00-20:00; Tu off; We off; Th 11:00-20:00; Fr 11:00-21:30; Sa 11:00-21:30; Su 13:00-20:00",
+   "address": "535 Yates St Suite 102, Victoria, BC V8W 2Z6",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Location page: \"All of our products are fresh baked and 100% kosher & vegan, dairy & lactose free, egg-free\"; FAQ: \"100% dedicated vegan facility\" | open: Listed on Cinnaholic's own locator (locations.cinnaholic.com/ll/ca/bc/victoria/73/) with store hours, order links and current seasonal pumpkin menu. | sources: https://locations.cinnaholic.com/ll/ca/bc/victoria/73/ https://www.cinnaholic.com/faq"
+  }
+ },
+ {
+  "id": "19f41c5c-e687-4795-ab72-bfeae94c8829",
+  "slug": "la-vie-la-vie-comptoir-sante-saint-hyacinthe",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "vegan_level": "mostly_vegan",
+   "verification_level": 2,
+   "opening_hours": "Mo 11:00-16:00; Tu 11:00-16:00; We 11:00-16:00; Th 11:00-20:00; Fr 11:00-20:00; Sa 11:00-20:00; Su off",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Own tagline: \"Cuisine principalement v\u00e9g\u00e9talienne\" (mostly vegan cuisine). Tourisme Mont\u00e9r\u00e9gie calls it 'Comptoir sant\u00e9 v\u00e9gane', but own site says mostly. | open: Own Squarespace site live, 2026 in page, business hours set; no closure notice. | sources: https://www.lavielavie.ca/ https://www.lavielavie.ca/a-propos"
+  }
+ },
+ {
+  "id": "25672821-8988-47e7-9f53-7d3ea85c983f",
+  "slug": "coven-vegan-market-hamilton",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 10:00-19:00; Tu 10:00-19:00; We 10:00-19:00; Th 10:00-19:00; Fr 10:00-19:00; Sa 10:00-19:00; Su 10:00-19:00",
+   "address": "949 Main St E, Hamilton, ON L8M 1M9",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"At Coven, we are proud to offer 100% vegan fare from our deli, bakery and extensive retail space.\" | open: Own site (2025/2026 content) lists this as its only location: 949 Main St. E, open everyday 10-7. | sources: https://www.covenmarket.com/ https://cekan.ca/?p=23657"
+  }
+ },
+ {
+  "id": "398acb1f-76d7-427c-b029-537b20b3ceaf",
+  "slug": "lettuce-love-cafe-burlington",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 3,
+   "opening_hours": "Mo 11:00-20:00; Tu 11:00-20:00; We 11:00-20:00; Th 11:00-20:00; Fr 11:00-20:00; Sa 10:00-20:00; Su 10:00-20:00",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Brand: 'Lettuce Love Plant Based Caf\u00e9'; menu uses vegan cheese, cashew/almond parmesan, tofu scramble, vegan mayo; no animal products found in menu scan. | open: Own site (2026 content) locations page lists Burlington with hours and online ordering. | sources: https://www.lettucelovecafe.com/locations https://www.lettucelovecafe.com/menu https://www.lettucelovecafe.com/about"
+  }
+ },
+ {
+  "id": "59bbee92-53fc-4eca-9a46-89d1baf13b89",
+  "slug": "kirtida-kitchen-guelph-2",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "vegan_level": "vegan_friendly",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Own meta: \"Guelph's best voted 100% vegetarian and Vegan and Gluten Free friendly restaurant since 2019.\" | open: Own site live with 2025/2026 content; lists dining at 245 Edinburgh Rd S and a second address 265 Eramosa Rd. | sources: http://www.kirtidakitchen.com/"
+  }
+ },
+ {
+  "id": "7e613e11-71bc-4c57-9379-86068e584599",
+  "slug": "the-belfountain-cafe-caledon",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "vegan_level": "vegan_options",
+   "verification_level": 2,
+   "address": "758 Bush St, Caledon, ON",
+   "latitude": 43.7941143,
+   "longitude": -80.0146144,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): downgrade | vegan: Only 'vegan and gluten-free options available' (BringFido); it is a coffee/pastry cafe, no vegan claim. | open: Our website (tammeron.ca) is ENOTFOUND. insauga June 2023: Belfountain Cafe opened at 758 Bush St, open daily 9:30-19:00 (2023 data). No 2025+ evidence found. | sources: https://insauga.com/new-cafe-with-garden-patio-serves-high-end-coffee-pastries-and-more-opens-in-caledon https://www.bringfido.ca/restaurant/127783"
+  }
+ },
+ {
+  "id": "df42471d-b999-443e-bad8-d4652a8411f3",
+  "slug": "rawbyn-s-kearney",
+  "archive": "no-trace-2025-2026: No website, no search results at all for Rawbyn's in Kearney."
+ },
+ {
+  "id": "afd98466-60f1-4d24-9723-035ac7fc7ba5",
+  "slug": "plant-matter-kitchen-london",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 2,
+   "address": "162 Wortley Rd, London, ON",
+   "latitude": 42.9724214,
+   "longitude": -81.252762,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: Listings: 'the only vegan eatery of its kind in the Forest City' (London Tourism / OpenTable). | open: Own site unreachable from here (self-signed cert / network filter). OpenTable has 2025 reviews (one diner April 2025); London Tourism listing current. | sources: https://londontourism.ca/plant-matter-kitchen https://www.opentable.ca/r/plant-matter-kitchen-london"
+  }
+ },
+ {
+  "id": "b02ea0d9-db76-4dfb-9867-d295716392b3",
+  "slug": "shine-plant-based-kitchen-orillia",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 2,
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"All of our menu items are plant based and almost everything can be made gluten free.\" | open: Own site live (2026 in page); no closure notice. Hours block on site is the Square template default (9-5, 'Number 8 Coffee San Francisco'), so not used. | sources: https://www.eatshine.ca/"
+  }
+ },
+ {
+  "id": "bb0e00ac-62e4-499b-965d-367fef97ba5d",
+  "slug": "coven-kitchener",
+  "archive": "closed: Coven's own site lists only the Hamilton shop (949 Main St E); no Kitchener activity found (checked 2026-10-30)"
+ },
+ {
+  "id": "ca33590d-f2a2-48d1-a8e5-c75b06087071",
+  "slug": "coven-hamilton",
+  "archive": "closed: cekan.ca: 'Hamilton's plant-based supermarket Coven has moved from its location on Barton Street to a larger storefront at 949 Main Street East' (~2021). Own site lists only 949 Main St E."
+ },
+ {
+  "id": "5a4c069a-f2a9-4b40-91eb-1d36815f3bdd",
+  "slug": "v-edge-elora",
+  "archive": "no-trace-2025-2026: No website. Only Trip.com ('V-Edge Smoothie Cafe', 22 Metcalfe St) which now returns 404. A UK 100% vegan 'V-Edge' (Middlesbrough) is permanently closed; our row may mix data with it."
+ },
+ {
+  "id": "f5078698-4bde-43a5-a6ca-ac7a1f3d5843",
+  "slug": "sacred-earth-vegan-market-london",
+  "archive": "closed: Not in Covent Garden Market's current merchant directory (coventmarket.com/merchants, 42 merchants checked); no website; no search results for the name in London ON."
+ },
+ {
+  "id": "39d572df-5259-4e17-8b6b-fa67d99076e7",
+  "slug": "nourish-moi",
+  "update": {
+   "verification_method": "canada-fv-verify-2026-10-30",
+   "last_verified_at": "2026-10-30T22:00:00Z",
+   "verification_level": 2,
+   "phone": "+1 905-274-5777",
+   "address": "229 Lakeshore Rd E, Mississauga, ON L5G 1G8",
+   "latitude": 43.5589542,
+   "longitude": -79.5773129,
+   "category": "eat",
+   "admin_notes": "2026-10-30 CLI verify (canada-fv-verify-2026-10-30): keep_fv | vegan: \"PLANT-BASED, GLUTEN FREE AND NATURALLY SWEETENED\"; menu uses cashew cheeze, cashew sour cream, chick'frea omelet, plant-based chorizo, vegan caesar mix; no animal products in food/drink menu scan. | open: Own site live: online ordering links, catering menu file versions dated ~Dec 2025 / Jan 2026; menu lists 2023 wine vintages. No closure notice. | sources: https://nourishmoi.com/food-menu https://nourishmoi.com/drink-menu https://nourishmoi.com/contact-us"
+  }
+ }
+]

@@ -1,0 +1,42 @@
+[
+ {
+  "slug": "odd-burger-whitby",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Whitby (150 Taunton Road West, Whitby, L1R3H8): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-brampton",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Brampton (9055 Airport Road, Brampton, L6S 0B8): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-london",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger London (102-645 Commissioners Road East, N6C 2T9): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-oakville",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Oakville (A2-280 North Service Road West, L6M 2S2): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-waterloo",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Waterloo (75 King Street South, N2J 1P2): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-hamilton",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Hamilton (5-920 Upper Wentworth Street, L9A 5C5): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-united-states",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Vaughan (Unit 4 Highway 27): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ },
+ {
+  "slug": "odd-burger-united-states-wjnn",
+  "proposed_action": "canada_verify_open_status",
+  "note": "Odd Burger Toronto (4549 Kingston Road): chain site oddburger.com is dead (HTTP 402) and the chain closed many Canadian branches in 2025-2026. Confirm this branch is open (Google Maps / phone); archive if closed."
+ }
+]

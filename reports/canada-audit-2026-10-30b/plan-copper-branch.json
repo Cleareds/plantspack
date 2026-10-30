@@ -1,0 +1,80 @@
+[
+ {
+  "id": "9deb2370-6d88-4700-9dbd-497d35a59162",
+  "slug": "copper-branch-montreal",
+  "update": {
+   "website": "https://eatcopperbranch.com/restaurants/stanley/",
+   "phone": "514-400-1284",
+   "opening_hours": "Mo 08:00-21:00; Tu 08:00-21:00; We 08:00-21:00; Th 08:00-21:00; Fr 08:00-21:00; Sa 11:00-20:00; Su 11:00-20:00",
+   "verification_method": "canada-copper-branch-locator-2026-10-30",
+   "last_verified_at": "2026-10-30T18:00:00Z",
+   "admin_notes": "2026-10-30 CLI: branch listed on https://eatcopperbranch.com/restaurants/stanley/ (Copper Branch locator, footer 2026); chain menu is 100% plant-based.",
+   "address": "1180 Boulevard De Maisonneuve Ouest, Montreal, QC H3A 1N5"
+  }
+ },
+ {
+  "id": "23202474-c5c7-4b56-8812-a158df61b918",
+  "slug": "copper-branch-montreal-4",
+  "update": {
+   "website": "https://eatcopperbranch.com/restaurants/complexe-desjardins/",
+   "phone": "514-864-2026",
+   "opening_hours": "Mo 11:00-20:00; Tu 11:00-20:00; We 11:00-20:00; Th 11:00-20:00; Fr 11:00-20:00; Sa 11:00-20:00; Su 11:00-20:00",
+   "verification_method": "canada-copper-branch-locator-2026-10-30",
+   "last_verified_at": "2026-10-30T18:00:00Z",
+   "admin_notes": "2026-10-30 CLI: branch listed on https://eatcopperbranch.com/restaurants/complexe-desjardins/ (Copper Branch locator, footer 2026); chain menu is 100% plant-based."
+  }
+ },
+ {
+  "id": "5e06cbca-73ce-48ab-9090-bbfa6ecd5d24",
+  "slug": "copper-branch-montreal-5",
+  "update": {
+   "website": "https://eatcopperbranch.com/restaurants/bois-franc/",
+   "phone": "514-956-9198",
+   "opening_hours": "Mo 09:00-21:30; Tu 09:00-21:30; We 09:00-21:30; Th 09:00-21:30; Fr 09:00-21:30; Sa 10:00-21:30; Su 10:00-21:30",
+   "verification_method": "canada-copper-branch-locator-2026-10-30",
+   "last_verified_at": "2026-10-30T18:00:00Z",
+   "admin_notes": "2026-10-30 CLI: branch listed on https://eatcopperbranch.com/restaurants/bois-franc/ (Copper Branch locator, footer 2026); chain menu is 100% plant-based.",
+   "address": "2310 Rue Wilfrid-Reid, Saint-Laurent, Montreal, QC H4R 1V9"
+  }
+ },
+ {
+  "id": "15ecaf50-2b4a-46d6-b6fb-ad48f07560dd",
+  "slug": "copper-branch-montreal-3",
+  "archive": "closed: Copper Branch Mont-Royal closed 31 March 2026 (noovomoi.ca, 17 March 2026); not on eatcopperbranch.com/restaurants (checked 2026-10-30)"
+ },
+ {
+  "id": "7d8a1d58-cf7a-4666-a461-a3b38fb8234d",
+  "slug": "copper-branch-montra-al",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "eb2ba258-cc1a-4de7-98b7-73d8d519b197",
+  "slug": "copper-branch-montra-al-2",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "d2e0e91b-9e58-4250-a2f8-5bbf50b14765",
+  "slug": "copper-branch-ottawa",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "777ed636-8cfd-4779-83f8-2b697352fb3f",
+  "slug": "copper-branch-sainte-therese",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "2bbe356a-89bd-4305-a9a1-28801731883e",
+  "slug": "copper-branch-candiac",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "afb13f40-41a6-43da-8319-bbef1654a0ea",
+  "slug": "copper-branch-laval-administrative-region",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ },
+ {
+  "id": "58ee9585-183a-4e6a-9fcf-26011e0ec57e",
+  "slug": "copper-branch-waterloo",
+  "archive": "closed: not listed on the Copper Branch locator eatcopperbranch.com/restaurants (checked 2026-10-30; Canadian branches listed: Bois Franc, Complexe Desjardins, Stanley, Mavis, Oshawa)"
+ }
+]
