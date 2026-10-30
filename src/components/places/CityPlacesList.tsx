@@ -20,21 +20,7 @@ import VerificationConfidenceBadge from './VerificationConfidenceBadge'
 import { CITY_LIST_PAGE_SIZE, categoriesOfLight, type LightPlace, type ListSummary, type FacetCounts } from '@/lib/city-list-light'
 import { openStatus, openLabel } from '@/shared/opening-hours'
 import { nowIn, hoursStringOf } from '@/lib/open-now'
-
-const CATEGORY_LABELS: Record<string, string> = {
-  eat: 'Eat',
-  hotel: 'Stay',
-  store: 'Store',
-  event: 'Event',
-  organisation: 'Animal Sanctuary',
-  other: 'Other',
-}
-
-const SUBCATEGORY_LABELS: Record<string, Record<string, string>> = {
-  eat: { restaurant: 'Restaurant', cafe: 'Cafe', fast_food: 'Fast Food', bar: 'Bar/Pub', bakery: 'Bakery', ice_cream: 'Ice Cream', 'online-delivery': 'Online / Delivery' },
-  store: { grocery: 'Grocery', bakery: 'Bakery', health_food: 'Health Food', specialty: 'Specialty', other_shop: 'Other' },
-  hotel: { hotel: 'Hotel', hostel: 'Hostel', bnb: 'B&B', retreat: 'Retreat', other_stay: 'Other' },
-}
+import { categoryLabel, subcategoryLabel } from '@/shared/place-categories'
 
 const VEGAN_LEVEL_FILTERS = [
   { value: null, label: 'All Levels' },
@@ -338,7 +324,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
         >
           <option value="">All ({countAll})</option>
           {categories.map(cat => (
-            <option key={cat} value={cat}>{(CATEGORY_LABELS[cat] || cat)} ({countCat(cat)})</option>
+            <option key={cat} value={cat}>{categoryLabel(cat)} ({countCat(cat)})</option>
           ))}
         </select>
         {validCategory && subcategories.length > 1 && (
@@ -350,7 +336,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
           >
             <option value="">All types</option>
             {subcategories.map(sub => sub ? (
-              <option key={sub} value={sub}>{(SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub} ({countSub(sub)})</option>
+              <option key={sub} value={sub}>{subcategoryLabel(sub, validCategory) || sub} ({countSub(sub)})</option>
             ) : null)}
           </select>
         )}
@@ -401,7 +387,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
           return (
             <button key={cat} onClick={() => setFilter({ category: validCategory === cat ? null : cat, sub: null })}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${validCategory === cat ? 'bg-primary text-on-primary-btn' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'}`}>
-              {CATEGORY_LABELS[cat] || cat} ({count})
+              {categoryLabel(cat)} ({count})
             </button>
           )
         })}
@@ -413,7 +399,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
             {subcategories.map(sub => {
               if (!sub) return null
               const count = countSub(sub)
-              const label = (validCategory && SUBCATEGORY_LABELS[validCategory]?.[sub]) || sub
+              const label = subcategoryLabel(sub, validCategory) || sub
               return (
                 <button key={sub} onClick={() => setFilter({ sub: validSubcategory === sub ? null : sub })}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${validSubcategory === sub ? 'bg-primary/80 text-on-primary-btn' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'}`}>
@@ -537,7 +523,7 @@ export function CityPlacesListView({ places, allPlaces, initialFull, summary, li
                     {/* Badges */}
                     <div className="flex items-center flex-wrap gap-1.5 mt-1">
                       <span className="bg-secondary-container text-on-surface px-1.5 py-0.5 rounded text-xs capitalize font-medium">
-                        {CATEGORY_LABELS[place.category] || place.category}
+                        {categoryLabel(place.category)}
                       </span>
                       {place.vegan_level && (
                         <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${VEGAN_LEVEL_INLINE_CLASS[place.vegan_level] || 'bg-stone-100 text-stone-600'}`}>

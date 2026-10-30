@@ -32,24 +32,24 @@ async function fetchOsmVeganPlaces(): Promise<any[]> {
   return data.elements || []
 }
 
-function categorizePlace(tags: Record<string, string>): { category: string; subcategory: string } {
+function categorizePlace(tags: Record<string, string>): { category: string; subcategory: string | null } {
   const amenity = tags.amenity || ''
   const shop = tags.shop || ''
   const tourism = tags.tourism || ''
 
   if (['restaurant', 'food_court'].includes(amenity)) return { category: 'eat', subcategory: 'restaurant' }
   if (amenity === 'cafe') return { category: 'eat', subcategory: 'cafe' }
-  if (amenity === 'fast_food') return { category: 'eat', subcategory: 'fast_food' }
+  if (amenity === 'fast_food') return { category: 'eat', subcategory: 'fast-food' }
   if (['bar', 'pub', 'biergarten'].includes(amenity)) return { category: 'eat', subcategory: 'bar' }
   if (amenity === 'ice_cream') return { category: 'eat', subcategory: 'ice_cream' }
   if (['supermarket', 'convenience', 'greengrocer', 'organic'].includes(shop)) return { category: 'store', subcategory: 'grocery' }
-  if (shop === 'health_food') return { category: 'store', subcategory: 'health_food' }
+  if (shop === 'health_food') return { category: 'store', subcategory: 'health-food' }
   if (['bakery'].includes(shop) || amenity === 'bakery') return { category: 'store', subcategory: 'bakery' }
   if (['hotel', 'motel', 'guest_house'].includes(tourism)) return { category: 'hotel', subcategory: 'hotel' }
   if (tourism === 'hostel') return { category: 'hotel', subcategory: 'hostel' }
   if (shop) return { category: 'store', subcategory: 'grocery' }
   if (amenity) return { category: 'eat', subcategory: 'restaurant' }
-  return { category: 'other', subcategory: 'other' }
+  return { category: 'other', subcategory: null }
 }
 
 export async function GET(request: Request) {

@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Check, X, RotateCcw, Loader2, MapPin, Search, ExternalLink, Trash2, XOctagon, PauseCircle, PlayCircle } from 'lucide-react'
 import { VEGAN_LEVEL_LABEL } from '@/lib/vegan-level'
+import { PLACE_CATEGORIES, isPlaceCategory, isValidSubcategory } from '@/shared/place-categories'
+import PlaceTypeOptions from '@/components/places/PlaceTypeOptions'
 
 export interface DataQualityRowProps {
   place: {
@@ -47,42 +49,6 @@ const VL_CLASS: Record<string, string> = {
   mostly_vegan: 'bg-teal-100 text-teal-800',
   vegan_friendly: 'bg-stone-100 text-stone-700',
   vegan_options: 'bg-stone-100 text-stone-600',
-}
-
-const CATEGORY_OPTIONS: Array<{ value: string; label: string }> = [
-  { value: 'eat', label: 'Eat' },
-  { value: 'store', label: 'Store' },
-  { value: 'hotel', label: 'Stay' },
-  { value: 'organisation', label: 'Sanctuary' },
-  { value: 'event', label: 'Event' },
-  { value: 'community', label: 'Community' },
-  { value: 'other', label: 'Other' },
-]
-
-const SUBCATEGORY_OPTIONS: Record<string, Array<{ value: string; label: string }>> = {
-  eat: [
-    { value: 'restaurant', label: 'Restaurant' },
-    { value: 'cafe', label: 'Cafe' },
-    { value: 'fast_food', label: 'Fast Food' },
-    { value: 'bar', label: 'Bar/Pub' },
-    { value: 'bakery', label: 'Bakery' },
-    { value: 'ice_cream', label: 'Ice Cream' },
-    { value: 'online-delivery', label: 'Online / Delivery' },
-  ],
-  store: [
-    { value: 'grocery', label: 'Grocery' },
-    { value: 'bakery', label: 'Bakery' },
-    { value: 'health_food', label: 'Health Food' },
-    { value: 'specialty', label: 'Specialty' },
-    { value: 'other_shop', label: 'Other' },
-  ],
-  hotel: [
-    { value: 'hotel', label: 'Hotel' },
-    { value: 'hostel', label: 'Hostel' },
-    { value: 'bnb', label: 'B&B' },
-    { value: 'retreat', label: 'Retreat' },
-    { value: 'other_stay', label: 'Other' },
-  ],
 }
 
 function YesNo({ ok, label }: { ok: boolean; label: string }) {
@@ -187,7 +153,7 @@ export default function DataQualityRow({ place, citySuggestion }: DataQualityRow
     setBusy('category')
     try {
       // Reset subcategory when category changes (the old sub may be invalid for the new cat).
-      const subValid = SUBCATEGORY_OPTIONS[newCat]?.some(o => o.value === subcategory)
+      const subValid = isValidSubcategory(newCat, subcategory)
       const nextSub = subValid ? subcategory : null
       await postJson(`/api/admin/places/${place.id}/category`, { category: newCat, subcategory: nextSub })
       setCategory(newCat)
@@ -323,11 +289,12 @@ export default function DataQualityRow({ place, citySuggestion }: DataQualityRow
             title="Place category"
           >
             <option value="">— category —</option>
-            {CATEGORY_OPTIONS.map(o => (
+            {PLACE_CATEGORIES.map(o => (
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
+            {category && !isPlaceCategory(category) && <option value={category}>{category} (old value)</option>}
           </select>
-          {SUBCATEGORY_OPTIONS[category] && (
+          {isPlaceCategory(category) && (
             <select
               value={subcategory}
               disabled={busy === 'subcategory'}
@@ -335,10 +302,7 @@ export default function DataQualityRow({ place, citySuggestion }: DataQualityRow
               className="text-[11px] px-1.5 py-0.5 rounded border border-outline-variant/40 bg-surface-container-lowest cursor-pointer"
               title="Subcategory"
             >
-              <option value="">— subcategory —</option>
-              {SUBCATEGORY_OPTIONS[category].map(o => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
+              <PlaceTypeOptions category={category} current={subcategory} placeholder="— subcategory —" />
             </select>
           )}
           {(busy === 'category' || busy === 'subcategory') && <span className="text-[10px] text-stone-500">saving…</span>}

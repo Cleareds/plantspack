@@ -6,16 +6,11 @@ import { Search, X, MapPin, Loader2, Globe, Plus, Clock, ChefHat, Wrench, BookOp
 import { useSearch, logSearchClick } from '@/hooks/useSearch'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { categoryLabel, subcategoryLabel } from '@/shared/place-categories'
 
 const CATEGORY_EMOJI: Record<string, string> = {
   eat: '🌿', hotel: '🛏️', store: '🛍️', organisation: '🐾', event: '🎉', other: '📍',
 }
-const SUBCATEGORY_LABELS: Record<string, string> = {
-  restaurant: 'Restaurant', cafe: 'Cafe', fast_food: 'Fast Food', bar: 'Bar/Pub',
-  bakery: 'Bakery', ice_cream: 'Ice Cream', 'online-delivery': 'Online / Delivery', grocery: 'Grocery', health_food: 'Health Food',
-  hotel: 'Hotel', hostel: 'Hostel', bnb: 'B&B', animal_sanctuary: 'Animal Sanctuary',
-}
-
 const RECENT_SEARCHES_KEY = 'plantspack_recent_searches'
 const MAX_RECENT = 5
 
@@ -285,7 +280,7 @@ export default function SearchBar({ className = '' }: SearchBarProps) {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-on-surface truncate">{place.name}</p>
                           <p className="text-[11px] text-on-surface-variant truncate">
-                            {SUBCATEGORY_LABELS[place.subcategory || ''] || place.category}
+                            {subcategoryLabel(place.subcategory, place.category) || categoryLabel(place.category)}
                             {place.city ? ` · ${place.city}` : ''}
                           </p>
                           {place.address && (

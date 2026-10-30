@@ -1,5 +1,6 @@
 import { toSlug } from '@/lib/slug'
 import { NextRequest, NextResponse } from 'next/server'
+import { parseCuisines } from '@/shared/place-categories'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@supabase/supabase-js'
 import { createClient as createServerClient } from '@/lib/supabase-server'
@@ -153,7 +154,7 @@ export async function PUT(
       'name', 'description', 'category', 'subcategory', 'address', 'latitude', 'longitude',
       'website', 'phone', 'is_pet_friendly', 'images', 'main_image_url', 'tags',
       'opening_hours', 'event_time', 'city', 'country', 'vegan_level',
-      'business_status', 'reopen_date'
+      'business_status', 'reopen_date', 'cuisine_types'
     ]
 
     for (const field of allowedFields) {
@@ -180,6 +181,12 @@ export async function PUT(
       }
     }
     if (updateData.reopen_date === '') updateData.reopen_date = null
+    if (updateData.cuisine_types !== undefined) {
+      if (!Array.isArray(updateData.cuisine_types) || updateData.cuisine_types.some((c: unknown) => typeof c !== 'string')) {
+        return NextResponse.json({ error: 'cuisine_types must be an array of strings' }, { status: 400 })
+      }
+      updateData.cuisine_types = parseCuisines(updateData.cuisine_types.join(','))
+    }
 
     // The vegan level is our public claim, not the editor's. Only an admin
     // changes it directly; an owner's or creator's change becomes a pending

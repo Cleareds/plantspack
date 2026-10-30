@@ -7,99 +7,9 @@ import { useAuth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { geocodingService } from '@/lib/geocoding'
 import ImageUploader from '../ui/ImageUploader'
+import { PLACE_CATEGORIES, isPlaceCategory, parseCuisines } from '@/shared/place-categories'
+import PlaceTypeOptions from './PlaceTypeOptions'
 
-const PLACE_CATEGORIES = [
-  { value: 'eat', label: 'Eat' },
-  { value: 'hotel', label: 'Stay' },
-  { value: 'store', label: 'Stores' },
-  { value: 'event', label: 'Events' },
-  { value: 'organisation', label: 'Organisations' },
-  { value: 'other', label: 'Other' },
-]
-
-// Canonical subcategories shown in the dropdown per category. Values stay
-// lowercase + kebab to match what's already in the places.subcategory column.
-const SUBCATEGORIES: Record<string, Array<{ value: string; label: string }>> = {
-  hotel: [
-    { value: 'hotel',       label: 'Hotel' },
-    { value: 'bnb',         label: 'B&B' },
-    { value: 'guesthouse',  label: 'Guesthouse' },
-    { value: 'hostel',      label: 'Hostel' },
-    { value: 'retreat',     label: 'Retreat' },
-    { value: 'resort',      label: 'Resort' },
-    { value: 'apartment',   label: 'Apartment / Self-catering' },
-    { value: 'agriturismo', label: 'Agriturismo / Farm stay' },
-    { value: 'eco-lodge',   label: 'Eco-lodge / Glamping' },
-  ],
-  eat: [
-    { value: 'restaurant',   label: 'Restaurant' },
-    { value: 'cafe',         label: 'Cafe' },
-    { value: 'coffee_shop',  label: 'Coffee shop' },
-    { value: 'bakery',       label: 'Bakery' },
-    { value: 'bar',          label: 'Bar' },
-    { value: 'wine_bar',     label: 'Wine bar' },
-    { value: 'brasserie',    label: 'Brasserie' },
-    { value: 'bistro',       label: 'Bistro' },
-    { value: 'fast-food',    label: 'Fast food' },
-    { value: 'fast_casual',  label: 'Fast casual' },
-    { value: 'takeaway',     label: 'Takeaway' },
-    { value: 'burger',       label: 'Burger joint' },
-    { value: 'burger_joint', label: 'Burger joint (legacy)' },
-    { value: 'pizzeria',     label: 'Pizzeria' },
-    { value: 'ramen',        label: 'Ramen' },
-    { value: 'sushi',        label: 'Sushi' },
-    { value: 'tapas',        label: 'Tapas' },
-    { value: 'friture',      label: 'Friture / Frituur' },
-    { value: 'deli',         label: 'Deli' },
-    { value: 'foodbar',      label: 'Food bar' },
-    { value: 'lunch_bar',    label: 'Lunch bar' },
-    { value: 'ice-cream',    label: 'Ice cream / Dessert' },
-    { value: 'chocolatier',  label: 'Chocolatier' },
-    { value: 'food-truck',   label: 'Food truck' },
-    { value: 'online-delivery', label: 'Online / Delivery' },
-    { value: 'caterer',      label: 'Caterer' },
-    { value: 'catering',     label: 'Catering (legacy)' },
-  ],
-  store: [
-    { value: 'grocery',     label: 'Grocery / Supermarket' },
-    { value: 'health-food', label: 'Health food shop' },
-    { value: 'butcher',     label: 'Vegan butcher / Deli' },
-    { value: 'farm-shop',   label: 'Farm shop' },
-    { value: 'market',      label: 'Market stall' },
-    { value: 'bookshop',    label: 'Bookshop' },
-    { value: 'clothing',    label: 'Clothing / Lifestyle' },
-    { value: 'beauty',      label: 'Beauty / Cosmetics' },
-    { value: 'brand-hq',    label: 'Brand HQ / Visitor centre' },
-    { value: 'flagship',    label: 'Flagship store' },
-    { value: 'lifestyle',   label: 'Lifestyle / Household' },
-  ],
-  organisation: [
-    { value: 'sanctuary',       label: 'Animal sanctuary' },
-    { value: 'wildlife-rescue', label: 'Wildlife rescue / Rehab' },
-    { value: 'advocacy',        label: 'Advocacy group' },
-    { value: 'charity',         label: 'Charity / NGO' },
-    { value: 'community',       label: 'Community group' },
-    { value: 'meetup',          label: 'Meetup group' },
-    { value: 'school',          label: 'School / Academy' },
-  ],
-  event: [
-    { value: 'vegfest',  label: 'VegFest / Vegan festival' },
-    { value: 'festival', label: 'Festival (general)' },
-    { value: 'market',   label: 'Market / Fair' },
-    { value: 'workshop', label: 'Workshop / Class' },
-    { value: 'social',   label: 'Social / Meetup' },
-    { value: 'protest',  label: 'Protest / Awareness action' },
-  ],
-  other: [
-    { value: 'yoga',         label: 'Yoga studio' },
-    { value: 'fitness',      label: 'Fitness / Gym' },
-    { value: 'wellness',     label: 'Wellness / Healing' },
-    { value: 'tattoo',       label: 'Tattoo / Piercing' },
-    { value: 'salon-spa',    label: 'Salon / Spa' },
-    { value: 'creative',     label: 'Creative / Studio' },
-    { value: 'professional', label: 'Professional service' },
-  ],
-}
 
 interface AddPlaceModalProps {
   onClose: () => void
@@ -137,6 +47,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
     city: draft?.city || defaultCity || ('' as string | undefined),
     country: draft?.country || defaultCountry || ('' as string | undefined),
   })
+  const [cuisines, setCuisines] = useState('')
 
   const [placeImages, setPlaceImages] = useState<string[]>(draft?.images || [])
   const [showImageUploader, setShowImageUploader] = useState(false)
@@ -257,6 +168,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
         .insert({
           ...newPlace,
           subcategory: newPlace.subcategory || null,
+          cuisine_types: newPlace.category === 'eat' ? parseCuisines(cuisines) : [],
           slug,
           vegan_level: newPlace.vegan_level,
           images: placeImages,
@@ -404,7 +316,7 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
                 ))}
               </select>
             </div>
-            {SUBCATEGORIES[newPlace.category as string]?.length > 0 && (
+            {isPlaceCategory(newPlace.category) && (
               <div>
                 <label className="block text-sm font-medium text-on-surface-variant mb-1">Type</label>
                 <select
@@ -412,14 +324,24 @@ export default function AddPlaceModal({ onClose, onPlaceAdded, defaultCity, defa
                   onChange={(e) => setNewPlace(prev => ({ ...prev, subcategory: e.target.value }))}
                   className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
                 >
-                  <option value="">- choose -</option>
-                  {SUBCATEGORIES[newPlace.category as string].map(s => (
-                    <option key={s.value} value={s.value}>{s.label}</option>
-                  ))}
+                  <PlaceTypeOptions category={newPlace.category} current={newPlace.subcategory} />
                 </select>
               </div>
             )}
           </div>
+
+          {newPlace.category === 'eat' && (
+            <div>
+              <label className="block text-sm font-medium text-on-surface-variant mb-1">Cuisine</label>
+              <input
+                type="text"
+                value={cuisines}
+                onChange={(e) => setCuisines(e.target.value)}
+                placeholder="e.g. pizza, ramen, indian (separate with commas)"
+                className="w-full px-3 py-2 bg-surface-container-low border-0 ghost-border rounded-md focus:ring-1 focus:ring-primary/40 focus:outline-none"
+              />
+            </div>
+          )}
 
           <div className="address-search-container">
             <label className="block text-sm font-medium text-on-surface-variant mb-1">Address *</label>

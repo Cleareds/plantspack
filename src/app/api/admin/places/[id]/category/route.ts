@@ -3,13 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase-server'
 import { revalidatePath } from 'next/cache'
-
-const VALID_CATEGORIES = new Set(['eat', 'hotel', 'store', 'organisation', 'event', 'community', 'other'])
-const VALID_SUBCATEGORIES: Record<string, Set<string>> = {
-  eat: new Set(['restaurant', 'cafe', 'fast_food', 'bar', 'bakery', 'ice_cream', 'online-delivery']),
-  store: new Set(['grocery', 'bakery', 'health_food', 'specialty', 'other_shop']),
-  hotel: new Set(['hotel', 'hostel', 'bnb', 'retreat', 'other_stay']),
-}
+import { PLACE_CATEGORIES, isPlaceCategory, isValidSubcategory } from '@/shared/place-categories'
 
 export async function POST(
   req: NextRequest,
@@ -26,8 +20,8 @@ export async function POST(
   const update: Record<string, any> = {}
 
   if (typeof body.category === 'string') {
-    if (!VALID_CATEGORIES.has(body.category)) {
-      return NextResponse.json({ error: `category must be one of ${[...VALID_CATEGORIES].join(', ')}` }, { status: 400 })
+    if (!isPlaceCategory(body.category)) {
+      return NextResponse.json({ error: `category must be one of ${PLACE_CATEGORIES.map(c => c.value).join(', ')}` }, { status: 400 })
     }
     update.category = body.category
   }
@@ -38,7 +32,7 @@ export async function POST(
       update.subcategory = null
     } else if (typeof sub === 'string') {
       const cat = (update.category || body.parent_category) as string | undefined
-      if (cat && VALID_SUBCATEGORIES[cat] && !VALID_SUBCATEGORIES[cat].has(sub)) {
+      if (cat && !isValidSubcategory(cat, sub)) {
         return NextResponse.json({ error: `subcategory '${sub}' not valid for category '${cat}'` }, { status: 400 })
       }
       update.subcategory = sub

@@ -5,90 +5,9 @@ import { X, Save, Star, Loader2 } from 'lucide-react'
 import ImageUploader from '../ui/ImageUploader'
 import { geocodingService } from '@/lib/geocoding'
 import { useAuth } from '@/lib/auth'
+import { PLACE_CATEGORIES, isPlaceCategory, parseCuisines } from '@/shared/place-categories'
+import PlaceTypeOptions from './PlaceTypeOptions'
 
-// Canonical subcategories per top-level category. Mirrors the list in
-// AddPlaceModal so values stay consistent.
-const EDIT_SUBCATEGORIES: Record<string, Array<{ value: string; label: string }>> = {
-  hotel: [
-    { value: 'hotel',       label: 'Hotel' },
-    { value: 'bnb',         label: 'B&B' },
-    { value: 'guesthouse',  label: 'Guesthouse' },
-    { value: 'hostel',      label: 'Hostel' },
-    { value: 'retreat',     label: 'Retreat' },
-    { value: 'resort',      label: 'Resort' },
-    { value: 'apartment',   label: 'Apartment / Self-catering' },
-    { value: 'agriturismo', label: 'Agriturismo / Farm stay' },
-    { value: 'eco-lodge',   label: 'Eco-lodge / Glamping' },
-  ],
-  eat: [
-    { value: 'restaurant',   label: 'Restaurant' },
-    { value: 'cafe',         label: 'Cafe' },
-    { value: 'coffee_shop',  label: 'Coffee shop' },
-    { value: 'bakery',       label: 'Bakery' },
-    { value: 'bar',          label: 'Bar' },
-    { value: 'wine_bar',     label: 'Wine bar' },
-    { value: 'brasserie',    label: 'Brasserie' },
-    { value: 'bistro',       label: 'Bistro' },
-    { value: 'fast-food',    label: 'Fast food' },
-    { value: 'fast_casual',  label: 'Fast casual' },
-    { value: 'takeaway',     label: 'Takeaway' },
-    { value: 'burger',       label: 'Burger joint' },
-    { value: 'burger_joint', label: 'Burger joint (legacy)' },
-    { value: 'pizzeria',     label: 'Pizzeria' },
-    { value: 'ramen',        label: 'Ramen' },
-    { value: 'sushi',        label: 'Sushi' },
-    { value: 'tapas',        label: 'Tapas' },
-    { value: 'friture',      label: 'Friture / Frituur' },
-    { value: 'deli',         label: 'Deli' },
-    { value: 'foodbar',      label: 'Food bar' },
-    { value: 'lunch_bar',    label: 'Lunch bar' },
-    { value: 'ice-cream',    label: 'Ice cream / Dessert' },
-    { value: 'chocolatier',  label: 'Chocolatier' },
-    { value: 'food-truck',   label: 'Food truck' },
-    { value: 'online-delivery', label: 'Online / Delivery' },
-    { value: 'caterer',      label: 'Caterer' },
-    { value: 'catering',     label: 'Catering (legacy)' },
-  ],
-  store: [
-    { value: 'grocery',     label: 'Grocery / Supermarket' },
-    { value: 'health-food', label: 'Health food shop' },
-    { value: 'butcher',     label: 'Vegan butcher / Deli' },
-    { value: 'farm-shop',   label: 'Farm shop' },
-    { value: 'market',      label: 'Market stall' },
-    { value: 'bookshop',    label: 'Bookshop' },
-    { value: 'clothing',    label: 'Clothing / Lifestyle' },
-    { value: 'beauty',      label: 'Beauty / Cosmetics' },
-    { value: 'brand-hq',    label: 'Brand HQ / Visitor centre' },
-    { value: 'flagship',    label: 'Flagship store' },
-    { value: 'lifestyle',   label: 'Lifestyle / Household' },
-  ],
-  organisation: [
-    { value: 'sanctuary',       label: 'Animal sanctuary' },
-    { value: 'wildlife-rescue', label: 'Wildlife rescue / Rehab' },
-    { value: 'advocacy',        label: 'Advocacy group' },
-    { value: 'charity',         label: 'Charity / NGO' },
-    { value: 'community',       label: 'Community group' },
-    { value: 'meetup',          label: 'Meetup group' },
-    { value: 'school',          label: 'School / Academy' },
-  ],
-  event: [
-    { value: 'vegfest',  label: 'VegFest / Vegan festival' },
-    { value: 'festival', label: 'Festival (general)' },
-    { value: 'market',   label: 'Market / Fair' },
-    { value: 'workshop', label: 'Workshop / Class' },
-    { value: 'social',   label: 'Social / Meetup' },
-    { value: 'protest',  label: 'Protest / Awareness action' },
-  ],
-  other: [
-    { value: 'yoga',         label: 'Yoga studio' },
-    { value: 'fitness',      label: 'Fitness / Gym' },
-    { value: 'wellness',     label: 'Wellness / Healing' },
-    { value: 'tattoo',       label: 'Tattoo / Piercing' },
-    { value: 'salon-spa',    label: 'Salon / Spa' },
-    { value: 'creative',     label: 'Creative / Studio' },
-    { value: 'professional', label: 'Professional service' },
-  ],
-}
 
 interface EditPlaceProps {
   place: {
@@ -121,6 +40,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
   const [description, setDescription] = useState(place.description || '')
   const [category, setCategory] = useState(place.category)
   const [subcategory, setSubcategory] = useState((place as any).subcategory || '')
+  const [cuisines, setCuisines] = useState((((place as any).cuisine_types as string[] | null) || []).join(', '))
   const [website, setWebsite] = useState(place.website || '')
   const [phone, setPhone] = useState(place.phone || '')
   const [openingHours, setOpeningHours] = useState(() => {
@@ -230,6 +150,7 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
           description: description.trim() || null,
           category,
           subcategory: subcategory || null,
+          cuisine_types: parseCuisines(cuisines),
           ...(veganLevel ? { vegan_level: veganLevel } : {}),
           business_status: businessStatus,
           reopen_date: businessStatus === 'temporarily_closed' ? (reopenDate || null) : null,
@@ -338,15 +259,11 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                   onChange={(e) => { setCategory(e.target.value); setSubcategory('') }}
                   className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
                 >
-                  <option value="eat">Eat</option>
-                  <option value="hotel">Stay</option>
-                  <option value="store">Store</option>
-                  <option value="event">Event</option>
-                  <option value="organisation">Organisation</option>
-                  <option value="other">Other</option>
+                  {PLACE_CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                  {!isPlaceCategory(category) && <option value={category}>{category} (old value)</option>}
                 </select>
               </div>
-              {EDIT_SUBCATEGORIES[category as string]?.length > 0 && (
+              {isPlaceCategory(category) && (
                 <div>
                   <label className="block text-sm font-medium text-on-surface-variant mb-1">Type</label>
                   <select
@@ -354,14 +271,25 @@ export default function EditPlace({ place, isOpen, onClose, onSaved }: EditPlace
                     onChange={(e) => setSubcategory(e.target.value)}
                     className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
                   >
-                    <option value="">- choose -</option>
-                    {EDIT_SUBCATEGORIES[category as string].map(s => (
-                      <option key={s.value} value={s.value}>{s.label}</option>
-                    ))}
+                    <PlaceTypeOptions category={category} current={subcategory} />
                   </select>
                 </div>
               )}
             </div>
+
+            {category === 'eat' && (
+              <div>
+                <label className="block text-sm font-medium text-on-surface-variant mb-1">Cuisine</label>
+                <input
+                  type="text"
+                  value={cuisines}
+                  onChange={(e) => setCuisines(e.target.value)}
+                  placeholder="e.g. pizza, ramen, indian"
+                  className="w-full p-2.5 bg-surface-container-low border-0 rounded-lg text-sm focus:ring-1 focus:ring-primary/40 focus:outline-none ghost-border"
+                />
+                <p className="text-xs text-on-surface-variant mt-1">Separate with commas.</p>
+              </div>
+            )}
 
             {/* Vegan Level */}
             <div>
